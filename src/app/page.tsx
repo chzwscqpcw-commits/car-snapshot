@@ -10,11 +10,28 @@ type VehicleData = {
   engineCapacity?: number;
   yearOfManufacture?: number;
   taxStatus?: string;
-  taxDueDate?: string; // YYYY-MM-DD
+  taxDueDate?: string;
   motStatus?: string;
-  monthOfFirstRegistration?: string | null; // "YYYY-MM"
-  motExpiryDate?: string; // YYYY-MM-DD
+  motExpiryDate?: string;
+
+  // Extra DVLA fields (often present, but not always)
+  monthOfFirstRegistration?: string | null;        // "YYYY-MM"
+  monthOfFirstDvlaRegistration?: string | null;    // "YYYY-MM"
+  dateOfLastV5CIssued?: string | null;             // "YYYY-MM-DD"
+  markedForExport?: boolean | null;
+
+  co2Emissions?: number | null;                    // g/km
+  euroStatus?: string | null;                      // e.g. "EURO 6"
+  realDrivingEmissions?: string | null;            // e.g. "RDE2"
+
+  typeApproval?: string | null;                    // type approval category
+  revenueWeight?: number | null;                   // often for vans/LGV
+  wheelplan?: string | null;                       // e.g. "2 AXLE RIGID BODY"
+  artEndDate?: string | null;                      // additional rate end date
+
+  automatedVehicle?: boolean | null;
 };
+
 
 type LookupResponse =
   | {
@@ -37,6 +54,23 @@ function formatDate(iso?: string) {
 
 function cleanReg(s: string) {
   return s.replace(/\s+/g, "").toUpperCase();
+}
+
+function fmtBool(v?: boolean | null) {
+  if (v === true) return "Yes";
+  if (v === false) return "No";
+  return "—";
+}
+
+function fmtNumber(v?: number | null, suffix = "") {
+  if (v === null || v === undefined) return "—";
+  if (!Number.isFinite(v)) return "—";
+  return `${v}${suffix}`;
+}
+
+function fmtText(v?: string | null) {
+  if (!v) return "—";
+  return String(v);
 }
 
 function looksLikeEmail(email: string) {
@@ -282,6 +316,13 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                     {(data.make ?? "Vehicle").toUpperCase()} — {cleanReg(data.registrationNumber)}
                   </h2>
 
+{data.markedForExport ? (
+  <div className="mt-3 rounded-xl border border-red-900/40 bg-red-950/30 px-3 py-2 text-sm text-red-200">
+    <strong>Red flag:</strong> DVLA record shows this vehicle is <strong>marked for export</strong>.
+  </div>
+) : null}
+
+
                   {meta && (
                     <p className="mt-1 text-sm text-neutral-400">
                       {meta.cached ? "Fast result (cached)" : "Fresh result"} ·{" "}
@@ -352,6 +393,82 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                   <div className="text-base">{formatDate(data.motExpiryDate)}</div>
                 </div>
               </div>
+
+<details className="mt-5 rounded-2xl border border-neutral-800 bg-neutral-950/30 p-4">
+  <summary className="cursor-pointer select-none text-sm font-semibold text-neutral-100">
+    More DVLA details
+    <span className="ml-2 text-xs font-normal text-neutral-400">
+      (some vehicles won’t have all fields)
+    </span>
+  </summary>
+
+  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+    <div>
+      <div className="text-xs text-neutral-400">First registered (month)</div>
+      <div className="text-sm">{fmtText(data.monthOfFirstRegistration)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">First DVLA registration (month)</div>
+      <div className="text-sm">{fmtText(data.monthOfFirstDvlaRegistration)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Last V5C (logbook) issued</div>
+      <div className="text-sm">{formatDate(data.dateOfLastV5CIssued ?? undefined)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Marked for export</div>
+      <div className="text-sm">{fmtBool(data.markedForExport)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">CO₂ emissions</div>
+      <div className="text-sm">{fmtNumber(data.co2Emissions, " g/km")}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Euro status</div>
+      <div className="text-sm">{fmtText(data.euroStatus)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Real driving emissions</div>
+      <div className="text-sm">{fmtText(data.realDrivingEmissions)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Type approval</div>
+      <div className="text-sm">{fmtText(data.typeApproval)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Revenue weight</div>
+      <div className="text-sm">{fmtNumber(data.revenueWeight, " kg")}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Wheelplan</div>
+      <div className="text-sm">{fmtText(data.wheelplan)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Additional rate end date</div>
+      <div className="text-sm">{formatDate(data.artEndDate ?? undefined)}</div>
+    </div>
+
+    <div>
+      <div className="text-xs text-neutral-400">Automated vehicle</div>
+      <div className="text-sm">{fmtBool(data.automatedVehicle)}</div>
+    </div>
+  </div>
+
+  <p className="mt-3 text-xs text-neutral-500">
+    Tip: if the V5C issue date is very recent, ask the seller why (address change can be normal).
+  </p>
+</details>
+
 
               {toast && <p className="mt-3 text-sm text-neutral-300">{toast}</p>}
             </section>
