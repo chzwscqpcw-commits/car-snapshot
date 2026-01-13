@@ -4,34 +4,35 @@ import { useMemo, useState } from "react";
 
 type VehicleData = {
   registrationNumber: string;
+
   make?: string;
   colour?: string;
   fuelType?: string;
   engineCapacity?: number;
   yearOfManufacture?: number;
+
   taxStatus?: string;
-  taxDueDate?: string;
+  taxDueDate?: string; // YYYY-MM-DD
+
   motStatus?: string;
-  motExpiryDate?: string;
+  motExpiryDate?: string; // YYYY-MM-DD
 
-  // Extra DVLA fields (often present, but not always)
-  monthOfFirstRegistration?: string | null;        // "YYYY-MM"
-  monthOfFirstDvlaRegistration?: string | null;    // "YYYY-MM"
-  dateOfLastV5CIssued?: string | null;             // "YYYY-MM-DD"
-  markedForExport?: boolean | null;
+  // Extra DVLA fields (may be missing on some vehicles)
+  monthOfFirstRegistration?: string; // YYYY-MM
+  dateOfFirstRegistration?: string; // YYYY-MM-DD (sometimes present)
+  dateOfLastV5CIssued?: string; // YYYY-MM-DD
+  markedForExport?: boolean;
 
-  co2Emissions?: number | null;                    // g/km
-  euroStatus?: string | null;                      // e.g. "EURO 6"
-  realDrivingEmissions?: string | null;            // e.g. "RDE2"
+  co2Emissions?: number;
+  euroStatus?: string;
+  realDrivingEmissions?: number;
 
-  typeApproval?: string | null;                    // type approval category
-  revenueWeight?: number | null;                   // often for vans/LGV
-  wheelplan?: string | null;                       // e.g. "2 AXLE RIGID BODY"
-  artEndDate?: string | null;                      // additional rate end date
-
-  automatedVehicle?: boolean | null;
+  wheelplan?: string;
+  revenueWeight?: number;
+  typeApproval?: string;
+  automatedVehicle?: boolean;
+  additionalRateEndDate?: string; // YYYY-MM-DD
 };
-
 
 type LookupResponse =
   | {
@@ -46,50 +47,50 @@ type LookupResponse =
       error: string;
     };
 
-function formatDate(iso?: string) {
-  if (!iso) return "—";
-  // Keep it simple and stable (no locale hydration weirdness)
-  return iso;
-}
+type InsightTone = "good" | "warn" | "risk" | "info";
+type Insight = { tone: InsightTone; title: string; detail: string };
 
 function cleanReg(s: string) {
   return s.replace(/\s+/g, "").toUpperCase();
 }
 
-function fmtBool(v?: boolean | null) {
-  if (v === true) return "Yes";
-  if (v === false) return "No";
-  return "—";
-}
-
-function fmtNumber(v?: number | null, suffix = "") {
-  if (v === null || v === undefined) return "—";
-  if (!Number.isFinite(v)) return "—";
-  return `${v}${suffix}`;
-}
-
-function fmtText(v?: string | null) {
-  if (!v) return "—";
-  return String(v);
-}
-
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim().toLowerCase());
 }
-function firstMotDueMonth(monthOfFirstRegistration?: string | null) {
-  // DVLA provides "YYYY-MM" (no day), so we show month/year only.
-  if (!monthOfFirstRegistration) return null;
 
-  const m = monthOfFirstRegistration.match(/^(\d{4})-(\d{2})$/);
+function formatDate(iso?: string) {
+  return iso ? iso : "—"; // stable, no locale hydration weirdness
+}
+
+function parseISODate(iso?: string) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function daysSince(iso?: string) {
+  const d = parseISODate(iso);
+  if (!d) return null;
+  const diff = Date.now() - d.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+// YYYY-MM + years => YYYY-MM (month/year only)
+function addYearsToYearMonth(ym: string, years: number) {
+  const m = /^(\d{4})-(\d{2})$/.exec(ym);
   if (!m) return null;
-
   const year = Number(m[1]);
-  const month = Number(m[2]); // 1-12
-  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) return null;
+  const month = Number(m[2]);
+  if (!year || !month) return null;
+  const outYear = year + years;
+  const outMonth = String(month).padStart(2, "0");
+  return `${outYear}-${outMonth}`;
+}
 
-  const dueYear = year + 3; // Great Britain rule of thumb
-  const mm = String(month).padStart(2, "0");
-  return `${dueYear}-${mm}`; // "YYYY-MM"
+function extractEuroNumber(euroStatus?: string) {
+  if (!euroStatus) return null;
+  const m = /EURO\s*([0-9]+)/i.exec(euroStatus);
+  return m ? Number(m[1]) : null;
 }
 
 export default function Page() {
@@ -108,8 +109,6 @@ export default function Page() {
   const [wantsReminders, setWantsReminders] = useState(false);
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupMsg, setSignupMsg] = useState<string | null>(null);
-  const [signupKind, setSignupKind] = useState<"success" | "updated" | "error" | null>(null);
-
 
   const checklist = useMemo(() => {
     if (!data) return [];
@@ -124,11 +123,80 @@ export default function Page() {
     const mot = (data.motStatus ?? "").toLowerCase();
 
     if (fuel.includes("DIESEL")) items.push("Diesel: ask about DPF/EGR issues and motorway vs short-trip use.");
-    if (year && year <= new Date().getFullYear() - 10)
-      items.push("Older car: inspect for corrosion underneath and around arches.");
+    if (year && year <= new Date().getFullYear() - 10) items.push("Older car: inspect for corrosion underneath and around arches.");
     if (mot && !mot.includes("valid")) items.push("MOT is not shown as valid: clarify why before viewing.");
 
     return items;
+  }, [data]);
+
+  const insights = useMemo<Insight[]>(() => {
+    if (!data) return [];
+    const list: Insight[] = [];
+
+    const motLower = (data.motStatus ?? "").toLowerCase();
+    const hasNoMotDetails = motLower.includes("no details held");
+    const firstRegMonth = data.monthOfFirstRegistration;
+
+    if (hasNoMotDetails && firstRegMonth) {
+      const due = addYearsToYearMonth(firstRegMonth, 3);
+      if (due) {
+        list.push({
+          tone: "info",
+          title: "Likely under 3 years old",
+          detail: `First MOT due around ${due} (month/year only — check V5C for exact date; NI rules can differ).`,
+        });
+      }
+    }
+
+    // ULEZ hint (carefully worded; always tell them to verify)
+    const euroN = extractEuroNumber(data.euroStatus);
+    const fuel = (data.fuelType ?? "").toUpperCase();
+    if (euroN && fuel) {
+      const isDiesel = fuel.includes("DIESEL");
+      const likelyOk = isDiesel ? euroN >= 6 : euroN >= 4;
+
+      if (likelyOk) {
+        list.push({
+          tone: "good",
+          title: "Likely ULEZ / Clean Air compliant (London)",
+          detail: `Euro ${euroN} ${isDiesel ? "diesel" : "petrol"} usually meets the standard — still verify on the TfL checker.`,
+        });
+      } else {
+        list.push({
+          tone: "warn",
+          title: "May be chargeable in ULEZ / Clean Air zones",
+          detail: `This looks like Euro ${euroN}. London ULEZ cars typically need Euro 4 (petrol) / Euro 6 (diesel) — check TfL to be sure.`,
+        });
+      }
+    }
+
+    if (data.markedForExport === true) {
+      list.push({
+        tone: "risk",
+        title: "Marked for export",
+        detail: "Ask the seller why. Double-check the V5C/logbook and consider a full history check before paying a deposit.",
+      });
+    }
+
+    const v5cDays = daysSince(data.dateOfLastV5CIssued);
+    if (v5cDays !== null && v5cDays >= 0 && v5cDays <= 90) {
+      list.push({
+        tone: "warn",
+        title: "V5C issued recently",
+        detail: "Often normal (address change can do it), but do ask the seller why and confirm keeper details match the logbook.",
+      });
+    }
+
+    const taxLower = (data.taxStatus ?? "").toLowerCase();
+    if (taxLower && !taxLower.includes("taxed")) {
+      list.push({
+        tone: "warn",
+        title: `Tax status: ${data.taxStatus}`,
+        detail: "Could be SORN/untaxed. Budget time to tax it before driving away (don’t assume you can ‘use the seller’s tax’).",
+      });
+    }
+
+    return list;
   }, [data]);
 
   async function handleLookup(e?: React.FormEvent) {
@@ -171,16 +239,12 @@ export default function Page() {
 
     setSignupMsg(null);
     setToast(null);
-    setSignupKind(null);
-
 
     const emailNorm = email.trim().toLowerCase();
     if (!looksLikeEmail(emailNorm)) {
-  setSignupKind("error");
-  setSignupMsg("Enter a valid email.");
-  return;
-}
-
+      setSignupMsg("Enter a valid email.");
+      return;
+    }
 
     setSignupLoading(true);
     try {
@@ -196,32 +260,23 @@ export default function Page() {
         }),
       });
 
-const json = await res.json();
+      const json = await res.json();
 
-if (!json?.ok) {
-  setSignupKind("error");
-  setSignupMsg(json?.error || "Could not save email.");
-  return;
-}
+      if (!json?.ok) {
+        setSignupMsg(json?.error || "Could not save email.");
+        return;
+      }
 
-const isUpdated = json?.already === true || json?.status === "updated";
+      if (json?.already) {
+        setSignupMsg("You’re already on the list.");
+      } else {
+        setSignupMsg("Saved. We’ll keep you posted.");
+      }
 
-setSignupKind(isUpdated ? "updated" : "success");
-
-setSignupMsg(
-  json?.message ||
-    (isUpdated ? "Already subscribed — preferences updated." : "Saved. We’ll keep you posted.")
-);
-
-setEmail("");
-
-
-
-} catch (err: any) {
-  setSignupKind("error");
-  setSignupMsg(err?.message ? String(err.message) : "Could not save email.");
-} finally {
-
+      setEmail("");
+    } catch (err: any) {
+      setSignupMsg(err?.message ? String(err.message) : "Could not save email.");
+    } finally {
       setSignupLoading(false);
     }
   }
@@ -229,7 +284,7 @@ setEmail("");
   function copyShareLink() {
     try {
       const url = window.location.origin;
-      const text = `Free UK car check (DVLA basics + buying checklist): ${url}\nWorth running before you view a used car.`;
+      const text = `UK Car Snapshot — DVLA basics + buying checklist.\n${url}\nTip: check tax/MOT before you view a car.`;
       navigator.clipboard.writeText(text);
       setToast("Copied share text to clipboard.");
     } catch {
@@ -255,20 +310,30 @@ setEmail("");
       setToast(`Couldn’t auto-copy. Your reg is: ${reg}`);
     }
 
-    // Give the user time to see the message before the new tab steals focus
     setTimeout(() => {
       window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
     }, 2000);
   }
 
+  const toneClasses: Record<InsightTone, string> = {
+    good: "border-emerald-900/40 bg-emerald-950/30 text-emerald-100",
+    warn: "border-amber-900/40 bg-amber-950/25 text-amber-100",
+    risk: "border-red-900/40 bg-red-950/30 text-red-100",
+    info: "border-sky-900/40 bg-sky-950/25 text-sky-100",
+  };
+
+  const toneIcon: Record<InsightTone, string> = {
+    good: "✅",
+    warn: "⚠️",
+    risk: "🚩",
+    info: "ℹ️",
+  };
+
   return (
-<main className="min-h-screen bg-black text-neutral-100 px-10 py-10">
-
-
-      <div className="mx-auto w-full max-w-[820px] px-6 sm:px-8 lg:px-10 py-10">
-<header className="mb-5">
-  <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">UK Car Snapshot</h1>
-
+    <main className="min-h-screen bg-black text-neutral-100">
+      <div className="mx-auto w-full max-w-3xl px-6 sm:px-8 py-10 sm:py-12">
+        <header className="mb-6">
+          <h1 className="text-3xl font-semibold tracking-tight">UK Car Snapshot</h1>
           <p className="mt-2 text-neutral-300">
             Enter a registration number to get vehicle basics + a buying checklist.
           </p>
@@ -279,12 +344,12 @@ setEmail("");
         </header>
 
         <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-<form onSubmit={handleLookup} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
+          <form onSubmit={handleLookup} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
             <input
               value={vrm}
               onChange={(e) => setVrm(e.target.value)}
               placeholder="e.g. AB12 CDE"
-className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
+              className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
               autoCapitalize="characters"
               autoCorrect="off"
               spellCheck={false}
@@ -292,8 +357,7 @@ className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-b
             <button
               type="submit"
               disabled={loading}
-className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-3 font-medium text-black disabled:opacity-60"
-
+              className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-3 font-medium text-black disabled:opacity-60"
             >
               {loading ? "Checking..." : "Lookup"}
             </button>
@@ -316,48 +380,39 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                     {(data.make ?? "Vehicle").toUpperCase()} — {cleanReg(data.registrationNumber)}
                   </h2>
 
-{data.markedForExport ? (
-  <div className="mt-3 rounded-xl border border-red-900/40 bg-red-950/30 px-3 py-2 text-sm text-red-200">
-    <strong>Red flag:</strong> DVLA record shows this vehicle is <strong>marked for export</strong>.
-  </div>
-) : null}
-
-
                   {meta && (
                     <p className="mt-1 text-sm text-neutral-400">
                       {meta.cached ? "Fast result (cached)" : "Fresh result"} ·{" "}
                       {meta.source === "dvla" ? "DVLA data" : "Demo data"}
                     </p>
                   )}
-                  {(() => {
-  const motMissing =
-    !data.motExpiryDate || String(data.motStatus ?? "").toLowerCase().includes("no details");
-
-  const due = firstMotDueMonth(data.monthOfFirstRegistration);
-
-  if (!motMissing || !due) return null;
-
-  return (
-    <div className="mt-3 rounded-xl border border-amber-900/40 bg-amber-950/25 px-3 py-2 text-sm text-amber-200">
-      <span className="mr-2">🆕</span>
-      Likely under 3 years old — first MOT due around <strong>{due}</strong>.
-      <span className="ml-2 text-amber-200/80">
-        (Month/year only — check V5C for the exact date. NI rules can differ.)
-      </span>
-    </div>
-  );
-})()}
-
                 </div>
 
                 <button
                   type="button"
                   onClick={copyShareLink}
-                  className="w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
+                  className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
                 >
                   Copy share link
                 </button>
               </div>
+
+              {/* Insights */}
+              {insights.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {insights.map((it, idx) => (
+                    <div
+                      key={idx}
+                      className={`rounded-xl border px-3 py-2 ${toneClasses[it.tone]}`}
+                    >
+                      <div className="text-sm font-medium">
+                        {toneIcon[it.tone]} {it.title}
+                      </div>
+                      <div className="mt-0.5 text-sm opacity-90">{it.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 <div>
@@ -394,83 +449,65 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                 </div>
               </div>
 
-<details className="mt-5 rounded-2xl border border-neutral-800 bg-neutral-950/30 p-4">
-  <summary className="cursor-pointer select-none text-sm font-semibold text-neutral-100">
-    More DVLA details
-    <span className="ml-2 text-xs font-normal text-neutral-400">
-      (some vehicles won’t have all fields)
-    </span>
-  </summary>
-
-  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-    <div>
-      <div className="text-xs text-neutral-400">First registered (month)</div>
-      <div className="text-sm">{fmtText(data.monthOfFirstRegistration)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">First DVLA registration (month)</div>
-      <div className="text-sm">{fmtText(data.monthOfFirstDvlaRegistration)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Last V5C (logbook) issued</div>
-      <div className="text-sm">{formatDate(data.dateOfLastV5CIssued ?? undefined)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Marked for export</div>
-      <div className="text-sm">{fmtBool(data.markedForExport)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">CO₂ emissions</div>
-      <div className="text-sm">{fmtNumber(data.co2Emissions, " g/km")}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Euro status</div>
-      <div className="text-sm">{fmtText(data.euroStatus)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Real driving emissions</div>
-      <div className="text-sm">{fmtText(data.realDrivingEmissions)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Type approval</div>
-      <div className="text-sm">{fmtText(data.typeApproval)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Revenue weight</div>
-      <div className="text-sm">{fmtNumber(data.revenueWeight, " kg")}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Wheelplan</div>
-      <div className="text-sm">{fmtText(data.wheelplan)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Additional rate end date</div>
-      <div className="text-sm">{formatDate(data.artEndDate ?? undefined)}</div>
-    </div>
-
-    <div>
-      <div className="text-xs text-neutral-400">Automated vehicle</div>
-      <div className="text-sm">{fmtBool(data.automatedVehicle)}</div>
-    </div>
-  </div>
-
-  <p className="mt-3 text-xs text-neutral-500">
-    Tip: if the V5C issue date is very recent, ask the seller why (address change can be normal).
-  </p>
-</details>
-
-
               {toast && <p className="mt-3 text-sm text-neutral-300">{toast}</p>}
+
+              {/* Progressive disclosure: extra DVLA fields */}
+              <details className="mt-4 rounded-xl border border-neutral-800 bg-neutral-950/40 p-4">
+                <summary className="cursor-pointer select-none text-sm font-medium text-neutral-200">
+                  More DVLA details <span className="text-neutral-500 font-normal">(some vehicles won’t have all fields)</span>
+                </summary>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <div className="text-xs text-neutral-500">First registered (month)</div>
+                    <div className="text-sm">{data.monthOfFirstRegistration ?? "—"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-neutral-500">Marked for export</div>
+                    <div className="text-sm">{data.markedForExport === true ? "Yes" : data.markedForExport === false ? "No" : "—"}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-neutral-500">Last V5C (logbook) issued</div>
+                    <div className="text-sm">{data.dateOfLastV5CIssued ?? "—"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-neutral-500">Euro status</div>
+                    <div className="text-sm">{data.euroStatus ?? "—"}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-neutral-500">CO₂ emissions</div>
+                    <div className="text-sm">{typeof data.co2Emissions === "number" ? `${data.co2Emissions} g/km` : "—"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-neutral-500">Real driving emissions (RDE)</div>
+                    <div className="text-sm">{typeof data.realDrivingEmissions === "number" ? String(data.realDrivingEmissions) : "—"}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-neutral-500">Revenue weight</div>
+                    <div className="text-sm">{typeof data.revenueWeight === "number" ? `${data.revenueWeight} kg` : "—"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-neutral-500">Wheelplan</div>
+                    <div className="text-sm">{data.wheelplan ?? "—"}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-neutral-500">Type approval</div>
+                    <div className="text-sm">{data.typeApproval ?? "—"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-neutral-500">Additional rate end date</div>
+                    <div className="text-sm">{data.additionalRateEndDate ?? "—"}</div>
+                  </div>
+                </div>
+
+                <p className="mt-3 text-xs text-neutral-500">
+                  Tip: if the V5C issue date is very recent, ask the seller why (address change can be normal).
+                </p>
+              </details>
             </section>
 
             {/* Next steps */}
@@ -542,43 +579,24 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                 Email me before MOT/tax expiry
               </label>
 
-<form onSubmit={handleSignup} className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
-
+              <form onSubmit={handleSignup} className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@email.com"
                   inputMode="email"
-className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
+                  className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
                 />
                 <button
                   type="submit"
                   disabled={signupLoading}
-                  className="w-full sm:w-auto shrink-0 rounded-xl bg-neutral-200 px-5 py-3 font-medium text-black disabled:opacity-60"
+                  className="whitespace-nowrap shrink-0 rounded-xl bg-neutral-200 px-6 py-3 font-medium text-black disabled:opacity-60"
                 >
                   {signupLoading ? "Saving..." : "Notify me"}
                 </button>
               </form>
 
-{signupMsg && (
-  <div
-    className={[
-      "mt-3 rounded-xl border px-3 py-2 text-sm",
-      signupKind === "success" && "border-emerald-900/40 bg-emerald-950/25 text-emerald-200",
-      signupKind === "updated" && "border-sky-900/40 bg-sky-950/25 text-sky-200",
-      signupKind === "error" && "border-red-900/40 bg-red-950/30 text-red-200",
-      !signupKind && "border-neutral-800 bg-neutral-950/40 text-neutral-200",
-    ]
-      .filter(Boolean)
-      .join(" ")}
-  >
-    {signupKind === "success" && <span className="mr-2">✅</span>}
-    {signupKind === "updated" && <span className="mr-2">🔄</span>}
-    {signupKind === "error" && <span className="mr-2">⚠️</span>}
-    {signupMsg}
-  </div>
-)}
-
+              {signupMsg && <p className="mt-3 text-sm text-neutral-300">{signupMsg}</p>}
             </section>
 
             <p className="text-xs text-neutral-600">

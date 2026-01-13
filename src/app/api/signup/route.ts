@@ -17,55 +17,61 @@ export async function POST(req: Request) {
     const email = normalizeEmail(String(body?.email ?? ""));
 
     if (!looksLikeEmail(email)) {
-      return NextResponse.json(
-        { ok: false, error: "Enter a valid email." },
-        { status: 400 }
-      );
+      return NextResponse.json({ ok: false, error: "Enter a valid email." }, { status: 400 });
     }
 
     const wantsReminders = Boolean(body?.wantsReminders);
     const lastVrmHash = typeof body?.vrmHash === "string" ? body.vrmHash : null;
-
-    // Dates come from the lookup response (strings like "2026-09-01")
-    const motExpiry =
-      typeof body?.motExpiryDate === "string" ? body.motExpiryDate : null;
-    const taxDue =
-      typeof body?.taxDueDate === "string" ? body.taxDueDate : null;
+    const motExpiry = typeof body?.motExpiryDate === "string" ? body.motExpiryDate : null;
+    const taxDue = typeof body?.taxDueDate === "string" ? body.taxDueDate : null;
 
     const sb = supabaseServer();
 
-    // Check if this email already exists (for a friendly message)
-    const { data: existing } = await sb
-      .from("email_signups")
-      .select("email")
-      .eq("email", email)
-      .maybeSingle();
+    // 1) Try to create a brand new signup
+    const { error: insertError } = await sb.from("email_signups").insert({
+      email,
+      source: "car-snapshot",
+      wants_reminders: wantsReminders,
+      last_vrm_hash: lastVrmHash,
+      mot_expiry: motExpiry,
+      tax_due: taxDue,
+    });
 
-    const wasAlready = Boolean(existing?.email);
-
-    // Upsert (insert if new, update if exists)
-    const { error } = await sb
-      .from("email_signups")
-      .upsert(
-        {
-          email,
-          source: "car-snapshot",
-          wants_reminders: wantsReminders,
-          last_vrm_hash: lastVrmHash,
-          mot_expiry: motExpiry,
-          tax_due: taxDue,
-        },
-        { onConflict: "email" }
-      );
-
-    if (error) {
-      return NextResponse.json(
-        { ok: false, error: "Could not save email." },
-        { status: 500 }
-      );
+    if (!insertError) {
+      return NextResponse.json({
+        ok: true,
+        status: "created",
+        message: "Saved. We’ll keep you posted.",
+      });
     }
 
-    return NextResponse.json({ ok: true, already: wasAlready });
+    // 2) If it’s a duplicate email, update preferences instead
+    if ((insertError as any).code === "23505") {
+      const update: Record<string, any> = {
+        wants_reminders: wantsReminders,
+      };
+
+      // Only overwrite these if we actually have values
+      if (lastVrmHash) update.last_vrm_hash = lastVrmHash;
+      if (motExpiry) update.mot_expiry = motExpiry;
+      if (taxDue) update.tax_due = taxDue;
+
+      const { error: updateError } = await sb.from("email_signups").update(update).eq("email", email);
+
+      if (updateError) {
+        console.error("signup_update_error:", updateError);
+        return NextResponse.json({ ok: false, error: "Could not update your preferences." }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        ok: true,
+        status: "updated",
+        message: "Already subscribed — preferences updated.",
+      });
+    }
+
+    console.error("signup_insert_error:", insertError);
+    return NextResponse.json({ ok: false, error: "Could not save email." }, { status: 500 });
   } catch {
     return NextResponse.json({ ok: false, error: "Bad request." }, { status: 400 });
   }

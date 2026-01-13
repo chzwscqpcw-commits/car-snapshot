@@ -21,17 +21,23 @@ function hashVrm(vrm: string) {
 function mockDvlaResponse(registrationNumber: string) {
   return {
     registrationNumber,
-    make: "FORD",
-    colour: "BLUE",
-    fuelType: "PETROL",
-    engineCapacity: 999,
-    yearOfManufacture: 2018,
+    make: "TESLA",
+    colour: "WHITE",
+    fuelType: "ELECTRICITY",
+    engineCapacity: 0,
+    yearOfManufacture: 2025,
     taxStatus: "Taxed",
     taxDueDate: "2026-05-01",
-    motStatus: "Valid",
-    motExpiryDate: "2026-04-10",
+
+    // This is the “new car” scenario:
+    motStatus: "No details held by DVLA",
+    motExpiryDate: null,
+
+    // DVLA gives month+year like "YYYY-MM"
+    monthOfFirstRegistration: "2025-06",
   };
 }
+
 
 type DvlaResult =
   | null
@@ -140,7 +146,8 @@ return NextResponse.json({
         updated_at: updatedAt,
       });
 
-      return NextResponse.json({ ok: true, data: fresh, source: "mock", cached: false });
+return NextResponse.json({ ok: true, data: fresh, source: "mock", cached: false, vrmHash });
+
     }
 
     if ("error" in dvlaResult) {
@@ -160,7 +167,8 @@ return NextResponse.json({
       updated_at: updatedAt,
     });
 
-    return NextResponse.json({ ok: true, data: fresh, source: "dvla", cached: false });
+return NextResponse.json({ ok: true, data: fresh, source: "dvla", cached: false, vrmHash });
+
   } catch (err: any) {
     console.error("lookup_error:", err?.message || err);
     return NextResponse.json(
