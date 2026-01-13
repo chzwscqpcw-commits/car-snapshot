@@ -154,9 +154,17 @@ if (!json?.ok) {
   return;
 }
 
-setSignupKind(json?.status === "updated" ? "updated" : "success");
-setSignupMsg(json?.message || "Saved. We’ll keep you posted.");
+const isUpdated = json?.already === true || json?.status === "updated";
+
+setSignupKind(isUpdated ? "updated" : "success");
+
+setSignupMsg(
+  json?.message ||
+    (isUpdated ? "Already subscribed — preferences updated." : "Saved. We’ll keep you posted.")
+);
+
 setEmail("");
+
 
 
 } catch (err: any) {
