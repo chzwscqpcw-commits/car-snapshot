@@ -1,0 +1,171 @@
+export const runtime = "nodejs";
+
+import { NextResponse } from "next/server";
+import crypto from "crypto";
+import { supabaseServer } from "@/lib/supabaseServer";
+
+function normalizeVrm(input: string) {
+  return input.toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function looksLikeVrm(vrm: string) {
+  // UK plates can be short (private) or standard. We'll let DVLA be the judge.
+  return vrm.length >= 2 && vrm.length <= 8;
+}
+
+function hashVrm(vrm: string) {
+  const salt = process.env.VRM_SALT || "change-me";
+  return crypto.createHash("sha256").update(`${salt}:${vrm}`).digest("hex");
+}
+
+function mockDvlaResponse(registrationNumber: string) {
+  return {
+    registrationNumber,
+    make: "FORD",
+    colour: "BLUE",
+    fuelType: "PETROL",
+    engineCapacity: 999,
+    yearOfManufacture: 2018,
+    taxStatus: "Taxed",
+    taxDueDate: "2026-05-01",
+    motStatus: "Valid",
+    motExpiryDate: "2026-04-10",
+  };
+}
+
+type DvlaResult =
+  | null
+  | { error: string; status: number }
+  | { data: any };
+
+async function fetchFromDvla(registrationNumber: string): Promise<DvlaResult> {
+  const endpoint =
+    process.env.DVLA_ENV === "uat"
+      ? "https://uat.driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles"
+      : "https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles";
+
+  const apiKey = process.env.DVLA_X_API_KEY;
+  if (!apiKey) return null;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify({ registrationNumber }),
+      signal: controller.signal,
+    });
+
+    const data = await resp.json().catch(() => null);
+
+    if (!resp.ok) {
+      const message =
+        resp.status === 404
+          ? "Vehicle not found."
+          : resp.status === 429
+          ? "Too many requests. Try again later."
+          : "DVLA service error. Try again.";
+      return { error: message, status: resp.status };
+    }
+
+    return { data };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const vrm = normalizeVrm(String(body?.vrm ?? ""));
+
+    if (!looksLikeVrm(vrm)) {
+      return NextResponse.json(
+        { ok: false, error: "Enter a valid UK registration (VRM)." },
+        { status: 400 }
+      );
+    }
+
+    const sb = supabaseServer();
+    const vrmHash = hashVrm(vrm);
+
+    // 1) Try cache
+    const { data: cached, error: cacheErr } = await sb
+      .from("vehicle_lookups")
+      .select("data, source, expires_at")
+      .eq("vrm_hash", vrmHash)
+      .maybeSingle();
+
+    if (cacheErr) {
+      console.error("cache_error:", cacheErr.message);
+    }
+
+    const hasDvlaKey = Boolean(process.env.DVLA_X_API_KEY);
+
+// If we have a DVLA key, don't let a cached MOCK response block DVLA.
+// We'll "upgrade" mock -> dvla by fetching fresh.
+if (cached?.expires_at && new Date(cached.expires_at) > new Date()) {
+  if (!(hasDvlaKey && cached.source === "mock")) {
+return NextResponse.json({
+  ok: true,
+  data: cached.data,
+  source: cached.source,
+  cached: true,
+  vrmHash,
+});
+
+  }
+}
+
+
+    // 2) Otherwise fetch fresh
+    const dvlaResult = await fetchFromDvla(vrm);
+
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    const updatedAt = new Date().toISOString();
+
+    if (dvlaResult === null) {
+      const fresh = mockDvlaResponse(vrm);
+
+      await sb.from("vehicle_lookups").upsert({
+        vrm_hash: vrmHash,
+        data: fresh,
+        source: "mock",
+        expires_at: expiresAt,
+        updated_at: updatedAt,
+      });
+
+      return NextResponse.json({ ok: true, data: fresh, source: "mock", cached: false });
+    }
+
+    if ("error" in dvlaResult) {
+      return NextResponse.json(
+        { ok: false, error: dvlaResult.error },
+        { status: dvlaResult.status }
+      );
+    }
+
+    const fresh = dvlaResult.data;
+
+    await sb.from("vehicle_lookups").upsert({
+      vrm_hash: vrmHash,
+      data: fresh,
+      source: "dvla",
+      expires_at: expiresAt,
+      updated_at: updatedAt,
+    });
+
+    return NextResponse.json({ ok: true, data: fresh, source: "dvla", cached: false });
+  } catch (err: any) {
+    console.error("lookup_error:", err?.message || err);
+    return NextResponse.json(
+      { ok: false, error: "Server error. Please try again." },
+      { status: 500 }
+    );
+  }
+}
