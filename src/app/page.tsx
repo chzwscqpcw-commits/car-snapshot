@@ -182,6 +182,25 @@ setSignupMsg(json.already ? "You’re already on the list." : "Saved. We’ll ke
             <h2 style={{ marginTop: 0 }}>
               {data.make ?? "Vehicle"} — {data.registrationNumber}
             </h2>
+<button
+  onClick={() => {
+    const url = window.location.origin;
+    const text =
+      `UK Car Snapshot — free DVLA basics + buying checklist.\n` +
+      `${url}\n` +
+      `Tip: paste your reg and check MOT/tax before you view a car.`;
+    navigator.clipboard.writeText(text);
+    setSignupMsg("Copied share text to clipboard.");
+  }}
+  style={{
+    marginTop: 10,
+    padding: "10px 12px",
+    fontSize: 14,
+    cursor: "pointer",
+  }}
+>
+  Copy share text
+</button>
 
             {meta && (
               <p style={{ marginTop: 6, opacity: 0.75 }}>
