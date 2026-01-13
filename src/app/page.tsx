@@ -12,6 +12,7 @@ type VehicleData = {
   taxStatus?: string;
   taxDueDate?: string; // YYYY-MM-DD
   motStatus?: string;
+  monthOfFirstRegistration?: string | null; // "YYYY-MM"
   motExpiryDate?: string; // YYYY-MM-DD
 };
 
@@ -40,6 +41,21 @@ function cleanReg(s: string) {
 
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim().toLowerCase());
+}
+function firstMotDueMonth(monthOfFirstRegistration?: string | null) {
+  // DVLA provides "YYYY-MM" (no day), so we show month/year only.
+  if (!monthOfFirstRegistration) return null;
+
+  const m = monthOfFirstRegistration.match(/^(\d{4})-(\d{2})$/);
+  if (!m) return null;
+
+  const year = Number(m[1]);
+  const month = Number(m[2]); // 1-12
+  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) return null;
+
+  const dueYear = year + 3; // Great Britain rule of thumb
+  const mm = String(month).padStart(2, "0");
+  return `${dueYear}-${mm}`; // "YYYY-MM"
 }
 
 export default function Page() {
@@ -272,6 +288,25 @@ className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-
                       {meta.source === "dvla" ? "DVLA data" : "Demo data"}
                     </p>
                   )}
+                  {(() => {
+  const motMissing =
+    !data.motExpiryDate || String(data.motStatus ?? "").toLowerCase().includes("no details");
+
+  const due = firstMotDueMonth(data.monthOfFirstRegistration);
+
+  if (!motMissing || !due) return null;
+
+  return (
+    <div className="mt-3 rounded-xl border border-amber-900/40 bg-amber-950/25 px-3 py-2 text-sm text-amber-200">
+      <span className="mr-2">🆕</span>
+      Likely under 3 years old — first MOT due around <strong>{due}</strong>.
+      <span className="ml-2 text-amber-200/80">
+        (Month/year only — check V5C for the exact date. NI rules can differ.)
+      </span>
+    </div>
+  );
+})()}
+
                 </div>
 
                 <button
