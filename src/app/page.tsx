@@ -185,11 +185,11 @@ setSignupMsg(json.already ? "You’re already on the list." : "Saved. We’ll ke
 <button
   onClick={() => {
     const url = window.location.origin;
-    const text =
-      `UK Car Snapshot — free DVLA basics + buying checklist.\n` +
-      `${url}\n` +
-      `Tip: paste your reg and check MOT/tax before you view a car.`;
-    navigator.clipboard.writeText(text);
+const text =
+  `Free UK car check (DVLA basics + buying checklist): ${url}\n` +
+  `Worth running before you view a used car.`;
+navigator.clipboard.writeText(text);
+
     setSignupMsg("Copied share text to clipboard.");
   }}
   style={{
@@ -199,7 +199,7 @@ setSignupMsg(json.already ? "You’re already on the list." : "Saved. We’ll ke
     cursor: "pointer",
   }}
 >
-  Copy share text
+  Copy share link
 </button>
 
             {meta && (
