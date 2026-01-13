@@ -58,6 +58,8 @@ export default function Page() {
   const [wantsReminders, setWantsReminders] = useState(false);
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupMsg, setSignupMsg] = useState<string | null>(null);
+  const [signupKind, setSignupKind] = useState<"success" | "updated" | "error" | null>(null);
+
 
   const checklist = useMemo(() => {
     if (!data) return [];
@@ -119,12 +121,16 @@ export default function Page() {
 
     setSignupMsg(null);
     setToast(null);
+    setSignupKind(null);
+
 
     const emailNorm = email.trim().toLowerCase();
     if (!looksLikeEmail(emailNorm)) {
-      setSignupMsg("Enter a valid email.");
-      return;
-    }
+  setSignupKind("error");
+  setSignupMsg("Enter a valid email.");
+  return;
+}
+
 
     setSignupLoading(true);
     try {
@@ -140,18 +146,24 @@ export default function Page() {
         }),
       });
 
-      const json = await res.json();
+const json = await res.json();
 
-      if (!json?.ok) {
-        setSignupMsg(json?.error || "Could not save email.");
-        return;
-      }
+if (!json?.ok) {
+  setSignupKind("error");
+  setSignupMsg(json?.error || "Could not save email.");
+  return;
+}
 
-      setSignupMsg("Saved. We’ll keep you posted.");
-      setEmail("");
-    } catch (err: any) {
-      setSignupMsg(err?.message ? String(err.message) : "Could not save email.");
-    } finally {
+setSignupKind(json?.status === "updated" ? "updated" : "success");
+setSignupMsg(json?.message || "Saved. We’ll keep you posted.");
+setEmail("");
+
+
+} catch (err: any) {
+  setSignupKind("error");
+  setSignupMsg(err?.message ? String(err.message) : "Could not save email.");
+} finally {
+
       setSignupLoading(false);
     }
   }
@@ -192,8 +204,10 @@ export default function Page() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-neutral-100">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10 sm:px-6 lg:max-w-4xl">
+<main className="min-h-screen bg-black text-neutral-100 px-10 py-10">
+
+
+      <div className="mx-auto w-full max-w-[820px] px-6 sm:px-8 lg:px-10 py-10">
 <header className="mb-5">
   <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">UK Car Snapshot</h1>
 
@@ -386,7 +400,25 @@ className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-b
                 </button>
               </form>
 
-              {signupMsg && <p className="mt-3 text-sm text-neutral-300">{signupMsg}</p>}
+{signupMsg && (
+  <div
+    className={[
+      "mt-3 rounded-xl border px-3 py-2 text-sm",
+      signupKind === "success" && "border-emerald-900/40 bg-emerald-950/25 text-emerald-200",
+      signupKind === "updated" && "border-sky-900/40 bg-sky-950/25 text-sky-200",
+      signupKind === "error" && "border-red-900/40 bg-red-950/30 text-red-200",
+      !signupKind && "border-neutral-800 bg-neutral-950/40 text-neutral-200",
+    ]
+      .filter(Boolean)
+      .join(" ")}
+  >
+    {signupKind === "success" && <span className="mr-2">✅</span>}
+    {signupKind === "updated" && <span className="mr-2">🔄</span>}
+    {signupKind === "error" && <span className="mr-2">⚠️</span>}
+    {signupMsg}
+  </div>
+)}
+
             </section>
 
             <p className="text-xs text-neutral-600">
