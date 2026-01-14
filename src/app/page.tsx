@@ -341,6 +341,74 @@ export default function Home() {
       });
     }
 
+    // CO2 Emissions insight
+    if (data.co2Emissions !== undefined && data.co2Emissions !== null) {
+      if (data.co2Emissions > 180) {
+        result.push({
+          tone: "warn",
+          title: "Higher CO2 emissions",
+          detail: `${data.co2Emissions}g/km is above average. Factor in fuel costs and potential future emission regulations.`,
+        });
+      } else if (data.co2Emissions < 100) {
+        result.push({
+          tone: "good",
+          title: "Low CO2 emissions",
+          detail: `${data.co2Emissions}g/km is eco-friendly. Good fuel economy and lower environmental impact.`,
+        });
+      }
+    }
+
+    // Fuel type insights
+    if (data.fuelType) {
+      const fuelLower = data.fuelType.toLowerCase();
+      if (fuelLower.includes("electric")) {
+        result.push({
+          tone: "good",
+          title: "Electric vehicle — zero emissions",
+          detail: "Check charging infrastructure in your area and battery health on older EVs.",
+        });
+      } else if (fuelLower.includes("hybrid")) {
+        result.push({
+          tone: "good",
+          title: "Hybrid — reduced emissions",
+          detail: "Good fuel economy with lower emissions. Verify battery health for older hybrids.",
+        });
+      } else if (fuelLower.includes("diesel")) {
+        result.push({
+          tone: "info",
+          title: "Diesel vehicle",
+          detail: "Check maintenance history — diesel engines need regular servicing. Fuel may be slightly cheaper.",
+        });
+      }
+    }
+
+    // Engine size (displacement) alert
+    if (data.engineCapacity && data.engineCapacity > 2000) {
+      result.push({
+        tone: "warn",
+        title: "Large engine — higher running costs",
+        detail: `${data.engineCapacity}cc engine uses more fuel. Check tax band and insurance quotes.`,
+      });
+    }
+
+    // Vehicle age and maintenance milestone
+    if (data.yearOfManufacture) {
+      const age = new Date().getFullYear() - data.yearOfManufacture;
+      if (age >= 5 && age < 10) {
+        result.push({
+          tone: "info",
+          title: "5+ year service milestone",
+          detail: "Check if a major 5-year service has been completed. Ask seller for full service history.",
+        });
+      } else if (age >= 10) {
+        result.push({
+          tone: "warn",
+          title: "10+ years old — major maintenance expected",
+          detail: "Budget for upcoming maintenance. Get a pre-purchase inspection and check service history carefully.",
+        });
+      }
+    }
+
     return result;
   }, [data]);
 
