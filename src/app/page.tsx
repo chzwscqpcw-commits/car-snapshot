@@ -777,9 +777,11 @@ export default function Home() {
               <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
                 <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-blue-400" />
-                  Next Steps
+                  Official Checks
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                
+                {/* Official government checks */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                   <button
                     onClick={openMotHistoryPrefilled}
                     className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
@@ -802,18 +804,83 @@ export default function Home() {
                     <p className="text-xs text-slate-400">TfL checker + copy reg</p>
                   </button>
 
-                  <button
-                    onClick={() => setExpandedSection(expandedSection === "report" ? null : "report")}
+                  <a
+                    href="https://www.gov.uk/check-vehicle-tax"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-1 flex items-center gap-2">
-                      Full history report
+                      Verify tax status
                       <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
                     </div>
-                    <p className="text-xs text-slate-400">Coming soon</p>
-                  </button>
+                    <p className="text-xs text-slate-400">Official DVLA tax checker</p>
+                  </a>
                 </div>
-                <p className="text-xs text-slate-500 mt-4">Opens official sites in a new tab.</p>
+
+                <hr className="border-slate-700/50 my-6" />
+
+                <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
+                  <span className="text-lg">💰</span>
+                  Get Better Deals
+                </h3>
+
+                {/* Affiliate partner buttons - more prominent */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a
+                    href="https://www.confused.com/car-insurance?utm_source=carsnapshot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-5 bg-gradient-to-br from-blue-600/30 to-blue-700/30 hover:from-blue-600/50 hover:to-blue-700/50 border border-blue-600/50 hover:border-blue-500/75 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-blue-100">
+                      🛡️ Car Insurance Quotes
+                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-blue-200/80">Compare quotes instantly. Often 30-40% cheaper.</p>
+                  </a>
+
+                  <a
+                    href="https://www.hpicheck.com/?utm_source=carsnapshot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-5 bg-gradient-to-br from-amber-600/30 to-amber-700/30 hover:from-amber-600/50 hover:to-amber-700/50 border border-amber-600/50 hover:border-amber-500/75 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-amber-100">
+                      🔍 Vehicle History Check
+                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-amber-200/80">Check for write-offs, theft, finance. Essential before buying.</p>
+                  </a>
+
+                  <a
+                    href="https://www.moneysupermarket.com/car-finance/?utm_source=carsnapshot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-5 bg-gradient-to-br from-emerald-600/30 to-emerald-700/30 hover:from-emerald-600/50 hover:to-emerald-700/50 border border-emerald-600/50 hover:border-emerald-500/75 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-emerald-100">
+                      💳 Finance & Loans
+                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-emerald-200/80">Find best interest rates. Compare car loans instantly.</p>
+                  </a>
+
+                  <a
+                    href="https://www.moneyextra.com/extended-warranty/car/?utm_source=carsnapshot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-5 bg-gradient-to-br from-purple-600/30 to-purple-700/30 hover:from-purple-600/50 hover:to-purple-700/50 border border-purple-600/50 hover:border-purple-500/75 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-purple-100">
+                      🔧 Extended Warranty
+                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-purple-200/80">Protect against unexpected repair costs.</p>
+                  </a>
+                </div>
+
+                <p className="text-xs text-slate-500 mt-6">All links open in a new tab. We earn a small commission if you proceed, at no extra cost to you.</p>
               </div>
             </DataReveal>
 
