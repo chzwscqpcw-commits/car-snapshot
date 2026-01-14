@@ -837,7 +837,7 @@ Get your own vehicle check at Car Snapshot!`;
                       
                       {/* Share menu dropdown */}
                       {shareMenuOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
                           <button
                             onClick={() => {
                               copyShareLink();
