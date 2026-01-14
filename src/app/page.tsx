@@ -466,14 +466,14 @@ export default function Home() {
       const json1 = (await res1.json()) as LookupResponse;
       const json2 = (await res2.json()) as LookupResponse;
 
-      if (!json1.ok || !json2.ok) {
-        setError(
-          !json1.ok && !json2.ok
-            ? "Could not fetch both vehicles."
-            : !json1.ok
-            ? `Error: ${json1.error}`
-            : `Error: ${json2.error}`
-        );
+      // Check if both responses are successful
+      if (!json1.ok) {
+        setError(`Vehicle 1 error: ${json1.error}`);
+        return;
+      }
+      
+      if (!json2.ok) {
+        setError(`Vehicle 2 error: ${json2.error}`);
         return;
       }
 
