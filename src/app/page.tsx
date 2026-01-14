@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 
 type VehicleData = {
   registrationNumber: string;
@@ -103,12 +103,37 @@ export default function Page() {
   const [vrmHash, setVrmHash] = useState<string | null>(null);
 
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Email capture
   const [email, setEmail] = useState("");
   const [wantsReminders, setWantsReminders] = useState(false);
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupMsg, setSignupMsg] = useState<string | null>(null);
+
+  // Interactive checklist
+  const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+
+  // Auto-dismiss toast
+  function showToast(message: string, duration = 4000) {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast(message);
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+      toastTimeoutRef.current = null;
+    }, duration);
+  }
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const checklist = useMemo(() => {
     if (!data) return [];
@@ -128,6 +153,11 @@ export default function Page() {
 
     return items;
   }, [data]);
+
+  // Reset checked items when checklist changes
+  useEffect(() => {
+    setCheckedItems(new Set());
+  }, [checklist]);
 
   const insights = useMemo<Insight[]>(() => {
     if (!data) return [];
@@ -192,7 +222,7 @@ export default function Page() {
       list.push({
         tone: "warn",
         title: `Tax status: ${data.taxStatus}`,
-        detail: "Could be SORN/untaxed. Budget time to tax it before driving away (don’t assume you can ‘use the seller’s tax’).",
+        detail: "Could be SORN/untaxed. Budget time to tax it before driving away (don't assume you can 'use the seller's tax').",
       });
     }
 
@@ -234,6 +264,19 @@ export default function Page() {
     }
   }
 
+  function handleNewLookup() {
+    setVrm("");
+    setData(null);
+    setMeta(null);
+    setVrmHash(null);
+    setError(null);
+    setToast(null);
+    setSignupMsg(null);
+    setEmail("");
+    setWantsReminders(false);
+    setCheckedItems(new Set());
+  }
+
   async function handleSignup(e?: React.FormEvent) {
     e?.preventDefault();
 
@@ -268,9 +311,9 @@ export default function Page() {
       }
 
       if (json?.already) {
-        setSignupMsg("You’re already on the list.");
+        setSignupMsg("You're already on the list.");
       } else {
-        setSignupMsg("Saved. We’ll keep you posted.");
+        setSignupMsg("Saved. We'll keep you posted.");
       }
 
       setEmail("");
@@ -286,9 +329,9 @@ export default function Page() {
       const url = window.location.origin;
       const text = `UK Car Snapshot — DVLA basics + buying checklist.\n${url}\nTip: check tax/MOT before you view a car.`;
       navigator.clipboard.writeText(text);
-      setToast("Copied share text to clipboard.");
+      showToast("Copied share text to clipboard.");
     } catch {
-      setToast("Couldn’t copy automatically. You can share this page URL from your browser.");
+      showToast("Couldn't copy automatically. You can share this page URL from your browser.");
     }
   }
 
@@ -303,16 +346,28 @@ export default function Page() {
     const reg = cleanReg(data?.registrationNumber ?? "");
     if (!reg) return;
 
+    // Open TfL immediately for better UX
+    window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
+
+    // Then try to copy - show toast after
     try {
       await navigator.clipboard.writeText(reg);
-      setToast(`✅ Copied ${reg}. Paste it into the TfL checker (Cmd+V). Opening…`);
+      showToast(`Copied ${reg} to clipboard. Paste it in the TfL checker (Ctrl+V / Cmd+V).`);
     } catch {
-      setToast(`Couldn’t auto-copy. Your reg is: ${reg}`);
+      showToast(`Couldn't auto-copy. Your reg is: ${reg}`);
     }
+  }
 
-    setTimeout(() => {
-      window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
-    }, 2000);
+  function toggleChecklistItem(index: number) {
+    setCheckedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
   }
 
   const toneClasses: Record<InsightTone, string> = {
@@ -329,6 +384,9 @@ export default function Page() {
     info: "ℹ️",
   };
 
+  const completedCount = checkedItems.size;
+  const totalCount = checklist.length;
+
   return (
     <main className="min-h-screen bg-black text-neutral-100">
       <div className="mx-auto w-full max-w-3xl px-6 sm:px-8 py-10 sm:py-12">
@@ -338,7 +396,7 @@ export default function Page() {
             Enter a registration number to get vehicle basics + a buying checklist.
           </p>
           <p className="mt-2 text-sm text-neutral-400 leading-relaxed">
-            Privacy: we treat registration numbers as sensitive. We don’t put them in URLs on this site and we don’t try
+            Privacy: we treat registration numbers as sensitive. We don't put them in URLs on this site and we don't try
             to identify owners. For performance we cache results using a hashed version of the registration.
           </p>
         </header>
@@ -347,8 +405,13 @@ export default function Page() {
           <form onSubmit={handleLookup} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
             <input
               value={vrm}
-              onChange={(e) => setVrm(e.target.value)}
+              onChange={(e) => {
+                setVrm(e.target.value);
+                // Clear error when user starts typing
+                if (error) setError(null);
+              }}
               placeholder="e.g. AB12 CDE"
+              aria-label="Vehicle registration number"
               className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
               autoCapitalize="characters"
               autoCorrect="off"
@@ -364,7 +427,10 @@ export default function Page() {
           </form>
 
           {error && (
-            <div className="mt-4 rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-red-200">
+            <div
+              role="alert"
+              className="mt-4 rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-red-200"
+            >
               <strong>Error:</strong> {error}
             </div>
           )}
@@ -388,13 +454,22 @@ export default function Page() {
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={copyShareLink}
-                  className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
-                >
-                  Copy share link
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleNewLookup}
+                    className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
+                  >
+                    New lookup
+                  </button>
+                  <button
+                    type="button"
+                    onClick={copyShareLink}
+                    className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
+                  >
+                    Share
+                  </button>
+                </div>
               </div>
 
               {/* Insights */}
@@ -449,12 +524,21 @@ export default function Page() {
                 </div>
               </div>
 
-              {toast && <p className="mt-3 text-sm text-neutral-300">{toast}</p>}
+              {/* Toast notification */}
+              {toast && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mt-3 rounded-lg bg-neutral-800 px-3 py-2 text-sm text-neutral-200"
+                >
+                  {toast}
+                </div>
+              )}
 
               {/* Progressive disclosure: extra DVLA fields */}
               <details className="mt-4 rounded-xl border border-neutral-800 bg-neutral-950/40 p-4">
                 <summary className="cursor-pointer select-none text-sm font-medium text-neutral-200">
-                  More DVLA details <span className="text-neutral-500 font-normal">(some vehicles won’t have all fields)</span>
+                  More DVLA details <span className="text-neutral-500 font-normal">(some vehicles won't have all fields)</span>
                 </summary>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -531,7 +615,7 @@ export default function Page() {
                   className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-4 text-left hover:bg-neutral-900/50 active:scale-[0.99]"
                 >
                   <div className="text-sm font-semibold">Check ULEZ / Clean Air</div>
-                  <div className="mt-1 text-sm text-neutral-400">Copies reg first, then opens the TfL checker.</div>
+                  <div className="mt-1 text-sm text-neutral-400">Opens TfL checker + copies reg to clipboard.</div>
                 </button>
 
                 <button
@@ -552,11 +636,32 @@ export default function Page() {
 
             {/* Buying checklist */}
             <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-              <h3 className="text-lg font-semibold">Buying checklist</h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-neutral-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Buying checklist</h3>
+                {totalCount > 0 && (
+                  <span className="text-sm text-neutral-400">
+                    {completedCount}/{totalCount} done
+                  </span>
+                )}
+              </div>
+              <ul className="mt-3 space-y-2">
                 {checklist.map((item, i) => (
-                  <li key={i} className="text-sm leading-relaxed">
-                    {item}
+                  <li key={i}>
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={checkedItems.has(i)}
+                        onChange={() => toggleChecklistItem(i)}
+                        className="mt-1 h-4 w-4 rounded border-neutral-600 bg-neutral-900 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
+                      />
+                      <span
+                        className={`text-sm leading-relaxed transition-opacity ${
+                          checkedItems.has(i) ? "line-through opacity-50" : "text-neutral-200"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                    </label>
                   </li>
                 ))}
               </ul>
@@ -566,7 +671,7 @@ export default function Page() {
             <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
               <h3 className="text-lg font-semibold">Get updates</h3>
               <p className="mt-1 text-sm text-neutral-400">
-                I’m building this tool. Leave your email for new features (MOT history, alerts, pricing checks).
+                I'm building this tool. Leave your email for new features (MOT history, alerts, pricing checks).
               </p>
 
               <label className="mt-3 flex items-center gap-2 text-sm text-neutral-200">
@@ -585,6 +690,7 @@ export default function Page() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@email.com"
                   inputMode="email"
+                  aria-label="Email address"
                   className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
                 />
                 <button
@@ -596,7 +702,11 @@ export default function Page() {
                 </button>
               </form>
 
-              {signupMsg && <p className="mt-3 text-sm text-neutral-300">{signupMsg}</p>}
+              {signupMsg && (
+                <p role="status" className="mt-3 text-sm text-neutral-300">
+                  {signupMsg}
+                </p>
+              )}
             </section>
 
             <p className="text-xs text-neutral-600">
