@@ -527,7 +527,7 @@ export default function Home() {
   function generateShareText() {
     if (!data) return "";
     
-    const year = data.yearOfManufacture || "Unknown";
+    const year = data.yearOfManufacture || 0;
     const make = data.make || "Unknown";
     const model = data.model || "";
     const reg = data.registrationNumber || "";
@@ -544,10 +544,11 @@ export default function Home() {
     
     // Calculate vehicle age
     const currentYear = new Date().getFullYear();
-    const age = currentYear - year;
-    const ageText = age >= 0 ? `${age} years old` : "Unknown age";
+    const age = year > 0 ? currentYear - year : 0;
+    const ageText = year > 0 ? `${age} years old` : "Unknown age";
+    const yearDisplay = year > 0 ? year : "Unknown";
     
-    return `🚗 ${make} ${model} (${year}) — ${reg}
+    return `🚗 ${make} ${model} (${yearDisplay}) — ${reg}
 ${ageText}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━
