@@ -663,6 +663,12 @@ Get your own vehicle check at Car Snapshot!`;
     window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
+  function shareViaFacebook() {
+    if (!data) return;
+    const url = window.location.origin;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
+  }
+
   function downloadTXT() {
     if (!data) return;
 
