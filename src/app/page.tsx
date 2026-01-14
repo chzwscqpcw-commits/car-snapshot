@@ -225,6 +225,8 @@ export default function Home() {
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
+  const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
+  const [showFavorites, setShowFavorites] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -243,6 +245,12 @@ export default function Home() {
       } catch (err) {
         console.error("Failed to load recent lookups:", err);
       }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      loadFavorites();
     }
   }, []);
 
@@ -669,6 +677,56 @@ Get your own vehicle check at Car Snapshot!`;
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
   }
 
+  function loadFavorites() {
+    const stored = localStorage.getItem("car-snapshot-favorites");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setFavorites(Array.isArray(parsed) ? parsed : []);
+      } catch (e) {
+        console.error("Failed to load favorites:", e);
+      }
+    }
+  }
+
+  function saveFavoritesToStorage(faves: (VehicleData & { savedAt: number })[]) {
+    try {
+      localStorage.setItem("car-snapshot-favorites", JSON.stringify(faves));
+    } catch (e) {
+      console.error("Failed to save favorites:", e);
+      showToast("Could not save favorite (storage full?)");
+    }
+  }
+
+  function addFavorite() {
+    if (!data) return;
+    const favorite = { ...data, savedAt: Date.now() };
+    const updated = [favorite, ...favorites.filter(f => f.registrationNumber !== data.registrationNumber)];
+    setFavorites(updated);
+    saveFavoritesToStorage(updated);
+    showToast("Added to favorites ❤️");
+  }
+
+  function removeFavorite(registrationNumber: string) {
+    const updated = favorites.filter(f => f.registrationNumber !== registrationNumber);
+    setFavorites(updated);
+    saveFavoritesToStorage(updated);
+    showToast("Removed from favorites");
+  }
+
+  function isFavorited(registrationNumber: string): boolean {
+    return favorites.some(f => f.registrationNumber === registrationNumber);
+  }
+
+  function clearAllFavorites() {
+    if (favorites.length === 0) return;
+    if (window.confirm(`Remove all ${favorites.length} favorite(s)?`)) {
+      setFavorites([]);
+      saveFavoritesToStorage([]);
+      showToast("Favorites cleared");
+    }
+  }
+
   function downloadTXT() {
     if (!data) return;
 
@@ -1017,6 +1075,40 @@ Get your own vehicle check at Car Snapshot!`;
               </div>
             </div>
           )}
+
+          {/* MY FAVORITES - Always visible */}
+          {favorites.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-slate-700/50">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">❤️ My Favorites ({favorites.length})</p>
+                <button
+                  onClick={() => clearAllFavorites()}
+                  className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {favorites.map((fav, idx) => (
+                  <div key={idx} className="relative group">
+                    <button
+                      onClick={() => performLookup(fav.registrationNumber)}
+                      className="px-3 py-1.5 bg-red-900/30 hover:bg-red-800/40 border border-red-700/50 hover:border-red-600 rounded-full text-red-200 text-sm font-medium transition-all flex items-center gap-2"
+                    >
+                      {fav.registrationNumber}
+                    </button>
+                    <button
+                      onClick={() => removeFavorite(fav.registrationNumber)}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Remove from favorites"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </header>
 
         {/* COMPARISON MODE */}
@@ -1322,6 +1414,18 @@ Get your own vehicle check at Car Snapshot!`;
                         </div>
                       )}
                     </div>
+                    
+                    <button
+                      onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
+                      className={`p-2.5 rounded-lg transition-colors ${
+                        isFavorited(data.registrationNumber)
+                          ? "bg-red-600 hover:bg-red-500"
+                          : "bg-slate-700 hover:bg-slate-600"
+                      }`}
+                      title={isFavorited(data.registrationNumber) ? "Remove from favorites" : "Add to favorites"}
+                    >
+                      {isFavorited(data.registrationNumber) ? "❤️" : "🤍"}
+                    </button>
                     
                     <div className="relative">
                       <button
