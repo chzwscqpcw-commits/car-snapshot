@@ -103,6 +103,40 @@ function extractEuroNumber(euroStatus?: string) {
   return m ? Number(m[1]) : null;
 }
 
+// Loading animation component
+function LoadingAnimation() {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 space-y-6">
+      {/* Animated search/car icon */}
+      <div className="relative w-16 h-16">
+        <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" stroke="url(#gradient)" strokeWidth="2" strokeDasharray="140" strokeLinecap="round" />
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <Search className="absolute inset-0 w-8 h-8 m-auto text-blue-400 animate-pulse" />
+      </div>
+      
+      {/* Loading text */}
+      <div className="text-center">
+        <p className="text-slate-300 font-medium">Fetching from DVLA</p>
+        <p className="text-xs text-slate-500 mt-1">Retrieving vehicle details...</p>
+      </div>
+      
+      {/* Progress dots */}
+      <div className="flex gap-2">
+        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }} />
+        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }} />
+      </div>
+    </div>
+  );
+}
+
 // Loading skeleton component
 function LoadingSkeleton() {
   return (
@@ -436,7 +470,35 @@ export default function Home() {
   const totalCount = checklist.length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-5">
+        <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+          {/* Road lines */}
+          <defs>
+            <pattern id="roadLines" x="0" y="0" width="200" height="600" patternUnits="userSpaceOnUse">
+              <line x1="100" y1="0" x2="100" y2="600" stroke="#fff" strokeWidth="2" strokeDasharray="40,20" />
+            </pattern>
+          </defs>
+          <rect width="1200" height="800" fill="url(#roadLines)" />
+          
+          {/* Car silhouettes - scattered */}
+          <g opacity="0.15">
+            <text x="100" y="150" fontSize="120" fill="#fff">🚗</text>
+            <text x="900" y="300" fontSize="140" fill="#fff">🚙</text>
+            <text x="400" y="650" fontSize="110" fill="#fff">🚕</text>
+            <text x="1000" y="600" fontSize="100" fill="#fff">🚗</text>
+          </g>
+        </svg>
+      </div>
+
+      {/* Gradient overlays for depth */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
+        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-cyan-500/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
       <style>{`
         @keyframes fadeInUp {
           from {
@@ -462,9 +524,20 @@ export default function Home() {
         .animate-pulse-soft {
           animation: pulse-soft 2s ease-in-out infinite;
         }
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 2s linear infinite;
+        }
       `}</style>
 
-      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset">
+      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset relative z-10">
         {/* HEADER WITH BRAND */}
         <header className="mb-10 sm:mb-12">
           <div className="flex items-baseline gap-2 mb-4">
@@ -527,14 +600,8 @@ export default function Home() {
 
         {/* RESULTS SECTION */}
         {loading && (
-          <div className="mb-10 p-6 bg-slate-800/50 rounded-lg border border-slate-700/50">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" />
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" style={{ animationDelay: "0.2s" }} />
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" style={{ animationDelay: "0.4s" }} />
-              <span className="text-sm text-slate-400 ml-2">Fetching from DVLA...</span>
-            </div>
-            <LoadingSkeleton />
+          <div className="mb-10">
+            <LoadingAnimation />
           </div>
         )}
 
