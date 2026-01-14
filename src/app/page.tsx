@@ -227,6 +227,7 @@ export default function Home() {
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -251,6 +252,7 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       loadFavorites();
+      loadMyVehicles();
     }
   }, []);
 
@@ -727,6 +729,159 @@ Get your own vehicle check at Car Snapshot!`;
     }
   }
 
+  function loadMyVehicles() {
+    const stored = localStorage.getItem("car-snapshot-my-vehicles");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setMyVehicles(Array.isArray(parsed) ? parsed : []);
+      } catch (e) {
+        console.error("Failed to load my vehicles:", e);
+      }
+    }
+  }
+
+  function saveMyVehiclesToStorage(vehicles: (VehicleData & { addedAt: number })[]) {
+    try {
+      localStorage.setItem("car-snapshot-my-vehicles", JSON.stringify(vehicles));
+    } catch (e) {
+      console.error("Failed to save my vehicles:", e);
+      showToast("Could not save vehicle (storage full?)");
+    }
+  }
+
+  function addToMyVehicles() {
+    if (!data) return;
+    const vehicle = { ...data, addedAt: Date.now() };
+    const updated = [vehicle, ...myVehicles.filter(v => v.registrationNumber !== data.registrationNumber)];
+    setMyVehicles(updated);
+    saveMyVehiclesToStorage(updated);
+    showToast("Added to My Vehicles ✓");
+  }
+
+  function removeFromMyVehicles(registrationNumber: string) {
+    const updated = myVehicles.filter(v => v.registrationNumber !== registrationNumber);
+    setMyVehicles(updated);
+    saveMyVehiclesToStorage(updated);
+    showToast("Removed from My Vehicles");
+  }
+
+  function isMyVehicle(registrationNumber: string): boolean {
+    return myVehicles.some(v => v.registrationNumber === registrationNumber);
+  }
+
+  function generateCalendarFile() {
+    if (myVehicles.length === 0) {
+      showToast("Add vehicles first using the 'This is my car' button");
+      return;
+    }
+
+    // Create calendar with proper .ics format
+    const now = new Date();
+    const dtstamp = now.toISOString().replace(/[-:.]/g, "").split("Z")[0] + "Z";
+
+    let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Car Snapshot//Car Snapshot//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Car Snapshot - MOT & Tax Reminders
+X-WR-TIMEZONE:UTC
+X-WR-CALDESC:MOT and Tax due dates for your vehicles
+BEGIN:VTIMEZONE
+TZID:UTC
+BEGIN:STANDARD
+DTSTART:19700101T000000
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0000
+TZNAME:UTC
+END:STANDARD
+END:VTIMEZONE
+`;
+
+    myVehicles.forEach((vehicle) => {
+      // MOT event
+      if (vehicle.motExpiryDate) {
+        const motDate = vehicle.motExpiryDate; // Format: YYYY-MM or YYYY-MM-DD
+        if (motDate && motDate.length >= 7) {
+          // Parse date - might be YYYY-MM or YYYY-MM-DD
+          let year = motDate.substring(0, 4);
+          let month = motDate.substring(5, 7);
+          let day = motDate.length > 7 ? motDate.substring(8, 10) : "01";
+          
+          const dateStr = `${year}${month}${day}`;
+          const nextDayNum = parseInt(day) + 1;
+          const nextDay = nextDayNum < 10 ? `0${nextDayNum}` : String(nextDayNum);
+          const nextDateStr = `${year}${month}${nextDay}`;
+
+          icsContent += `BEGIN:VEVENT
+UID:car-snapshot-mot-${vehicle.registrationNumber}-${year}-${month}@carsnapshot.app
+DTSTAMP:${dtstamp}
+DTSTART;VALUE=DATE:${dateStr}
+DTEND;VALUE=DATE:${nextDateStr}
+SUMMARY:MOT Due - ${vehicle.registrationNumber} (${vehicle.make})
+DESCRIPTION:MOT expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
+SEQUENCE:0
+STATUS:CONFIRMED
+END:VEVENT
+`;
+        }
+      }
+
+      // Tax event
+      if (vehicle.taxDueDate) {
+        const taxDate = vehicle.taxDueDate; // Format: YYYY-MM-DD
+        if (taxDate && taxDate.length >= 7) {
+          // Parse date
+          let year = taxDate.substring(0, 4);
+          let month = taxDate.substring(5, 7);
+          let day = taxDate.length > 7 ? taxDate.substring(8, 10) : "01";
+          
+          const dateStr = `${year}${month}${day}`;
+          const nextDayNum = parseInt(day) + 1;
+          const nextDay = nextDayNum < 10 ? `0${nextDayNum}` : String(nextDayNum);
+          const nextDateStr = `${year}${month}${nextDay}`;
+
+          icsContent += `BEGIN:VEVENT
+UID:car-snapshot-tax-${vehicle.registrationNumber}-${year}-${month}@carsnapshot.app
+DTSTAMP:${dtstamp}
+DTSTART;VALUE=DATE:${dateStr}
+DTEND;VALUE=DATE:${nextDateStr}
+SUMMARY:Tax Due - ${vehicle.registrationNumber} (${vehicle.make})
+DESCRIPTION:Vehicle tax expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
+SEQUENCE:0
+STATUS:CONFIRMED
+END:VEVENT
+`;
+        }
+      }
+    });
+
+    icsContent += `END:VCALENDAR`;
+
+    // Download the file
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `car-snapshot-calendar-${new Date().getTime()}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast(`Calendar file ready! Import into Outlook, Apple Calendar, or Google Calendar.`);
+  }
+
+  function clearAllMyVehicles() {
+    if (myVehicles.length === 0) return;
+    if (window.confirm(`Remove all ${myVehicles.length} vehicle(s) from My Vehicles?`)) {
+      setMyVehicles([]);
+      saveMyVehiclesToStorage([]);
+      showToast("My Vehicles cleared");
+    }
+  }
+
   function downloadTXT() {
     if (!data) return;
 
@@ -1109,6 +1264,64 @@ Get your own vehicle check at Car Snapshot!`;
               </div>
             </div>
           )}
+
+          {/* MY VEHICLES - Always visible */}
+          {myVehicles.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-slate-700/50">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">✓ My Vehicles ({myVehicles.length})</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => generateCalendarFile()}
+                    className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                    title="Export MOT and Tax dates to calendar"
+                  >
+                    📅 Export Calendar
+                  </button>
+                  <button
+                    onClick={() => clearAllMyVehicles()}
+                    className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {myVehicles.map((vehicle, idx) => (
+                  <div key={idx} className="p-3 bg-emerald-900/20 border border-emerald-700/50 rounded-lg">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <button
+                          onClick={() => performLookup(vehicle.registrationNumber)}
+                          className="text-sm font-semibold text-emerald-100 hover:text-emerald-50 transition-colors text-left"
+                        >
+                          {vehicle.make} {vehicle.model || ""} — {vehicle.registrationNumber}
+                        </button>
+                        <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-200/70">
+                          {vehicle.motExpiryDate && (
+                            <span>
+                              MOT: {formatDate(vehicle.motExpiryDate)}
+                            </span>
+                          )}
+                          {vehicle.taxDueDate && (
+                            <span>
+                              Tax: {formatDate(vehicle.taxDueDate)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeFromMyVehicles(vehicle.registrationNumber)}
+                        className="text-xs text-emerald-600 hover:text-emerald-500 transition-colors whitespace-nowrap mt-1"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </header>
 
         {/* COMPARISON MODE */}
@@ -1427,6 +1640,18 @@ Get your own vehicle check at Car Snapshot!`;
                       {isFavorited(data.registrationNumber) ? "❤️" : "🤍"}
                     </button>
                     
+                    <button
+                      onClick={isMyVehicle(data.registrationNumber) ? () => removeFromMyVehicles(data.registrationNumber) : addToMyVehicles}
+                      className={`p-2.5 rounded-lg transition-colors ${
+                        isMyVehicle(data.registrationNumber)
+                          ? "bg-emerald-600 hover:bg-emerald-500"
+                          : "bg-slate-700 hover:bg-slate-600"
+                      }`}
+                      title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as my car"}
+                    >
+                      {isMyVehicle(data.registrationNumber) ? "✓" : "✔️"}
+                    </button>
+                    
                     <div className="relative">
                       <button
                         onClick={() => setDownloadMenuOpen(!downloadMenuOpen)}
@@ -1695,7 +1920,7 @@ Get your own vehicle check at Car Snapshot!`;
             Get Updates
           </h3>
           <p className="text-sm text-slate-300 mb-4">
-            Leave your email for new features: MOT alerts, tax reminders, and more.
+            Get notified about new features. Coming soon: Automated MOT & tax email reminders for your vehicles.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
