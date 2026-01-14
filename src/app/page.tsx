@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
-  Share2,
+  Share,
   RotateCcw,
   Search,
   Bell,
@@ -217,6 +217,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+  const [checklistRole, setChecklistRole] = useState<"owner" | "buyer" | "seller">("owner");
   const [email, setEmail] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupMsg, setSignupMsg] = useState("");
@@ -228,6 +229,7 @@ export default function Home() {
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
+  const [showFeatureHelp, setShowFeatureHelp] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -257,37 +259,70 @@ export default function Home() {
   }, []);
 
   const checklist = useMemo((): string[] => {
-    const baseItems = [
-      "Ask for full service history and receipts.",
-      "Confirm the VIN on the car matches the V5C/logbook.",
-      "Check tyres (tread + uneven wear) and look for warning lights.",
-    ];
+    if (!data) return [];
 
-    // Only add MOT item if vehicle is 3+ years old AND MOT is not valid/missing
-    if (data && data.yearOfManufacture) {
-      let isOver3Years = false;
-      
-      // If we have month of first registration, use it for accuracy
-      if (data.monthOfFirstRegistration) {
-        const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
-        const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
-        const threeYearsAgo = new Date();
-        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
-        isOver3Years = regDate <= threeYearsAgo;
-      } else {
-        // Fallback: only count it as 3+ if it's from previous years
-        const currentYear = new Date().getFullYear();
-        isOver3Years = currentYear - data.yearOfManufacture > 3;
-      }
-      
-      // Only warn about MOT if car is 3+ years old AND MOT is not valid
-      if (isOver3Years && (!data.motStatus || data.motStatus.toLowerCase() !== "valid")) {
-        baseItems.push("MOT is not shown as valid: clarify why before viewing.");
-      }
+    // OWNER - Checking their own vehicle
+    if (checklistRole === "owner") {
+      return [
+        "MOT status is valid",
+        "Tax status is current",
+        "Service history up to date",
+        "Insurance is active",
+        "Check for recalls",
+      ];
     }
 
-    return baseItems;
-  }, [data?.yearOfManufacture, data?.monthOfFirstRegistration, data?.motStatus]);
+    // BUYER - Purchasing a vehicle
+    if (checklistRole === "buyer") {
+      const items = [
+        "Service history verified",
+        "VIN matches logbook (V5C)",
+        "Tyres: tread and wear acceptable",
+        "History check: write-offs, theft, finance",
+        "Get pre-purchase mechanic inspection",
+        "Arrange new insurance quotes",
+        "Check warranty or guarantee",
+        "Test drive thoroughly",
+      ];
+      
+      // Add MOT warning if 3+ years old and invalid
+      if (data.yearOfManufacture) {
+        let isOver3Years = false;
+        if (data.monthOfFirstRegistration) {
+          const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
+          const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
+          const threeYearsAgo = new Date();
+          threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+          isOver3Years = regDate <= threeYearsAgo;
+        } else {
+          const currentYear = new Date().getFullYear();
+          isOver3Years = currentYear - data.yearOfManufacture > 3;
+        }
+        
+        if (isOver3Years && (!data.motStatus || data.motStatus.toLowerCase() !== "valid")) {
+          items.unshift("MOT valid (car is 3+ years old)");
+        }
+      }
+      
+      return items;
+    }
+
+    // SELLER - Selling a vehicle
+    if (checklistRole === "seller") {
+      return [
+        "MOT status is current",
+        "Tax status is current",
+        "Gather service history and receipts",
+        "Cancel existing insurance",
+        "Verify no outstanding finance",
+        "Prepare V5C logbook",
+        "Get recent valuation",
+        "Take clear photos of vehicle",
+      ];
+    }
+
+    return [];
+  }, [data, checklistRole]);
 
   const insights = useMemo((): Insight[] => {
     if (!data) return [];
@@ -893,6 +928,11 @@ END:VEVENT
       day: "numeric",
     });
 
+    const checklistTitle = 
+      checklistRole === "owner" ? "MY CAR CHECKLIST" :
+      checklistRole === "buyer" ? "BUYING CHECKLIST" :
+      "SELLING CHECKLIST";
+
     const reportLines = [
       "╔════════════════════════════════════════════════════════════════╗",
       "║            CAR SNAPSHOT - VEHICLE REPORT                       ║",
@@ -934,7 +974,7 @@ END:VEVENT
         `   ${insight.detail}`,
         "",
       ]).flat(),
-      "BUYING CHECKLIST",
+      checklistTitle,
       "────────────────────────────────────────────────────────────────",
       "",
       ...checklist.map((item, idx) => `${idx + 1}. ☐ ${item}`),
@@ -982,6 +1022,11 @@ END:VEVENT
         day: "numeric",
       });
 
+      const checklistTitle = 
+        checklistRole === "owner" ? "MY CAR CHECKLIST" :
+        checklistRole === "buyer" ? "BUYING CHECKLIST" :
+        "SELLING CHECKLIST";
+
       // Create PDF document
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -1007,18 +1052,18 @@ END:VEVENT
       doc.setFontSize(18);
       doc.setFont(doc.getFont().fontName, "bold");
       doc.text("CAR SNAPSHOT", 10, yPosition);
-      yPosition += 8;
+      yPosition += 6;
       doc.setFontSize(14);
       doc.text("Vehicle Report", 10, yPosition);
-      yPosition += 12;
+      yPosition += 10;
 
       // Generated info
       doc.setFontSize(10);
       doc.setFont(doc.getFont().fontName, "normal");
       doc.text(`Generated: ${formattedDate}`, 10, yPosition);
-      yPosition += 6;
+      yPosition += 5;
       doc.text(`Registration: ${data.registrationNumber}`, 10, yPosition);
-      yPosition += 12;
+      yPosition += 9;
 
       // Vehicle Information Section
       addText("VEHICLE INFORMATION", 13, true);
@@ -1026,7 +1071,7 @@ END:VEVENT
       addText(`Make & Model: ${data.make} ${data.model || ""}`);
       addText(`Year: ${data.yearOfManufacture || "—"}`);
       addText(`Colour: ${data.colour || "—"}`);
-      yPosition += 4;
+      yPosition += 2;
 
       // Specifications Section
       addText("SPECIFICATIONS", 13, true);
@@ -1035,7 +1080,7 @@ END:VEVENT
       addText(`Engine Capacity: ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"}`);
       addText(`CO2 Emissions: ${data.co2Emissions ? `${data.co2Emissions}g/km` : "—"}`);
       addText(`Euro Status: ${data.euroStatus || "—"}`);
-      yPosition += 4;
+      yPosition += 2;
 
       // Compliance Status Section
       addText("COMPLIANCE STATUS", 13, true);
@@ -1045,27 +1090,27 @@ END:VEVENT
       addText(`MOT Status: ${data.motStatus || "—"}`);
       addText(`MOT Expiry: ${formatDate(data.motExpiryDate)}`);
       addText(`First Registered: ${data.monthOfFirstRegistration || data.dateOfFirstRegistration || "—"}`);
-      yPosition += 4;
+      yPosition += 2;
 
       // Key Insights Section
       addText("KEY INSIGHTS", 13, true);
       yPosition += 2;
-      insights.slice(0, 5).forEach((insight) => {
+      insights.slice(0, 3).forEach((insight) => {
         addText(`${insight.title}`, 11, true);
         addText(insight.detail);
-        yPosition += 1;
+        yPosition += 0.5;
       });
-      yPosition += 2;
+      yPosition += 1;
 
       // Buying Checklist Section
-      addText("BUYING CHECKLIST", 13, true);
+      addText(checklistTitle, 13, true);
       yPosition += 2;
       checklist.forEach((item) => {
         addText(`[ ] ${item}`);
       });
 
       // Footer
-      yPosition += 4;
+      yPosition += 2;
       doc.setFontSize(9);
       doc.setFont(doc.getFont().fontName, "normal");
       addText("Created with Car Snapshot");
@@ -1195,9 +1240,9 @@ END:VEVENT
               Car Snapshot
             </h1>
           </div>
-          <p className="text-slate-300 text-lg font-medium">Vehicle basics + buying checklist</p>
+          <p className="text-slate-300 text-lg font-medium">Look up any UK vehicle instantly. Tax, MOT & checklists for owners, buyers & sellers.</p>
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
-            Privacy first. Registration numbers stay private—we don't store them in URLs and use hashing to protect your lookups.
+            Your data is private. We don't store registration numbers or track who you are.
           </p>
 
           {/* RECENT LOOKUPS - Always visible */}
@@ -1572,19 +1617,28 @@ END:VEVENT
                     </h2>
                     <p className="text-sm text-slate-400">DVLA data • {new Date().toLocaleDateString()}</p>
                   </div>
-                  <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowFeatureHelp(!showFeatureHelp)}
+                    className="h-fit px-3 py-2 text-xs font-semibold text-slate-300 hover:text-slate-100 border border-slate-600 hover:border-slate-500 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-700 whitespace-nowrap"
+                    title="Learn what you can do with this vehicle"
+                  >
+                    <span className="text-base mr-1.5">?</span> What can I do?
+                  </button>
+                </div>
+
+                <div className="flex gap-2">
                     <div className="relative">
                       <button
                         onClick={() => setShareMenuOpen(!shareMenuOpen)}
                         className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
                         title="Share vehicle details"
                       >
-                        <Share2 className="w-5 h-5" />
+                        <Share className="w-5 h-5" />
                       </button>
                       
                       {/* Share menu dropdown */}
                       {shareMenuOpen && (
-                        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto -mt-32 w-48 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
                           <button
                             onClick={() => {
                               copyShareLink();
@@ -1663,7 +1717,7 @@ END:VEVENT
 
                       {/* Download format menu */}
                       {downloadMenuOpen && (
-                        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-40 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto -mt-32 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
                           <button
                             onClick={() => downloadPDF()}
                             className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
@@ -1696,13 +1750,64 @@ END:VEVENT
                   </div>
                 </div>
 
+                {/* FEATURE HELP MODAL */}
+                {showFeatureHelp && (
+                  <div className="mb-6 p-4 bg-slate-800/80 border border-slate-700 rounded-lg">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-slate-100">What can you do?</h3>
+                      <button
+                        onClick={() => setShowFeatureHelp(false)}
+                        className="text-slate-400 hover:text-slate-300 text-2xl leading-none"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <div className="space-y-3 text-sm text-slate-300">
+                      <div className="flex gap-3">
+                        <span className="text-lg">❤️</span>
+                        <div>
+                          <p className="font-semibold text-slate-100 mb-1">Save to Favorites</p>
+                          <p className="text-slate-400">Bookmark vehicles you're interested in. Great for comparing multiple cars side-by-side later.</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <span className="text-lg">✔️</span>
+                        <div>
+                          <p className="font-semibold text-slate-100 mb-1">Mark as My Car</p>
+                          <p className="text-slate-400">Track your own vehicle. Export MOT & tax due dates to Apple Calendar, Google Calendar, or Outlook for automatic reminders.</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Share className="w-5 h-5 text-lg flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-semibold text-slate-100 mb-1">Share Details</p>
+                          <p className="text-slate-400">Send vehicle information to friends via email, WhatsApp, or Facebook. Perfect for getting second opinions.</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <span className="text-lg">📥</span>
+                        <div>
+                          <p className="font-semibold text-slate-100 mb-1">Download Report</p>
+                          <p className="text-slate-400">Save the full vehicle analysis as a PDF or text file. Keep records for your records or share with a mechanic.</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <span className="text-lg">🔄</span>
+                        <div>
+                          <p className="font-semibold text-slate-100 mb-1">Compare Vehicles</p>
+                          <p className="text-slate-400">Side-by-side comparison of tax, MOT, specs and more. Works with your recent lookups.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* KEY INSIGHTS */}
                 <div className="space-y-2">
                   {insights.slice(0, 2).map((insight, idx) => (
                     <InsightCard key={idx} insight={insight} delay={idx * 100} />
                   ))}
                 </div>
-              </div>
             </DataReveal>
 
             {/* VEHICLE SPECS GRID */}
@@ -1770,7 +1875,7 @@ END:VEVENT
                 </h3>
                 
                 {/* Official government checks */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                   <button
                     onClick={openMotHistoryPrefilled}
                     className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
@@ -1792,26 +1897,13 @@ END:VEVENT
                     </div>
                     <p className="text-xs text-slate-400">TfL checker + copy reg</p>
                   </button>
-
-                  <a
-                    href="https://www.gov.uk/check-vehicle-tax"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
-                      Verify tax status
-                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-slate-400">Official DVLA tax checker</p>
-                  </a>
                 </div>
 
                 <hr className="border-slate-700/50 my-6" />
 
                 <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
                   <span className="text-lg">💰</span>
-                  Get Better Deals
+                  Next Steps: Insurance, Finance & More
                 </h3>
 
                 {/* Affiliate partner buttons - more prominent */}
@@ -1879,12 +1971,40 @@ END:VEVENT
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
                     <CheckSquare className="w-5 h-5 text-emerald-400" />
-                    Buying Checklist
+                    Helpful Checklist
                   </h3>
                   <span className="text-xs font-semibold text-slate-400">
                     {completedCount}/{totalCount}
                   </span>
                 </div>
+
+                <div className="mb-4 pb-4 border-b border-slate-700">
+                  <p className="text-xs text-slate-400 mb-3">I'm checking this vehicle because I am:</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {[
+                      { value: "owner" as const, label: "My car" },
+                      { value: "buyer" as const, label: "Buying a car" },
+                      { value: "seller" as const, label: "Selling a car" },
+                    ].map((role) => (
+                      <button
+                        key={role.value}
+                        onClick={() => {
+                          setChecklistRole(role.value);
+                          setCheckedItems(new Set());
+                        }}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                          checklistRole === role.value
+                            ? "bg-emerald-600 text-white"
+                            : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        }`}
+                      >
+                        {role.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-400 mb-4">Check off items as you verify them:</p>
 
                 <div className="space-y-2">
                   {checklist.map((item, idx) => (
@@ -1917,10 +2037,10 @@ END:VEVENT
         <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg backdrop-blur">
           <h3 className="text-lg font-semibold text-slate-100 mb-2 flex items-center gap-2">
             <Bell className="w-5 h-5 text-blue-400" />
-            Get Updates
+            Stay Updated
           </h3>
           <p className="text-sm text-slate-300 mb-4">
-            Get notified about new features. Coming soon: Automated MOT & tax email reminders for your vehicles.
+            We'll let you know about significant updates to Car Snapshot.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
@@ -1947,9 +2067,8 @@ END:VEVENT
         {/* FOOTER */}
         <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500">
           <p>
-            Built with DVLA vehicle data. Always verify details with the seller and official documents.
+            Built with DVLA vehicle data. Always verify details with the seller and official documents before making any decisions.
           </p>
-          <p className="mt-2">Privacy: registration numbers are hashed—we don't store or identify owners.</p>
         </footer>
 
         {/* TOAST NOTIFICATION */}
