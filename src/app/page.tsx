@@ -222,6 +222,21 @@ export default function Home() {
   const [signupMsg, setSignupMsg] = useState("");
   const [toastMsg, setToastMsg] = useState("");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [recentLookups, setRecentLookups] = useState<string[]>([]);
+
+  // Load recent lookups from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("carSnapshotRecent");
+        if (stored) {
+          setRecentLookups(JSON.parse(stored));
+        }
+      } catch (err) {
+        console.error("Failed to load recent lookups:", err);
+      }
+    }
+  }, []);
 
   const checklist = useMemo((): string[] => {
     const baseItems = [
@@ -417,8 +432,8 @@ export default function Home() {
     setTimeout(() => setToastMsg(""), 4000);
   }
 
-  async function handleLookup() {
-    const cleanedReg = cleanReg(vrm);
+  // Extract core lookup logic so it can be called with a registration directly
+  async function performLookup(cleanedReg: string) {
     if (!cleanedReg) {
       setError("Please enter a registration number.");
       return;
@@ -427,6 +442,7 @@ export default function Home() {
     setError(null);
     setData(null);
     setLoading(true);
+    setVrm(cleanedReg);
 
     try {
       const res = await fetch("/api/lookup", {
@@ -444,11 +460,27 @@ export default function Home() {
 
       setData(json.data);
       setCheckedItems(new Set());
+
+      // Save to recent lookups (localStorage)
+      if (typeof window !== "undefined") {
+        try {
+          const updated = [cleanedReg, ...recentLookups.filter((r) => r !== cleanedReg)].slice(0, 5);
+          localStorage.setItem("carSnapshotRecent", JSON.stringify(updated));
+          setRecentLookups(updated);
+        } catch (err) {
+          console.error("Failed to save recent lookup:", err);
+        }
+      }
     } catch (err: any) {
       setError(err?.message ? String(err.message) : "Could not complete lookup.");
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleLookup() {
+    const cleanedReg = cleanReg(vrm);
+    performLookup(cleanedReg);
   }
 
   async function handleSignup() {
@@ -618,6 +650,37 @@ export default function Home() {
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
             Privacy first. Registration numbers stay private—we don't store them in URLs and use hashing to protect your lookups.
           </p>
+
+          {/* RECENT LOOKUPS - Always visible */}
+          {recentLookups.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-slate-700/50">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Recent Lookups</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("carSnapshotRecent");
+                    setRecentLookups([]);
+                    showToast("History cleared");
+                  }}
+                  className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {recentLookups.map((reg, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => performLookup(reg)}
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 rounded-full text-slate-200 text-sm font-medium transition-all flex items-center gap-2 group"
+                  >
+                    <RotateCcw className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    {reg}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </header>
 
         {/* SEARCH SECTION */}
@@ -665,6 +728,7 @@ export default function Home() {
             </div>
           )}
         </div>
+
 
         {/* RESULTS SECTION */}
         {loading && (
