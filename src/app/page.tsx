@@ -1,37 +1,48 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from "react";
+import {
+  Fuel,
+  Gauge,
+  Calendar,
+  AlertCircle,
+  CheckCircle2,
+  AlertTriangle,
+  Info,
+  Share2,
+  RotateCcw,
+  Search,
+  Bell,
+  ExternalLink,
+  CheckSquare,
+  Square,
+  Zap,
+} from "lucide-react";
 
 type VehicleData = {
   registrationNumber: string;
-
   make?: string;
+  model?: string;
   colour?: string;
   fuelType?: string;
   engineCapacity?: number;
   yearOfManufacture?: number;
-
   taxStatus?: string;
-  taxDueDate?: string; // YYYY-MM-DD
-
+  taxDueDate?: string;
   motStatus?: string;
-  motExpiryDate?: string; // YYYY-MM-DD
-
-  // Extra DVLA fields (may be missing on some vehicles)
-  monthOfFirstRegistration?: string; // YYYY-MM
-  dateOfFirstRegistration?: string; // YYYY-MM-DD (sometimes present)
-  dateOfLastV5CIssued?: string; // YYYY-MM-DD
+  motExpiryDate?: string;
+  monthOfFirstRegistration?: string;
+  dateOfFirstRegistration?: string;
+  dateOfLastV5CIssued?: string;
   markedForExport?: boolean;
-
   co2Emissions?: number;
   euroStatus?: string;
   realDrivingEmissions?: number;
-
   wheelplan?: string;
   revenueWeight?: number;
   typeApproval?: string;
   automatedVehicle?: boolean;
-  additionalRateEndDate?: string; // YYYY-MM-DD
+  additionalRateEndDate?: string;
 };
 
 type LookupResponse =
@@ -59,7 +70,7 @@ function looksLikeEmail(email: string) {
 }
 
 function formatDate(iso?: string) {
-  return iso ? iso : "—"; // stable, no locale hydration weirdness
+  return iso ? iso : "—";
 }
 
 function parseISODate(iso?: string) {
@@ -75,7 +86,6 @@ function daysSince(iso?: string) {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-// YYYY-MM + years => YYYY-MM (month/year only)
 function addYearsToYearMonth(ym: string, years: number) {
   const m = /^(\d{4})-(\d{2})$/.exec(ym);
   if (!m) return null;
@@ -93,212 +103,267 @@ function extractEuroNumber(euroStatus?: string) {
   return m ? Number(m[1]) : null;
 }
 
-export default function Page() {
+// Loading skeleton component
+function LoadingSkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      <div className="h-12 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg w-2/3"></div>
+      <div className="space-y-3">
+        <div className="h-20 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+        <div className="h-20 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
+      </div>
+    </div>
+  );
+}
+
+// Animated data reveal component
+function DataReveal({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="animate-fadeInUp opacity-0"
+      style={{
+        animationDelay: `${delay}ms`,
+        animationFillMode: "forwards",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Icon badge for vehicle attributes
+function IconBadge({ icon: Icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-slate-600/50 transition-colors">
+      <div className="text-slate-400">{Icon}</div>
+      <div className="text-xs font-medium text-slate-400 uppercase tracking-wide">{label}</div>
+      <div className="text-sm font-semibold text-slate-100 text-center">{value}</div>
+    </div>
+  );
+}
+
+// Insight card with color-coded tone
+function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number }) {
+  const toneStyles = {
+    good: "border-emerald-900/40 bg-emerald-950/40 text-emerald-100",
+    warn: "border-amber-900/40 bg-amber-950/40 text-amber-100",
+    risk: "border-red-900/40 bg-red-950/40 text-red-100",
+    info: "border-blue-900/40 bg-blue-950/40 text-blue-100",
+  };
+
+  const toneIcons = {
+    good: <CheckCircle2 className="w-5 h-5" />,
+    warn: <AlertTriangle className="w-5 h-5" />,
+    risk: <AlertCircle className="w-5 h-5" />,
+    info: <Info className="w-5 h-5" />,
+  };
+
+  return (
+    <DataReveal delay={delay}>
+      <div className={`border rounded-lg p-4 flex gap-3 transition-all hover:border-opacity-100 ${toneStyles[insight.tone]}`}>
+        <div className="flex-shrink-0 mt-0.5">{toneIcons[insight.tone]}</div>
+        <div className="flex-1">
+          <h4 className="font-semibold text-sm mb-1">{insight.title}</h4>
+          <p className="text-sm opacity-90">{insight.detail}</p>
+        </div>
+      </div>
+    </DataReveal>
+  );
+}
+
+export default function Home() {
   const [vrm, setVrm] = useState("");
+  const [data, setData] = useState<VehicleData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [data, setData] = useState<VehicleData | null>(null);
-  const [meta, setMeta] = useState<{ source: string; cached: boolean } | null>(null);
-  const [vrmHash, setVrmHash] = useState<string | null>(null);
-
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Email capture
-  const [email, setEmail] = useState("");
-  const [wantsReminders, setWantsReminders] = useState(false);
-  const [signupLoading, setSignupLoading] = useState(false);
-  const [signupMsg, setSignupMsg] = useState<string | null>(null);
-
-  // Interactive checklist
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+  const [email, setEmail] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupMsg, setSignupMsg] = useState("");
+  const [toastMsg, setToastMsg] = useState("");
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  // Auto-dismiss toast
-  function showToast(message: string, duration = 4000) {
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-    setToast(message);
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast(null);
-      toastTimeoutRef.current = null;
-    }, duration);
-  }
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const checklist = useMemo(() => {
-    if (!data) return [];
-    const items: string[] = [
+  const checklist = useMemo((): string[] => {
+    const baseItems = [
       "Ask for full service history and receipts.",
       "Confirm the VIN on the car matches the V5C/logbook.",
       "Check tyres (tread + uneven wear) and look for warning lights.",
     ];
 
-    const year = data.yearOfManufacture ?? 0;
-    const fuel = (data.fuelType ?? "").toUpperCase();
-    const mot = (data.motStatus ?? "").toLowerCase();
-
-    if (fuel.includes("DIESEL")) items.push("Diesel: ask about DPF/EGR issues and motorway vs short-trip use.");
-    if (year && year <= new Date().getFullYear() - 10) items.push("Older car: inspect for corrosion underneath and around arches.");
-    if (mot && !mot.includes("valid")) items.push("MOT is not shown as valid: clarify why before viewing.");
-
-    return items;
-  }, [data]);
-
-  // Reset checked items when checklist changes
-  useEffect(() => {
-    setCheckedItems(new Set());
-  }, [checklist]);
-
-  const insights = useMemo<Insight[]>(() => {
-    if (!data) return [];
-    const list: Insight[] = [];
-
-    const motLower = (data.motStatus ?? "").toLowerCase();
-    const hasNoMotDetails = motLower.includes("no details held");
-    const firstRegMonth = data.monthOfFirstRegistration;
-
-    if (hasNoMotDetails && firstRegMonth) {
-      const due = addYearsToYearMonth(firstRegMonth, 3);
-      if (due) {
-        list.push({
-          tone: "info",
-          title: "Likely under 3 years old",
-          detail: `First MOT due around ${due} (month/year only — check V5C for exact date; NI rules can differ).`,
-        });
-      }
-    }
-
-    // ULEZ hint (carefully worded; always tell them to verify)
-    const euroN = extractEuroNumber(data.euroStatus);
-    const fuel = (data.fuelType ?? "").toUpperCase();
-    if (euroN && fuel) {
-      const isDiesel = fuel.includes("DIESEL");
-      const likelyOk = isDiesel ? euroN >= 6 : euroN >= 4;
-
-      if (likelyOk) {
-        list.push({
-          tone: "good",
-          title: "Likely ULEZ / Clean Air compliant (London)",
-          detail: `Euro ${euroN} ${isDiesel ? "diesel" : "petrol"} usually meets the standard — still verify on the TfL checker.`,
-        });
+    // Only add MOT item if vehicle is 3+ years old AND MOT is not valid/missing
+    if (data && data.yearOfManufacture) {
+      let isOver3Years = false;
+      
+      // If we have month of first registration, use it for accuracy
+      if (data.monthOfFirstRegistration) {
+        const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
+        const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+        isOver3Years = regDate <= threeYearsAgo;
       } else {
-        list.push({
-          tone: "warn",
-          title: "May be chargeable in ULEZ / Clean Air zones",
-          detail: `This looks like Euro ${euroN}. London ULEZ cars typically need Euro 4 (petrol) / Euro 6 (diesel) — check TfL to be sure.`,
+        // Fallback: only count it as 3+ if it's from previous years
+        const currentYear = new Date().getFullYear();
+        isOver3Years = currentYear - data.yearOfManufacture > 3;
+      }
+      
+      // Only warn about MOT if car is 3+ years old AND MOT is not valid
+      if (isOver3Years && (!data.motStatus || data.motStatus.toLowerCase() !== "valid")) {
+        baseItems.push("MOT is not shown as valid: clarify why before viewing.");
+      }
+    }
+
+    return baseItems;
+  }, [data?.yearOfManufacture, data?.monthOfFirstRegistration, data?.motStatus]);
+
+  const insights = useMemo((): Insight[] => {
+    if (!data) return [];
+
+    const result: Insight[] = [];
+
+    const yearOfCar = data.yearOfManufacture;
+    let isUnder3Years = false;
+    
+    if (yearOfCar) {
+      // If we have month of first registration, use it for accuracy
+      if (data.monthOfFirstRegistration) {
+        const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
+        const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+        isUnder3Years = regDate > threeYearsAgo;
+      } else {
+        // Fallback: be conservative, count as under 3 only if same year or next year
+        const currentYear = new Date().getFullYear();
+        isUnder3Years = currentYear - yearOfCar <= 3;
+      }
+      
+      if (isUnder3Years) {
+        result.push({
+          tone: "good",
+          title: "Under 3 years old — no MOT required yet",
+          detail: `First MOT due around ${addYearsToYearMonth(data.monthOfFirstRegistration ?? "", 3) ?? "?"} (month/year only—check V5C for exact date).`,
         });
       }
     }
 
-    if (data.markedForExport === true) {
-      list.push({
-        tone: "risk",
-        title: "Marked for export",
-        detail: "Ask the seller why. Double-check the V5C/logbook and consider a full history check before paying a deposit.",
+    const euroNum = extractEuroNumber(data.euroStatus);
+    if (euroNum && euroNum >= 6) {
+      result.push({
+        tone: "good",
+        title: "Likely ULEZ / Clean Air compliant (London)",
+        detail: `Euro ${euroNum} petrol usually meets the standard—still verify on the TfL checker.`,
       });
     }
 
-    const v5cDays = daysSince(data.dateOfLastV5CIssued);
-    if (v5cDays !== null && v5cDays >= 0 && v5cDays <= 90) {
-      list.push({
-        tone: "warn",
-        title: "V5C issued recently",
-        detail: "Often normal (address change can do it), but do ask the seller why and confirm keeper details match the logbook.",
+    const taxDays = daysSince(data.taxDueDate);
+    if (taxDays !== null) {
+      if (taxDays > 0) {
+        result.push({
+          tone: "risk",
+          title: "Tax is overdue",
+          detail: `Tax expired ${taxDays} days ago. Verify with seller before viewing.`,
+        });
+      } else if (taxDays > -30) {
+        result.push({
+          tone: "warn",
+          title: "Tax expiring soon",
+          detail: `Renewal due in ${Math.abs(taxDays)} days. Factor in cost if you buy.`,
+        });
+      }
+    }
+
+    // Only check MOT if vehicle is 3+ years old
+    if (!isUnder3Years) {
+      const motDays = daysSince(data.motExpiryDate);
+      if (motDays !== null) {
+        if (motDays > 0) {
+          result.push({
+            tone: "risk",
+            title: "MOT is overdue",
+            detail: `MOT expired ${motDays} days ago. Not legal to drive. Clarify repair costs.`,
+          });
+        } else if (motDays > -60) {
+          result.push({
+            tone: "warn",
+            title: "MOT expiring soon",
+            detail: `Renewal due in ${Math.abs(motDays)} days. Check MOT history for failures.`,
+          });
+        }
+      }
+    }
+
+    if (!result.length) {
+      result.push({
+        tone: "info",
+        title: "No immediate flags",
+        detail: "Tax and MOT look fine. Always verify details with the seller and official documents.",
       });
     }
 
-    const taxLower = (data.taxStatus ?? "").toLowerCase();
-    if (taxLower && !taxLower.includes("taxed")) {
-      list.push({
-        tone: "warn",
-        title: `Tax status: ${data.taxStatus}`,
-        detail: "Could be SORN/untaxed. Budget time to tax it before driving away (don't assume you can 'use the seller's tax').",
-      });
-    }
-
-    return list;
+    return result;
   }, [data]);
 
-  async function handleLookup(e?: React.FormEvent) {
-    e?.preventDefault();
+  function showToast(msg: string) {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 4000);
+  }
 
-    setLoading(true);
+  async function handleLookup() {
+    const cleanedReg = cleanReg(vrm);
+    if (!cleanedReg) {
+      setError("Please enter a registration number.");
+      return;
+    }
+
     setError(null);
-    setToast(null);
-    setSignupMsg(null);
     setData(null);
-    setMeta(null);
-    setVrmHash(null);
+    setLoading(true);
 
     try {
       const res = await fetch("/api/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vrm }),
+        body: JSON.stringify({ vrm: cleanedReg }),
       });
 
       const json = (await res.json()) as LookupResponse;
 
       if (!json.ok) {
-        setError(json.error || "Lookup failed.");
+        setError(json.error);
         return;
       }
 
       setData(json.data);
-      setMeta({ source: json.source, cached: json.cached });
-      setVrmHash(json.vrmHash ?? null);
+      setCheckedItems(new Set());
     } catch (err: any) {
-      setError(err?.message ? String(err.message) : "Lookup failed.");
+      setError(err?.message ? String(err.message) : "Could not complete lookup.");
     } finally {
       setLoading(false);
     }
   }
 
-  function handleNewLookup() {
-    setVrm("");
-    setData(null);
-    setMeta(null);
-    setVrmHash(null);
-    setError(null);
-    setToast(null);
-    setSignupMsg(null);
-    setEmail("");
-    setWantsReminders(false);
-    setCheckedItems(new Set());
-  }
-
-  async function handleSignup(e?: React.FormEvent) {
-    e?.preventDefault();
-
-    setSignupMsg(null);
-    setToast(null);
-
-    const emailNorm = email.trim().toLowerCase();
-    if (!looksLikeEmail(emailNorm)) {
-      setSignupMsg("Enter a valid email.");
+  async function handleSignup() {
+    if (!looksLikeEmail(email)) {
+      setSignupMsg("Please enter a valid email.");
       return;
     }
 
     setSignupLoading(true);
+    setSignupMsg("");
+
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: emailNorm,
-          wantsReminders,
-          vrmHash,
-          motExpiryDate: data?.motExpiryDate ?? null,
+          email: email.trim().toLowerCase(),
           taxDueDate: data?.taxDueDate ?? null,
         }),
       });
@@ -345,14 +410,11 @@ export default function Page() {
   async function openTflWithCopiedReg() {
     const reg = cleanReg(data?.registrationNumber ?? "");
     if (!reg) return;
-
-    // Open TfL immediately for better UX
     window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
 
-    // Then try to copy - show toast after
     try {
       await navigator.clipboard.writeText(reg);
-      showToast(`Copied ${reg} to clipboard. Paste it in the TfL checker (Ctrl+V / Cmd+V).`);
+      showToast(`Copied ${reg} to clipboard. Paste it in the TfL checker.`);
     } catch {
       showToast(`Couldn't auto-copy. Your reg is: ${reg}`);
     }
@@ -370,348 +432,339 @@ export default function Page() {
     });
   }
 
-  const toneClasses: Record<InsightTone, string> = {
-    good: "border-emerald-900/40 bg-emerald-950/30 text-emerald-100",
-    warn: "border-amber-900/40 bg-amber-950/25 text-amber-100",
-    risk: "border-red-900/40 bg-red-950/30 text-red-100",
-    info: "border-sky-900/40 bg-sky-950/25 text-sky-100",
-  };
-
-  const toneIcon: Record<InsightTone, string> = {
-    good: "✅",
-    warn: "⚠️",
-    risk: "🚩",
-    info: "ℹ️",
-  };
-
   const completedCount = checkedItems.size;
   const totalCount = checklist.length;
 
   return (
-    <main className="min-h-screen bg-black text-neutral-100">
-      <div className="mx-auto w-full max-w-4xl px-6 sm:px-8 lg:px-12 py-10 sm:py-12">
-        <header className="mb-6">
-          <h1 className="text-3xl font-semibold tracking-tight">UK Car Snapshot</h1>
-          <p className="mt-2 text-neutral-300">
-            Enter a registration number to get vehicle basics + a buying checklist.
-          </p>
-          <p className="mt-2 text-sm text-neutral-400 leading-relaxed">
-            Privacy: we treat registration numbers as sensitive. We don't put them in URLs on this site and we don't try
-            to identify owners. For performance we cache results using a hashed version of the registration.
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes pulse-soft {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        .animate-pulse-soft {
+          animation: pulse-soft 2s ease-in-out infinite;
+        }
+      `}</style>
+
+      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset">
+        {/* HEADER WITH BRAND */}
+        <header className="mb-10 sm:mb-12">
+          <div className="flex items-baseline gap-2 mb-4">
+            <Zap className="w-6 h-6 text-blue-400" />
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              Car Snapshot
+            </h1>
+          </div>
+          <p className="text-slate-300 text-lg font-medium">Vehicle basics + buying checklist</p>
+          <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
+            Privacy first. Registration numbers stay private—we don't store them in URLs and use hashing to protect your lookups.
           </p>
         </header>
 
-        <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-          <form onSubmit={handleLookup} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
-            <input
-              value={vrm}
-              onChange={(e) => {
-                setVrm(e.target.value);
-                // Clear error when user starts typing
-                if (error) setError(null);
-              }}
-              placeholder="e.g. AB12 CDE"
-              aria-label="Vehicle registration number"
-              className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
-              autoCapitalize="characters"
-              autoCorrect="off"
-              spellCheck={false}
-            />
+        {/* SEARCH SECTION */}
+        <div className="mb-10 sm:mb-12">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="E.g. P7 SJG"
+                value={vrm}
+                onChange={(e) => {
+                  setVrm(e.target.value.toUpperCase());
+                  if (error) setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleLookup();
+                }}
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
             <button
-              type="submit"
+              onClick={handleLookup}
               disabled={loading}
-              className="w-full sm:w-auto whitespace-nowrap rounded-xl bg-neutral-200 px-5 py-3 font-medium text-black disabled:opacity-60"
+              className="px-6 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              {loading ? "Checking..." : "Lookup"}
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Looking up...
+                </>
+              ) : (
+                <>
+                  <Search className="w-4 h-4" />
+                  Look up
+                </>
+              )}
             </button>
-          </form>
+          </div>
 
           {error && (
-            <div
-              role="alert"
-              className="mt-4 rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-red-200"
-            >
-              <strong>Error:</strong> {error}
+            <div className="mt-3 p-3 bg-red-950/40 border border-red-900/40 rounded-lg text-red-100 text-sm flex gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <span>{error}</span>
             </div>
           )}
-        </section>
+        </div>
 
-        {data && (
-          <div className="mt-6 grid gap-4">
-            {/* Vehicle summary */}
-            <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold">
-                    {(data.make ?? "Vehicle").toUpperCase()} — {cleanReg(data.registrationNumber)}
-                  </h2>
+        {/* RESULTS SECTION */}
+        {loading && (
+          <div className="mb-10 p-6 bg-slate-800/50 rounded-lg border border-slate-700/50">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" />
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" style={{ animationDelay: "0.2s" }} />
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse-soft" style={{ animationDelay: "0.4s" }} />
+              <span className="text-sm text-slate-400 ml-2">Fetching from DVLA...</span>
+            </div>
+            <LoadingSkeleton />
+          </div>
+        )}
 
-                  {meta && (
-                    <p className="mt-1 text-sm text-neutral-400">
-                      {meta.cached ? "Fast result (cached)" : "Fresh result"} ·{" "}
-                      {meta.source === "dvla" ? "DVLA data" : "Demo data"}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={handleNewLookup}
-                    className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
-                  >
-                    New lookup
-                  </button>
-                  <button
-                    type="button"
-                    onClick={copyShareLink}
-                    className="whitespace-nowrap w-fit rounded-xl border border-neutral-700 bg-neutral-900/40 px-3 py-2 text-sm text-neutral-100 hover:bg-neutral-900"
-                  >
-                    Share
-                  </button>
-                </div>
-              </div>
-
-              {/* Insights */}
-              {insights.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {insights.map((it, idx) => (
-                    <div
-                      key={idx}
-                      className={`rounded-xl border px-3 py-2 ${toneClasses[it.tone]}`}
+        {data && !loading && (
+          <>
+            {/* VEHICLE HEADER */}
+            <DataReveal delay={0}>
+              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2">
+                      {data.make} {data.model && `${data.model}`} — {data.registrationNumber}
+                    </h2>
+                    <p className="text-sm text-slate-400">DVLA data • {new Date().toLocaleDateString()}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={copyShareLink}
+                      className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                      title="Share"
                     >
-                      <div className="text-sm font-medium">
-                        {toneIcon[it.tone]} {it.title}
-                      </div>
-                      <div className="mt-0.5 text-sm opacity-90">{it.detail}</div>
-                    </div>
+                      <Share2 className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setData(null);
+                        setVrm("");
+                        setCheckedItems(new Set());
+                      }}
+                      className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                      title="New lookup"
+                    >
+                      <RotateCcw className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* KEY INSIGHTS */}
+                <div className="space-y-2">
+                  {insights.slice(0, 2).map((insight, idx) => (
+                    <InsightCard key={idx} insight={insight} delay={idx * 100} />
                   ))}
                 </div>
-              )}
+              </div>
+            </DataReveal>
 
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                <div>
-                  <div className="text-sm text-neutral-400">Year</div>
-                  <div className="text-base">{data.yearOfManufacture ?? "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">Fuel</div>
-                  <div className="text-base">{data.fuelType ?? "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">Colour</div>
-                  <div className="text-base">{data.colour ?? "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">Engine</div>
-                  <div className="text-base">{data.engineCapacity ? `${data.engineCapacity} cc` : "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">Tax</div>
-                  <div className="text-base">{data.taxStatus ?? "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">Tax due</div>
-                  <div className="text-base">{formatDate(data.taxDueDate)}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">MOT</div>
-                  <div className="text-base">{data.motStatus ?? "—"}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-neutral-400">MOT expiry</div>
-                  <div className="text-base">{formatDate(data.motExpiryDate)}</div>
+            {/* VEHICLE SPECS GRID */}
+            <DataReveal delay={100}>
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">Vehicle Details</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <IconBadge
+                    icon={<Calendar className="w-5 h-5" />}
+                    label="Year"
+                    value={String(data.yearOfManufacture ?? "—")}
+                  />
+                  <IconBadge icon={<Fuel className="w-5 h-5" />} label="Fuel" value={data.fuelType ?? "—"} />
+                  <IconBadge
+                    icon={<Gauge className="w-5 h-5" />}
+                    label="Engine"
+                    value={`${data.engineCapacity ?? "—"} cc`}
+                  />
+                  <IconBadge icon={<div>🎨</div>} label="Colour" value={data.colour ?? "—"} />
                 </div>
               </div>
+            </DataReveal>
 
-              {/* Toast notification */}
-              {toast && (
-                <div
-                  role="status"
-                  aria-live="polite"
-                  className="mt-3 rounded-lg bg-neutral-800 px-3 py-2 text-sm text-neutral-200"
-                >
-                  {toast}
-                </div>
-              )}
-
-              {/* Progressive disclosure: extra DVLA fields */}
-              <details className="mt-4 rounded-xl border border-neutral-800 bg-neutral-950/40 p-4">
-                <summary className="cursor-pointer select-none text-sm font-medium text-neutral-200">
-                  More DVLA details <span className="text-neutral-500 font-normal">(some vehicles won't have all fields)</span>
-                </summary>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <div className="text-xs text-neutral-500">First registered (month)</div>
-                    <div className="text-sm">{data.monthOfFirstRegistration ?? "—"}</div>
+            {/* TAX & MOT STATUS */}
+            <DataReveal delay={200}>
+              <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="w-4 h-4 text-slate-400" />
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Tax Status</span>
                   </div>
-                  <div>
-                    <div className="text-xs text-neutral-500">Marked for export</div>
-                    <div className="text-sm">{data.markedForExport === true ? "Yes" : data.markedForExport === false ? "No" : "—"}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-neutral-500">Last V5C (logbook) issued</div>
-                    <div className="text-sm">{data.dateOfLastV5CIssued ?? "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-neutral-500">Euro status</div>
-                    <div className="text-sm">{data.euroStatus ?? "—"}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-neutral-500">CO₂ emissions</div>
-                    <div className="text-sm">{typeof data.co2Emissions === "number" ? `${data.co2Emissions} g/km` : "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-neutral-500">Real driving emissions (RDE)</div>
-                    <div className="text-sm">{typeof data.realDrivingEmissions === "number" ? String(data.realDrivingEmissions) : "—"}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-neutral-500">Revenue weight</div>
-                    <div className="text-sm">{typeof data.revenueWeight === "number" ? `${data.revenueWeight} kg` : "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-neutral-500">Wheelplan</div>
-                    <div className="text-sm">{data.wheelplan ?? "—"}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-neutral-500">Type approval</div>
-                    <div className="text-sm">{data.typeApproval ?? "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-neutral-500">Additional rate end date</div>
-                    <div className="text-sm">{data.additionalRateEndDate ?? "—"}</div>
-                  </div>
+                  <p className="text-lg font-semibold text-slate-100 mb-1">{data.taxStatus ?? "—"}</p>
+                  <p className="text-sm text-slate-400">Due: {formatDate(data.taxDueDate)}</p>
                 </div>
 
-                <p className="mt-3 text-xs text-neutral-500">
-                  Tip: if the V5C issue date is very recent, ask the seller why (address change can be normal).
-                </p>
-              </details>
-            </section>
-
-            {/* Next steps */}
-            <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-              <h3 className="text-lg font-semibold">Next steps</h3>
-              <p className="mt-1 text-sm text-neutral-400">Useful checks before you travel to view a car.</p>
-
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                <button
-                  type="button"
-                  onClick={openMotHistoryPrefilled}
-                  className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-4 text-left hover:bg-neutral-900/50 active:scale-[0.99]"
-                >
-                  <div className="text-sm font-semibold">Check MOT history</div>
-                  <div className="mt-1 text-sm text-neutral-400">Past failures + advisories (official GOV.UK).</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={openTflWithCopiedReg}
-                  className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-4 text-left hover:bg-neutral-900/50 active:scale-[0.99]"
-                >
-                  <div className="text-sm font-semibold">Check ULEZ / Clean Air</div>
-                  <div className="mt-1 text-sm text-neutral-400">Opens TfL checker + copies reg to clipboard.</div>
-                </button>
-
-                <button
-                  type="button"
-                  disabled
-                  title="Coming soon"
-                  className="cursor-not-allowed rounded-2xl border border-neutral-800 bg-neutral-900/10 p-4 text-left opacity-60"
-                >
-                  <div className="text-sm font-semibold">Full history report</div>
-                  <div className="mt-1 text-sm text-neutral-400">
-                    Write-off, finance, theft, mileage flags (coming soon).
+                <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">MOT Status</span>
                   </div>
-                </button>
+                  <p className="text-lg font-semibold text-slate-100 mb-1">{data.motStatus ?? "—"}</p>
+                  <p className="text-sm text-slate-400">Expires: {formatDate(data.motExpiryDate)}</p>
+                </div>
               </div>
+            </DataReveal>
 
-              <p className="mt-3 text-xs text-neutral-500">Opens official sites in a new tab.</p>
-            </section>
+            {/* ALL INSIGHTS */}
+            {insights.length > 2 && (
+              <DataReveal delay={300}>
+                <div className="mb-8 space-y-3">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">More Insights</h3>
+                  {insights.slice(2).map((insight, idx) => (
+                    <InsightCard key={idx} insight={insight} delay={idx * 100} />
+                  ))}
+                </div>
+              </DataReveal>
+            )}
 
-            {/* Buying checklist */}
-            <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Buying checklist</h3>
-                {totalCount > 0 && (
-                  <span className="text-sm text-neutral-400">
-                    {completedCount}/{totalCount} done
+            {/* NEXT STEPS */}
+            <DataReveal delay={400}>
+              <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-blue-400" />
+                  Next Steps
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    onClick={openMotHistoryPrefilled}
+                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
+                      Check MOT history
+                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-slate-400">Past failures + advisories</p>
+                  </button>
+
+                  <button
+                    onClick={openTflWithCopiedReg}
+                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
+                      Check ULEZ / Clean Air
+                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-slate-400">TfL checker + copy reg</p>
+                  </button>
+
+                  <button
+                    onClick={() => setExpandedSection(expandedSection === "report" ? null : "report")}
+                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
+                  >
+                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
+                      Full history report
+                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-slate-400">Coming soon</p>
+                  </button>
+                </div>
+                <p className="text-xs text-slate-500 mt-4">Opens official sites in a new tab.</p>
+              </div>
+            </DataReveal>
+
+            {/* BUYING CHECKLIST */}
+            <DataReveal delay={500}>
+              <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                    <CheckSquare className="w-5 h-5 text-emerald-400" />
+                    Buying Checklist
+                  </h3>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {completedCount}/{totalCount}
                   </span>
-                )}
-              </div>
-              <ul className="mt-3 space-y-2">
-                {checklist.map((item, i) => (
-                  <li key={i}>
-                    <label className="flex items-start gap-3 cursor-pointer group">
-                      <input
-                        type="checkbox"
-                        checked={checkedItems.has(i)}
-                        onChange={() => toggleChecklistItem(i)}
-                        className="mt-1 h-4 w-4 rounded border-neutral-600 bg-neutral-900 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
-                      />
+                </div>
+
+                <div className="space-y-2">
+                  {checklist.map((item, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => toggleChecklistItem(idx)}
+                      className="w-full flex items-start gap-3 p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors text-left group"
+                    >
+                      {checkedItems.has(idx) ? (
+                        <CheckSquare className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      ) : (
+                        <Square className="w-5 h-5 text-slate-600 flex-shrink-0 mt-0.5 group-hover:text-slate-500" />
+                      )}
                       <span
-                        className={`text-sm leading-relaxed transition-opacity ${
-                          checkedItems.has(i) ? "line-through opacity-50" : "text-neutral-200"
+                        className={`text-sm flex-1 ${
+                          checkedItems.has(idx) ? "text-slate-400 line-through" : "text-slate-200"
                         }`}
                       >
                         {item}
                       </span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </section>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </DataReveal>
+          </>
+        )}
 
-            {/* Email capture */}
-            <section className="rounded-2xl border border-neutral-800 bg-neutral-950/50 p-5">
-              <h3 className="text-lg font-semibold">Get updates</h3>
-              <p className="mt-1 text-sm text-neutral-400">
-                I'm building this tool. Leave your email for new features (MOT history, alerts, pricing checks).
-              </p>
+        {/* EMAIL SIGNUP */}
+        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg backdrop-blur">
+          <h3 className="text-lg font-semibold text-slate-100 mb-2 flex items-center gap-2">
+            <Bell className="w-5 h-5 text-blue-400" />
+            Get Updates
+          </h3>
+          <p className="text-sm text-slate-300 mb-4">
+            Leave your email for new features: MOT alerts, tax reminders, and more.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSignup();
+              }}
+              className="flex-1 px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+            <button
+              onClick={handleSignup}
+              disabled={signupLoading}
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition-all whitespace-nowrap disabled:cursor-not-allowed"
+            >
+              {signupLoading ? "Saving..." : "Notify me"}
+            </button>
+          </div>
+          {signupMsg && <p className="mt-2 text-sm text-blue-200">{signupMsg}</p>}
+        </div>
 
-              <label className="mt-3 flex items-center gap-2 text-sm text-neutral-200">
-                <input
-                  type="checkbox"
-                  checked={wantsReminders}
-                  onChange={(e) => setWantsReminders(e.target.checked)}
-                  className="h-4 w-4"
-                />
-                Email me before MOT/tax expiry
-              </label>
+        {/* FOOTER */}
+        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500">
+          <p>
+            Built with DVLA vehicle data. Always verify details with the seller and official documents.
+          </p>
+          <p className="mt-2">Privacy: registration numbers are hashed—we don't store or identify owners.</p>
+        </footer>
 
-              <form onSubmit={handleSignup} className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                  inputMode="email"
-                  aria-label="Email address"
-                  className="w-full rounded-xl border border-neutral-800 bg-black px-4 py-3 text-base outline-none focus:border-neutral-600"
-                />
-                <button
-                  type="submit"
-                  disabled={signupLoading}
-                  className="whitespace-nowrap shrink-0 rounded-xl bg-neutral-200 px-6 py-3 font-medium text-black disabled:opacity-60"
-                >
-                  {signupLoading ? "Saving..." : "Notify me"}
-                </button>
-              </form>
-
-              {signupMsg && (
-                <p role="status" className="mt-3 text-sm text-neutral-300">
-                  {signupMsg}
-                </p>
-              )}
-            </section>
-
-            <p className="text-xs text-neutral-600">
-              This tool uses DVLA vehicle data. Always verify details with the seller and official documents.
-            </p>
+        {/* TOAST NOTIFICATION */}
+        {toastMsg && (
+          <div className="fixed bottom-6 left-6 right-6 sm:left-auto sm:right-6 max-w-sm p-4 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 text-sm shadow-lg animate-fadeInUp">
+            {toastMsg}
           </div>
         )}
       </div>
