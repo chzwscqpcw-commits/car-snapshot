@@ -224,6 +224,12 @@ export default function Home() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [comparisonMode, setComparisonMode] = useState(false);
+  const [compareReg1, setCompareReg1] = useState<string>("");
+  const [compareReg2, setCompareReg2] = useState<string>("");
+  const [compareData1, setCompareData1] = useState<VehicleData | null>(null);
+  const [compareData2, setCompareData2] = useState<VehicleData | null>(null);
+  const [compareLoading, setCompareLoading] = useState(false);
 
   // Load recent lookups from localStorage on mount
   useEffect(() => {
@@ -427,6 +433,58 @@ export default function Home() {
 
     return result;
   }, [data]);
+
+  async function loadComparisonData() {
+    if (!compareReg1 || !compareReg2) {
+      setError("Please select two vehicles to compare.");
+      return;
+    }
+
+    if (compareReg1 === compareReg2) {
+      setError("Please select two different vehicles.");
+      return;
+    }
+
+    setCompareLoading(true);
+    setError(null);
+
+    try {
+      // Fetch both vehicles in parallel
+      const [res1, res2] = await Promise.all([
+        fetch("/api/lookup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vrm: compareReg1 }),
+        }),
+        fetch("/api/lookup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vrm: compareReg2 }),
+        }),
+      ]);
+
+      const json1 = (await res1.json()) as LookupResponse;
+      const json2 = (await res2.json()) as LookupResponse;
+
+      if (!json1.ok || !json2.ok) {
+        setError(
+          !json1.ok && !json2.ok
+            ? "Could not fetch both vehicles."
+            : !json1.ok
+            ? `Error: ${json1.error}`
+            : `Error: ${json2.error}`
+        );
+        return;
+      }
+
+      setCompareData1(json1.data);
+      setCompareData2(json2.data);
+    } catch (err: any) {
+      setError(err?.message ? String(err.message) : "Could not load comparison data.");
+    } finally {
+      setCompareLoading(false);
+    }
+  }
 
   function showToast(msg: string) {
     setToastMsg(msg);
@@ -759,6 +817,175 @@ Get your own vehicle check at Car Snapshot!`;
           )}
         </header>
 
+        {/* COMPARISON MODE */}
+        {comparisonMode && (
+          <div className="mb-10 p-6 bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-700/50 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                🔄 Compare Vehicles
+              </h2>
+              <button
+                onClick={() => {
+                  setComparisonMode(false);
+                  setCompareData1(null);
+                  setCompareData2(null);
+                  setCompareReg1("");
+                  setCompareReg2("");
+                }}
+                className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wide">Vehicle 1</label>
+                <select
+                  value={compareReg1}
+                  onChange={(e) => setCompareReg1(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Select a vehicle...</option>
+                  {recentLookups.map((reg) => (
+                    <option key={reg} value={reg}>
+                      {reg}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wide">Vehicle 2</label>
+                <select
+                  value={compareReg2}
+                  onChange={(e) => setCompareReg2(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Select a vehicle...</option>
+                  {recentLookups.map((reg) => (
+                    <option key={reg} value={reg}>
+                      {reg}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={loadComparisonData}
+              disabled={!compareReg1 || !compareReg2 || compareLoading}
+              className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {compareLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Compare Vehicles"
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* COMPARISON RESULTS */}
+        {compareData1 && compareData2 && comparisonMode && (
+          <div className="mb-10 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Vehicle 1 */}
+              <div>
+                <h3 className="text-lg font-bold text-slate-100 mb-4">
+                  {compareData1.make} {compareData1.model} — {compareData1.registrationNumber}
+                </h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Year</span>
+                    <span className="font-semibold text-slate-100">{compareData1.yearOfManufacture || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Colour</span>
+                    <span className="font-semibold text-slate-100">{compareData1.colour || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Fuel Type</span>
+                    <span className="font-semibold text-slate-100">{compareData1.fuelType || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Engine</span>
+                    <span className="font-semibold text-slate-100">{compareData1.engineCapacity ? `${compareData1.engineCapacity}cc` : "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">CO2</span>
+                    <span className="font-semibold text-slate-100">{compareData1.co2Emissions ? `${compareData1.co2Emissions}g/km` : "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Tax Status</span>
+                    <span className="font-semibold text-emerald-300">{compareData1.taxStatus || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Tax Due</span>
+                    <span className="font-semibold text-slate-100">{formatDate(compareData1.taxDueDate)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">MOT Status</span>
+                    <span className="font-semibold text-slate-100">{compareData1.motStatus || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-slate-400">MOT Expires</span>
+                    <span className="font-semibold text-slate-100">{formatDate(compareData1.motExpiryDate)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vehicle 2 */}
+              <div>
+                <h3 className="text-lg font-bold text-slate-100 mb-4">
+                  {compareData2.make} {compareData2.model} — {compareData2.registrationNumber}
+                </h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Year</span>
+                    <span className="font-semibold text-slate-100">{compareData2.yearOfManufacture || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Colour</span>
+                    <span className="font-semibold text-slate-100">{compareData2.colour || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Fuel Type</span>
+                    <span className="font-semibold text-slate-100">{compareData2.fuelType || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Engine</span>
+                    <span className="font-semibold text-slate-100">{compareData2.engineCapacity ? `${compareData2.engineCapacity}cc` : "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">CO2</span>
+                    <span className="font-semibold text-slate-100">{compareData2.co2Emissions ? `${compareData2.co2Emissions}g/km` : "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Tax Status</span>
+                    <span className="font-semibold text-emerald-300">{compareData2.taxStatus || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">Tax Due</span>
+                    <span className="font-semibold text-slate-100">{formatDate(compareData2.taxDueDate)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-700/50">
+                    <span className="text-slate-400">MOT Status</span>
+                    <span className="font-semibold text-slate-100">{compareData2.motStatus || "—"}</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-slate-400">MOT Expires</span>
+                    <span className="font-semibold text-slate-100">{formatDate(compareData2.motExpiryDate)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* SEARCH SECTION */}
         <div className="mb-10 sm:mb-12">
           <div className="flex flex-col sm:flex-row gap-3">
@@ -795,6 +1022,19 @@ Get your own vehicle check at Car Snapshot!`;
                 </>
               )}
             </button>
+
+            {recentLookups.length >= 2 && (
+              <button
+                onClick={() => {
+                  setComparisonMode(!comparisonMode);
+                  setCompareData1(null);
+                  setCompareData2(null);
+                }}
+                className="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                🔄 Compare
+              </button>
+            )}
           </div>
 
           {error && (
