@@ -223,6 +223,7 @@ export default function Home() {
   const [toastMsg, setToastMsg] = useState("");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
 
   // Load recent lookups from localStorage on mount
   useEffect(() => {
@@ -523,15 +524,89 @@ export default function Home() {
     }
   }
 
+  function generateShareText() {
+    if (!data) return "";
+    
+    const year = data.yearOfManufacture || "Unknown";
+    const make = data.make || "Unknown";
+    const model = data.model || "";
+    const reg = data.registrationNumber || "";
+    const fuelType = data.fuelType || "Unknown";
+    const taxStatus = data.taxStatus || "Unknown";
+    const motStatus = data.motStatus || "Unknown";
+    const colour = data.colour || "Unknown";
+    const engine = data.engineCapacity ? `${data.engineCapacity}cc` : "Unknown";
+    const co2 = data.co2Emissions ? `${data.co2Emissions}g/km` : "N/A";
+    const euroStatus = data.euroStatus || "Unknown";
+    const taxDueDate = data.taxDueDate ? formatDate(data.taxDueDate) : "Unknown";
+    const motExpiryDate = data.motExpiryDate ? formatDate(data.motExpiryDate) : "N/A";
+    const firstRegDate = data.dateOfFirstRegistration ? formatDate(data.dateOfFirstRegistration) : (data.monthOfFirstRegistration || "Unknown");
+    
+    // Calculate vehicle age
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - year;
+    const ageText = age >= 0 ? `${age} years old` : "Unknown age";
+    
+    return `🚗 ${make} ${model} (${year}) — ${reg}
+${ageText}
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+📋 VEHICLE DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Colour: ${colour}
+Fuel Type: ${fuelType}
+Engine: ${engine}
+CO2 Emissions: ${co2}
+Euro Status: ${euroStatus}
+First Registered: ${firstRegDate}
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+✅ COMPLIANCE STATUS
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tax: ${taxStatus}
+Tax Due: ${taxDueDate}
+MOT: ${motStatus}
+MOT Expires: ${motExpiryDate}
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+📍 TOOL & LINK
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Checked with: Car Snapshot
+Full details: ${window.location.origin}
+
+Get your own vehicle check at Car Snapshot!`;
+  }
+
   function copyShareLink() {
     try {
-      const url = window.location.origin;
-      const text = `UK Car Snapshot — DVLA basics + buying checklist.\n${url}\nTip: check tax/MOT before you view a car.`;
+      const text = generateShareText();
       navigator.clipboard.writeText(text);
-      showToast("Copied share text to clipboard.");
+      showToast("Vehicle details copied to clipboard.");
     } catch {
       showToast("Couldn't copy automatically. You can share this page URL from your browser.");
     }
+  }
+
+  function shareViaEmail() {
+    if (!data) return;
+    const subject = `Check out this car: ${data.make} ${data.model || ""} ${data.registrationNumber}`;
+    const body = encodeURIComponent(generateShareText());
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
+  }
+
+  function shareViaWhatsapp() {
+    if (!data) return;
+    const text = encodeURIComponent(generateShareText());
+    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
+  }
+
+  function shareViaFacebook() {
+    if (!data) return;
+    const url = window.location.origin;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
   }
 
   function openMotHistoryPrefilled() {
@@ -750,18 +825,67 @@ export default function Home() {
                     <p className="text-sm text-slate-400">DVLA data • {new Date().toLocaleDateString()}</p>
                   </div>
                   <div className="flex gap-2">
-                    <button
-                      onClick={copyShareLink}
-                      className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                      title="Share"
-                    >
-                      <Share2 className="w-5 h-5" />
-                    </button>
+                    <div className="relative">
+                      <button
+                        onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                        className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                        title="Share vehicle details"
+                      >
+                        <Share2 className="w-5 h-5" />
+                      </button>
+                      
+                      {/* Share menu dropdown */}
+                      {shareMenuOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
+                          <button
+                            onClick={() => {
+                              copyShareLink();
+                              setShareMenuOpen(false);
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            📋 Copy to clipboard
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              shareViaEmail();
+                              setShareMenuOpen(false);
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            ✉️ Share via Email
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              shareViaWhatsapp();
+                              setShareMenuOpen(false);
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            💬 WhatsApp
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              shareViaFacebook();
+                              setShareMenuOpen(false);
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            👥 Facebook
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
                     <button
                       onClick={() => {
                         setData(null);
                         setVrm("");
                         setCheckedItems(new Set());
+                        setShareMenuOpen(false);
                       }}
                       className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
                       title="New lookup"
