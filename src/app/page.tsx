@@ -310,7 +310,7 @@ export default function Page() {
         return;
       }
 
-      if (json?.already) {
+      if (json?.status === "updated") {
         setSignupMsg("You're already on the list.");
       } else {
         setSignupMsg("Saved. We'll keep you posted.");
