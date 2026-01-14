@@ -211,6 +211,17 @@ function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number 
   );
 }
 
+// ============================================
+// AFFILIATE LINKS CONFIGURATION
+// ============================================
+// Update these URLs with your AWIN tracking links once approved
+const AFFILIATE_LINKS = {
+  goCompare: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
+  hpiCheck: "https://www.hpicheck.com/?utm_source=carsnapshot",
+  carmoola: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.carmoola.com%2F",
+  racBreakdown: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.rac.co.uk%2Fbreakdown-cover",
+};
+
 export default function Home() {
   const [vrm, setVrm] = useState("");
   const [data, setData] = useState<VehicleData | null>(null);
@@ -1908,8 +1919,9 @@ END:VEVENT
 
                 {/* Affiliate partner buttons - more prominent */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Insurance - Go Compare */}
                   <a
-                    href="https://www.confused.com/car-insurance?utm_source=carsnapshot"
+                    href={AFFILIATE_LINKS.goCompare}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 bg-gradient-to-br from-blue-600/30 to-blue-700/30 hover:from-blue-600/50 hover:to-blue-700/50 border border-blue-600/50 hover:border-blue-500/75 rounded-lg text-left transition-all group"
@@ -1921,8 +1933,9 @@ END:VEVENT
                     <p className="text-xs text-blue-200/80">Compare quotes instantly. Often 30-40% cheaper.</p>
                   </a>
 
+                  {/* Vehicle History - HPI Check */}
                   <a
-                    href="https://www.hpicheck.com/?utm_source=carsnapshot"
+                    href={AFFILIATE_LINKS.hpiCheck}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 bg-gradient-to-br from-amber-600/30 to-amber-700/30 hover:from-amber-600/50 hover:to-amber-700/50 border border-amber-600/50 hover:border-amber-500/75 rounded-lg text-left transition-all group"
@@ -1934,8 +1947,9 @@ END:VEVENT
                     <p className="text-xs text-amber-200/80">Check for write-offs, theft, finance. Essential before buying.</p>
                   </a>
 
+                  {/* Finance - Carmoola */}
                   <a
-                    href="https://www.moneysupermarket.com/car-finance/?utm_source=carsnapshot"
+                    href={AFFILIATE_LINKS.carmoola}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 bg-gradient-to-br from-emerald-600/30 to-emerald-700/30 hover:from-emerald-600/50 hover:to-emerald-700/50 border border-emerald-600/50 hover:border-emerald-500/75 rounded-lg text-left transition-all group"
@@ -1944,20 +1958,21 @@ END:VEVENT
                       💳 Finance & Loans
                       <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
                     </div>
-                    <p className="text-xs text-emerald-200/80">Find best interest rates. Compare car loans instantly.</p>
+                    <p className="text-xs text-emerald-200/80">Find best interest rates. Compare car finance instantly.</p>
                   </a>
 
+                  {/* Breakdown Cover - RAC */}
                   <a
-                    href="https://www.moneyextra.com/extended-warranty/car/?utm_source=carsnapshot"
+                    href={AFFILIATE_LINKS.racBreakdown}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 bg-gradient-to-br from-purple-600/30 to-purple-700/30 hover:from-purple-600/50 hover:to-purple-700/50 border border-purple-600/50 hover:border-purple-500/75 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-purple-100">
-                      🔧 Extended Warranty
+                      🚗 Breakdown Cover
                       <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
                     </div>
-                    <p className="text-xs text-purple-200/80">Protect against unexpected repair costs.</p>
+                    <p className="text-xs text-purple-200/80">Essential protection for UK drivers. Peace of mind on the road.</p>
                   </a>
                 </div>
 
