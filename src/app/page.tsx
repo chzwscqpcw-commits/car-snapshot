@@ -224,6 +224,7 @@ export default function Home() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -662,10 +663,205 @@ Get your own vehicle check at Car Snapshot!`;
     window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
-  function shareViaFacebook() {
+  function downloadTXT() {
     if (!data) return;
-    const url = window.location.origin;
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
+
+    // Create a professional text-based report
+    const timestamp = new Date();
+    const formattedDate = timestamp.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const reportLines = [
+      "╔════════════════════════════════════════════════════════════════╗",
+      "║            CAR SNAPSHOT - VEHICLE REPORT                       ║",
+      "╚════════════════════════════════════════════════════════════════╝",
+      "",
+      `Generated: ${formattedDate}`,
+      `Registration: ${data.registrationNumber}`,
+      "",
+      "────────────────────────────────────────────────────────────────",
+      "VEHICLE INFORMATION",
+      "────────────────────────────────────────────────────────────────",
+      "",
+      `Make & Model:        ${data.make} ${data.model || ""}`,
+      `Year:                ${data.yearOfManufacture || "—"}`,
+      `Colour:              ${data.colour || "—"}`,
+      "",
+      "SPECIFICATIONS",
+      "────────────────────────────────────────────────────────────────",
+      "",
+      `Fuel Type:           ${data.fuelType || "—"}`,
+      `Engine Capacity:     ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"}`,
+      `CO2 Emissions:       ${data.co2Emissions ? `${data.co2Emissions}g/km` : "—"}`,
+      `Euro Status:         ${data.euroStatus || "—"}`,
+      "",
+      "COMPLIANCE STATUS",
+      "────────────────────────────────────────────────────────────────",
+      "",
+      `Tax Status:          ${data.taxStatus || "—"}`,
+      `Tax Due Date:        ${formatDate(data.taxDueDate)}`,
+      `MOT Status:          ${data.motStatus || "—"}`,
+      `MOT Expiry:          ${formatDate(data.motExpiryDate)}`,
+      `First Registered:    ${data.monthOfFirstRegistration || data.dateOfFirstRegistration || "—"}`,
+      "",
+      "KEY INSIGHTS",
+      "────────────────────────────────────────────────────────────────",
+      "",
+      ...insights.slice(0, 5).map((insight, idx) => [
+        `${idx + 1}. ${insight.title}`,
+        `   ${insight.detail}`,
+        "",
+      ]).flat(),
+      "BUYING CHECKLIST",
+      "────────────────────────────────────────────────────────────────",
+      "",
+      ...checklist.map((item, idx) => `${idx + 1}. ☐ ${item}`),
+      "",
+      "═════════════════════════════════════════════════════════════════",
+      "",
+      "Created with Car Snapshot",
+      "https://car-snapshot-stephen-gaisfords-projects.vercel.app",
+      "",
+      "⚠️  Always verify vehicle details with the seller and official",
+      "    documents before making any purchase.",
+      "",
+      "🔒 Privacy: Registration numbers are hashed and not stored.",
+      "═════════════════════════════════════════════════════════════════",
+    ];
+
+    const reportContent = reportLines.join("\n");
+
+    // Create blob and download
+    const blob = new Blob([reportContent], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Car-Snapshot-${data.registrationNumber}-${new Date().getTime()}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast("Text report downloaded!");
+    setDownloadMenuOpen(false);
+  }
+
+  async function downloadPDF() {
+    if (!data) return;
+
+    try {
+      // Dynamically import jsPDF to keep bundle size small
+      const { jsPDF } = await import("jspdf");
+
+      const timestamp = new Date();
+      const formattedDate = timestamp.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      // Create PDF document
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      let yPosition = 15;
+
+      // Helper function to add text with wrapping
+      const addText = (text: string, fontSize: number = 11, isBold: boolean = false) => {
+        doc.setFontSize(fontSize);
+        doc.setFont(doc.getFont().fontName, isBold ? "bold" : "normal");
+        const lines = doc.splitTextToSize(text, pageWidth - 20);
+        lines.forEach((line: string) => {
+          if (yPosition > pageHeight - 15) {
+            doc.addPage();
+            yPosition = 15;
+          }
+          doc.text(line, 10, yPosition);
+          yPosition += 6;
+        });
+      };
+
+      // Title
+      doc.setFontSize(18);
+      doc.setFont(doc.getFont().fontName, "bold");
+      doc.text("CAR SNAPSHOT", 10, yPosition);
+      yPosition += 8;
+      doc.setFontSize(14);
+      doc.text("Vehicle Report", 10, yPosition);
+      yPosition += 12;
+
+      // Generated info
+      doc.setFontSize(10);
+      doc.setFont(doc.getFont().fontName, "normal");
+      doc.text(`Generated: ${formattedDate}`, 10, yPosition);
+      yPosition += 6;
+      doc.text(`Registration: ${data.registrationNumber}`, 10, yPosition);
+      yPosition += 12;
+
+      // Vehicle Information Section
+      addText("VEHICLE INFORMATION", 13, true);
+      yPosition += 2;
+      addText(`Make & Model: ${data.make} ${data.model || ""}`);
+      addText(`Year: ${data.yearOfManufacture || "—"}`);
+      addText(`Colour: ${data.colour || "—"}`);
+      yPosition += 4;
+
+      // Specifications Section
+      addText("SPECIFICATIONS", 13, true);
+      yPosition += 2;
+      addText(`Fuel Type: ${data.fuelType || "—"}`);
+      addText(`Engine Capacity: ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"}`);
+      addText(`CO2 Emissions: ${data.co2Emissions ? `${data.co2Emissions}g/km` : "—"}`);
+      addText(`Euro Status: ${data.euroStatus || "—"}`);
+      yPosition += 4;
+
+      // Compliance Status Section
+      addText("COMPLIANCE STATUS", 13, true);
+      yPosition += 2;
+      addText(`Tax Status: ${data.taxStatus || "—"}`);
+      addText(`Tax Due Date: ${formatDate(data.taxDueDate)}`);
+      addText(`MOT Status: ${data.motStatus || "—"}`);
+      addText(`MOT Expiry: ${formatDate(data.motExpiryDate)}`);
+      addText(`First Registered: ${data.monthOfFirstRegistration || data.dateOfFirstRegistration || "—"}`);
+      yPosition += 4;
+
+      // Key Insights Section
+      addText("KEY INSIGHTS", 13, true);
+      yPosition += 2;
+      insights.slice(0, 5).forEach((insight) => {
+        addText(`${insight.title}`, 11, true);
+        addText(insight.detail);
+        yPosition += 1;
+      });
+      yPosition += 2;
+
+      // Buying Checklist Section
+      addText("BUYING CHECKLIST", 13, true);
+      yPosition += 2;
+      checklist.forEach((item) => {
+        addText(`[ ] ${item}`);
+      });
+
+      // Footer
+      yPosition += 4;
+      doc.setFontSize(9);
+      doc.setFont(doc.getFont().fontName, "normal");
+      addText("Created with Car Snapshot");
+      addText("https://car-snapshot-stephen-gaisfords-projects.vercel.app");
+      addText("Always verify vehicle details with the seller and official documents.");
+      addText("Privacy: Registration numbers are hashed and not stored.");
+
+      // Save PDF
+      doc.save(`Car-Snapshot-${data.registrationNumber}-${timestamp.getTime()}.pdf`);
+      showToast("PDF report downloaded!");
+      setDownloadMenuOpen(false);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      showToast("PDF generation failed. Please try the text version.");
+    }
   }
 
   function openMotHistoryPrefilled() {
@@ -1116,6 +1312,35 @@ Get your own vehicle check at Car Snapshot!`;
                             className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
                           >
                             👥 Facebook
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="relative">
+                      <button
+                        onClick={() => setDownloadMenuOpen(!downloadMenuOpen)}
+                        className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                        title="Download report"
+                      >
+                        📥
+                      </button>
+
+                      {/* Download format menu */}
+                      {downloadMenuOpen && (
+                        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-40 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50 py-2">
+                          <button
+                            onClick={() => downloadPDF()}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            📄 PDF (Recommended)
+                          </button>
+
+                          <button
+                            onClick={() => downloadTXT()}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                          >
+                            📋 Text File
                           </button>
                         </div>
                       )}
