@@ -1,6 +1,103 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from "react";
+
+// MOT Insights calculation
+function calculateMotInsights(motTests: any[]) {
+  if (!motTests || motTests.length === 0) {
+    return null;
+  }
+
+  const sortedTests = [...motTests].sort((a, b) => 
+    new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime()
+  );
+
+  const passedTests = motTests.filter(t => t.testResult === "PASSED").length;
+  const passRate = Math.round((passedTests / motTests.length) * 100);
+
+  const mileageTests = sortedTests.filter(t => t.odometer?.value).map(t => ({
+    date: new Date(t.completedDate),
+    mileage: t.odometer.value,
+    test: t
+  }));
+
+  let avgMilesPerYear = 0;
+  let mileageWarnings: string[] = [];
+  let mileageTrend = "normal";
+
+  if (mileageTests.length >= 2) {
+    const oldest = mileageTests[0];
+    const newest = mileageTests[mileageTests.length - 1];
+    const yearsSpan = (newest.date.getTime() - oldest.date.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+    const totalMiles = newest.mileage - oldest.mileage;
+
+    avgMilesPerYear = Math.round(totalMiles / yearsSpan);
+
+    if (avgMilesPerYear < 4000) {
+      mileageWarnings.push("⚠️ Unusually low annual mileage (under 4,000 miles/year) - verify vehicle usage or check for odometer issues");
+      mileageTrend = "low";
+    } else if (avgMilesPerYear > 15000) {
+      mileageWarnings.push("ℹ️ High annual mileage (over 15,000 miles/year) - vehicle has seen heavy use");
+      mileageTrend = "high";
+    }
+
+    for (let i = 1; i < mileageTests.length; i++) {
+      const prev = mileageTests[i - 1];
+      const curr = mileageTests[i];
+      const daysBetween = (curr.date.getTime() - prev.date.getTime()) / (1000 * 60 * 60 * 24);
+      const milesDifference = curr.mileage - prev.mileage;
+
+      if (milesDifference < 0) {
+        mileageWarnings.push(`🚨 ALERT: Mileage decreased by ${Math.abs(milesDifference).toLocaleString()} miles between ${prev.date.toLocaleDateString()} and ${curr.date.toLocaleDateString()} - possible odometer tamper`);
+      } else if (daysBetween > 0) {
+        const milesPerDay = milesDifference / daysBetween;
+        const expectedMilesPerDay = avgMilesPerYear / 365;
+        
+        if (milesPerDay > expectedMilesPerDay * 2 && daysBetween < 365) {
+          const percentageAbove = Math.round(((milesPerDay / expectedMilesPerDay) - 1) * 100);
+          mileageWarnings.push(`ℹ️ Unusual mileage increase of ${milesDifference.toLocaleString()} miles in ${Math.round(daysBetween)} days (${percentageAbove}% above average)`);
+        }
+      }
+    }
+  }
+
+  const allAdvisories: { [key: string]: number } = {};
+  motTests.forEach(test => {
+    test.rfrAndComments?.forEach((item: any) => {
+      if (item.type === "ADVISORY") {
+        const key = item.text.substring(0, 50);
+        allAdvisories[key] = (allAdvisories[key] || 0) + 1;
+      }
+    });
+  });
+
+  const recurringAdvisories = Object.entries(allAdvisories)
+    .filter(([_, count]) => count >= 2)
+    .map(([text, count]) => ({ text, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3);
+
+  // Days until next MOT - use the FIRST test (newest) not the last
+  const latestTest = motTests[0];
+  let daysUntilExpiry = 0;
+  if (latestTest.expiryDate) {
+    const expiryDate = new Date(latestTest.expiryDate);
+    const today = new Date();
+    daysUntilExpiry = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  return {
+    passRate,
+    passedTests,
+    totalTests: motTests.length,
+    avgMilesPerYear,
+    mileageWarnings,
+    mileageTrend,
+    recurringAdvisories,
+    daysUntilExpiry,
+    latestMileage: mileageTests[mileageTests.length - 1]?.mileage
+  };
+}
 import {
   Fuel,
   Gauge,
@@ -2289,6 +2386,94 @@ END:VEVENT
                     <InsightCard key={idx} insight={insight} delay={idx * 100} />
                   ))}
                 </div>
+              </DataReveal>
+            )}
+
+            {/* MOT INSIGHTS */}
+            {data.motTests && data.motTests.length > 0 && (
+              <DataReveal delay={350}>
+                {(() => {
+                  const insights = calculateMotInsights(data.motTests);
+                  if (!insights) return null;
+
+                  return (
+                    <div className="mb-8">
+                      <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT Insights</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Pass Rate Card */}
+                        <div className="p-4 rounded-lg border border-emerald-500/50 bg-emerald-950/20">
+                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Pass Rate</p>
+                          <p className="text-2xl font-bold text-emerald-400">{insights.passRate}%</p>
+                          <p className="text-xs text-slate-300 mt-1">{insights.passedTests} of {insights.totalTests} tests passed</p>
+                        </div>
+
+                        {/* Mileage Trend Card */}
+                        <div className={`p-4 rounded-lg border ${
+                          insights.mileageTrend === "low" ? "border-amber-500/50 bg-amber-950/20" :
+                          insights.mileageTrend === "high" ? "border-blue-500/50 bg-blue-950/20" :
+                          "border-emerald-500/50 bg-emerald-950/20"
+                        }`}>
+                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">
+                            {insights.mileageTrend === "low" ? "Low Annual Mileage" :
+                             insights.mileageTrend === "high" ? "High Annual Mileage" :
+                             "Normal Annual Mileage"}
+                          </p>
+                          <p className="text-2xl font-bold text-slate-100">{insights.avgMilesPerYear.toLocaleString()}</p>
+                          <p className="text-xs text-slate-300 mt-1">miles per year (UK avg: 8,000-12,000)</p>
+                        </div>
+
+                        {/* Days Until Expiry */}
+                        <div className="p-4 rounded-lg border border-cyan-500/50 bg-cyan-950/20">
+                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Next MOT Due</p>
+                          <p className={`text-2xl font-bold ${insights.daysUntilExpiry < 60 ? "text-amber-400" : "text-cyan-400"}`}>
+                            {insights.daysUntilExpiry} days
+                          </p>
+                          <p className="text-xs text-slate-300 mt-1">
+                            {insights.daysUntilExpiry < 0 ? "MOT expired" : insights.daysUntilExpiry < 30 ? "⚠️ Due soon" : ""}
+                          </p>
+                        </div>
+
+                        {/* Current Mileage */}
+                        <div className="p-4 rounded-lg border border-slate-500/50 bg-slate-900/20">
+                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Current Mileage</p>
+                          <p className="text-2xl font-bold text-slate-100">{insights.latestMileage?.toLocaleString() || "—"}</p>
+                          <p className="text-xs text-slate-300 mt-1">from latest MOT test</p>
+                        </div>
+                      </div>
+
+                      {/* Mileage Warnings */}
+                      {insights.mileageWarnings.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                          {insights.mileageWarnings.map((warning, idx) => (
+                            <div key={idx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
+                              <p className="text-xs text-amber-300">{warning}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Recurring Advisories */}
+                      {insights.recurringAdvisories.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-3">Recurring Advisories</p>
+                          <div className="space-y-2">
+                            {insights.recurringAdvisories.map((advisory, idx) => (
+                              <div key={idx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
+                                <div className="flex items-start justify-between">
+                                  <p className="text-xs text-amber-300 flex-1">{advisory.text}</p>
+                                  <span className="ml-2 px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 whitespace-nowrap">
+                                    {advisory.count}x
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </DataReveal>
             )}
 
