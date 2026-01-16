@@ -2116,12 +2116,12 @@ END:VEVENT
                           <div className="flex gap-2 flex-wrap">
                             {test.rfrAndComments?.some(r => r.type === "ADVISORY") && (
                               <span className="px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 border border-amber-700/50">
-                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisory
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
                               </span>
                             )}
                             {test.rfrAndComments?.some(r => r.type === "DEFECT") && (
                               <span className="px-2 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 border border-red-700/50">
-                                {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect
+                                {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""}
                               </span>
                             )}
                           </div>
@@ -2256,12 +2256,12 @@ END:VEVENT
                             <div className="flex gap-2 flex-wrap">
                               {test.rfrAndComments?.some(r => r.type === "ADVISORY") && (
                                 <span className="px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 border border-amber-700/50">
-                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisory
+                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
                                 </span>
                               )}
                               {test.rfrAndComments?.some(r => r.type === "DEFECT") && (
                                 <span className="px-2 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 border border-red-700/50">
-                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect
+                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""}
                                 </span>
                               )}
                             </div>
@@ -2290,10 +2290,7 @@ END:VEVENT
                                 className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
                               >
                                 <span>{expandedMotTests.has(idx + 3) ? "−" : "+"}</span>
-                                <span>
-                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""},{" "}
-                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
-                                </span>
+                                <span>Click to view details</span>
                               </button>
                               {expandedMotTests.has(idx + 3) && (
                                 <div className="mt-3 space-y-2">
