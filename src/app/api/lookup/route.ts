@@ -139,7 +139,7 @@ function mockDvlaResponse(registrationNumber: string) {
     taxStatus: "Taxed",
     taxDueDate: "2026-05-01",
     motStatus: "No details held by DVLA",
-    motExpiryDate: null,
+    motExpiryDate: undefined,
     monthOfFirstRegistration: "2025-06",
   };
 }
