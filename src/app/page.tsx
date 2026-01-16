@@ -43,6 +43,22 @@ type VehicleData = {
   typeApproval?: string;
   automatedVehicle?: boolean;
   additionalRateEndDate?: string;
+  variant?: string;
+  motTests?: Array<{
+    completedDate: string;
+    testResult: "PASSED" | "FAILED" | "NO DETAILS HELD";
+    expiryDate?: string;
+    odometer?: {
+      value: number;
+      unit: string;
+    };
+    motTestNumber?: string;
+    rfrAndComments?: Array<{
+      text: string;
+      type: "COMMENT" | "DEFECT" | "ADVISORY";
+    }>;
+  }>;
+  motTestsLastUpdated?: string;
 };
 
 type LookupResponse =
@@ -71,8 +87,16 @@ function looksLikeEmail(email: string) {
 
 function formatDate(iso?: string) {
   if (!iso) return "—";
-  const [year, month, day] = iso.split("-");
-  return `${day}/${month}/${year}`;
+  try {
+    const date = new Date(iso);
+    if (isNaN(date.getTime())) return "—";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  } catch {
+    return "—";
+  }
 }
 
 function parseISODate(iso?: string) {
@@ -117,6 +141,12 @@ function getMotStatusColor(motStatus?: string, motExpiryDate?: string) {
     return "red"; // Red - expired
   }
   if (motStatus === "Expired") return "red";
+  return "slate";
+}
+
+function getMotTestResultColor(result?: string): "emerald" | "red" | "slate" {
+  if (result === "PASSED") return "emerald";
+  if (result === "FAILED") return "red";
   return "slate";
 }
 
@@ -273,6 +303,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [checklistRole, setChecklistRole] = useState<"owner" | "buyer" | "seller">("owner");
+  const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set());
+  const [showAllMotTests, setShowAllMotTests] = useState(false);
   const [email, setEmail] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupMsg, setSignupMsg] = useState("");
@@ -638,7 +670,7 @@ export default function Home() {
   }
 
   // Extract core lookup logic so it can be called with a registration directly
-  async function performLookup(cleanedReg: string) {
+  async function performLookup(cleanedReg: string, skipCache: boolean = false) {
     if (!cleanedReg) {
       setError("Please enter a registration number.");
       return;
@@ -653,7 +685,7 @@ export default function Home() {
       const res = await fetch("/api/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vrm: cleanedReg }),
+        body: JSON.stringify({ vrm: cleanedReg, skipCache }),
       });
 
       const json = (await res.json()) as LookupResponse;
@@ -684,8 +716,17 @@ export default function Home() {
   }
 
   async function handleLookup() {
-    const cleanedReg = cleanReg(vrm);
-    performLookup(cleanedReg);
+    let inputVrm = vrm.trim();
+    let skipCache = false;
+
+    // Check for * prefix to skip cache
+    if (inputVrm.startsWith("*")) {
+      skipCache = true;
+      inputVrm = inputVrm.substring(1).trim();
+    }
+
+    const cleanedReg = cleanReg(inputVrm);
+    performLookup(cleanedReg, skipCache);
   }
 
   async function handleSignup() {
@@ -1756,11 +1797,23 @@ END:VEVENT
             <DataReveal delay={0}>
               <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                  <div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2">
-                      {data.make} {data.model && `${data.model}`} — {data.registrationNumber}
-                    </h2>
-                    <p className="text-sm text-slate-400">DVLA data • {new Date().toLocaleDateString()}</p>
+                  <div className="flex-1">
+                    <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 mb-4 inline-flex items-center justify-center">
+                      <p className="text-lg font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em", width: "fit-content" }}>
+                        {data.registrationNumber}
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                      <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
+                        <p className="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wide">Make</p>
+                        <p className="text-xl sm:text-2xl font-bold text-slate-100">{data.make || "—"}</p>
+                      </div>
+                      <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
+                        <p className="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wide">Model</p>
+                        <p className="text-xl sm:text-2xl font-bold text-slate-100">{data.model || "—"}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-slate-400 mt-4">DVLA data • {new Date().toLocaleDateString()}</p>
                   </div>
                   <button
                     onClick={() => setShowFeatureHelp(!showFeatureHelp)}
@@ -2029,6 +2082,248 @@ END:VEVENT
               </div>
             </DataReveal>
 
+            {data.motTests && data.motTests.length > 0 && (
+              <DataReveal delay={250}>
+                <div className="mb-8">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT Test History</h3>
+                  <div className="space-y-3">
+                    {data.motTests.slice(0, 3).map((test, idx) => (
+                      <div
+                        key={idx}
+                        className="p-6 rounded-lg border transition-all"
+                        style={{
+                          backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotTestResultColor(test.testResult)],
+                          borderColor: { emerald: "rgba(5, 150, 105, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
+                        }}
+                      >
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
+                            <p className="text-sm font-semibold text-slate-100">{formatDate(test.completedDate)}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
+                            <p className="text-sm font-semibold text-slate-100">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"} miles</p>
+                          </div>
+                          {test.expiryDate && (
+                            <div>
+                              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Valid Until</p>
+                              <p className="text-sm font-semibold text-slate-100">{formatDate(test.expiryDate)}</p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex gap-2 flex-wrap">
+                            {test.rfrAndComments?.some(r => r.type === "ADVISORY") && (
+                              <span className="px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 border border-amber-700/50">
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisory
+                              </span>
+                            )}
+                            {test.rfrAndComments?.some(r => r.type === "DEFECT") && (
+                              <span className="px-2 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 border border-red-700/50">
+                                {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect
+                              </span>
+                            )}
+                          </div>
+                          <span
+                            className="px-3 py-1 rounded-full text-xs font-semibold"
+                            style={{
+                              backgroundColor: { emerald: "rgba(5, 150, 105, 0.3)", red: "rgba(220, 38, 38, 0.3)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
+                              color: { emerald: "#10b981", red: "#ef4444", slate: "#94a3b8" }[getMotTestResultColor(test.testResult)],
+                            }}
+                          >
+                            {test.testResult}
+                          </span>
+                        </div>
+                        {test.rfrAndComments && test.rfrAndComments.length > 0 && (
+                          <div className="border-t border-slate-700/50 pt-3">
+                            <button
+                              onClick={() => {
+                                const newSet = new Set(expandedMotTests);
+                                if (newSet.has(idx)) {
+                                  newSet.delete(idx);
+                                } else {
+                                  newSet.add(idx);
+                                }
+                                setExpandedMotTests(newSet);
+                              }}
+                              className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
+                            >
+                              <span>{expandedMotTests.has(idx) ? "−" : "+"}</span>
+                              <span>Click to view details</span>
+                            </button>
+                            {expandedMotTests.has(idx) && (
+                              <div className="mt-3 space-y-2">
+                                {test.rfrAndComments.filter(r => r.type === "DEFECT").map((defect, didx) => (
+                                  <p key={`defect-${didx}`} className="text-xs text-red-300 pl-3 border-l border-red-500">
+                                    <span className="font-semibold">Defect:</span> {defect.text}
+                                  </p>
+                                ))}
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
+                                  <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
+                                    <span className="font-semibold">Advisory:</span> {advisory.text}
+                                  </p>
+                                ))}
+                                {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
+                                  <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
+                                    <span className="font-semibold">Note:</span> {comment.text}
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {test.rfrAndComments && test.rfrAndComments.length > 0 && (
+                          <div className="mt-3 border-t border-slate-700/50 pt-3">
+                            <button
+                              onClick={() => {
+                                const newSet = new Set(expandedMotTests);
+                                if (newSet.has(idx)) {
+                                  newSet.delete(idx);
+                                } else {
+                                  newSet.add(idx);
+                                }
+                                setExpandedMotTests(newSet);
+                              }}
+                              className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
+                            >
+                              <span>{expandedMotTests.has(idx) ? "−" : "+"}</span>
+                              <span>
+                                {test.rfrAndComments.filter(r => r.type === "DEFECT").length} defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""},{" "}
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
+                              </span>
+                            </button>
+                            {expandedMotTests.has(idx) && (
+                              <div className="mt-3 space-y-2">
+                                {test.rfrAndComments.filter(r => r.type === "DEFECT").map((defect, didx) => (
+                                  <p key={`defect-${didx}`} className="text-xs text-red-300 pl-3 border-l border-red-500">
+                                    <span className="font-semibold">Defect:</span> {defect.text}
+                                  </p>
+                                ))}
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
+                                  <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
+                                    <span className="font-semibold">Advisory:</span> {advisory.text}
+                                  </p>
+                                ))}
+                                {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
+                                  <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
+                                    <span className="font-semibold">Note:</span> {comment.text}
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {data.motTests.length > 3 && (
+                    <button
+                      onClick={() => setShowAllMotTests(!showAllMotTests)}
+                      className="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      {showAllMotTests ? "Show less" : `View all ${data.motTests.length} tests`}
+                    </button>
+                  )}
+                  {showAllMotTests && data.motTests.length > 3 && (
+                    <div className="mt-4 space-y-3">
+                      {data.motTests.slice(3).map((test, idx) => (
+                        <div
+                          key={idx + 3}
+                          className="p-6 rounded-lg border transition-all"
+                          style={{
+                            backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotTestResultColor(test.testResult)],
+                            borderColor: { emerald: "rgba(5, 150, 105, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
+                          }}
+                        >
+                          <div className="grid grid-cols-3 gap-4 mb-4">
+                            <div>
+                              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
+                              <p className="text-sm font-semibold text-slate-100">{formatDate(test.completedDate)}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
+                              <p className="text-sm font-semibold text-slate-100">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"} miles</p>
+                            </div>
+                            {test.expiryDate && (
+                              <div>
+                                <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Valid Until</p>
+                                <p className="text-sm font-semibold text-slate-100">{formatDate(test.expiryDate)}</p>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex gap-2 flex-wrap">
+                              {test.rfrAndComments?.some(r => r.type === "ADVISORY") && (
+                                <span className="px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 border border-amber-700/50">
+                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisory
+                                </span>
+                              )}
+                              {test.rfrAndComments?.some(r => r.type === "DEFECT") && (
+                                <span className="px-2 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 border border-red-700/50">
+                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect
+                                </span>
+                              )}
+                            </div>
+                            <span
+                              className="px-3 py-1 rounded-full text-xs font-semibold"
+                              style={{
+                                backgroundColor: { emerald: "rgba(5, 150, 105, 0.3)", red: "rgba(220, 38, 38, 0.3)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
+                                color: { emerald: "#10b981", red: "#ef4444", slate: "#94a3b8" }[getMotTestResultColor(test.testResult)],
+                              }}
+                            >
+                              {test.testResult}
+                            </span>
+                          </div>
+                          {test.rfrAndComments && test.rfrAndComments.length > 0 && (
+                            <div className="mt-3 border-t border-slate-700/50 pt-3">
+                              <button
+                                onClick={() => {
+                                  const newSet = new Set(expandedMotTests);
+                                  if (newSet.has(idx + 3)) {
+                                    newSet.delete(idx + 3);
+                                  } else {
+                                    newSet.add(idx + 3);
+                                  }
+                                  setExpandedMotTests(newSet);
+                                }}
+                                className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
+                              >
+                                <span>{expandedMotTests.has(idx + 3) ? "−" : "+"}</span>
+                                <span>
+                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""},{" "}
+                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
+                                </span>
+                              </button>
+                              {expandedMotTests.has(idx + 3) && (
+                                <div className="mt-3 space-y-2">
+                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").map((defect, didx) => (
+                                    <p key={`defect-${didx}`} className="text-xs text-red-300 pl-3 border-l border-red-500">
+                                      <span className="font-semibold">Defect:</span> {defect.text}
+                                    </p>
+                                  ))}
+                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
+                                    <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
+                                      <span className="font-semibold">Advisory:</span> {advisory.text}
+                                    </p>
+                                  ))}
+                                  {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
+                                    <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
+                                      <span className="font-semibold">Note:</span> {comment.text}
+                                    </p>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </DataReveal>
+            )}
+
             {/* ALL INSIGHTS */}
             {insights.length > 2 && (
               <DataReveal delay={300}>
@@ -2051,17 +2346,6 @@ END:VEVENT
                 
                 {/* Official government checks */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                  <button
-                    onClick={openMotHistoryPrefilled}
-                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
-                      Check MOT history
-                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-slate-400">Past failures + advisories</p>
-                  </button>
-
                   <button
                     onClick={openTflWithCopiedReg}
                     className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
