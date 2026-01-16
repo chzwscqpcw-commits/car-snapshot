@@ -137,7 +137,7 @@ function mockDvlaResponse(registrationNumber: string) {
     taxStatus: "Taxed",
     taxDueDate: "2026-05-01",
     motStatus: "No details held by DVLA",
-    motExpiryDate: null,
+    motExpiryDate: undefined,
     monthOfFirstRegistration: "2025-06",
   };
 }
@@ -146,53 +146,9 @@ function mockDvlaResponse(registrationNumber: string) {
 // MOT HISTORY API
 // ============================================
 
-let motAccessToken: string | null = null;
-let motTokenExpiry: number = 0;
-
-async function getMOTAccessToken(): Promise<string | null> {
-  if (!MOT_CLIENT_ID || !MOT_CLIENT_SECRET || !MOT_TOKEN_URL) {
-    console.warn("MOT API credentials not configured");
-    return null;
-  }
-
-  // Return cached token if still valid
-  if (motAccessToken && Date.now() < motTokenExpiry) {
-    return motAccessToken;
-  }
-
-  try {
-    const response = await fetch(MOT_TOKEN_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: MOT_CLIENT_ID,
-        client_secret: MOT_CLIENT_SECRET,
-        scope: "https://tapi.dvsa.gov.uk/.default",
-      }).toString(),
-    });
-
-    if (!response.ok) {
-      console.error(`MOT token error: ${response.status}`);
-      return null;
-    }
-
-    const data = (await response.json()) as { access_token: string; expires_in: number };
-    motAccessToken = data.access_token;
-    motTokenExpiry = Date.now() + (data.expires_in - 60) * 1000; // Refresh 60s before expiry
-
-    return motAccessToken;
-  } catch (error) {
-    console.error("MOT token fetch error:", error);
-    return null;
-  }
-}
-
 async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryData | null> {
-  const token = await getMOTAccessToken();
-  if (!token || !MOT_API_URL) {
+  if (!MOT_API_KEY || !MOT_API_URL) {
+    console.warn("MOT API key not configured");
     return null;
   }
 
@@ -200,15 +156,14 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(MOT_API_URL, {
-      method: "POST",
+    const url = `${MOT_API_URL}?registration=${registrationNumber}`;
+
+    const response = await fetch(url, {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Accept": "application/json+v6",
+        "x-api-key": MOT_API_KEY,
       },
-      body: JSON.stringify({
-        registration: registrationNumber,
-      }),
       signal: controller.signal,
     });
 
@@ -223,8 +178,14 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
       return null;
     }
 
-    const data = (await response.json()) as MOTHistoryData;
-    return data;
+    const data = (await response.json()) as any;
+    
+    // The response contains a "vehicles" array
+    if (data.vehicles && data.vehicles.length > 0) {
+      return data.vehicles[0];
+    }
+    
+    return null;
   } catch (error: any) {
     if (error.name === "AbortError") {
       console.error("MOT request timeout");
