@@ -19,22 +19,6 @@ import {
   Zap,
 } from "lucide-react";
 
-        ))}
-// Simple VehicleXRay background
-function VehicleXRay() {
-  return (
-    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-      <ellipse cx="50" cy="50" rx="35" ry="40" fill="none" stroke="#0ea5e9" strokeWidth="2" />
-      <circle cx="30" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1.5" />
-      <circle cx="70" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1.5" />
-      <circle cx="50" cy="40" r="8" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
-      <circle cx="70" cy="50" r="6" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
-      <circle cx="30" cy="60" r="7" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
-      <circle cx="50" cy="70" r="7" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 type VehicleData = {
   registrationNumber: string;
   make?: string;
@@ -1568,9 +1552,8 @@ END:VEVENT
         {/* SEARCH SECTION */}
         <div className="mb-10 sm:mb-12">
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 relative overflow-hidden min-h-[48px]">
-              <VehicleXRay interactive={true} />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none z-10" />
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
               <input
                 type="text"
                 placeholder="E.g. P7 SJG"
@@ -1582,7 +1565,7 @@ END:VEVENT
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleLookup();
                 }}
-                className="relative z-10 w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
             <button
