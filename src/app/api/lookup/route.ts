@@ -180,9 +180,9 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
 
     const data = (await response.json()) as any;
     
-    // The response contains a "vehicles" array
-    if (data.vehicles && data.vehicles.length > 0) {
-      return data.vehicles[0];
+    // The response is an array of vehicles directly (not wrapped in object)
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0];
     }
     
     return null;
@@ -350,6 +350,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     console.log(`[LOOKUP] MOT Data:`, motData ? "✅ Got MOT history" : "❌ No MOT data");
     if (motData) {
       console.log(`[LOOKUP] MOT Tests:`, motData.motTests?.length || 0, "records");
+      console.log(`[LOOKUP] MOT Model:`, motData.model || "no model");
     }
 
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
