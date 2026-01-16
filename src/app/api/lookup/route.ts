@@ -12,12 +12,9 @@ const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-// MOT History API OAuth
-const MOT_CLIENT_ID = process.env.MOT_CLIENT_ID;
-const MOT_CLIENT_SECRET = process.env.MOT_CLIENT_SECRET;
-const MOT_TOKEN_URL = process.env.MOT_TOKEN_URL;
-const MOT_API_URL = process.env.MOT_API_URL || "https://tapi.dvsa.gov.uk/vehicle-enquiry/v1/vehicles";
+// MOT History API
 const MOT_API_KEY = process.env.MOT_API_KEY;
+const MOT_API_URL = "https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests";
 
 // DVLA Vehicle Enquiry API
 const DVLA_API_KEY = process.env.DVLA_X_API_KEY;
@@ -140,7 +137,7 @@ function mockDvlaResponse(registrationNumber: string) {
     taxStatus: "Taxed",
     taxDueDate: "2026-05-01",
     motStatus: "No details held by DVLA",
-    motExpiryDate: undefined,
+    motExpiryDate: null,
     monthOfFirstRegistration: "2025-06",
   };
 }
@@ -195,8 +192,7 @@ async function getMOTAccessToken(): Promise<string | null> {
 
 async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryData | null> {
   const token = await getMOTAccessToken();
-  const apiKey = process.env.MOT_API_KEY;
-  if (!token || !apiKey) {
+  if (!token || !MOT_API_URL) {
     return null;
   }
 
@@ -204,15 +200,15 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const url = `https://tapi.dvsa.gov.uk/v1/trade/vehicles/registration/${registrationNumber}`;
-
-    const response = await fetch(url, {
-      method: "GET",
+    const response = await fetch(MOT_API_URL, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "X-API-Key": apiKey,
       },
+      body: JSON.stringify({
+        registration: registrationNumber,
+      }),
       signal: controller.signal,
     });
 
