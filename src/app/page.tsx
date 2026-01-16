@@ -291,6 +291,46 @@ export default function Home() {
   const [compareData1, setCompareData1] = useState<VehicleData | null>(null);
   const [compareData2, setCompareData2] = useState<VehicleData | null>(null);
   const [compareLoading, setCompareLoading] = useState(false);
+  const [insuranceModalOpen, setInsuranceModalOpen] = useState(false);
+  const [insuranceModalVrm, setInsuranceModalVrm] = useState<string>("");
+  const [insuranceModalDate, setInsuranceModalDate] = useState<string>("");
+  const [vehicleInsuranceDates, setVehicleInsuranceDates] = useState<{ [key: string]: string }>({});
+
+  // Load insurance dates from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("carSnapshotInsuranceDates");
+        if (stored) {
+          setVehicleInsuranceDates(JSON.parse(stored));
+        }
+      } catch (err) {
+        console.error("Failed to load insurance dates:", err);
+      }
+    }
+  }, []);
+
+  // Save insurance dates to localStorage whenever they change
+  const saveInsuranceDate = (vrm: string, date: string) => {
+    const updated = { ...vehicleInsuranceDates, [vrm]: date };
+    setVehicleInsuranceDates(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("carSnapshotInsuranceDates", JSON.stringify(updated));
+    }
+  };
+
+  const handleInsuranceModalOpen = (vrm: string) => {
+    setInsuranceModalVrm(vrm);
+    setInsuranceModalDate(vehicleInsuranceDates[vrm] || "");
+    setInsuranceModalOpen(true);
+  };
+
+  const handleInsuranceModalSave = () => {
+    if (insuranceModalDate) {
+      saveInsuranceDate(insuranceModalVrm, insuranceModalDate);
+    }
+    setInsuranceModalOpen(false);
+  };
 
   // Load recent lookups from localStorage on mount
   // Set browser title
@@ -880,9 +920,9 @@ VERSION:2.0
 PRODID:-//CarScans//CarScans//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:CarScans - MOT & Tax Reminders
+X-WR-CALNAME:CarScans - MOT, Tax & Insurance Reminders
 X-WR-TIMEZONE:UTC
-X-WR-CALDESC:MOT and Tax due dates for your vehicles
+X-WR-CALDESC:MOT, Tax and Insurance renewal reminders for your vehicles
 BEGIN:VTIMEZONE
 TZID:UTC
 BEGIN:STANDARD
@@ -918,6 +958,7 @@ SUMMARY:MOT Due - ${vehicle.registrationNumber} (${vehicle.make})
 DESCRIPTION:MOT expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
 SEQUENCE:0
 STATUS:CONFIRMED
+TRANSP:TRANSPARENT
 END:VEVENT
 `;
         }
@@ -946,9 +987,32 @@ SUMMARY:Tax Due - ${vehicle.registrationNumber} (${vehicle.make})
 DESCRIPTION:Vehicle tax expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
 SEQUENCE:0
 STATUS:CONFIRMED
+TRANSP:TRANSPARENT
 END:VEVENT
 `;
         }
+      }
+
+      // Insurance Renewal event (7-day window: 27-20 days before expiry)
+      const insuranceDate = vehicleInsuranceDates[vehicle.registrationNumber];
+      if (insuranceDate && insuranceDate.length >= 10) {
+        const insuranceExpiry = new Date(insuranceDate);
+        const renewalWindowStart = new Date(insuranceExpiry);
+        renewalWindowStart.setDate(renewalWindowStart.getDate() - 27); // Start 27 days before
+        const renewalWindowEnd = new Date(insuranceExpiry);
+        renewalWindowEnd.setDate(renewalWindowEnd.getDate() - 19); // End 20 days before (7-day window)
+
+        const startYear = renewalWindowStart.getFullYear();
+        const startMonth = String(renewalWindowStart.getMonth() + 1).padStart(2, "0");
+        const startDay = String(renewalWindowStart.getDate()).padStart(2, "0");
+        const startDateStr = `${startYear}${startMonth}${startDay}`;
+
+        const endYear = renewalWindowEnd.getFullYear();
+        const endMonth = String(renewalWindowEnd.getMonth() + 1).padStart(2, "0");
+        const endDay = String(renewalWindowEnd.getDate()).padStart(2, "0");
+        const endDateStr = `${endYear}${endMonth}${endDay}`;
+
+        icsContent += `BEGIN:VEVENT\nUID:car-snapshot-insurance-${vehicle.registrationNumber}-${startYear}-${startMonth}@carsnapshot.app\nDTSTAMP:${dtstamp}\nDTSTART;VALUE=DATE:${startDateStr}\nDTEND;VALUE=DATE:${endDateStr}\nSUMMARY:Insurance Renewal Window - ${vehicle.registrationNumber} (${vehicle.make})\nDESCRIPTION:Best time to renew your car insurance for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber}).\\n\\nSweet Spot: Renew 20-27 days BEFORE your policy expires to get the best rates and coverage options. This 7-day window marks the optimal renewal period.\\n\\nPolicy expires: ${formatDate(insuranceDate)}\nSEQUENCE:0\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\nEND:VEVENT\n`;
       }
     });
 
@@ -1379,7 +1443,7 @@ END:VEVENT
                   <button
                     onClick={() => generateCalendarFile()}
                     className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                    title="Export MOT and Tax dates to calendar"
+                    title="Export MOT, Tax and Insurance dates to calendar"
                   >
                     📅 Export Calendar
                   </button>
@@ -1413,7 +1477,28 @@ END:VEVENT
                               Tax: {formatDate(vehicle.taxDueDate)}
                             </span>
                           )}
+                          {vehicleInsuranceDates[vehicle.registrationNumber] && (
+                            <span>
+                              Insurance: {formatDate(vehicleInsuranceDates[vehicle.registrationNumber])}
+                            </span>
+                          )}
                         </div>
+                        {!vehicleInsuranceDates[vehicle.registrationNumber] && (
+                          <button
+                            onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
+                            className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                          >
+                            + Add insurance date
+                          </button>
+                        )}
+                        {vehicleInsuranceDates[vehicle.registrationNumber] && (
+                          <button
+                            onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
+                            className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                          >
+                            ✏️ Edit insurance
+                          </button>
+                        )}
                       </div>
                       <button
                         onClick={() => removeFromMyVehicles(vehicle.registrationNumber)}
@@ -2164,6 +2249,42 @@ END:VEVENT
             Built with DVLA vehicle data. Always verify details with the seller and official documents before making any decisions.
           </p>
         </footer>
+
+        {/* INSURANCE DATE MODAL */}
+        {insuranceModalOpen && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 max-w-sm w-full shadow-xl">
+              <h3 className="text-lg font-semibold text-slate-100 mb-4">Insurance Policy Expiry Date</h3>
+              <p className="text-sm text-slate-400 mb-4">Enter your car insurance policy expiry date. When you export to calendar, we'll show a 7-day renewal window (20-27 days before expiry) — the sweet spot for getting the best renewal rates.</p>
+              
+              <input
+                type="date"
+                value={insuranceModalDate}
+                onChange={(e) => setInsuranceModalDate(e.target.value)}
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+              />
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setInsuranceModalOpen(false);
+                    setInsuranceModalDate("");
+                  }}
+                  className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-100 font-medium rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleInsuranceModalSave}
+                  disabled={!insuranceModalDate}
+                  className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 text-white font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* TOAST NOTIFICATION */}
         {toastMsg && (
