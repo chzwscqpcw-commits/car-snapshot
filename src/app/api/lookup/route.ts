@@ -17,6 +17,7 @@ const MOT_CLIENT_ID = process.env.MOT_CLIENT_ID;
 const MOT_CLIENT_SECRET = process.env.MOT_CLIENT_SECRET;
 const MOT_TOKEN_URL = process.env.MOT_TOKEN_URL;
 const MOT_API_URL = process.env.MOT_API_URL || "https://tapi.dvsa.gov.uk/vehicle-enquiry/v1/vehicles";
+const MOT_API_KEY = process.env.MOT_API_KEY;
 
 // DVLA Vehicle Enquiry API
 const DVLA_API_KEY = process.env.DVLA_X_API_KEY;
@@ -204,10 +205,11 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
 
     const response = await fetch(MOT_API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+headers: {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${token}`,
+  "X-API-Key": MOT_API_KEY || "",
+},
       body: JSON.stringify({
         registration: registrationNumber,
       }),
