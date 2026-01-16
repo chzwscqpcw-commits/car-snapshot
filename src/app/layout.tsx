@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "UK Car Snapshot",
-  description: "DVLA basics + buying checklist",
+  title: "CarScans - UK Vehicle Lookup",
+  description: "Instant DVLA data, MOT status, tax dates & buying checklist for car owners, buyers & sellers",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
