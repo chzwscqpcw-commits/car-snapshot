@@ -1682,7 +1682,7 @@ END:VEVENT
                     className="h-fit px-3 py-2 text-xs font-semibold text-slate-300 hover:text-slate-100 border border-slate-600 hover:border-slate-500 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-700 whitespace-nowrap"
                     title="Learn what you can do with this vehicle"
                   >
-                    <span className="text-base mr-1.5">?</span> What can I do?
+                    💡 What can I do?
                   </button>
                 </div>
 
