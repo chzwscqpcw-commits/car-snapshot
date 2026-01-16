@@ -2173,47 +2173,6 @@ END:VEVENT
                             )}
                           </div>
                         )}
-                        {test.rfrAndComments && test.rfrAndComments.length > 0 && (
-                          <div className="mt-3 border-t border-slate-700/50 pt-3">
-                            <button
-                              onClick={() => {
-                                const newSet = new Set(expandedMotTests);
-                                if (newSet.has(idx)) {
-                                  newSet.delete(idx);
-                                } else {
-                                  newSet.add(idx);
-                                }
-                                setExpandedMotTests(newSet);
-                              }}
-                              className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
-                            >
-                              <span>{expandedMotTests.has(idx) ? "−" : "+"}</span>
-                              <span>
-                                {test.rfrAndComments.filter(r => r.type === "DEFECT").length} defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""},{" "}
-                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
-                              </span>
-                            </button>
-                            {expandedMotTests.has(idx) && (
-                              <div className="mt-3 space-y-2">
-                                {test.rfrAndComments.filter(r => r.type === "DEFECT").map((defect, didx) => (
-                                  <p key={`defect-${didx}`} className="text-xs text-red-300 pl-3 border-l border-red-500">
-                                    <span className="font-semibold">Defect:</span> {defect.text}
-                                  </p>
-                                ))}
-                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
-                                  <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
-                                    <span className="font-semibold">Advisory:</span> {advisory.text}
-                                  </p>
-                                ))}
-                                {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
-                                  <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
-                                    <span className="font-semibold">Note:</span> {comment.text}
-                                  </p>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>
