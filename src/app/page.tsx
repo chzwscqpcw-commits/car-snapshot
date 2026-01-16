@@ -70,7 +70,9 @@ function looksLikeEmail(email: string) {
 }
 
 function formatDate(iso?: string) {
-  return iso ? iso : "—";
+  if (!iso) return "—";
+  const [year, month, day] = iso.split("-");
+  return `${day}/${month}/${year}`;
 }
 
 function parseISODate(iso?: string) {
@@ -84,6 +86,48 @@ function daysSince(iso?: string) {
   if (!d) return null;
   const diff = Date.now() - d.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+function daysUntil(iso?: string) {
+  const d = parseISODate(iso);
+  if (!d) return null;
+  const diff = d.getTime() - Date.now();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+function getTaxStatusColor(taxStatus?: string, taxDueDate?: string) {
+  if (!taxStatus) return "slate";
+  if (taxStatus === "Taxed") {
+    const days = daysUntil(taxDueDate);
+    if (days === null || days > 30) return "emerald"; // Green - good
+    if (days > 0) return "amber"; // Amber - warning
+    return "red"; // Red - overdue
+  }
+  if (taxStatus === "Not Taxed") return "red";
+  if (taxStatus === "SORN") return "slate"; // SORN = Statutory Off Road Notification
+  return "slate";
+}
+
+function getMotStatusColor(motStatus?: string, motExpiryDate?: string) {
+  if (!motStatus) return "slate";
+  if (motStatus === "Valid") {
+    const days = daysUntil(motExpiryDate);
+    if (days === null || days > 30) return "emerald"; // Green - good
+    if (days > 0) return "amber"; // Amber - warning
+    return "red"; // Red - expired
+  }
+  if (motStatus === "Expired") return "red";
+  return "slate";
+}
+
+function getStatusBgClass(color: string) {
+  const bgMap: { [key: string]: string } = {
+    emerald: "bg-emerald-950/40 border-emerald-900/40",
+    amber: "bg-amber-950/40 border-amber-900/40",
+    red: "bg-red-950/40 border-red-900/40",
+    slate: "bg-slate-800/50 border-slate-700/50",
+  };
+  return `border ${bgMap[color] || bgMap.slate}`;
 }
 
 function addYearsToYearMonth(ym: string, years: number) {
@@ -249,6 +293,11 @@ export default function Home() {
   const [compareLoading, setCompareLoading] = useState(false);
 
   // Load recent lookups from localStorage on mount
+  // Set browser title
+  useEffect(() => {
+    document.title = "CarScans - UK Vehicle Lookup";
+  }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -1556,7 +1605,7 @@ END:VEVENT
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
               <input
                 type="text"
-                placeholder="E.g. P7 SJG"
+                placeholder="E.g. AB12 CDE"
                 value={vrm}
                 onChange={(e) => {
                   setVrm(e.target.value.toUpperCase());
@@ -1845,21 +1894,51 @@ END:VEVENT
             {/* TAX & MOT STATUS */}
             <DataReveal delay={200}>
               <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-slate-400" />
+                <div 
+                  className="p-6 rounded-lg border"
+                  style={{
+                    backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", amber: "rgba(217, 119, 6, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)],
+                    borderColor: { emerald: "rgba(5, 150, 105, 0.4)", amber: "rgba(217, 119, 6, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)],
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Calendar className="w-5 h-5" style={{ color: { emerald: "#10b981", amber: "#f59e0b", red: "#ef4444", slate: "#64748b" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)] }} />
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Tax Status</span>
                   </div>
-                  <p className="text-lg font-semibold text-slate-100 mb-1">{data.taxStatus ?? "—"}</p>
+                  <p className={`text-xl font-bold leading-tight mb-2 ${{ emerald: "text-emerald-100", amber: "text-amber-100", red: "text-red-100", slate: "text-slate-100" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
+                    {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null
+                      ? daysUntil(data.taxDueDate)! > 0
+                        ? `Taxed for another ${daysUntil(data.taxDueDate)} days`
+                        : "Tax expired"
+                      : data.taxStatus === "Not Taxed"
+                      ? "Not Taxed"
+                      : data.taxStatus === "SORN"
+                      ? "Off Road (SORN)"
+                      : data.taxStatus ?? "—"}
+                  </p>
                   <p className="text-sm text-slate-400">Due: {formatDate(data.taxDueDate)}</p>
                 </div>
 
-                <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                <div 
+                  className="p-6 rounded-lg border"
+                  style={{
+                    backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", amber: "rgba(217, 119, 6, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotStatusColor(data.motStatus, data.motExpiryDate)],
+                    borderColor: { emerald: "rgba(5, 150, 105, 0.4)", amber: "rgba(217, 119, 6, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotStatusColor(data.motStatus, data.motExpiryDate)],
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle2 className="w-5 h-5" style={{ color: { emerald: "#10b981", amber: "#f59e0b", red: "#ef4444", slate: "#64748b" }[getMotStatusColor(data.motStatus, data.motExpiryDate)] }} />
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">MOT Status</span>
                   </div>
-                  <p className="text-lg font-semibold text-slate-100 mb-1">{data.motStatus ?? "—"}</p>
+                  <p className={`text-xl font-bold leading-tight mb-2 ${{ emerald: "text-emerald-100", amber: "text-amber-100", red: "text-red-100", slate: "text-slate-100" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
+                    {data.motStatus === "Valid" && daysUntil(data.motExpiryDate) !== null
+                      ? daysUntil(data.motExpiryDate)! > 0
+                        ? `Valid for another ${daysUntil(data.motExpiryDate)} days`
+                        : "MOT expired"
+                      : data.motStatus === "Expired"
+                      ? "MOT Expired"
+                      : data.motStatus ?? "—"}
+                  </p>
                   <p className="text-sm text-slate-400">Expires: {formatDate(data.motExpiryDate)}</p>
                 </div>
               </div>
@@ -1997,7 +2076,7 @@ END:VEVENT
                   <p className="text-xs text-slate-400 mb-3">I'm checking this vehicle because I am:</p>
                   <div className="flex gap-2 flex-wrap">
                     {[
-                      { value: "owner" as const, label: "My car" },
+                      { value: "owner" as const, label: "The owner" },
                       { value: "buyer" as const, label: "Buying a car" },
                       { value: "seller" as const, label: "Selling a car" },
                     ].map((role) => (
