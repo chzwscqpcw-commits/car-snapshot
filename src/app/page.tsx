@@ -34,16 +34,6 @@ function VehicleXRay() {
     </svg>
   );
 }
-      </svg>
-
-      {hoveredPart && interactive && (
-        <div className="absolute top-4 left-4 bg-cyan-900/80 px-3 py-1 rounded text-xs text-cyan-100 backdrop-blur pointer-events-none">
-          {parts.find((p) => p.id === hoveredPart)?.label}
-        </div>
-      )}
-    </div>
-  );
-}
 
 type VehicleData = {
   registrationNumber: string;
