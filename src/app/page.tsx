@@ -19,59 +19,21 @@ import {
   Zap,
 } from "lucide-react";
 
-// VehicleXRay Component - Semi-interactive subtle background
-function VehicleXRay({ interactive = true }: { interactive?: boolean }) {
-  const [hoveredPart, setHoveredPart] = useState<string | null>(null);
-
-  const parts = [
-    { id: "engine", label: "Engine", cx: 50, cy: 40, r: 8 },
-    { id: "battery", label: "Battery", cx: 70, cy: 50, r: 6 },
-    { id: "documents", label: "MOT & Tax", cx: 30, cy: 60, r: 7 },
-    { id: "transmission", label: "Transmission", cx: 50, cy: 70, r: 7 },
-  ];
-
-  return (
-    <div className="absolute inset-0 opacity-10 hover:opacity-20 transition-opacity duration-300">
-      <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-        {/* Vehicle silhouette */}
-        <ellipse cx="50" cy="50" rx="35" ry="40" fill="none" stroke="#0ea5e9" strokeWidth="1.5" opacity="0.6" />
-        
-        {/* Wheels */}
-        <circle cx="30" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.4" />
-        <circle cx="70" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.4" />
-
-        {/* Internal components */}
-        {parts.map((part) => (
-          <g
-            key={part.id}
-            onMouseEnter={() => interactive && setHoveredPart(part.id)}
-            onMouseLeave={() => interactive && setHoveredPart(null)}
-            style={{ cursor: interactive ? "pointer" : "default" }}
-          >
-            <circle
-              cx={part.cx}
-              cy={part.cy}
-              r={part.r}
-              fill="none"
-              stroke={hoveredPart === part.id ? "#06b6d4" : "#64748b"}
-              strokeWidth={hoveredPart === part.id ? 2 : 1}
-              opacity={hoveredPart === part.id ? 0.8 : 0.5}
-              style={{ transition: "all 0.2s ease" }}
-            />
-            {hoveredPart === part.id && (
-              <circle
-                cx={part.cx}
-                cy={part.cy}
-                r={part.r + 2}
-                fill="none"
-                stroke="#22d3ee"
-                strokeWidth="0.5"
-                strokeDasharray="2,2"
-                opacity="0.6"
-              />
-            )}
-          </g>
         ))}
+// Simple VehicleXRay background
+function VehicleXRay() {
+  return (
+    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+      <ellipse cx="50" cy="50" rx="35" ry="40" fill="none" stroke="#0ea5e9" strokeWidth="2" />
+      <circle cx="30" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1.5" />
+      <circle cx="70" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1.5" />
+      <circle cx="50" cy="40" r="8" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
+      <circle cx="70" cy="50" r="6" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
+      <circle cx="30" cy="60" r="7" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
+      <circle cx="50" cy="70" r="7" fill="none" stroke="#06b6d4" strokeWidth="1.5" />
+    </svg>
+  );
+}
       </svg>
 
       {hoveredPart && interactive && (
