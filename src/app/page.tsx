@@ -19,6 +19,70 @@ import {
   Zap,
 } from "lucide-react";
 
+// VehicleXRay Component - Semi-interactive subtle background
+function VehicleXRay({ interactive = true }: { interactive?: boolean }) {
+  const [hoveredPart, setHoveredPart] = useState<string | null>(null);
+
+  const parts = [
+    { id: "engine", label: "Engine", cx: 50, cy: 40, r: 8 },
+    { id: "battery", label: "Battery", cx: 70, cy: 50, r: 6 },
+    { id: "documents", label: "MOT & Tax", cx: 30, cy: 60, r: 7 },
+    { id: "transmission", label: "Transmission", cx: 50, cy: 70, r: 7 },
+  ];
+
+  return (
+    <div className="absolute inset-0 opacity-10 hover:opacity-20 transition-opacity duration-300">
+      <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+        {/* Vehicle silhouette */}
+        <ellipse cx="50" cy="50" rx="35" ry="40" fill="none" stroke="#0ea5e9" strokeWidth="1.5" opacity="0.6" />
+        
+        {/* Wheels */}
+        <circle cx="30" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.4" />
+        <circle cx="70" cy="75" r="8" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.4" />
+
+        {/* Internal components */}
+        {parts.map((part) => (
+          <g
+            key={part.id}
+            onMouseEnter={() => interactive && setHoveredPart(part.id)}
+            onMouseLeave={() => interactive && setHoveredPart(null)}
+            style={{ cursor: interactive ? "pointer" : "default" }}
+          >
+            <circle
+              cx={part.cx}
+              cy={part.cy}
+              r={part.r}
+              fill="none"
+              stroke={hoveredPart === part.id ? "#06b6d4" : "#64748b"}
+              strokeWidth={hoveredPart === part.id ? 2 : 1}
+              opacity={hoveredPart === part.id ? 0.8 : 0.5}
+              style={{ transition: "all 0.2s ease" }}
+            />
+            {hoveredPart === part.id && (
+              <circle
+                cx={part.cx}
+                cy={part.cy}
+                r={part.r + 2}
+                fill="none"
+                stroke="#22d3ee"
+                strokeWidth="0.5"
+                strokeDasharray="2,2"
+                opacity="0.6"
+              />
+            )}
+          </g>
+        ))}
+      </svg>
+
+      {hoveredPart && interactive && (
+        <div className="absolute top-4 left-4 bg-cyan-900/80 px-3 py-1 rounded text-xs text-cyan-100 backdrop-blur pointer-events-none">
+          {parts.find((p) => p.id === hoveredPart)?.label}
+        </div>
+      )}
+    </div>
+  );
+}
+
 type VehicleData = {
   registrationNumber: string;
   make?: string;
@@ -690,10 +754,10 @@ MOT Expires: ${motExpiryDate}
 📍 TOOL & LINK
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
-Checked with: Car Snapshot
+Checked with: CarScans
 Full details: ${window.location.origin}
 
-Get your own vehicle check at Car Snapshot!`;
+Get your own vehicle check at CarScans!`;
   }
 
   function copyShareLink() {
@@ -828,10 +892,10 @@ Get your own vehicle check at Car Snapshot!`;
 
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Car Snapshot//Car Snapshot//EN
+PRODID:-//CarScans//CarScans//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Car Snapshot - MOT & Tax Reminders
+X-WR-CALNAME:CarScans - MOT & Tax Reminders
 X-WR-TIMEZONE:UTC
 X-WR-CALDESC:MOT and Tax due dates for your vehicles
 BEGIN:VTIMEZONE
@@ -992,7 +1056,7 @@ END:VEVENT
       "",
       "═════════════════════════════════════════════════════════════════",
       "",
-      "Created with Car Snapshot",
+      "Created with CarScans",
       "https://car-snapshot-stephen-gaisfords-projects.vercel.app",
       "",
       "⚠️  Always verify vehicle details with the seller and official",
@@ -1124,7 +1188,7 @@ END:VEVENT
       yPosition += 2;
       doc.setFontSize(9);
       doc.setFont(doc.getFont().fontName, "normal");
-      addText("Created with Car Snapshot");
+      addText("Created with CarScans");
       addText("https://car-snapshot-stephen-gaisfords-projects.vercel.app");
       addText("Always verify vehicle details with the seller and official documents.");
       addText("Privacy: Registration numbers are hashed and not stored.");
@@ -1248,7 +1312,7 @@ END:VEVENT
           <div className="flex items-baseline gap-2 mb-4">
             <Zap className="w-6 h-6 text-blue-400" />
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-              Car Snapshot
+              CarScans
             </h1>
           </div>
           <p className="text-slate-300 text-lg font-medium">Look up any UK vehicle instantly. Tax, MOT & checklists for owners, buyers & sellers.</p>
@@ -1552,8 +1616,9 @@ END:VEVENT
         {/* SEARCH SECTION */}
         <div className="mb-10 sm:mb-12">
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
+            <div className="flex-1 relative overflow-hidden min-h-[48px]">
+              <VehicleXRay interactive={true} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none z-10" />
               <input
                 type="text"
                 placeholder="E.g. P7 SJG"
@@ -1565,7 +1630,7 @@ END:VEVENT
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleLookup();
                 }}
-                className="w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="relative z-10 w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
             <button
@@ -2055,7 +2120,7 @@ END:VEVENT
             Stay Updated
           </h3>
           <p className="text-sm text-slate-300 mb-4">
-            We'll let you know about significant updates to Car Snapshot.
+            We'll let you know about significant updates to CarScans.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
