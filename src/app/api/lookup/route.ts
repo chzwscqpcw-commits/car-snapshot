@@ -195,7 +195,8 @@ async function getMOTAccessToken(): Promise<string | null> {
 
 async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryData | null> {
   const token = await getMOTAccessToken();
-  if (!token || !MOT_API_URL) {
+  const apiKey = process.env.MOT_API_KEY;
+  if (!token || !apiKey) {
     return null;
   }
 
@@ -203,16 +204,15 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(MOT_API_URL, {
-      method: "POST",
-headers: {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${token}`,
-  "X-API-Key": MOT_API_KEY || "",
-},
-      body: JSON.stringify({
-        registration: registrationNumber,
-      }),
+    const url = `https://tapi.dvsa.gov.uk/v1/trade/vehicles/registration/${registrationNumber}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-API-Key": apiKey,
+      },
       signal: controller.signal,
     });
 
