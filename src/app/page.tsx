@@ -1289,99 +1289,195 @@ END:VEVENT
         checklistRole === "buyer" ? "BUYING CHECKLIST" :
         "SELLING CHECKLIST";
 
+      // Calculate MOT insights if available
+      const motInsights = data.motTests ? calculateMotInsights(data.motTests) : null;
+
       // Create PDF document
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      let yPosition = 15;
+      let yPosition = 12;
 
-      // Helper function to add text with wrapping
-      const addText = (text: string, fontSize: number = 11, isBold: boolean = false) => {
+      // Helper function to add text with wrapping (tighter spacing)
+      const addText = (text: string, fontSize: number = 10, isBold: boolean = false) => {
         doc.setFontSize(fontSize);
         doc.setFont(doc.getFont().fontName, isBold ? "bold" : "normal");
         const lines = doc.splitTextToSize(text, pageWidth - 20);
         lines.forEach((line: string) => {
-          if (yPosition > pageHeight - 15) {
+          if (yPosition > pageHeight - 12) {
             doc.addPage();
-            yPosition = 15;
+            yPosition = 12;
           }
           doc.text(line, 10, yPosition);
-          yPosition += 6;
+          yPosition += 5;
         });
       };
 
+      // Helper to check if we need a new page
+      const checkNewPage = (spaceNeeded: number) => {
+        if (yPosition + spaceNeeded > pageHeight - 12) {
+          doc.addPage();
+          yPosition = 12;
+        }
+      };
+
       // Title
-      doc.setFontSize(18);
+      doc.setFontSize(16);
       doc.setFont(doc.getFont().fontName, "bold");
-      doc.text("CAR SNAPSHOT", 10, yPosition);
-      yPosition += 6;
-      doc.setFontSize(14);
-      doc.text("Vehicle Report", 10, yPosition);
-      yPosition += 10;
-
-      // Generated info
-      doc.setFontSize(10);
+      doc.text("CARSCANS", 10, yPosition);
+      doc.setFontSize(11);
       doc.setFont(doc.getFont().fontName, "normal");
-      doc.text(`Generated: ${formattedDate}`, 10, yPosition);
-      yPosition += 5;
-      doc.text(`Registration: ${data.registrationNumber}`, 10, yPosition);
-      yPosition += 9;
+      doc.text("Vehicle Report", 45, yPosition);
+      yPosition += 6;
 
-      // Vehicle Information Section
-      addText("VEHICLE INFORMATION", 13, true);
-      yPosition += 2;
-      addText(`Make & Model: ${data.make} ${data.model || ""}`);
-      addText(`Year: ${data.yearOfManufacture || "—"}`);
-      addText(`Colour: ${data.colour || "—"}`);
-      yPosition += 2;
+      // Generated info (inline)
+      doc.setFontSize(9);
+      doc.text(`Generated: ${formattedDate}  |  Registration: ${data.registrationNumber}`, 10, yPosition);
+      yPosition += 7;
 
-      // Specifications Section
-      addText("SPECIFICATIONS", 13, true);
-      yPosition += 2;
-      addText(`Fuel Type: ${data.fuelType || "—"}`);
-      addText(`Engine Capacity: ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"}`);
-      addText(`CO2 Emissions: ${data.co2Emissions ? `${data.co2Emissions}g/km` : "—"}`);
-      addText(`Euro Status: ${data.euroStatus || "—"}`);
+      // Vehicle Information & Specifications (combined, compact)
+      addText("VEHICLE DETAILS", 11, true);
+      yPosition += 1;
+      addText(`${data.make} ${data.model || ""} (${data.yearOfManufacture || "—"}) - ${data.colour || "—"}`);
+      addText(`${data.fuelType || "—"} | ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"} | ${data.co2Emissions ? `${data.co2Emissions}g/km CO2` : "—"}`);
       yPosition += 2;
 
-      // Compliance Status Section
-      addText("COMPLIANCE STATUS", 13, true);
-      yPosition += 2;
-      addText(`Tax Status: ${data.taxStatus || "—"}`);
-      addText(`Tax Due Date: ${formatDate(data.taxDueDate)}`);
-      addText(`MOT Status: ${data.motStatus || "—"}`);
-      addText(`MOT Expiry: ${formatDate(data.motExpiryDate)}`);
+      // Compliance Status (compact)
+      addText("COMPLIANCE STATUS", 11, true);
+      yPosition += 1;
+      addText(`Tax: ${data.taxStatus || "—"} (due ${formatDate(data.taxDueDate)})  |  MOT: ${data.motStatus || "—"} (expires ${formatDate(data.motExpiryDate)})`);
       addText(`First Registered: ${data.monthOfFirstRegistration || data.dateOfFirstRegistration || "—"}`);
       yPosition += 2;
 
-      // Key Insights Section
-      addText("KEY INSIGHTS", 13, true);
-      yPosition += 2;
-      insights.slice(0, 3).forEach((insight) => {
-        addText(`${insight.title}`, 11, true);
-        addText(insight.detail);
-        yPosition += 0.5;
-      });
-      yPosition += 1;
+      // MOT History Summary Section
+      if (motInsights) {
+        addText("MOT HISTORY", 11, true);
+        yPosition += 1;
+        addText(`${motInsights.totalTests} tests | ${motInsights.passRate}% pass rate (${motInsights.passedTests} passed) | ${motInsights.latestMileage ? motInsights.latestMileage.toLocaleString() + " miles" : "—"}`);
+        if (motInsights.avgMilesPerYear > 0) {
+          const trendLabel = motInsights.mileageTrend === "low" ? " (Low)" : 
+                            motInsights.mileageTrend === "high" ? " (High)" : " (Normal)";
+          addText(`Average: ${motInsights.avgMilesPerYear.toLocaleString()} miles/year${trendLabel} | MOT due in ${motInsights.daysUntilExpiry < 0 ? `EXPIRED` : `${motInsights.daysUntilExpiry} days`}`);
+        }
+        yPosition += 2;
 
-      // Buying Checklist Section
-      addText(checklistTitle, 13, true);
+        // Mileage Alerts or positive message
+        if (motInsights.mileageWarnings && motInsights.mileageWarnings.length > 0) {
+          addText("MILEAGE ALERTS", 11, true);
+          yPosition += 1;
+          motInsights.mileageWarnings.forEach((warning: string) => {
+            const cleanWarning = warning.replace(/[🚨⚠️ℹ️]/g, "").trim();
+            addText(`! ${cleanWarning}`);
+          });
+          yPosition += 2;
+        } else if (motInsights.totalTests >= 2) {
+          addText("+ No mileage anomalies detected - odometer history looks consistent", 10, false);
+          yPosition += 2;
+        }
+
+        // Recurring Issues
+        if (motInsights.recurringAdvisories && motInsights.recurringAdvisories.length > 0) {
+          addText("RECURRING ISSUES", 11, true);
+          yPosition += 1;
+          motInsights.recurringAdvisories.slice(0, 3).forEach((issue: { text: string; count: number }) => {
+            addText(`- ${issue.text} (${issue.count}x)`);
+          });
+          yPosition += 2;
+        }
+
+        // Recent MOT Tests Table (compact - last 5)
+        if (data.motTests && data.motTests.length > 0) {
+          addText("RECENT MOT TESTS", 11, true);
+          yPosition += 2;
+          
+          // Table header
+          doc.setFontSize(9);
+          doc.setFont(doc.getFont().fontName, "bold");
+          doc.text("Date", 10, yPosition);
+          doc.text("Mileage", 45, yPosition);
+          doc.text("Result", 80, yPosition);
+          doc.text("Issues", 105, yPosition);
+          yPosition += 4;
+          
+          // Table rows (last 5 tests)
+          doc.setFont(doc.getFont().fontName, "normal");
+          data.motTests.slice(0, 5).forEach((test) => {
+            if (yPosition > pageHeight - 12) {
+              doc.addPage();
+              yPosition = 12;
+            }
+            
+            const testDate = new Date(test.completedDate).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            });
+            const mileage = test.odometer?.value ? test.odometer.value.toLocaleString() : "—";
+            const result = test.testResult === "PASSED" ? "PASS" : "FAIL";
+            
+            const defects = test.rfrAndComments?.filter((d) => d.type === "DEFECT").length || 0;
+            const advisories = test.rfrAndComments?.filter((d) => d.type === "ADVISORY").length || 0;
+            const issues = [];
+            if (defects > 0) issues.push(`${defects}D`);
+            if (advisories > 0) issues.push(`${advisories}A`);
+            const issueText = issues.length > 0 ? issues.join(", ") : "None";
+            
+            doc.text(testDate, 10, yPosition);
+            doc.text(mileage, 45, yPosition);
+            doc.text(result, 80, yPosition);
+            doc.text(issueText, 105, yPosition);
+            yPosition += 4;
+          });
+          yPosition += 2;
+        }
+
+        // Current Advisories to Address
+        const latestTest = data.motTests?.[0];
+        const currentAdvisories = latestTest?.rfrAndComments?.filter((d) => 
+          d.type === "ADVISORY"
+        ) || [];
+        
+        if (currentAdvisories.length > 0) {
+          checkNewPage(25);
+          addText("CURRENT ADVISORIES", 11, true);
+          yPosition += 1;
+          currentAdvisories.slice(0, 4).forEach((advisory) => {
+            addText(`- ${advisory.text}`);
+          });
+          if (currentAdvisories.length > 4) {
+            addText(`  ...and ${currentAdvisories.length - 4} more`);
+          }
+          yPosition += 2;
+        }
+      }
+
+      // Key Insights (compact - top 2 only)
+      checkNewPage(25);
+      addText("KEY INSIGHTS", 11, true);
+      yPosition += 1;
+      insights.slice(0, 2).forEach((insight) => {
+        addText(`${insight.title}: ${insight.detail}`);
+      });
       yPosition += 2;
+
+      // Checklist (compact)
+      checkNewPage(35);
+      addText(checklistTitle, 11, true);
+      yPosition += 1;
       checklist.forEach((item) => {
         addText(`[ ] ${item}`);
       });
 
-      // Footer
-      yPosition += 2;
-      doc.setFontSize(9);
+      // Footer (compact)
+      yPosition += 3;
+      doc.setFontSize(8);
       doc.setFont(doc.getFont().fontName, "normal");
-      addText("Created with CarScans");
-      addText("https://car-snapshot-stephen-gaisfords-projects.vercel.app");
-      addText("Always verify vehicle details with the seller and official documents.");
-      addText("Privacy: Registration numbers are hashed and not stored.");
+      doc.text("Created with CarScans | https://car-snapshot-stephen-gaisfords-projects.vercel.app", 10, yPosition);
+      yPosition += 4;
+      doc.text("Always verify details with seller and official documents. Registration numbers are hashed and not stored.", 10, yPosition);
 
       // Save PDF
-      doc.save(`Car-Snapshot-${data.registrationNumber}-${timestamp.getTime()}.pdf`);
+      doc.save(`CarScans-${data.registrationNumber}-${timestamp.getTime()}.pdf`);
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);
     } catch (error) {
