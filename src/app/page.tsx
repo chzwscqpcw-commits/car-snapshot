@@ -389,7 +389,7 @@ function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number 
 const AFFILIATE_LINKS = {
   goCompare: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
   hpiCheck: "https://www.hpicheck.com/?utm_source=carsnapshot",
-  carmoola: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.carmoola.com%2F",
+  carmoola: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
   racBreakdown: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.rac.co.uk%2Fbreakdown-cover",
 };
 
