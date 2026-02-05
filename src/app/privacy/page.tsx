@@ -7,7 +7,7 @@ export default function PrivacyPage() {
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <a href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">
-            ← Back to Car Snapshot
+            ← Back to Free Plate Check
           </a>
           <h1 className="text-3xl font-bold text-slate-100">Privacy Policy</h1>
           <p className="text-sm text-slate-400 mt-2">Last Updated: January 14, 2026</p>
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">1. Introduction</h2>
             <p>
-              Car Snapshot ("we," "us," "our") is committed to protecting your privacy. We believe in a <strong>privacy-first approach</strong> and 
+              Free Plate Check ("we," "us," "our") is committed to protecting your privacy. We believe in a <strong>privacy-first approach</strong> and 
               collect only the minimal data necessary to provide our Service.
             </p>
             <p>
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Automatically Collected Information</h3>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong>Cookies & Analytics:</strong> We use Google Analytics to understand how you use Car Snapshot (anonymized data only)</li>
+              <li><strong>Cookies & Analytics:</strong> We use Google Analytics to understand how you use Free Plate Check (anonymized data only)</li>
               <li><strong>IP Address:</strong> Automatically collected through standard web server logs, not stored long-term</li>
               <li><strong>Device Information:</strong> Browser type, device type, operating system (not linked to identity)</li>
               <li><strong>Page Interactions:</strong> Which features you use, time spent on pages (anonymized)</li>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li><strong>Email:</strong> Only if you voluntarily sign up for updates</li>
               <li><strong>Feedback:</strong> If you contact us with feedback or questions</li>
-              <li><strong>No payment data:</strong> Car Snapshot is free and doesn't process payments</li>
+              <li><strong>No payment data:</strong> Free Plate Check is free and doesn't process payments</li>
             </ul>
 
             <p className="mt-4 bg-slate-900 border-l-4 border-blue-500 p-4 rounded">
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
             <p>We use collected information for:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>✅ <strong>Service provision</strong> - To provide vehicle lookup functionality</li>
-              <li>✅ <strong>Improvement</strong> - To understand how users interact with Car Snapshot</li>
+              <li>✅ <strong>Improvement</strong> - To understand how users interact with Free Plate Check</li>
               <li>✅ <strong>Analytics</strong> - To track usage patterns and optimize the service</li>
               <li>✅ <strong>Communication</strong> - To respond to inquiries or send updates (if opted in)</li>
               <li>✅ <strong>Legal compliance</strong> - To comply with GDPR, FCA, or other legal requirements</li>
@@ -121,7 +121,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">7. Third-Party Links</h2>
             <p>
-              Car Snapshot contains links to third-party websites (Go Compare, Carmoola, RAC, HPI Check). 
+              Free Plate Check contains links to third-party websites (Go Compare, Carmoola, RAC, HPI Check). 
               These third parties have their own privacy policies. We are not responsible for their privacy practices.
             </p>
             <p className="mt-4">
@@ -132,7 +132,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">8. International Data Transfers</h2>
             <p>
-              Car Snapshot operates in the UK. If you access from outside the UK, your data may be transferred to and processed in the UK, 
+              Free Plate Check operates in the UK. If you access from outside the UK, your data may be transferred to and processed in the UK, 
               which may have different data protection laws than your home country.
             </p>
           </section>
@@ -218,7 +218,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Children's Privacy</h2>
             <p>
-              Car Snapshot is not directed to children under 18. We do not knowingly collect data from children. 
+              Free Plate Check is not directed to children under 18. We do not knowingly collect data from children. 
               If we become aware a child has used the Service, we will delete their data promptly.
             </p>
           </section>
@@ -261,7 +261,7 @@ export default function PrivacyPage() {
 
           <section className="bg-slate-900 border border-slate-800 rounded-lg p-6 mt-12">
             <p className="text-slate-300">
-              <strong>By using Car Snapshot, you acknowledge that you have read and understood this Privacy Policy.</strong>
+              <strong>By using Free Plate Check, you acknowledge that you have read and understood this Privacy Policy.</strong>
             </p>
           </section>
 
@@ -271,7 +271,7 @@ export default function PrivacyPage() {
       {/* Footer */}
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
-          <p>Car Snapshot © 2026. All rights reserved.</p>
+          <p>Free Plate Check © 2026. All rights reserved.</p>
           <div className="mt-4 space-x-4">
             <a href="/" className="hover:text-slate-300">Home</a>
             <span>•</span>

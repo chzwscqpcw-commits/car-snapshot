@@ -7,7 +7,7 @@ export default function TermsPage() {
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <a href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">
-            ← Back to Car Snapshot
+            ← Back to Free Plate Check
           </a>
           <h1 className="text-3xl font-bold text-slate-100">Terms of Service</h1>
           <p className="text-sm text-slate-400 mt-2">Last Updated: January 14, 2026</p>
@@ -21,7 +21,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using Car Snapshot ("the Service"), you agree to be bound by these Terms of Service. 
+              By accessing and using Free Plate Check ("the Service"), you agree to be bound by these Terms of Service. 
               If you do not agree to these terms, do not use the Service.
             </p>
           </section>
@@ -29,7 +29,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">2. Description of Service</h2>
             <p>
-              Car Snapshot is a vehicle information lookup tool that provides publicly available data about UK registered vehicles, 
+              Free Plate Check is a vehicle information lookup tool that provides publicly available data about UK registered vehicles, 
               including tax status, MOT information, and checklists for vehicle owners, buyers, and sellers.
             </p>
           </section>
@@ -40,7 +40,7 @@ export default function TermsPage() {
               <li>We source vehicle data from the DVLA (Driver and Vehicle Licensing Agency)</li>
               <li>Data is provided "as-is" without warranty of accuracy or completeness</li>
               <li>We recommend you <strong>always verify information with official sources</strong> before making decisions</li>
-              <li>Registration numbers are hashed and not stored by Car Snapshot</li>
+              <li>Registration numbers are hashed and not stored by Free Plate Check</li>
             </ul>
           </section>
 
@@ -59,7 +59,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">5. Third-Party Links & Affiliate Disclosure</h2>
             <p className="mb-4">
-              Car Snapshot contains links to third-party websites (insurance, finance, breakdown cover providers). 
+              Free Plate Check contains links to third-party websites (insurance, finance, breakdown cover providers). 
               These are affiliate links - we earn a commission if you proceed through our links, at no extra cost to you.
             </p>
             <p className="mb-4">We are not responsible for:</p>
@@ -74,7 +74,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold text-slate-100 mb-4">6. Liability Disclaimer</h2>
             <p className="mb-4 font-semibold text-slate-200">TO THE FULLEST EXTENT PERMITTED BY LAW:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Car Snapshot is provided "AS-IS" without warranties</li>
+              <li>Free Plate Check is provided "AS-IS" without warranties</li>
               <li>We are not liable for decisions made based on information provided</li>
               <li>We are not liable for vehicle purchase/sale decisions</li>
               <li>We are not liable for data inaccuracies or omissions</li>
@@ -148,7 +148,7 @@ export default function TermsPage() {
 
           <section className="bg-slate-900 border border-slate-800 rounded-lg p-6 mt-12">
             <p className="text-slate-300">
-              <strong>By using Car Snapshot, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</strong>
+              <strong>By using Free Plate Check, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</strong>
             </p>
           </section>
 
@@ -158,7 +158,7 @@ export default function TermsPage() {
       {/* Footer */}
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
-          <p>Car Snapshot © 2026. All rights reserved.</p>
+          <p>Free Plate Check © 2026. All rights reserved.</p>
           <div className="mt-4 space-x-4">
             <a href="/" className="hover:text-slate-300">Home</a>
             <span>•</span>

@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "CarScans - UK Vehicle Lookup",
+  title: "Free Plate Check - UK Vehicle Lookup",
   description: "Instant DVLA data, MOT status, tax dates & buying checklist for car owners, buyers & sellers",
 };
 

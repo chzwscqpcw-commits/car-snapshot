@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // 1) Try to create a brand new signup
     const { error: insertError } = await sb.from("email_signups").insert({
       email,
-      source: "car-snapshot",
+      source: "free-plate-check",
       wants_reminders: wantsReminders,
       last_vrm_hash: lastVrmHash,
       mot_expiry: motExpiry,
