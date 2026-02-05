@@ -7,6 +7,6 @@ export default function robots() {
         disallow: "/api/",
       },
     ],
-    sitemap: "https://freeplatecheck.co.uk/sitemap.xml",
+    sitemap: "https://www.freeplatecheck.co.uk/sitemap.xml",
   };
 }
