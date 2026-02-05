@@ -1,11 +1,51 @@
 import "./globals.css";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Free Plate Check - UK Vehicle Lookup",
-  description: "Instant DVLA data, MOT status, tax dates & buying checklist for car owners, buyers & sellers",
+export const metadata: Metadata = {
+  title: "Free Plate Check — Free UK Vehicle Check | MOT History, Tax Status & More",
+  description:
+    "Check any UK vehicle free. Enter a reg plate to instantly see MOT history, tax status, mileage data, and get checklists for buying, selling or owning a car. DVLA data, no signup required.",
+  keywords: [
+    "free car check",
+    "number plate check",
+    "vehicle reg check",
+    "MOT check",
+    "car tax check",
+    "DVLA vehicle check",
+    "free vehicle check UK",
+    "registration lookup",
+    "MOT history check",
+    "used car check",
+  ],
+  openGraph: {
+    title: "Free Plate Check — Free UK Vehicle Check",
+    description:
+      "Enter a reg plate to instantly check MOT history, tax status, mileage and more. Free, private, no signup.",
+    url: "https://freeplatecheck.co.uk",
+    siteName: "Free Plate Check",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Free Plate Check — Free UK Vehicle Check",
+    description:
+      "Check any UK vehicle free. MOT history, tax status, mileage data and buying checklists.",
+  },
+  alternates: {
+    canonical: "https://freeplatecheck.co.uk",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
