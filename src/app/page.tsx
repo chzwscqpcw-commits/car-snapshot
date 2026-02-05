@@ -388,7 +388,7 @@ function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number 
 // Update these URLs with your AWIN tracking links once approved
 const AFFILIATE_LINKS = {
   goCompare: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
-  hpiCheck: "https://www.hpicheck.com/?utm_source=carsnapshot",
+  hpiCheck: "https://www.hpicheck.com/?utm_source=freeplatecheck",
   carmoola: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
   racBreakdown: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.rac.co.uk%2Fbreakdown-cover",
 };
@@ -429,7 +429,7 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        const stored = localStorage.getItem("carSnapshotInsuranceDates");
+        const stored = localStorage.getItem("fpcInsuranceDates");
         if (stored) {
           setVehicleInsuranceDates(JSON.parse(stored));
         }
@@ -444,7 +444,7 @@ export default function Home() {
     const updated = { ...vehicleInsuranceDates, [vrm]: date };
     setVehicleInsuranceDates(updated);
     if (typeof window !== "undefined") {
-      localStorage.setItem("carSnapshotInsuranceDates", JSON.stringify(updated));
+      localStorage.setItem("fpcInsuranceDates", JSON.stringify(updated));
     }
   };
 
@@ -464,13 +464,13 @@ export default function Home() {
   // Load recent lookups from localStorage on mount
   // Set browser title
   useEffect(() => {
-    document.title = "CarScans - UK Vehicle Lookup";
+    document.title = "Free Plate Check - UK Vehicle Lookup";
   }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        const stored = localStorage.getItem("carSnapshotRecent");
+        const stored = localStorage.getItem("fpcRecent");
         if (stored) {
           setRecentLookups(JSON.parse(stored));
         }
@@ -799,7 +799,7 @@ export default function Home() {
       if (typeof window !== "undefined") {
         try {
           const updated = [cleanedReg, ...recentLookups.filter((r) => r !== cleanedReg)].slice(0, 5);
-          localStorage.setItem("carSnapshotRecent", JSON.stringify(updated));
+          localStorage.setItem("fpcRecent", JSON.stringify(updated));
           setRecentLookups(updated);
         } catch (err) {
           console.error("Failed to save recent lookup:", err);
@@ -917,10 +917,10 @@ MOT Expires: ${motExpiryDate}
 📍 TOOL & LINK
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
-Checked with: CarScans
-Full details: ${window.location.origin}
+Checked with: Free Plate Check
+Full details: https://freeplatecheck.co.uk
 
-Get your own vehicle check at CarScans!`;
+Get your own free vehicle check at freeplatecheck.co.uk!`;
   }
 
   function copyShareLink() {
@@ -948,12 +948,12 @@ Get your own vehicle check at CarScans!`;
 
   function shareViaFacebook() {
     if (!data) return;
-    const url = window.location.origin;
+    const url = "https://freeplatecheck.co.uk";
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
   }
 
   function loadFavorites() {
-    const stored = localStorage.getItem("car-snapshot-favorites");
+    const stored = localStorage.getItem("fpc-favorites");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -966,7 +966,7 @@ Get your own vehicle check at CarScans!`;
 
   function saveFavoritesToStorage(faves: (VehicleData & { savedAt: number })[]) {
     try {
-      localStorage.setItem("car-snapshot-favorites", JSON.stringify(faves));
+      localStorage.setItem("fpc-favorites", JSON.stringify(faves));
     } catch (e) {
       console.error("Failed to save favorites:", e);
       showToast("Could not save favorite (storage full?)");
@@ -1003,7 +1003,7 @@ Get your own vehicle check at CarScans!`;
   }
 
   function loadMyVehicles() {
-    const stored = localStorage.getItem("car-snapshot-my-vehicles");
+    const stored = localStorage.getItem("fpc-my-vehicles");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -1016,7 +1016,7 @@ Get your own vehicle check at CarScans!`;
 
   function saveMyVehiclesToStorage(vehicles: (VehicleData & { addedAt: number })[]) {
     try {
-      localStorage.setItem("car-snapshot-my-vehicles", JSON.stringify(vehicles));
+      localStorage.setItem("fpc-my-vehicles", JSON.stringify(vehicles));
     } catch (e) {
       console.error("Failed to save my vehicles:", e);
       showToast("Could not save vehicle (storage full?)");
@@ -1055,10 +1055,10 @@ Get your own vehicle check at CarScans!`;
 
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//CarScans//CarScans//EN
+PRODID:-//FreePlateCheck//FreePlateCheck//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:CarScans - MOT, Tax & Insurance Reminders
+X-WR-CALNAME:Free Plate Check - MOT, Tax & Insurance Reminders
 X-WR-TIMEZONE:UTC
 X-WR-CALDESC:MOT, Tax and Insurance renewal reminders for your vehicles
 BEGIN:VTIMEZONE
@@ -1088,7 +1088,7 @@ END:VTIMEZONE
           const nextDateStr = `${year}${month}${nextDay}`;
 
           icsContent += `BEGIN:VEVENT
-UID:car-snapshot-mot-${vehicle.registrationNumber}-${year}-${month}@carsnapshot.app
+UID:fpc-mot-${vehicle.registrationNumber}-${year}-${month}@freeplatecheck.co.uk
 DTSTAMP:${dtstamp}
 DTSTART;VALUE=DATE:${dateStr}
 DTEND;VALUE=DATE:${nextDateStr}
@@ -1117,7 +1117,7 @@ END:VEVENT
           const nextDateStr = `${year}${month}${nextDay}`;
 
           icsContent += `BEGIN:VEVENT
-UID:car-snapshot-tax-${vehicle.registrationNumber}-${year}-${month}@carsnapshot.app
+UID:fpc-tax-${vehicle.registrationNumber}-${year}-${month}@freeplatecheck.co.uk
 DTSTAMP:${dtstamp}
 DTSTART;VALUE=DATE:${dateStr}
 DTEND;VALUE=DATE:${nextDateStr}
@@ -1150,7 +1150,7 @@ END:VEVENT
         const endDay = String(renewalWindowEnd.getDate()).padStart(2, "0");
         const endDateStr = `${endYear}${endMonth}${endDay}`;
 
-        icsContent += `BEGIN:VEVENT\nUID:car-snapshot-insurance-${vehicle.registrationNumber}-${startYear}-${startMonth}@carsnapshot.app\nDTSTAMP:${dtstamp}\nDTSTART;VALUE=DATE:${startDateStr}\nDTEND;VALUE=DATE:${endDateStr}\nSUMMARY:Insurance Renewal Window - ${vehicle.registrationNumber} (${vehicle.make})\nDESCRIPTION:Best time to renew your car insurance for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber}).\\n\\nSweet Spot: Renew 20-27 days BEFORE your policy expires to get the best rates and coverage options. This 7-day window marks the optimal renewal period.\\n\\nPolicy expires: ${formatDate(insuranceDate)}\nSEQUENCE:0\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\nEND:VEVENT\n`;
+        icsContent += `BEGIN:VEVENT\nUID:fpc-insurance-${vehicle.registrationNumber}-${startYear}-${startMonth}@freeplatecheck.co.uk\nDTSTAMP:${dtstamp}\nDTSTART;VALUE=DATE:${startDateStr}\nDTEND;VALUE=DATE:${endDateStr}\nSUMMARY:Insurance Renewal Window - ${vehicle.registrationNumber} (${vehicle.make})\nDESCRIPTION:Best time to renew your car insurance for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber}).\\n\\nSweet Spot: Renew 20-27 days BEFORE your policy expires to get the best rates and coverage options. This 7-day window marks the optimal renewal period.\\n\\nPolicy expires: ${formatDate(insuranceDate)}\nSEQUENCE:0\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\nEND:VEVENT\n`;
       }
     });
 
@@ -1161,7 +1161,7 @@ END:VEVENT
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `car-snapshot-calendar-${new Date().getTime()}.ics`;
+    link.download = `free-plate-check-calendar-${new Date().getTime()}.ics`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1197,7 +1197,7 @@ END:VEVENT
 
     const reportLines = [
       "╔════════════════════════════════════════════════════════════════╗",
-      "║            CAR SNAPSHOT - VEHICLE REPORT                       ║",
+      "║          FREE PLATE CHECK - VEHICLE REPORT                    ║",
       "╚════════════════════════════════════════════════════════════════╝",
       "",
       `Generated: ${formattedDate}`,
@@ -1243,8 +1243,8 @@ END:VEVENT
       "",
       "═════════════════════════════════════════════════════════════════",
       "",
-      "Created with CarScans",
-      "https://car-snapshot-stephen-gaisfords-projects.vercel.app",
+      "Created with Free Plate Check",
+      "https://freeplatecheck.co.uk",
       "",
       "⚠️  Always verify vehicle details with the seller and official",
       "    documents before making any purchase.",
@@ -1260,7 +1260,7 @@ END:VEVENT
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `Car-Snapshot-${data.registrationNumber}-${new Date().getTime()}.txt`;
+    link.download = `FreePlateCheck-${data.registrationNumber}-${new Date().getTime()}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1324,10 +1324,10 @@ END:VEVENT
       // Title
       doc.setFontSize(16);
       doc.setFont(doc.getFont().fontName, "bold");
-      doc.text("CARSCANS", 10, yPosition);
+      doc.text("FREE PLATE CHECK", 10, yPosition);
       doc.setFontSize(11);
       doc.setFont(doc.getFont().fontName, "normal");
-      doc.text("Vehicle Report", 45, yPosition);
+      doc.text("Vehicle Report", 68, yPosition);
       yPosition += 6;
 
       // Generated info (inline)
@@ -1472,12 +1472,12 @@ END:VEVENT
       yPosition += 3;
       doc.setFontSize(8);
       doc.setFont(doc.getFont().fontName, "normal");
-      doc.text("Created with CarScans | https://car-snapshot-stephen-gaisfords-projects.vercel.app", 10, yPosition);
+      doc.text("Created with Free Plate Check | https://freeplatecheck.co.uk", 10, yPosition);
       yPosition += 4;
       doc.text("Always verify details with seller and official documents. Registration numbers are hashed and not stored.", 10, yPosition);
 
       // Save PDF
-      doc.save(`CarScans-${data.registrationNumber}-${timestamp.getTime()}.pdf`);
+      doc.save(`FreePlateCheck-${data.registrationNumber}-${timestamp.getTime()}.pdf`);
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);
     } catch (error) {
@@ -1595,7 +1595,7 @@ END:VEVENT
           <div className="flex items-baseline gap-2 mb-4">
             <Zap className="w-6 h-6 text-blue-400" />
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-              CarScans
+              Free Plate Check
             </h1>
           </div>
           <p className="text-slate-300 text-lg font-medium">Look up any UK vehicle instantly. Tax, MOT & checklists for owners, buyers & sellers.</p>
@@ -1610,7 +1610,7 @@ END:VEVENT
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Recent Lookups</p>
                 <button
                   onClick={() => {
-                    localStorage.removeItem("carSnapshotRecent");
+                    localStorage.removeItem("fpcRecent");
                     setRecentLookups([]);
                     showToast("History cleared");
                   }}
@@ -2740,7 +2740,7 @@ END:VEVENT
             Stay Updated
           </h3>
           <p className="text-sm text-slate-300 mb-4">
-            We'll let you know about significant updates to CarScans.
+            We'll let you know about significant updates to Free Plate Check.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
