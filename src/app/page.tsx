@@ -2645,8 +2645,8 @@ END:VEVENT
                     </div>
                     <p className="text-xs text-emerald-200/80 mb-2">Find best interest rates. Compare car finance instantly.</p>
                     <div className="inline-flex items-center gap-1.5 bg-black/25 rounded-md px-2.5 py-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
-                      <span className="text-[11px] text-emerald-100/50">Powered by Carmoola</span>
+                      <span className="text-[11px] text-emerald-100/50">Powered by</span>
+                      <img src="https://www.awin1.com/cshow.php?s=3188374&v=31283&q=442018&r=2729598" alt="Carmoola" className="h-3 opacity-70" />
                     </div>
                   </a>
 
