@@ -1603,6 +1603,21 @@ END:VEVENT
             Your data is private. We don't store registration numbers or track who you are.
           </p>
 
+          {/* TRUSTED PARTNERS */}
+          <div className="mt-4 flex items-center gap-2">
+            <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Trusted partner</span>
+            <span className="text-slate-700">·</span>
+            
+              href={AFFILIATE_LINKS.carmoola}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity"
+              title="Carmoola - Car Finance"
+            >
+              <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" />
+            </a>
+          </div>
+
           {/* RECENT LOOKUPS - Always visible */}
           {recentLookups.length > 0 && (
             <div className="mt-6 pt-6 border-t border-slate-700/50">
