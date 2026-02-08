@@ -1,4 +1,21 @@
-'use client';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Free Plate Check",
+  description:
+    "Terms of service for Free Plate Check. Understand how our free UK vehicle lookup tool works, data sources, limitations and your responsibilities.",
+  alternates: {
+    canonical: "https://www.freeplatecheck.co.uk/terms",
+  },
+  openGraph: {
+    title: "Terms of Service | Free Plate Check",
+    description:
+      "Terms of service for Free Plate Check. Understand how our free UK vehicle lookup tool works, data sources, limitations and your responsibilities.",
+    url: "https://www.freeplatecheck.co.uk/terms",
+    siteName: "Free Plate Check",
+    type: "website",
+  },
+};
 
 export default function TermsPage() {
   return (

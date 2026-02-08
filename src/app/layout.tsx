@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Free Plate Check — Free UK Vehicle Check",
     description:
       "Enter a reg plate to instantly check MOT history, tax status, mileage and more. Free, private, no signup.",
-    url: "https://freeplatecheck.co.uk",
+    url: "https://www.freeplatecheck.co.uk",
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
       "Check any UK vehicle free. MOT history, tax status, mileage data and buying checklists.",
   },
   alternates: {
-    canonical: "https://freeplatecheck.co.uk",
+    canonical: "https://www.freeplatecheck.co.uk",
   },
   robots: {
     index: true,

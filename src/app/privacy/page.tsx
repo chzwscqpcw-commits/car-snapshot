@@ -1,4 +1,21 @@
-'use client';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Free Plate Check",
+  description:
+    "How Free Plate Check handles your data. We don't store registration numbers or track which vehicles you look up. Read our full privacy policy.",
+  alternates: {
+    canonical: "https://www.freeplatecheck.co.uk/privacy",
+  },
+  openGraph: {
+    title: "Privacy Policy | Free Plate Check",
+    description:
+      "How Free Plate Check handles your data. We don't store registration numbers or track which vehicles you look up.",
+    url: "https://www.freeplatecheck.co.uk/privacy",
+    siteName: "Free Plate Check",
+    type: "website",
+  },
+};
 
 export default function PrivacyPage() {
   return (
