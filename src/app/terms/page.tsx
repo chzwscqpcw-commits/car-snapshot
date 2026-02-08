@@ -162,6 +162,8 @@ export default function TermsPage() {
           <div className="mt-4 space-x-4">
             <a href="/" className="hover:text-slate-300">Home</a>
             <span>•</span>
+            <a href="/blog" className="hover:text-slate-300">Guides</a>
+            <span>•</span>
             <a href="/privacy" className="hover:text-slate-300">Privacy Policy</a>
             <span>•</span>
             <a href="/terms" className="hover:text-slate-300">Terms of Service</a>

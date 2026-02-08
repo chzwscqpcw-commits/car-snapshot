@@ -424,6 +424,15 @@ export default function Home() {
   const [insuranceModalVrm, setInsuranceModalVrm] = useState<string>("");
   const [insuranceModalDate, setInsuranceModalDate] = useState<string>("");
   const [vehicleInsuranceDates, setVehicleInsuranceDates] = useState<{ [key: string]: string }>({});
+  const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
+
+  // Load recent guides
+  useEffect(() => {
+    fetch("/api/posts")
+      .then((res) => res.json())
+      .then((data) => setRecentGuides(data))
+      .catch(() => {});
+  }, []);
 
   // Load insurance dates from localStorage
   useEffect(() => {
@@ -1602,6 +1611,9 @@ END:VEVENT
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
             Your data is private. We don't store registration numbers or track who you are.
           </p>
+          <div className="mt-3">
+            <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
+          </div>
 
 {/* TRUSTED PARTNERS */}
           <div className="mt-4 flex items-center gap-2">
@@ -2776,6 +2788,35 @@ END:VEVENT
           </div>
           {signupMsg && <p className="mt-2 text-sm text-blue-200">{signupMsg}</p>}
         </div>
+
+        {/* HELPFUL GUIDES */}
+        {recentGuides.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-xl font-bold text-slate-100 mb-6">Helpful Guides</h2>
+            <div className="space-y-4">
+              {recentGuides.map((guide) => (
+                <a
+                  key={guide.slug}
+                  href={`/blog/${guide.slug}`}
+                  className="block p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group"
+                >
+                  <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">
+                    {guide.title}
+                  </h3>
+                  <p className="text-sm text-slate-400 mt-1">{guide.description}</p>
+                  <span className="inline-block mt-2 text-xs text-blue-400 group-hover:text-blue-300 transition-colors">
+                    Read more &rarr;
+                  </span>
+                </a>
+              ))}
+            </div>
+            <div className="mt-4 text-center">
+              <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                See all guides &rarr;
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* FOOTER */}
         <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500">
