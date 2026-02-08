@@ -1532,6 +1532,65 @@ END:VEVENT
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-hidden">
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is this car check really free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. We use official DVLA and MOT data to show you tax status, MOT history, mileage records and vehicle details."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What information does a free plate check show?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You'll see the vehicle's make, model, colour, fuel type, engine size, CO2 emissions, year of manufacture, current tax and MOT status, full MOT history with advisories and failures, and mileage recorded at each MOT test. You also get checklists tailored to buyers, sellers and owners."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I check my car's MOT history?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Enter your registration number on Free Plate Check and you'll see every MOT test result since 2005 — including pass/fail outcomes, advisories, failures, mileage readings and the next MOT due date. It's free, instant and works for any UK-registered vehicle."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you store my registration number?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. We do not store registration numbers or any information that identifies which vehicles you look up. Your search is sent directly to the DVLA and MOT APIs, and nothing is saved on our servers. Recent lookups are stored only in your browser's local storage, which you can clear at any time."
+              }
+            }
+          ]
+        }) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Free Plate Check",
+          "url": "https://www.freeplatecheck.co.uk",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "GBP"
+          }
+        }) }}
+      />
+
       {/* Subtle background pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
         <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
@@ -2787,6 +2846,41 @@ END:VEVENT
             </button>
           </div>
           {signupMsg && <p className="mt-2 text-sm text-blue-200">{signupMsg}</p>}
+        </div>
+
+        {/* WHAT CAN YOU CHECK? */}
+        <div className="mt-10">
+          <h2 className="text-xl font-bold text-slate-100 mb-6">What Can You Check?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="/mot-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Search className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT History Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">See every MOT result, advisory and failure since 2005.</p>
+            </a>
+            <a href="/car-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">Look up make, model, colour, engine size and fuel type from DVLA data.</p>
+            </a>
+            <a href="/tax-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Calendar className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Tax Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">See if a vehicle is taxed, SORN&apos;d or untaxed, plus the expiry date.</p>
+            </a>
+            <a href="/mileage-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Gauge className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Mileage Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">Track odometer readings across MOT tests to spot clocking.</p>
+            </a>
+          </div>
         </div>
 
         {/* HELPFUL GUIDES */}

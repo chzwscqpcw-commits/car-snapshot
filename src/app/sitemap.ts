@@ -23,6 +23,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/mot-check",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/car-check",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/tax-check",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/mileage-check",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",
