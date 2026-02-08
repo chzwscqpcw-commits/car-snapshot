@@ -89,17 +89,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       {/* Post content */}
       <div className="max-w-3xl mx-auto px-4 py-12">
         <article
-          className="prose prose-invert max-w-[700px] mx-auto
-            prose-headings:text-slate-100 prose-headings:font-bold
-            prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
-            prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
-            prose-p:text-slate-300 prose-p:leading-relaxed prose-p:mb-4
-            prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
-            prose-strong:text-slate-100
-            prose-ul:text-slate-300 prose-ul:space-y-2
-            prose-ol:text-slate-300 prose-ol:space-y-2
-            prose-li:leading-relaxed
-            prose-blockquote:border-blue-500 prose-blockquote:text-slate-400"
+          className="blog-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
