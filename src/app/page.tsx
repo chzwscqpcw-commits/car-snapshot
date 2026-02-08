@@ -334,10 +334,10 @@ function LoadingSkeleton() {
 }
 
 // Animated data reveal component
-function DataReveal({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
+function DataReveal({ delay = 0, children, className }: { delay?: number; children: React.ReactNode; className?: string }) {
   return (
     <div
-      className="animate-fadeInUp opacity-0"
+      className={`animate-fadeInUp opacity-0${className ? ` ${className}` : ""}`}
       style={{
         animationDelay: `${delay}ms`,
         animationFillMode: "forwards",
@@ -496,8 +496,10 @@ export default function Home() {
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
-  const [showFavorites, setShowFavorites] = useState(false);
   const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
+  const [confirmingClear, setConfirmingClear] = useState<string | null>(null);
+  const confirmClearTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [activeVehicleTab, setActiveVehicleTab] = useState<"recent" | "saved" | "mycars">("recent");
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -633,6 +635,10 @@ export default function Home() {
     if (typeof window !== "undefined") {
       loadFavorites();
       loadMyVehicles();
+      const savedTab = localStorage.getItem("fpc-active-tab");
+      if (savedTab === "recent" || savedTab === "saved" || savedTab === "mycars") {
+        setActiveVehicleTab(savedTab);
+      }
     }
   }, []);
 
@@ -1252,11 +1258,9 @@ Get your own free vehicle check at freeplatecheck.co.uk!`;
 
   function clearAllFavorites() {
     if (favorites.length === 0) return;
-    if (window.confirm(`Remove all ${favorites.length} favorite(s)?`)) {
-      setFavorites([]);
-      saveFavoritesToStorage([]);
-      showToast("Favorites cleared");
-    }
+    setFavorites([]);
+    saveFavoritesToStorage([]);
+    showToast("Favorites cleared");
   }
 
   function loadMyVehicles() {
@@ -1429,10 +1433,28 @@ END:VEVENT
 
   function clearAllMyVehicles() {
     if (myVehicles.length === 0) return;
-    if (window.confirm(`Remove all ${myVehicles.length} vehicle(s) from My Vehicles?`)) {
-      setMyVehicles([]);
-      saveMyVehiclesToStorage([]);
-      showToast("My Vehicles cleared");
+    setMyVehicles([]);
+    saveMyVehiclesToStorage([]);
+    showToast("My Vehicles cleared");
+  }
+
+  function handleClearConfirm(section: string) {
+    if (confirmingClear === section) {
+      // Second click — perform the clear
+      if (confirmClearTimeout.current) clearTimeout(confirmClearTimeout.current);
+      setConfirmingClear(null);
+      if (section === "favorites") clearAllFavorites();
+      else if (section === "mycars") clearAllMyVehicles();
+      else if (section === "recent") {
+        localStorage.removeItem("fpcRecent");
+        setRecentLookups([]);
+        showToast("History cleared");
+      }
+    } else {
+      // First click — enter confirming state
+      if (confirmClearTimeout.current) clearTimeout(confirmClearTimeout.current);
+      setConfirmingClear(section);
+      confirmClearTimeout.current = setTimeout(() => setConfirmingClear(null), 4000);
     }
   }
 
@@ -1617,7 +1639,7 @@ END:VEVENT
   const totalCount = checklist.length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-x-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-hidden">
       {/* Structured data */}
       <script
         type="application/ld+json"
@@ -1769,147 +1791,183 @@ END:VEVENT
             </a>
           </div>
 
-          {/* RECENT LOOKUPS - Always visible */}
-          {recentLookups.length > 0 && (
+          {/* TABBED SECTION: Recent / Saved / My Cars */}
+          {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
             <div className="mt-6 pt-6 border-t border-slate-700/50">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Recent Lookups</p>
+              {/* Tab bar */}
+              <div className="flex gap-1 mb-4 border-b border-slate-700/50">
                 <button
-                  onClick={() => {
-                    localStorage.removeItem("fpcRecent");
-                    setRecentLookups([]);
-                    showToast("History cleared");
-                  }}
-                  className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
+                  onClick={() => { setActiveVehicleTab("recent"); localStorage.setItem("fpc-active-tab", "recent"); }}
+                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "recent" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
                 >
-                  Clear
+                  Recent
+                </button>
+                <button
+                  onClick={() => { setActiveVehicleTab("saved"); localStorage.setItem("fpc-active-tab", "saved"); }}
+                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "saved" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+                >
+                  Saved{favorites.length > 0 ? ` (${favorites.length})` : ""}
+                </button>
+                <button
+                  onClick={() => { setActiveVehicleTab("mycars"); localStorage.setItem("fpc-active-tab", "mycars"); }}
+                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "mycars" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+                >
+                  My Cars{myVehicles.length > 0 ? ` (${myVehicles.length})` : ""}
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {recentLookups.map((reg, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => performLookup(reg)}
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 rounded-full text-slate-200 text-sm font-medium transition-all flex items-center gap-2 group"
-                  >
-                    <RotateCcw className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                    {reg}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* MY FAVORITES - Always visible */}
-          {favorites.length > 0 && (
-            <div className="mt-6 pt-6 border-t border-slate-700/50">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">❤️ My Favorites ({favorites.length})</p>
-                <button
-                  onClick={() => clearAllFavorites()}
-                  className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
-                >
-                  Clear All
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {favorites.map((fav, idx) => (
-                  <div key={idx} className="relative group">
-                    <button
-                      onClick={() => performLookup(fav.registrationNumber)}
-                      className="px-3 py-1.5 bg-red-900/30 hover:bg-red-800/40 border border-red-700/50 hover:border-red-600 rounded-full text-red-200 text-sm font-medium transition-all flex items-center gap-2"
-                    >
-                      {fav.registrationNumber}
-                    </button>
-                    <button
-                      onClick={() => removeFavorite(fav.registrationNumber)}
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Remove from favorites"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* MY VEHICLES - Always visible */}
-          {myVehicles.length > 0 && (
-            <div className="mt-6 pt-6 border-t border-slate-700/50">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">✓ My Vehicles ({myVehicles.length})</p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => generateCalendarFile()}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                    title="Export MOT, Tax and Insurance dates to calendar"
-                  >
-                    📅 Export Calendar
-                  </button>
-                  <button
-                    onClick={() => clearAllMyVehicles()}
-                    className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
-                  >
-                    Clear
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {myVehicles.map((vehicle, idx) => (
-                  <div key={idx} className="p-3 bg-emerald-900/20 border border-emerald-700/50 rounded-lg">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
+              {/* Recent tab */}
+              {activeVehicleTab === "recent" && (
+                <div>
+                  {recentLookups.length > 0 ? (
+                    <>
+                      <div className="flex items-center justify-end mb-3">
                         <button
-                          onClick={() => performLookup(vehicle.registrationNumber)}
-                          className="text-sm font-semibold text-emerald-100 hover:text-emerald-50 transition-colors text-left"
+                          onClick={() => handleClearConfirm("recent")}
+                          className={`text-xs transition-colors ${confirmingClear === "recent" ? "text-red-400 font-semibold" : "text-slate-500 hover:text-slate-400"}`}
                         >
-                          {vehicle.make} {vehicle.model || ""} — {vehicle.registrationNumber}
+                          {confirmingClear === "recent" ? "Confirm?" : "Clear"}
                         </button>
-                        <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-200/70">
-                          {vehicle.motExpiryDate && (
-                            <span>
-                              MOT: {formatDate(vehicle.motExpiryDate)}
-                            </span>
-                          )}
-                          {vehicle.taxDueDate && (
-                            <span>
-                              Tax: {formatDate(vehicle.taxDueDate)}
-                            </span>
-                          )}
-                          {vehicleInsuranceDates[vehicle.registrationNumber] && (
-                            <span>
-                              Insurance: {formatDate(vehicleInsuranceDates[vehicle.registrationNumber])}
-                            </span>
-                          )}
-                        </div>
-                        {!vehicleInsuranceDates[vehicle.registrationNumber] && (
-                          <button
-                            onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
-                            className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                          >
-                            + Add insurance date
-                          </button>
-                        )}
-                        {vehicleInsuranceDates[vehicle.registrationNumber] && (
-                          <button
-                            onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
-                            className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                          >
-                            ✏️ Edit insurance
-                          </button>
-                        )}
                       </div>
-                      <button
-                        onClick={() => removeFromMyVehicles(vehicle.registrationNumber)}
-                        className="text-xs text-emerald-600 hover:text-emerald-500 transition-colors whitespace-nowrap mt-1"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex flex-wrap gap-2">
+                        {recentLookups.map((reg, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => performLookup(reg)}
+                            className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 rounded-full text-slate-200 text-sm font-medium transition-all flex items-center gap-2 group"
+                          >
+                            <RotateCcw className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                            {reg}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-500">Your recent lookups will appear here</p>
+                  )}
+                </div>
+              )}
+
+              {/* Saved tab */}
+              {activeVehicleTab === "saved" && (
+                <div>
+                  {favorites.length > 0 ? (
+                    <>
+                      <div className="flex items-center justify-end mb-3">
+                        <button
+                          onClick={() => handleClearConfirm("favorites")}
+                          className={`text-xs transition-colors ${confirmingClear === "favorites" ? "text-red-400 font-semibold" : "text-slate-500 hover:text-slate-400"}`}
+                        >
+                          {confirmingClear === "favorites" ? "Confirm?" : "Clear All"}
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {favorites.map((fav, idx) => (
+                          <div key={idx} className="relative group">
+                            <button
+                              onClick={() => performLookup(fav.registrationNumber)}
+                              className="px-3 py-1.5 bg-red-900/30 hover:bg-red-800/40 border border-red-700/50 hover:border-red-600 rounded-full text-red-200 text-sm font-medium transition-all flex items-center gap-2"
+                            >
+                              {fav.registrationNumber}
+                            </button>
+                            <button
+                              onClick={() => removeFavorite(fav.registrationNumber)}
+                              className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                              title="Remove from favorites"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-500">Save vehicles from results to compare later</p>
+                  )}
+                </div>
+              )}
+
+              {/* My Cars tab */}
+              {activeVehicleTab === "mycars" && (
+                <div>
+                  {myVehicles.length > 0 ? (
+                    <>
+                      <div className="flex items-center justify-end gap-2 mb-3">
+                        <button
+                          onClick={() => generateCalendarFile()}
+                          className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                          title="Export MOT, Tax and Insurance dates to calendar"
+                        >
+                          Export Calendar
+                        </button>
+                        <button
+                          onClick={() => handleClearConfirm("mycars")}
+                          className={`text-xs transition-colors ${confirmingClear === "mycars" ? "text-red-400 font-semibold" : "text-slate-500 hover:text-slate-400"}`}
+                        >
+                          {confirmingClear === "mycars" ? "Confirm?" : "Clear"}
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        {myVehicles.map((vehicle, idx) => (
+                          <div key={idx} className="p-3 bg-emerald-900/20 border border-emerald-700/50 rounded-lg">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex-1 min-w-0">
+                                <button
+                                  onClick={() => performLookup(vehicle.registrationNumber)}
+                                  className="text-sm font-semibold text-emerald-100 hover:text-emerald-50 transition-colors text-left"
+                                >
+                                  {vehicle.make} {vehicle.model || ""} — {vehicle.registrationNumber}
+                                </button>
+                                <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-200/70">
+                                  {vehicle.motExpiryDate && (
+                                    <span>
+                                      MOT: {formatDate(vehicle.motExpiryDate)}
+                                    </span>
+                                  )}
+                                  {vehicle.taxDueDate && (
+                                    <span>
+                                      Tax: {formatDate(vehicle.taxDueDate)}
+                                    </span>
+                                  )}
+                                  {vehicleInsuranceDates[vehicle.registrationNumber] && (
+                                    <span>
+                                      Insurance: {formatDate(vehicleInsuranceDates[vehicle.registrationNumber])}
+                                    </span>
+                                  )}
+                                </div>
+                                {!vehicleInsuranceDates[vehicle.registrationNumber] && (
+                                  <button
+                                    onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
+                                    className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                                  >
+                                    + Add insurance date
+                                  </button>
+                                )}
+                                {vehicleInsuranceDates[vehicle.registrationNumber] && (
+                                  <button
+                                    onClick={() => handleInsuranceModalOpen(vehicle.registrationNumber)}
+                                    className="mt-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                                  >
+                                    Edit insurance
+                                  </button>
+                                )}
+                              </div>
+                              <button
+                                onClick={() => removeFromMyVehicles(vehicle.registrationNumber)}
+                                className="text-xs text-emerald-600 hover:text-emerald-500 transition-colors whitespace-nowrap mt-1"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-500">Mark a vehicle as yours to track MOT & tax dates</p>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </header>
@@ -2178,7 +2236,7 @@ END:VEVENT
             />
 
             {/* VEHICLE HEADER */}
-            <DataReveal delay={0}>
+            <DataReveal delay={0} className="relative z-20">
               <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                   <div className="flex-1">
