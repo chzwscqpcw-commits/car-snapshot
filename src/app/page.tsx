@@ -1719,7 +1719,7 @@ END:VEVENT
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Trusted partner</span>
             <span className="text-slate-700">·</span>
             <a href={AFFILIATE_LINKS.carmoola} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title="Carmoola - Car Finance">
-              <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" />
+              <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" loading="lazy" />
             </a>
           </div>
 
@@ -2791,7 +2791,7 @@ END:VEVENT
                     <p className="text-xs text-emerald-200/80 mb-2">Find best interest rates. Compare car finance instantly.</p>
                     <div className="inline-flex items-center gap-1.5 bg-black/25 rounded-md px-2.5 py-1">
                       <span className="text-[11px] text-emerald-100/50">Powered by</span>
-                      <img src="/carmoola-logo.png" alt="Carmoola" className="h-3 opacity-70" />
+                      <img src="/carmoola-logo.png" alt="Carmoola" className="h-3 opacity-70" loading="lazy" />
                     </div>
                   </a>
 
