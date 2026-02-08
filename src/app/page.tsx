@@ -434,6 +434,46 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
+  // Dynamic meta for vehicle results
+  useEffect(() => {
+    if (data) {
+      const make = data.make || "Vehicle";
+      const model = data.model || "";
+      const year = data.yearOfManufacture || "";
+      document.title = `${make} ${model} (${year}) — Free Vehicle Check | Free Plate Check`;
+
+      let desc = document.querySelector('meta[name="description"]');
+      if (!desc) {
+        desc = document.createElement("meta");
+        desc.setAttribute("name", "description");
+        document.head.appendChild(desc);
+      }
+      const parts = [
+        `${make} ${model}`.trim(),
+        year ? `${year}` : "",
+        data.colour || "",
+        data.fuelType || "",
+        data.engineCapacity ? `${data.engineCapacity}cc` : "",
+        data.taxStatus ? `Tax: ${data.taxStatus}` : "",
+        data.motStatus ? `MOT: ${data.motStatus}` : "",
+      ].filter(Boolean);
+      desc.setAttribute("content", `Free check for ${parts.join(" · ")}. View full MOT history, mileage records and more on Free Plate Check.`);
+
+      // noindex for results state (safety measure — reg not in URL but prevents any cached snapshots)
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) {
+        robots = document.createElement("meta");
+        robots.setAttribute("name", "robots");
+        document.head.appendChild(robots);
+      }
+      robots.setAttribute("content", "noindex, follow");
+    } else {
+      document.title = "Free Plate Check — Free UK Vehicle Check | MOT History, Tax Status & More";
+      const robots = document.querySelector('meta[name="robots"]');
+      if (robots) robots.setAttribute("content", "index, follow");
+    }
+  }, [data]);
+
   // Load insurance dates from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -2066,6 +2106,31 @@ END:VEVENT
 
         {data && !loading && (
           <>
+            {/* VEHICLE JSON-LD */}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Car",
+                "name": `${data.make || ""} ${data.model || ""}`.trim(),
+                "manufacturer": data.make || undefined,
+                "model": data.model || undefined,
+                "vehicleConfiguration": data.fuelType || undefined,
+                "color": data.colour || undefined,
+                "vehicleEngine": data.engineCapacity ? {
+                  "@type": "EngineSpecification",
+                  "engineDisplacement": {
+                    "@type": "QuantitativeValue",
+                    "value": data.engineCapacity,
+                    "unitCode": "CMQ"
+                  }
+                } : undefined,
+                "dateVehicleFirstRegistered": data.dateOfFirstRegistration || undefined,
+                "modelDate": data.yearOfManufacture ? `${data.yearOfManufacture}` : undefined,
+                "fuelType": data.fuelType || undefined,
+              }) }}
+            />
+
             {/* VEHICLE HEADER */}
             <DataReveal delay={0}>
               <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur">
@@ -2814,6 +2879,51 @@ END:VEVENT
                 </div>
               </div>
             </DataReveal>
+
+            {/* PDF REPORT CTA */}
+            <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-slate-200">Save this report</p>
+                <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
+              </div>
+              <button
+                onClick={() => downloadPDF()}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
+              >
+                Download PDF
+              </button>
+            </div>
+
+            {/* WHAT TO CHECK NEXT */}
+            <div className="mt-8">
+              <h3 className="text-base font-semibold text-slate-100 mb-4">What to check next</h3>
+              <div className="space-y-3">
+                {data.motTests?.some(t => t.rfrAndComments?.some(r => r.type === "ADVISORY")) && (
+                  <a href="/blog/what-does-mot-advisory-mean" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                    <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">What Does an MOT Advisory Mean?</p>
+                    <p className="text-xs text-slate-500 mt-1">This vehicle has MOT advisories — learn what they mean and when to act.</p>
+                  </a>
+                )}
+                {(data.taxStatus === "SORN" || data.taxStatus === "Untaxed") && (
+                  <a href="/blog/what-is-sorn-and-when-do-you-need-one" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                    <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">What Is a SORN and When Do You Need One?</p>
+                    <p className="text-xs text-slate-500 mt-1">This vehicle is {data.taxStatus === "SORN" ? "SORN'd" : "untaxed"} — understand the rules.</p>
+                  </a>
+                )}
+                <a href="/blog/how-to-read-mot-history" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Read MOT History</p>
+                  <p className="text-xs text-slate-500 mt-1">Understand what the test results, mileage and advisories mean.</p>
+                </a>
+                <a href="/blog/how-to-check-if-a-car-is-taxed" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Check if a Car Is Taxed</p>
+                  <p className="text-xs text-slate-500 mt-1">Everything you need to know about vehicle tax status in the UK.</p>
+                </a>
+                <a href="/blog/used-car-checks-before-buying" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
+                  <p className="text-xs text-slate-500 mt-1">A practical checklist to protect yourself when buying second-hand.</p>
+                </a>
+              </div>
+            </div>
           </>
         )}
 
