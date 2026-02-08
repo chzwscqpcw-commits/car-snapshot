@@ -16,6 +16,21 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Plate Check — Car Guides & MOT Tips",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Car Guides & MOT Tips | Free Plate Check",
+    description:
+      "Practical guides about MOT checks, car tax, vehicle history, and buying used cars in the UK.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

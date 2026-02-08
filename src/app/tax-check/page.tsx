@@ -23,6 +23,21 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Car Tax Check — Is My Car Taxed?",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Car Tax Check — Is My Car Taxed?",
+    description:
+      "Check if any UK vehicle is taxed. See current tax status, expiry date and whether a SORN is in place. Free and instant.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

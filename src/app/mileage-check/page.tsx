@@ -23,6 +23,21 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Mileage Check — Car Mileage History by Reg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Mileage Check — Car Mileage History by Reg",
+    description:
+      "Check a vehicle's recorded mileage history free. See odometer readings from every MOT test to spot clocking and verify genuine mileage.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

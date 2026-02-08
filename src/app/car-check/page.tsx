@@ -23,6 +23,21 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Car Check — Vehicle Registration Lookup",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Car Check — Vehicle Registration Lookup",
+    description:
+      "Run a free car check on any UK vehicle. See make, model, colour, engine size, fuel type, tax status and MOT history.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

@@ -14,6 +14,21 @@ export const metadata: Metadata = {
     url: "https://www.freeplatecheck.co.uk/privacy",
     siteName: "Free Plate Check",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Plate Check — Privacy Policy",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | Free Plate Check",
+    description:
+      "How Free Plate Check handles your data. We don't store registration numbers or track which vehicles you look up.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

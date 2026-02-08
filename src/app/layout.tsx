@@ -25,12 +25,21 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
+    images: [
+      {
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Plate Check — Free UK Vehicle Check",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Free Plate Check — Free UK Vehicle Check",
     description:
       "Check any UK vehicle free. MOT history, tax status, mileage data and buying checklists.",
+    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk",
