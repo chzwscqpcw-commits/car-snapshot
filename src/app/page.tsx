@@ -107,13 +107,17 @@ import {
   AlertTriangle,
   Info,
   Share,
-  RotateCcw,
   Search,
   Bell,
   ExternalLink,
   CheckSquare,
   Square,
   Zap,
+  RotateCcw,
+  Heart,
+  Car,
+  FileText,
+  ArrowLeftRight,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -494,7 +498,6 @@ export default function Home() {
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
-  const [showFeatureHelp, setShowFeatureHelp] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -2196,28 +2199,22 @@ END:VEVENT
                     </div>
                     <p className="text-sm text-slate-400 mt-4">DVLA data • {new Date().toLocaleDateString()}</p>
                   </div>
-                  <button
-                    onClick={() => setShowFeatureHelp(!showFeatureHelp)}
-                    className="h-fit px-3 py-2 text-xs font-semibold text-slate-300 hover:text-slate-100 border border-slate-600 hover:border-slate-500 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-700 whitespace-nowrap"
-                    title="Learn what you can do with this vehicle"
-                  >
-                    💡 What can I do?
-                  </button>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
+                    {/* Share button */}
                     <div className="relative">
                       <button
                         onClick={() => setShareMenuOpen(!shareMenuOpen)}
-                        className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                        title="Share vehicle details"
+                        className="w-full border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
+                        title="Send vehicle details to friends via email, WhatsApp, or Facebook"
                       >
-                        <Share className="w-5 h-5" />
+                        <Share className="w-4 h-4" />
+                        Share
                       </button>
-                      
-                      {/* Share menu dropdown */}
+
                       {shareMenuOpen && (
-                        <div className="absolute left-0 sm:right-0 sm:left-auto -mt-32 w-48 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
+                        <div className="absolute left-0 top-full mt-1 w-48 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
                           <button
                             onClick={() => {
                               copyShareLink();
@@ -2227,7 +2224,6 @@ END:VEVENT
                           >
                             📋 Copy to clipboard
                           </button>
-                          
                           <button
                             onClick={() => {
                               shareViaEmail();
@@ -2237,7 +2233,6 @@ END:VEVENT
                           >
                             ✉️ Share via Email
                           </button>
-                          
                           <button
                             onClick={() => {
                               shareViaWhatsapp();
@@ -2247,7 +2242,6 @@ END:VEVENT
                           >
                             💬 WhatsApp
                           </button>
-                          
                           <button
                             onClick={() => {
                               shareViaFacebook();
@@ -2260,50 +2254,54 @@ END:VEVENT
                         </div>
                       )}
                     </div>
-                    
+
+                    {/* Save button */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
-                      className={`p-2.5 rounded-lg transition-colors ${
+                      className={`border rounded-lg px-3 py-2.5 text-sm transition-colors flex items-center gap-2 min-h-[44px] ${
                         isFavorited(data.registrationNumber)
-                          ? "bg-red-600 hover:bg-red-500"
-                          : "bg-slate-700 hover:bg-slate-600"
+                          ? "border-red-500/50 bg-red-500/10 text-red-400"
+                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-300 hover:text-slate-100"
                       }`}
-                      title={isFavorited(data.registrationNumber) ? "Remove from favorites" : "Add to favorites"}
+                      title={isFavorited(data.registrationNumber) ? "Remove from saved vehicles" : "Bookmark this vehicle to review later"}
                     >
-                      {isFavorited(data.registrationNumber) ? "❤️" : "🤍"}
+                      <Heart className="w-4 h-4" fill={isFavorited(data.registrationNumber) ? "currentColor" : "none"} />
+                      Save
                     </button>
-                    
+
+                    {/* My Car button */}
                     <button
                       onClick={isMyVehicle(data.registrationNumber) ? () => removeFromMyVehicles(data.registrationNumber) : addToMyVehicles}
-                      className={`p-2.5 rounded-lg transition-colors ${
+                      className={`border rounded-lg px-3 py-2.5 text-sm transition-colors flex items-center gap-2 min-h-[44px] ${
                         isMyVehicle(data.registrationNumber)
-                          ? "bg-emerald-600 hover:bg-emerald-500"
-                          : "bg-slate-700 hover:bg-slate-600"
+                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
+                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-300 hover:text-slate-100"
                       }`}
-                      title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as my car"}
+                      title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as your car to track MOT & tax reminders"}
                     >
-                      {isMyVehicle(data.registrationNumber) ? "✓" : "✔️"}
+                      <Car className="w-4 h-4" />
+                      {isMyVehicle(data.registrationNumber) ? "My Car ✓" : "My Car"}
                     </button>
-                    
+
+                    {/* Report button */}
                     <div className="relative">
                       <button
                         onClick={() => setDownloadMenuOpen(!downloadMenuOpen)}
-                        className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                        title="Download report"
+                        className="w-full border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
+                        title="Download the full vehicle report as PDF or text"
                       >
-                        📥
+                        <FileText className="w-4 h-4" />
+                        Report
                       </button>
 
-                      {/* Download format menu */}
                       {downloadMenuOpen && (
-                        <div className="absolute left-0 sm:right-0 sm:left-auto -mt-32 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
+                        <div className="absolute left-0 top-full mt-1 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
                           <button
                             onClick={() => downloadPDF()}
                             className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
                           >
                             📄 PDF (Recommended)
                           </button>
-
                           <button
                             onClick={() => downloadTXT()}
                             className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
@@ -2313,73 +2311,26 @@ END:VEVENT
                         </div>
                       )}
                     </div>
-                    
+
+                    {/* Compare button */}
                     <button
                       onClick={() => {
-                        setData(null);
-                        setVrm("");
-                        setCheckedItems(new Set());
-                        setShareMenuOpen(false);
+                        if (recentLookups.length >= 2) {
+                          setComparisonMode(true);
+                          setCompareData1(null);
+                          setCompareData2(null);
+                        } else {
+                          showToast("Look up another vehicle to compare");
+                        }
                       }}
-                      className="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                      title="New lookup"
+                      className="border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
+                      title="Compare this vehicle side-by-side with another recent lookup"
                     >
-                      <RotateCcw className="w-5 h-5" />
+                      <ArrowLeftRight className="w-4 h-4" />
+                      Compare
                     </button>
                   </div>
                 </div>
-
-                {/* FEATURE HELP MODAL */}
-                {showFeatureHelp && (
-                  <div className="mb-6 p-4 bg-slate-800/80 border border-slate-700 rounded-lg">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-slate-100">What can you do?</h3>
-                      <button
-                        onClick={() => setShowFeatureHelp(false)}
-                        className="text-slate-400 hover:text-slate-300 text-2xl leading-none"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    <div className="space-y-3 text-sm text-slate-300">
-                      <div className="flex gap-3">
-                        <span className="text-lg">❤️</span>
-                        <div>
-                          <p className="font-semibold text-slate-100 mb-1">Save to Favorites</p>
-                          <p className="text-slate-400">Bookmark vehicles you're interested in. Great for comparing multiple cars side-by-side later.</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <span className="text-lg">✔️</span>
-                        <div>
-                          <p className="font-semibold text-slate-100 mb-1">Mark as My Car</p>
-                          <p className="text-slate-400">Track your own vehicle. Export MOT & tax due dates to Apple Calendar, Google Calendar, or Outlook for automatic reminders.</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <Share className="w-5 h-5 text-lg flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-semibold text-slate-100 mb-1">Share Details</p>
-                          <p className="text-slate-400">Send vehicle information to friends via email, WhatsApp, or Facebook. Perfect for getting second opinions.</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <span className="text-lg">📥</span>
-                        <div>
-                          <p className="font-semibold text-slate-100 mb-1">Download Report</p>
-                          <p className="text-slate-400">Save the full vehicle analysis as a PDF or text file. Keep records for your records or share with a mechanic.</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <span className="text-lg">🔄</span>
-                        <div>
-                          <p className="font-semibold text-slate-100 mb-1">Compare Vehicles</p>
-                          <p className="text-slate-400">Side-by-side comparison of tax, MOT, specs and more. Works with your recent lookups.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
             </DataReveal>
 
