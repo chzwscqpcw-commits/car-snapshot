@@ -529,6 +529,22 @@ export default function Home() {
     }
   }, []);
 
+  // Auto-lookup from ?vrm= query param (used by 404 page)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const reg = params.get("vrm");
+      if (reg) {
+        const cleaned = reg.replace(/\s/g, "").toUpperCase();
+        if (cleaned) {
+          setVrm(cleaned);
+          performLookup(cleaned);
+          window.history.replaceState({}, "", "/");
+        }
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       loadFavorites();
