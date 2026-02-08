@@ -106,7 +106,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
-  Share,
   Search,
   Bell,
   ExternalLink,
@@ -121,6 +120,7 @@ import {
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { triggerShare, isMobileDevice } from "@/lib/share";
 
 type VehicleData = {
   registrationNumber: string;
@@ -493,13 +493,18 @@ export default function Home() {
   const [toastMsg, setToastMsg] = useState("");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
-  const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
   const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
   const [confirmingClear, setConfirmingClear] = useState<string | null>(null);
   const confirmClearTimeout = useRef<NodeJS.Timeout | null>(null);
   const [activeVehicleTab, setActiveVehicleTab] = useState<"recent" | "saved" | "mycars">("recent");
+  const [shareToastVisible, setShareToastVisible] = useState(false);
+  const [shareToastDismissing, setShareToastDismissing] = useState(false);
+  const [downloadSharePrompt, setDownloadSharePrompt] = useState(false);
+  const [downloadShareCopied, setDownloadShareCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const shareToastTimer = useRef<NodeJS.Timeout | null>(null);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -559,6 +564,21 @@ export default function Home() {
       if (robots) robots.setAttribute("content", "index, follow");
     }
   }, [data]);
+
+  // Show share toast on first successful lookup (one-time only)
+  useEffect(() => {
+    if (!data || typeof window === "undefined") return;
+    if (localStorage.getItem("fpc_first_share_shown")) return;
+
+    const timer = setTimeout(() => {
+      localStorage.setItem("fpc_first_share_shown", "1");
+      setShareToastVisible(true);
+      // Auto-dismiss after 10 seconds
+      shareToastTimer.current = setTimeout(() => dismissShareToast(), 10000);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load insurance dates from localStorage
   useEffect(() => {
@@ -1029,6 +1049,56 @@ export default function Home() {
     setTimeout(() => setToastMsg(""), 4000);
   }
 
+  function dismissShareToast() {
+    if (shareToastTimer.current) clearTimeout(shareToastTimer.current);
+    setShareToastDismissing(true);
+    setTimeout(() => {
+      setShareToastVisible(false);
+      setShareToastDismissing(false);
+    }, 200);
+  }
+
+  async function handleShareToastClick() {
+    if (isMobileDevice()) {
+      await triggerShare();
+      dismissShareToast();
+    } else {
+      const ok = await triggerShare();
+      if (ok) {
+        setShareCopied(true);
+        setTimeout(() => {
+          setShareCopied(false);
+          dismissShareToast();
+        }, 2000);
+      }
+    }
+  }
+
+  async function handleDownloadShare() {
+    if (isMobileDevice()) {
+      await triggerShare();
+      setDownloadSharePrompt(false);
+    } else {
+      const ok = await triggerShare();
+      if (ok) {
+        setDownloadShareCopied(true);
+        setTimeout(() => {
+          setDownloadShareCopied(false);
+          setDownloadSharePrompt(false);
+        }, 2000);
+      }
+    }
+  }
+
+  async function handleFooterShare() {
+    if (isMobileDevice()) {
+      await triggerShare();
+    } else {
+      const ok = await triggerShare();
+      if (ok) showToast("Link copied to clipboard");
+    }
+  }
+
   // Extract core lookup logic so it can be called with a registration directly
   async function performLookup(cleanedReg: string, skipCache: boolean = false) {
     if (!cleanedReg) {
@@ -1127,92 +1197,6 @@ export default function Home() {
     } finally {
       setSignupLoading(false);
     }
-  }
-
-  function generateShareText() {
-    if (!data) return "";
-    
-    const year = data.yearOfManufacture || 0;
-    const make = data.make || "Unknown";
-    const model = data.model || "";
-    const reg = data.registrationNumber || "";
-    const fuelType = data.fuelType || "Unknown";
-    const taxStatus = data.taxStatus || "Unknown";
-    const motStatus = data.motStatus || "Unknown";
-    const colour = data.colour || "Unknown";
-    const engine = data.engineCapacity ? `${data.engineCapacity}cc` : "Unknown";
-    const co2 = data.co2Emissions ? `${data.co2Emissions}g/km` : "N/A";
-    const euroStatus = data.euroStatus || "Unknown";
-    const taxDueDate = data.taxDueDate ? formatDate(data.taxDueDate) : "Unknown";
-    const motExpiryDate = data.motExpiryDate ? formatDate(data.motExpiryDate) : "N/A";
-    const firstRegDate = data.dateOfFirstRegistration ? formatDate(data.dateOfFirstRegistration) : (data.monthOfFirstRegistration || "Unknown");
-    
-    // Calculate vehicle age
-    const currentYear = new Date().getFullYear();
-    const age = year > 0 ? currentYear - year : 0;
-    const ageText = year > 0 ? `${age} years old` : "Unknown age";
-    const yearDisplay = year > 0 ? year : "Unknown";
-    
-    return `🚗 ${make} ${model} (${yearDisplay}) — ${reg}
-${ageText}
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-📋 VEHICLE DETAILS
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-Colour: ${colour}
-Fuel Type: ${fuelType}
-Engine: ${engine}
-CO2 Emissions: ${co2}
-Euro Status: ${euroStatus}
-First Registered: ${firstRegDate}
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-✅ COMPLIANCE STATUS
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-Tax: ${taxStatus}
-Tax Due: ${taxDueDate}
-MOT: ${motStatus}
-MOT Expires: ${motExpiryDate}
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-📍 TOOL & LINK
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-Checked with: Free Plate Check
-Full details: https://freeplatecheck.co.uk
-
-Get your own free vehicle check at freeplatecheck.co.uk!`;
-  }
-
-  function copyShareLink() {
-    try {
-      const text = generateShareText();
-      navigator.clipboard.writeText(text);
-      showToast("Vehicle details copied to clipboard.");
-    } catch {
-      showToast("Couldn't copy automatically. You can share this page URL from your browser.");
-    }
-  }
-
-  function shareViaEmail() {
-    if (!data) return;
-    const subject = `Check out this car: ${data.make} ${data.model || ""} ${data.registrationNumber}`;
-    const body = encodeURIComponent(generateShareText());
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
-  }
-
-  function shareViaWhatsapp() {
-    if (!data) return;
-    const text = encodeURIComponent(generateShareText());
-    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
-  }
-
-  function shareViaFacebook() {
-    if (!data) return;
-    const url = "https://freeplatecheck.co.uk";
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
   }
 
   function loadFavorites() {
@@ -1547,6 +1531,8 @@ END:VEVENT
 
     showToast("Text report downloaded!");
     setDownloadMenuOpen(false);
+    setDownloadSharePrompt(true);
+    setTimeout(() => setDownloadSharePrompt(false), 5000);
   }
 
   async function downloadPDF() {
@@ -1597,6 +1583,8 @@ END:VEVENT
 
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);
+      setDownloadSharePrompt(true);
+      setTimeout(() => setDownloadSharePrompt(false), 5000);
     } catch (error) {
       console.error("PDF generation failed:", error);
       showToast("PDF generation failed. Please try the text version.");
@@ -1762,6 +1750,32 @@ END:VEVENT
         }
         .animate-spin-slow {
           animation: spin-slow 2s linear infinite;
+        }
+        @keyframes slideUpIn {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes slideDownOut {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+        }
+        .animate-slideUpIn {
+          animation: slideUpIn 0.25s ease-out forwards;
+        }
+        .animate-slideDownOut {
+          animation: slideDownOut 0.2s ease-in forwards;
         }
       `}</style>
 
@@ -2260,59 +2274,6 @@ END:VEVENT
                 </div>
 
                 <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
-                    {/* Share button */}
-                    <div className="relative">
-                      <button
-                        onClick={() => setShareMenuOpen(!shareMenuOpen)}
-                        className="w-full border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
-                        title="Send vehicle details to friends via email, WhatsApp, or Facebook"
-                      >
-                        <Share className="w-4 h-4" />
-                        Share
-                      </button>
-
-                      {shareMenuOpen && (
-                        <div className="absolute left-0 top-full mt-1 w-48 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
-                          <button
-                            onClick={() => {
-                              copyShareLink();
-                              setShareMenuOpen(false);
-                            }}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            📋 Copy to clipboard
-                          </button>
-                          <button
-                            onClick={() => {
-                              shareViaEmail();
-                              setShareMenuOpen(false);
-                            }}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            ✉️ Share via Email
-                          </button>
-                          <button
-                            onClick={() => {
-                              shareViaWhatsapp();
-                              setShareMenuOpen(false);
-                            }}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            💬 WhatsApp
-                          </button>
-                          <button
-                            onClick={() => {
-                              shareViaFacebook();
-                              setShareMenuOpen(false);
-                            }}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            👥 Facebook
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
                     {/* Save button */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
@@ -3006,9 +2967,21 @@ END:VEVENT
         )}
 
         {/* FOOTER */}
-        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500">
+        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-2">
           <p>
             Built with DVLA vehicle data. Always verify details with the seller and official documents before making any decisions.
+          </p>
+          <p>
+            <button
+              onClick={handleFooterShare}
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Share this tool
+            </button>
+            <span className="mx-1.5">·</span>
+            <a href="/terms" className="hover:text-slate-400 transition-colors">Terms</a>
+            <span className="mx-1.5">·</span>
+            <a href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</a>
           </p>
         </footer>
 
@@ -3055,6 +3028,55 @@ END:VEVENT
           </div>
         )}
       </div>
+
+      {/* SHARE TOAST — first lookup (Moment A) */}
+      {shareToastVisible && (
+        <div className={`fixed bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 ${shareToastDismissing ? "animate-slideDownOut" : "animate-slideUpIn"}`}>
+          <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-slate-200">Know someone buying a car?</p>
+              <p className="text-xs text-slate-400 mt-0.5">Share Free Plate Check</p>
+            </div>
+            <button
+              onClick={handleShareToastClick}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-xs font-semibold rounded-full transition-all whitespace-nowrap"
+            >
+              {shareCopied ? "Copied!" : (isMobileDevice() ? "Share" : "Copy Link")}
+            </button>
+            <button
+              onClick={dismissShareToast}
+              className="text-slate-500 hover:text-slate-400 transition-colors p-1 -mr-1"
+              aria-label="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* DOWNLOAD SHARE PROMPT (Moment B) */}
+      {downloadSharePrompt && (
+        <div className="fixed bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn">
+          <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
+            <p className="flex-1 text-sm text-slate-300">
+              Report downloaded — {isMobileDevice() ? "share this tool with a friend?" : "know someone buying a car?"}
+            </p>
+            <button
+              onClick={handleDownloadShare}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-xs font-semibold rounded-full transition-all whitespace-nowrap"
+            >
+              {downloadShareCopied ? "Copied!" : (isMobileDevice() ? "Share" : "Copy Link")}
+            </button>
+            <button
+              onClick={() => setDownloadSharePrompt(false)}
+              className="text-slate-500 hover:text-slate-400 transition-colors p-1 -mr-1"
+              aria-label="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
