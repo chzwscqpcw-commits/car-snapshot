@@ -384,6 +384,95 @@ function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number 
   );
 }
 
+// Action prompt card — contextual CTA with variant-based styling
+function ActionPrompt({
+  variant,
+  icon,
+  title,
+  description,
+  linkText,
+  linkHref,
+  partnerId,
+  trackingContext,
+  secondaryLink,
+  delay = 0,
+}: {
+  variant: "urgent" | "warning" | "info" | "subtle";
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  linkText: string;
+  linkHref: string;
+  partnerId: string;
+  trackingContext: string;
+  secondaryLink?: { text: string; href: string; partnerId: string; trackingContext: string };
+  delay?: number;
+}) {
+  const variantStyles = {
+    urgent: "bg-red-950/30 border-red-800/50",
+    warning: "bg-amber-950/30 border-amber-800/50",
+    info: "bg-slate-800/50 border-slate-700/50",
+    subtle: "bg-slate-800/30 border-slate-700/30",
+  };
+  const linkStyles = {
+    urgent: "bg-red-600/30 hover:bg-red-600/50 border-red-600/50 text-red-100",
+    warning: "bg-amber-600/30 hover:bg-amber-600/50 border-amber-600/50 text-amber-100",
+    info: "bg-slate-700/50 hover:bg-slate-700/80 border-slate-600/50 text-slate-200",
+    subtle: "bg-slate-700/30 hover:bg-slate-700/50 border-slate-600/30 text-slate-400 hover:text-slate-200",
+  };
+  const titleStyles = {
+    urgent: "text-red-200",
+    warning: "text-amber-200",
+    info: "text-slate-200",
+    subtle: "text-slate-300",
+  };
+  const descStyles = {
+    urgent: "text-red-300/70",
+    warning: "text-amber-300/70",
+    info: "text-slate-400",
+    subtle: "text-slate-500",
+  };
+
+  const partner = PARTNER_LINKS[partnerId as keyof typeof PARTNER_LINKS];
+  const rel = partner ? getPartnerRel(partner) : "noopener noreferrer";
+
+  return (
+    <DataReveal delay={delay}>
+      <div className={`p-4 border rounded-lg ${variantStyles[variant]}`}>
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 shrink-0">{icon}</div>
+          <div>
+            <p className={`text-sm font-medium ${titleStyles[variant]}`}>{title}</p>
+            <p className={`text-xs mt-1 ${descStyles[variant]}`}>{description}</p>
+            <div className="flex flex-wrap items-center gap-3 mt-3">
+              <a
+                href={linkHref}
+                target="_blank"
+                rel={rel}
+                onClick={() => trackPartnerClick(partnerId, trackingContext)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 border rounded text-xs font-medium transition-colors ${linkStyles[variant]}`}
+              >
+                {linkText}
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              {secondaryLink && (
+                <a
+                  href={secondaryLink.href}
+                  target="_blank"
+                  rel={PARTNER_LINKS[secondaryLink.partnerId as keyof typeof PARTNER_LINKS] ? getPartnerRel(PARTNER_LINKS[secondaryLink.partnerId as keyof typeof PARTNER_LINKS]) : "noopener noreferrer"}
+                  onClick={() => trackPartnerClick(secondaryLink.partnerId, secondaryLink.trackingContext)}
+                  className={`text-xs underline underline-offset-2 transition-colors ${descStyles[variant]} hover:${titleStyles[variant]}`}
+                >
+                  {secondaryLink.text}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </DataReveal>
+  );
+}
 
 export default function Home() {
   const [vrm, setVrm] = useState("");
@@ -392,7 +481,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [checklistRole, setChecklistRole] = useState<"owner" | "buyer" | "seller">("owner");
-  const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set());
+  const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set([0, 1, 2]));
   const [showAllMotTests, setShowAllMotTests] = useState(false);
   const [email, setEmail] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
@@ -610,35 +699,143 @@ export default function Home() {
     return [];
   }, [data, checklistRole]);
 
+  // Shared computed values — deduplicate isOver3Years calculation
+  const isOver3Years = useMemo(() => {
+    if (!data?.yearOfManufacture) return false;
+    if (data.monthOfFirstRegistration) {
+      const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
+      const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
+      const threeYearsAgo = new Date();
+      threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+      return regDate <= threeYearsAgo;
+    }
+    return new Date().getFullYear() - data.yearOfManufacture > 3;
+  }, [data]);
+
+  const motDaysUntilExpiry = useMemo(() => {
+    return daysUntil(data?.motExpiryDate) ?? 0;
+  }, [data]);
+
+  const latestAdvisoryCount = useMemo(() => {
+    const latest = data?.motTests?.[0];
+    if (!latest?.rfrAndComments) return 0;
+    return latest.rfrAndComments.filter(r => r.type === "ADVISORY").length;
+  }, [data]);
+
+  type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
+  type ActionPromptConfig = {
+    variant: ActionPromptVariant;
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+    linkText: string;
+    linkHref: string;
+    partnerId: string;
+    trackingContext: string;
+    secondaryLink?: { text: string; href: string; partnerId: string; trackingContext: string };
+  };
+
+  const actionPrompts = useMemo((): ActionPromptConfig[] => {
+    if (!data) return [];
+    const prompts: ActionPromptConfig[] = [];
+
+    const motExpired = isOver3Years && motDaysUntilExpiry < 0;
+    const motExpiringSoon = isOver3Years && !motExpired && motDaysUntilExpiry >= 0 && motDaysUntilExpiry <= 30;
+    const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Not Taxed";
+    const hasAdvisories = isOver3Years && !motExpired && latestAdvisoryCount > 0;
+
+    // 1. MOT expired
+    if (motExpired) {
+      prompts.push({
+        variant: "urgent",
+        icon: <AlertTriangle className="w-5 h-5 text-red-400" />,
+        title: "MOT expired — this vehicle cannot legally be driven",
+        description: "Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.",
+        linkText: "Book MOT via BookMyGarage",
+        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        partnerId: "bookMyGarage",
+        trackingContext: "action-mot-expired",
+        secondaryLink: {
+          text: "Find MOT centres on GOV.UK",
+          href: PARTNER_LINKS.govMotCentres.url,
+          partnerId: "govMotCentres",
+          trackingContext: "action-mot-expired-gov",
+        },
+      });
+    }
+
+    // 2. MOT expiring soon
+    if (motExpiringSoon) {
+      prompts.push({
+        variant: "warning",
+        icon: <AlertCircle className="w-5 h-5 text-amber-400" />,
+        title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
+        description: "You can book an MOT up to a month before expiry without losing any days on your certificate.",
+        linkText: "Book MOT via Fixter",
+        linkHref: PARTNER_LINKS.fixter.url,
+        partnerId: "fixter",
+        trackingContext: "action-mot-expiring",
+      });
+    }
+
+    // 3. Tax SORN/Untaxed
+    if (isSornOrUntaxed) {
+      prompts.push({
+        variant: "warning",
+        icon: <Info className="w-5 h-5 text-amber-400" />,
+        title: `Vehicle is ${data.taxStatus === "SORN" ? "SORN'd" : "untaxed"}`,
+        description: "This vehicle cannot be driven or parked on public roads without valid tax.",
+        linkText: "Tax this vehicle on GOV.UK",
+        linkHref: PARTNER_LINKS.govTaxVehicle.url,
+        partnerId: "govTaxVehicle",
+        trackingContext: "action-sorn-untaxed",
+      });
+    }
+
+    // 4. Has advisories (only if MOT not expired)
+    if (hasAdvisories) {
+      prompts.push({
+        variant: "info",
+        icon: <Info className="w-5 h-5 text-blue-400" />,
+        title: `${latestAdvisoryCount} MOT advisor${latestAdvisoryCount !== 1 ? "ies" : "y"} on record`,
+        description: "Advisories aren't failures, but some may need attention before the next test. A pre-MOT check can flag issues early.",
+        linkText: "Get a pre-MOT check",
+        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        partnerId: "bookMyGarage",
+        trackingContext: "action-advisories",
+      });
+    }
+
+    // 5. Breakdown cover (for 3yr+ vehicles, only if MOT not expired)
+    if (isOver3Years && !motExpired) {
+      prompts.push({
+        variant: "subtle",
+        icon: <Info className="w-5 h-5 text-slate-500" />,
+        title: "Breakdown cover",
+        description: "Older vehicles are more likely to need roadside assistance. RAC cover starts from around £7/month.",
+        linkText: "View RAC breakdown cover",
+        linkHref: PARTNER_LINKS.racBreakdown.url,
+        partnerId: "racBreakdown",
+        trackingContext: "action-breakdown",
+      });
+    }
+
+    return prompts.slice(0, 3);
+  }, [data, isOver3Years, motDaysUntilExpiry, latestAdvisoryCount]);
+
   const insights = useMemo((): Insight[] => {
     if (!data) return [];
 
     const result: Insight[] = [];
 
-    const yearOfCar = data.yearOfManufacture;
-    let isUnder3Years = false;
-    
-    if (yearOfCar) {
-      // If we have month of first registration, use it for accuracy
-      if (data.monthOfFirstRegistration) {
-        const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
-        const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
-        const threeYearsAgo = new Date();
-        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
-        isUnder3Years = regDate > threeYearsAgo;
-      } else {
-        // Fallback: be conservative, count as under 3 only if same year or next year
-        const currentYear = new Date().getFullYear();
-        isUnder3Years = currentYear - yearOfCar <= 3;
-      }
-      
-      if (isUnder3Years) {
-        result.push({
-          tone: "good",
-          title: "Under 3 years old — no MOT required yet",
-          detail: `First MOT due around ${addYearsToYearMonth(data.monthOfFirstRegistration ?? "", 3) ?? "?"} (month/year only—check V5C for exact date).`,
-        });
-      }
+    const isUnder3Years = !isOver3Years && !!data.yearOfManufacture;
+
+    if (isUnder3Years) {
+      result.push({
+        tone: "good",
+        title: "Under 3 years old — no MOT required yet",
+        detail: `First MOT due around ${addYearsToYearMonth(data.monthOfFirstRegistration ?? "", 3) ?? "?"} (month/year only—check V5C for exact date).`,
+      });
     }
 
     const euroNum = extractEuroNumber(data.euroStatus);
@@ -764,7 +961,7 @@ export default function Home() {
     }
 
     return result;
-  }, [data]);
+  }, [data, isOver3Years]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -2346,12 +2543,6 @@ END:VEVENT
                   </div>
                 )}
 
-                {/* KEY INSIGHTS */}
-                <div className="space-y-2">
-                  {insights.slice(0, 2).map((insight, idx) => (
-                    <InsightCard key={idx} insight={insight} delay={idx * 100} />
-                  ))}
-                </div>
             </DataReveal>
 
             {/* VEHICLE SPECS GRID */}
@@ -2375,63 +2566,184 @@ END:VEVENT
               </div>
             </DataReveal>
 
-            {/* TAX & MOT STATUS */}
-            <DataReveal delay={200}>
-              <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div 
-                  className="p-6 rounded-lg border"
-                  style={{
-                    backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", amber: "rgba(217, 119, 6, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)],
-                    borderColor: { emerald: "rgba(5, 150, 105, 0.4)", amber: "rgba(217, 119, 6, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)],
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <Calendar className="w-5 h-5" style={{ color: { emerald: "#10b981", amber: "#f59e0b", red: "#ef4444", slate: "#64748b" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)] }} />
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Tax Status</span>
+            {/* STATUS DASHBOARD */}
+            <DataReveal delay={100}>
+              <div className="mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {/* MOT Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getMotStatusColor(data.motStatus, data.motExpiryDate))}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">MOT</p>
+                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
+                      {data.motStatus === "Valid" && motDaysUntilExpiry > 0
+                        ? `${motDaysUntilExpiry}d left`
+                        : data.motStatus === "Valid" && motDaysUntilExpiry <= 0
+                        ? "Expired"
+                        : data.motStatus ?? "—"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.motExpiryDate)}</p>
                   </div>
-                  <p className={`text-xl font-bold leading-tight mb-2 ${{ emerald: "text-emerald-100", amber: "text-amber-100", red: "text-red-100", slate: "text-slate-100" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
-                    {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null
-                      ? daysUntil(data.taxDueDate)! > 0
-                        ? `Taxed for another ${daysUntil(data.taxDueDate)} days`
-                        : "Tax expired"
-                      : data.taxStatus === "Not Taxed"
-                      ? "Not Taxed"
-                      : data.taxStatus === "SORN"
-                      ? "Off Road (SORN)"
-                      : data.taxStatus ?? "—"}
-                  </p>
-                  <p className="text-sm text-slate-400">Due: {formatDate(data.taxDueDate)}</p>
-                </div>
 
-                <div 
-                  className="p-6 rounded-lg border"
-                  style={{
-                    backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", amber: "rgba(217, 119, 6, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotStatusColor(data.motStatus, data.motExpiryDate)],
-                    borderColor: { emerald: "rgba(5, 150, 105, 0.4)", amber: "rgba(217, 119, 6, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotStatusColor(data.motStatus, data.motExpiryDate)],
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <CheckCircle2 className="w-5 h-5" style={{ color: { emerald: "#10b981", amber: "#f59e0b", red: "#ef4444", slate: "#64748b" }[getMotStatusColor(data.motStatus, data.motExpiryDate)] }} />
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">MOT Status</span>
+                  {/* Tax Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getTaxStatusColor(data.taxStatus, data.taxDueDate))}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Tax</p>
+                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
+                      {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null && daysUntil(data.taxDueDate)! > 0
+                        ? `${daysUntil(data.taxDueDate)}d left`
+                        : data.taxStatus === "Taxed"
+                        ? "Overdue"
+                        : data.taxStatus === "SORN"
+                        ? "SORN"
+                        : data.taxStatus ?? "—"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.taxDueDate)}</p>
                   </div>
-                  <p className={`text-xl font-bold leading-tight mb-2 ${{ emerald: "text-emerald-100", amber: "text-amber-100", red: "text-red-100", slate: "text-slate-100" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
-                    {data.motStatus === "Valid" && daysUntil(data.motExpiryDate) !== null
-                      ? daysUntil(data.motExpiryDate)! > 0
-                        ? `Valid for another ${daysUntil(data.motExpiryDate)} days`
-                        : "MOT expired"
-                      : data.motStatus === "Expired"
-                      ? "MOT Expired"
-                      : data.motStatus ?? "—"}
-                  </p>
-                  <p className="text-sm text-slate-400">Expires: {formatDate(data.motExpiryDate)}</p>
+
+                  {/* Mileage Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass("slate")}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Mileage</p>
+                    <p className="text-sm font-bold text-slate-300 leading-tight">
+                      {data.motTests?.[0]?.odometer?.value
+                        ? data.motTests[0].odometer.value.toLocaleString()
+                        : "—"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">latest MOT</p>
+                  </div>
+
+                  {/* Advisories Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(latestAdvisoryCount > 0 ? "amber" : "emerald")}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Advisories</p>
+                    <p className={`text-sm font-bold leading-tight ${latestAdvisoryCount > 0 ? "text-amber-300" : "text-emerald-300"}`}>
+                      {latestAdvisoryCount > 0 ? latestAdvisoryCount : "Clean"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">latest test</p>
+                  </div>
                 </div>
               </div>
             </DataReveal>
 
+            {/* ACTION PROMPTS */}
+            {actionPrompts.length > 0 && (
+              <DataReveal delay={150}>
+                <div className="mb-8 space-y-3">
+                  {actionPrompts.map((prompt, idx) => (
+                    <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
+                  ))}
+                  <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* KEY INSIGHTS */}
+            {insights.length > 0 && (
+              <DataReveal delay={200}>
+                <div className="mb-8 space-y-3">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">Key Insights</h3>
+                  {insights.map((insight, idx) => (
+                    <InsightCard key={idx} insight={insight} delay={idx * 80} />
+                  ))}
+                </div>
+              </DataReveal>
+            )}
+
+            {/* PDF REPORT CTA */}
+            <DataReveal delay={250}>
+              <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-200">Save this report</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
+                </div>
+                <button
+                  onClick={() => downloadPDF()}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
+                >
+                  Download PDF
+                </button>
+              </div>
+            </DataReveal>
+
+            {/* MOT HISTORY + MOT INSIGHTS (merged) */}
             {data.motTests && data.motTests.length > 0 && (
-              <DataReveal delay={250}>
+              <DataReveal delay={300}>
                 <div className="mb-8">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT Test History</h3>
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT History &amp; Insights</h3>
+
+                  {/* MOT Insights grid — above test cards */}
+                  {(() => {
+                    const motInsights = calculateMotInsights(data.motTests);
+                    if (!motInsights) return null;
+
+                    return (
+                      <div className="mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="p-4 rounded-lg border border-emerald-500/50 bg-emerald-950/20">
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Pass Rate</p>
+                            <p className="text-2xl font-bold text-emerald-400">{motInsights.passRate}%</p>
+                            <p className="text-xs text-slate-300 mt-1">{motInsights.passedTests} of {motInsights.totalTests} tests passed</p>
+                          </div>
+
+                          <div className={`p-4 rounded-lg border ${
+                            motInsights.mileageTrend === "low" ? "border-amber-500/50 bg-amber-950/20" :
+                            motInsights.mileageTrend === "high" ? "border-blue-500/50 bg-blue-950/20" :
+                            "border-emerald-500/50 bg-emerald-950/20"
+                          }`}>
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">
+                              {motInsights.mileageTrend === "low" ? "Low Annual Mileage" :
+                               motInsights.mileageTrend === "high" ? "High Annual Mileage" :
+                               "Normal Annual Mileage"}
+                            </p>
+                            <p className="text-2xl font-bold text-slate-100">{motInsights.avgMilesPerYear.toLocaleString()}</p>
+                            <p className="text-xs text-slate-300 mt-1">miles per year (UK avg: 8,000-12,000)</p>
+                          </div>
+
+                          <div className="p-4 rounded-lg border border-cyan-500/50 bg-cyan-950/20">
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Next MOT Due</p>
+                            <p className={`text-2xl font-bold ${motInsights.daysUntilExpiry < 60 ? "text-amber-400" : "text-cyan-400"}`}>
+                              {motInsights.daysUntilExpiry} days
+                            </p>
+                            <p className="text-xs text-slate-300 mt-1">
+                              {motInsights.daysUntilExpiry < 0 ? "MOT expired" : motInsights.daysUntilExpiry < 30 ? "Due soon" : ""}
+                            </p>
+                          </div>
+
+                          <div className="p-4 rounded-lg border border-slate-500/50 bg-slate-900/20">
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Current Mileage</p>
+                            <p className="text-2xl font-bold text-slate-100">{motInsights.latestMileage?.toLocaleString() || "—"}</p>
+                            <p className="text-xs text-slate-300 mt-1">from latest MOT test</p>
+                          </div>
+                        </div>
+
+                        {motInsights.mileageWarnings.length > 0 && (
+                          <div className="mt-4 space-y-2">
+                            {motInsights.mileageWarnings.map((warning, widx) => (
+                              <div key={widx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
+                                <p className="text-xs text-amber-300">{warning}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {motInsights.recurringAdvisories.length > 0 && (
+                          <div className="mt-4">
+                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-3">Recurring Advisories</p>
+                            <div className="space-y-2">
+                              {motInsights.recurringAdvisories.map((advisory, aidx) => (
+                                <div key={aidx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
+                                  <div className="flex items-start justify-between">
+                                    <p className="text-xs text-amber-300 flex-1">{advisory.text}</p>
+                                    <span className="ml-2 px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 whitespace-nowrap">
+                                      {advisory.count}x
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Test cards — first 3 expanded by default */}
                   <div className="space-y-3">
                     {data.motTests.slice(0, 3).map((test, idx) => (
                       <div
@@ -2522,12 +2834,14 @@ END:VEVENT
                       </div>
                     ))}
                   </div>
+
+                  {/* Show earlier MOT history toggle */}
                   {data.motTests.length > 3 && (
                     <button
                       onClick={() => setShowAllMotTests(!showAllMotTests)}
                       className="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors"
                     >
-                      {showAllMotTests ? "Show less" : `View all ${data.motTests.length} tests`}
+                      {showAllMotTests ? "Hide earlier tests" : `Show earlier MOT history (${data.motTests.length - 3} more)`}
                     </button>
                   )}
                   {showAllMotTests && data.motTests.length > 3 && (
@@ -2626,116 +2940,14 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* ALL INSIGHTS */}
-            {insights.length > 2 && (
-              <DataReveal delay={300}>
-                <div className="mb-8 space-y-3">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">More Insights</h3>
-                  {insights.slice(2).map((insight, idx) => (
-                    <InsightCard key={idx} insight={insight} delay={idx * 100} />
-                  ))}
-                </div>
-              </DataReveal>
-            )}
-
-            {/* MOT INSIGHTS */}
-            {data.motTests && data.motTests.length > 0 && (
-              <DataReveal delay={350}>
-                {(() => {
-                  const insights = calculateMotInsights(data.motTests);
-                  if (!insights) return null;
-
-                  return (
-                    <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT Insights</h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Pass Rate Card */}
-                        <div className="p-4 rounded-lg border border-emerald-500/50 bg-emerald-950/20">
-                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Pass Rate</p>
-                          <p className="text-2xl font-bold text-emerald-400">{insights.passRate}%</p>
-                          <p className="text-xs text-slate-300 mt-1">{insights.passedTests} of {insights.totalTests} tests passed</p>
-                        </div>
-
-                        {/* Mileage Trend Card */}
-                        <div className={`p-4 rounded-lg border ${
-                          insights.mileageTrend === "low" ? "border-amber-500/50 bg-amber-950/20" :
-                          insights.mileageTrend === "high" ? "border-blue-500/50 bg-blue-950/20" :
-                          "border-emerald-500/50 bg-emerald-950/20"
-                        }`}>
-                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">
-                            {insights.mileageTrend === "low" ? "Low Annual Mileage" :
-                             insights.mileageTrend === "high" ? "High Annual Mileage" :
-                             "Normal Annual Mileage"}
-                          </p>
-                          <p className="text-2xl font-bold text-slate-100">{insights.avgMilesPerYear.toLocaleString()}</p>
-                          <p className="text-xs text-slate-300 mt-1">miles per year (UK avg: 8,000-12,000)</p>
-                        </div>
-
-                        {/* Days Until Expiry */}
-                        <div className="p-4 rounded-lg border border-cyan-500/50 bg-cyan-950/20">
-                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Next MOT Due</p>
-                          <p className={`text-2xl font-bold ${insights.daysUntilExpiry < 60 ? "text-amber-400" : "text-cyan-400"}`}>
-                            {insights.daysUntilExpiry} days
-                          </p>
-                          <p className="text-xs text-slate-300 mt-1">
-                            {insights.daysUntilExpiry < 0 ? "MOT expired" : insights.daysUntilExpiry < 30 ? "⚠️ Due soon" : ""}
-                          </p>
-                        </div>
-
-                        {/* Current Mileage */}
-                        <div className="p-4 rounded-lg border border-slate-500/50 bg-slate-900/20">
-                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Current Mileage</p>
-                          <p className="text-2xl font-bold text-slate-100">{insights.latestMileage?.toLocaleString() || "—"}</p>
-                          <p className="text-xs text-slate-300 mt-1">from latest MOT test</p>
-                        </div>
-                      </div>
-
-                      {/* Mileage Warnings */}
-                      {insights.mileageWarnings.length > 0 && (
-                        <div className="mt-4 space-y-2">
-                          {insights.mileageWarnings.map((warning, idx) => (
-                            <div key={idx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
-                              <p className="text-xs text-amber-300">{warning}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Recurring Advisories */}
-                      {insights.recurringAdvisories.length > 0 && (
-                        <div className="mt-4">
-                          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-3">Recurring Advisories</p>
-                          <div className="space-y-2">
-                            {insights.recurringAdvisories.map((advisory, idx) => (
-                              <div key={idx} className="p-3 rounded-lg border border-amber-500/30 bg-amber-950/20">
-                                <div className="flex items-start justify-between">
-                                  <p className="text-xs text-amber-300 flex-1">{advisory.text}</p>
-                                  <span className="ml-2 px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 whitespace-nowrap">
-                                    {advisory.count}x
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
-              </DataReveal>
-            )}
-
-            {/* NEXT STEPS */}
-            <DataReveal delay={400}>
+            {/* OFFICIAL CHECKS */}
+            <DataReveal delay={350}>
               <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
                 <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-blue-400" />
                   Official Checks
                 </h3>
-                
-                {/* Official government checks */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     onClick={openTflWithCopiedReg}
                     className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
@@ -2747,87 +2959,11 @@ END:VEVENT
                     <p className="text-xs text-slate-400">TfL checker + copy reg</p>
                   </button>
                 </div>
-
-                <hr className="border-slate-700/50 my-6" />
-
-                <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
-                  <span className="text-lg">💰</span>
-                  Next Steps: Insurance, Finance & More
-                </h3>
-
-                {/* Affiliate partner buttons - more prominent */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {/* Insurance - Go Compare */}
-                  <a
-                    href={PARTNER_LINKS.goCompare.url}
-                    target="_blank"
-                    rel={getPartnerRel(PARTNER_LINKS.goCompare)}
-                    onClick={() => trackPartnerClick("goCompare", "next-steps")}
-                    className="p-5 bg-gradient-to-br from-blue-600/30 to-blue-700/30 hover:from-blue-600/50 hover:to-blue-700/50 border border-blue-600/50 hover:border-blue-500/75 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-blue-100">
-                      🛡️ Car Insurance Quotes
-                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-blue-200/80">Compare quotes instantly. Often 30-40% cheaper.</p>
-                  </a>
-
-                  {/* Vehicle History - HPI Check */}
-                  <a
-                    href={PARTNER_LINKS.hpiCheck.url}
-                    target="_blank"
-                    rel={getPartnerRel(PARTNER_LINKS.hpiCheck)}
-                    onClick={() => trackPartnerClick("hpiCheck", "next-steps")}
-                    className="p-5 bg-gradient-to-br from-amber-600/30 to-amber-700/30 hover:from-amber-600/50 hover:to-amber-700/50 border border-amber-600/50 hover:border-amber-500/75 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-amber-100">
-                      🔍 Vehicle History Check
-                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-amber-200/80">Check for write-offs, theft, finance. Essential before buying.</p>
-                  </a>
-
-                  {/* Finance - Carmoola */}
-                  <a
-                    href={PARTNER_LINKS.carmoola.url}
-                    target="_blank"
-                    rel={getPartnerRel(PARTNER_LINKS.carmoola)}
-                    onClick={() => trackPartnerClick("carmoola", "next-steps")}
-                    className="p-5 bg-gradient-to-br from-emerald-600/30 to-emerald-700/30 hover:from-emerald-600/50 hover:to-emerald-700/50 border border-emerald-600/50 hover:border-emerald-500/75 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-emerald-100">
-                      💳 Finance & Loans
-                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-emerald-200/80 mb-2">Find best interest rates. Compare car finance instantly.</p>
-                    <div className="inline-flex items-center gap-1.5 bg-black/25 rounded-md px-2.5 py-1">
-                      <span className="text-[11px] text-emerald-100/50">Powered by</span>
-                      <img src="/carmoola-logo.png" alt="Carmoola" className="h-3 opacity-70" loading="lazy" />
-                    </div>
-                  </a>
-
-                  {/* Breakdown Cover - RAC */}
-                  <a
-                    href={PARTNER_LINKS.racBreakdown.url}
-                    target="_blank"
-                    rel={getPartnerRel(PARTNER_LINKS.racBreakdown)}
-                    onClick={() => trackPartnerClick("racBreakdown", "next-steps")}
-                    className="p-5 bg-gradient-to-br from-purple-600/30 to-purple-700/30 hover:from-purple-600/50 hover:to-purple-700/50 border border-purple-600/50 hover:border-purple-500/75 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-purple-100">
-                      🚗 Breakdown Cover
-                      <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-purple-200/80">Essential protection for UK drivers. Peace of mind on the road.</p>
-                  </a>
-                </div>
-
-                <p className="text-xs text-slate-500 mt-6">All links open in a new tab. We earn a small commission if you proceed, at no extra cost to you.</p>
               </div>
             </DataReveal>
 
             {/* BUYING CHECKLIST */}
-            <DataReveal delay={500}>
+            <DataReveal delay={400}>
               <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
@@ -2892,22 +3028,9 @@ END:VEVENT
               </div>
             </DataReveal>
 
-            {/* PDF REPORT CTA */}
-            <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-slate-200">Save this report</p>
-                <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
-              </div>
-              <button
-                onClick={() => downloadPDF()}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
-              >
-                Download PDF
-              </button>
-            </div>
-
             {/* WHAT TO CHECK NEXT */}
-            <div className="mt-8">
+            <DataReveal delay={450}>
+            <div className="mb-8">
               <h3 className="text-base font-semibold text-slate-100 mb-4">What to check next</h3>
               <div className="space-y-3">
                 {data.motTests?.some(t => t.rfrAndComments?.some(r => r.type === "ADVISORY")) && (
@@ -2936,176 +3059,7 @@ END:VEVENT
                 </a>
               </div>
             </div>
-
-            {/* RECOMMENDED NEXT STEPS */}
-            {(() => {
-              const currentYear = new Date().getFullYear();
-              const isOver3Years = data.yearOfManufacture
-                ? (() => {
-                    if (data.monthOfFirstRegistration) {
-                      const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
-                      const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
-                      const threeYearsAgo = new Date();
-                      threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
-                      return regDate <= threeYearsAgo;
-                    }
-                    return currentYear - data.yearOfManufacture! > 3;
-                  })()
-                : false;
-
-              let daysUntilExpiry = 0;
-              const latestTest = data.motTests?.[0];
-              if (latestTest?.expiryDate) {
-                const expiryDate = new Date(latestTest.expiryDate);
-                const today = new Date();
-                daysUntilExpiry = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-              }
-
-              const motExpired = isOver3Years && daysUntilExpiry < 0;
-              const motExpiringSoon = isOver3Years && !motExpired && daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
-              const hasAdvisories = isOver3Years && !motExpired && data.motTests?.some(t => t.rfrAndComments?.some(r => r.type === "ADVISORY"));
-              const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Untaxed";
-
-              const hasAnyCard = motExpired || motExpiringSoon || hasAdvisories || isSornOrUntaxed || isOver3Years;
-
-              if (!hasAnyCard) return null;
-
-              return (
-                <div className="mt-8">
-                  <h3 className="text-base font-semibold text-slate-100 mb-4">Recommended next steps</h3>
-                  <div className="space-y-3">
-
-                    {/* MOT Expired */}
-                    {motExpired && (
-                      <div className="p-4 bg-red-950/30 border border-red-800/50 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-red-200">MOT expired — this vehicle cannot legally be driven</p>
-                            <p className="text-xs text-red-300/70 mt-1">Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.</p>
-                            <div className="flex flex-wrap items-center gap-3 mt-3">
-                              <a
-                                href={PARTNER_LINKS.bookMyGarage.url}
-                                target="_blank"
-                                rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-                                onClick={() => trackPartnerClick("bookMyGarage", "mot-expired")}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/30 hover:bg-red-600/50 border border-red-600/50 rounded text-xs font-medium text-red-100 transition-colors"
-                              >
-                                Book MOT via BookMyGarage
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
-                              <a
-                                href={PARTNER_LINKS.govMotCentres.url}
-                                target="_blank"
-                                rel={getPartnerRel(PARTNER_LINKS.govMotCentres)}
-                                onClick={() => trackPartnerClick("govMotCentres", "mot-expired")}
-                                className="text-xs text-red-300/70 hover:text-red-200 underline underline-offset-2 transition-colors"
-                              >
-                                Find MOT centres on GOV.UK
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* MOT Expiring Soon */}
-                    {motExpiringSoon && (
-                      <div className="p-4 bg-amber-950/30 border border-amber-800/50 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-amber-200">MOT expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? "s" : ""}</p>
-                            <p className="text-xs text-amber-300/70 mt-1">You can book an MOT up to a month before expiry without losing any days on your certificate.</p>
-                            <a
-                              href={PARTNER_LINKS.fixter.url}
-                              target="_blank"
-                              rel={getPartnerRel(PARTNER_LINKS.fixter)}
-                              onClick={() => trackPartnerClick("fixter", "mot-expiring")}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-amber-600/30 hover:bg-amber-600/50 border border-amber-600/50 rounded text-xs font-medium text-amber-100 transition-colors"
-                            >
-                              Book MOT via Fixter
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Has Advisories */}
-                    {hasAdvisories && (
-                      <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Info className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-200">MOT advisories on record</p>
-                            <p className="text-xs text-slate-400 mt-1">Advisories aren&apos;t failures, but some may need attention before the next test. A pre-MOT check can flag issues early.</p>
-                            <a
-                              href={PARTNER_LINKS.bookMyGarage.url}
-                              target="_blank"
-                              rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-                              onClick={() => trackPartnerClick("bookMyGarage", "advisories")}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700/80 border border-slate-600/50 rounded text-xs font-medium text-slate-200 transition-colors"
-                            >
-                              Get a pre-MOT check
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* SORN / Untaxed */}
-                    {isSornOrUntaxed && (
-                      <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Info className="w-5 h-5 text-cyan-400 mt-0.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-200">Vehicle is {data.taxStatus === "SORN" ? "SORN'd" : "untaxed"}</p>
-                            <p className="text-xs text-slate-400 mt-1">This vehicle cannot be driven or parked on public roads without valid tax.</p>
-                            <a
-                              href={PARTNER_LINKS.govTaxVehicle.url}
-                              target="_blank"
-                              rel={getPartnerRel(PARTNER_LINKS.govTaxVehicle)}
-                              onClick={() => trackPartnerClick("govTaxVehicle", "sorn-untaxed")}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700/80 border border-slate-600/50 rounded text-xs font-medium text-slate-200 transition-colors"
-                            >
-                              Tax this vehicle on GOV.UK
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Breakdown Cover — always shown for 3yr+ vehicles */}
-                    {isOver3Years && (
-                      <div className="p-4 bg-slate-800/30 border border-slate-700/30 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Info className="w-5 h-5 text-slate-500 mt-0.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-300">Breakdown cover</p>
-                            <p className="text-xs text-slate-500 mt-1">Older vehicles are more likely to need roadside assistance. RAC cover starts from around £7/month.</p>
-                            <a
-                              href={PARTNER_LINKS.racBreakdown.url}
-                              target="_blank"
-                              rel={getPartnerRel(PARTNER_LINKS.racBreakdown)}
-                              onClick={() => trackPartnerClick("racBreakdown", "recommended")}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/30 hover:bg-slate-700/50 border border-slate-600/30 rounded text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
-                            >
-                              View RAC breakdown cover
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                  </div>
-                  <p className="text-[11px] text-slate-600 mt-3">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
-                </div>
-              );
-            })()}
+            </DataReveal>
           </>
         )}
 
