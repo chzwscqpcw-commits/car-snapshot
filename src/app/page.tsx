@@ -1617,7 +1617,7 @@ END:VEVENT
   const totalCount = checklist.length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-x-hidden">
       {/* Structured data */}
       <script
         type="application/ld+json"
