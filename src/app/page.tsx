@@ -115,6 +115,8 @@ import {
   Square,
   Zap,
 } from "lucide-react";
+import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
+import { trackPartnerClick } from "@/lib/tracking";
 
 type VehicleData = {
   registrationNumber: string;
@@ -382,16 +384,6 @@ function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number 
   );
 }
 
-// ============================================
-// AFFILIATE LINKS CONFIGURATION
-// ============================================
-// Update these URLs with your AWIN tracking links once approved
-const AFFILIATE_LINKS = {
-  goCompare: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
-  hpiCheck: "https://www.hpicheck.com/?utm_source=freeplatecheck",
-  carmoola: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
-  racBreakdown: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.rac.co.uk%2Fbreakdown-cover",
-};
 
 export default function Home() {
   const [vrm, setVrm] = useState("");
@@ -1734,7 +1726,7 @@ END:VEVENT
           <div className="mt-4 flex items-center gap-2">
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Trusted partner</span>
             <span className="text-slate-700">·</span>
-            <a href={AFFILIATE_LINKS.carmoola} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title="Carmoola - Car Finance">
+            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title="Carmoola - Car Finance">
               <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" loading="lazy" />
             </a>
           </div>
@@ -2767,9 +2759,10 @@ END:VEVENT
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Insurance - Go Compare */}
                   <a
-                    href={AFFILIATE_LINKS.goCompare}
+                    href={PARTNER_LINKS.goCompare.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={getPartnerRel(PARTNER_LINKS.goCompare)}
+                    onClick={() => trackPartnerClick("goCompare", "next-steps")}
                     className="p-5 bg-gradient-to-br from-blue-600/30 to-blue-700/30 hover:from-blue-600/50 hover:to-blue-700/50 border border-blue-600/50 hover:border-blue-500/75 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-blue-100">
@@ -2781,9 +2774,10 @@ END:VEVENT
 
                   {/* Vehicle History - HPI Check */}
                   <a
-                    href={AFFILIATE_LINKS.hpiCheck}
+                    href={PARTNER_LINKS.hpiCheck.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={getPartnerRel(PARTNER_LINKS.hpiCheck)}
+                    onClick={() => trackPartnerClick("hpiCheck", "next-steps")}
                     className="p-5 bg-gradient-to-br from-amber-600/30 to-amber-700/30 hover:from-amber-600/50 hover:to-amber-700/50 border border-amber-600/50 hover:border-amber-500/75 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-amber-100">
@@ -2795,9 +2789,10 @@ END:VEVENT
 
                   {/* Finance - Carmoola */}
                   <a
-                    href={AFFILIATE_LINKS.carmoola}
+                    href={PARTNER_LINKS.carmoola.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={getPartnerRel(PARTNER_LINKS.carmoola)}
+                    onClick={() => trackPartnerClick("carmoola", "next-steps")}
                     className="p-5 bg-gradient-to-br from-emerald-600/30 to-emerald-700/30 hover:from-emerald-600/50 hover:to-emerald-700/50 border border-emerald-600/50 hover:border-emerald-500/75 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-emerald-100">
@@ -2813,9 +2808,10 @@ END:VEVENT
 
                   {/* Breakdown Cover - RAC */}
                   <a
-                    href={AFFILIATE_LINKS.racBreakdown}
+                    href={PARTNER_LINKS.racBreakdown.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={getPartnerRel(PARTNER_LINKS.racBreakdown)}
+                    onClick={() => trackPartnerClick("racBreakdown", "next-steps")}
                     className="p-5 bg-gradient-to-br from-purple-600/30 to-purple-700/30 hover:from-purple-600/50 hover:to-purple-700/50 border border-purple-600/50 hover:border-purple-500/75 rounded-lg text-left transition-all group"
                   >
                     <div className="font-semibold text-sm mb-2 flex items-center gap-2 text-purple-100">
@@ -2940,6 +2936,176 @@ END:VEVENT
                 </a>
               </div>
             </div>
+
+            {/* RECOMMENDED NEXT STEPS */}
+            {(() => {
+              const currentYear = new Date().getFullYear();
+              const isOver3Years = data.yearOfManufacture
+                ? (() => {
+                    if (data.monthOfFirstRegistration) {
+                      const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
+                      const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
+                      const threeYearsAgo = new Date();
+                      threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+                      return regDate <= threeYearsAgo;
+                    }
+                    return currentYear - data.yearOfManufacture! > 3;
+                  })()
+                : false;
+
+              let daysUntilExpiry = 0;
+              const latestTest = data.motTests?.[0];
+              if (latestTest?.expiryDate) {
+                const expiryDate = new Date(latestTest.expiryDate);
+                const today = new Date();
+                daysUntilExpiry = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+              }
+
+              const motExpired = isOver3Years && daysUntilExpiry < 0;
+              const motExpiringSoon = isOver3Years && !motExpired && daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
+              const hasAdvisories = isOver3Years && !motExpired && data.motTests?.some(t => t.rfrAndComments?.some(r => r.type === "ADVISORY"));
+              const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Untaxed";
+
+              const hasAnyCard = motExpired || motExpiringSoon || hasAdvisories || isSornOrUntaxed || isOver3Years;
+
+              if (!hasAnyCard) return null;
+
+              return (
+                <div className="mt-8">
+                  <h3 className="text-base font-semibold text-slate-100 mb-4">Recommended next steps</h3>
+                  <div className="space-y-3">
+
+                    {/* MOT Expired */}
+                    {motExpired && (
+                      <div className="p-4 bg-red-950/30 border border-red-800/50 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-red-200">MOT expired — this vehicle cannot legally be driven</p>
+                            <p className="text-xs text-red-300/70 mt-1">Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.</p>
+                            <div className="flex flex-wrap items-center gap-3 mt-3">
+                              <a
+                                href={PARTNER_LINKS.bookMyGarage.url}
+                                target="_blank"
+                                rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                                onClick={() => trackPartnerClick("bookMyGarage", "mot-expired")}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/30 hover:bg-red-600/50 border border-red-600/50 rounded text-xs font-medium text-red-100 transition-colors"
+                              >
+                                Book MOT via BookMyGarage
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                              <a
+                                href={PARTNER_LINKS.govMotCentres.url}
+                                target="_blank"
+                                rel={getPartnerRel(PARTNER_LINKS.govMotCentres)}
+                                onClick={() => trackPartnerClick("govMotCentres", "mot-expired")}
+                                className="text-xs text-red-300/70 hover:text-red-200 underline underline-offset-2 transition-colors"
+                              >
+                                Find MOT centres on GOV.UK
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* MOT Expiring Soon */}
+                    {motExpiringSoon && (
+                      <div className="p-4 bg-amber-950/30 border border-amber-800/50 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-amber-200">MOT expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? "s" : ""}</p>
+                            <p className="text-xs text-amber-300/70 mt-1">You can book an MOT up to a month before expiry without losing any days on your certificate.</p>
+                            <a
+                              href={PARTNER_LINKS.fixter.url}
+                              target="_blank"
+                              rel={getPartnerRel(PARTNER_LINKS.fixter)}
+                              onClick={() => trackPartnerClick("fixter", "mot-expiring")}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-amber-600/30 hover:bg-amber-600/50 border border-amber-600/50 rounded text-xs font-medium text-amber-100 transition-colors"
+                            >
+                              Book MOT via Fixter
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Has Advisories */}
+                    {hasAdvisories && (
+                      <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <Info className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-slate-200">MOT advisories on record</p>
+                            <p className="text-xs text-slate-400 mt-1">Advisories aren&apos;t failures, but some may need attention before the next test. A pre-MOT check can flag issues early.</p>
+                            <a
+                              href={PARTNER_LINKS.bookMyGarage.url}
+                              target="_blank"
+                              rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                              onClick={() => trackPartnerClick("bookMyGarage", "advisories")}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700/80 border border-slate-600/50 rounded text-xs font-medium text-slate-200 transition-colors"
+                            >
+                              Get a pre-MOT check
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* SORN / Untaxed */}
+                    {isSornOrUntaxed && (
+                      <div className="p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <Info className="w-5 h-5 text-cyan-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-slate-200">Vehicle is {data.taxStatus === "SORN" ? "SORN'd" : "untaxed"}</p>
+                            <p className="text-xs text-slate-400 mt-1">This vehicle cannot be driven or parked on public roads without valid tax.</p>
+                            <a
+                              href={PARTNER_LINKS.govTaxVehicle.url}
+                              target="_blank"
+                              rel={getPartnerRel(PARTNER_LINKS.govTaxVehicle)}
+                              onClick={() => trackPartnerClick("govTaxVehicle", "sorn-untaxed")}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700/80 border border-slate-600/50 rounded text-xs font-medium text-slate-200 transition-colors"
+                            >
+                              Tax this vehicle on GOV.UK
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Breakdown Cover — always shown for 3yr+ vehicles */}
+                    {isOver3Years && (
+                      <div className="p-4 bg-slate-800/30 border border-slate-700/30 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <Info className="w-5 h-5 text-slate-500 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm font-medium text-slate-300">Breakdown cover</p>
+                            <p className="text-xs text-slate-500 mt-1">Older vehicles are more likely to need roadside assistance. RAC cover starts from around £7/month.</p>
+                            <a
+                              href={PARTNER_LINKS.racBreakdown.url}
+                              target="_blank"
+                              rel={getPartnerRel(PARTNER_LINKS.racBreakdown)}
+                              onClick={() => trackPartnerClick("racBreakdown", "recommended")}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-slate-700/30 hover:bg-slate-700/50 border border-slate-600/30 rounded text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
+                            >
+                              View RAC breakdown cover
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-3">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
+                </div>
+              );
+            })()}
           </>
         )}
 

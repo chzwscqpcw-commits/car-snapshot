@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import { PARTNER_LINKS, getPartnerRel, hasMotKeywords } from "@/config/partners";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -106,6 +107,24 @@ export default async function BlogPostPage({ params }: PageProps) {
           className="blog-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {/* MOT Booking CTA — only for MOT-related posts */}
+        {hasMotKeywords(post.keywords) && (
+          <div className="max-w-[700px] mx-auto mt-12 border-l-2 border-blue-500/50 bg-blue-950/30 rounded-r-lg px-4 py-3">
+            <p className="text-sm text-slate-300">
+              Need to book an MOT?{" "}
+              <a
+                href={PARTNER_LINKS.bookMyGarage.url}
+                target="_blank"
+                rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
+              >
+                Compare local garages on BookMyGarage
+              </a>
+              .
+            </p>
+          </div>
+        )}
 
         {/* CTA */}
         <div className="max-w-[700px] mx-auto mt-16 p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center">
