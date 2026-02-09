@@ -2953,9 +2953,9 @@ END:VEVENT
                   )}
 
                   <p className="text-[11px] text-slate-600 mt-3">{valuationResult.disclaimer}</p>
-                  <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-900/40 border border-blue-700/30">
-                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span></span>
-                    <span className="text-[11px] text-blue-300 font-medium">Enhanced AI valuation coming soon</span>
+                  <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-800/30 border border-blue-600/40">
+                    <span className="relative flex h-2.5 w-2.5 shrink-0"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400"></span></span>
+                    <span className="text-xs text-blue-200 font-semibold">Enhanced AI valuation coming soon</span>
                   </div>
                 </div>
               </DataReveal>
