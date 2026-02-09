@@ -117,10 +117,18 @@ import {
   Car,
   FileText,
   ArrowLeftRight,
+  Shield,
+  Star,
+  Leaf,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
+import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
+import { calculateVed } from "@/lib/ved";
+import { lookupNcap, type NcapRating } from "@/lib/ncap";
+import { type Recall } from "@/lib/recalls";
+import { type FuelEconomyResult } from "@/lib/fuel-economy";
 
 type VehicleData = {
   registrationNumber: string;
@@ -516,6 +524,8 @@ export default function Home() {
   const [insuranceModalDate, setInsuranceModalDate] = useState<string>("");
   const [vehicleInsuranceDates, setVehicleInsuranceDates] = useState<{ [key: string]: string }>({});
   const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
+  const [recalls, setRecalls] = useState<Recall[]>([]);
+  const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
 
   // Load recent guides
   useEffect(() => {
@@ -524,6 +534,36 @@ export default function Home() {
       .then((data) => setRecentGuides(data))
       .catch(() => {});
   }, []);
+
+  // Fetch recalls when vehicle data changes
+  useEffect(() => {
+    if (!data?.make) {
+      setRecalls([]);
+      return;
+    }
+    const params = new URLSearchParams({ make: data.make });
+    if (data.model) params.set("model", data.model);
+    if (data.yearOfManufacture) params.set("year", String(data.yearOfManufacture));
+    fetch(`/api/recalls?${params}`)
+      .then((res) => res.json())
+      .then((results) => setRecalls(Array.isArray(results) ? results : []))
+      .catch(() => setRecalls([]));
+  }, [data?.make, data?.model, data?.yearOfManufacture]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch fuel economy when vehicle data changes
+  useEffect(() => {
+    if (!data?.make || !data?.model) {
+      setFuelEconomy(null);
+      return;
+    }
+    const params = new URLSearchParams({ make: data.make, model: data.model });
+    if (data.engineCapacity) params.set("engine", String(data.engineCapacity));
+    if (data.fuelType) params.set("fuel", data.fuelType);
+    fetch(`/api/fuel-economy?${params}`)
+      .then((res) => res.json())
+      .then((result) => setFuelEconomy(result))
+      .catch(() => setFuelEconomy(null));
+  }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Dynamic meta for vehicle results
   useEffect(() => {
@@ -751,6 +791,34 @@ export default function Home() {
     return latest.rfrAndComments.filter(r => r.type === "ADVISORY").length;
   }, [data]);
 
+  // ULEZ compliance
+  const ulezResult = useMemo((): UlezResult | null => {
+    if (!data) return null;
+    return calculateUlezCompliance({
+      fuelType: data.fuelType,
+      euroStatus: data.euroStatus,
+      monthOfFirstRegistration: data.monthOfFirstRegistration,
+      co2Emissions: data.co2Emissions,
+      yearOfManufacture: data.yearOfManufacture,
+    });
+  }, [data]);
+
+  // VED road tax
+  const vedResult = useMemo(() => {
+    if (!data) return null;
+    return calculateVed({
+      co2Emissions: data.co2Emissions,
+      fuelType: data.fuelType,
+      monthOfFirstRegistration: data.monthOfFirstRegistration,
+    });
+  }, [data]);
+
+  // NCAP rating
+  const ncapRating = useMemo((): NcapRating | null => {
+    if (!data) return null;
+    return lookupNcap(data.make, data.model);
+  }, [data]);
+
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
     variant: ActionPromptVariant;
@@ -869,12 +937,12 @@ export default function Home() {
       });
     }
 
-    const euroNum = extractEuroNumber(data.euroStatus);
-    if (euroNum && euroNum >= 6) {
+    // ULEZ insight — only for non-compliant (the ULEZ card handles compliant/exempt display)
+    if (ulezResult && ulezResult.status === "non-compliant") {
       result.push({
-        tone: "good",
-        title: "Likely ULEZ / Clean Air compliant (London)",
-        detail: `Euro ${euroNum} petrol usually meets the standard—still verify on the TfL checker.`,
+        tone: "risk",
+        title: "Likely not ULEZ compliant",
+        detail: `${ulezResult.reason}. Daily charges apply in London and other Clean Air Zones.`,
       });
     }
 
@@ -991,8 +1059,45 @@ export default function Home() {
       }
     }
 
+    // VED road tax insight
+    if (vedResult && vedResult.estimatedAnnualRate !== null) {
+      result.push({
+        tone: "info",
+        title: `Estimated road tax: £${vedResult.estimatedAnnualRate}/year`,
+        detail: vedResult.band ? `${vedResult.band}. ${vedResult.details.split(".")[0]}.` : vedResult.details,
+      });
+    }
+
+    // Fuel economy insight
+    if (fuelEconomy) {
+      result.push({
+        tone: fuelEconomy.combinedMpg >= 50 ? "good" : fuelEconomy.combinedMpg < 35 ? "warn" : "info",
+        title: `Estimated ${fuelEconomy.combinedMpg.toFixed(1)} MPG (combined)`,
+        detail: `Roughly £${fuelEconomy.estimatedAnnualCost}/year in fuel at 8,000 miles.${fuelEconomy.matchType !== "exact" ? " Estimate based on similar model." : ""}`,
+      });
+    }
+
+    // NCAP safety rating insight
+    if (ncapRating) {
+      const starText = ncapRating.overallStars === 5 ? "Top safety rating" : ncapRating.overallStars >= 4 ? "Good safety rating" : ncapRating.overallStars >= 3 ? "Average safety rating" : "Below-average safety rating";
+      result.push({
+        tone: ncapRating.overallStars >= 4 ? "good" : ncapRating.overallStars >= 3 ? "info" : "warn",
+        title: `Euro NCAP: ${ncapRating.overallStars} star${ncapRating.overallStars !== 1 ? "s" : ""} (${ncapRating.yearTested})`,
+        detail: `${starText}. Adult ${ncapRating.adultOccupant}%, Child ${ncapRating.childOccupant}%, Pedestrian ${ncapRating.pedestrian}%, Safety Assist ${ncapRating.safetyAssist}%.`,
+      });
+    }
+
+    // Recalls insight
+    if (recalls.length > 0) {
+      result.push({
+        tone: "risk",
+        title: `${recalls.length} safety recall${recalls.length !== 1 ? "s" : ""} found`,
+        detail: "Check the Safety Recalls section below for details. Recall repairs are always free at authorised dealers.",
+      });
+    }
+
     return result;
-  }, [data, isOver3Years]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1681,6 +1786,7 @@ END:VEVENT
           "url": "https://www.freeplatecheck.co.uk",
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "Web",
+          "featureList": "MOT History Check, Tax Status Check, Mileage Check, ULEZ Compliance Check, Safety Recall Check, VED Road Tax Calculator, Fuel Economy Lookup, Euro NCAP Ratings, Vehicle Comparison, PDF Report Download",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -2435,6 +2541,74 @@ END:VEVENT
               </div>
             </DataReveal>
 
+            {/* ULEZ COMPLIANCE CARD */}
+            {ulezResult && ulezResult.status !== "unknown" && (
+              <DataReveal delay={120}>
+                <div className={`mb-8 p-5 rounded-lg border ${
+                  ulezResult.status === "exempt" || ulezResult.status === "compliant"
+                    ? "bg-emerald-950/30 border-emerald-800/40"
+                    : "bg-red-950/30 border-red-800/40"
+                }`}>
+                  <div className="flex items-start gap-3">
+                    <Leaf className={`w-5 h-5 mt-0.5 ${
+                      ulezResult.status === "exempt" || ulezResult.status === "compliant"
+                        ? "text-emerald-400"
+                        : "text-red-400"
+                    }`} />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-sm font-semibold text-slate-100">ULEZ / Clean Air Zone</h3>
+                        <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                          ulezResult.status === "exempt"
+                            ? "bg-emerald-900/50 text-emerald-300"
+                            : ulezResult.status === "compliant"
+                            ? "bg-emerald-900/50 text-emerald-300"
+                            : "bg-red-900/50 text-red-300"
+                        }`}>
+                          {ulezResult.status === "exempt" ? "Exempt" : ulezResult.status === "compliant" ? "Compliant" : "Non-compliant"}
+                        </span>
+                      </div>
+                      <p className={`text-sm ${
+                        ulezResult.status === "exempt" || ulezResult.status === "compliant"
+                          ? "text-emerald-200/80"
+                          : "text-red-200/80"
+                      }`}>
+                        {ulezResult.reason}
+                      </p>
+                      <p className="text-xs text-slate-400 mt-2">{ulezResult.details}</p>
+                      {ulezResult.confidence === "estimated" && (
+                        <p className="text-xs text-slate-500 mt-1 italic">Estimated from registration date — verify on the TfL checker.</p>
+                      )}
+                      {ulezResult.cleanAirZones && ulezResult.cleanAirZones.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-red-800/30">
+                          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Daily charges in affected zones</p>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {ulezResult.cleanAirZones.map((zone) => (
+                              <div key={zone.name} className="text-xs text-red-300/80">
+                                <span className="font-medium">{zone.name}</span>: {zone.dailyCharge}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      <div className="mt-3 flex items-center gap-3">
+                        <a
+                          href="https://tfl.gov.uk/modes/driving/check-your-vehicle/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
+                        >
+                          Check on TfL
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-2">ULEZ compliance calculated using DVLA emission data and published TfL emission standards.</p>
+                    </div>
+                  </div>
+                </div>
+              </DataReveal>
+            )}
+
             {/* ACTION PROMPTS */}
             {actionPrompts.length > 0 && (
               <DataReveal delay={150}>
@@ -2761,27 +2935,53 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* OFFICIAL CHECKS */}
-            <DataReveal delay={350}>
-              <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-                <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-blue-400" />
-                  Official Checks
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <button
-                    onClick={openTflWithCopiedReg}
-                    className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-left transition-all group"
-                  >
-                    <div className="font-semibold text-sm mb-1 flex items-center gap-2">
-                      Check ULEZ / Clean Air
-                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p className="text-xs text-slate-400">TfL checker + copy reg</p>
-                  </button>
+            {/* SAFETY RECALLS */}
+            {recalls.length > 0 && (
+              <DataReveal delay={320}>
+                <div className="mb-8">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-red-400" />
+                    Safety Recalls
+                  </h3>
+                  <div className="space-y-3">
+                    {recalls.map((recall, idx) => (
+                      <div key={idx} className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <p className="text-sm font-semibold text-red-200">{recall.defect}</p>
+                          <span className="text-xs text-slate-500 whitespace-nowrap">{recall.recallNumber}</span>
+                        </div>
+                        <p className="text-xs text-slate-300 mb-2"><span className="font-medium text-slate-400">Remedy:</span> {recall.remedy}</p>
+                        <p className="text-xs text-slate-500">
+                          Recall date: {new Date(recall.recallDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                          {" · "}Affects: {recall.models.join(", ")}
+                          {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-3">
+                    Matched by make, model and year — not VIN-specific. A recall may have already been completed on this vehicle. For vehicle-specific recall status, visit{" "}
+                    <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
+                    {" "}or contact your manufacturer. Recall repairs are always free.
+                  </p>
                 </div>
-              </div>
-            </DataReveal>
+              </DataReveal>
+            )}
+
+            {/* No recalls — positive signal */}
+            {data && recalls.length === 0 && data.make && (
+              <DataReveal delay={320}>
+                <div className="mb-8 p-4 rounded-lg border border-emerald-800/30 bg-emerald-950/15">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-emerald-400" />
+                    <div>
+                      <p className="text-sm font-medium text-emerald-200">No known safety recalls</p>
+                      <p className="text-xs text-slate-400 mt-0.5">No matching recalls found in our database. Check with the manufacturer for a complete record.</p>
+                    </div>
+                  </div>
+                </div>
+              </DataReveal>
+            )}
 
             {/* BUYING CHECKLIST */}
             <DataReveal delay={400}>
@@ -2866,6 +3066,18 @@ END:VEVENT
                     <p className="text-xs text-slate-500 mt-1">This vehicle is {data.taxStatus === "SORN" ? "SORN'd" : "untaxed"} — understand the rules.</p>
                   </a>
                 )}
+                {ulezResult && ulezResult.status === "non-compliant" && (
+                  <a href="/blog/is-my-car-ulez-compliant" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                    <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">Is My Car ULEZ Compliant?</p>
+                    <p className="text-xs text-slate-500 mt-1">This vehicle may not be ULEZ compliant — learn about charges, exemptions and your options.</p>
+                  </a>
+                )}
+                {recalls.length > 0 && (
+                  <a href="/blog/car-safety-recalls-guide" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                    <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">Car Safety Recalls: What You Need to Know</p>
+                    <p className="text-xs text-slate-500 mt-1">This vehicle has {recalls.length} matching recall{recalls.length !== 1 ? "s" : ""} — learn how to get free repairs.</p>
+                  </a>
+                )}
                 <a href="/blog/how-to-read-mot-history" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                   <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Read MOT History</p>
                   <p className="text-xs text-slate-500 mt-1">Understand what the test results, mileage and advisories mean.</p>
@@ -2946,6 +3158,20 @@ END:VEVENT
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Mileage Check</h3>
               </div>
               <p className="text-sm text-slate-400">Track odometer readings across MOT tests to spot clocking.</p>
+            </a>
+            <a href="/ulez-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Leaf className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">ULEZ Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">Find out if a vehicle is ULEZ compliant and see Clean Air Zone charges.</p>
+            </a>
+            <a href="/recall-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Shield className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Recall Check</h3>
+              </div>
+              <p className="text-sm text-slate-400">Check for safety recalls on any UK car model. Free repairs at dealers.</p>
             </a>
           </div>
         </div>

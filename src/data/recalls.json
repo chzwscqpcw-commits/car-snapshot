@@ -1,0 +1,462 @@
+[
+  {
+    "make": "VAUXHALL",
+    "models": ["CORSA", "CORSA E"],
+    "buildDateStart": "2014-09-01",
+    "buildDateEnd": "2019-08-31",
+    "recallDate": "2023-05-15",
+    "defect": "Rear axle mounting points may corrode, potentially leading to axle detachment",
+    "remedy": "Inspection and replacement of rear axle if corrosion found",
+    "recallNumber": "R/2023/123"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": ["ZAFIRA", "ZAFIRA B"],
+    "buildDateStart": "2005-07-01",
+    "buildDateEnd": "2014-12-31",
+    "recallDate": "2018-12-01",
+    "defect": "Blower motor resistor may overheat, risk of fire in dashboard area",
+    "remedy": "Replace blower motor resistor and related wiring",
+    "recallNumber": "R/2018/456"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": ["ASTRA", "ASTRA K"],
+    "buildDateStart": "2015-10-01",
+    "buildDateEnd": "2021-12-31",
+    "recallDate": "2022-03-10",
+    "defect": "Seatbelt pretensioner may not deploy correctly in a collision",
+    "remedy": "Software update and seatbelt pretensioner inspection",
+    "recallNumber": "R/2022/089"
+  },
+  {
+    "make": "FORD",
+    "models": ["FIESTA"],
+    "buildDateStart": "2013-01-01",
+    "buildDateEnd": "2019-06-30",
+    "recallDate": "2022-09-20",
+    "defect": "Door latch may not engage properly, door could open while driving",
+    "remedy": "Replace door latch mechanism on all four doors",
+    "recallNumber": "R/2022/201"
+  },
+  {
+    "make": "FORD",
+    "models": ["FOCUS"],
+    "buildDateStart": "2018-07-01",
+    "buildDateEnd": "2020-06-30",
+    "recallDate": "2023-01-15",
+    "defect": "Fuel tank ventilation valve may crack, causing fuel vapour leak",
+    "remedy": "Replace fuel tank ventilation valve",
+    "recallNumber": "R/2023/045"
+  },
+  {
+    "make": "FORD",
+    "models": ["KUGA"],
+    "buildDateStart": "2020-01-01",
+    "buildDateEnd": "2021-06-30",
+    "recallDate": "2021-07-10",
+    "defect": "PHEV battery cells may overheat, risk of thermal event during charging",
+    "remedy": "Software update and battery inspection",
+    "recallNumber": "R/2021/178"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": ["GOLF", "GOLF MK7", "GOLF MK8"],
+    "buildDateStart": "2019-12-01",
+    "buildDateEnd": "2022-04-30",
+    "recallDate": "2022-11-08",
+    "defect": "Airbag control unit software may prevent airbag deployment in certain collision scenarios",
+    "remedy": "Software update to airbag control unit",
+    "recallNumber": "R/2022/312"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": ["POLO"],
+    "buildDateStart": "2017-09-01",
+    "buildDateEnd": "2021-03-31",
+    "recallDate": "2022-06-22",
+    "defect": "Rear seatbelt buckle may not latch correctly",
+    "remedy": "Replace rear seatbelt buckle assemblies",
+    "recallNumber": "R/2022/189"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": ["TIGUAN"],
+    "buildDateStart": "2016-04-01",
+    "buildDateEnd": "2020-11-30",
+    "recallDate": "2021-09-15",
+    "defect": "Fuel pump flange may leak, potential fuel smell or dripping",
+    "remedy": "Replace fuel pump flange gasket",
+    "recallNumber": "R/2021/267"
+  },
+  {
+    "make": "BMW",
+    "models": ["3 SERIES", "320", "330", "318", "325"],
+    "buildDateStart": "2018-03-01",
+    "buildDateEnd": "2022-06-30",
+    "recallDate": "2023-02-28",
+    "defect": "EGR cooler may develop a crack, causing coolant leak",
+    "remedy": "Replace EGR cooler module",
+    "recallNumber": "R/2023/067"
+  },
+  {
+    "make": "BMW",
+    "models": ["1 SERIES", "116", "118", "120"],
+    "buildDateStart": "2019-09-01",
+    "buildDateEnd": "2022-03-31",
+    "recallDate": "2023-04-12",
+    "defect": "Seatbelt anchor bolt may not be tightened to correct torque specification",
+    "remedy": "Check and re-torque seatbelt anchor bolts",
+    "recallNumber": "R/2023/098"
+  },
+  {
+    "make": "TOYOTA",
+    "models": ["YARIS", "YARIS CROSS"],
+    "buildDateStart": "2020-06-01",
+    "buildDateEnd": "2022-09-30",
+    "recallDate": "2023-06-01",
+    "defect": "Incorrect valve spring may cause engine misfire or stalling",
+    "remedy": "Replace valve springs in affected engines",
+    "recallNumber": "R/2023/156"
+  },
+  {
+    "make": "TOYOTA",
+    "models": ["RAV4"],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2021-12-31",
+    "recallDate": "2022-08-15",
+    "defect": "Rear suspension lower arm bolt may loosen over time",
+    "remedy": "Inspect and re-torque rear suspension lower arm bolts",
+    "recallNumber": "R/2022/245"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": ["A-CLASS", "A180", "A200", "A250"],
+    "buildDateStart": "2018-05-01",
+    "buildDateEnd": "2021-09-30",
+    "recallDate": "2022-04-20",
+    "defect": "Communication module software may cause incorrect eCall (emergency call) location data",
+    "remedy": "Software update to communication module",
+    "recallNumber": "R/2022/112"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": ["C-CLASS", "C180", "C200", "C220", "C300"],
+    "buildDateStart": "2021-06-01",
+    "buildDateEnd": "2023-03-31",
+    "recallDate": "2023-08-10",
+    "defect": "Steering column coupling bolt may not be properly tightened",
+    "remedy": "Inspect and re-torque steering column coupling bolt",
+    "recallNumber": "R/2023/201"
+  },
+  {
+    "make": "AUDI",
+    "models": ["A3"],
+    "buildDateStart": "2020-04-01",
+    "buildDateEnd": "2022-08-31",
+    "recallDate": "2023-01-20",
+    "defect": "Rear windscreen wiper motor bracket may crack in cold weather",
+    "remedy": "Replace rear windscreen wiper motor bracket",
+    "recallNumber": "R/2023/034"
+  },
+  {
+    "make": "AUDI",
+    "models": ["Q5"],
+    "buildDateStart": "2017-01-01",
+    "buildDateEnd": "2020-12-31",
+    "recallDate": "2021-11-30",
+    "defect": "Front passenger airbag may not deploy correctly due to sensor error",
+    "remedy": "Replace front passenger airbag sensor and software update",
+    "recallNumber": "R/2021/345"
+  },
+  {
+    "make": "NISSAN",
+    "models": ["QASHQAI"],
+    "buildDateStart": "2021-06-01",
+    "buildDateEnd": "2023-02-28",
+    "recallDate": "2023-09-05",
+    "defect": "e-POWER hybrid system inverter may malfunction, causing loss of drive",
+    "remedy": "Replace inverter unit and update control software",
+    "recallNumber": "R/2023/234"
+  },
+  {
+    "make": "NISSAN",
+    "models": ["JUKE"],
+    "buildDateStart": "2019-11-01",
+    "buildDateEnd": "2022-03-31",
+    "recallDate": "2022-12-01",
+    "defect": "Brake caliper mounting bolt may loosen, reducing braking effectiveness",
+    "remedy": "Inspect and re-torque brake caliper mounting bolts",
+    "recallNumber": "R/2022/378"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": ["TUCSON"],
+    "buildDateStart": "2021-03-01",
+    "buildDateEnd": "2023-01-31",
+    "recallDate": "2023-07-20",
+    "defect": "Parking brake may not fully engage on steep inclines",
+    "remedy": "Software update to electronic parking brake module",
+    "recallNumber": "R/2023/189"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": ["I10"],
+    "buildDateStart": "2019-11-01",
+    "buildDateEnd": "2022-06-30",
+    "recallDate": "2023-03-15",
+    "defect": "Seatbelt warning system may not function correctly for rear passengers",
+    "remedy": "Software update to body control module",
+    "recallNumber": "R/2023/078"
+  },
+  {
+    "make": "KIA",
+    "models": ["SPORTAGE"],
+    "buildDateStart": "2021-09-01",
+    "buildDateEnd": "2023-06-30",
+    "recallDate": "2024-01-10",
+    "defect": "Rear view camera image may freeze in cold conditions",
+    "remedy": "Software update to rear camera module",
+    "recallNumber": "R/2024/012"
+  },
+  {
+    "make": "KIA",
+    "models": ["NIRO", "NIRO EV"],
+    "buildDateStart": "2022-01-01",
+    "buildDateEnd": "2023-09-30",
+    "recallDate": "2024-02-20",
+    "defect": "High-voltage battery relay may malfunction, causing drive system shutdown",
+    "remedy": "Replace high-voltage battery relay and update BMS software",
+    "recallNumber": "R/2024/034"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": ["208", "E-208"],
+    "buildDateStart": "2019-06-01",
+    "buildDateEnd": "2022-03-31",
+    "recallDate": "2023-04-25",
+    "defect": "Steering column universal joint may corrode, affecting steering feel",
+    "remedy": "Inspect and replace steering column universal joint if corroded",
+    "recallNumber": "R/2023/109"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": ["3008"],
+    "buildDateStart": "2016-10-01",
+    "buildDateEnd": "2020-12-31",
+    "recallDate": "2022-02-15",
+    "defect": "AdBlue heater may fail, triggering engine management warning and reduced power",
+    "remedy": "Replace AdBlue heating element",
+    "recallNumber": "R/2022/056"
+  },
+  {
+    "make": "RENAULT",
+    "models": ["CLIO"],
+    "buildDateStart": "2019-09-01",
+    "buildDateEnd": "2022-06-30",
+    "recallDate": "2023-05-30",
+    "defect": "Windscreen bonding adhesive may not meet specification, windscreen could detach in collision",
+    "remedy": "Inspect and re-bond windscreen if necessary",
+    "recallNumber": "R/2023/145"
+  },
+  {
+    "make": "SKODA",
+    "models": ["OCTAVIA"],
+    "buildDateStart": "2020-01-01",
+    "buildDateEnd": "2022-09-30",
+    "recallDate": "2023-03-01",
+    "defect": "Airbag control unit software may prevent correct airbag deployment timing",
+    "remedy": "Software update to airbag control unit",
+    "recallNumber": "R/2023/072"
+  },
+  {
+    "make": "HONDA",
+    "models": ["CIVIC"],
+    "buildDateStart": "2022-07-01",
+    "buildDateEnd": "2023-12-31",
+    "recallDate": "2024-03-01",
+    "defect": "Hood latch secondary catch may not engage, hood could open while driving",
+    "remedy": "Adjust and lubricate hood latch mechanism",
+    "recallNumber": "R/2024/056"
+  },
+  {
+    "make": "MAZDA",
+    "models": ["CX-5"],
+    "buildDateStart": "2017-02-01",
+    "buildDateEnd": "2021-11-30",
+    "recallDate": "2022-07-18",
+    "defect": "Fuel pump impeller may deform, causing engine stalling or failure to start",
+    "remedy": "Replace fuel pump assembly",
+    "recallNumber": "R/2022/223"
+  },
+  {
+    "make": "VOLVO",
+    "models": ["XC40"],
+    "buildDateStart": "2018-02-01",
+    "buildDateEnd": "2020-12-31",
+    "recallDate": "2021-06-15",
+    "defect": "ASDM (Active Safety Domain Master) software may prevent autonomous emergency braking",
+    "remedy": "Software update to ASDM module",
+    "recallNumber": "R/2021/156"
+  },
+  {
+    "make": "VOLVO",
+    "models": ["XC60"],
+    "buildDateStart": "2017-05-01",
+    "buildDateEnd": "2020-09-30",
+    "recallDate": "2021-03-22",
+    "defect": "Front seatbelt pretensioner connector may corrode in humid conditions",
+    "remedy": "Inspect and replace front seatbelt pretensioner connectors",
+    "recallNumber": "R/2021/089"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": ["RANGE ROVER EVOQUE"],
+    "buildDateStart": "2019-04-01",
+    "buildDateEnd": "2022-03-31",
+    "recallDate": "2023-02-14",
+    "defect": "9-speed automatic gearbox may unexpectedly shift to neutral",
+    "remedy": "Software update to transmission control module",
+    "recallNumber": "R/2023/051"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": ["DEFENDER"],
+    "buildDateStart": "2020-01-01",
+    "buildDateEnd": "2022-06-30",
+    "recallDate": "2023-01-30",
+    "defect": "Rear trailing arm bush may separate from bracket under extreme load",
+    "remedy": "Inspect and replace rear trailing arm bush if worn",
+    "recallNumber": "R/2023/028"
+  },
+  {
+    "make": "TESLA",
+    "models": ["MODEL 3"],
+    "buildDateStart": "2019-02-01",
+    "buildDateEnd": "2023-04-30",
+    "recallDate": "2024-01-29",
+    "defect": "Hood latch bolt may be under-torqued, hood could open at speed",
+    "remedy": "Inspect and re-torque hood latch bolts",
+    "recallNumber": "R/2024/018"
+  },
+  {
+    "make": "TESLA",
+    "models": ["MODEL Y"],
+    "buildDateStart": "2022-01-01",
+    "buildDateEnd": "2023-10-31",
+    "recallDate": "2024-02-15",
+    "defect": "Suspension lower arm fastener may loosen due to incorrect coating",
+    "remedy": "Replace lower arm fasteners with updated specification",
+    "recallNumber": "R/2024/041"
+  },
+  {
+    "make": "SUZUKI",
+    "models": ["SWIFT"],
+    "buildDateStart": "2017-04-01",
+    "buildDateEnd": "2020-12-31",
+    "recallDate": "2021-08-12",
+    "defect": "Front wheel hub bearing may fail prematurely, causing wheel vibration",
+    "remedy": "Replace front wheel hub bearings",
+    "recallNumber": "R/2021/212"
+  },
+  {
+    "make": "FIAT",
+    "models": ["500", "500C"],
+    "buildDateStart": "2015-01-01",
+    "buildDateEnd": "2019-12-31",
+    "recallDate": "2020-11-10",
+    "defect": "Driver airbag inflator may rupture during deployment (Takata recall)",
+    "remedy": "Replace driver airbag module",
+    "recallNumber": "R/2020/312"
+  },
+  {
+    "make": "MINI",
+    "models": ["COOPER", "ONE", "COUNTRYMAN"],
+    "buildDateStart": "2014-03-01",
+    "buildDateEnd": "2018-06-30",
+    "recallDate": "2020-09-15",
+    "defect": "Engine timing chain may stretch, causing engine rattle or failure",
+    "remedy": "Replace timing chain, tensioner and guides",
+    "recallNumber": "R/2020/278"
+  },
+  {
+    "make": "SEAT",
+    "models": ["LEON"],
+    "buildDateStart": "2020-01-01",
+    "buildDateEnd": "2022-09-30",
+    "recallDate": "2023-03-01",
+    "defect": "Airbag control unit software may prevent correct airbag deployment timing",
+    "remedy": "Software update to airbag control unit",
+    "recallNumber": "R/2023/073"
+  },
+  {
+    "make": "DACIA",
+    "models": ["SANDERO", "SANDERO STEPWAY"],
+    "buildDateStart": "2020-12-01",
+    "buildDateEnd": "2022-11-30",
+    "recallDate": "2023-06-20",
+    "defect": "Rear seatbelt may not retract correctly after use",
+    "remedy": "Replace rear seatbelt retractor mechanisms",
+    "recallNumber": "R/2023/167"
+  },
+  {
+    "make": "CITROEN",
+    "models": ["C3"],
+    "buildDateStart": "2017-01-01",
+    "buildDateEnd": "2021-12-31",
+    "recallDate": "2022-10-05",
+    "defect": "Passenger airbag may not deploy due to connector fault",
+    "remedy": "Replace passenger airbag connector",
+    "recallNumber": "R/2022/301"
+  },
+  {
+    "make": "JAGUAR",
+    "models": ["F-PACE"],
+    "buildDateStart": "2016-04-01",
+    "buildDateEnd": "2020-12-31",
+    "recallDate": "2021-05-20",
+    "defect": "Battery positive cable may chafe against body structure, causing short circuit",
+    "remedy": "Inspect and reroute battery positive cable with additional protection",
+    "recallNumber": "R/2021/134"
+  },
+  {
+    "make": "MG",
+    "models": ["ZS", "ZS EV"],
+    "buildDateStart": "2019-09-01",
+    "buildDateEnd": "2022-12-31",
+    "recallDate": "2023-08-30",
+    "defect": "Rear suspension crossmember bolts may not be correctly tightened",
+    "remedy": "Inspect and re-torque rear suspension crossmember bolts",
+    "recallNumber": "R/2023/220"
+  },
+  {
+    "make": "PORSCHE",
+    "models": ["CAYENNE"],
+    "buildDateStart": "2018-09-01",
+    "buildDateEnd": "2021-06-30",
+    "recallDate": "2022-03-28",
+    "defect": "Rear axle toe link ball joint may fail, affecting vehicle stability",
+    "remedy": "Replace rear axle toe links",
+    "recallNumber": "R/2022/098"
+  },
+  {
+    "make": "CUPRA",
+    "models": ["FORMENTOR"],
+    "buildDateStart": "2020-11-01",
+    "buildDateEnd": "2022-09-30",
+    "recallDate": "2023-04-15",
+    "defect": "DSG gearbox mechatronic unit software may cause unexpected gear engagement",
+    "remedy": "Software update to DSG gearbox mechatronic unit",
+    "recallNumber": "R/2023/110"
+  },
+  {
+    "make": "SUBARU",
+    "models": ["FORESTER", "XV"],
+    "buildDateStart": "2018-01-01",
+    "buildDateEnd": "2021-03-31",
+    "recallDate": "2022-01-25",
+    "defect": "PCV (Positive Crankcase Ventilation) valve may fail, causing oil consumption",
+    "remedy": "Replace PCV valve assembly",
+    "recallNumber": "R/2022/024"
+  }
+]
