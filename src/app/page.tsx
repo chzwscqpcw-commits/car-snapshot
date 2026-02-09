@@ -1803,9 +1803,7 @@ END:VEVENT
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
             <span className="text-slate-700">·</span>
             <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
-              <span className="inline-flex items-center bg-white rounded px-2 py-1">
-                <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" loading="lazy" />
-              </span>
+              <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" loading="lazy" />
             </a>
             <span className="text-slate-700">·</span>
             <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.carmoola.description}>
