@@ -1802,9 +1802,9 @@ END:VEVENT
           <div className="mt-4 flex items-center gap-3">
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
             <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
-              <span className="inline-flex items-center bg-white/90 rounded px-1.5 py-0.5">
-                <img src="/bmg-logo.png" alt="BookMyGarage" className="h-3.5" loading="lazy" />
+            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
+              <span className="inline-flex items-center bg-white rounded px-2 py-1">
+                <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" loading="lazy" />
               </span>
             </a>
             <span className="text-slate-700">·</span>
