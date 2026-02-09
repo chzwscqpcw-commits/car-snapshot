@@ -772,6 +772,7 @@ export default function Home() {
     const motExpiringSoon = isOver3Years && !motExpired && motDaysUntilExpiry >= 0 && motDaysUntilExpiry <= 30;
     const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Not Taxed";
     const hasAdvisories = isOver3Years && !motExpired && latestAdvisoryCount > 0;
+    const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url;
 
     // 1. MOT expired
     if (motExpired) {
@@ -780,8 +781,8 @@ export default function Home() {
         icon: <AlertTriangle className="w-5 h-5 text-red-400" />,
         title: "MOT expired — this vehicle cannot legally be driven",
         description: "Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.",
-        linkText: "Book MOT via BookMyGarage",
-        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        linkText: "Book MOT — BookMyGarage",
+        linkHref: bmgLink,
         partnerId: "bookMyGarage",
         trackingContext: "action-mot-expired",
         secondaryLink: {
@@ -801,7 +802,7 @@ export default function Home() {
         title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
         description: "Book up to 28 days early without losing your current expiry date.",
         linkText: "Compare MOT prices — BookMyGarage",
-        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        linkHref: bmgLink,
         partnerId: "bookMyGarage",
         trackingContext: "action-mot-expiring",
       });
@@ -829,7 +830,7 @@ export default function Home() {
         title: `${latestAdvisoryCount} MOT advisor${latestAdvisoryCount !== 1 ? "ies" : "y"} on record`,
         description: "Advisories aren't failures, but may need attention before your next test.",
         linkText: "Find a garage — BookMyGarage",
-        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        linkHref: bmgLink,
         partnerId: "bookMyGarage",
         trackingContext: "action-advisories",
       });
@@ -1801,11 +1802,13 @@ END:VEVENT
           <div className="mt-4 flex items-center gap-3">
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
             <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="text-[11px] text-slate-500 hover:text-slate-400 transition-colors" title={PARTNER_LINKS.bookMyGarage.description}>
-              BookMyGarage
+            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
+              <span className="inline-flex items-center bg-white/90 rounded px-1.5 py-0.5">
+                <img src="/bmg-logo.png" alt="BookMyGarage" className="h-3.5" loading="lazy" />
+              </span>
             </a>
             <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.carmoola.description}>
+            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.carmoola.description}>
               <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" loading="lazy" />
             </a>
           </div>
@@ -2651,7 +2654,7 @@ END:VEVENT
                   {/* Inline partner link after most recent test */}
                   {data.motTests[0] && (data.motTests[0].testResult === "FAILED" || data.motTests[0].rfrAndComments?.some(r => r.type === "ADVISORY" || r.type === "DEFECT")) && (
                     <p className="mt-3 text-xs text-slate-400">
-                      Get these checked — <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "mot-history-inline")} className="text-blue-400 hover:text-blue-300 transition-colors">compare garage prices on BookMyGarage <ExternalLink className="w-3 h-3 inline" /></a>
+                      Get these checked — <a href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "mot-history-inline")} className="text-blue-400 hover:text-blue-300 transition-colors">compare garage prices on BookMyGarage <ExternalLink className="w-3 h-3 inline" /></a>
                     </p>
                   )}
 

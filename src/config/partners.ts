@@ -4,6 +4,7 @@ export interface PartnerLink {
   isAffiliate: boolean;
   description?: string;
   shortDescription?: string;
+  buildLink?: (reg: string) => string;
 }
 
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
@@ -13,6 +14,10 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     isAffiliate: true,
     description: "Compare MOT, servicing & repair prices at local garages",
     shortDescription: "MOT & servicing",
+    buildLink: (reg: string) => {
+      const destination = encodeURIComponent(`https://www.bookmygarage.com/?vrm=${reg}`);
+      return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+    },
   },
   carmoola: {
     url: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
