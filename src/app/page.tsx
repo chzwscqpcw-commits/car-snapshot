@@ -1892,6 +1892,14 @@ END:VEVENT
         .animate-slideDownOut {
           animation: slideDownOut 0.2s ease-in forwards;
         }
+        @keyframes logoReveal {
+          0% { opacity: 0.35; transform: translate(-50%, -50%) scale(1); }
+          50% { opacity: 0.25; transform: translate(-50%, -50%) scale(1.08); }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+        }
+        .animate-logoReveal {
+          animation: logoReveal 2s ease-out forwards;
+        }
       `}</style>
 
       <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset relative z-10">
@@ -2370,23 +2378,25 @@ END:VEVENT
 
             {/* VEHICLE HEADER */}
             <DataReveal delay={0} className="relative z-20">
-              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative overflow-hidden">
+                {getMakeLogoPath(data.make) && (
+                  <img
+                    src={getMakeLogoPath(data.make)!}
+                    alt=""
+                    className="absolute top-1/2 left-1/2 max-h-[80px] max-w-[140px] sm:max-h-[120px] sm:max-w-[200px] w-auto h-auto pointer-events-none select-none z-0 animate-logoReveal"
+                    style={{ filter: "brightness(1.2)" }}
+                    aria-hidden="true"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
+                )}
+                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="mb-4">
                       <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 inline-flex items-center justify-center">
                         <p className="text-lg font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em", width: "fit-content" }}>
                           {data.registrationNumber}
                         </p>
                       </div>
-                      {getMakeLogoPath(data.make) && (
-                        <img
-                          src={getMakeLogoPath(data.make)!}
-                          alt=""
-                          className="w-10 sm:w-12 opacity-[0.12] pointer-events-none select-none"
-                          aria-hidden="true"
-                        />
-                      )}
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 mb-4">
                       <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
@@ -2407,7 +2417,7 @@ END:VEVENT
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
+                <div className="relative z-10 grid grid-cols-2 md:flex md:flex-wrap gap-2">
                     {/* Save button */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
