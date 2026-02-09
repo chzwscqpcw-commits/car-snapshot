@@ -514,6 +514,7 @@ export default function Home() {
   const [downloadShareCopied, setDownloadShareCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const shareToastTimer = useRef<NodeJS.Timeout | null>(null);
+  const [showLogoReveal, setShowLogoReveal] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
@@ -535,6 +536,16 @@ export default function Home() {
       .then((data) => setRecentGuides(data))
       .catch(() => {});
   }, []);
+
+  // Show full-screen logo reveal when vehicle data arrives
+  useEffect(() => {
+    if (data?.make && getMakeLogoPath(data.make)) {
+      setShowLogoReveal(true);
+      const t = setTimeout(() => setShowLogoReveal(false), 3500);
+      return () => clearTimeout(t);
+    }
+    setShowLogoReveal(false);
+  }, [data]);
 
   // Fetch recalls when vehicle data changes
   useEffect(() => {
@@ -1830,6 +1841,19 @@ END:VEVENT
         <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-cyan-500/5 to-transparent rounded-full blur-3xl" />
       </div>
 
+      {/* Full-screen logo reveal overlay */}
+      {showLogoReveal && data?.make && getMakeLogoPath(data.make) && (
+        <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center">
+          <img
+            src={getMakeLogoPath(data.make)!}
+            alt=""
+            className="w-[60vw] h-[60vh] sm:w-[50vw] sm:h-[50vh] max-w-none max-h-none object-contain animate-logoReveal"
+            aria-hidden="true"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
+      )}
+
       <style>{`
         @keyframes fadeInUp {
           from {
@@ -1893,12 +1917,13 @@ END:VEVENT
           animation: slideDownOut 0.2s ease-in forwards;
         }
         @keyframes logoReveal {
-          0% { opacity: 0.12; transform: translate(-50%, -50%) scale(1); }
-          40% { opacity: 0.08; transform: translate(-50%, -50%) scale(1.04); }
-          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+          0% { opacity: 0; transform: scale(0.9); filter: grayscale(1) brightness(1.5) blur(8px); }
+          15% { opacity: 0.12; transform: scale(1); filter: grayscale(1) brightness(1.5) blur(4px); }
+          40% { opacity: 0.08; transform: scale(1.03); filter: grayscale(1) brightness(1.5) blur(6px); }
+          100% { opacity: 0; transform: scale(1.08); filter: grayscale(1) brightness(1.5) blur(12px); }
         }
         .animate-logoReveal {
-          animation: logoReveal 4s ease-out forwards;
+          animation: logoReveal 3.5s ease-out forwards;
         }
       `}</style>
 
@@ -2378,18 +2403,8 @@ END:VEVENT
 
             {/* VEHICLE HEADER */}
             <DataReveal delay={0} className="relative z-20">
-              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative overflow-hidden">
-                {getMakeLogoPath(data.make) && (
-                  <img
-                    src={getMakeLogoPath(data.make)!}
-                    alt=""
-                    className="absolute top-1/2 left-1/2 max-h-[140px] max-w-[240px] sm:max-h-[200px] sm:max-w-[320px] w-auto h-auto pointer-events-none select-none z-0 animate-logoReveal"
-                    style={{ filter: "grayscale(1) brightness(1.4)" }}
-                    aria-hidden="true"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                  />
-                )}
-                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                   <div className="flex-1">
                     <div className="mb-4">
                       <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 inline-flex items-center justify-center">
@@ -2417,7 +2432,7 @@ END:VEVENT
                   </div>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-2 md:flex md:flex-wrap gap-2">
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
                     {/* Save button */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
