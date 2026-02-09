@@ -32,6 +32,55 @@ function normalizeStr(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }
 
+/** Strip common prefixes VCA adds like "NEW" from model names */
+function stripModelPrefix(model: string): string {
+  return model.replace(/^NEW\s+/, "");
+}
+
+/** Check if two engine capacities are close enough (within 100cc) */
+function engineMatch(a?: number, b?: number): boolean {
+  if (!a || !b) return false;
+  return Math.abs(a - b) <= 100;
+}
+
+/** Score how well a candidate model matches the search model (higher = better) */
+function modelMatchScore(candidate: string, search: string): number {
+  const c = stripModelPrefix(candidate);
+  if (c === search) return 100; // exact
+  if (c.startsWith(search + " ")) return 80; // e.g. "A6 SALOON" starts with "A6 "
+  if (c.includes(search)) return 60; // contains
+  if (search.includes(c)) return 40; // search contains candidate
+  return 0;
+}
+
+/** Find the best matching entry from candidates by model name and optional engine */
+function bestMatch(
+  candidates: FuelEconomyEntry[],
+  normModel: string,
+  engineCapacity?: number,
+): FuelEconomyEntry | null {
+  let best: FuelEconomyEntry | null = null;
+  let bestScore = 0;
+
+  for (const e of candidates) {
+    const eModel = normalizeStr(e.model);
+    let score = modelMatchScore(eModel, normModel);
+    if (score === 0) continue;
+
+    // Bonus for engine capacity match
+    if (engineCapacity && engineMatch(e.engineCapacity, engineCapacity)) {
+      score += 10;
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      best = e;
+    }
+  }
+
+  return best;
+}
+
 function getFuelPrice(fuelType?: string): number {
   if (!fuelType) return FUEL_PRICES.default;
   const lower = fuelType.toLowerCase();
@@ -58,15 +107,19 @@ export function lookupFuelEconomy(
 
   const normMake = normalizeStr(make);
   const normModel = normalizeStr(model);
+  const normFuel = fuelType ? normalizeStr(fuelType) : null;
 
-  // 1. Exact match: make + model + engine + fuel
-  if (engineCapacity && fuelType) {
-    const exact = data.find(
+  // Filter to same make first
+  const sameMake = data.filter((e) => normalizeStr(e.make) === normMake);
+  if (sameMake.length === 0) return null;
+
+  // 1. Exact match: make + model + engine (within tolerance) + fuel
+  if (engineCapacity && normFuel) {
+    const exact = sameMake.find(
       (e) =>
-        normalizeStr(e.make) === normMake &&
         normalizeStr(e.model) === normModel &&
-        e.engineCapacity === engineCapacity &&
-        normalizeStr(e.fuelType) === normalizeStr(fuelType)
+        engineMatch(e.engineCapacity, engineCapacity) &&
+        normalizeStr(e.fuelType) === normFuel
     );
     if (exact) {
       return {
@@ -79,41 +132,29 @@ export function lookupFuelEconomy(
     }
   }
 
-  // 2. Make + model + fuel
-  if (fuelType) {
-    const modelFuel = data.find(
-      (e) =>
-        normalizeStr(e.make) === normMake &&
-        (normalizeStr(e.model) === normModel ||
-          normalizeStr(e.model).includes(normModel) ||
-          normModel.includes(normalizeStr(e.model))) &&
-        normalizeStr(e.fuelType) === normalizeStr(fuelType)
-    );
-    if (modelFuel) {
+  // 2. Best model match + fuel (with engine preference)
+  if (normFuel) {
+    const sameFuel = sameMake.filter((e) => normalizeStr(e.fuelType) === normFuel);
+    const match = bestMatch(sameFuel, normModel, engineCapacity);
+    if (match) {
       return {
-        combinedMpg: modelFuel.combinedMpg,
-        urbanMpg: modelFuel.urbanMpg,
-        extraUrbanMpg: modelFuel.extraUrbanMpg,
-        estimatedAnnualCost: calculateAnnualCost(modelFuel.combinedMpg, fuelType),
+        combinedMpg: match.combinedMpg,
+        urbanMpg: match.urbanMpg,
+        extraUrbanMpg: match.extraUrbanMpg,
+        estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
         matchType: "model-fuel",
       };
     }
   }
 
-  // 3. Make + model only
-  const modelOnly = data.find(
-    (e) =>
-      normalizeStr(e.make) === normMake &&
-      (normalizeStr(e.model) === normModel ||
-        normalizeStr(e.model).includes(normModel) ||
-        normModel.includes(normalizeStr(e.model)))
-  );
-  if (modelOnly) {
+  // 3. Best model match only (any fuel)
+  const match = bestMatch(sameMake, normModel, engineCapacity);
+  if (match) {
     return {
-      combinedMpg: modelOnly.combinedMpg,
-      urbanMpg: modelOnly.urbanMpg,
-      extraUrbanMpg: modelOnly.extraUrbanMpg,
-      estimatedAnnualCost: calculateAnnualCost(modelOnly.combinedMpg, fuelType),
+      combinedMpg: match.combinedMpg,
+      urbanMpg: match.urbanMpg,
+      extraUrbanMpg: match.extraUrbanMpg,
+      estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
       matchType: "model-only",
     };
   }
