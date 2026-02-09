@@ -12,10 +12,15 @@ export type VedResult = {
 };
 
 // Post-April 2017 flat rates (2025/26 rates — from April 2025)
-const POST_2017_STANDARD = 195;
-const POST_2017_ELECTRIC = 195; // from April 2025, EVs pay standard rate
-const POST_2017_ALT_FUEL = 195; // from April 2025, £10 alt fuel discount removed
+const POST_2017_STANDARD = 195; // all fuel types pay the same from April 2025
 const PREMIUM_SUPPLEMENT = 425; // cars with list price over £40,000, years 2-6
+
+// Pre-2017 electric vehicles pay a reduced flat rate (Band A/B equivalent)
+const PRE_2017_ELECTRIC = 20;
+
+// Pre-March 2001 engine-size based rates
+const PRE_2001_SMALL_ENGINE = 220; // up to 1549cc
+const PRE_2001_LARGE_ENGINE = 360; // over 1549cc
 
 // Pre-April 2017 CO2-based bands
 type VedBand = { band: string; co2Min: number; co2Max: number; petrol: number; diesel: number; altFuel: number };
@@ -38,12 +43,17 @@ const PRE_2017_BANDS: VedBand[] = [
 ];
 
 function isElectric(fuelType?: string): boolean {
-  return (fuelType ?? "").toLowerCase().includes("electric");
+  const f = (fuelType ?? "").toLowerCase();
+  // Pure electric only — exclude hybrids like "PETROL/ELECTRICITY"
+  return f.includes("electric") && !f.includes("hybrid") && !f.includes("petrol") && !f.includes("diesel");
 }
 
 function isAltFuel(fuelType?: string): boolean {
   const f = (fuelType ?? "").toLowerCase();
-  return f.includes("hybrid") || f.includes("gas") || f.includes("lpg") || f.includes("cng");
+  if (f.includes("hybrid") || f.includes("gas") || f.includes("lpg") || f.includes("cng")) return true;
+  // Mixed fuel types (e.g. "PETROL/ELECTRICITY") are hybrid/alt fuel
+  if (f.includes("electric") && (f.includes("petrol") || f.includes("diesel"))) return true;
+  return false;
 }
 
 function isDiesel(fuelType?: string): boolean {
@@ -52,10 +62,11 @@ function isDiesel(fuelType?: string): boolean {
 
 export function calculateVed(vehicle: {
   co2Emissions?: number;
+  engineCapacity?: number;
   fuelType?: string;
   monthOfFirstRegistration?: string;
 }): VedResult {
-  const { co2Emissions, fuelType, monthOfFirstRegistration } = vehicle;
+  const { co2Emissions, engineCapacity, fuelType, monthOfFirstRegistration } = vehicle;
   const disclaimer = `Estimated rate based on GOV.UK data (last verified ${RATES_LAST_VERIFIED}). Actual rate may differ — check GOV.UK for your exact vehicle.`;
 
   // Determine registration date
@@ -67,41 +78,69 @@ export function calculateVed(vehicle: {
     }
   }
 
-  // Electric vehicles — from April 2025, EVs pay the standard rate
-  if (isElectric(fuelType)) {
-    return {
-      estimatedAnnualRate: POST_2017_ELECTRIC,
-      band: "Zero emission",
-      rateType: "post-2017",
-      details: `From April 2025, electric vehicles pay the standard rate of £${POST_2017_ELECTRIC}/year.`,
-      disclaimer,
-    };
-  }
-
-  // Post-April 2017 registration
   const postApril2017 = regDate && regDate >= new Date(2017, 3); // April 2017
+  const preMarch2001 = regDate && regDate < new Date(2001, 2); // March 2001
 
+  // ── Post-April 2017: flat rate for all fuel types ──
   if (postApril2017) {
-    if (isAltFuel(fuelType)) {
+    const rate = POST_2017_STANDARD;
+    const supplementNote = ` Vehicles with a list price over £40,000 may pay an additional £${PREMIUM_SUPPLEMENT}/year supplement for years 2–6.`;
+
+    if (isElectric(fuelType)) {
       return {
-        estimatedAnnualRate: POST_2017_ALT_FUEL,
-        band: "Standard (alternative fuel)",
+        estimatedAnnualRate: rate,
+        band: "Standard (zero emission)",
         rateType: "post-2017",
-        details: `Post-April 2017 vehicles pay £${POST_2017_ALT_FUEL}/year. Vehicles with a list price over £40,000 may pay an additional £${PREMIUM_SUPPLEMENT}/year supplement for years 2–6.`,
+        details: `From April 2025, electric vehicles pay the standard rate of £${rate}/year.${supplementNote}`,
         disclaimer,
       };
     }
 
     return {
-      estimatedAnnualRate: POST_2017_STANDARD,
-      band: "Standard",
+      estimatedAnnualRate: rate,
+      band: isAltFuel(fuelType) ? "Standard (alternative fuel)" : "Standard",
       rateType: "post-2017",
-      details: `Post-April 2017 vehicles pay a flat rate of £${POST_2017_STANDARD}/year. Vehicles with a list price over £40,000 may pay an additional £${PREMIUM_SUPPLEMENT}/year supplement for years 2–6.`,
+      details: `Post-April 2017 vehicles pay a flat rate of £${rate}/year.${supplementNote}`,
       disclaimer,
     };
   }
 
-  // Pre-April 2017 — needs CO2 emissions
+  // ── Pre-March 2001: engine-size based ──
+  if (preMarch2001) {
+    if (engineCapacity !== undefined && engineCapacity !== null && engineCapacity > 0) {
+      const rate = engineCapacity <= 1549 ? PRE_2001_SMALL_ENGINE : PRE_2001_LARGE_ENGINE;
+      const sizeLabel = engineCapacity <= 1549 ? "up to 1,549cc" : "over 1,549cc";
+      return {
+        estimatedAnnualRate: rate,
+        band: sizeLabel,
+        rateType: "pre-2017",
+        details: `Pre-March 2001 vehicles are taxed by engine size. ${engineCapacity}cc (${sizeLabel}) = £${rate}/year.`,
+        disclaimer,
+      };
+    }
+
+    return {
+      estimatedAnnualRate: null,
+      band: null,
+      rateType: null,
+      details: "Pre-March 2001 vehicles are taxed by engine size. Engine capacity data not available.",
+      disclaimer,
+    };
+  }
+
+  // ── March 2001 to March 2017: CO2 emission bands ──
+
+  // Pure electric pre-2017: £20/year flat rate
+  if (isElectric(fuelType)) {
+    return {
+      estimatedAnnualRate: PRE_2017_ELECTRIC,
+      band: "Band A (zero emission)",
+      rateType: "pre-2017",
+      details: `Pre-April 2017 zero-emission vehicles pay £${PRE_2017_ELECTRIC}/year.`,
+      disclaimer,
+    };
+  }
+
   if (co2Emissions !== undefined && co2Emissions !== null) {
     const band = PRE_2017_BANDS.find(b => co2Emissions >= b.co2Min && co2Emissions <= b.co2Max);
     if (band) {
@@ -118,9 +157,7 @@ export function calculateVed(vehicle: {
         estimatedAnnualRate: rate,
         band: `Band ${band.band} (${band.co2Min}–${band.co2Max} g/km)`,
         rateType: "pre-2017",
-        details: rate === 0
-          ? `Band ${band.band} — £0/year road tax. Low emissions vehicles registered before April 2017 pay no VED.`
-          : `Band ${band.band} — £${rate}/year based on ${co2Emissions}g/km CO2 emissions.`,
+        details: `Band ${band.band} — £${rate}/year based on ${co2Emissions}g/km CO2 emissions.`,
         disclaimer,
       };
     }
@@ -133,17 +170,6 @@ export function calculateVed(vehicle: {
       band: null,
       rateType: null,
       details: "Not enough data to estimate road tax. Registration date and CO2 emissions are needed.",
-      disclaimer,
-    };
-  }
-
-  // Post-2017 but no emissions (shouldn't happen often)
-  if (postApril2017) {
-    return {
-      estimatedAnnualRate: POST_2017_STANDARD,
-      band: "Standard (estimated)",
-      rateType: "post-2017",
-      details: `Post-April 2017 vehicles typically pay £${POST_2017_STANDARD}/year flat rate.`,
       disclaimer,
     };
   }

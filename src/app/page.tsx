@@ -808,6 +808,7 @@ export default function Home() {
     if (!data) return null;
     return calculateVed({
       co2Emissions: data.co2Emissions,
+      engineCapacity: data.engineCapacity,
       fuelType: data.fuelType,
       monthOfFirstRegistration: data.monthOfFirstRegistration,
     });
