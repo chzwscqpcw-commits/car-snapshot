@@ -799,10 +799,10 @@ export default function Home() {
         variant: "warning",
         icon: <AlertCircle className="w-5 h-5 text-amber-400" />,
         title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
-        description: "You can book an MOT up to a month before expiry without losing any days on your certificate.",
-        linkText: "Book MOT via Fixter",
-        linkHref: PARTNER_LINKS.fixter.url,
-        partnerId: "fixter",
+        description: "Book up to 28 days early without losing your current expiry date.",
+        linkText: "Compare MOT prices — BookMyGarage",
+        linkHref: PARTNER_LINKS.bookMyGarage.url,
+        partnerId: "bookMyGarage",
         trackingContext: "action-mot-expiring",
       });
     }
@@ -827,25 +827,26 @@ export default function Home() {
         variant: "info",
         icon: <Info className="w-5 h-5 text-blue-400" />,
         title: `${latestAdvisoryCount} MOT advisor${latestAdvisoryCount !== 1 ? "ies" : "y"} on record`,
-        description: "Advisories aren't failures, but some may need attention before the next test. A pre-MOT check can flag issues early.",
-        linkText: "Get a pre-MOT check",
+        description: "Advisories aren't failures, but may need attention before your next test.",
+        linkText: "Find a garage — BookMyGarage",
         linkHref: PARTNER_LINKS.bookMyGarage.url,
         partnerId: "bookMyGarage",
         trackingContext: "action-advisories",
       });
     }
 
-    // 5. Breakdown cover (for 3yr+ vehicles, only if MOT not expired)
-    if (isOver3Years && !motExpired) {
+    // 5. Car finance (for vehicles 3-15 years old, only if MOT not expired)
+    const vehicleAge = data.yearOfManufacture ? new Date().getFullYear() - data.yearOfManufacture : 0;
+    if (isOver3Years && !motExpired && vehicleAge <= 15) {
       prompts.push({
         variant: "subtle",
         icon: <Info className="w-5 h-5 text-slate-500" />,
-        title: "Breakdown cover",
-        description: "Older vehicles are more likely to need roadside assistance. RAC cover starts from around £7/month.",
-        linkText: "View RAC breakdown cover",
-        linkHref: PARTNER_LINKS.racBreakdown.url,
-        partnerId: "racBreakdown",
-        trackingContext: "action-breakdown",
+        title: "Thinking of buying this car?",
+        description: "Check your eligibility for car finance without affecting your credit score.",
+        linkText: "Check eligibility — Carmoola",
+        linkHref: PARTNER_LINKS.carmoola.url,
+        partnerId: "carmoola",
+        trackingContext: "action-finance",
       });
     }
 
@@ -1796,11 +1797,15 @@ END:VEVENT
             <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
           </div>
 
-{/* TRUSTED PARTNERS */}
-          <div className="mt-4 flex items-center gap-2">
-            <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Trusted partner</span>
+{/* OUR PARTNERS */}
+          <div className="mt-4 flex items-center gap-3">
+            <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
             <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title="Carmoola - Car Finance">
+            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="text-[11px] text-slate-500 hover:text-slate-400 transition-colors" title={PARTNER_LINKS.bookMyGarage.description}>
+              BookMyGarage
+            </a>
+            <span className="text-slate-700">·</span>
+            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.carmoola.description}>
               <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" loading="lazy" />
             </a>
           </div>
@@ -2643,6 +2648,13 @@ END:VEVENT
                     ))}
                   </div>
 
+                  {/* Inline partner link after most recent test */}
+                  {data.motTests[0] && (data.motTests[0].testResult === "FAILED" || data.motTests[0].rfrAndComments?.some(r => r.type === "ADVISORY" || r.type === "DEFECT")) && (
+                    <p className="mt-3 text-xs text-slate-400">
+                      Get these checked — <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "mot-history-inline")} className="text-blue-400 hover:text-blue-300 transition-colors">compare garage prices on BookMyGarage <ExternalLink className="w-3 h-3 inline" /></a>
+                    </p>
+                  )}
+
                   {/* Show earlier MOT history toggle */}
                   {data.motTests.length > 3 && (
                     <button
@@ -2970,6 +2982,9 @@ END:VEVENT
         <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-2">
           <p>
             Built with DVLA vehicle data. Always verify details with the seller and official documents before making any decisions.
+          </p>
+          <p className="text-slate-600">
+            Free Plate Check may earn a commission from partner links. This doesn't affect our recommendations or the data we show.
           </p>
           <p>
             <button

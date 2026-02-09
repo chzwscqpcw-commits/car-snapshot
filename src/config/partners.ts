@@ -2,38 +2,24 @@ export interface PartnerLink {
   url: string;
   name: string;
   isAffiliate: boolean;
+  description?: string;
+  shortDescription?: string;
 }
 
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
   bookMyGarage: {
-    url: "https://www.bookmygarage.com/",
+    url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com",
     name: "BookMyGarage",
-    isAffiliate: false,
-  },
-  fixter: {
-    url: "https://www.fixter.co.uk/mot",
-    name: "Fixter",
-    isAffiliate: false,
-  },
-  goCompare: {
-    url: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
-    name: "GoCompare",
     isAffiliate: true,
-  },
-  hpiCheck: {
-    url: "https://www.hpicheck.com/?utm_source=freeplatecheck",
-    name: "HPI Check",
-    isAffiliate: true,
+    description: "Compare MOT, servicing & repair prices at local garages",
+    shortDescription: "MOT & servicing",
   },
   carmoola: {
     url: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
     name: "Carmoola",
     isAffiliate: true,
-  },
-  racBreakdown: {
-    url: "https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=XXXX&ued=https%3A%2F%2Fwww.rac.co.uk%2Fbreakdown-cover",
-    name: "RAC Breakdown",
-    isAffiliate: true,
+    description: "Flexible car finance — check eligibility without affecting your credit score",
+    shortDescription: "Car finance",
   },
   govTaxVehicle: {
     url: "https://www.gov.uk/tax-your-vehicle",
