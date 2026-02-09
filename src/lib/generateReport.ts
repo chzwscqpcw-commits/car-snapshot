@@ -56,6 +56,11 @@ export type ReportInput = {
   data: VehicleData;
   motInsights: MotInsights | null;
   checklist: { owner: string[]; buyer: string[]; seller: string[] };
+  ulezResult?: { status: string; confidence: string; reason: string; details: string } | null;
+  vedResult?: { estimatedAnnualRate: number | null; band: string | null; details: string } | null;
+  fuelEconomy?: { combinedMpg: number; urbanMpg?: number; extraUrbanMpg?: number; estimatedAnnualCost: number } | null;
+  ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
+  recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -309,6 +314,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput) {
   if (data.yearOfManufacture) parts.push(String(data.yearOfManufacture));
   if (data.make) parts.push(data.make.toUpperCase());
   if (data.model) parts.push(data.model.toUpperCase());
+  if (data.variant) parts.push(data.variant.toUpperCase());
   const engineDesc: string[] = [];
   if (data.engineCapacity) engineDesc.push(`${(data.engineCapacity / 1000).toFixed(1)}L`);
   if (data.fuelType) engineDesc.push(data.fuelType);
@@ -576,6 +582,143 @@ function renderMotHistory(doc: jsPDF, input: ReportInput) {
   }
 }
 
+function renderEnrichedInsights(doc: jsPDF, input: ReportInput) {
+  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls } = input;
+
+  // Only render if at least one enrichment has data
+  const hasUlez = ulezResult && ulezResult.status !== "unknown";
+  const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
+  const hasFuel = fuelEconomy && fuelEconomy.combinedMpg > 0;
+  const hasNcap = ncapRating && ncapRating.overallStars > 0;
+  const hasRecalls = recalls !== undefined; // show section even if empty (to confirm no recalls)
+
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls) return;
+
+  addNewPage(doc);
+  let y = MARGIN + 5;
+  y = addSectionHeader(doc, y, "Vehicle Insights");
+
+  const cardX = MARGIN;
+  const cardW = CONTENT_W;
+  const accentW = 3;
+  const padLeft = accentW + 6;
+
+  // Helper to draw a card with left accent bar
+  function drawInsightCard(
+    startY: number,
+    accentColor: RGB,
+    title: string,
+    lines: string[],
+  ): number {
+    const lineH = 4.5;
+    const titleH = 6;
+    const padTop = 5;
+    const padBottom = 5;
+    // Wrap lines to fit card
+    const wrappedLines: string[] = [];
+    for (const line of lines) {
+      const split = doc.splitTextToSize(line, cardW - padLeft - 6);
+      wrappedLines.push(...split);
+    }
+    const cardH = padTop + titleH + wrappedLines.length * lineH + padBottom;
+
+    startY = checkPageBreak(doc, startY, cardH + 4);
+
+    // Card background
+    drawRoundedRect(doc, cardX, startY, cardW, cardH, 3, C.slate800, C.slate700);
+
+    // Accent bar
+    setFill(doc, accentColor);
+    doc.rect(cardX, startY + 2, accentW, cardH - 4, "F");
+
+    // Title
+    let textY = startY + padTop;
+    doc.setFontSize(FONT.body);
+    setTextColor(doc, C.white);
+    doc.setFont("helvetica", "bold");
+    doc.text(title, cardX + padLeft, textY + 3);
+    textY += titleH;
+
+    // Content lines
+    doc.setFontSize(FONT.small);
+    setTextColor(doc, C.slate300);
+    doc.setFont("helvetica", "normal");
+    for (const line of wrappedLines) {
+      doc.text(line, cardX + padLeft, textY + 3);
+      textY += lineH;
+    }
+
+    return startY + cardH + 4;
+  }
+
+  // ULEZ Compliance
+  if (hasUlez) {
+    const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
+    const accent = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.slate400;
+    const statusLabel = ulezResult!.status === "exempt" ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
+    y = drawInsightCard(y, accent, `ULEZ: ${statusLabel}`, [
+      ulezResult!.reason,
+      `Confidence: ${ulezResult!.confidence}`,
+    ]);
+  }
+
+  // VED Road Tax
+  if (hasVed) {
+    const lines: string[] = [`Estimated £${vedResult!.estimatedAnnualRate}/year`];
+    if (vedResult!.band) lines.push(`Band: ${vedResult!.band}`);
+    if (vedResult!.details) {
+      const firstSentence = vedResult!.details.split(".")[0];
+      if (firstSentence) lines.push(firstSentence + ".");
+    }
+    y = drawInsightCard(y, C.blue, "VED Road Tax", lines);
+  }
+
+  // Fuel Economy
+  if (hasFuel) {
+    const lines: string[] = [`${fuelEconomy!.combinedMpg.toFixed(1)} MPG (combined)`];
+    if (fuelEconomy!.urbanMpg) lines.push(`Urban: ${fuelEconomy!.urbanMpg.toFixed(1)} MPG`);
+    if (fuelEconomy!.extraUrbanMpg) lines.push(`Extra-urban: ${fuelEconomy!.extraUrbanMpg.toFixed(1)} MPG`);
+    lines.push(`Estimated annual fuel cost: £${fuelEconomy!.estimatedAnnualCost}`);
+    y = drawInsightCard(y, C.blue, "Fuel Economy", lines);
+  }
+
+  // NCAP Rating
+  if (hasNcap) {
+    const lines: string[] = [
+      `${ncapRating!.overallStars}/5 stars (tested ${ncapRating!.yearTested})`,
+    ];
+    const scores: string[] = [];
+    if (ncapRating!.adultOccupant != null) scores.push(`Adult ${ncapRating!.adultOccupant}%`);
+    if (ncapRating!.childOccupant != null) scores.push(`Child ${ncapRating!.childOccupant}%`);
+    if (ncapRating!.pedestrian != null) scores.push(`Pedestrian ${ncapRating!.pedestrian}%`);
+    if (ncapRating!.safetyAssist != null) scores.push(`Safety Assist ${ncapRating!.safetyAssist}%`);
+    if (scores.length > 0) lines.push(scores.join(" · "));
+    y = drawInsightCard(y, C.cyan, "Euro NCAP Safety Rating", lines);
+  }
+
+  // Safety Recalls
+  if (hasRecalls) {
+    if (recalls!.length === 0) {
+      y = drawInsightCard(y, C.emerald, "Safety Recalls", [
+        "No known safety recalls found for this vehicle.",
+      ]);
+    } else {
+      const lines: string[] = [
+        `${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`,
+      ];
+      // Show up to 3 recall summaries
+      for (let i = 0; i < Math.min(3, recalls!.length); i++) {
+        const r = recalls![i];
+        lines.push(`${r.recallDate}: ${r.defect.substring(0, 100)}${r.defect.length > 100 ? "..." : ""}`);
+      }
+      if (recalls!.length > 3) {
+        lines.push(`...and ${recalls!.length - 3} more`);
+      }
+      y = drawInsightCard(y, C.red, "Safety Recalls", lines);
+    }
+  }
+}
+
 function renderVehicleDetails(doc: jsPDF, input: ReportInput) {
   const { data } = input;
 
@@ -786,6 +929,9 @@ export async function generateVehicleReport(input: ReportInput): Promise<void> {
 
   // Page 2+: MOT History
   renderMotHistory(doc, input);
+
+  // Vehicle Insights (ULEZ, VED, fuel economy, NCAP, recalls)
+  renderEnrichedInsights(doc, input);
 
   // Vehicle Details
   renderVehicleDetails(doc, input);

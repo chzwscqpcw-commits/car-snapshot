@@ -129,6 +129,7 @@ import { calculateVed } from "@/lib/ved";
 import { lookupNcap, type NcapRating } from "@/lib/ncap";
 import { type Recall } from "@/lib/recalls";
 import { type FuelEconomyResult } from "@/lib/fuel-economy";
+import { getMakeLogoPath } from "@/lib/make-logo";
 
 type VehicleData = {
   registrationNumber: string;
@@ -569,7 +570,7 @@ export default function Home() {
   useEffect(() => {
     if (data) {
       const make = data.make || "Vehicle";
-      const model = data.model || "";
+      const model = [data.model, data.variant].filter(Boolean).join(" ") || "";
       const year = data.yearOfManufacture || "";
       document.title = `${make} ${model} (${year}) — Free Vehicle Check | Free Plate Check`;
 
@@ -1446,7 +1447,7 @@ DTSTAMP:${dtstamp}
 DTSTART;VALUE=DATE:${dateStr}
 DTEND;VALUE=DATE:${nextDateStr}
 SUMMARY:MOT Due - ${vehicle.registrationNumber} (${vehicle.make})
-DESCRIPTION:MOT expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
+DESCRIPTION:MOT expires for ${vehicle.make} ${[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} (${vehicle.registrationNumber})
 SEQUENCE:0
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
@@ -1475,7 +1476,7 @@ DTSTAMP:${dtstamp}
 DTSTART;VALUE=DATE:${dateStr}
 DTEND;VALUE=DATE:${nextDateStr}
 SUMMARY:Tax Due - ${vehicle.registrationNumber} (${vehicle.make})
-DESCRIPTION:Vehicle tax expires for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber})
+DESCRIPTION:Vehicle tax expires for ${vehicle.make} ${[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} (${vehicle.registrationNumber})
 SEQUENCE:0
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
@@ -1503,7 +1504,7 @@ END:VEVENT
         const endDay = String(renewalWindowEnd.getDate()).padStart(2, "0");
         const endDateStr = `${endYear}${endMonth}${endDay}`;
 
-        icsContent += `BEGIN:VEVENT\nUID:fpc-insurance-${vehicle.registrationNumber}-${startYear}-${startMonth}@freeplatecheck.co.uk\nDTSTAMP:${dtstamp}\nDTSTART;VALUE=DATE:${startDateStr}\nDTEND;VALUE=DATE:${endDateStr}\nSUMMARY:Insurance Renewal Window - ${vehicle.registrationNumber} (${vehicle.make})\nDESCRIPTION:Best time to renew your car insurance for ${vehicle.make} ${vehicle.model || ""} (${vehicle.registrationNumber}).\\n\\nSweet Spot: Renew 20-27 days BEFORE your policy expires to get the best rates and coverage options. This 7-day window marks the optimal renewal period.\\n\\nPolicy expires: ${formatDate(insuranceDate)}\nSEQUENCE:0\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\nEND:VEVENT\n`;
+        icsContent += `BEGIN:VEVENT\nUID:fpc-insurance-${vehicle.registrationNumber}-${startYear}-${startMonth}@freeplatecheck.co.uk\nDTSTAMP:${dtstamp}\nDTSTART;VALUE=DATE:${startDateStr}\nDTEND;VALUE=DATE:${endDateStr}\nSUMMARY:Insurance Renewal Window - ${vehicle.registrationNumber} (${vehicle.make})\nDESCRIPTION:Best time to renew your car insurance for ${vehicle.make} ${[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} (${vehicle.registrationNumber}).\\n\\nSweet Spot: Renew 20-27 days BEFORE your policy expires to get the best rates and coverage options. This 7-day window marks the optimal renewal period.\\n\\nPolicy expires: ${formatDate(insuranceDate)}\nSEQUENCE:0\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\nEND:VEVENT\n`;
       }
     });
 
@@ -1578,7 +1579,7 @@ END:VEVENT
       "VEHICLE INFORMATION",
       "────────────────────────────────────────────────────────────────",
       "",
-      `Make & Model:        ${data.make} ${data.model || ""}`,
+      `Make & Model:        ${data.make} ${[data.model, data.variant].filter(Boolean).join(" ")}`,
       `Year:                ${data.yearOfManufacture || "—"}`,
       `Colour:              ${data.colour || "—"}`,
       "",
@@ -1687,6 +1688,11 @@ END:VEVENT
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
         checklist: { owner: ownerItems, buyer: buyerItems, seller: sellerItems },
+        ulezResult,
+        vedResult,
+        fuelEconomy,
+        ncapRating,
+        recalls,
       });
 
       showToast("PDF report downloaded!");
@@ -2043,7 +2049,7 @@ END:VEVENT
                                   onClick={() => performLookup(vehicle.registrationNumber)}
                                   className="text-sm font-semibold text-emerald-100 hover:text-emerald-50 transition-colors text-left"
                                 >
-                                  {vehicle.make} {vehicle.model || ""} — {vehicle.registrationNumber}
+                                  {vehicle.make} {[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} — {vehicle.registrationNumber}
                                 </button>
                                 <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-200/70">
                                   {vehicle.motExpiryDate && (
@@ -2178,7 +2184,7 @@ END:VEVENT
               {/* Vehicle 1 */}
               <div>
                 <h3 className="text-lg font-bold text-slate-100 mb-4">
-                  {compareData1.make} {compareData1.model} — {compareData1.registrationNumber}
+                  {compareData1.make} {[compareData1.model, compareData1.variant].filter(Boolean).join(" ")} — {compareData1.registrationNumber}
                 </h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between py-2 border-b border-slate-700/50">
@@ -2223,7 +2229,7 @@ END:VEVENT
               {/* Vehicle 2 */}
               <div>
                 <h3 className="text-lg font-bold text-slate-100 mb-4">
-                  {compareData2.make} {compareData2.model} — {compareData2.registrationNumber}
+                  {compareData2.make} {[compareData2.model, compareData2.variant].filter(Boolean).join(" ")} — {compareData2.registrationNumber}
                 </h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between py-2 border-b border-slate-700/50">
@@ -2343,7 +2349,7 @@ END:VEVENT
               dangerouslySetInnerHTML={{ __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "Car",
-                "name": `${data.make || ""} ${data.model || ""}`.trim(),
+                "name": [data.make, data.model, data.variant].filter(Boolean).join(" "),
                 "manufacturer": data.make || undefined,
                 "model": data.model || undefined,
                 "vehicleConfiguration": data.fuelType || undefined,
@@ -2364,13 +2370,23 @@ END:VEVENT
 
             {/* VEHICLE HEADER */}
             <DataReveal delay={0} className="relative z-20">
-              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur">
+              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                   <div className="flex-1">
-                    <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 mb-4 inline-flex items-center justify-center">
-                      <p className="text-lg font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em", width: "fit-content" }}>
-                        {data.registrationNumber}
-                      </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 inline-flex items-center justify-center">
+                        <p className="text-lg font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em", width: "fit-content" }}>
+                          {data.registrationNumber}
+                        </p>
+                      </div>
+                      {getMakeLogoPath(data.make) && (
+                        <img
+                          src={getMakeLogoPath(data.make)!}
+                          alt=""
+                          className="w-10 sm:w-12 opacity-[0.12] pointer-events-none select-none"
+                          aria-hidden="true"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 mb-4">
                       <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
@@ -2379,7 +2395,12 @@ END:VEVENT
                       </div>
                       <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
                         <p className="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wide">Model</p>
-                        <p className="text-xl sm:text-2xl font-bold text-slate-100">{data.model || "—"}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-slate-100">
+                          {data.model || "—"}
+                          {data.variant && (
+                            <span className="text-lg font-medium text-slate-300 ml-2">{data.variant}</span>
+                          )}
+                        </p>
                       </div>
                     </div>
                     <p className="text-sm text-slate-400 mt-4">DVLA data • {new Date().toLocaleDateString()}</p>
