@@ -1893,12 +1893,12 @@ END:VEVENT
           animation: slideDownOut 0.2s ease-in forwards;
         }
         @keyframes logoReveal {
-          0% { opacity: 0.35; transform: translate(-50%, -50%) scale(1); }
-          50% { opacity: 0.25; transform: translate(-50%, -50%) scale(1.08); }
-          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+          0% { opacity: 0.12; transform: translate(-50%, -50%) scale(1); }
+          40% { opacity: 0.08; transform: translate(-50%, -50%) scale(1.04); }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
         }
         .animate-logoReveal {
-          animation: logoReveal 2s ease-out forwards;
+          animation: logoReveal 4s ease-out forwards;
         }
       `}</style>
 
@@ -2383,8 +2383,8 @@ END:VEVENT
                   <img
                     src={getMakeLogoPath(data.make)!}
                     alt=""
-                    className="absolute top-1/2 left-1/2 max-h-[80px] max-w-[140px] sm:max-h-[120px] sm:max-w-[200px] w-auto h-auto pointer-events-none select-none z-0 animate-logoReveal"
-                    style={{ filter: "brightness(1.2)" }}
+                    className="absolute top-1/2 left-1/2 max-h-[140px] max-w-[240px] sm:max-h-[200px] sm:max-w-[320px] w-auto h-auto pointer-events-none select-none z-0 animate-logoReveal"
+                    style={{ filter: "grayscale(1) brightness(1.4)" }}
                     aria-hidden="true"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                   />
