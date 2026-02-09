@@ -61,6 +61,7 @@ export type ReportInput = {
   fuelEconomy?: { combinedMpg: number; urbanMpg?: number; extraUrbanMpg?: number; estimatedAnnualCost: number } | null;
   ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
   recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
+  valuation?: { rangeLow: number; rangeHigh: number; confidence: string; sources: string[] } | null;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -583,7 +584,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput) {
 }
 
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput) {
-  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls } = input;
+  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuation } = input;
 
   // Only render if at least one enrichment has data
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
@@ -591,8 +592,9 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput) {
   const hasFuel = fuelEconomy && fuelEconomy.combinedMpg > 0;
   const hasNcap = ncapRating && ncapRating.overallStars > 0;
   const hasRecalls = recalls !== undefined; // show section even if empty (to confirm no recalls)
+  const hasValuation = valuation && valuation.rangeLow > 0;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls) return;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasValuation) return;
 
   addNewPage(doc);
   let y = MARGIN + 5;
@@ -694,6 +696,17 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput) {
     if (ncapRating!.safetyAssist != null) scores.push(`Safety Assist ${ncapRating!.safetyAssist}%`);
     if (scores.length > 0) lines.push(scores.join(" · "));
     y = drawInsightCard(y, C.cyan, "Euro NCAP Safety Rating", lines);
+  }
+
+  // Estimated Value
+  if (hasValuation) {
+    const confLabel = valuation!.confidence === "high" ? "High confidence" : valuation!.confidence === "medium" ? "Medium confidence" : "Estimate only";
+    const lines: string[] = [
+      `£${valuation!.rangeLow.toLocaleString()} – £${valuation!.rangeHigh.toLocaleString()}`,
+      `Confidence: ${confLabel}`,
+      `Sources: ${valuation!.sources.join(", ")}`,
+    ];
+    y = drawInsightCard(y, C.blue, "Estimated Value", lines);
   }
 
   // Safety Recalls

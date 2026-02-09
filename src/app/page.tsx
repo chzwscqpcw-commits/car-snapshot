@@ -120,6 +120,9 @@ import {
   Shield,
   Star,
   Leaf,
+  PoundSterling,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -130,6 +133,16 @@ import { lookupNcap, type NcapRating } from "@/lib/ncap";
 import { type Recall } from "@/lib/recalls";
 import { type FuelEconomyResult } from "@/lib/fuel-economy";
 import { getMakeLogoPath } from "@/lib/make-logo";
+import {
+  lookupNewPrice,
+  calculateDepreciationBaseline,
+  getMileageAdjustment,
+  getConditionAdjustment,
+  combineValuationLayers,
+  type ValuationResult,
+  type ConditionInputs,
+} from "@/lib/valuation";
+import newPricesData from "@/data/new-prices.json";
 
 type VehicleData = {
   registrationNumber: string;
@@ -528,6 +541,9 @@ export default function Home() {
   const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
   const [recalls, setRecalls] = useState<Recall[]>([]);
   const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
+  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; cacheMedian: number | null; sources: string[] } | null>(null);
+  const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
+  const [showConditionForm, setShowConditionForm] = useState(false);
 
   // Load recent guides
   useEffect(() => {
@@ -576,6 +592,39 @@ export default function Home() {
       .then((result) => setFuelEconomy(result))
       .catch(() => setFuelEconomy(null));
   }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch valuation server data (eBay + cache) when vehicle data changes
+  useEffect(() => {
+    if (!data?.make || !data?.model || !data?.yearOfManufacture) {
+      setValuationServerData(null);
+      setValuationCondition(null);
+      setShowConditionForm(false);
+      return;
+    }
+    const newPrice = lookupNewPrice(newPricesData, data.make, data.model);
+    if (!newPrice) {
+      setValuationServerData(null);
+      return;
+    }
+    const latestMileage = data.motTests?.[data.motTests.length - 1]?.odometer?.value
+      ?? data.motTests?.[0]?.odometer?.value
+      ?? null;
+    const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
+    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, latestMileage);
+
+    const params = new URLSearchParams({
+      make: data.make,
+      model: data.model,
+      year: String(data.yearOfManufacture),
+      depreciationEstimate: String(depEst),
+    });
+    if (data.fuelType) params.set("fuelType", data.fuelType);
+
+    fetch(`/api/valuation?${params}`)
+      .then((res) => res.json())
+      .then((result) => setValuationServerData(result))
+      .catch(() => setValuationServerData(null));
+  }, [data?.make, data?.model, data?.yearOfManufacture, data?.fuelType, data?.motTests]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Dynamic meta for vehicle results
   useEffect(() => {
@@ -831,6 +880,45 @@ export default function Home() {
     if (!data) return null;
     return lookupNcap(data.make, data.model);
   }, [data]);
+
+  // Vehicle valuation
+  const valuationResult = useMemo((): ValuationResult | null => {
+    if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
+
+    const newPrice = lookupNewPrice(newPricesData, data.make, data.model);
+    if (!newPrice) return null;
+
+    const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
+    // Get latest mileage from MOT tests (sorted oldest first, so last element is latest)
+    const sortedTests = data.motTests ? [...data.motTests].sort(
+      (a, b) => new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime()
+    ) : [];
+    const latestMileage = sortedTests.length > 0
+      ? sortedTests[sortedTests.length - 1]?.odometer?.value ?? null
+      : null;
+
+    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, latestMileage);
+    const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge);
+
+    const advisoryCount = data.motTests?.[0]?.rfrAndComments?.filter(
+      (r) => r.type === "ADVISORY"
+    ).length ?? 0;
+    const recentFailure = data.motTests?.[0]?.testResult === "FAILED";
+    const condAdj = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure);
+
+    const result = combineValuationLayers(
+      depBaseline,
+      valuationServerData?.ebayMedian ?? null,
+      valuationServerData?.cacheMedian ?? null,
+      condAdj,
+    );
+
+    if (result) {
+      result.mileageAdjustmentPercent = mileageAdj;
+    }
+
+    return result;
+  }, [data, valuationServerData, valuationCondition]);
 
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
@@ -1109,8 +1197,17 @@ export default function Home() {
       });
     }
 
+    // Valuation insight
+    if (valuationResult) {
+      result.push({
+        tone: "info",
+        title: `Estimated value: £${valuationResult.rangeLow.toLocaleString()} – £${valuationResult.rangeHigh.toLocaleString()}`,
+        detail: `Based on ${valuationResult.sources.join(", ")}. See the full valuation breakdown below.`,
+      });
+    }
+
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1704,6 +1801,12 @@ END:VEVENT
         fuelEconomy,
         ncapRating,
         recalls,
+        valuation: valuationResult ? {
+          rangeLow: valuationResult.rangeLow,
+          rangeHigh: valuationResult.rangeHigh,
+          confidence: valuationResult.confidence,
+          sources: valuationResult.sources,
+        } : null,
       });
 
       showToast("PDF report downloaded!");
@@ -1804,7 +1907,7 @@ END:VEVENT
           "url": "https://www.freeplatecheck.co.uk",
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "Web",
-          "featureList": "MOT History Check, Tax Status Check, Mileage Check, ULEZ Compliance Check, Safety Recall Check, VED Road Tax Calculator, Fuel Economy Lookup, Euro NCAP Ratings, Vehicle Comparison, PDF Report Download",
+          "featureList": "MOT History Check, Tax Status Check, Mileage Check, ULEZ Compliance Check, Safety Recall Check, VED Road Tax Calculator, Fuel Economy Lookup, Euro NCAP Ratings, Vehicle Valuation Estimator, Vehicle Comparison, PDF Report Download",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -2696,6 +2799,168 @@ END:VEVENT
               </div>
             </DataReveal>
 
+            {/* VEHICLE VALUATION ESTIMATE */}
+            {valuationResult && (
+              <DataReveal delay={270}>
+                <div className="mb-8 p-5 rounded-lg border border-blue-800/40 bg-gradient-to-r from-blue-900/30 to-cyan-900/30">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <PoundSterling className="w-5 h-5 text-blue-400" />
+                      <h3 className="text-sm font-semibold text-slate-200">Estimated Value</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      valuationResult.confidence === "high" ? "bg-emerald-900/40 text-emerald-300" :
+                      valuationResult.confidence === "medium" ? "bg-blue-900/40 text-blue-300" :
+                      "bg-slate-700/60 text-slate-300"
+                    }`}>
+                      {valuationResult.confidence === "high" ? "High confidence" :
+                       valuationResult.confidence === "medium" ? "Medium confidence" :
+                       "Estimate only"}
+                    </span>
+                  </div>
+
+                  <p className="text-3xl font-bold text-slate-100 mb-1">
+                    £{valuationResult.rangeLow.toLocaleString()} – £{valuationResult.rangeHigh.toLocaleString()}
+                  </p>
+
+                  <p className="text-xs text-slate-400 mb-4">
+                    Based on: {valuationResult.sources.join(", ")}
+                    {valuationResult.mileageAdjustmentPercent !== 0 && (
+                      <span> · Mileage adj: {valuationResult.mileageAdjustmentPercent > 0 ? "+" : ""}{valuationResult.mileageAdjustmentPercent}%</span>
+                    )}
+                    {valuationResult.conditionAdjustmentPercent !== 0 && (
+                      <span> · Condition adj: {valuationResult.conditionAdjustmentPercent > 0 ? "+" : ""}{valuationResult.conditionAdjustmentPercent}%</span>
+                    )}
+                  </p>
+
+                  {/* Condition refinement toggle */}
+                  <button
+                    onClick={() => setShowConditionForm(!showConditionForm)}
+                    className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors mb-2"
+                  >
+                    {showConditionForm ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    Refine with vehicle condition
+                  </button>
+
+                  {showConditionForm && (
+                    <div className="mt-3 pt-3 border-t border-blue-800/30 space-y-3">
+                      {/* Service History */}
+                      <div>
+                        <p className="text-xs text-slate-400 font-semibold mb-1.5">Service History</p>
+                        <div className="flex gap-2">
+                          {(["full", "partial", "none"] as const).map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => setValuationCondition((prev) => ({ serviceHistory: opt, bodywork: prev?.bodywork ?? "good", interior: prev?.interior ?? "good", owners: prev?.owners ?? "2-3", accidents: prev?.accidents ?? "none" }))}
+                              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                                valuationCondition?.serviceHistory === opt
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                              }`}
+                            >
+                              {opt === "full" ? "Full" : opt === "partial" ? "Partial" : "None"}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Bodywork */}
+                      <div>
+                        <p className="text-xs text-slate-400 font-semibold mb-1.5">Bodywork</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {(["excellent", "good", "fair", "poor"] as const).map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => setValuationCondition((prev) => ({ serviceHistory: prev?.serviceHistory ?? "partial", bodywork: opt, interior: prev?.interior ?? "good", owners: prev?.owners ?? "2-3", accidents: prev?.accidents ?? "none" }))}
+                              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                                valuationCondition?.bodywork === opt
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                              }`}
+                            >
+                              {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Interior */}
+                      <div>
+                        <p className="text-xs text-slate-400 font-semibold mb-1.5">Interior</p>
+                        <div className="flex gap-2">
+                          {(["excellent", "good", "worn"] as const).map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => setValuationCondition((prev) => ({ serviceHistory: prev?.serviceHistory ?? "partial", bodywork: prev?.bodywork ?? "good", interior: opt, owners: prev?.owners ?? "2-3", accidents: prev?.accidents ?? "none" }))}
+                              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                                valuationCondition?.interior === opt
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                              }`}
+                            >
+                              {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Owners */}
+                      <div>
+                        <p className="text-xs text-slate-400 font-semibold mb-1.5">Previous Owners</p>
+                        <div className="flex gap-2">
+                          {(["1", "2-3", "4+"] as const).map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => setValuationCondition((prev) => ({ serviceHistory: prev?.serviceHistory ?? "partial", bodywork: prev?.bodywork ?? "good", interior: prev?.interior ?? "good", owners: opt, accidents: prev?.accidents ?? "none" }))}
+                              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                                valuationCondition?.owners === opt
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                              }`}
+                            >
+                              {opt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Accidents */}
+                      <div>
+                        <p className="text-xs text-slate-400 font-semibold mb-1.5">Accident History</p>
+                        <div className="flex gap-2">
+                          {(["none", "minor", "significant"] as const).map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => setValuationCondition((prev) => ({ serviceHistory: prev?.serviceHistory ?? "partial", bodywork: prev?.bodywork ?? "good", interior: prev?.interior ?? "good", owners: prev?.owners ?? "2-3", accidents: opt }))}
+                              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                                valuationCondition?.accidents === opt
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                              }`}
+                            >
+                              {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {latestAdvisoryCount > 0 && (
+                        <p className="text-[11px] text-slate-500">
+                          MOT adjustment applied automatically: {latestAdvisoryCount} advisor{latestAdvisoryCount !== 1 ? "ies" : "y"} on latest test.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="text-[11px] text-slate-600 mt-3">{valuationResult.disclaimer}</p>
+                  <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-900/40 border border-blue-700/30">
+                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span></span>
+                    <span className="text-[11px] text-blue-300 font-medium">Enhanced AI valuation coming soon</span>
+                  </div>
+                </div>
+              </DataReveal>
+            )}
+
             {/* MOT HISTORY + MOT INSIGHTS (merged) */}
             {data.motTests && data.motTests.length > 0 && (
               <DataReveal delay={300}>
@@ -3219,6 +3484,13 @@ END:VEVENT
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Recall Check</h3>
               </div>
               <p className="text-sm text-slate-400">Check for safety recalls on any UK car model. Free repairs at dealers.</p>
+            </a>
+            <a href="/car-valuation" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <PoundSterling className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>
+              </div>
+              <p className="text-sm text-slate-400">Get a free instant car valuation. No signup required — just enter a reg.</p>
             </a>
           </div>
         </div>
