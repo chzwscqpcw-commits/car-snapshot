@@ -142,6 +142,7 @@ import {
   type ValuationResult,
   type ConditionInputs,
 } from "@/lib/valuation";
+
 import newPricesData from "@/data/new-prices.json";
 
 type VehicleData = {
@@ -541,7 +542,7 @@ export default function Home() {
   const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
   const [recalls, setRecalls] = useState<Recall[]>([]);
   const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
-  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; cacheMedian: number | null; sources: string[] } | null>(null);
+  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayListingCount: number; cacheMedian: number | null; cacheEntryCount: number; sources: string[] } | null>(null);
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
 
@@ -610,15 +611,18 @@ export default function Home() {
       ?? data.motTests?.[0]?.odometer?.value
       ?? null;
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
-    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, latestMileage);
+    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
 
     const params = new URLSearchParams({
       make: data.make,
       model: data.model,
       year: String(data.yearOfManufacture),
       depreciationEstimate: String(depEst),
+      newPrice: String(newPrice),
     });
     if (data.fuelType) params.set("fuelType", data.fuelType);
+    if (data.engineCapacity) params.set("engineCapacity", String(data.engineCapacity));
+    if (latestMileage) params.set("mileage", String(latestMileage));
 
     fetch(`/api/valuation?${params}`)
       .then((res) => res.json())
@@ -897,24 +901,27 @@ export default function Home() {
       ? sortedTests[sortedTests.length - 1]?.odometer?.value ?? null
       : null;
 
-    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, latestMileage);
+    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
     const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge);
 
     const advisoryCount = data.motTests?.[0]?.rfrAndComments?.filter(
       (r) => r.type === "ADVISORY"
     ).length ?? 0;
     const recentFailure = data.motTests?.[0]?.testResult === "FAILED";
-    const condAdj = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure);
+    const { total: condAdj, motAuto } = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure);
 
     const result = combineValuationLayers(
       depBaseline,
       valuationServerData?.ebayMedian ?? null,
+      valuationServerData?.ebayListingCount ?? 0,
       valuationServerData?.cacheMedian ?? null,
+      valuationServerData?.cacheEntryCount ?? 0,
       condAdj,
     );
 
     if (result) {
       result.mileageAdjustmentPercent = mileageAdj;
+      result.motAutoAdjustmentPercent = motAuto;
     }
 
     return result;
@@ -2792,11 +2799,11 @@ END:VEVENT
                     <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                       valuationResult.confidence === "high" ? "bg-emerald-900/40 text-emerald-300" :
                       valuationResult.confidence === "medium" ? "bg-blue-900/40 text-blue-300" :
-                      "bg-slate-700/60 text-slate-300"
+                      "bg-amber-900/40 text-amber-300"
                     }`}>
                       {valuationResult.confidence === "high" ? "High confidence" :
                        valuationResult.confidence === "medium" ? "Medium confidence" :
-                       "Estimate only"}
+                       "Low confidence"}
                     </span>
                   </div>
 
@@ -2925,11 +2932,9 @@ END:VEVENT
                         </div>
                       </div>
 
-                      {latestAdvisoryCount > 0 && (
-                        <p className="text-[11px] text-slate-500">
-                          MOT adjustment applied automatically: {latestAdvisoryCount} advisor{latestAdvisoryCount !== 1 ? "ies" : "y"} on latest test.
-                        </p>
-                      )}
+                      <p className="text-[11px] text-slate-500">
+                        MOT advisories ({latestAdvisoryCount} noted): {valuationResult.motAutoAdjustmentPercent === 0 ? "no impact on value" : `${valuationResult.motAutoAdjustmentPercent > 0 ? "+" : ""}${valuationResult.motAutoAdjustmentPercent}% auto-applied`}
+                      </p>
                     </div>
                   )}
 
