@@ -3254,13 +3254,14 @@ END:VEVENT
                           {" · "}Affects: {recall.models.join(", ")}
                           {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
                         </p>
+                        <p className="text-xs text-emerald-400/80 mt-1.5">Recall repairs are always free at any authorised dealer.</p>
                       </div>
                     ))}
                   </div>
                   <p className="text-[11px] text-slate-600 mt-3">
-                    Matched by make, model and year — not VIN-specific. A recall may have already been completed on this vehicle. For vehicle-specific recall status, visit{" "}
+                    Recall data is matched by make, model, and year of manufacture. Individual vehicle recall status may differ — a recall may have already been completed on this specific vehicle. For vehicle-specific recall status, check at{" "}
                     <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
-                    {" "}or contact your manufacturer. Recall repairs are always free.
+                    {" "}or contact your manufacturer&apos;s dealer. Recall repairs are always free.
                   </p>
                 </div>
               </DataReveal>
