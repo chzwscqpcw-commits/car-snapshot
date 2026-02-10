@@ -310,7 +310,7 @@ export function combineValuationLayers(
     // Depreciation + eBay — give depreciation more weight when year widened
     if (ebayYearWidened) {
       estimatedValue = depreciationEstimate * 0.55 + ebayMedian * 0.45;
-      confidence = totalOnMarket >= 10 ? "medium" : "low";
+      confidence = totalOnMarket >= 5 ? "medium" : "low";
       rangePercent = confidence === "medium" ? 18 : 20;
     } else {
       estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
