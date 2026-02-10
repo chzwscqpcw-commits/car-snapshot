@@ -1918,7 +1918,7 @@ END:VEVENT
         "Take clear photos of vehicle",
       ];
 
-      await generateVehicleReport({
+      const blob = await generateVehicleReport({
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
         checklist: { owner: ownerItems, buyer: buyerItems, seller: sellerItems },
@@ -1945,6 +1945,25 @@ END:VEVENT
           disclaimer: valuationResult.disclaimer,
         } : null,
       });
+
+      const reg = data.registrationNumber.replace(/\s+/g, "");
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const filename = `FPC-Report-${reg}-${dateStr}.pdf`;
+      const blobUrl = URL.createObjectURL(blob);
+
+      if (isMobileDevice()) {
+        // Mobile: open in new tab (iOS blocks programmatic <a> downloads)
+        window.open(blobUrl, "_blank");
+      } else {
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      // Revoke after a delay to allow download/tab to start
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
 
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);

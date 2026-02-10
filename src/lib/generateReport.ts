@@ -572,7 +572,6 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
   const colMileage = 28;
   const colChange = 25;
   const colMPY = 25;
-  const colNotes = CONTENT_W - colDate - colMileage - colChange - colMPY;
   const rowH = 7;
 
   // Draw table header
@@ -1281,7 +1280,7 @@ function addFooterPass(doc: jsPDF) {
 
 // ── Orchestrator ─────────────────────────────────────────────────────────────
 
-export async function generateVehicleReport(input: ReportInput): Promise<void> {
+export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
 
@@ -1315,8 +1314,6 @@ export async function generateVehicleReport(input: ReportInput): Promise<void> {
   // Global footer pass
   addFooterPass(doc);
 
-  // Save
-  const reg = input.data.registrationNumber.replace(/\s+/g, "");
-  const dateStr = new Date().toISOString().slice(0, 10);
-  doc.save(`FPC-Report-${reg}-${dateStr}.pdf`);
+  // Return blob for caller to handle download (mobile vs desktop)
+  return doc.output("blob");
 }
