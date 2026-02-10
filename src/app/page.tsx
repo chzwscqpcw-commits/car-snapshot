@@ -2668,7 +2668,7 @@ END:VEVENT
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 overflow-visible">
                     {/* Save button */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
@@ -2709,7 +2709,7 @@ END:VEVENT
                       </button>
 
                       {downloadMenuOpen && (
-                        <div className="absolute left-0 top-full mt-1 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
+                        <div className="absolute left-0 bottom-full mb-1 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
                           <button
                             onClick={() => downloadPDF()}
                             className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
