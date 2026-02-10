@@ -1949,21 +1949,31 @@ END:VEVENT
       const reg = data.registrationNumber.replace(/\s+/g, "");
       const dateStr = new Date().toISOString().slice(0, 10);
       const filename = `FPC-Report-${reg}-${dateStr}.pdf`;
-      const blobUrl = URL.createObjectURL(blob);
+      const file = new File([blob], filename, { type: "application/pdf" });
 
-      if (isMobileDevice()) {
-        // Mobile: open in new tab (iOS blocks programmatic <a> downloads)
-        window.open(blobUrl, "_blank");
+      // Best path: Web Share API with file support (iOS 15+, Android Chrome)
+      // Opens native share sheet — user can "Save to Files", AirDrop, etc.
+      // Stays on the current page — no tab navigation.
+      if (isMobileDevice() && navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file] });
+        } catch (shareErr: unknown) {
+          // User cancelled the share sheet — not an error
+          if (shareErr instanceof Error && shareErr.name !== "AbortError") {
+            console.error("Share failed:", shareErr);
+          }
+        }
       } else {
+        // Desktop fallback: programmatic <a> download
+        const blobUrl = URL.createObjectURL(file);
         const link = document.createElement("a");
         link.href = blobUrl;
         link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
       }
-      // Revoke after a delay to allow download/tab to start
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
 
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);
