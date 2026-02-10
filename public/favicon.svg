@@ -1,8 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="80" fill="#0f172a"/>
-  <rect x="36" y="148" width="440" height="196" rx="20" fill="#FACC15"/>
-  <rect x="78" y="212" width="144" height="68" rx="8" fill="#1e293b" opacity="0.8"/>
-  <rect x="246" y="212" width="108" height="68" rx="8" fill="#1e293b" opacity="0.8"/>
-  <circle cx="436" cy="320" r="56" fill="#2563EB"/>
-  <polyline points="410,320 428,344 462,292" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1419"/>
+      <stop offset="100%" stop-color="#1a1f2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg1)"/>
+  <!-- UK plate -->
+  <rect x="56" y="186" width="400" height="140" rx="14" fill="#FDE68A"/>
+  <!-- Blue strip -->
+  <rect x="56" y="186" width="48" height="140" rx="14" fill="#1e3a8a"/>
+  <rect x="80" y="186" width="24" height="140" fill="#1e3a8a"/>
+  <!-- Plate text -->
+  <text x="296" y="280" font-family="'Outfit', sans-serif" font-weight="800" font-size="76" fill="#0f172a" text-anchor="middle" letter-spacing="5">FPC</text>
+  <!-- Emerald check badge -->
+  <circle cx="406" cy="186" r="52" fill="#10b981"/>
+  <polyline points="382,186 398,204 432,168" fill="none" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
