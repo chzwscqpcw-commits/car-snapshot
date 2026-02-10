@@ -153,7 +153,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">7. Third-Party Links</h2>
             <p>
-              Free Plate Check contains links to third-party websites (Go Compare, Carmoola, RAC, HPI Check). 
+              Free Plate Check contains links to third-party websites (Go Compare, RAC, HPI Check).
               These third parties have their own privacy policies. We are not responsible for their privacy practices.
             </p>
             <p className="mt-4">

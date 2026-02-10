@@ -1005,21 +1005,6 @@ export default function Home() {
       });
     }
 
-    // 5. Car finance (for vehicles 3-15 years old, only if MOT not expired)
-    const vehicleAge = data.yearOfManufacture ? new Date().getFullYear() - data.yearOfManufacture : 0;
-    if (isOver3Years && !motExpired && vehicleAge <= 15) {
-      prompts.push({
-        variant: "subtle",
-        icon: <Info className="w-5 h-5 text-slate-500" />,
-        title: "Thinking of buying this car?",
-        description: "Check your eligibility for car finance without affecting your credit score.",
-        linkText: "Check eligibility — Carmoola",
-        linkHref: PARTNER_LINKS.carmoola.url,
-        partnerId: "carmoola",
-        trackingContext: "action-finance",
-      });
-    }
-
     return prompts.slice(0, 3);
   }, [data, isOver3Years, motDaysUntilExpiry, latestAdvisoryCount]);
 
@@ -2053,10 +2038,6 @@ END:VEVENT
             <span className="text-slate-700">·</span>
             <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
               <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" loading="lazy" />
-            </a>
-            <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.carmoola.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.carmoola)} onClick={() => trackPartnerClick("carmoola", "header")} className="inline-flex items-center opacity-50 hover:opacity-80 transition-opacity" title={PARTNER_LINKS.carmoola.description}>
-              <img src="/carmoola-logo.png" alt="Carmoola" className="h-3.5" loading="lazy" />
             </a>
           </div>
 

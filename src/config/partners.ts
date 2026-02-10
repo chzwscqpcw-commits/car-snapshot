@@ -19,13 +19,6 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
     },
   },
-  carmoola: {
-    url: "https://www.awin1.com/cread.php?awinmid=31283&awinaffid=2729598&ued=https%3A%2F%2Fwww.carmoola.co.uk",
-    name: "Carmoola",
-    isAffiliate: true,
-    description: "Flexible car finance — check eligibility without affecting your credit score",
-    shortDescription: "Car finance",
-  },
   govTaxVehicle: {
     url: "https://www.gov.uk/tax-your-vehicle",
     name: "GOV.UK Tax Vehicle",
