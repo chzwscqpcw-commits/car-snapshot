@@ -526,9 +526,12 @@ export default function Home() {
   const [shareToastVisible, setShareToastVisible] = useState(false);
   const [shareToastDismissing, setShareToastDismissing] = useState(false);
   const [downloadSharePrompt, setDownloadSharePrompt] = useState(false);
+  const [sharePromptDismissed, setSharePromptDismissed] = useState(false);
   const [downloadShareCopied, setDownloadShareCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const shareToastTimer = useRef<NodeJS.Timeout | null>(null);
+  const shareSentinelMidRef = useRef<HTMLDivElement | null>(null);
+  const shareSentinelBottomRef = useRef<HTMLDivElement | null>(null);
   const [showLogoReveal, setShowLogoReveal] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
@@ -768,6 +771,26 @@ export default function Home() {
       }
     }
   }, []);
+
+  // Show floating share prompt when user scrolls into mid-results or bottom
+  useEffect(() => {
+    if (!data || sharePromptDismissed) return;
+    const targets = [shareSentinelMidRef.current, shareSentinelBottomRef.current].filter(Boolean) as HTMLDivElement[];
+    if (targets.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !sharePromptDismissed) {
+            setDownloadSharePrompt(true);
+          }
+        }
+      },
+      { threshold: 0.1 },
+    );
+    for (const el of targets) observer.observe(el);
+    return () => observer.disconnect();
+  }, [data, sharePromptDismissed]);
 
   const checklist = useMemo((): string[] => {
     if (!data) return [];
@@ -1293,17 +1316,22 @@ export default function Home() {
     }
   }
 
+  function dismissSharePrompt() {
+    setDownloadSharePrompt(false);
+    setSharePromptDismissed(true);
+  }
+
   async function handleDownloadShare() {
     if (isMobileDevice()) {
       await triggerShare();
-      setDownloadSharePrompt(false);
+      dismissSharePrompt();
     } else {
       const ok = await triggerShare();
       if (ok) {
         setDownloadShareCopied(true);
         setTimeout(() => {
           setDownloadShareCopied(false);
-          setDownloadSharePrompt(false);
+          dismissSharePrompt();
         }, 2000);
       }
     }
@@ -1329,6 +1357,8 @@ export default function Home() {
     setData(null);
     setLoading(true);
     setVrm(cleanedReg);
+    setSharePromptDismissed(false);
+    setDownloadSharePrompt(false);
 
     try {
       const res = await fetch("/api/lookup", {
@@ -1874,8 +1904,6 @@ END:VEVENT
 
     showToast("Text report downloaded!");
     setDownloadMenuOpen(false);
-    setDownloadSharePrompt(true);
-    setTimeout(() => setDownloadSharePrompt(false), 5000);
   }
 
   async function downloadPDF() {
@@ -1977,8 +2005,6 @@ END:VEVENT
 
       showToast("PDF report downloaded!");
       setDownloadMenuOpen(false);
-      setDownloadSharePrompt(true);
-      setTimeout(() => setDownloadSharePrompt(false), 5000);
     } catch (error) {
       console.error("PDF generation failed:", error);
       showToast("PDF generation failed. Please try the text version.");
@@ -3153,6 +3179,9 @@ END:VEVENT
             )}
 
             {/* MOT HISTORY + MOT INSIGHTS (merged) */}
+            {/* Share prompt sentinel — mid-results */}
+            <div ref={shareSentinelMidRef} className="h-0" aria-hidden="true" />
+
             {data.motTests && data.motTests.length > 0 && (
               <DataReveal delay={300}>
                 <div className="mb-8">
@@ -3633,6 +3662,8 @@ END:VEVENT
 
         {/* WHAT CAN YOU CHECK? */}
         <div className="mt-10">
+          {/* Share prompt sentinel — bottom of results */}
+          <div ref={shareSentinelBottomRef} className="h-0" aria-hidden="true" />
           <h2 className="text-xl font-bold text-slate-100 mb-6">What Can You Check?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a href="/mot-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
@@ -3812,7 +3843,7 @@ END:VEVENT
         <div className="fixed bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn">
           <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
             <p className="flex-1 text-sm text-slate-300">
-              Report downloaded — {isMobileDevice() ? "share this tool with a friend?" : "know someone buying a car?"}
+              {isMobileDevice() ? "Finding this useful? Share with a friend!" : "Finding this useful? Know someone buying a car?"}
             </p>
             <button
               onClick={handleDownloadShare}
@@ -3821,7 +3852,7 @@ END:VEVENT
               {downloadShareCopied ? "Copied!" : (isMobileDevice() ? "Share" : "Copy Link")}
             </button>
             <button
-              onClick={() => setDownloadSharePrompt(false)}
+              onClick={dismissSharePrompt}
               className="text-slate-500 hover:text-slate-400 transition-colors p-1 -mr-1"
               aria-label="Dismiss"
             >
