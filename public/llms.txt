@@ -1,0 +1,30 @@
+# Free Plate Check
+
+> Free UK vehicle lookup tool. Check any UK vehicle's MOT history, tax status, mileage records, ULEZ compliance, safety recalls, and estimated valuation — completely free, no signup required. Uses official DVLA and DVSA data sources.
+
+## Core Tools
+
+- [Free Car Check](https://www.freeplatecheck.co.uk/car-check): Run a free car check on any UK vehicle. See make, model, colour, engine size, fuel type, tax status and MOT history by entering a registration number.
+- [Free MOT History Check](https://www.freeplatecheck.co.uk/mot-check): Check any vehicle's full MOT history free. See pass/fail results, advisories, mileage records and next MOT due date.
+- [Car Tax Check](https://www.freeplatecheck.co.uk/tax-check): Check if any UK vehicle is taxed. See current tax status, expiry date and whether a SORN is in place. Free, instant, no signup required.
+- [Mileage Check](https://www.freeplatecheck.co.uk/mileage-check): Check a vehicle's recorded mileage history free. See odometer readings from every MOT test to spot clocking and verify genuine mileage.
+- [ULEZ Compliance Check](https://www.freeplatecheck.co.uk/ulez-check): Check if any UK vehicle is ULEZ compliant. See emission standards, Euro status and whether the vehicle meets London's Ultra Low Emission Zone requirements.
+- [Safety Recall Check](https://www.freeplatecheck.co.uk/recall-check): Check if any UK vehicle has outstanding safety recalls from the DVSA. Free lookup by registration number.
+- [Free Car Valuation](https://www.freeplatecheck.co.uk/car-valuation): Get a free estimated valuation for any UK vehicle based on age, mileage and market data. No signup required.
+
+## Guides & Articles
+
+- [How to Read a Car's MOT History](https://www.freeplatecheck.co.uk/blog/how-to-read-mot-history): Practical guide explaining MOT test results, advisories, failures and what to look for when buying a used car.
+- [What Does MOT Advisory Mean?](https://www.freeplatecheck.co.uk/blog/what-does-mot-advisory-mean): Plain English explanation of MOT advisories, how they differ from failures, and when to worry about them.
+- [How to Spot a Clocked Car](https://www.freeplatecheck.co.uk/blog/how-to-spot-a-clocked-car): Guide to identifying mileage fraud when buying a used car, including warning signs and how to verify genuine mileage.
+- [Used Car Checks Before Buying](https://www.freeplatecheck.co.uk/blog/used-car-checks-before-buying): Complete checklist of checks to run before buying a used car in the UK, covering MOT, tax, finance and history.
+- [How to Check if a Car is Taxed](https://www.freeplatecheck.co.uk/blog/how-to-check-if-a-car-is-taxed): Step-by-step guide to checking a vehicle's tax status and what to do if tax has lapsed.
+- [What is SORN and When Do You Need One?](https://www.freeplatecheck.co.uk/blog/what-is-sorn-and-when-do-you-need-one): Explanation of Statutory Off Road Notification, when it's required, and how to apply.
+- [Is My Car ULEZ Compliant?](https://www.freeplatecheck.co.uk/blog/is-my-car-ulez-compliant): How to check ULEZ compliance for free and what to do if your vehicle doesn't meet emission standards.
+- [Car Safety Recalls Guide](https://www.freeplatecheck.co.uk/blog/car-safety-recalls-guide): How to check for outstanding vehicle safety recalls and what to do if your car is affected.
+
+## About
+
+Free Plate Check is an independent UK vehicle information service. All vehicle data is sourced from official DVLA and DVSA government databases. The service is completely free to use with no account registration required. The site does not store registration numbers and is designed with user privacy in mind.
+
+Website: https://www.freeplatecheck.co.uk
