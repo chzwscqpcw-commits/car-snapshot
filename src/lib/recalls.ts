@@ -72,6 +72,44 @@ function modelMatches(recallModel: string, vehicleModel: string): boolean {
   return false;
 }
 
+/**
+ * Generate alternative model names for makes that use numeric codes.
+ * BMW DVLA returns "320D" but recall data uses "3 SERIES".
+ * Mercedes DVLA may return "C220D" but recall data uses "C CLASS".
+ */
+function getModelAlternatives(make: string, model: string): string[] {
+  const alts = [model];
+  const norm = normalizeStr(model);
+  const normMake = normalizeStr(make);
+
+  if (normMake === "BMW") {
+    // BMW: "320D" → "3 SERIES", "118I" → "1 SERIES", "X3" stays as is
+    const stripped = stripFuelSuffix(norm) || norm;
+    // Check if it's a pure numeric code like "320", "118", "530"
+    const numMatch = stripped.match(/^(\d)\d{2}$/);
+    if (numMatch) {
+      alts.push(`${numMatch[1]} SERIES`);
+    }
+    // M cars: "M3" → "3 SERIES", "M5" → "5 SERIES"
+    const mMatch = stripped.match(/^M(\d)$/);
+    if (mMatch) {
+      alts.push(`${mMatch[1]} SERIES`);
+    }
+  }
+
+  if (normMake === "MERCEDES BENZ" || normMake === "MERCEDES-BENZ" ||
+      normMake === "MERCEDES") {
+    // Mercedes: "C220D" → "C CLASS", "A180D" → "A CLASS", "E300" → "E CLASS"
+    const stripped = stripFuelSuffix(norm) || norm;
+    const classMatch = stripped.match(/^([A-Z])\d{2,3}$/);
+    if (classMatch) {
+      alts.push(`${classMatch[1]} CLASS`);
+    }
+  }
+
+  return alts;
+}
+
 export function findRecalls(
   recalls: Recall[],
   make?: string,
@@ -81,15 +119,18 @@ export function findRecalls(
   if (!make) return [];
 
   const normMake = normalizeStr(make);
+  const modelAlts = model ? getModelAlternatives(make, model) : [];
 
   return recalls
     .filter((r) => {
       // 1. Exact make match (normalized)
       if (normalizeStr(r.make) !== normMake) return false;
 
-      // 2. Token-based model match (not substring)
+      // 2. Token-based model match — try all alternatives
       if (model) {
-        const matched = r.models.some((m) => modelMatches(m, model));
+        const matched = modelAlts.some((alt) =>
+          r.models.some((m) => modelMatches(m, alt))
+        );
         if (!matched) return false;
       }
 

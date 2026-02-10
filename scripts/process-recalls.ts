@@ -78,6 +78,68 @@ const INCLUDED_VEHICLE_TYPES = new Set([
   "m1", // EU vehicle category for passenger cars
 ]);
 
+// Normalise DVSA company names → DVLA consumer brand names
+const MAKE_ALIASES: Record<string, string> = {
+  "FIAT CHRYSLER AUTOMOBILES  UK LTD": "FIAT",
+  "FIAT CHRYSLER AUTOMOBILES UK LTD": "FIAT",
+  "TOYOTA (GB) PLC": "TOYOTA",
+  "MERCEDES-BENZ CARS UK LTD": "MERCEDES-BENZ",
+  "MERCEDES BENZ UK LIMITED": "MERCEDES-BENZ",
+  "MERCEDES-BENZ VANS UK LTD": "MERCEDES-BENZ",
+  "VW": "VOLKSWAGEN",
+  "NISSAN MOTOR (GB) LIMITED": "NISSAN",
+  "VOLVO CAR": "VOLVO",
+  "HONDA MOTOR CO": "HONDA",
+  "SUZUKI GB PLC": "SUZUKI",
+  "CHRYSLER UK LTD": "CHRYSLER",
+  "CHEVROLET UK": "CHEVROLET",
+  "INFINITI GB": "INFINITI",
+  "DS AUTOMOBILES": "DS",
+  "GENESIS MOTOR UK": "GENESIS",
+  "MG MOTOR": "MG",
+  "MCLAREN AUTOMOTIVE LIMITED": "MCLAREN",
+  "BENTLEY MOTORS LIMITED": "BENTLEY",
+  "POLESTAR AUTOMOTIVE": "POLESTAR",
+  "GENERAL MOTORS CO LLC": "GENERAL MOTORS",
+};
+
+// Exclude non-car manufacturers (motorcycles, trucks, buses, trailers, etc.)
+const EXCLUDED_MAKE_PATTERNS = [
+  /MOTORCYCLE/i, /MOTORRAD/i, /TRUCK/i, /BUS\b/i, /TRAILER/i,
+  /TRACTOR/i, /AGRICULTURAL/i,
+];
+const EXCLUDED_MAKES = new Set([
+  "YAMAHA", "KAWASAKI", "DUCATI", "HARLEY DAVIDSON", "KTM",
+  "PIAGGIO", "APRILIA", "MOTO GUZZI", "BUELL", "GAS GAS",
+  "POLARIS", "BRP-CAN AM", "CCM", "LEXMOTO",
+  "HUSQVARNA MOTORCYCLES LTD", "INDIAN MOTORCYCLE COMPANY",
+  "MV AGUSTA  MOTOR SPA", "ROYAL ENFIELD UK LTD", "ZERO MOTORCYCLES",
+  "TRIUMPH MOTORCYCLES LIMITED",
+  "VOLVO TRUCKS", "VOLVO BUS", "DAIMLER TRUCK UK LIMITED",
+  "RENAULT TRUCKS UK LTD", "MERCEDES-BENZ & FUSO TRUCKS UK",
+  "MERCEDES BENZ BUS", "SCANIA TRUCK", "SCANIA BUS",
+  "MAN TRUCK AND BUS LTD", "MAN BUS", "DAF TRUCKS", "DAF BUS",
+  "IVECO BUS", "HINO", "DENNIS EAGLE", "DENNIS", "ERF", "FODEN",
+  "NEOMAN BUS UK", "OPTARE", "WRIGHTBUS", "ALEXANDER DENNIS",
+  "DAIMLER BUSES GMBH", "SEDDON ATKINSON", "MITSUBISHI TRUCK",
+  "ISUZU TRUCK",
+  "IFOR WILLIAMS", "ADMIRAL TRAILERS",
+  "SWIFT", "AUTO-TRAIL", "AUTO-SLEEPERS LTD", "HYMER GMBH & CO KG",
+  "KNAUS TABBERT AG", "AUTOCRUISE AND PIONEER", "TRIGANO SPA",
+  "NEW HOLLAND", "KUBOTA", "CASE IH", "CLAAS TRACTOR SAS",
+  "BARRUS", "MICHELIN", "ALLIANCE AUTOMOTIVE GROUP", "COOPER TIRE",
+  "BIKERS LIFESTYLE LTD",
+]);
+
+function shouldExcludeMake(make: string): boolean {
+  if (EXCLUDED_MAKES.has(make)) return true;
+  return EXCLUDED_MAKE_PATTERNS.some((p) => p.test(make));
+}
+
+function normalizeMake(make: string): string {
+  return MAKE_ALIASES[make] || make;
+}
+
 // ---------------------------------------------------------------------------
 // CSV Parsing Helpers
 // ---------------------------------------------------------------------------
@@ -207,6 +269,12 @@ function detectColumns(headers: string[]): {
   const lower = headers.map((h) => h.toLowerCase().replace(/[^a-z0-9]/g, ""));
 
   function findIndex(patterns: string[]): number {
+    // Prefer exact matches first to avoid "model" matching "recallsmodelinformation"
+    for (const pattern of patterns) {
+      const idx = lower.findIndex((h) => h === pattern);
+      if (idx !== -1) return idx;
+    }
+    // Fall back to substring matching
     for (const pattern of patterns) {
       const idx = lower.findIndex((h) => h.includes(pattern));
       if (idx !== -1) return idx;
@@ -215,14 +283,14 @@ function detectColumns(headers: string[]): {
   }
 
   const result = {
-    manufacturer: findIndex(["manufacturer", "make"]),
+    manufacturer: findIndex(["make", "manufacturer"]),
     model: findIndex(["model", "modelrange"]),
     buildStart: findIndex(["buildstart", "buildfrom", "startdate", "buildrangestart", "datefrom"]),
     buildEnd: findIndex(["buildend", "buildto", "enddate", "buildrangeend", "dateto"]),
     recallDate: findIndex(["recalldate", "launchdate", "dateofrecall", "daterecall"]),
     defect: findIndex(["defect", "concern", "defectdescription", "faultdescription"]),
     remedy: findIndex(["remedy", "remedyaction", "correctiveaction", "remedydescription"]),
-    recallNumber: findIndex(["recallnumber", "recallref", "recallno", "dvsarecall", "recallreference"]),
+    recallNumber: findIndex(["recallsnumber", "recallnumber", "recallref", "recallno", "dvsarecall", "recallreference"]),
     vehicleType: findIndex(["vehicletype", "type", "vehiclecategory", "category"]),
   };
 
@@ -288,7 +356,7 @@ async function processRecalls(): Promise<void> {
       console.log(`Detected ${headers.length} columns in header row.`);
       if (columns.vehicleType === -1) {
         console.log(
-          "Note: No 'Vehicle Type' column found. All records will be included (no type filtering)."
+          "Note: No 'Vehicle Type' column found. Filtering by make name instead (excluding motorcycles, trucks, buses, etc.)."
         );
       }
       continue;
@@ -308,7 +376,16 @@ async function processRecalls(): Promise<void> {
     }
 
     // Extract fields
-    const make = (fields[columns.manufacturer] || "").trim().toUpperCase();
+    const rawMake = (fields[columns.manufacturer] || "").trim().toUpperCase();
+
+    // Exclude non-car manufacturers (motorcycles, trucks, buses, etc.)
+    if (shouldExcludeMake(rawMake)) {
+      filteredOut++;
+      continue;
+    }
+
+    // Normalise company name to DVLA consumer brand name
+    const make = normalizeMake(rawMake);
     const modelRaw = fields[columns.model] || "";
     const models = parseModels(modelRaw);
     const buildDateStart = parseDate(fields[columns.buildStart] || "");
