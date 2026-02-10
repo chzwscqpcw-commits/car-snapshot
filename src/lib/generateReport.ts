@@ -108,7 +108,9 @@ const C = {
   amber: [245, 158, 11] as RGB,
   red: [239, 68, 68] as RGB,
   blue: [59, 130, 246] as RGB,
+  blue400: [96, 165, 250] as RGB,
   cyan: [34, 211, 238] as RGB,
+  cyan300: [103, 232, 249] as RGB,
   yellow: [250, 204, 21] as RGB,
   yellowDark: [66, 32, 6] as RGB,
 };
@@ -369,20 +371,89 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
 
   let y = 0;
 
-  // ── Header banner (36mm — tightened from 42mm) ──
-  drawRoundedRect(doc, 0, 0, 210, 36, 0, C.slate800);
-  setFill(doc, C.cyan);
-  doc.rect(0, 0, 210, 2, "F");
+  // ── Header banner (dark branded banner matching website) ──
+  drawRoundedRect(doc, 0, 0, 210, 24, 0, C.slate800);
+  setFill(doc, C.blue400);
+  doc.rect(0, 0, 210, 1.5, "F"); // accent line matching title
 
+  // Measure title for horizontal centering
+  const titleText = "Free Plate Check";
   doc.setFontSize(FONT.h1);
-  setTextColor(doc, C.white);
   doc.setFont("helvetica", "bold");
-  doc.text("FREE PLATE CHECK", 105, 16, { align: "center" });
+  const titleW = doc.getTextWidth(titleText);
 
+  // Zap icon — exact lucide-react SVG path from 24×24 viewBox:
+  // M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02
+  // A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46
+  // l1.92-6.02A1 1 0 0 0 11 14z
+  // Bounding box: x∈[3.22,20.78] y∈[2.17,21.83] → 17.56 × 19.66 units
+  const zapScale = 0.4;                    // mm per SVG unit
+  const zapPathW = 17.56 * zapScale;       // 7.02 mm
+  const zapPathH = 19.66 * zapScale;       // 7.86 mm
+  const zapStrokeW = 2 * zapScale;         // 0.80 mm (SVG stroke-width="2")
+  const zapGap = 2.5;                      // space between icon and text
+
+  // Horizontal: icon + gap + title, centred on page
+  const compositeW = zapPathW + zapStrokeW + zapGap + titleW;
+  const compositeX = (210 - compositeW) / 2;
+
+  // Vertical: both icon and text visually centred in banner
+  const bannerMid = (1.5 + 24) / 2;       // 12.75 mm
+  const zapTopY = bannerMid - zapPathH / 2;
+
+  // SVG path starts at M4,14 → offset from path bbox origin (3.22, 2.17)
+  const zapStartX = compositeX + zapStrokeW / 2 + (4 - 3.22) * zapScale;
+  const zapStartY = zapTopY + (14 - 2.17) * zapScale;
+
+  setDraw(doc, C.blue400);
+  doc.setLineWidth(zapStrokeW);
+  doc.setLineCap("round");
+  doc.setLineJoin("round");
+
+  // Exact path vertices as relative movements (matches lucide SVG)
+  doc.lines(
+    [
+      [-0.78, -1.63],   // arc → left-middle
+      [9.9, -10.2],     // line → top
+      [0.86, 0.46],     // arc → rounded top
+      [-1.92, 6.02],    // line → back down
+      [0.94, 1.35],     // arc → middle junction
+      [7, 0],           // line → far right
+      [0.78, 1.63],     // arc → rounded right
+      [-9.9, 10.2],     // line → bottom
+      [-0.86, -0.46],   // arc → rounded bottom
+      [1.92, -6.02],    // line → back up
+      [-0.94, -1.35],   // arc → middle junction
+      [-7, 0],          // close → left
+    ],
+    zapStartX, zapStartY,
+    [zapScale, zapScale],
+    "S",   // stroke only — no fill, matching lucide fill="none"
+    true,  // closed path
+  );
+
+  // Title text with gradient: blue-400 → cyan-300 (matches website bg-gradient-to-r)
+  const textX = compositeX + zapPathW + zapStrokeW + zapGap;
+  const textY = bannerMid + 2; // baseline offset for visual centering
+  const gradFrom: RGB = C.blue400;   // [96, 165, 250]
+  const gradTo: RGB = C.cyan300;     // [103, 232, 249]
+  const chars = titleText.split("");
+  let charX = textX;
+  for (let i = 0; i < chars.length; i++) {
+    const t = chars.length > 1 ? i / (chars.length - 1) : 0;
+    const r = Math.round(gradFrom[0] + (gradTo[0] - gradFrom[0]) * t);
+    const g = Math.round(gradFrom[1] + (gradTo[1] - gradFrom[1]) * t);
+    const b = Math.round(gradFrom[2] + (gradTo[2] - gradFrom[2]) * t);
+    doc.setTextColor(r, g, b);
+    doc.text(chars[i], charX, textY);
+    charX += doc.getTextWidth(chars[i]);
+  }
+
+  // ── Subtitle and date below the banner ──
   doc.setFontSize(FONT.h3);
-  setTextColor(doc, C.cyan);
+  setTextColor(doc, C.slate300);
   doc.setFont("helvetica", "normal");
-  doc.text("Vehicle Report", 105, 25, { align: "center" });
+  doc.text("Vehicle Report", 105, 30, { align: "center" });
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.slate400);
@@ -391,7 +462,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     month: "long",
     year: "numeric",
   });
-  doc.text(`Generated ${genDate}`, 105, 32, { align: "center" });
+  doc.text(`Generated ${genDate}`, 105, 36, { align: "center" });
 
   y = 44;
 
@@ -425,7 +496,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const totalAdvisories = data.motTests?.[0]?.rfrAndComments?.filter(
     (r) => r.type === "ADVISORY",
   ).length ?? 0;
-  const advisoryColor = totalAdvisories > 3 ? C.amber : totalAdvisories > 0 ? C.blue : C.emerald;
+  const advisoryColor = totalAdvisories > 0 ? C.amber : C.emerald;
 
   const mileageColor = motInsights
     ? motInsights.mileageTrend === "low" ? C.amber
