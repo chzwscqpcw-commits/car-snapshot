@@ -138,6 +138,7 @@ import {
   calculateDepreciationBaseline,
   getMileageAdjustment,
   getConditionAdjustment,
+  getColourAdjustment,
   combineValuationLayers,
   type ValuationResult,
   type ConditionInputs,
@@ -542,7 +543,7 @@ export default function Home() {
   const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
   const [recalls, setRecalls] = useState<Recall[]>([]);
   const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
-  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayListingCount: number; cacheMedian: number | null; cacheEntryCount: number; sources: string[] } | null>(null);
+  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayListingCount: number; ebayMinPrice: number | null; ebayMaxPrice: number | null; ebayTotalListings: number | null; ebayDominantTransmission: string | null; ebayDominantBodyType: string | null; ebayYearWidened: boolean; cacheMedian: number | null; cacheEntryCount: number; sources: string[] } | null>(null);
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
 
@@ -623,6 +624,7 @@ export default function Home() {
     if (data.fuelType) params.set("fuelType", data.fuelType);
     if (data.engineCapacity) params.set("engineCapacity", String(data.engineCapacity));
     if (latestMileage) params.set("mileage", String(latestMileage));
+    if (data.colour) params.set("colour", String(getColourAdjustment(data.colour)));
 
     fetch(`/api/valuation?${params}`)
       .then((res) => res.json())
@@ -909,6 +911,7 @@ export default function Home() {
     ).length ?? 0;
     const recentFailure = data.motTests?.[0]?.testResult === "FAILED";
     const { total: condAdj, motAuto } = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure);
+    const colourAdj = getColourAdjustment(data.colour);
 
     const result = combineValuationLayers(
       depBaseline,
@@ -917,6 +920,13 @@ export default function Home() {
       valuationServerData?.cacheMedian ?? null,
       valuationServerData?.cacheEntryCount ?? 0,
       condAdj,
+      colourAdj,
+      valuationServerData?.ebayTotalListings ?? null,
+      valuationServerData?.ebayMinPrice ?? null,
+      valuationServerData?.ebayMaxPrice ?? null,
+      valuationServerData?.ebayDominantTransmission ?? null,
+      valuationServerData?.ebayDominantBodyType ?? null,
+      valuationServerData?.ebayYearWidened ?? false,
     );
 
     if (result) {
@@ -2811,15 +2821,50 @@ END:VEVENT
                     £{valuationResult.rangeLow.toLocaleString()} – £{valuationResult.rangeHigh.toLocaleString()}
                   </p>
 
-                  <p className="text-xs text-slate-400 mb-4">
+                  <p className="text-xs text-slate-400 mb-1">
                     Based on: {valuationResult.sources.join(", ")}
-                    {valuationResult.mileageAdjustmentPercent !== 0 && (
-                      <span> · Mileage adj: {valuationResult.mileageAdjustmentPercent > 0 ? "+" : ""}{valuationResult.mileageAdjustmentPercent}%</span>
-                    )}
-                    {valuationResult.conditionAdjustmentPercent !== 0 && (
-                      <span> · Condition adj: {valuationResult.conditionAdjustmentPercent > 0 ? "+" : ""}{valuationResult.conditionAdjustmentPercent}%</span>
-                    )}
                   </p>
+
+                  {/* Market Snapshot */}
+                  {(valuationResult.ebayMinPrice || valuationResult.marketSupply) && (
+                    <div className="mb-4 mt-3 p-3 rounded-md bg-slate-900/50 border border-slate-800/50">
+                      <p className="text-xs font-semibold text-slate-300 mb-2">Market Snapshot</p>
+                      <div className="space-y-1">
+                        {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && (
+                          <p className="text-xs text-slate-400">
+                            Asking prices: £{valuationResult.ebayMinPrice.toLocaleString()} – £{valuationResult.ebayMaxPrice.toLocaleString()}
+                          </p>
+                        )}
+                        {(valuationResult.ebayDominantTransmission || valuationResult.ebayDominantBodyType) && (
+                          <p className="text-xs text-slate-400">
+                            Most common spec: {[data?.fuelType?.charAt(0).toUpperCase() + (data?.fuelType?.slice(1).toLowerCase() || ""), valuationResult.ebayDominantTransmission, valuationResult.ebayDominantBodyType].filter(Boolean).join(", ")}
+                          </p>
+                        )}
+                        {valuationResult.marketSupply && (
+                          <p className="text-xs text-slate-400">
+                            Market supply: {valuationResult.marketSupply === "good" ? "Good" : valuationResult.marketSupply === "moderate" ? "Moderate" : "Limited"}
+                            {valuationResult.ebayTotalListings && ` (${valuationResult.ebayTotalListings}+ available)`}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Adjustment factors */}
+                  {(valuationResult.mileageAdjustmentPercent !== 0 || valuationResult.conditionAdjustmentPercent !== 0 || valuationResult.colourAdjustmentPercent !== 0) && (
+                    <p className="text-[11px] text-slate-500 mb-3">
+                      Factors:
+                      {valuationResult.mileageAdjustmentPercent !== 0 && (
+                        <span> Mileage {valuationResult.mileageAdjustmentPercent > 0 ? "+" : ""}{valuationResult.mileageAdjustmentPercent}%</span>
+                      )}
+                      {valuationResult.conditionAdjustmentPercent !== 0 && (
+                        <span> · Condition {valuationResult.conditionAdjustmentPercent > 0 ? "+" : ""}{valuationResult.conditionAdjustmentPercent}%</span>
+                      )}
+                      {valuationResult.colourAdjustmentPercent !== 0 && data?.colour && (
+                        <span> · Colour ({data.colour.charAt(0).toUpperCase() + data.colour.slice(1).toLowerCase()}) {valuationResult.colourAdjustmentPercent}%</span>
+                      )}
+                    </p>
+                  )}
 
                   {/* Condition refinement toggle */}
                   <button
@@ -2939,10 +2984,6 @@ END:VEVENT
                   )}
 
                   <p className="text-[11px] text-slate-600 mt-3">{valuationResult.disclaimer}</p>
-                  <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-800/30 border border-blue-600/40">
-                    <span className="relative flex h-2.5 w-2.5 shrink-0"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400"></span></span>
-                    <span className="text-xs text-blue-200 font-semibold">Enhanced AI valuation coming soon</span>
-                  </div>
                 </div>
               </DataReveal>
             )}

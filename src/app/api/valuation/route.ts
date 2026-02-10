@@ -47,37 +47,80 @@ async function getEbayToken(): Promise<string | null> {
   }
 }
 
+// ── Fuel type mapping (DVLA → eBay aspect values) ──────────────────────────
+
+const FUEL_TYPE_MAP: Record<string, string> = {
+  PETROL: "Petrol",
+  DIESEL: "Diesel",
+  ELECTRIC: "Electric",
+  "HYBRID ELECTRIC": "Hybrid",
+  "PETROL/ELECTRIC": "Hybrid",
+  "DIESEL/ELECTRIC": "Hybrid",
+  GAS: "Petrol",
+  "GAS BI-FUEL": "Petrol",
+};
+
+// ── Asking price discount ──────────────────────────────────────────────────
+
+const ASKING_PRICE_DISCOUNT = 0.92; // 8% discount: eBay asking → realistic
+
 // ── eBay comparables ────────────────────────────────────────────────────────
+
+type AspectDistribution = {
+  localizedAspectName: string;
+  aspectValueDistributions: Array<{
+    localizedAspectValue: string;
+    matchCount: number;
+  }>;
+};
 
 type EbayResult = {
   median: number;
   listingCount: number;
   minPrice: number;
   maxPrice: number;
-} | null;
+  totalListings: number;
+  dominantTransmission: string | null;
+  dominantBodyType: string | null;
+  yearWidened: boolean;
+};
 
 async function searchEbay(
   token: string,
-  query: string,
   make: string,
   model: string,
+  yearFilter: string | null,
+  fuelType: string | null,
   depreciationEstimate?: number,
-): Promise<EbayResult> {
+): Promise<EbayResult | null> {
+  // Build aspect_filter parts
+  const aspects: string[] = [];
+  if (yearFilter) aspects.push(`Model Year:${yearFilter}`);
+  if (fuelType) {
+    const mapped = FUEL_TYPE_MAP[fuelType.toUpperCase()];
+    if (mapped) aspects.push(`Fuel Type:{${mapped}}`);
+  }
+
   const params = new URLSearchParams({
-    q: query,
+    q: `${make} ${model}`,
     category_ids: "9801",
+    fieldgroups: "MATCHING_ITEMS,ASPECT_REFINEMENTS,EXTENDED",
     filter: [
       "buyingOptions:{FIXED_PRICE}",
       "conditionIds:{3000}",
-      "price:[500..],priceCurrency:GBP",
+      "price:[750..],priceCurrency:GBP",
       "itemLocationCountry:GB",
     ].join(","),
     sort: "price",
-    limit: "10",
+    limit: "50",
   });
 
+  if (aspects.length > 0) {
+    params.set("aspect_filter", `categoryId:9801,${aspects.join(",")}`);
+  }
+
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
   const response = await fetch(
     `https://api.ebay.com/buy/browse/v1/item_summary/search?${params}`,
@@ -99,10 +142,14 @@ async function searchEbay(
   }
 
   const data = (await response.json()) as {
+    total?: number;
     itemSummaries?: Array<{
       title?: string;
       price?: { value: string; currency: string };
     }>;
+    refinement?: {
+      aspectDistributions?: AspectDistribution[];
+    };
   };
 
   if (!data.itemSummaries || data.itemSummaries.length === 0) return null;
@@ -140,11 +187,31 @@ async function searchEbay(
       ? (filtered[mid - 1] + filtered[mid]) / 2
       : filtered[mid];
 
+  // Extract dominant aspects from refinement data
+  let dominantTransmission: string | null = null;
+  let dominantBodyType: string | null = null;
+  if (data.refinement?.aspectDistributions) {
+    for (const aspect of data.refinement.aspectDistributions) {
+      if (aspect.localizedAspectName === "Transmission" && aspect.aspectValueDistributions.length > 0) {
+        const top = [...aspect.aspectValueDistributions].sort((a, b) => b.matchCount - a.matchCount)[0];
+        dominantTransmission = top.localizedAspectValue;
+      }
+      if (aspect.localizedAspectName === "Body Type" && aspect.aspectValueDistributions.length > 0) {
+        const top = [...aspect.aspectValueDistributions].sort((a, b) => b.matchCount - a.matchCount)[0];
+        dominantBodyType = top.localizedAspectValue;
+      }
+    }
+  }
+
   return {
-    median: Math.round(median),
+    median: Math.round(median * ASKING_PRICE_DISCOUNT),
     listingCount: filtered.length,
     minPrice: Math.round(filtered[0]),
     maxPrice: Math.round(filtered[filtered.length - 1]),
+    totalListings: data.total || filtered.length,
+    dominantTransmission,
+    dominantBodyType,
+    yearWidened: false,
   };
 }
 
@@ -152,41 +219,44 @@ async function fetchEbayComparables(
   make: string,
   model: string,
   year: number,
+  fuelType: string | null,
   depreciationEstimate?: number,
-): Promise<EbayResult> {
+): Promise<EbayResult | null> {
   const token = await getEbayToken();
   if (!token) return null;
 
   try {
-    // Try 1: make + model + year
-    const result1 = await searchEbay(
-      token,
-      `${make} ${model} ${year}`,
-      make,
-      model,
-      depreciationEstimate,
-    );
-    if (result1) return result1;
+    // Attempt 1: Exact year
+    const r1 = await searchEbay(token, make, model, `{${year}}`, fuelType, depreciationEstimate);
+    if (r1 && r1.listingCount >= 5) return r1;
 
-    // Try 2: make + model only (drop year)
-    const result2 = await searchEbay(
-      token,
-      `${make} ${model}`,
-      make,
-      model,
-      depreciationEstimate,
+    // Attempt 2: Adjacent years (±1)
+    const r2 = await searchEbay(
+      token, make, model,
+      `{${year - 1}|${year}|${year + 1}}`,
+      fuelType, depreciationEstimate,
     );
-    if (result2) return result2;
+    if (r2 && r2.listingCount >= 5) return { ...r2, yearWidened: true };
 
-    // Try 3: make only with model in keywords
-    const result3 = await searchEbay(
-      token,
-      `${make} ${model} car`,
-      make,
-      model,
-      depreciationEstimate,
+    // Attempt 3: ±2 years
+    const years = [year - 2, year - 1, year, year + 1, year + 2].join("|");
+    const r3 = await searchEbay(
+      token, make, model, `{${years}}`, fuelType, depreciationEstimate,
     );
-    return result3;
+    if (r3 && r3.listingCount >= 3) return { ...r3, yearWidened: true };
+
+    // Attempt 4: Drop year filter, keep fuel type
+    const r4 = await searchEbay(token, make, model, null, fuelType, depreciationEstimate);
+    if (r4 && r4.listingCount >= 3) return { ...r4, yearWidened: true };
+
+    // Attempt 5: Drop year and fuel type
+    const r5 = await searchEbay(token, make, model, null, null, depreciationEstimate);
+    if (r5) return { ...r5, yearWidened: true };
+
+    // Return whatever we got from attempt 1 if it had any results
+    if (r1) return r1;
+
+    return null;
   } catch (error: any) {
     if (error?.name === "AbortError") {
       console.error("[VALUATION] eBay request timeout");
@@ -259,6 +329,10 @@ async function writeCache(params: {
   ebayListingCount?: number;
   ebayMinPrice?: number;
   ebayMaxPrice?: number;
+  ebayTotalListings?: number;
+  dominantTransmission?: string;
+  dominantBodyType?: string;
+  colourAdjustment?: number;
   combinedLow?: number;
   combinedHigh?: number;
 }): Promise<void> {
@@ -278,6 +352,10 @@ async function writeCache(params: {
       ebay_listing_count: params.ebayListingCount || null,
       ebay_min_price: params.ebayMinPrice || null,
       ebay_max_price: params.ebayMaxPrice || null,
+      ebay_total_listings: params.ebayTotalListings || null,
+      ebay_dominant_transmission: params.dominantTransmission || null,
+      ebay_dominant_body_type: params.dominantBodyType || null,
+      colour_adjustment: params.colourAdjustment || null,
       combined_low: params.combinedLow || null,
       combined_high: params.combinedHigh || null,
     });
@@ -293,6 +371,10 @@ type ValuationResponse = {
   ebayListingCount: number;
   ebayMinPrice: number | null;
   ebayMaxPrice: number | null;
+  ebayTotalListings: number | null;
+  ebayDominantTransmission: string | null;
+  ebayDominantBodyType: string | null;
+  ebayYearWidened: boolean;
   cacheMedian: number | null;
   cacheEntryCount: number;
   sources: string[];
@@ -308,9 +390,10 @@ export async function GET(
     const yearStr = searchParams.get("year");
     const depEstStr = searchParams.get("depreciationEstimate");
     const newPriceStr = searchParams.get("newPrice");
-    const fuelType = searchParams.get("fuelType") || undefined;
+    const fuelType = searchParams.get("fuelType") || null;
     const engineStr = searchParams.get("engineCapacity");
     const mileageStr = searchParams.get("mileage");
+    const colourStr = searchParams.get("colour");
 
     if (!make || !model || !yearStr) {
       return NextResponse.json(
@@ -332,16 +415,19 @@ export async function GET(
     // Check cache first — if warm, we can skip eBay
     const cacheResult = await checkCache(make, model, year);
 
-    let ebayResult: EbayResult = null;
+    let ebayResult: EbayResult | null = null;
 
     // Only call eBay if cache is cold (<3 entries)
     if (!cacheResult) {
-      ebayResult = await fetchEbayComparables(make, model, year, depEstimate);
+      ebayResult = await fetchEbayComparables(make, model, year, fuelType, depEstimate);
     }
 
     const sources: string[] = [];
     if (ebayResult) sources.push("ebay");
     if (cacheResult) sources.push("cache");
+
+    // Parse colour adjustment for cache write
+    const colourAdj = colourStr ? parseFloat(colourStr) : undefined;
 
     // Write to cache asynchronously (don't block response)
     if (ebayResult) {
@@ -349,7 +435,7 @@ export async function GET(
         make,
         model,
         year,
-        fuelType,
+        fuelType: fuelType || undefined,
         engineCapacity,
         mileage,
         estimatedNewPrice: newPrice,
@@ -358,6 +444,10 @@ export async function GET(
         ebayListingCount: ebayResult.listingCount,
         ebayMinPrice: ebayResult.minPrice,
         ebayMaxPrice: ebayResult.maxPrice,
+        ebayTotalListings: ebayResult.totalListings,
+        dominantTransmission: ebayResult.dominantTransmission || undefined,
+        dominantBodyType: ebayResult.dominantBodyType || undefined,
+        colourAdjustment: colourAdj,
       }).catch(() => {});
     }
 
@@ -366,6 +456,10 @@ export async function GET(
       ebayListingCount: ebayResult?.listingCount ?? 0,
       ebayMinPrice: ebayResult?.minPrice ?? null,
       ebayMaxPrice: ebayResult?.maxPrice ?? null,
+      ebayTotalListings: ebayResult?.totalListings ?? null,
+      ebayDominantTransmission: ebayResult?.dominantTransmission ?? null,
+      ebayDominantBodyType: ebayResult?.dominantBodyType ?? null,
+      ebayYearWidened: ebayResult?.yearWidened ?? false,
       cacheMedian: cacheResult?.median ?? null,
       cacheEntryCount: cacheResult?.entryCount ?? 0,
       sources,

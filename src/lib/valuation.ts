@@ -11,6 +11,14 @@ export type ValuationResult = {
   mileageAdjustmentPercent: number;
   conditionAdjustmentPercent: number;
   motAutoAdjustmentPercent: number;
+  colourAdjustmentPercent: number;
+  ebayTotalListings: number | null;
+  ebayMinPrice: number | null;
+  ebayMaxPrice: number | null;
+  ebayDominantTransmission: string | null;
+  ebayDominantBodyType: string | null;
+  ebayYearWidened: boolean;
+  marketSupply: "good" | "moderate" | "limited" | null;
   disclaimer: string;
 };
 
@@ -216,6 +224,21 @@ export function getConditionAdjustment(
   return { total: adj, motAuto };
 }
 
+// ── Colour adjustment ───────────────────────────────────────────────────────
+
+const COLOUR_ADJUSTMENTS: Record<string, number> = {
+  BLACK: 0, WHITE: 0, SILVER: 0, GREY: 0,
+  BLUE: -1, RED: -1,
+  GREEN: -3, YELLOW: -4, ORANGE: -4,
+  BROWN: -3, BEIGE: -2, PURPLE: -4,
+  GOLD: -2, MAROON: -2, BRONZE: -2,
+};
+
+export function getColourAdjustment(colour?: string): number {
+  if (!colour) return 0;
+  return COLOUR_ADJUSTMENTS[colour.toUpperCase()] ?? -2;
+}
+
 // ── Depreciation baseline ───────────────────────────────────────────────────
 
 export function calculateDepreciationBaseline(
@@ -244,12 +267,20 @@ export function combineValuationLayers(
   cacheMedian: number | null,
   cacheEntryCount: number,
   conditionAdjPercent: number,
+  colourAdjPercent: number,
+  ebayTotalListings: number | null,
+  ebayMinPrice: number | null,
+  ebayMaxPrice: number | null,
+  ebayDominantTransmission: string | null,
+  ebayDominantBodyType: string | null,
+  ebayYearWidened: boolean,
 ): ValuationResult | null {
   if (!depreciationEstimate) return null;
 
   const disclaimer =
     "This is an estimated guide value based on depreciation calculations, " +
-    "publicly advertised vehicle prices, and aggregated market data. It is " +
+    "publicly advertised vehicle prices (adjusted from asking prices to " +
+    "reflect typical transaction values), and aggregated market data. It is " +
     "not a professional valuation and should not be relied upon as such. " +
     "Actual vehicle value depends on exact specification, condition, service " +
     "history, local market conditions, and provenance.";
@@ -260,23 +291,24 @@ export function combineValuationLayers(
   const sources: string[] = ["depreciation model"];
 
   const totalComparables = ebayListingCount + cacheEntryCount;
+  const totalOnMarket = ebayTotalListings || 0;
 
   if (ebayMedian && cacheMedian) {
     // All three sources
     estimatedValue = depreciationEstimate * 0.20 + ebayMedian * 0.40 + cacheMedian * 0.40;
-    confidence = totalComparables >= 5 ? "high" : "medium";
+    confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "medium";
     rangePercent = confidence === "high" ? 10 : 15;
     sources.push(
-      `${ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} currently advertised`,
+      `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
       "recent valuations",
     );
   } else if (ebayMedian) {
     // Depreciation + eBay
     estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
-    confidence = "medium";
-    rangePercent = 15;
+    confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "low";
+    rangePercent = confidence === "high" ? 10 : 15;
     sources.push(
-      `${ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} currently advertised`,
+      `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
     );
   } else if (cacheMedian) {
     // Depreciation + cache
@@ -291,12 +323,26 @@ export function combineValuationLayers(
     rangePercent = 25;
   }
 
-  // Apply condition adjustment
+  // Widened year search caps confidence at medium
+  if (ebayYearWidened && confidence === "high") {
+    confidence = "medium";
+  }
+
+  // Apply condition + colour adjustments
   const condAdj = 1 + conditionAdjPercent / 100;
-  estimatedValue = estimatedValue * condAdj;
+  const colAdj = 1 + colourAdjPercent / 100;
+  estimatedValue = estimatedValue * condAdj * colAdj;
 
   const rangeLow = roundTo50(estimatedValue * (1 - rangePercent / 100));
   const rangeHigh = roundTo50(estimatedValue * (1 + rangePercent / 100));
+
+  // Market supply categorisation
+  let marketSupply: "good" | "moderate" | "limited" | null = null;
+  if (totalOnMarket > 0) {
+    if (totalOnMarket >= 100) marketSupply = "good";
+    else if (totalOnMarket >= 20) marketSupply = "moderate";
+    else marketSupply = "limited";
+  }
 
   return {
     rangeLow: Math.max(rangeLow, 100),
@@ -307,6 +353,14 @@ export function combineValuationLayers(
     mileageAdjustmentPercent: 0, // set by caller
     conditionAdjustmentPercent: conditionAdjPercent,
     motAutoAdjustmentPercent: 0, // set by caller
+    colourAdjustmentPercent: colourAdjPercent,
+    ebayTotalListings: totalOnMarket || null,
+    ebayMinPrice,
+    ebayMaxPrice,
+    ebayDominantTransmission,
+    ebayDominantBodyType,
+    ebayYearWidened,
+    marketSupply,
     disclaimer,
   };
 }
