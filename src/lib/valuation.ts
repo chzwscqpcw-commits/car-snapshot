@@ -294,8 +294,12 @@ export function combineValuationLayers(
   const totalOnMarket = ebayTotalListings || 0;
 
   if (ebayMedian && cacheMedian) {
-    // All three sources
-    estimatedValue = depreciationEstimate * 0.20 + ebayMedian * 0.40 + cacheMedian * 0.40;
+    // All three sources — reduce eBay weight when year widened
+    if (ebayYearWidened) {
+      estimatedValue = depreciationEstimate * 0.30 + ebayMedian * 0.30 + cacheMedian * 0.40;
+    } else {
+      estimatedValue = depreciationEstimate * 0.20 + ebayMedian * 0.40 + cacheMedian * 0.40;
+    }
     confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "medium";
     rangePercent = confidence === "high" ? 10 : 15;
     sources.push(
@@ -303,10 +307,16 @@ export function combineValuationLayers(
       "recent valuations",
     );
   } else if (ebayMedian) {
-    // Depreciation + eBay
-    estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
-    confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "low";
-    rangePercent = confidence === "high" ? 10 : 15;
+    // Depreciation + eBay — give depreciation more weight when year widened
+    if (ebayYearWidened) {
+      estimatedValue = depreciationEstimate * 0.55 + ebayMedian * 0.45;
+      confidence = "low";
+      rangePercent = 20;
+    } else {
+      estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
+      confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "low";
+      rangePercent = confidence === "high" ? 10 : 15;
+    }
     sources.push(
       `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
     );

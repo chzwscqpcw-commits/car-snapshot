@@ -169,11 +169,11 @@ async function searchEbay(
 
   if (prices.length < 2) return null;
 
-  // Discard outliers relative to depreciation estimate
+  // Discard outliers relative to depreciation estimate (35%-250%)
   let filtered = prices;
   if (depreciationEstimate && depreciationEstimate > 0) {
-    const low = depreciationEstimate * 0.2;
-    const high = depreciationEstimate * 3.0;
+    const low = depreciationEstimate * 0.35;
+    const high = depreciationEstimate * 2.5;
     filtered = prices.filter((p) => p >= low && p <= high);
   }
 
@@ -226,26 +226,26 @@ async function fetchEbayComparables(
   if (!token) return null;
 
   try {
-    // Attempt 1: Exact year
+    // Attempt 1: Exact year aspect + fuel type
     const r1 = await searchEbay(token, make, model, `{${year}}`, fuelType, depreciationEstimate);
-    if (r1 && r1.listingCount >= 5) return r1;
+    if (r1 && r1.listingCount >= 3) return r1;
 
-    // Attempt 2: Adjacent years (±1)
+    // Attempt 2: Adjacent years ±1 aspect + fuel type
     const r2 = await searchEbay(
       token, make, model,
       `{${year - 1}|${year}|${year + 1}}`,
       fuelType, depreciationEstimate,
     );
-    if (r2 && r2.listingCount >= 5) return { ...r2, yearWidened: true };
+    if (r2 && r2.listingCount >= 3) return { ...r2, yearWidened: true };
 
-    // Attempt 3: ±2 years
+    // Attempt 3: ±2 years aspect + fuel type
     const years = [year - 2, year - 1, year, year + 1, year + 2].join("|");
     const r3 = await searchEbay(
       token, make, model, `{${years}}`, fuelType, depreciationEstimate,
     );
     if (r3 && r3.listingCount >= 3) return { ...r3, yearWidened: true };
 
-    // Attempt 4: Drop year filter, keep fuel type
+    // Attempt 4: Drop year aspect, keep fuel type
     const r4 = await searchEbay(token, make, model, null, fuelType, depreciationEstimate);
     if (r4 && r4.listingCount >= 3) return { ...r4, yearWidened: true };
 
@@ -253,8 +253,9 @@ async function fetchEbayComparables(
     const r5 = await searchEbay(token, make, model, null, null, depreciationEstimate);
     if (r5) return { ...r5, yearWidened: true };
 
-    // Return whatever we got from attempt 1 if it had any results
+    // Return whatever we got from earlier attempts if any had results
     if (r1) return r1;
+    if (r2) return { ...r2, yearWidened: true };
 
     return null;
   } catch (error: any) {
