@@ -1664,20 +1664,19 @@ END:VEVENT
   function downloadTXT() {
     if (!data) return;
 
-    // Create a professional text-based report
     const timestamp = new Date();
     const formattedDate = timestamp.toLocaleDateString("en-GB", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
 
-    const checklistTitle = 
-      checklistRole === "owner" ? "MY CAR CHECKLIST" :
-      checklistRole === "buyer" ? "BUYING CHECKLIST" :
-      "SELLING CHECKLIST";
+    const sep = "────────────────────────────────────────────────────────────────";
+    const dblSep = "═════════════════════════════════════════════════════════════════";
 
-    const reportLines = [
+    const lines: string[] = [
       "╔════════════════════════════════════════════════════════════════╗",
       "║          FREE PLATE CHECK - VEHICLE REPORT                    ║",
       "╚════════════════════════════════════════════════════════════════╝",
@@ -1685,64 +1684,189 @@ END:VEVENT
       `Generated: ${formattedDate}`,
       `Registration: ${data.registrationNumber}`,
       "",
-      "────────────────────────────────────────────────────────────────",
-      "VEHICLE INFORMATION",
-      "────────────────────────────────────────────────────────────────",
-      "",
+
+      // ── VEHICLE DETAILS ──
+      sep, "VEHICLE DETAILS", sep, "",
       `Make & Model:        ${data.make} ${[data.model, data.variant].filter(Boolean).join(" ")}`,
       `Year:                ${data.yearOfManufacture || "—"}`,
       `Colour:              ${data.colour || "—"}`,
-      "",
-      "SPECIFICATIONS",
-      "────────────────────────────────────────────────────────────────",
-      "",
       `Fuel Type:           ${data.fuelType || "—"}`,
       `Engine Capacity:     ${data.engineCapacity ? `${data.engineCapacity}cc` : "—"}`,
       `CO2 Emissions:       ${data.co2Emissions ? `${data.co2Emissions}g/km` : "—"}`,
       `Euro Status:         ${data.euroStatus || "—"}`,
+      `Real Driving Emissions: ${data.realDrivingEmissions != null ? `RDE2 Step ${data.realDrivingEmissions}` : "—"}`,
+      `Wheelplan:           ${data.wheelplan || "—"}`,
+      `Revenue Weight:      ${data.revenueWeight ? `${data.revenueWeight} kg` : "—"}`,
+      `Type Approval:       ${data.typeApproval || "—"}`,
+      `Automated Vehicle:   ${data.automatedVehicle != null ? (data.automatedVehicle ? "Yes" : "No") : "—"}`,
       "",
-      "COMPLIANCE STATUS",
-      "────────────────────────────────────────────────────────────────",
-      "",
+
+      // ── COMPLIANCE STATUS ──
+      sep, "COMPLIANCE STATUS", sep, "",
       `Tax Status:          ${data.taxStatus || "—"}`,
       `Tax Due Date:        ${formatDate(data.taxDueDate)}`,
+      `Additional Rate End: ${formatDate(data.additionalRateEndDate)}`,
       `MOT Status:          ${data.motStatus || "—"}`,
       `MOT Expiry:          ${formatDate(data.motExpiryDate)}`,
+      `MOT Data Updated:    ${formatDate(data.motTestsLastUpdated)}`,
       `First Registered:    ${data.monthOfFirstRegistration || data.dateOfFirstRegistration || "—"}`,
+      `Last V5C Issued:     ${formatDate(data.dateOfLastV5CIssued)}`,
+      `Marked for Export:   ${data.markedForExport != null ? (data.markedForExport ? "Yes" : "No") : "—"}`,
       "",
-      "KEY INSIGHTS",
-      "────────────────────────────────────────────────────────────────",
-      "",
-      ...insights.slice(0, 5).map((insight, idx) => [
-        `${idx + 1}. ${insight.title}`,
-        `   ${insight.detail}`,
-        "",
-      ]).flat(),
-      checklistTitle,
-      "────────────────────────────────────────────────────────────────",
-      "",
-      ...checklist.map((item, idx) => `${idx + 1}. ☐ ${item}`),
-      "",
-      "═════════════════════════════════════════════════════════════════",
-      "",
-      "Created with Free Plate Check",
-      "https://freeplatecheck.co.uk",
-      "",
-      "⚠️  Always verify vehicle details with the seller and official",
-      "    documents before making any purchase.",
-      "",
-      "🔒 Privacy: Registration numbers are hashed and not stored.",
-      "═════════════════════════════════════════════════════════════════",
     ];
 
-    const reportContent = reportLines.join("\n");
+    // ── ULEZ ──
+    if (ulezResult && ulezResult.status !== "unknown") {
+      lines.push(sep, "ULEZ COMPLIANCE", sep, "");
+      const statusLabel = ulezResult.status === "exempt" ? "Exempt" : ulezResult.status === "compliant" ? "Compliant" : "Non-compliant";
+      lines.push(`Status:              ${statusLabel}`);
+      lines.push(`Reason:              ${ulezResult.reason}`);
+      lines.push(`Confidence:          ${ulezResult.confidence}`);
+      if (ulezResult.status === "non-compliant" && ulezResult.cleanAirZones && ulezResult.cleanAirZones.length > 0) {
+        lines.push("", "Clean Air Zone Daily Charges:");
+        for (const zone of ulezResult.cleanAirZones) {
+          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+        }
+      }
+      lines.push("");
+    }
 
-    // Create blob and download
+    // ── VED ──
+    if (vedResult && vedResult.estimatedAnnualRate !== null) {
+      lines.push(sep, "VED ROAD TAX", sep, "");
+      lines.push(`Estimated:           £${vedResult.estimatedAnnualRate}/year`);
+      if (vedResult.band) lines.push(`Band:                ${vedResult.band}`);
+      lines.push("");
+    }
+
+    // ── FUEL ECONOMY ──
+    if (fuelEconomy) {
+      lines.push(sep, "FUEL ECONOMY", sep, "");
+      lines.push(`Combined:            ${fuelEconomy.combinedMpg.toFixed(1)} MPG`);
+      if (fuelEconomy.urbanMpg) lines.push(`Urban:               ${fuelEconomy.urbanMpg.toFixed(1)} MPG`);
+      if (fuelEconomy.extraUrbanMpg) lines.push(`Extra-urban:         ${fuelEconomy.extraUrbanMpg.toFixed(1)} MPG`);
+      lines.push(`Est. Annual Cost:    £${fuelEconomy.estimatedAnnualCost}`);
+      lines.push("");
+    }
+
+    // ── NCAP ──
+    if (ncapRating) {
+      lines.push(sep, "EURO NCAP SAFETY RATING", sep, "");
+      lines.push(`Overall:             ${ncapRating.overallStars}/5 stars (tested ${ncapRating.yearTested})`);
+      if (ncapRating.adultOccupant != null) lines.push(`Adult Occupant:      ${ncapRating.adultOccupant}%`);
+      if (ncapRating.childOccupant != null) lines.push(`Child Occupant:      ${ncapRating.childOccupant}%`);
+      if (ncapRating.pedestrian != null) lines.push(`Pedestrian:          ${ncapRating.pedestrian}%`);
+      if (ncapRating.safetyAssist != null) lines.push(`Safety Assist:       ${ncapRating.safetyAssist}%`);
+      lines.push("");
+    }
+
+    // ── VALUATION ──
+    if (valuationResult) {
+      lines.push(sep, "VEHICLE VALUATION", sep, "");
+      lines.push(`Estimated Range:     £${valuationResult.rangeLow.toLocaleString()} – £${valuationResult.rangeHigh.toLocaleString()}`);
+      const confLabel = valuationResult.confidence === "high" ? "High" : valuationResult.confidence === "medium" ? "Medium" : "Low";
+      lines.push(`Confidence:          ${confLabel}`);
+      lines.push(`Sources:             ${valuationResult.sources.join(", ")}`);
+      if (valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice) {
+        lines.push(`Asking Prices:       £${valuationResult.ebayMinPrice.toLocaleString()} – £${valuationResult.ebayMaxPrice.toLocaleString()}`);
+      }
+      if (valuationResult.marketSupply) {
+        const supplyLabel = valuationResult.marketSupply === "good" ? "Good" : valuationResult.marketSupply === "moderate" ? "Moderate" : "Limited";
+        const countSuffix = valuationResult.ebayTotalListings ? ` (${valuationResult.ebayTotalListings} listings)` : "";
+        lines.push(`Market Supply:       ${supplyLabel}${countSuffix}`);
+      }
+      lines.push("");
+    }
+
+    // ── SAFETY RECALLS ──
+    lines.push(sep, "SAFETY RECALLS", sep, "");
+    if (recalls.length === 0) {
+      lines.push("No known safety recalls found for this vehicle.");
+    } else {
+      lines.push(`${recalls.length} recall${recalls.length !== 1 ? "s" : ""} found:`);
+      lines.push("");
+      for (const r of recalls) {
+        lines.push(`  Date:    ${r.recallDate}`);
+        lines.push(`  Ref:     ${r.recallNumber}`);
+        lines.push(`  Defect:  ${r.defect}`);
+        lines.push(`  Remedy:  ${r.remedy}`);
+        lines.push("");
+      }
+    }
+    lines.push("");
+
+    // ── KEY INSIGHTS (all) ──
+    lines.push(sep, "KEY INSIGHTS", sep, "");
+    insights.forEach((insight, idx) => {
+      lines.push(`${idx + 1}. ${insight.title}`);
+      lines.push(`   ${insight.detail}`);
+      lines.push("");
+    });
+
+    // ── MILEAGE WARNINGS ──
+    if (motInsightsData && motInsightsData.mileageWarnings.length > 0) {
+      lines.push(sep, "MILEAGE WARNINGS", sep, "");
+      for (const w of motInsightsData.mileageWarnings) {
+        lines.push(`  ${w}`);
+      }
+      lines.push("");
+    }
+
+    // ── MOT HISTORY ──
+    if (data.motTests && data.motTests.length > 0) {
+      lines.push(sep, "MOT HISTORY", sep, "");
+      lines.push(`${data.motTests.length} test${data.motTests.length !== 1 ? "s" : ""} on record`);
+      if (motInsightsData) {
+        lines.push(`Pass rate: ${motInsightsData.passRate}% (${motInsightsData.passedTests}/${motInsightsData.totalTests})`);
+        if (motInsightsData.avgMilesPerYear > 0) {
+          lines.push(`Avg miles/year: ${motInsightsData.avgMilesPerYear.toLocaleString()}`);
+        }
+      }
+      lines.push("");
+
+      for (const test of data.motTests) {
+        const mileage = test.odometer?.value ? `${test.odometer.value.toLocaleString()} miles` : "—";
+        lines.push(`  ${formatDate(test.completedDate)}  ${test.testResult}  ${mileage}${test.motTestNumber ? `  Ref: ${test.motTestNumber}` : ""}`);
+        const items = test.rfrAndComments || [];
+        for (const item of items) {
+          lines.push(`    [${item.type}] ${item.text}`);
+        }
+        if (items.length > 0) lines.push("");
+      }
+      lines.push("");
+    }
+
+    // ── CHECKLISTS ──
+    const checklistTitle =
+      checklistRole === "owner" ? "MY CAR CHECKLIST" :
+      checklistRole === "buyer" ? "BUYING CHECKLIST" :
+      "SELLING CHECKLIST";
+
+    lines.push(sep, checklistTitle, sep, "");
+    checklist.forEach((item, idx) => {
+      lines.push(`${idx + 1}. [ ] ${item}`);
+    });
+    lines.push("");
+
+    // ── FOOTER ──
+    lines.push(dblSep, "");
+    lines.push("Created with Free Plate Check");
+    lines.push("https://freeplatecheck.co.uk");
+    lines.push("");
+    lines.push("Always verify vehicle details with the seller and official");
+    lines.push("documents before making any purchase.");
+    lines.push("");
+    lines.push("Privacy: Registration numbers are hashed and not stored.");
+    lines.push(dblSep);
+
+    const reportContent = lines.join("\n");
+
     const blob = new Blob([reportContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `FreePlateCheck-${data.registrationNumber}-${new Date().getTime()}.txt`;
+    const reg = data.registrationNumber.replace(/\s+/g, "");
+    link.download = `FPC-Report-${reg}-${dateStr}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1808,6 +1932,17 @@ END:VEVENT
           rangeHigh: valuationResult.rangeHigh,
           confidence: valuationResult.confidence,
           sources: valuationResult.sources,
+          estimatedValue: valuationResult.estimatedValue,
+          ebayMinPrice: valuationResult.ebayMinPrice,
+          ebayMaxPrice: valuationResult.ebayMaxPrice,
+          ebayTotalListings: valuationResult.ebayTotalListings,
+          ebayDominantTransmission: valuationResult.ebayDominantTransmission,
+          ebayDominantBodyType: valuationResult.ebayDominantBodyType,
+          marketSupply: valuationResult.marketSupply,
+          mileageAdjustmentPercent: valuationResult.mileageAdjustmentPercent,
+          conditionAdjustmentPercent: valuationResult.conditionAdjustmentPercent,
+          colourAdjustmentPercent: valuationResult.colourAdjustmentPercent,
+          disclaimer: valuationResult.disclaimer,
         } : null,
       });
 
