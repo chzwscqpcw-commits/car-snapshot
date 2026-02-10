@@ -15,17 +15,40 @@ function normalizeStr(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// Known fuel/engine variant suffixes that don't change the base model.
+// "320D" is a diesel 320, "118I" is a petrol 118 — same recall applies.
+// But "500X" is a different model from "500" — X is NOT a fuel suffix.
+const FUEL_SUFFIXES = /^(D|I|E|S|DI|TD|TDI|CDI|HDI|TDCI|TFSI|TSI|GTI|GTD|GTE|SDI|CRDI|PHEV|EV|BEV)$/;
+
+/**
+ * Strip a known fuel/engine suffix from a numeric model code.
+ * "320D" → "320", "118I" → "118", "A180D" → "A180"
+ * Returns null if no suffix was stripped or the token isn't a
+ * numeric model code pattern.
+ */
+function stripFuelSuffix(token: string): string | null {
+  // Match: digits (optionally preceded by a single letter) + suffix
+  // e.g. "320D", "118I", "A180D", "C220D", "E300E"
+  const match = token.match(/^([A-Z]?\d{2,4})(D|I|E|S|DI|TD|TDI|CDI|HDI|TDCI|TFSI|TSI|GTI|GTD|GTE|SDI|CRDI|PHEV)$/);
+  if (match) return match[1];
+  return null;
+}
+
 /**
  * Token-based model matching — avoids substring false positives.
  *
  * "500X" must NOT match a recall for "500" (different vehicle).
  * "500" must NOT match a recall for "500X" or "500L".
+ * "320D" SHOULD match a recall for "320" (diesel variant, same car).
+ * "118I" SHOULD match a recall for "118" (petrol variant, same car).
  * "FOCUS" SHOULD match a recall for "FOCUS C-MAX" (same platform).
  * "GOLF" SHOULD match a recall for "GOLF PLUS" (shared platform).
  * "C CLASS" SHOULD match "C-CLASS" (normalised to same tokens).
  *
- * Logic: the vehicle model's primary token (first word) must appear
- * as a complete, exact token in the recall model string.
+ * Logic:
+ * 1. Exact token match on the primary (first) token
+ * 2. If no match, try stripping known fuel suffixes (D/I/TDI etc.)
+ *    from the vehicle token — "320D" → "320" → matches recall "320"
  */
 function modelMatches(recallModel: string, vehicleModel: string): boolean {
   const recall = normalizeStr(recallModel);
@@ -36,25 +59,17 @@ function modelMatches(recallModel: string, vehicleModel: string): boolean {
 
   const recallTokens = recall.split(/\s+/);
   const vehicleTokens = vehicle.split(/\s+/);
-
-  // The vehicle's primary model token must appear as a complete token
-  // in the recall model. e.g. "500X" only matches recall tokens
-  // containing "500X", not "500" or "500L".
   const primaryVehicleToken = vehicleTokens[0];
 
-  if (!recallTokens.some((t) => t === primaryVehicleToken)) return false;
+  // 1. Exact primary token match
+  if (recallTokens.some((t) => t === primaryVehicleToken)) return true;
 
-  // If the vehicle model has additional qualifying tokens that look
-  // like variant identifiers (not generic words like SERIES/CLASS),
-  // verify they also appear in the recall model to avoid matching
-  // e.g. vehicle "FOCUS C MAX" against recall "FOCUS" only.
-  // However, if the vehicle has extra tokens not in the recall, we
-  // still match — the recall may cover the whole model family.
-  // The critical check is the reverse: a recall for a SPECIFIC variant
-  // should not match a DIFFERENT variant. That's already handled by
-  // the primary token check above (e.g. "500X" ≠ "500").
+  // 2. Try stripping fuel suffix from the vehicle token
+  //    "320D" → "320", then check if "320" is in recall tokens
+  const stripped = stripFuelSuffix(primaryVehicleToken);
+  if (stripped && recallTokens.some((t) => t === stripped)) return true;
 
-  return true;
+  return false;
 }
 
 export function findRecalls(
