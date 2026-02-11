@@ -29,6 +29,12 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     name: "GOV.UK Find MOT Centre",
     isAffiliate: false,
   },
+  parkersInsurance: {
+    url: "https://www.parkers.co.uk/car-insurance/insurance-groups/",
+    name: "Parkers Insurance Groups",
+    isAffiliate: false,
+    description: "Free insurance group lookup tool",
+  },
 };
 
 export function getPartnerRel(partner: PartnerLink): string {

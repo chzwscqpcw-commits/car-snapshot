@@ -549,6 +549,7 @@ export default function Home() {
   const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayListingCount: number; ebayMinPrice: number | null; ebayMaxPrice: number | null; ebayTotalListings: number | null; ebayDominantTransmission: string | null; ebayDominantBodyType: string | null; ebayYearWidened: boolean; cacheMedian: number | null; cacheEntryCount: number; sources: string[] } | null>(null);
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
 
   // Load recent guides
   useEffect(() => {
@@ -1045,6 +1046,22 @@ export default function Home() {
       });
     }
 
+    // 5. Insurance group lookup (low priority — only if space)
+    if (prompts.length < 3) {
+      const makeModel = data.make && data.model ? `${data.make} ${data.model}` : "";
+      const parkersQuery = makeModel ? encodeURIComponent(makeModel.toLowerCase()) : "";
+      prompts.push({
+        variant: "subtle",
+        icon: <Shield className="w-5 h-5 text-slate-400" />,
+        title: "Check your insurance group",
+        description: "Insurance groups (1–50) affect your premium. Look up this vehicle's group rating for free.",
+        linkText: "Check insurance group — Parkers",
+        linkHref: `https://www.parkers.co.uk/car-insurance/insurance-groups/${parkersQuery ? `?q=${parkersQuery}` : ""}`,
+        partnerId: "parkersInsurance",
+        trackingContext: "action-insurance-group",
+      });
+    }
+
     return prompts.slice(0, 3);
   }, [data, isOver3Years, motDaysUntilExpiry, latestAdvisoryCount]);
 
@@ -1187,19 +1204,24 @@ export default function Home() {
 
     // VED road tax insight
     if (vedResult && vedResult.estimatedAnnualRate !== null) {
+      const sixMonthText = vedResult.estimatedSixMonthRate !== null ? ` (£${vedResult.estimatedSixMonthRate} for 6 months)` : "";
       result.push({
         tone: "info",
-        title: `Estimated road tax: £${vedResult.estimatedAnnualRate}/year`,
+        title: `Estimated road tax: £${vedResult.estimatedAnnualRate}/year${sixMonthText}`,
         detail: vedResult.band ? `${vedResult.band}. ${vedResult.details.split(".")[0]}.` : vedResult.details,
       });
     }
 
     // Fuel economy insight
     if (fuelEconomy) {
+      const parts: string[] = [`Combined: ${fuelEconomy.combinedMpg.toFixed(1)} MPG`];
+      if (fuelEconomy.urbanMpg) parts.push(`Urban: ${fuelEconomy.urbanMpg.toFixed(1)} MPG`);
+      if (fuelEconomy.extraUrbanMpg) parts.push(`Extra-urban: ${fuelEconomy.extraUrbanMpg.toFixed(1)} MPG`);
+      parts.push(`~£${fuelEconomy.estimatedAnnualCost}/year fuel`);
       result.push({
         tone: fuelEconomy.combinedMpg >= 50 ? "good" : fuelEconomy.combinedMpg < 35 ? "warn" : "info",
         title: `Estimated ${fuelEconomy.combinedMpg.toFixed(1)} MPG (combined)`,
-        detail: `Roughly £${fuelEconomy.estimatedAnnualCost}/year in fuel at 8,000 miles.${fuelEconomy.matchType !== "exact" ? " Estimate based on similar model." : ""}`,
+        detail: `${parts.join(" · ")}${fuelEconomy.matchType !== "exact" ? ". Estimate based on similar model." : ""}`,
       });
     }
 
@@ -1764,7 +1786,7 @@ END:VEVENT
     // ── VED ──
     if (vedResult && vedResult.estimatedAnnualRate !== null) {
       lines.push(sep, "VED ROAD TAX", sep, "");
-      lines.push(`Estimated:           £${vedResult.estimatedAnnualRate}/year`);
+      lines.push(`Estimated:           £${vedResult.estimatedAnnualRate}/year${vedResult.estimatedSixMonthRate != null ? ` (£${vedResult.estimatedSixMonthRate} for 6 months)` : ""}`);
       if (vedResult.band) lines.push(`Band:                ${vedResult.band}`);
       lines.push("");
     }
@@ -2820,7 +2842,51 @@ END:VEVENT
                     value={`${data.engineCapacity ?? "—"} cc`}
                   />
                   <IconBadge icon={<div>🎨</div>} label="Colour" value={data.colour ?? "—"} />
+                  {fuelEconomy?.enginePowerPS && (
+                    <IconBadge icon={<Zap className="w-5 h-5" />} label="Power" value={`${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}`} />
+                  )}
                 </div>
+
+                {/* Collapsible Technical Details */}
+                {(() => {
+                  const techRows: { label: string; value: string; warn?: boolean }[] = [];
+                  if (fuelEconomy?.enginePowerPS) techRows.push({ label: "Engine Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` / ${fuelEconomy.enginePowerKW} kW` : ""}` });
+                  if (fuelEconomy?.transmission) techRows.push({ label: "Transmission", value: fuelEconomy.transmission });
+                  if (data.co2Emissions != null) techRows.push({ label: "CO2 Emissions", value: `${data.co2Emissions} g/km` });
+                  if (data.euroStatus) techRows.push({ label: "Euro Status", value: data.euroStatus });
+                  if (data.realDrivingEmissions != null) techRows.push({ label: "Real Driving Emissions", value: `RDE2 Step ${data.realDrivingEmissions}` });
+                  if (data.monthOfFirstRegistration) techRows.push({ label: "First Registered", value: formatDate(data.monthOfFirstRegistration + "-01") ?? data.monthOfFirstRegistration });
+                  if (data.dateOfLastV5CIssued) techRows.push({ label: "Last V5C Issued", value: formatDate(data.dateOfLastV5CIssued) ?? "—" });
+                  if (data.wheelplan) techRows.push({ label: "Wheelplan", value: data.wheelplan });
+                  if (data.typeApproval) techRows.push({ label: "Type Approval", value: data.typeApproval });
+                  if (data.revenueWeight) techRows.push({ label: "Revenue Weight", value: `${data.revenueWeight.toLocaleString()} kg` });
+                  if (data.markedForExport) techRows.push({ label: "Marked for Export", value: "Yes", warn: true });
+                  if (data.automatedVehicle) techRows.push({ label: "Automated Vehicle", value: "Yes" });
+
+                  if (techRows.length === 0) return null;
+
+                  return (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-300 transition-colors"
+                      >
+                        {showTechnicalDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        {showTechnicalDetails ? "Hide" : "Show"} technical details
+                      </button>
+                      {showTechnicalDetails && (
+                        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                          {techRows.map((row) => (
+                            <div key={row.label} className="flex justify-between text-sm py-1 border-b border-slate-800">
+                              <span className="text-slate-400">{row.label}</span>
+                              <span className={row.warn ? "text-amber-400 font-medium" : "text-slate-200"}>{row.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             </DataReveal>
 

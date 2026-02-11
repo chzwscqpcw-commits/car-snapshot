@@ -8,6 +8,11 @@ export type FuelEconomyEntry = {
   combinedMpg: number;
   urbanMpg?: number;
   extraUrbanMpg?: number;
+  enginePowerPS?: number;
+  enginePowerKW?: number;
+  noiseLevel?: number;
+  electricRange?: number;
+  transmission?: string;
 };
 
 export type FuelEconomyResult = {
@@ -16,6 +21,11 @@ export type FuelEconomyResult = {
   extraUrbanMpg?: number;
   estimatedAnnualCost: number;
   matchType: "exact" | "model-fuel" | "model-only";
+  enginePowerPS?: number;
+  enginePowerKW?: number;
+  noiseLevel?: number;
+  electricRange?: number;
+  transmission?: string;
 };
 
 // Average fuel prices (pence per litre) — update periodically
@@ -96,6 +106,16 @@ function calculateAnnualCost(mpg: number, fuelType?: string): number {
   return Math.round(litres * pricePerLitre);
 }
 
+function extendedFields(entry: FuelEconomyEntry): Pick<FuelEconomyResult, "enginePowerPS" | "enginePowerKW" | "noiseLevel" | "electricRange" | "transmission"> {
+  const result: Pick<FuelEconomyResult, "enginePowerPS" | "enginePowerKW" | "noiseLevel" | "electricRange" | "transmission"> = {};
+  if (entry.enginePowerPS) result.enginePowerPS = entry.enginePowerPS;
+  if (entry.enginePowerKW) result.enginePowerKW = entry.enginePowerKW;
+  if (entry.noiseLevel) result.noiseLevel = entry.noiseLevel;
+  if (entry.electricRange) result.electricRange = entry.electricRange;
+  if (entry.transmission) result.transmission = entry.transmission;
+  return result;
+}
+
 export function lookupFuelEconomy(
   data: FuelEconomyEntry[],
   make?: string,
@@ -128,6 +148,7 @@ export function lookupFuelEconomy(
         extraUrbanMpg: exact.extraUrbanMpg,
         estimatedAnnualCost: calculateAnnualCost(exact.combinedMpg, fuelType),
         matchType: "exact",
+        ...extendedFields(exact),
       };
     }
   }
@@ -143,6 +164,7 @@ export function lookupFuelEconomy(
         extraUrbanMpg: match.extraUrbanMpg,
         estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
         matchType: "model-fuel",
+        ...extendedFields(match),
       };
     }
   }
@@ -156,6 +178,7 @@ export function lookupFuelEconomy(
       extraUrbanMpg: match.extraUrbanMpg,
       estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
       matchType: "model-only",
+      ...extendedFields(match),
     };
   }
 

@@ -69,7 +69,7 @@ export type ReportInput = {
     details: string;
     cleanAirZones?: CleanAirZone[];
   } | null;
-  vedResult?: { estimatedAnnualRate: number | null; band: string | null; details: string } | null;
+  vedResult?: { estimatedAnnualRate: number | null; estimatedSixMonthRate?: number | null; band: string | null; details: string } | null;
   fuelEconomy?: { combinedMpg: number; urbanMpg?: number; extraUrbanMpg?: number; estimatedAnnualCost: number } | null;
   ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
   recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
@@ -1008,7 +1008,8 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
 
   // VED Road Tax
   if (hasVed) {
-    const lines: string[] = [`Estimated \u00A3${vedResult!.estimatedAnnualRate}/year`];
+    const sixMonthText = vedResult!.estimatedSixMonthRate != null ? ` (\u00A3${vedResult!.estimatedSixMonthRate} for 6 months)` : "";
+    const lines: string[] = [`Estimated \u00A3${vedResult!.estimatedAnnualRate}/year${sixMonthText}`];
     if (vedResult!.band) lines.push(`Band: ${vedResult!.band}`);
     if (vedResult!.details) {
       const firstSentence = vedResult!.details.split(".")[0];

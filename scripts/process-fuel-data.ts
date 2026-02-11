@@ -65,6 +65,11 @@ interface FuelRecord {
   combinedMpg: number;
   urbanMpg: number;
   extraUrbanMpg: number;
+  enginePowerPS?: number;
+  enginePowerKW?: number;
+  noiseLevel?: number;
+  electricRange?: number;
+  transmission?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -170,6 +175,11 @@ function detectColumns(headers: string[]): {
   combinedMpg: number;
   urbanMpg: number;
   extraUrbanMpg: number;
+  enginePowerPS: number;
+  enginePowerKW: number;
+  noiseLevel: number;
+  electricRange: number;
+  transmission: number;
 } | null {
   const lower = headers.map((h) => h.toLowerCase().replace(/[^a-z0-9]/g, ""));
 
@@ -220,6 +230,11 @@ function detectColumns(headers: string[]): {
     combinedMpg: findMpgIndex("combined"),
     urbanMpg: findMpgIndex("urban"),
     extraUrbanMpg: findMpgIndex("extraurban"),
+    enginePowerPS: findIndex(["metrichorsepower", "enginepowerps", "powerps", "bhpps"]),
+    enginePowerKW: findIndex(["enginepowerkw", "powerkw"]),
+    noiseLevel: findIndex(["noiselevel", "noisedb", "dba"]),
+    electricRange: findIndex(["electricrange", "erange", "electriconly"]),
+    transmission: findIndex(["transmission", "gearbox"]),
   };
 
   // Validate essential columns
@@ -355,7 +370,7 @@ async function processFile(
     }
     seen.add(dedupeKey);
 
-    records.push({
+    const record: FuelRecord = {
       make,
       model,
       engineCapacity,
@@ -363,7 +378,31 @@ async function processFile(
       combinedMpg,
       urbanMpg,
       extraUrbanMpg,
-    });
+    };
+
+    // Optional extended fields
+    if (columns.enginePowerPS !== -1) {
+      const ps = Math.round(parseNumber(fields[columns.enginePowerPS] || ""));
+      if (ps > 0) record.enginePowerPS = ps;
+    }
+    if (columns.enginePowerKW !== -1) {
+      const kw = Math.round(parseNumber(fields[columns.enginePowerKW] || ""));
+      if (kw > 0) record.enginePowerKW = kw;
+    }
+    if (columns.noiseLevel !== -1) {
+      const noise = parseNumber(fields[columns.noiseLevel] || "");
+      if (noise > 0) record.noiseLevel = Math.round(noise * 10) / 10;
+    }
+    if (columns.electricRange !== -1) {
+      const range = Math.round(parseNumber(fields[columns.electricRange] || ""));
+      if (range > 0) record.electricRange = range;
+    }
+    if (columns.transmission !== -1) {
+      const trans = (fields[columns.transmission] || "").trim().toUpperCase();
+      if (trans) record.transmission = trans;
+    }
+
+    records.push(record);
 
     stats.added++;
   }

@@ -5,6 +5,7 @@ export const RATES_LAST_VERIFIED = "2026-02-09";
 
 export type VedResult = {
   estimatedAnnualRate: number | null;
+  estimatedSixMonthRate: number | null;
   band: string | null;
   rateType: "post-2017" | "pre-2017" | null;
   details: string;
@@ -89,6 +90,7 @@ export function calculateVed(vehicle: {
     if (isElectric(fuelType)) {
       return {
         estimatedAnnualRate: rate,
+        estimatedSixMonthRate: Math.ceil(rate * 0.525),
         band: "Standard (zero emission)",
         rateType: "post-2017",
         details: `From April 2025, electric vehicles pay the standard rate of £${rate}/year.${supplementNote}`,
@@ -98,6 +100,7 @@ export function calculateVed(vehicle: {
 
     return {
       estimatedAnnualRate: rate,
+      estimatedSixMonthRate: Math.ceil(rate * 0.525),
       band: isAltFuel(fuelType) ? "Standard (alternative fuel)" : "Standard",
       rateType: "post-2017",
       details: `Post-April 2017 vehicles pay a flat rate of £${rate}/year.${supplementNote}`,
@@ -112,6 +115,7 @@ export function calculateVed(vehicle: {
       const sizeLabel = engineCapacity <= 1549 ? "up to 1,549cc" : "over 1,549cc";
       return {
         estimatedAnnualRate: rate,
+        estimatedSixMonthRate: Math.ceil(rate * 0.525),
         band: sizeLabel,
         rateType: "pre-2017",
         details: `Pre-March 2001 vehicles are taxed by engine size. ${engineCapacity}cc (${sizeLabel}) = £${rate}/year.`,
@@ -121,6 +125,7 @@ export function calculateVed(vehicle: {
 
     return {
       estimatedAnnualRate: null,
+      estimatedSixMonthRate: null,
       band: null,
       rateType: null,
       details: "Pre-March 2001 vehicles are taxed by engine size. Engine capacity data not available.",
@@ -134,6 +139,7 @@ export function calculateVed(vehicle: {
   if (isElectric(fuelType)) {
     return {
       estimatedAnnualRate: PRE_2017_ELECTRIC,
+      estimatedSixMonthRate: Math.ceil(PRE_2017_ELECTRIC * 0.525),
       band: "Band A (zero emission)",
       rateType: "pre-2017",
       details: `Pre-April 2017 zero-emission vehicles pay £${PRE_2017_ELECTRIC}/year.`,
@@ -155,6 +161,7 @@ export function calculateVed(vehicle: {
 
       return {
         estimatedAnnualRate: rate,
+        estimatedSixMonthRate: Math.ceil(rate * 0.525),
         band: `Band ${band.band} (${band.co2Min}–${band.co2Max} g/km)`,
         rateType: "pre-2017",
         details: `Band ${band.band} — £${rate}/year based on ${co2Emissions}g/km CO2 emissions.`,
@@ -167,6 +174,7 @@ export function calculateVed(vehicle: {
   if (!regDate && co2Emissions === undefined) {
     return {
       estimatedAnnualRate: null,
+      estimatedSixMonthRate: null,
       band: null,
       rateType: null,
       details: "Not enough data to estimate road tax. Registration date and CO2 emissions are needed.",
@@ -177,6 +185,7 @@ export function calculateVed(vehicle: {
   // Pre-2017 without CO2 data
   return {
     estimatedAnnualRate: null,
+    estimatedSixMonthRate: null,
     band: null,
     rateType: null,
     details: "CO2 emissions data not available — cannot estimate pre-April 2017 road tax band.",
