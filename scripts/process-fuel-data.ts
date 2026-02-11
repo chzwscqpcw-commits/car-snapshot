@@ -232,7 +232,7 @@ function detectColumns(headers: string[]): {
   }
 
   const result = {
-    manufacturer: findIndex(["manufacturer", "make"]),
+    manufacturer: findIndex(["manufacturer", "make", "manufacturermodel"]),
     model: findIndex(["model"]),
     engineCapacity: findIndex(["enginecapacity", "capacity", "enginecc", "enginesize", "cc"]),
     fuelType: findIndex(["fueltype", "fuel"]),
@@ -254,8 +254,6 @@ function detectColumns(headers: string[]): {
   if (result.fuelType === -1) missing.push("Fuel Type");
 
   if (missing.length > 0) {
-    console.warn("  Could not detect required columns:", missing.join(", "));
-    console.warn("  Headers found:", headers.join(" | "));
     return null;
   }
 
@@ -300,21 +298,29 @@ async function processFile(
 
   let headers: string[] | null = null;
   let columns: ReturnType<typeof detectColumns> = null;
+  let headerAttempts = 0;
+  const MAX_HEADER_ATTEMPTS = 10; // Try up to 10 rows to find a valid header
 
   for await (const line of rl) {
     if (line.trim() === "") continue;
 
     const fields = parseCSVLine(line);
 
-    // First non-empty line is the header
+    // Try to detect headers — some older VCA files have metadata rows before
+    // the real column header (e.g. 2005 CSVs have the header on row 4)
     if (!headers) {
-      headers = fields;
-      columns = detectColumns(headers);
-      if (!columns) {
-        console.warn(`  Skipping file (unrecognized format): ${filePath}`);
+      headerAttempts++;
+      const attempt = detectColumns(fields);
+      if (attempt) {
+        headers = fields;
+        columns = attempt;
+        console.log(`  Detected ${headers.length} columns (header on row ${headerAttempts}).`);
+        continue;
+      }
+      if (headerAttempts >= MAX_HEADER_ATTEMPTS) {
+        console.warn(`  Skipping file (no valid header in first ${MAX_HEADER_ATTEMPTS} rows): ${filePath}`);
         break;
       }
-      console.log(`  Detected ${headers.length} columns.`);
       continue;
     }
 

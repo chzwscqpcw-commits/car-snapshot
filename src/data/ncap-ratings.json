@@ -266,5 +266,98 @@
   { "make": "LOTUS", "model": "ELETRE", "overallStars": 5, "adultOccupant": 90, "childOccupant": 87, "pedestrian": 67, "safetyAssist": 83, "yearTested": 2023 },
   { "make": "MASERATI", "model": "GRECALE", "overallStars": 5, "adultOccupant": 88, "childOccupant": 85, "pedestrian": 70, "safetyAssist": 83, "yearTested": 2023 },
   { "make": "ABARTH", "model": "500", "overallStars": 3, "adultOccupant": 77, "childOccupant": 71, "pedestrian": 67, "safetyAssist": 50, "yearTested": 2021 },
-  { "make": "ABARTH", "model": "595", "overallStars": 3, "adultOccupant": 70, "childOccupant": 64, "pedestrian": 54, "safetyAssist": 40, "yearTested": 2017 }
+  { "make": "ABARTH", "model": "595", "overallStars": 3, "adultOccupant": 70, "childOccupant": 64, "pedestrian": 54, "safetyAssist": 40, "yearTested": 2017 },
+
+  { "make": "FORD", "model": "KA+", "overallStars": 3, "adultOccupant": 73, "childOccupant": 61, "pedestrian": 57, "safetyAssist": 29, "yearTested": 2017 },
+  { "make": "FORD", "model": "GALAXY", "overallStars": 5, "adultOccupant": 87, "childOccupant": 84, "pedestrian": 72, "safetyAssist": 71, "yearTested": 2019 },
+  { "make": "FORD", "model": "S-MAX", "overallStars": 5, "adultOccupant": 87, "childOccupant": 84, "pedestrian": 72, "safetyAssist": 71, "yearTested": 2019 },
+  { "make": "FORD", "model": "ECOSPORT", "overallStars": 4, "adultOccupant": 83, "childOccupant": 78, "pedestrian": 73, "safetyAssist": 58, "yearTested": 2017 },
+
+  { "make": "NISSAN", "model": "NOTE", "overallStars": 4, "adultOccupant": 86, "childOccupant": 82, "pedestrian": 58, "safetyAssist": 64, "yearTested": 2013 },
+  { "make": "NISSAN", "model": "PULSAR", "overallStars": 5, "adultOccupant": 84, "childOccupant": 81, "pedestrian": 80, "safetyAssist": 81, "yearTested": 2014 },
+
+  { "make": "VOLKSWAGEN", "model": "BEETLE", "overallStars": 5, "adultOccupant": 92, "childOccupant": 90, "pedestrian": 53, "safetyAssist": 86, "yearTested": 2011 },
+  { "make": "VOLKSWAGEN", "model": "TOURAN", "overallStars": 5, "adultOccupant": 93, "childOccupant": 89, "pedestrian": 71, "safetyAssist": 78, "yearTested": 2015 },
+  { "make": "VOLKSWAGEN", "model": "SHARAN", "overallStars": 5, "adultOccupant": 96, "childOccupant": 81, "pedestrian": 37, "safetyAssist": 69, "yearTested": 2010 },
+  { "make": "VOLKSWAGEN", "model": "SCIROCCO", "overallStars": 5, "adultOccupant": 94, "childOccupant": 85, "pedestrian": 67, "safetyAssist": 71, "yearTested": 2014 },
+  { "make": "VOLKSWAGEN", "model": "ID BUZZ", "overallStars": 5, "adultOccupant": 92, "childOccupant": 87, "pedestrian": 68, "safetyAssist": 84, "yearTested": 2024 },
+
+  { "make": "CITROEN", "model": "C4 PICASSO", "overallStars": 5, "adultOccupant": 89, "childOccupant": 87, "pedestrian": 74, "safetyAssist": 83, "yearTested": 2013 },
+  { "make": "CITROEN", "model": "C1", "overallStars": 3, "adultOccupant": 63, "childOccupant": 59, "pedestrian": 68, "safetyAssist": 55, "yearTested": 2014 },
+
+  { "make": "VAUXHALL", "model": "ZAFIRA TOURER", "overallStars": 5, "adultOccupant": 86, "childOccupant": 84, "pedestrian": 57, "safetyAssist": 69, "yearTested": 2011 },
+  { "make": "VAUXHALL", "model": "ADAM", "overallStars": 4, "adultOccupant": 80, "childOccupant": 69, "pedestrian": 53, "safetyAssist": 62, "yearTested": 2013 },
+  { "make": "VAUXHALL", "model": "MERIVA", "overallStars": 5, "adultOccupant": 86, "childOccupant": 80, "pedestrian": 37, "safetyAssist": 57, "yearTested": 2010 },
+  { "make": "VAUXHALL", "model": "AMPERA", "overallStars": 5, "adultOccupant": 87, "childOccupant": 81, "pedestrian": 40, "safetyAssist": 86, "yearTested": 2011 },
+
+  { "make": "RENAULT", "model": "LAGUNA", "overallStars": 5, "adultOccupant": 88, "childOccupant": 72, "pedestrian": 48, "safetyAssist": 56, "yearTested": 2007 },
+  { "make": "RENAULT", "model": "ESPACE", "overallStars": 5, "adultOccupant": 93, "childOccupant": 88, "pedestrian": 72, "safetyAssist": 64, "yearTested": 2015 },
+  { "make": "RENAULT", "model": "TWINGO", "overallStars": 4, "adultOccupant": 67, "childOccupant": 72, "pedestrian": 71, "safetyAssist": 60, "yearTested": 2014 },
+  { "make": "RENAULT", "model": "KOLEOS", "overallStars": 5, "adultOccupant": 89, "childOccupant": 85, "pedestrian": 66, "safetyAssist": 67, "yearTested": 2017 },
+
+  { "make": "HONDA", "model": "ACCORD", "overallStars": 5, "adultOccupant": 94, "childOccupant": 77, "pedestrian": 59, "safetyAssist": 71, "yearTested": 2009 },
+  { "make": "HONDA", "model": "INSIGHT", "overallStars": 5, "adultOccupant": 90, "childOccupant": 78, "pedestrian": 69, "safetyAssist": 71, "yearTested": 2009 },
+  { "make": "HONDA", "model": "CR-Z", "overallStars": 5, "adultOccupant": 86, "childOccupant": 77, "pedestrian": 54, "safetyAssist": 71, "yearTested": 2010 },
+
+  { "make": "HYUNDAI", "model": "I40", "overallStars": 5, "adultOccupant": 91, "childOccupant": 81, "pedestrian": 64, "safetyAssist": 71, "yearTested": 2011 },
+  { "make": "HYUNDAI", "model": "IX35", "overallStars": 5, "adultOccupant": 90, "childOccupant": 78, "pedestrian": 50, "safetyAssist": 71, "yearTested": 2010 },
+
+  { "make": "VOLVO", "model": "V40", "overallStars": 5, "adultOccupant": 98, "childOccupant": 77, "pedestrian": 88, "safetyAssist": 100, "yearTested": 2012 },
+
+  { "make": "BMW", "model": "I3", "overallStars": 4, "adultOccupant": 86, "childOccupant": 81, "pedestrian": 57, "safetyAssist": 55, "yearTested": 2013 },
+  { "make": "BMW", "model": "2 SERIES ACTIVE TOURER", "overallStars": 5, "adultOccupant": 86, "childOccupant": 87, "pedestrian": 76, "safetyAssist": 81, "yearTested": 2014 },
+
+  { "make": "KIA", "model": "VENGA", "overallStars": 5, "adultOccupant": 89, "childOccupant": 85, "pedestrian": 64, "safetyAssist": 68, "yearTested": 2010 },
+  { "make": "KIA", "model": "CARENS", "overallStars": 5, "adultOccupant": 86, "childOccupant": 83, "pedestrian": 71, "safetyAssist": 59, "yearTested": 2013 },
+  { "make": "KIA", "model": "OPTIMA", "overallStars": 5, "adultOccupant": 93, "childOccupant": 84, "pedestrian": 66, "safetyAssist": 69, "yearTested": 2015 },
+
+  { "make": "TOYOTA", "model": "AVENSIS", "overallStars": 5, "adultOccupant": 93, "childOccupant": 85, "pedestrian": 78, "safetyAssist": 81, "yearTested": 2015 },
+  { "make": "TOYOTA", "model": "VERSO", "overallStars": 5, "adultOccupant": 89, "childOccupant": 75, "pedestrian": 69, "safetyAssist": 86, "yearTested": 2009 },
+  { "make": "TOYOTA", "model": "AURIS", "overallStars": 5, "adultOccupant": 91, "childOccupant": 87, "pedestrian": 72, "safetyAssist": 86, "yearTested": 2013 },
+  { "make": "TOYOTA", "model": "LAND CRUISER", "overallStars": 5, "adultOccupant": 88, "childOccupant": 80, "pedestrian": 73, "safetyAssist": 70, "yearTested": 2017 },
+
+  { "make": "SKODA", "model": "RAPID", "overallStars": 5, "adultOccupant": 85, "childOccupant": 79, "pedestrian": 59, "safetyAssist": 67, "yearTested": 2012 },
+  { "make": "SKODA", "model": "YETI", "overallStars": 5, "adultOccupant": 92, "childOccupant": 77, "pedestrian": 39, "safetyAssist": 71, "yearTested": 2009 },
+  { "make": "SKODA", "model": "ROOMSTER", "overallStars": 4, "adultOccupant": 80, "childOccupant": 71, "pedestrian": 33, "safetyAssist": 57, "yearTested": 2006 },
+
+  { "make": "SEAT", "model": "ALHAMBRA", "overallStars": 5, "adultOccupant": 96, "childOccupant": 81, "pedestrian": 37, "safetyAssist": 69, "yearTested": 2010 },
+  { "make": "SEAT", "model": "TOLEDO", "overallStars": 5, "adultOccupant": 85, "childOccupant": 79, "pedestrian": 59, "safetyAssist": 67, "yearTested": 2013 },
+
+  { "make": "FIAT", "model": "500L", "overallStars": 5, "adultOccupant": 94, "childOccupant": 78, "pedestrian": 65, "safetyAssist": 71, "yearTested": 2012 },
+  { "make": "FIAT", "model": "DOBLO", "overallStars": 3, "adultOccupant": 67, "childOccupant": 73, "pedestrian": 44, "safetyAssist": 19, "yearTested": 2017 },
+  { "make": "FIAT", "model": "PUNTO", "overallStars": 0, "adultOccupant": 51, "childOccupant": 43, "pedestrian": 52, "safetyAssist": 20, "yearTested": 2017 },
+
+  { "make": "CHEVROLET", "model": "CRUZE", "overallStars": 5, "adultOccupant": 92, "childOccupant": 80, "pedestrian": 35, "safetyAssist": 43, "yearTested": 2009 },
+  { "make": "CHEVROLET", "model": "AVEO", "overallStars": 5, "adultOccupant": 95, "childOccupant": 87, "pedestrian": 51, "safetyAssist": 57, "yearTested": 2011 },
+  { "make": "CHEVROLET", "model": "ORLANDO", "overallStars": 5, "adultOccupant": 95, "childOccupant": 79, "pedestrian": 56, "safetyAssist": 57, "yearTested": 2011 },
+  { "make": "CHEVROLET", "model": "TRAX", "overallStars": 4, "adultOccupant": 82, "childOccupant": 78, "pedestrian": 67, "safetyAssist": 50, "yearTested": 2013 },
+
+  { "make": "LEXUS", "model": "CT", "overallStars": 5, "adultOccupant": 94, "childOccupant": 84, "pedestrian": 55, "safetyAssist": 86, "yearTested": 2011 },
+  { "make": "LEXUS", "model": "IS", "overallStars": 5, "adultOccupant": 92, "childOccupant": 83, "pedestrian": 80, "safetyAssist": 66, "yearTested": 2013 },
+
+  { "make": "PEUGEOT", "model": "107", "overallStars": 3, "adultOccupant": 63, "childOccupant": 59, "pedestrian": 68, "safetyAssist": 55, "yearTested": 2014 },
+  { "make": "PEUGEOT", "model": "207", "overallStars": 5, "adultOccupant": 85, "childOccupant": 73, "pedestrian": 26, "safetyAssist": 71, "yearTested": 2006 },
+  { "make": "PEUGEOT", "model": "307", "overallStars": 5, "adultOccupant": 84, "childOccupant": 84, "pedestrian": 34, "safetyAssist": 43, "yearTested": 2003 },
+  { "make": "PEUGEOT", "model": "PARTNER TEPEE", "overallStars": 3, "adultOccupant": 72, "childOccupant": 73, "pedestrian": 37, "safetyAssist": 43, "yearTested": 2013 },
+
+  { "make": "MITSUBISHI", "model": "MIRAGE", "overallStars": 3, "adultOccupant": 69, "childOccupant": 66, "pedestrian": 58, "safetyAssist": 59, "yearTested": 2013 },
+  { "make": "MITSUBISHI", "model": "L200", "overallStars": 4, "adultOccupant": 78, "childOccupant": 66, "pedestrian": 62, "safetyAssist": 57, "yearTested": 2015 },
+  { "make": "MITSUBISHI", "model": "SHOGUN", "overallStars": 5, "adultOccupant": 88, "childOccupant": 77, "pedestrian": 60, "safetyAssist": 57, "yearTested": 2007 },
+
+  { "make": "SUZUKI", "model": "IGNIS", "overallStars": 3, "adultOccupant": 78, "childOccupant": 71, "pedestrian": 63, "safetyAssist": 25, "yearTested": 2016 },
+  { "make": "SUZUKI", "model": "BALENO", "overallStars": 3, "adultOccupant": 82, "childOccupant": 69, "pedestrian": 69, "safetyAssist": 25, "yearTested": 2016 },
+  { "make": "SUZUKI", "model": "JIMNY", "overallStars": 3, "adultOccupant": 73, "childOccupant": 84, "pedestrian": 52, "safetyAssist": 50, "yearTested": 2018 },
+  { "make": "SUZUKI", "model": "SX4 S-CROSS", "overallStars": 5, "adultOccupant": 84, "childOccupant": 80, "pedestrian": 64, "safetyAssist": 77, "yearTested": 2022 },
+  { "make": "SUZUKI", "model": "ACROSS", "overallStars": 5, "adultOccupant": 93, "childOccupant": 87, "pedestrian": 85, "safetyAssist": 77, "yearTested": 2021 },
+
+  { "make": "CHRYSLER", "model": "300C", "overallStars": 3, "adultOccupant": 82, "childOccupant": 44, "pedestrian": 39, "safetyAssist": 29, "yearTested": 2012 },
+
+  { "make": "SAAB", "model": "9-3", "overallStars": 5, "adultOccupant": 95, "childOccupant": 75, "pedestrian": 50, "safetyAssist": 57, "yearTested": 2008 },
+  { "make": "SAAB", "model": "9-5", "overallStars": 5, "adultOccupant": 93, "childOccupant": 80, "pedestrian": 42, "safetyAssist": 86, "yearTested": 2010 },
+
+  { "make": "NIO", "model": "EL6", "overallStars": 5, "adultOccupant": 91, "childOccupant": 87, "pedestrian": 75, "safetyAssist": 82, "yearTested": 2023 },
+  { "make": "LYNK & CO", "model": "01", "overallStars": 5, "adultOccupant": 96, "childOccupant": 87, "pedestrian": 74, "safetyAssist": 76, "yearTested": 2021 },
+  { "make": "XPENG", "model": "G9", "overallStars": 5, "adultOccupant": 91, "childOccupant": 89, "pedestrian": 77, "safetyAssist": 80, "yearTested": 2023 },
+
+  { "make": "MAXUS", "model": "EUNIQ 6", "overallStars": 3, "adultOccupant": 73, "childOccupant": 68, "pedestrian": 49, "safetyAssist": 66, "yearTested": 2022 }
 ]

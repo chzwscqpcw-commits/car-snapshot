@@ -42,3 +42,4 @@ RecallsFile.csv
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+vca-data/
