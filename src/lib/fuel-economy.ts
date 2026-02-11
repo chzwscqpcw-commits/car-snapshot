@@ -21,6 +21,7 @@ export type FuelEconomyResult = {
   extraUrbanMpg?: number;
   estimatedAnnualCost: number;
   matchType: "exact" | "model-fuel" | "model-only";
+  matchedModel?: string;
   enginePowerPS?: number;
   enginePowerKW?: number;
   noiseLevel?: number;
@@ -157,6 +158,7 @@ export function lookupFuelEconomy(
         extraUrbanMpg: exact.extraUrbanMpg,
         estimatedAnnualCost: calculateAnnualCost(exact.combinedMpg, fuelType),
         matchType: "exact",
+        matchedModel: exact.model,
         ...extendedFields(exact),
       };
     }
@@ -173,6 +175,7 @@ export function lookupFuelEconomy(
         extraUrbanMpg: match.extraUrbanMpg,
         estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
         matchType: "model-fuel",
+        matchedModel: match.model,
         ...extendedFields(match),
       };
     }
@@ -187,6 +190,7 @@ export function lookupFuelEconomy(
       extraUrbanMpg: match.extraUrbanMpg,
       estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
       matchType: "model-only",
+      matchedModel: match.model,
       ...extendedFields(match),
     };
   }

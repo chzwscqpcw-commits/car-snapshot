@@ -582,12 +582,19 @@ export default function Home() {
     return expandBaseModelForLookup(data?.make ?? "", parsedModel);
   }, [data?.model, data?.make, parsedModel]);
 
-  // Body style — from parser or fallback lookup
+  // Parse the VCA matched model for additional variant info
+  const vcaParsedModel = useMemo((): ParsedModel | null => {
+    if (!fuelEconomy?.matchedModel) return null;
+    return parseModel(fuelEconomy.matchedModel, data?.make);
+  }, [fuelEconomy?.matchedModel, data?.make]);
+
+  // Body style — from DVLA parser, then VCA match, then static fallback
   const bodyStyle = useMemo((): string | null => {
     if (parsedModel?.bodyStyle) return parsedModel.bodyStyle;
+    if (vcaParsedModel?.bodyStyle) return vcaParsedModel.bodyStyle;
     if (!data?.make) return null;
     return lookupBodyType(data.make, parsedModel?.baseModel || data.model);
-  }, [data?.make, data?.model, parsedModel]);
+  }, [data?.make, data?.model, parsedModel, vcaParsedModel]);
 
   // Fetch recalls when vehicle data changes
   useEffect(() => {
@@ -1995,13 +2002,13 @@ END:VEVENT
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
         checklist: { owner: ownerItems, buyer: buyerItems, seller: sellerItems },
-        parsedModel: parsedModel ? {
+        parsedModel: (parsedModel || vcaParsedModel) ? {
           bodyStyle: bodyStyle,
-          trim: parsedModel.trim,
-          driveType: parsedModel.driveType,
-          fuelIndicator: parsedModel.fuelIndicator,
-          transmission: parsedModel.transmission,
-          engineDesc: parsedModel.engineDesc,
+          trim: parsedModel?.trim || vcaParsedModel?.trim || null,
+          driveType: parsedModel?.driveType || vcaParsedModel?.driveType || null,
+          fuelIndicator: parsedModel?.fuelIndicator || vcaParsedModel?.fuelIndicator || null,
+          transmission: parsedModel?.transmission || vcaParsedModel?.transmission || fuelEconomy?.transmission || null,
+          engineDesc: parsedModel?.engineDesc || vcaParsedModel?.engineDesc || null,
         } : null,
         ulezResult,
         vedResult,
@@ -2770,16 +2777,16 @@ END:VEVENT
                             <span className="text-lg font-medium text-slate-300 ml-2">{data.variant}</span>
                           )}
                         </p>
-                        {(bodyStyle || parsedModel?.trim || parsedModel?.driveType) && (
+                        {(bodyStyle || parsedModel?.trim || vcaParsedModel?.trim || parsedModel?.driveType || vcaParsedModel?.driveType) && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
                             {bodyStyle && (
                               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{bodyStyle}</span>
                             )}
-                            {parsedModel?.trim && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel.trim}</span>
+                            {(parsedModel?.trim || vcaParsedModel?.trim) && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.trim || vcaParsedModel?.trim}</span>
                             )}
-                            {parsedModel?.driveType && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel.driveType}</span>
+                            {(parsedModel?.driveType || vcaParsedModel?.driveType) && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.driveType || vcaParsedModel?.driveType}</span>
                             )}
                           </div>
                         )}
@@ -2897,12 +2904,12 @@ END:VEVENT
                 {/* Collapsible Technical Details */}
                 {(() => {
                   const techRows: { label: string; value: string; warn?: boolean }[] = [];
-                  if (parsedModel?.trim) techRows.push({ label: "Trim", value: parsedModel.trim });
-                  if (parsedModel?.driveType) techRows.push({ label: "Drive Type", value: parsedModel.driveType });
-                  if (parsedModel?.fuelIndicator) techRows.push({ label: "Engine Type", value: parsedModel.fuelIndicator });
+                  if (parsedModel?.trim || vcaParsedModel?.trim) techRows.push({ label: "Trim", value: (parsedModel?.trim || vcaParsedModel?.trim)! });
+                  if (parsedModel?.driveType || vcaParsedModel?.driveType) techRows.push({ label: "Drive Type", value: (parsedModel?.driveType || vcaParsedModel?.driveType)! });
+                  if (parsedModel?.fuelIndicator || vcaParsedModel?.fuelIndicator) techRows.push({ label: "Engine Type", value: (parsedModel?.fuelIndicator || vcaParsedModel?.fuelIndicator)! });
                   if (fuelEconomy?.enginePowerPS) techRows.push({ label: "Engine Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` / ${fuelEconomy.enginePowerKW} kW` : ""}` });
                   if (fuelEconomy?.transmission) techRows.push({ label: "Transmission", value: fuelEconomy.transmission });
-                  else if (parsedModel?.transmission) techRows.push({ label: "Transmission", value: parsedModel.transmission });
+                  else if (parsedModel?.transmission || vcaParsedModel?.transmission) techRows.push({ label: "Transmission", value: (parsedModel?.transmission || vcaParsedModel?.transmission)! });
                   if (data.co2Emissions != null) techRows.push({ label: "CO2 Emissions", value: `${data.co2Emissions} g/km` });
                   if (data.euroStatus) techRows.push({ label: "Euro Status", value: data.euroStatus });
                   if (data.realDrivingEmissions != null) techRows.push({ label: "Real Driving Emissions", value: `RDE2 Step ${data.realDrivingEmissions}` });
