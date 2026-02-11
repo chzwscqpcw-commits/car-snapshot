@@ -133,6 +133,8 @@ import { lookupNcap, type NcapRating } from "@/lib/ncap";
 import { type Recall } from "@/lib/recalls";
 import { type FuelEconomyResult } from "@/lib/fuel-economy";
 import { getMakeLogoPath } from "@/lib/make-logo";
+import { parseModel, expandBaseModelForLookup, type ParsedModel } from "@/lib/model-parser";
+import { lookupBodyType } from "@/lib/body-type";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -569,6 +571,24 @@ export default function Home() {
     setShowLogoReveal(false);
   }, [data]);
 
+  // Parsed model string
+  const parsedModel = useMemo((): ParsedModel | null => {
+    if (!data?.model) return null;
+    return parseModel(data.model, data.make);
+  }, [data?.model, data?.make]);
+
+  const lookupModel = useMemo((): string | null => {
+    if (!parsedModel) return data?.model ?? null;
+    return expandBaseModelForLookup(data?.make ?? "", parsedModel);
+  }, [data?.model, data?.make, parsedModel]);
+
+  // Body style — from parser or fallback lookup
+  const bodyStyle = useMemo((): string | null => {
+    if (parsedModel?.bodyStyle) return parsedModel.bodyStyle;
+    if (!data?.make) return null;
+    return lookupBodyType(data.make, parsedModel?.baseModel || data.model);
+  }, [data?.make, data?.model, parsedModel]);
+
   // Fetch recalls when vehicle data changes
   useEffect(() => {
     if (!data?.make) {
@@ -576,13 +596,14 @@ export default function Home() {
       return;
     }
     const params = new URLSearchParams({ make: data.make });
-    if (data.model) params.set("model", data.model);
+    if (lookupModel) params.set("model", lookupModel);
+    else if (data.model) params.set("model", data.model);
     if (data.yearOfManufacture) params.set("year", String(data.yearOfManufacture));
     fetch(`/api/recalls?${params}`)
       .then((res) => res.json())
       .then((results) => setRecalls(Array.isArray(results) ? results : []))
       .catch(() => setRecalls([]));
-  }, [data?.make, data?.model, data?.yearOfManufacture]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data?.make, data?.model, data?.yearOfManufacture, lookupModel]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch fuel economy when vehicle data changes
   useEffect(() => {
@@ -590,14 +611,16 @@ export default function Home() {
       setFuelEconomy(null);
       return;
     }
-    const params = new URLSearchParams({ make: data.make, model: data.model });
+    const model = lookupModel || data.model;
+    const params = new URLSearchParams({ make: data.make, model });
     if (data.engineCapacity) params.set("engine", String(data.engineCapacity));
     if (data.fuelType) params.set("fuel", data.fuelType);
+    if (parsedModel?.bodyStyle) params.set("bodyStyle", parsedModel.bodyStyle);
     fetch(`/api/fuel-economy?${params}`)
       .then((res) => res.json())
       .then((result) => setFuelEconomy(result))
       .catch(() => setFuelEconomy(null));
-  }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType, lookupModel, parsedModel?.bodyStyle]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch valuation server data (eBay + cache) when vehicle data changes
   useEffect(() => {
@@ -607,7 +630,7 @@ export default function Home() {
       setShowConditionForm(false);
       return;
     }
-    const newPrice = lookupNewPrice(newPricesData, data.make, data.model);
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
     if (!newPrice) {
       setValuationServerData(null);
       return;
@@ -908,14 +931,14 @@ export default function Home() {
   // NCAP rating
   const ncapRating = useMemo((): NcapRating | null => {
     if (!data) return null;
-    return lookupNcap(data.make, data.model);
-  }, [data]);
+    return lookupNcap(data.make, lookupModel ?? data.model);
+  }, [data, lookupModel]);
 
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
 
-    const newPrice = lookupNewPrice(newPricesData, data.make, data.model);
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
     if (!newPrice) return null;
 
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
@@ -959,7 +982,7 @@ export default function Home() {
     }
 
     return result;
-  }, [data, valuationServerData, valuationCondition]);
+  }, [data, valuationServerData, valuationCondition, lookupModel]);
 
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
@@ -1972,6 +1995,14 @@ END:VEVENT
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
         checklist: { owner: ownerItems, buyer: buyerItems, seller: sellerItems },
+        parsedModel: parsedModel ? {
+          bodyStyle: bodyStyle,
+          trim: parsedModel.trim,
+          driveType: parsedModel.driveType,
+          fuelIndicator: parsedModel.fuelIndicator,
+          transmission: parsedModel.transmission,
+          engineDesc: parsedModel.engineDesc,
+        } : null,
         ulezResult,
         vedResult,
         fuelEconomy,
@@ -2739,6 +2770,19 @@ END:VEVENT
                             <span className="text-lg font-medium text-slate-300 ml-2">{data.variant}</span>
                           )}
                         </p>
+                        {(bodyStyle || parsedModel?.trim || parsedModel?.driveType) && (
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {bodyStyle && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{bodyStyle}</span>
+                            )}
+                            {parsedModel?.trim && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel.trim}</span>
+                            )}
+                            {parsedModel?.driveType && (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel.driveType}</span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <p className="text-sm text-slate-400 mt-4">DVLA data • {new Date().toLocaleDateString()}</p>
@@ -2842,6 +2886,9 @@ END:VEVENT
                     value={`${data.engineCapacity ?? "—"} cc`}
                   />
                   <IconBadge icon={<div>🎨</div>} label="Colour" value={data.colour ?? "—"} />
+                  {bodyStyle && (
+                    <IconBadge icon={<Car className="w-5 h-5" />} label="Body" value={bodyStyle} />
+                  )}
                   {fuelEconomy?.enginePowerPS && (
                     <IconBadge icon={<Zap className="w-5 h-5" />} label="Power" value={`${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}`} />
                   )}
@@ -2850,8 +2897,12 @@ END:VEVENT
                 {/* Collapsible Technical Details */}
                 {(() => {
                   const techRows: { label: string; value: string; warn?: boolean }[] = [];
+                  if (parsedModel?.trim) techRows.push({ label: "Trim", value: parsedModel.trim });
+                  if (parsedModel?.driveType) techRows.push({ label: "Drive Type", value: parsedModel.driveType });
+                  if (parsedModel?.fuelIndicator) techRows.push({ label: "Engine Type", value: parsedModel.fuelIndicator });
                   if (fuelEconomy?.enginePowerPS) techRows.push({ label: "Engine Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` / ${fuelEconomy.enginePowerKW} kW` : ""}` });
                   if (fuelEconomy?.transmission) techRows.push({ label: "Transmission", value: fuelEconomy.transmission });
+                  else if (parsedModel?.transmission) techRows.push({ label: "Transmission", value: parsedModel.transmission });
                   if (data.co2Emissions != null) techRows.push({ label: "CO2 Emissions", value: `${data.co2Emissions} g/km` });
                   if (data.euroStatus) techRows.push({ label: "Euro Status", value: data.euroStatus });
                   if (data.realDrivingEmissions != null) techRows.push({ label: "Real Driving Emissions", value: `RDE2 Step ${data.realDrivingEmissions}` });

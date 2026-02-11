@@ -58,10 +58,20 @@ type CleanAirZone = {
   url: string;
 };
 
+export type ParsedModelInfo = {
+  bodyStyle: string | null;
+  trim: string | null;
+  driveType: string | null;
+  fuelIndicator: string | null;
+  transmission: string | null;
+  engineDesc: string | null;
+};
+
 export type ReportInput = {
   data: VehicleData;
   motInsights: MotInsights | null;
   checklist: { owner: string[]; buyer: string[]; seller: string[] };
+  parsedModel?: ParsedModelInfo | null;
   ulezResult?: {
     status: string;
     confidence: string;
@@ -1120,6 +1130,9 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
   add("Make", data.make);
   add("Model", data.model);
   add("Variant", data.variant);
+  if (input.parsedModel?.bodyStyle) add("Body Style", input.parsedModel.bodyStyle);
+  if (input.parsedModel?.trim) add("Trim Level", input.parsedModel.trim);
+  if (input.parsedModel?.driveType) add("Drive Type", input.parsedModel.driveType);
   add("Colour", data.colour);
   add("Year of Manufacture", data.yearOfManufacture);
   add("First Registered", data.monthOfFirstRegistration || data.dateOfFirstRegistration);

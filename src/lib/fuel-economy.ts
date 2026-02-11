@@ -68,6 +68,7 @@ function bestMatch(
   candidates: FuelEconomyEntry[],
   normModel: string,
   engineCapacity?: number,
+  bodyStyleHint?: string,
 ): FuelEconomyEntry | null {
   let best: FuelEconomyEntry | null = null;
   let bestScore = 0;
@@ -80,6 +81,13 @@ function bestMatch(
     // Bonus for engine capacity match
     if (engineCapacity && engineMatch(e.engineCapacity, engineCapacity)) {
       score += 10;
+    }
+
+    // Bonus for body style match (e.g. "AVANT" in "A6 AVANT")
+    if (bodyStyleHint && normalizeStr(bodyStyleHint).length > 0) {
+      if (eModel.includes(normalizeStr(bodyStyleHint))) {
+        score += 5;
+      }
     }
 
     if (score > bestScore) {
@@ -121,7 +129,8 @@ export function lookupFuelEconomy(
   make?: string,
   model?: string,
   engineCapacity?: number,
-  fuelType?: string
+  fuelType?: string,
+  bodyStyleHint?: string,
 ): FuelEconomyResult | null {
   if (!make || !model || data.length === 0) return null;
 
@@ -156,7 +165,7 @@ export function lookupFuelEconomy(
   // 2. Best model match + fuel (with engine preference)
   if (normFuel) {
     const sameFuel = sameMake.filter((e) => normalizeStr(e.fuelType) === normFuel);
-    const match = bestMatch(sameFuel, normModel, engineCapacity);
+    const match = bestMatch(sameFuel, normModel, engineCapacity, bodyStyleHint);
     if (match) {
       return {
         combinedMpg: match.combinedMpg,
@@ -170,7 +179,7 @@ export function lookupFuelEconomy(
   }
 
   // 3. Best model match only (any fuel)
-  const match = bestMatch(sameMake, normModel, engineCapacity);
+  const match = bestMatch(sameMake, normModel, engineCapacity, bodyStyleHint);
   if (match) {
     return {
       combinedMpg: match.combinedMpg,

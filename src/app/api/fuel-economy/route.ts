@@ -9,12 +9,13 @@ export async function GET(request: NextRequest) {
   const engineStr = searchParams.get("engine");
   const engine = engineStr ? parseInt(engineStr, 10) : undefined;
   const fuel = searchParams.get("fuel") ?? undefined;
+  const bodyStyle = searchParams.get("bodyStyle") ?? undefined;
 
   if (!make || !model) {
     return NextResponse.json({ error: "make and model parameters are required" }, { status: 400 });
   }
 
-  const result = lookupFuelEconomy(fuelData as FuelEconomyEntry[], make, model, engine, fuel);
+  const result = lookupFuelEconomy(fuelData as FuelEconomyEntry[], make, model, engine, fuel, bodyStyle);
 
   if (!result) {
     return NextResponse.json(null);
