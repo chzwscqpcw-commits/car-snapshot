@@ -192,23 +192,32 @@ function detectColumns(headers: string[]): {
   }
 
   // For MPG columns, we specifically want the Imperial values, not Metric (L/100km).
-  // We need to be careful: "imperialcombined" vs "metriccombined".
-  function findMpgIndex(context: string): number {
-    // First try: look for imperial + context
+  // New WLTP CSVs use "WLTP Imperial Combined/Low/Extra High" instead of older
+  // "Imperial - Combined/Urban/Extra Urban" naming.
+  function findMpgIndex(context: string, wltpFallback?: string): number {
+    // First try: WLTP imperial columns (newer VCA CSVs)
+    if (wltpFallback) {
+      const idx = lower.findIndex(
+        (h) => h.includes("wltpimperial") && h.includes(wltpFallback)
+      );
+      if (idx !== -1) return idx;
+    }
+
+    // Second try: look for imperial + context (older NEDC CSVs)
     let idx = lower.findIndex(
       (h) => h.includes("imperial") && h.includes(context)
     );
     if (idx !== -1) return idx;
 
-    // Second try: look for mpg + context
+    // Third try: look for mpg + context
     idx = lower.findIndex((h) => h.includes("mpg") && h.includes(context));
     if (idx !== -1) return idx;
 
-    // Third try: look for context + mpg
+    // Fourth try: look for context + mpg
     idx = lower.findIndex((h) => h.includes(context) && h.includes("mpg"));
     if (idx !== -1) return idx;
 
-    // Fourth try: just "combined", "urban", "extraurban" that does NOT contain "metric" or "l100"
+    // Fifth try: just "combined", "urban", "extraurban" that does NOT contain "metric" or "l100"
     idx = lower.findIndex(
       (h) =>
         h.includes(context) &&
@@ -227,13 +236,14 @@ function detectColumns(headers: string[]): {
     model: findIndex(["model"]),
     engineCapacity: findIndex(["enginecapacity", "capacity", "enginecc", "enginesize", "cc"]),
     fuelType: findIndex(["fueltype", "fuel"]),
-    combinedMpg: findMpgIndex("combined"),
-    urbanMpg: findMpgIndex("urban"),
-    extraUrbanMpg: findMpgIndex("extraurban"),
-    enginePowerPS: findIndex(["metrichorsepower", "enginepowerps", "powerps", "bhpps"]),
+    // WLTP: Combined→combined, Low→urban, Extra High→extra-urban
+    combinedMpg: findMpgIndex("combined", "combined"),
+    urbanMpg: findMpgIndex("urban", "low"),
+    extraUrbanMpg: findMpgIndex("extraurban", "extrahigh"),
+    enginePowerPS: findIndex(["enginepowerps", "metrichorsepower", "powerps", "bhpps"]),
     enginePowerKW: findIndex(["enginepowerkw", "powerkw"]),
     noiseLevel: findIndex(["noiselevel", "noisedb", "dba"]),
-    electricRange: findIndex(["electricrange", "erange", "electriconly"]),
+    electricRange: findIndex(["maximumrangemiles", "electricrange", "erange", "electriconly"]),
     transmission: findIndex(["transmission", "gearbox"]),
   };
 
