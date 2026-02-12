@@ -3879,6 +3879,19 @@ END:VEVENT
           <p className="text-slate-600">
             Free Plate Check may earn a commission from partner links. This doesn't affect our recommendations or the data we show.
           </p>
+          <div className="flex justify-center py-1">
+            <a
+              href="https://www.saashub.com/free-plate-check?utm_source=badge&utm_campaign=badge&utm_content=free-plate-check&badge_variant=color&badge_kind=approved"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
+                alt="Free Plate Check - Approved on SaaSHub"
+                className="max-w-[120px] opacity-70 hover:opacity-100 transition-opacity"
+              />
+            </a>
+          </div>
           <p>
             <button
               onClick={handleFooterShare}
