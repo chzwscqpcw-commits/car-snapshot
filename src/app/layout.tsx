@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Free Plate Check — Free UK Vehicle Check | MOT History, Tax Status & More",
@@ -83,12 +84,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LW3HZS1Z5H" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -113,7 +108,16 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Free Plate Check" />
         <link rel="alternate" type="application/rss+xml" title="Free Plate Check — Car Guides & MOT Tips" href="https://www.freeplatecheck.co.uk/feed.xml" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-LW3HZS1Z5H"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
