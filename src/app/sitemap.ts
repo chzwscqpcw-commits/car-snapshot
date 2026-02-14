@@ -4,7 +4,7 @@ import { getAllPosts, getAllTags } from "@/lib/blog";
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
     url: `https://www.freeplatecheck.co.uk/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.lastModified || post.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
