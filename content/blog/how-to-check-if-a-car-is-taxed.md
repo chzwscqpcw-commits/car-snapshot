@@ -18,7 +18,7 @@ Since 2014, there's no physical tax disc. Everything is handled electronically b
 
 ## How to check a car's tax status
 
-The simplest way is to enter the registration number into a vehicle checker like [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk). You'll see the tax status straight away, along with other useful details like MOT status and vehicle specs.
+The simplest way is to enter the registration number into a [free tax status checker](/tax-check). You'll see the tax status straight away, along with other useful details like MOT status and vehicle specs.
 
 You don't need to own the vehicle to check. Anyone can look up any UK-registered vehicle using just the number plate.
 

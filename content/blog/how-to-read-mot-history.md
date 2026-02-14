@@ -12,7 +12,7 @@ But the information is only useful if you know what you're looking at. Here's ho
 
 ## Where to find MOT history
 
-You can check any vehicle's MOT history by entering the registration number on [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk). You'll see every test result, including the date, mileage, result, and any advisories, failures, or defects recorded.
+You can check any vehicle's MOT history by entering the registration number on [Free Plate Check's MOT history tool](/mot-check). You'll see every test result, including the date, mileage, result, and any advisories, failures, or defects recorded.
 
 No signup is needed and it works for any UK-registered vehicle that's had an MOT.
 

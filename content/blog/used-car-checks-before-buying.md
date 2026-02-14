@@ -12,7 +12,7 @@ Here are ten checks you should do before handing over any money.
 
 ## 1. Run a vehicle history check
 
-Before you even go to see the car, look up the registration number. You can check the basics for free — MOT history, tax status, mileage records, and vehicle details — using tools like [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk).
+Before you even go to see the car, look up the registration number. You can check the basics for free — [MOT history](/mot-check), [tax status](/tax-check), [mileage records](/mileage-check), and vehicle details — using a [free car check](/car-check).
 
 This alone will tell you if the car's MOT is current, whether the mileage adds up across past tests, and whether the car matches what's being advertised. If the advert says "2019 Ford Focus, 40,000 miles" but the records show 70,000 miles at its last MOT, you've saved yourself a wasted trip.
 

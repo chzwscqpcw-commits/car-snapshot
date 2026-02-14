@@ -69,7 +69,7 @@ The charges apply per day, not per journey. So if you drive in and out of the zo
 
 The simplest way to check is to look up your vehicle by its registration number:
 
-- **Free Plate Check** — Enter your registration at [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk) to see your vehicle's emission standard, fuel type, and registration date. This gives you the information you need to determine compliance.
+- **Free Plate Check** — Enter your registration in our [ULEZ compliance checker](/ulez-check) to see your vehicle's emission standard, fuel type, and registration date. This gives you the information you need to determine compliance.
 - **TfL ULEZ checker** — Transport for London provides an official checker specifically for the London ULEZ at tfl.gov.uk/modes/driving/check-your-vehicle.
 - **Clean Air Zone checkers** — Individual cities with CAZs often have their own checking tools on their council websites.
 

@@ -66,7 +66,7 @@ For any other journey, the vehicle must be taxed and insured before its wheels t
 
 ### Buying a SORN'd vehicle
 
-If you buy a car that's currently SORN'd, you must tax and insure it before driving it on any public road. You cannot rely on the seller's SORN — it doesn't transfer. You can check whether a vehicle is currently SORN'd by looking up its registration number on [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk). The tax status will show as "SORN" if one is in place.
+If you buy a car that's currently SORN'd, you must tax and insure it before driving it on any public road. You cannot rely on the seller's SORN — it doesn't transfer. You can check whether a vehicle is currently SORN'd by looking up its registration number with our [free tax status checker](/tax-check). The tax status will show as "SORN" if one is in place.
 
 If the car is being delivered to you on a trailer or transporter, you don't need to tax it immediately. But the moment you want to drive it yourself, tax and insurance must be in place.
 

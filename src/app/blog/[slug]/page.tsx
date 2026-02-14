@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
-import { PARTNER_LINKS, getPartnerRel, hasMotKeywords } from "@/config/partners";
+import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -52,6 +52,31 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.freeplatecheck.co.uk",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: "https://www.freeplatecheck.co.uk/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `https://www.freeplatecheck.co.uk/blog/${slug}`,
+      },
+    ],
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -72,6 +97,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -126,22 +155,45 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* CTA */}
-        <div className="max-w-[700px] mx-auto mt-16 p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center">
-          <p className="text-lg font-semibold text-slate-100 mb-2">
-            Check any UK vehicle free
-          </p>
-          <p className="text-sm text-slate-400 mb-4">
-            Enter a registration to see MOT history, tax status, mileage and
-            more — no signup required.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Look up a vehicle
-          </a>
-        </div>
+        {/* Topic-aware CTA */}
+        {(() => {
+          const topicCta = getTopicCta(post.keywords);
+          if (topicCta) {
+            return (
+              <div className="max-w-[700px] mx-auto mt-16 p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center">
+                <p className="text-lg font-semibold text-slate-100 mb-2">
+                  {topicCta.label}
+                </p>
+                <p className="text-sm text-slate-400 mb-4">
+                  {topicCta.description}
+                </p>
+                <a
+                  href={topicCta.path}
+                  className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Check a vehicle now
+                </a>
+              </div>
+            );
+          }
+          return (
+            <div className="max-w-[700px] mx-auto mt-16 p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center">
+              <p className="text-lg font-semibold text-slate-100 mb-2">
+                Check any UK vehicle free
+              </p>
+              <p className="text-sm text-slate-400 mb-4">
+                Enter a registration to see MOT history, tax status, mileage and
+                more — no signup required.
+              </p>
+              <a
+                href="/"
+                className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+              >
+                Look up a vehicle
+              </a>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Footer */}

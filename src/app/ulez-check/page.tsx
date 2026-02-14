@@ -43,6 +43,25 @@ export const metadata: Metadata = {
 };
 
 export default function UlezCheckPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.freeplatecheck.co.uk",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "ULEZ Check",
+        item: "https://www.freeplatecheck.co.uk/ulez-check",
+      },
+    ],
+  };
+
   const webAppJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -116,6 +135,10 @@ export default function UlezCheckPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

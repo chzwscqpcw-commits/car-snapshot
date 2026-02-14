@@ -42,6 +42,25 @@ export const metadata: Metadata = {
 };
 
 export default function CarCheckPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.freeplatecheck.co.uk",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Free Car Check",
+        item: "https://www.freeplatecheck.co.uk/car-check",
+      },
+    ],
+  };
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -115,6 +134,10 @@ export default function CarCheckPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}

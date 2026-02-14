@@ -43,6 +43,25 @@ export const metadata: Metadata = {
 };
 
 export default function CarValuationPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.freeplatecheck.co.uk",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Car Valuation",
+        item: "https://www.freeplatecheck.co.uk/car-valuation",
+      },
+    ],
+  };
+
   const webAppJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -116,6 +135,10 @@ export default function CarValuationPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

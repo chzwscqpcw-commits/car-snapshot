@@ -58,7 +58,7 @@ A sensible approach is to prioritise anything related to braking, steering, tyre
 
 ## How to check your car's advisory history
 
-Every MOT test result since 2005 is recorded and publicly available. You can check a vehicle's full MOT history — including all advisories, failures and passes — by entering the registration number on [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk).
+Every MOT test result since 2005 is recorded and publicly available. You can check a vehicle's full MOT history — including all advisories, failures and passes — by entering the registration number on [Free Plate Check's MOT history tool](/mot-check).
 
 This is particularly useful when buying a used car. Recurring advisories that never get addressed can tell you a lot about how well (or badly) a previous owner maintained the vehicle. For example, if "brake discs worn" has appeared as an advisory for three consecutive years, it suggests the owner has been putting off necessary maintenance.
 

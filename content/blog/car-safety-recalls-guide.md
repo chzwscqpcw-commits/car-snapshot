@@ -53,7 +53,7 @@ Not all recalls are dramatic. Some involve a five-minute software update. Others
 
 There are several ways to find out whether your vehicle is subject to an outstanding recall:
 
-- **Free Plate Check** — Enter your registration at [freeplatecheck.co.uk](https://www.freeplatecheck.co.uk) to see key vehicle information. This can help you identify your exact model, engine variant, and build details, which you can then cross-reference against known recalls.
+- **Free Plate Check** — Enter your registration in our [free recall checker](/recall-check) to see whether any safety recalls have been issued for your vehicle, along with full vehicle details and MOT history.
 - **DVSA recall checker** — The DVSA maintains a public database of all vehicle recalls at gov.uk. You can search by make and model to see whether any recalls have been issued, along with details of the defect and remedy.
 - **Contact your manufacturer or dealer.** Your franchised dealer can check your specific vehicle identification number (VIN) against their recall database to tell you whether your individual car is affected and whether any outstanding recall work needs to be done. This is the most reliable method, as it checks your exact vehicle rather than just the model range.
 
