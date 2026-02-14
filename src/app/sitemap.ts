@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, getAllTags } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
@@ -7,6 +7,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  const tagPages = getAllTags().map((t) => ({
+    url: `https://www.freeplatecheck.co.uk/blog/tag/${t.tag}`,
+    lastModified: new Date("2026-02-14"),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
   }));
 
   return [
@@ -77,5 +84,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     ...blogPosts,
+    ...tagPages,
   ];
 }

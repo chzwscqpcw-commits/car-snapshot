@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -54,6 +54,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
+
+  const tags = getPostTags(post.keywords);
+  const relatedPosts = getRelatedPosts(slug, post.keywords);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -154,11 +157,24 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>&middot;</span>
             <span>{post.readingTime} min read</span>
           </div>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-3">
             <ShareButtons
               url={`https://www.freeplatecheck.co.uk/blog/${slug}`}
               title={post.title}
             />
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 ml-2">
+                {tags.map((tag) => (
+                  <a
+                    key={tag}
+                    href={`/blog/tag/${tag}`}
+                    className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                  >
+                    {getTagLabel(tag)}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -254,6 +270,32 @@ export default async function BlogPostPage({ params }: PageProps) {
           );
         })()}
       </div>
+
+      {/* Related posts */}
+      {relatedPosts.length > 0 && (
+        <div className="max-w-3xl mx-auto px-4 mt-16">
+          <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {relatedPosts.map((rp) => (
+              <a
+                key={rp.slug}
+                href={`/blog/${rp.slug}`}
+                className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
+              >
+                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors line-clamp-2">
+                  {rp.title}
+                </p>
+                <p className="text-xs text-slate-500 mt-2 line-clamp-2">
+                  {rp.description}
+                </p>
+                <p className="text-xs text-slate-600 mt-2">
+                  {rp.readingTime} min read
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">

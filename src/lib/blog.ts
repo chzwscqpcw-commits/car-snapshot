@@ -120,6 +120,85 @@ export function getPostMeta(slug: string): BlogPostMeta | null {
   };
 }
 
+/* ── Tag helpers ──────────────────────────────────────────── */
+
+const TAG_RULES: { tag: string; label: string; pattern: RegExp }[] = [
+  { tag: "mot", label: "MOT", pattern: /\bmot\b/i },
+  { tag: "tax", label: "Tax & VED", pattern: /\b(tax|ved|sorn)\b/i },
+  { tag: "mileage", label: "Mileage", pattern: /\b(mileage|clocked|odometer)\b/i },
+  { tag: "buying", label: "Buying a Car", pattern: /\b(buying|used car|checklist|first car)\b/i },
+  { tag: "ulez", label: "ULEZ", pattern: /\bulez|clean air/i },
+  { tag: "recalls", label: "Recalls", pattern: /\brecall/i },
+  { tag: "valuation", label: "Valuation", pattern: /\b(valuation|car value|car worth)\b/i },
+];
+
+export interface TagInfo {
+  tag: string;
+  label: string;
+  count: number;
+}
+
+export function getPostTags(keywords: string[]): string[] {
+  const joined = keywords.join(" ");
+  const tags = new Set<string>();
+  for (const rule of TAG_RULES) {
+    if (rule.pattern.test(joined)) tags.add(rule.tag);
+  }
+  return Array.from(tags);
+}
+
+export function getTagLabel(tag: string): string {
+  return TAG_RULES.find((r) => r.tag === tag)?.label ?? tag;
+}
+
+export function getAllTags(): TagInfo[] {
+  const posts = getAllPosts();
+  const counts = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of getPostTags(post.keywords)) {
+      counts.set(tag, (counts.get(tag) || 0) + 1);
+    }
+  }
+  return Array.from(counts.entries())
+    .map(([tag, count]) => ({ tag, label: getTagLabel(tag), count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export function getPostsByTag(tag: string): BlogPostMeta[] {
+  return getAllPosts().filter((post) => getPostTags(post.keywords).includes(tag));
+}
+
+/* ── Related posts ───────────────────────────────────────── */
+
+export function getRelatedPosts(
+  slug: string,
+  keywords: string[],
+  limit = 3
+): BlogPostMeta[] {
+  const all = getAllPosts().filter((p) => p.slug !== slug);
+  const currentTags = new Set(getPostTags(keywords));
+  const currentKw = new Set(keywords.map((k) => k.toLowerCase()));
+
+  const scored = all.map((post) => {
+    let score = 0;
+    // Tag overlap (broad match)
+    for (const t of getPostTags(post.keywords)) {
+      if (currentTags.has(t)) score += 2;
+    }
+    // Exact keyword overlap (precise match)
+    for (const kw of post.keywords) {
+      if (currentKw.has(kw.toLowerCase())) score += 3;
+    }
+    return { post, score };
+  });
+
+  return scored
+    .filter((s) => s.score > 0)
+    .sort((a, b) => b.score - a.score || (a.post.date > b.post.date ? -1 : 1))
+    .slice(0, limit)
+    .map((s) => s.post);
+}
+
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const filePath = path.join(BLOG_DIR, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
