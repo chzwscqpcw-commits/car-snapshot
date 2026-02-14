@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: post.title,
       description: post.description,
       type: "article",
+      publishedTime: post.date,
+      modifiedTime: post.lastModified || post.date,
       url: `https://www.freeplatecheck.co.uk/blog/${slug}`,
       siteName: "Free Plate Check",
       images: [

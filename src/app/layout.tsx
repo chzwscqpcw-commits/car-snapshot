@@ -105,6 +105,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#0f172a" />
         <meta name="apple-mobile-web-app-title" content="Free Plate Check" />
+        <link rel="alternate" type="application/rss+xml" title="Free Plate Check — Car Guides & MOT Tips" href="https://www.freeplatecheck.co.uk/feed.xml" />
       </head>
       <body>{children}</body>
     </html>
