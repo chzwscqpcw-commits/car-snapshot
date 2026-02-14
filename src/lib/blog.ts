@@ -82,7 +82,13 @@ function calculateReadingTime(text: string): number {
   return Math.max(1, Math.ceil(words / 230));
 }
 
-export function getAllPostSlugs(): string[] {
+function isPublished(date: string): boolean {
+  if (!date) return true;
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  return date <= today;
+}
+
+function allSlugs(): string[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
   return fs
     .readdirSync(BLOG_DIR)
@@ -90,11 +96,18 @@ export function getAllPostSlugs(): string[] {
     .map((file) => file.replace(/\.md$/, ""));
 }
 
+export function getAllPostSlugs(): string[] {
+  return allSlugs().filter((slug) => {
+    const meta = getPostMeta(slug);
+    return meta !== null && isPublished(meta.date);
+  });
+}
+
 export function getAllPosts(): BlogPostMeta[] {
-  const slugs = getAllPostSlugs();
+  const slugs = allSlugs();
   return slugs
     .map((slug) => getPostMeta(slug))
-    .filter((post): post is BlogPostMeta => post !== null)
+    .filter((post): post is BlogPostMeta => post !== null && isPublished(post.date))
     .sort((a, b) => (a.date > b.date ? -1 : 1));
 }
 
@@ -205,6 +218,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   const fileContents = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContents);
+
+  if (!isPublished(data.date)) return null;
 
   const result = await remark().use(html).process(content);
   const words = content.trim().split(/\s+/).length;
