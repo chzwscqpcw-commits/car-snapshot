@@ -156,6 +156,24 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* Post content */}
       <div className="max-w-3xl mx-auto px-4 py-12">
+        {post.toc.length >= 3 && (
+          <nav className="mb-10 p-5 bg-slate-900/60 border border-slate-800 rounded-lg" aria-label="Table of contents">
+            <p className="text-sm font-semibold text-slate-300 mb-3">In this guide</p>
+            <ul className="space-y-1.5">
+              {post.toc.map((entry) => (
+                <li key={entry.id} className={entry.level === 3 ? "ml-4" : ""}>
+                  <a
+                    href={`#${entry.id}`}
+                    className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    {entry.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
         <article
           className="blog-content"
           dangerouslySetInnerHTML={{ __html: post.content }}

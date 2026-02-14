@@ -58,7 +58,7 @@ export default function NotFound() {
             <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">
               Popular checks
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               <a
                 href="/mot-check"
                 className="p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors text-center"
@@ -83,6 +83,24 @@ export default function NotFound() {
               >
                 <p className="text-sm font-medium text-slate-200">Mileage Check</p>
               </a>
+              <a
+                href="/ulez-check"
+                className="p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors text-center"
+              >
+                <p className="text-sm font-medium text-slate-200">ULEZ Check</p>
+              </a>
+              <a
+                href="/recall-check"
+                className="p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors text-center"
+              >
+                <p className="text-sm font-medium text-slate-200">Recall Check</p>
+              </a>
+              <a
+                href="/car-valuation"
+                className="p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors text-center"
+              >
+                <p className="text-sm font-medium text-slate-200">Car Valuation</p>
+              </a>
             </div>
           </div>
 
@@ -102,6 +120,12 @@ export default function NotFound() {
                 className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
               >
                 <p className="text-sm font-medium text-slate-200">10 Essential Checks Before Buying a Used Car</p>
+              </a>
+              <a
+                href="/blog/how-to-check-if-a-car-is-taxed"
+                className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
+              >
+                <p className="text-sm font-medium text-slate-200">How to Check if a Car Is Taxed</p>
               </a>
               <a
                 href="/blog"

@@ -11,6 +11,12 @@ export interface HowToStep {
   text: string;
 }
 
+export interface TocEntry {
+  id: string;
+  text: string;
+  level: number;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -20,6 +26,7 @@ export interface BlogPost {
   keywords: string[];
   author: string;
   content: string;
+  toc: TocEntry[];
   readingTime: number;
   wordCount: number;
   howToSteps?: HowToStep[];
@@ -35,6 +42,39 @@ export interface BlogPostMeta {
   author: string;
   readingTime: number;
   wordCount: number;
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
+
+function addHeadingIds(htmlContent: string): { html: string; toc: TocEntry[] } {
+  const toc: TocEntry[] = [];
+  const usedIds = new Set<string>();
+
+  const updated = htmlContent.replace(
+    /<(h[23])>(.*?)<\/\1>/gi,
+    (_, tag: string, text: string) => {
+      const level = parseInt(tag[1], 10);
+      const plain = text.replace(/<[^>]+>/g, "");
+      let id = slugify(plain);
+      if (usedIds.has(id)) {
+        let i = 2;
+        while (usedIds.has(`${id}-${i}`)) i++;
+        id = `${id}-${i}`;
+      }
+      usedIds.add(id);
+      toc.push({ id, text: plain, level });
+      return `<${tag} id="${id}">${text}</${tag}>`;
+    }
+  );
+
+  return { html: updated, toc };
 }
 
 function calculateReadingTime(text: string): number {
@@ -89,6 +129,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   const result = await remark().use(html).process(content);
   const words = content.trim().split(/\s+/).length;
+  const { html: contentWithIds, toc } = addHeadingIds(result.toString());
 
   return {
     slug,
@@ -98,7 +139,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     lastModified: data.lastModified || undefined,
     keywords: data.keywords || [],
     author: data.author || "Free Plate Check",
-    content: result.toString(),
+    content: contentWithIds,
+    toc,
     readingTime: calculateReadingTime(content),
     wordCount: words,
     howToSteps: data.howToSteps || undefined,
