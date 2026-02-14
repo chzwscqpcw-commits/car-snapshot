@@ -2,6 +2,7 @@
 title: "How to Read a Car's MOT History (And What to Look For)"
 description: "Your guide to understanding MOT test results — what pass, fail, advisory, major and dangerous mean, and how to spot red flags in a vehicle's history."
 date: "2026-02-18"
+lastModified: "2026-02-14"
 keywords: ["MOT history check", "how to read MOT history", "MOT test results explained", "check MOT history free", "MOT history red flags"]
 author: "Free Plate Check"
 ---

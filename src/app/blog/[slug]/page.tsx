@@ -83,6 +83,9 @@ export default async function BlogPostPage({ params }: PageProps) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.lastModified || post.date,
+    wordCount: post.wordCount,
+    image: "https://www.freeplatecheck.co.uk/og-image.png",
     author: {
       "@type": "Organization",
       name: "Free Plate Check",
@@ -95,6 +98,21 @@ export default async function BlogPostPage({ params }: PageProps) {
     mainEntityOfPage: `https://www.freeplatecheck.co.uk/blog/${slug}`,
   };
 
+  const howToJsonLd = post.howToSteps
+    ? {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: post.title,
+        description: post.description,
+        step: post.howToSteps.map((s, i) => ({
+          "@type": "HowToStep",
+          position: i + 1,
+          name: s.name,
+          text: s.text,
+        })),
+      }
+    : null;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <script
@@ -105,6 +123,12 @@ export default async function BlogPostPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {howToJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        />
+      )}
 
       {/* Header */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">

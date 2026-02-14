@@ -2,6 +2,7 @@
 title: "What Does an MOT Advisory Mean?"
 description: "A plain-English guide to MOT advisories — what they are, when to worry, and what to do next."
 date: "2026-02-10"
+lastModified: "2026-02-14"
 keywords: ["MOT advisory meaning", "what is an MOT advisory", "advisory vs failure MOT", "MOT advisory examples", "do I need to fix MOT advisories"]
 author: "Free Plate Check"
 ---

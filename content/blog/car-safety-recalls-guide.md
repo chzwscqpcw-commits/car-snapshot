@@ -2,6 +2,7 @@
 title: "Car Safety Recalls: Everything You Need to Know"
 description: "A practical guide to vehicle safety recalls in the UK — how they work, how to check if your car is affected, and what to do about it."
 date: "2026-02-09"
+lastModified: "2026-02-14"
 keywords: ["car safety recall", "vehicle recall UK", "DVSA recall check", "is my car recalled", "car recall what to do", "safety recall free repair"]
 author: "Free Plate Check"
 readingTime: 5

@@ -6,15 +6,23 @@ import html from "remark-html";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+export interface HowToStep {
+  name: string;
+  text: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
   description: string;
   date: string;
+  lastModified?: string;
   keywords: string[];
   author: string;
   content: string;
   readingTime: number;
+  wordCount: number;
+  howToSteps?: HowToStep[];
 }
 
 export interface BlogPostMeta {
@@ -22,9 +30,11 @@ export interface BlogPostMeta {
   title: string;
   description: string;
   date: string;
+  lastModified?: string;
   keywords: string[];
   author: string;
   readingTime: number;
+  wordCount: number;
 }
 
 function calculateReadingTime(text: string): number {
@@ -55,14 +65,18 @@ export function getPostMeta(slug: string): BlogPostMeta | null {
   const fileContents = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContents);
 
+  const words = content.trim().split(/\s+/).length;
+
   return {
     slug,
     title: data.title || "",
     description: data.description || "",
     date: data.date || "",
+    lastModified: data.lastModified || undefined,
     keywords: data.keywords || [],
     author: data.author || "Free Plate Check",
     readingTime: calculateReadingTime(content),
+    wordCount: words,
   };
 }
 
@@ -74,15 +88,19 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const { data, content } = matter(fileContents);
 
   const result = await remark().use(html).process(content);
+  const words = content.trim().split(/\s+/).length;
 
   return {
     slug,
     title: data.title || "",
     description: data.description || "",
     date: data.date || "",
+    lastModified: data.lastModified || undefined,
     keywords: data.keywords || [],
     author: data.author || "Free Plate Check",
     content: result.toString(),
     readingTime: calculateReadingTime(content),
+    wordCount: words,
+    howToSteps: data.howToSteps || undefined,
   };
 }

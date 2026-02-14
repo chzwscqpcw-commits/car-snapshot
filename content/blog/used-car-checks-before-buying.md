@@ -2,8 +2,30 @@
 title: "10 Essential Checks Before Buying a Used Car"
 description: "A practical checklist of things to verify before handing over money for a used car — from MOT history to mileage red flags."
 date: "2026-02-15"
+lastModified: "2026-02-14"
 keywords: ["used car checks", "buying a used car UK", "what to check before buying a car", "used car checklist", "second hand car checks"]
 author: "Free Plate Check"
+howToSteps:
+  - name: "Run a vehicle history check"
+    text: "Look up the registration number to check MOT history, tax status, mileage records, and vehicle details using a free car check tool."
+  - name: "Check the MOT history in detail"
+    text: "Read through the full MOT history looking for recurring advisories, failures that took a long time to resolve, and mileage discrepancies."
+  - name: "Verify the V5C logbook"
+    text: "Check the V5C details match the car — colour, engine size, VIN — and that the seller's name is on it. Walk away if it's missing."
+  - name: "Check for outstanding finance"
+    text: "Run a finance check to ensure the previous owner has fully paid off any car finance. If not, the finance company can repossess the car from you."
+  - name: "Inspect the bodywork carefully"
+    text: "Look for mismatched paint, uneven panel gaps, rust, and overspray in daylight. Run your hand along panels to feel for filler."
+  - name: "Check the tyres"
+    text: "Check tread depth (minimum 1.6mm), even wear across all four tyres, matching brands, and tyre age. Budget for replacements if needed."
+  - name: "Start the car from cold"
+    text: "Arrive before the seller warms the engine. Watch for blue smoke, rough idle, warning lights, and unusual noises on cold start."
+  - name: "Test drive properly"
+    text: "Drive on various roads at different speeds. Check steering, braking, clutch, and gearbox. Turn off the radio and listen for problems."
+  - name: "Look under the bonnet"
+    text: "Check oil level and condition, coolant level, battery terminals, belts and hoses for cracks, and general engine bay cleanliness."
+  - name: "Get a pre-purchase inspection"
+    text: "For cars over a couple of thousand pounds, pay for an independent inspection from the AA, RAC, or an independent inspector."
 ---
 
 Buying a used car is one of the biggest purchases most people make outside of property. Get it right and you'll have reliable transport for years. Get it wrong and you could be looking at expensive repairs, hidden finance, or worse — a car that isn't legally yours.

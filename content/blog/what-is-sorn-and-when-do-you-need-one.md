@@ -2,6 +2,7 @@
 title: "What Is a SORN and When Do You Need One?"
 description: "Everything you need to know about SORN declarations in the UK — when to make one, what the rules are, and what happens if you don't."
 date: "2026-02-20"
+lastModified: "2026-02-14"
 keywords: ["what is a SORN", "SORN meaning", "how to SORN a car", "SORN rules UK", "statutory off road notification"]
 author: "Free Plate Check"
 ---

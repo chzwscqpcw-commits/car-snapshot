@@ -2,6 +2,7 @@
 title: "Is My Car ULEZ Compliant? A Complete Guide"
 description: "Find out whether your car meets ULEZ emission standards, what happens if it doesn't, and what your options are — covering London's ULEZ and other UK Clean Air Zones."
 date: "2026-02-09"
+lastModified: "2026-02-14"
 keywords: ["ULEZ compliant", "is my car ULEZ compliant", "ULEZ checker", "ULEZ emission standards", "Clean Air Zone UK", "ULEZ exemptions", "ULEZ charge"]
 author: "Free Plate Check"
 readingTime: 5

@@ -2,6 +2,7 @@
 title: "How to Check if a Car Is Taxed"
 description: "A quick guide to checking a vehicle's tax status in the UK — what to look for, what the statuses mean, and why it matters."
 date: "2026-02-12"
+lastModified: "2026-02-14"
 keywords: ["check car tax", "is my car taxed", "vehicle tax check", "car tax status UK", "DVLA tax check"]
 author: "Free Plate Check"
 ---
