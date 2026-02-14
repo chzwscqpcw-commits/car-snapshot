@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
+import ShareButtons from "@/components/ShareButtons";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -153,6 +154,12 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>&middot;</span>
             <span>{post.readingTime} min read</span>
           </div>
+          <div className="mt-3">
+            <ShareButtons
+              url={`https://www.freeplatecheck.co.uk/blog/${slug}`}
+              title={post.title}
+            />
+          </div>
         </div>
       </div>
 
@@ -180,6 +187,14 @@ export default async function BlogPostPage({ params }: PageProps) {
           className="blog-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {/* Share buttons (bottom) */}
+        <div className="max-w-[700px] mx-auto mt-10 pt-6 border-t border-slate-800">
+          <ShareButtons
+            url={`https://www.freeplatecheck.co.uk/blog/${slug}`}
+            title={post.title}
+          />
+        </div>
 
         {/* MOT Booking CTA — only for MOT-related posts */}
         {hasMotKeywords(post.keywords) && (
