@@ -42,16 +42,26 @@ export const metadata: Metadata = {
 };
 
 export default function RecallCheckPage() {
+  const webAppJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Free Plate Check — Safety Recall Check",
+    url: "https://www.freeplatecheck.co.uk/recall-check",
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "GBP",
+    },
+    description:
+      "Check for safety recalls on any UK vehicle. See if the manufacturer has issued a recall and what action to take. Free, instant results.",
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Free Car Recall Check — Safety Recalls UK | Free Plate Check",
-    description:
-      "Check if your car has any outstanding safety recalls for free. See recall details, defects and remedies. Enter a registration number to check now.",
-    url: "https://www.freeplatecheck.co.uk/recall-check",
-    mainEntity: {
-      "@type": "FAQPage",
-      mainEntity: [
+    "@type": "FAQPage",
+    mainEntity: [
         {
           "@type": "Question",
           name: "Is the recall check free?",
@@ -84,8 +94,15 @@ export default function RecallCheckPage() {
             text: "We match your vehicle's make, model and year against the DVSA recall database. This is model-level matching rather than VIN-specific, so we recommend verifying with the manufacturer for complete records specific to your individual vehicle.",
           },
         },
+        {
+          "@type": "Question",
+          name: "Does a recall affect my car's value?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "An outstanding recall can affect resale value and buyer confidence. However, once the recall repair has been completed (for free at a franchised dealer), it should not negatively affect the vehicle's value. Having documentation of completed recall work is a positive when selling.",
+          },
+        },
       ],
-    },
   };
 
   return (
@@ -93,6 +110,10 @@ export default function RecallCheckPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
@@ -162,7 +183,7 @@ export default function RecallCheckPage() {
               It&apos;s important to understand that our check uses model-level matching rather than VIN-specific matching. This means we can tell you whether recalls have been issued for your type of vehicle, but we cannot confirm whether the specific repair has already been carried out on your individual car.
             </p>
             <p className="leading-relaxed">
-              For the most complete and vehicle-specific recall information, we always recommend checking directly with the manufacturer or an authorised dealer. They can run a VIN check against their internal records and confirm whether any outstanding work is needed on your particular vehicle.
+              For the most complete and vehicle-specific recall information, we always recommend checking directly with the manufacturer or an authorised dealer. They can run a VIN check against their internal records and confirm whether any outstanding work is needed on your particular vehicle. Your <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> may also show recall-related advisories that are worth reviewing.
             </p>
           </section>
 
@@ -185,7 +206,14 @@ export default function RecallCheckPage() {
                 <h3 className="font-semibold text-slate-100">How accurate is the recall check?</h3>
                 <p className="text-sm mt-1">We match your vehicle&apos;s make, model and year against the DVSA recall database. This is model-level matching rather than VIN-specific, so we recommend verifying with the manufacturer for complete records specific to your individual vehicle.</p>
               </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Does a recall affect my car&apos;s value?</h3>
+                <p className="text-sm mt-1">An outstanding recall can affect resale value and buyer confidence. However, once the recall repair has been completed (for free at a franchised dealer), it should not negatively affect the vehicle&apos;s value. Having documentation of completed recall work is a positive when selling.</p>
+              </div>
             </div>
+            <p className="text-sm text-slate-400 mt-4">
+              For more details on how recalls work, read our <a href="/blog/car-safety-recalls-guide" className="text-blue-400 hover:text-blue-300">complete guide to vehicle safety recalls</a>.
+            </p>
           </section>
         </div>
       </div>

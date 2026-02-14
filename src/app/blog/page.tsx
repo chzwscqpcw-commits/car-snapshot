@@ -4,14 +4,14 @@ import { getAllPosts } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Car Guides & MOT Tips | Free Plate Check",
   description:
-    "Practical guides about MOT checks, car tax, vehicle history, and buying used cars in the UK.",
+    "Free car buying guides, MOT tips, ULEZ advice and vehicle ownership help from Free Plate Check.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/blog",
   },
   openGraph: {
     title: "Car Guides & MOT Tips | Free Plate Check",
     description:
-      "Practical guides about MOT checks, car tax, vehicle history, and buying used cars in the UK.",
+      "Free car buying guides, MOT tips, ULEZ advice and vehicle ownership help from Free Plate Check.",
     url: "https://www.freeplatecheck.co.uk/blog",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Car Guides & MOT Tips | Free Plate Check",
     description:
-      "Practical guides about MOT checks, car tax, vehicle history, and buying used cars in the UK.",
+      "Free car buying guides, MOT tips, ULEZ advice and vehicle ownership help from Free Plate Check.",
     images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
@@ -42,7 +42,7 @@ export default function BlogPage() {
     "@type": "Blog",
     name: "Free Plate Check Guides",
     description:
-      "Practical guides about MOT checks, car tax, vehicle history, and buying used cars in the UK.",
+      "Free car buying guides, MOT tips, ULEZ advice and vehicle ownership help from Free Plate Check.",
     url: "https://www.freeplatecheck.co.uk/blog",
   };
 

@@ -43,21 +43,26 @@ export const metadata: Metadata = {
 };
 
 export default function CarValuationPage() {
+  const webAppJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Free Plate Check — Car Valuation",
+    url: "https://www.freeplatecheck.co.uk/car-valuation",
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "GBP",
+    },
+    description:
+      "Get a free instant car valuation based on live market data. No signup, no email required. Just enter your reg.",
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Free Car Valuation — How Much Is My Car Worth?",
-    description:
-      "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and market data.",
-    url: "https://www.freeplatecheck.co.uk/car-valuation",
-    publisher: {
-      "@type": "Organization",
-      name: "Free Plate Check",
-      url: "https://www.freeplatecheck.co.uk",
-    },
-    mainEntity: {
-      "@type": "FAQPage",
-      mainEntity: [
+    "@type": "FAQPage",
+    mainEntity: [
         {
           "@type": "Question",
           name: "How much is my car worth?",
@@ -90,8 +95,23 @@ export default function CarValuationPage() {
             text: "Key factors include: age and mileage, make and model (some brands hold value better), service history, bodywork and interior condition, number of previous owners, accident history, MOT advisories and failures, and current market demand.",
           },
         },
+        {
+          "@type": "Question",
+          name: "Why do you show a range instead of one number?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No two used cars are identical. A valuation range accounts for differences in condition, specification, service history, and local demand that we cannot determine from registration data alone. Use our condition questionnaire to narrow the range based on your vehicle's specific state.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Does mileage affect my car's value?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.",
+          },
+        },
       ],
-    },
   };
 
   return (
@@ -99,6 +119,10 @@ export default function CarValuationPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
@@ -155,11 +179,11 @@ export default function CarValuationPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-4">
               <li><strong className="text-slate-100">Age and depreciation</strong> — New cars lose roughly 15-35% of their value in the first year alone. Depreciation slows with age but never fully stops.</li>
-              <li><strong className="text-slate-100">Mileage</strong> — Lower-than-average mileage adds value; higher-than-average reduces it. The UK average is around 8,000 miles per year.</li>
+              <li><strong className="text-slate-100">Mileage</strong> — Lower-than-average mileage adds value; higher-than-average reduces it. The UK average is around 8,000 miles per year. Use our <a href="/mileage-check" className="text-blue-400 hover:text-blue-300">mileage check</a> to verify consistent mileage progression.</li>
               <li><strong className="text-slate-100">Make and model</strong> — Some brands hold their value better than others. Porsche, Toyota, and Tesla tend to retain value well, while some volume brands depreciate faster.</li>
               <li><strong className="text-slate-100">Service history</strong> — A full service history (especially from main dealers) adds significant value. Missing records raise questions for buyers.</li>
               <li><strong className="text-slate-100">Condition</strong> — Bodywork, interior wear, tyre condition, and general upkeep all affect what a buyer will pay.</li>
-              <li><strong className="text-slate-100">MOT history</strong> — Frequent failures and long advisory lists can reduce value. A clean MOT history is a selling point.</li>
+              <li><strong className="text-slate-100">MOT history</strong> — Frequent failures and long advisory lists can reduce value. A clean <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> is a selling point.</li>
               <li><strong className="text-slate-100">Previous owners</strong> — Fewer owners generally means better value retention. One-owner cars command a premium.</li>
             </ul>
             <p className="leading-relaxed">
@@ -198,6 +222,14 @@ export default function CarValuationPage() {
               <div>
                 <h3 className="font-semibold text-slate-100">What affects my car&apos;s value?</h3>
                 <p className="text-sm mt-1">Key factors include: age and mileage, make and model (some brands hold value better), service history, bodywork and interior condition, number of previous owners, accident history, MOT advisories and failures, and current market demand.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Why do you show a range instead of one number?</h3>
+                <p className="text-sm mt-1">No two used cars are identical. A valuation range accounts for differences in condition, specification, service history, and local demand that we cannot determine from registration data alone. Use our condition questionnaire to narrow the range based on your vehicle&apos;s specific state.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Does mileage affect my car&apos;s value?</h3>
+                <p className="text-sm mt-1">Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.</p>
               </div>
             </div>
           </section>
