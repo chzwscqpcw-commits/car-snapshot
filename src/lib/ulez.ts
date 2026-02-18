@@ -8,6 +8,7 @@ export type CleanAirZone = {
   name: string;
   dailyCharge: string;
   url: string;
+  carsCharged: boolean;
 };
 
 export type UlezResult = {
@@ -19,12 +20,17 @@ export type UlezResult = {
 };
 
 const CLEAN_AIR_ZONES: CleanAirZone[] = [
-  { name: "London ULEZ", dailyCharge: "£12.50", url: "https://tfl.gov.uk/modes/driving/ultra-low-emission-zone" },
-  { name: "Birmingham CAZ", dailyCharge: "£8", url: "https://www.brumbreathes.co.uk" },
-  { name: "Bath CAZ", dailyCharge: "£9", url: "https://www.bathnes.gov.uk/bath-clean-air-zone" },
-  { name: "Bradford CAZ", dailyCharge: "£12.50", url: "https://www.bradford.gov.uk/clean-air-zone" },
-  { name: "Bristol CAZ", dailyCharge: "£9", url: "https://www.bristol.gov.uk/clean-air-zone" },
-  { name: "Oxford ZEZ", dailyCharge: "£2–£10", url: "https://www.oxford.gov.uk/zez" },
+  // Class C/D zones — charge non-compliant cars
+  { name: "London ULEZ", dailyCharge: "£12.50", url: "https://tfl.gov.uk/modes/driving/ultra-low-emission-zone", carsCharged: true },
+  { name: "Birmingham CAZ", dailyCharge: "£8", url: "https://www.brumbreathes.co.uk", carsCharged: true },
+  { name: "Bath CAZ", dailyCharge: "£9", url: "https://www.bathnes.gov.uk/bath-clean-air-zone", carsCharged: true },
+  { name: "Bradford CAZ", dailyCharge: "£12.50", url: "https://www.bradford.gov.uk/clean-air-zone", carsCharged: true },
+  { name: "Bristol CAZ", dailyCharge: "£9", url: "https://www.bristol.gov.uk/clean-air-zone", carsCharged: true },
+  { name: "Oxford ZEZ", dailyCharge: "£2–£10", url: "https://www.oxford.gov.uk/zez", carsCharged: true },
+  // Class B/C zones — commercial vehicles only (cars exempt)
+  { name: "Portsmouth CAZ", dailyCharge: "£10–£50", url: "https://www.portsmouth.gov.uk/cleanairzone", carsCharged: false },
+  { name: "Sheffield CAZ", dailyCharge: "£10–£50", url: "https://www.sheffield.gov.uk/cleanairzone", carsCharged: false },
+  { name: "Tyneside CAZ", dailyCharge: "£12.50–£50", url: "https://www.breathe-cleanair.com", carsCharged: false },
 ];
 
 function extractEuroNumber(euroStatus?: string): number | null {

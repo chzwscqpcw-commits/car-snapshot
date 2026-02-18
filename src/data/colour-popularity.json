@@ -1,0 +1,17 @@
+{
+  "WHITE": { "rank": 1, "share": 27.6, "label": "the most popular colour in the UK" },
+  "BLACK": { "rank": 2, "share": 20.2, "label": "the 2nd most popular colour in the UK" },
+  "GREY": { "rank": 3, "share": 19.2, "label": "the 3rd most popular colour in the UK" },
+  "BLUE": { "rank": 4, "share": 14.3, "label": "the 4th most popular colour in the UK" },
+  "RED": { "rank": 5, "share": 7.6, "label": "the 5th most popular colour in the UK" },
+  "SILVER": { "rank": 6, "share": 3.8, "label": "the 6th most popular colour" },
+  "GREEN": { "rank": 7, "share": 2.3, "label": "a less common colour choice" },
+  "ORANGE": { "rank": 8, "share": 1.5, "label": "an uncommon colour choice" },
+  "BRONZE": { "rank": 9, "share": 0.9, "label": "a rare colour choice" },
+  "YELLOW": { "rank": 10, "share": 0.6, "label": "a rare colour choice" },
+  "BEIGE": { "rank": 11, "share": 0.5, "label": "a rare colour choice" },
+  "BROWN": { "rank": 12, "share": 0.4, "label": "a rare colour choice" },
+  "PURPLE": { "rank": 13, "share": 0.3, "label": "a very rare colour choice" },
+  "MAROON": { "rank": 14, "share": 0.2, "label": "a very rare colour choice" },
+  "GOLD": { "rank": 15, "share": 0.1, "label": "a very rare colour choice" }
+}

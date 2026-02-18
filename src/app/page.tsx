@@ -136,6 +136,10 @@ import { getMakeLogoPath } from "@/lib/make-logo";
 import { parseModel, expandBaseModelForLookup, type ParsedModel } from "@/lib/model-parser";
 import { lookupBodyType } from "@/lib/body-type";
 import { lookupRarity } from "@/lib/how-many-left";
+import { lookupColourPopularity } from "@/lib/colour-popularity";
+import { calculateHealthScore, type HealthScoreResult } from "@/lib/health-score";
+import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
+import { lookupMotPassRate } from "@/lib/mot-pass-rate";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -948,6 +952,50 @@ export default function Home() {
     return lookupRarity(data.make, lookupModel ?? data.model);
   }, [data?.make, data?.model, lookupModel]);
 
+  // Colour popularity
+  const colourPopularity = useMemo(() => {
+    if (!data?.colour) return null;
+    return lookupColourPopularity(data.colour);
+  }, [data?.colour]);
+
+  // Vehicle Health Score
+  const healthScore = useMemo((): HealthScoreResult | null => {
+    if (!data) return null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const hasMileageDiscrepancy = motInsightsData?.mileageWarnings?.some(w => w.includes("ALERT") || w.includes("decreased")) ?? false;
+    return calculateHealthScore({
+      passRate: motInsightsData?.passRate,
+      totalTests: motInsightsData?.totalTests,
+      latestAdvisoryCount: latestAdvisoryCount,
+      hasMileageDiscrepancy,
+      avgMilesPerYear: motInsightsData?.avgMilesPerYear,
+      vehicleAge: data.yearOfManufacture ? new Date().getFullYear() - data.yearOfManufacture : undefined,
+      ncapStars: ncapRating?.overallStars,
+      recallCount: recalls.length,
+      taxCurrent: data.taxStatus === "Taxed",
+      motCurrent: data.motStatus === "Valid",
+      ulezCompliant: ulezResult?.status === "compliant" || ulezResult?.status === "exempt",
+    });
+  }, [data, latestAdvisoryCount, ncapRating, recalls, ulezResult]);
+
+  // Environmental Eco Score
+  const ecoScore = useMemo((): EcoScoreResult | null => {
+    if (!data) return null;
+    return calculateEcoScore({
+      co2Emissions: data.co2Emissions,
+      euroStatus: data.euroStatus,
+      fuelType: data.fuelType,
+      combinedMpg: fuelEconomy?.combinedMpg,
+      ulezCompliant: ulezResult?.status === "compliant" || ulezResult?.status === "exempt",
+    });
+  }, [data, fuelEconomy, ulezResult]);
+
+  // MOT national pass rate
+  const motPassRate = useMemo(() => {
+    if (!data?.make) return null;
+    return lookupMotPassRate(data.make, lookupModel ?? data.model);
+  }, [data?.make, data?.model, lookupModel]);
+
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
@@ -1316,8 +1364,40 @@ export default function Home() {
       }
     }
 
+    // MOT national pass rate insight
+    if (motPassRate && data.make) {
+      const modelName = lookupModel ?? data.model ?? "this model";
+      const diff = motPassRate.passRate - motPassRate.nationalAverage;
+      const comparison = diff >= 0
+        ? `${diff.toFixed(1)}% above`
+        : `${Math.abs(diff).toFixed(1)}% below`;
+      result.push({
+        tone: motPassRate.aboveAverage ? "good" : "warn",
+        title: `${data.make} ${modelName}: ${motPassRate.passRate}% national MOT pass rate`,
+        detail: `${comparison} the ${motPassRate.nationalAverage}% UK average (based on ${motPassRate.testCount.toLocaleString()} tests).`,
+      });
+    }
+
+    // Eco score insight
+    if (ecoScore) {
+      result.push({
+        tone: ecoScore.grade <= "B" ? "good" : ecoScore.grade <= "D" ? "info" : "warn",
+        title: `Eco Score: Grade ${ecoScore.grade} — ${ecoScore.label}`,
+        detail: `Environmental impact score ${ecoScore.score}/100 based on emissions, fuel type, and economy.`,
+      });
+    }
+
+    // Colour popularity insight
+    if (colourPopularity && data.colour) {
+      result.push({
+        tone: colourPopularity.isTopFive ? "good" : "info",
+        title: `${data.colour} — ${colourPopularity.label}`,
+        detail: `${data.colour} accounts for ${colourPopularity.share}% of new UK registrations (ranked #${colourPopularity.rank}).`,
+      });
+    }
+
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1838,11 +1918,51 @@ END:VEVENT
       lines.push(`Reason:              ${ulezResult.reason}`);
       lines.push(`Confidence:          ${ulezResult.confidence}`);
       if (ulezResult.status === "non-compliant" && ulezResult.cleanAirZones && ulezResult.cleanAirZones.length > 0) {
-        lines.push("", "Clean Air Zone Daily Charges:");
-        for (const zone of ulezResult.cleanAirZones) {
-          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+        const carZones = ulezResult.cleanAirZones.filter(z => z.carsCharged);
+        const commercialOnly = ulezResult.cleanAirZones.filter(z => !z.carsCharged);
+        if (carZones.length > 0) {
+          lines.push("", "Zones Charging Cars:");
+          for (const zone of carZones) {
+            lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+          }
+        }
+        if (commercialOnly.length > 0) {
+          lines.push("", "Commercial Vehicles Only (Cars Exempt):");
+          for (const zone of commercialOnly) {
+            lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+          }
         }
       }
+      lines.push("");
+    }
+
+    // ── HEALTH SCORE ──
+    if (healthScore) {
+      lines.push(sep, "VEHICLE HEALTH SCORE", sep, "");
+      lines.push(`Score:               ${healthScore.score}/100 (Grade ${healthScore.grade} — ${healthScore.label})`);
+      for (const item of healthScore.breakdown) {
+        lines.push(`  ${item.category.padEnd(20)} ${item.score}/${item.maxScore}  ${item.detail}`);
+      }
+      lines.push("");
+    }
+
+    // ── ECO SCORE ──
+    if (ecoScore) {
+      lines.push(sep, "ENVIRONMENTAL ECO SCORE", sep, "");
+      lines.push(`Grade:               ${ecoScore.grade} — ${ecoScore.label} (${ecoScore.score}/100)`);
+      for (const factor of ecoScore.factors) {
+        lines.push(`  ${factor.name.padEnd(20)} ${factor.score}/100  ${factor.detail}`);
+      }
+      lines.push("");
+    }
+
+    // ── MOT PASS RATE ──
+    if (motPassRate && data.make) {
+      const modelName = lookupModel ?? data.model ?? "this model";
+      lines.push(sep, "NATIONAL MOT PASS RATE", sep, "");
+      lines.push(`${data.make} ${modelName}: ${motPassRate.passRate}% pass rate`);
+      lines.push(`UK Average:          ${motPassRate.nationalAverage}%`);
+      lines.push(`Based on:            ${motPassRate.testCount.toLocaleString()} tests`);
       lines.push("");
     }
 
@@ -1898,6 +2018,14 @@ END:VEVENT
         const countSuffix = valuationResult.ebayTotalListings ? ` (${valuationResult.ebayTotalListings} listings)` : "";
         lines.push(`Market Supply:       ${supplyLabel}${countSuffix}`);
       }
+      lines.push("");
+    }
+
+    // ── COLOUR POPULARITY ──
+    if (colourPopularity && data.colour) {
+      lines.push(sep, "COLOUR POPULARITY", sep, "");
+      lines.push(`Colour:              ${data.colour} — ${colourPopularity.label}`);
+      lines.push(`UK Share:            ${colourPopularity.share}% (ranked #${colourPopularity.rank})`);
       lines.push("");
     }
 
@@ -2074,6 +2202,10 @@ END:VEVENT
           disclaimer: valuationResult.disclaimer,
         } : null,
         rarityResult: rarityResult ?? undefined,
+        colourPopularity: colourPopularity ?? undefined,
+        healthScore: healthScore ?? undefined,
+        ecoScore: ecoScore ?? undefined,
+        motPassRate: motPassRate ?? undefined,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");
@@ -3083,18 +3215,38 @@ END:VEVENT
                       {ulezResult.confidence === "estimated" && (
                         <p className="text-xs text-slate-500 mt-1 italic">Estimated from registration date — verify on the TfL checker.</p>
                       )}
-                      {ulezResult.cleanAirZones && ulezResult.cleanAirZones.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-red-800/30">
-                          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Daily charges in affected zones</p>
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            {ulezResult.cleanAirZones.map((zone) => (
-                              <div key={zone.name} className="text-xs text-red-300/80">
-                                <span className="font-medium">{zone.name}</span>: {zone.dailyCharge}
-                              </div>
-                            ))}
+                      {ulezResult.cleanAirZones && ulezResult.cleanAirZones.length > 0 && (() => {
+                        const carZones = ulezResult.cleanAirZones!.filter(z => z.carsCharged);
+                        const commercialOnly = ulezResult.cleanAirZones!.filter(z => !z.carsCharged);
+                        return (
+                          <div className="mt-3 pt-3 border-t border-red-800/30">
+                            {carZones.length > 0 && (
+                              <>
+                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Zones charging cars</p>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+                                  {carZones.map((zone) => (
+                                    <div key={zone.name} className="text-xs text-red-300/80">
+                                      <span className="font-medium">{zone.name}</span>: {zone.dailyCharge}
+                                    </div>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                            {commercialOnly.length > 0 && (
+                              <>
+                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Commercial vehicles only (cars exempt)</p>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                  {commercialOnly.map((zone) => (
+                                    <div key={zone.name} className="text-xs text-slate-400">
+                                      <span className="font-medium">{zone.name}</span>: {zone.dailyCharge}
+                                    </div>
+                                  ))}
+                                </div>
+                              </>
+                            )}
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
                       <div className="mt-3 flex items-center gap-3">
                         <a
                           href="https://tfl.gov.uk/modes/driving/check-your-vehicle/"
@@ -3108,6 +3260,75 @@ END:VEVENT
                       </div>
                       <p className="text-[11px] text-slate-600 mt-2">ULEZ compliance calculated using DVLA emission data and published TfL emission standards.</p>
                     </div>
+                  </div>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* VEHICLE HEALTH SCORE */}
+            {healthScore && (
+              <DataReveal delay={135}>
+                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
+                  <div className="flex items-center gap-5">
+                    {/* Circular progress */}
+                    <div className="relative flex-shrink-0">
+                      <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-700" />
+                        <circle
+                          cx="40" cy="40" r="34"
+                          fill="none"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          strokeDasharray={`${(healthScore.score / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
+                          transform="rotate(-90 40 40)"
+                          className={
+                            healthScore.grade === "A" ? "stroke-emerald-400" :
+                            healthScore.grade === "B" ? "stroke-blue-400" :
+                            healthScore.grade === "C" ? "stroke-amber-400" :
+                            healthScore.grade === "D" ? "stroke-orange-400" :
+                            "stroke-red-400"
+                          }
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className={`text-2xl font-bold ${
+                          healthScore.grade === "A" ? "text-emerald-400" :
+                          healthScore.grade === "B" ? "text-blue-400" :
+                          healthScore.grade === "C" ? "text-amber-400" :
+                          healthScore.grade === "D" ? "text-orange-400" :
+                          "text-red-400"
+                        }`}>{healthScore.grade}</span>
+                        <span className="text-xs text-slate-400">{healthScore.score}/100</span>
+                      </div>
+                    </div>
+                    {/* Title and label */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-slate-100 mb-0.5">Vehicle Health Score</h3>
+                      <p className={`text-lg font-bold ${
+                        healthScore.grade === "A" ? "text-emerald-400" :
+                        healthScore.grade === "B" ? "text-blue-400" :
+                        healthScore.grade === "C" ? "text-amber-400" :
+                        healthScore.grade === "D" ? "text-orange-400" :
+                        "text-red-400"
+                      }`}>{healthScore.label}</p>
+                      <p className="text-xs text-slate-400 mt-1">Based on MOT history, advisories, mileage, safety, and compliance data.</p>
+                    </div>
+                  </div>
+                  {/* Breakdown grid */}
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {healthScore.breakdown.map((item) => (
+                      <div key={item.category} className="bg-slate-900/50 rounded px-2.5 py-2 border border-slate-700/30">
+                        <div className="flex items-baseline justify-between mb-0.5">
+                          <span className="text-[10px] text-slate-500 uppercase tracking-wide">{item.category}</span>
+                          <span className={`text-xs font-semibold ${
+                            item.score >= item.maxScore * 0.8 ? "text-emerald-400" :
+                            item.score >= item.maxScore * 0.5 ? "text-amber-400" :
+                            "text-red-400"
+                          }`}>{item.score}/{item.maxScore}</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 leading-tight truncate">{item.detail}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </DataReveal>

@@ -56,6 +56,7 @@ type CleanAirZone = {
   name: string;
   dailyCharge: string;
   url: string;
+  carsCharged?: boolean;
 };
 
 export type ParsedModelInfo = {
@@ -84,6 +85,10 @@ export type ReportInput = {
   ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
   recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
   rarityResult?: { licensed: number; sorn: number; total: number; category: string } | null;
+  colourPopularity?: { rank: number; share: number; label: string; isTopFive: boolean } | null;
+  healthScore?: { score: number; grade: string; label: string; breakdown: Array<{ category: string; score: number; maxScore: number; detail: string }> } | null;
+  ecoScore?: { grade: string; score: number; label: string; factors: Array<{ name: string; score: number; maxScore: number; detail: string }> } | null;
+  motPassRate?: { passRate: number; testCount: number; aboveAverage: boolean; nationalAverage: number } | null;
   valuation?: {
     rangeLow: number;
     rangeHigh: number;
@@ -983,8 +988,74 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
   return y;
 }
 
+function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
+  const hs = input.healthScore;
+  if (!hs) return y;
+
+  y = startSection(doc, y, "Vehicle Health Score", 40);
+
+  const cardH = 45;
+  y = checkPageBreak(doc, y, cardH + 4);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.slate800, C.slate700);
+
+  // Grade badge
+  const gradeColor: RGB = hs.grade === "A" ? C.emerald : hs.grade === "B" ? C.blue : hs.grade === "C" ? C.amber : C.red;
+  const badgeSize = 22;
+  const badgeX = MARGIN + 8;
+  const badgeY = y + 6;
+  drawRoundedRect(doc, badgeX, badgeY, badgeSize, badgeSize, 4, gradeColor);
+  doc.setFontSize(18);
+  setTextColor(doc, C.white);
+  doc.setFont("helvetica", "bold");
+  doc.text(hs.grade, badgeX + badgeSize / 2, badgeY + 15, { align: "center" });
+
+  // Score text
+  doc.setFontSize(FONT.h2);
+  setTextColor(doc, C.white);
+  doc.text(`${hs.score}/100`, badgeX + badgeSize + 8, badgeY + 9);
+  doc.setFontSize(FONT.body);
+  setTextColor(doc, gradeColor);
+  doc.text(hs.label, badgeX + badgeSize + 8, badgeY + 17);
+
+  // Breakdown row
+  const breakdownY = y + 32;
+  const colCount = Math.min(hs.breakdown.length, 4);
+  const colW = (CONTENT_W - 16) / colCount;
+  for (let i = 0; i < colCount; i++) {
+    const item = hs.breakdown[i];
+    const cx = MARGIN + 8 + i * colW;
+    doc.setFontSize(FONT.tiny);
+    setTextColor(doc, C.slate400);
+    doc.setFont("helvetica", "normal");
+    doc.text(item.category, cx, breakdownY);
+    const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
+    setTextColor(doc, itemColor);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${item.score}/${item.maxScore}`, cx, breakdownY + 4);
+  }
+  // Second row of breakdown items
+  if (hs.breakdown.length > 4) {
+    const row2Y = breakdownY + 10;
+    for (let i = 4; i < hs.breakdown.length; i++) {
+      const item = hs.breakdown[i];
+      const cx = MARGIN + 8 + (i - 4) * colW;
+      doc.setFontSize(FONT.tiny);
+      setTextColor(doc, C.slate400);
+      doc.setFont("helvetica", "normal");
+      doc.text(item.category, cx, row2Y);
+      const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
+      setTextColor(doc, itemColor);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${item.score}/${item.maxScore}`, cx, row2Y + 4);
+    }
+  }
+
+  y += cardH + 4;
+  return y;
+}
+
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
-  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuation } = input;
+  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuation, colourPopularity } = input;
 
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
@@ -993,8 +1064,9 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   const hasRecalls = recalls !== undefined;
   const hasRarityEarly = input.rarityResult && input.rarityResult.total > 0;
   const hasValuation = valuation && valuation.rangeLow > 0;
+  const hasColour = colourPopularity && input.data.colour;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation) return y;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour) return y;
 
   y = startSection(doc, y, "Vehicle Insights", 20);
 
@@ -1009,10 +1081,19 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     ];
     // Add clean air zone daily charges for non-compliant vehicles
     if (!isCompliant && ulezResult!.cleanAirZones && ulezResult!.cleanAirZones.length > 0) {
-      lines.push(""); // blank separator
-      lines.push("Clean Air Zone daily charges:");
-      for (const zone of ulezResult!.cleanAirZones) {
-        lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+      const carZones = ulezResult!.cleanAirZones.filter(z => z.carsCharged !== false);
+      const commercialOnly = ulezResult!.cleanAirZones.filter(z => z.carsCharged === false);
+      if (carZones.length > 0) {
+        lines.push("", "Zones charging cars:");
+        for (const zone of carZones) {
+          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+        }
+      }
+      if (commercialOnly.length > 0) {
+        lines.push("", "Commercial vehicles only (cars exempt):");
+        for (const zone of commercialOnly) {
+          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+        }
       }
     }
     y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines);
@@ -1065,6 +1146,44 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       `Category: ${catLabel}`,
     ];
     y = drawInsightCard(doc, y, accent, "UK Road Presence", lines);
+  }
+
+  // Environmental Eco Score
+  if (input.ecoScore) {
+    const eco = input.ecoScore;
+    const accent: RGB = eco.grade <= "B" ? C.emerald : eco.grade <= "D" ? C.blue : C.amber;
+    const lines: string[] = [
+      `Grade ${eco.grade} \u2014 ${eco.label} (${eco.score}/100)`,
+      ...eco.factors.map(f => `${f.name}: ${f.detail}`),
+    ];
+    y = drawInsightCard(doc, y, accent, "Environmental Eco Score", lines);
+  }
+
+  // National MOT Pass Rate
+  if (input.motPassRate) {
+    const mpr = input.motPassRate;
+    const accent = mpr.aboveAverage ? C.emerald : C.amber;
+    const makeName = input.data.make ?? "";
+    const modelName = input.data.model ?? "";
+    const diff = mpr.passRate - mpr.nationalAverage;
+    const comparison = diff >= 0
+      ? `${diff.toFixed(1)}% above`
+      : `${Math.abs(diff).toFixed(1)}% below`;
+    y = drawInsightCard(doc, y, accent, "National MOT Pass Rate", [
+      `${makeName} ${modelName}: ${mpr.passRate}% pass rate`,
+      `${comparison} the ${mpr.nationalAverage}% UK average`,
+      `Based on ${mpr.testCount.toLocaleString()} MOT tests`,
+    ]);
+  }
+
+  // Colour Popularity
+  if (hasColour) {
+    const cp = colourPopularity!;
+    const accent = cp.isTopFive ? C.emerald : C.blue;
+    y = drawInsightCard(doc, y, accent, "Colour Popularity", [
+      `${input.data.colour} \u2014 ${cp.label}`,
+      `${cp.share}% of new UK registrations (ranked #${cp.rank})`,
+    ]);
   }
 
   // Estimated Value (expanded with market snapshot)
@@ -1401,6 +1520,9 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   y = renderRecurringAdvisories(doc, input, y);
 
   // Vehicle Insights (ULEZ, VED, fuel economy, NCAP, valuation, recalls)
+  // Health Score
+  y = renderHealthScore(doc, input, y);
+
   y = renderEnrichedInsights(doc, input, y);
 
   // Vehicle Details (two-column)
