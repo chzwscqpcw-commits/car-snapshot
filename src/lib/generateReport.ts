@@ -82,6 +82,7 @@ export type ReportInput = {
   } | null;
   vedResult?: { estimatedAnnualRate: number | null; estimatedSixMonthRate?: number | null; band: string | null; details: string } | null;
   fuelEconomy?: { combinedMpg: number; urbanMpg?: number; extraUrbanMpg?: number; estimatedAnnualCost: number } | null;
+  fuelPrices?: { petrol: number; diesel: number; date: string | null } | null;
   ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
   recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
   rarityResult?: { licensed: number; sorn: number; total: number; category: string } | null;
@@ -1055,18 +1056,19 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
 }
 
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
-  const { ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuation, colourPopularity } = input;
+  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity } = input;
 
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
   const hasFuel = fuelEconomy && fuelEconomy.combinedMpg > 0;
+  const hasFuelPrices = fuelPrices && (fuelPrices.petrol > 0 || fuelPrices.diesel > 0);
   const hasNcap = ncapRating && ncapRating.overallStars > 0;
   const hasRecalls = recalls !== undefined;
   const hasRarityEarly = input.rarityResult && input.rarityResult.total > 0;
   const hasValuation = valuation && valuation.rangeLow > 0;
   const hasColour = colourPopularity && input.data.colour;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour) return y;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices) return y;
 
   y = startSection(doc, y, "Vehicle Insights", 20);
 
@@ -1117,7 +1119,19 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     if (fuelEconomy!.urbanMpg) lines.push(`Urban: ${fuelEconomy!.urbanMpg.toFixed(1)} MPG`);
     if (fuelEconomy!.extraUrbanMpg) lines.push(`Extra-urban: ${fuelEconomy!.extraUrbanMpg.toFixed(1)} MPG`);
     lines.push(`Estimated annual fuel cost: \u00A3${fuelEconomy!.estimatedAnnualCost}`);
+    if (hasFuelPrices) {
+      lines.push(`Based on ${fuelPrices!.petrol.toFixed(1)}p/litre petrol, ${fuelPrices!.diesel.toFixed(1)}p/litre diesel`);
+    }
     y = drawInsightCard(doc, y, C.blue, "Fuel Economy", lines);
+  }
+
+  // Current Fuel Prices
+  if (hasFuelPrices && !hasFuel) {
+    const dateStr = fuelPrices!.date ? formatDate(fuelPrices!.date) : null;
+    y = drawInsightCard(doc, y, C.blue, "Current UK Fuel Prices", [
+      `Petrol: ${fuelPrices!.petrol.toFixed(1)}p/litre \u00B7 Diesel: ${fuelPrices!.diesel.toFixed(1)}p/litre`,
+      `National average pump prices${dateStr ? ` as of ${dateStr}` : ""}`,
+    ]);
   }
 
   // NCAP Rating

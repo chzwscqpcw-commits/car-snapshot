@@ -36,7 +36,7 @@ const FUEL_PRICES: Record<string, number> = {
   default: 145,
 };
 
-const ASSUMED_ANNUAL_MILES = 8000;
+export const ASSUMED_ANNUAL_MILES = 8000;
 const LITRES_PER_GALLON = 4.546;
 
 function normalizeStr(s: string): string {
@@ -108,9 +108,10 @@ function getFuelPrice(fuelType?: string): number {
   return FUEL_PRICES.default;
 }
 
-function calculateAnnualCost(mpg: number, fuelType?: string): number {
+function calculateAnnualCost(mpg: number, fuelType?: string, livePricePence?: number): number {
   if (mpg <= 0) return 0;
-  const pricePerLitre = getFuelPrice(fuelType) / 100; // convert pence to pounds
+  const pricePence = livePricePence ?? getFuelPrice(fuelType);
+  const pricePerLitre = pricePence / 100; // convert pence to pounds
   const litres = (ASSUMED_ANNUAL_MILES / mpg) * LITRES_PER_GALLON;
   return Math.round(litres * pricePerLitre);
 }
@@ -132,6 +133,7 @@ export function lookupFuelEconomy(
   engineCapacity?: number,
   fuelType?: string,
   bodyStyleHint?: string,
+  livePricePence?: number,
 ): FuelEconomyResult | null {
   if (!make || !model || data.length === 0) return null;
 
@@ -156,7 +158,7 @@ export function lookupFuelEconomy(
         combinedMpg: exact.combinedMpg,
         urbanMpg: exact.urbanMpg,
         extraUrbanMpg: exact.extraUrbanMpg,
-        estimatedAnnualCost: calculateAnnualCost(exact.combinedMpg, fuelType),
+        estimatedAnnualCost: calculateAnnualCost(exact.combinedMpg, fuelType, livePricePence),
         matchType: "exact",
         matchedModel: exact.model,
         ...extendedFields(exact),
@@ -173,7 +175,7 @@ export function lookupFuelEconomy(
         combinedMpg: match.combinedMpg,
         urbanMpg: match.urbanMpg,
         extraUrbanMpg: match.extraUrbanMpg,
-        estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
+        estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType, livePricePence),
         matchType: "model-fuel",
         matchedModel: match.model,
         ...extendedFields(match),
@@ -188,7 +190,7 @@ export function lookupFuelEconomy(
       combinedMpg: match.combinedMpg,
       urbanMpg: match.urbanMpg,
       extraUrbanMpg: match.extraUrbanMpg,
-      estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType),
+      estimatedAnnualCost: calculateAnnualCost(match.combinedMpg, fuelType, livePricePence),
       matchType: "model-only",
       matchedModel: match.model,
       ...extendedFields(match),
@@ -196,4 +198,11 @@ export function lookupFuelEconomy(
   }
 
   return null;
+}
+
+/** Recalculate annual fuel cost using a live price (pence/litre). Client-side helper. */
+export function recalcAnnualCost(mpg: number, livePricePence: number): number {
+  if (mpg <= 0) return 0;
+  const litres = (ASSUMED_ANNUAL_MILES / mpg) * LITRES_PER_GALLON;
+  return Math.round(litres * (livePricePence / 100));
 }

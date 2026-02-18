@@ -131,7 +131,7 @@ import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
 import { lookupNcap, type NcapRating } from "@/lib/ncap";
 import { type Recall } from "@/lib/recalls";
-import { type FuelEconomyResult } from "@/lib/fuel-economy";
+import { type FuelEconomyResult, recalcAnnualCost } from "@/lib/fuel-economy";
 import { getMakeLogoPath } from "@/lib/make-logo";
 import { parseModel, expandBaseModelForLookup, type ParsedModel } from "@/lib/model-parser";
 import { lookupBodyType } from "@/lib/body-type";
@@ -557,6 +557,15 @@ export default function Home() {
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
+  const [fuelPrices, setFuelPrices] = useState<{ petrol: number; diesel: number; date: string | null } | null>(null);
+
+  // Fetch live fuel prices once on mount
+  useEffect(() => {
+    fetch("/api/fuel-prices")
+      .then((res) => res.json())
+      .then((data) => setFuelPrices(data))
+      .catch(() => {});
+  }, []);
 
   // Load recent guides
   useEffect(() => {
@@ -633,6 +642,14 @@ export default function Home() {
       .then((result) => setFuelEconomy(result))
       .catch(() => setFuelEconomy(null));
   }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType, lookupModel, parsedModel?.bodyStyle]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Recalculate annual fuel cost using live prices when available
+  const liveAnnualCost = useMemo((): number | null => {
+    if (!fuelEconomy || !fuelPrices) return null;
+    const fuelLower = data?.fuelType?.toLowerCase() ?? "";
+    const pricePence = fuelLower.includes("diesel") ? fuelPrices.diesel : fuelPrices.petrol;
+    return recalcAnnualCost(fuelEconomy.combinedMpg, pricePence);
+  }, [fuelEconomy, fuelPrices, data?.fuelType]);
 
   // Fetch valuation server data (eBay + cache) when vehicle data changes
   useEffect(() => {
@@ -1303,14 +1320,28 @@ export default function Home() {
 
     // Fuel economy insight
     if (fuelEconomy) {
+      const annualCost = liveAnnualCost ?? fuelEconomy.estimatedAnnualCost;
       const parts: string[] = [`Combined: ${fuelEconomy.combinedMpg.toFixed(1)} MPG`];
       if (fuelEconomy.urbanMpg) parts.push(`Urban: ${fuelEconomy.urbanMpg.toFixed(1)} MPG`);
       if (fuelEconomy.extraUrbanMpg) parts.push(`Extra-urban: ${fuelEconomy.extraUrbanMpg.toFixed(1)} MPG`);
-      parts.push(`~£${fuelEconomy.estimatedAnnualCost}/year fuel`);
+      parts.push(`~£${annualCost}/year fuel`);
+      const priceNote = liveAnnualCost ? " Based on current UK fuel prices." : "";
       result.push({
         tone: fuelEconomy.combinedMpg >= 50 ? "good" : fuelEconomy.combinedMpg < 35 ? "warn" : "info",
         title: `Estimated ${fuelEconomy.combinedMpg.toFixed(1)} MPG (combined)`,
-        detail: `${parts.join(" · ")}${fuelEconomy.matchType !== "exact" ? ". Estimate based on similar model." : ""}`,
+        detail: `${parts.join(" · ")}${fuelEconomy.matchType !== "exact" ? ". Estimate based on similar model." : ""}${priceNote}`,
+      });
+    }
+
+    // Live fuel prices insight
+    if (fuelPrices) {
+      const dateStr = fuelPrices.date
+        ? new Date(fuelPrices.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+        : null;
+      result.push({
+        tone: "info",
+        title: `UK fuel prices: ${fuelPrices.petrol.toFixed(1)}p petrol · ${fuelPrices.diesel.toFixed(1)}p diesel`,
+        detail: `National average pump prices${dateStr ? ` as of ${dateStr}` : ""}. Source: DESNZ weekly statistics.`,
       });
     }
 
@@ -1399,7 +1430,7 @@ export default function Home() {
     }
 
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1978,11 +2009,18 @@ END:VEVENT
 
     // ── FUEL ECONOMY ──
     if (fuelEconomy) {
+      const txtAnnualCost = liveAnnualCost ?? fuelEconomy.estimatedAnnualCost;
       lines.push(sep, "FUEL ECONOMY", sep, "");
       lines.push(`Combined:            ${fuelEconomy.combinedMpg.toFixed(1)} MPG`);
       if (fuelEconomy.urbanMpg) lines.push(`Urban:               ${fuelEconomy.urbanMpg.toFixed(1)} MPG`);
       if (fuelEconomy.extraUrbanMpg) lines.push(`Extra-urban:         ${fuelEconomy.extraUrbanMpg.toFixed(1)} MPG`);
-      lines.push(`Est. Annual Cost:    £${fuelEconomy.estimatedAnnualCost}`);
+      lines.push(`Est. Annual Cost:    £${txtAnnualCost}`);
+      if (fuelPrices) {
+        const dateStr = fuelPrices.date
+          ? new Date(fuelPrices.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+          : "latest";
+        lines.push(`Fuel Prices:         ${fuelPrices.petrol.toFixed(1)}p petrol / ${fuelPrices.diesel.toFixed(1)}p diesel (${dateStr})`);
+      }
       lines.push("");
     }
 
@@ -2183,7 +2221,11 @@ END:VEVENT
         } : null,
         ulezResult,
         vedResult,
-        fuelEconomy,
+        fuelEconomy: fuelEconomy ? {
+          ...fuelEconomy,
+          estimatedAnnualCost: liveAnnualCost ?? fuelEconomy.estimatedAnnualCost,
+        } : null,
+        fuelPrices: fuelPrices ?? undefined,
         ncapRating,
         recalls,
         valuation: valuationResult ? {
