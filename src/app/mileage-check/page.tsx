@@ -23,21 +23,12 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "https://www.freeplatecheck.co.uk/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Free Mileage Check — Spot Clocking | Free Plate Check",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free Mileage Check — Spot Clocking",
     description:
       "Track odometer readings across MOT tests to spot mileage fraud. See if a car has been clocked before you buy. Free, no signup required.",
-    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

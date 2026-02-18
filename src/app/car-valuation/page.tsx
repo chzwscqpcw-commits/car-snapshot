@@ -24,21 +24,12 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "https://www.freeplatecheck.co.uk/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Free Car Valuation — How Much Is My Car Worth?",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free Car Valuation — How Much Is My Car Worth?",
     description:
       "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and market data.",
-    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

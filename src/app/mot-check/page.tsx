@@ -23,21 +23,12 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "https://www.freeplatecheck.co.uk/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Free MOT History Check — Full MOT Results | Free Plate Check",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free MOT History Check — Full MOT Results",
     description:
       "See every MOT result, advisory and failure since 2005. Check mileage history and spot problems before buying.",
-    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 

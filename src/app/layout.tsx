@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.freeplatecheck.co.uk"),
   title: "Free Plate Check — Free UK Vehicle Check | MOT History, Tax Status & More",
   description:
     "Check any UK vehicle free. Enter a reg plate to instantly see MOT history, tax status, mileage data, and get checklists for buying, selling or owning a car. DVLA data, no signup required.",

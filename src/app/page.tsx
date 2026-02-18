@@ -3919,7 +3919,7 @@ END:VEVENT
                 src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
                 alt="Free Plate Check - Approved on SaaSHub"
                 width={120}
-                height={54}
+                height={40}
                 className="max-w-[120px] opacity-70 hover:opacity-100 transition-opacity"
               />
             </a>

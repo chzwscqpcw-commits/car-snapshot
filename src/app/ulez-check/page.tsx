@@ -24,21 +24,12 @@ export const metadata: Metadata = {
     siteName: "Free Plate Check",
     locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "https://www.freeplatecheck.co.uk/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Free ULEZ Check — Is My Car ULEZ Compliant?",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free ULEZ Check — Is My Car ULEZ Compliant?",
     description:
       "Check if your car is ULEZ compliant for free. See Euro status, Clean Air Zone charges and exemptions. Enter a registration number to check instantly.",
-    images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
 };
 
