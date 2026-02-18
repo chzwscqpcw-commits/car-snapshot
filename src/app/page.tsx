@@ -135,6 +135,7 @@ import { type FuelEconomyResult } from "@/lib/fuel-economy";
 import { getMakeLogoPath } from "@/lib/make-logo";
 import { parseModel, expandBaseModelForLookup, type ParsedModel } from "@/lib/model-parser";
 import { lookupBodyType } from "@/lib/body-type";
+import { lookupRarity } from "@/lib/how-many-left";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -941,6 +942,12 @@ export default function Home() {
     return lookupNcap(data.make, lookupModel ?? data.model);
   }, [data, lookupModel]);
 
+  // How many left on UK roads (rarity)
+  const rarityResult = useMemo(() => {
+    if (!data?.make) return null;
+    return lookupRarity(data.make, lookupModel ?? data.model);
+  }, [data?.make, data?.model, lookupModel]);
+
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
@@ -1285,8 +1292,32 @@ export default function Home() {
       });
     }
 
+    // How many left (rarity) insight
+    if (rarityResult) {
+      const { licensed, category } = rarityResult;
+      if (category === "very-rare" || category === "rare") {
+        result.push({
+          tone: "warn",
+          title: `Only ${licensed.toLocaleString()} licensed in the UK`,
+          detail: "Rare model — parts and specialist servicing may be harder to find.",
+        });
+      } else if (category === "uncommon") {
+        result.push({
+          tone: "info",
+          title: `${licensed.toLocaleString()} licensed in the UK`,
+          detail: "Less common model — parts generally available but may take longer to source.",
+        });
+      } else {
+        result.push({
+          tone: "good",
+          title: `${licensed.toLocaleString()} licensed in the UK`,
+          detail: "Popular model — wide parts availability, competitive servicing and insurance.",
+        });
+      }
+    }
+
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1844,6 +1875,14 @@ END:VEVENT
       lines.push("");
     }
 
+    // ── UK ROAD PRESENCE ──
+    if (rarityResult) {
+      const catLabel = rarityResult.category === "very-rare" ? "Very Rare" : rarityResult.category === "rare" ? "Rare" : rarityResult.category === "uncommon" ? "Uncommon" : rarityResult.category === "common" ? "Common" : "Very Common";
+      lines.push(sep, "UK ROAD PRESENCE", sep, "");
+      lines.push(`UK Road Presence:    ${rarityResult.licensed.toLocaleString()} licensed (+ ${rarityResult.sorn.toLocaleString()} SORN'd) — ${catLabel}`);
+      lines.push("");
+    }
+
     // ── VALUATION ──
     if (valuationResult) {
       lines.push(sep, "VEHICLE VALUATION", sep, "");
@@ -2034,6 +2073,7 @@ END:VEVENT
           colourAdjustmentPercent: valuationResult.colourAdjustmentPercent,
           disclaimer: valuationResult.disclaimer,
         } : null,
+        rarityResult: rarityResult ?? undefined,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");

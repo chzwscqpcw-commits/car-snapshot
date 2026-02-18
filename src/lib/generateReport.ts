@@ -83,6 +83,7 @@ export type ReportInput = {
   fuelEconomy?: { combinedMpg: number; urbanMpg?: number; extraUrbanMpg?: number; estimatedAnnualCost: number } | null;
   ncapRating?: { overallStars: number; adultOccupant?: number; childOccupant?: number; pedestrian?: number; safetyAssist?: number; yearTested: number } | null;
   recalls?: Array<{ recallDate: string; defect: string; remedy: string; recallNumber: string }>;
+  rarityResult?: { licensed: number; sorn: number; total: number; category: string } | null;
   valuation?: {
     rangeLow: number;
     rangeHigh: number;
@@ -990,9 +991,10 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   const hasFuel = fuelEconomy && fuelEconomy.combinedMpg > 0;
   const hasNcap = ncapRating && ncapRating.overallStars > 0;
   const hasRecalls = recalls !== undefined;
+  const hasRarityEarly = input.rarityResult && input.rarityResult.total > 0;
   const hasValuation = valuation && valuation.rangeLow > 0;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasValuation) return y;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation) return y;
 
   y = startSection(doc, y, "Vehicle Insights", 20);
 
@@ -1049,6 +1051,20 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     if (ncapRating!.safetyAssist != null) scores.push(`Safety Assist ${ncapRating!.safetyAssist}%`);
     if (scores.length > 0) lines.push(scores.join(" \u00B7 "));
     y = drawInsightCard(doc, y, C.cyan, "Euro NCAP Safety Rating", lines);
+  }
+
+  // UK Road Presence (rarity)
+  const hasRarity = input.rarityResult && input.rarityResult.total > 0;
+  if (hasRarity) {
+    const r = input.rarityResult!;
+    const catLabel = r.category === "very-rare" ? "Very Rare" : r.category === "rare" ? "Rare" : r.category === "uncommon" ? "Uncommon" : r.category === "common" ? "Common" : "Very Common";
+    const accent = (r.category === "very-rare" || r.category === "rare") ? C.amber : C.blue;
+    const lines: string[] = [
+      `${r.licensed.toLocaleString()} currently licensed in the UK`,
+      `${r.sorn.toLocaleString()} declared SORN`,
+      `Category: ${catLabel}`,
+    ];
+    y = drawInsightCard(doc, y, accent, "UK Road Presence", lines);
   }
 
   // Estimated Value (expanded with market snapshot)
