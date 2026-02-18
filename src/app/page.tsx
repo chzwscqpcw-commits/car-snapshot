@@ -123,6 +123,7 @@ import {
   PoundSterling,
   ChevronDown,
   ChevronUp,
+  Wrench,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -139,6 +140,8 @@ import { lookupRarity } from "@/lib/how-many-left";
 import { lookupColourPopularity } from "@/lib/colour-popularity";
 import { calculateHealthScore, type HealthScoreResult } from "@/lib/health-score";
 import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
+import { calculateMotReadiness, type MotReadinessResult } from "@/lib/mot-readiness";
+import { calculateOwnershipCost, type OwnershipCostResult } from "@/lib/ownership-cost";
 import { lookupMotPassRate } from "@/lib/mot-pass-rate";
 import {
   lookupNewPrice,
@@ -1007,6 +1010,21 @@ export default function Home() {
     });
   }, [data, fuelEconomy, ulezResult]);
 
+  // MOT Readiness Score
+  const motReadiness = useMemo((): MotReadinessResult | null => {
+    if (!data) return null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const latestAdvisoryTexts = (data.motTests?.[0]?.rfrAndComments
+      ?.filter((r: { type: string }) => r.type === "ADVISORY")
+      .map((r: { text: string }) => r.text)) ?? [];
+    return calculateMotReadiness({
+      latestAdvisories: latestAdvisoryTexts,
+      recurringAdvisories: motInsightsData?.recurringAdvisories ?? [],
+      daysUntilExpiry: motInsightsData?.daysUntilExpiry ?? 0,
+      isOver3Years,
+    });
+  }, [data, isOver3Years]);
+
   // MOT national pass rate
   const motPassRate = useMemo(() => {
     if (!data?.make) return null;
@@ -1064,6 +1082,24 @@ export default function Home() {
 
     return result;
   }, [data, valuationServerData, valuationCondition, lookupModel]);
+
+  // Ownership Cost Calculator
+  const ownershipCost = useMemo((): OwnershipCostResult | null => {
+    if (!data?.yearOfManufacture) return null;
+    const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
+    const vedAnnual = vedResult?.estimatedAnnualRate ?? null;
+    const annualFuelCost = liveAnnualCost ?? fuelEconomy?.estimatedAnnualCost ?? null;
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
+    return calculateOwnershipCost({
+      vedAnnualRate: vedAnnual,
+      fuelAnnualCost: annualFuelCost,
+      newPrice,
+      vehicleAge,
+      make: data.make,
+      model: data.model,
+      isOver3Years,
+    });
+  }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel]);
 
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
@@ -1429,8 +1465,29 @@ export default function Home() {
       });
     }
 
+    // MOT Readiness insight
+    if (motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0) {
+      const costText = motReadiness.totalEstimatedCost.high > 0
+        ? ` Estimated repair costs: £${motReadiness.totalEstimatedCost.low}–£${motReadiness.totalEstimatedCost.high}.`
+        : "";
+      result.push({
+        tone: motReadiness.score === "red" ? "risk" : motReadiness.score === "amber" ? "warn" : "good",
+        title: `MOT Readiness: ${motReadiness.label}`,
+        detail: `${motReadiness.advisoryCount} advisory item${motReadiness.advisoryCount !== 1 ? "s" : ""} on last test.${costText}`,
+      });
+    }
+
+    // Ownership Cost insight
+    if (ownershipCost) {
+      result.push({
+        tone: "info",
+        title: `Estimated running cost: £${ownershipCost.totalAnnual.toLocaleString()}/year (${ownershipCost.costPerMile.toFixed(0)}p/mile)`,
+        detail: `Includes ${[ownershipCost.hasFuel ? "fuel" : null, ownershipCost.hasVed ? "road tax" : null, ownershipCost.hasDepreciation ? "depreciation" : null, ownershipCost.breakdown.mot != null ? "MOT fee" : null].filter(Boolean).join(", ")}. ${ownershipCost.excludedNote}`,
+      });
+    }
+
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices, motReadiness, ownershipCost]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -1989,6 +2046,37 @@ END:VEVENT
       lines.push("");
     }
 
+    // ── MOT READINESS ──
+    if (motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0) {
+      lines.push(sep, "MOT READINESS", sep, "");
+      lines.push(`Status:              ${motReadiness.label} (${motReadiness.score})`);
+      lines.push(`Advisories:          ${motReadiness.advisoryCount}`);
+      if (motReadiness.daysUntilMot > 0) {
+        lines.push(`Days until MOT:      ${motReadiness.daysUntilMot}`);
+      }
+      if (motReadiness.totalEstimatedCost.high > 0) {
+        lines.push(`Est. Repair Costs:   £${motReadiness.totalEstimatedCost.low}–£${motReadiness.totalEstimatedCost.high}`);
+      }
+      for (const item of motReadiness.riskItems) {
+        const recurTag = item.isRecurring ? " [RECURRING]" : "";
+        lines.push(`  [${item.risk.toUpperCase()}] ${item.categoryLabel}: ${item.text}${recurTag}`);
+        lines.push(`         Est. £${item.estimatedCost.low}–£${item.estimatedCost.high}`);
+      }
+      lines.push("");
+    }
+
+    // ── OWNERSHIP COSTS ──
+    if (ownershipCost) {
+      lines.push(sep, "ANNUAL RUNNING COSTS", sep, "");
+      lines.push(`Total:               £${ownershipCost.totalAnnual.toLocaleString()}/year (${ownershipCost.costPerMile.toFixed(0)}p/mile)`);
+      if (ownershipCost.breakdown.fuel != null) lines.push(`  Fuel:              £${ownershipCost.breakdown.fuel.toLocaleString()}`);
+      if (ownershipCost.breakdown.ved != null) lines.push(`  Road Tax (VED):    £${ownershipCost.breakdown.ved}`);
+      if (ownershipCost.breakdown.depreciation != null) lines.push(`  Depreciation:      £${ownershipCost.breakdown.depreciation.toLocaleString()}`);
+      if (ownershipCost.breakdown.mot != null) lines.push(`  MOT Fee:           £${ownershipCost.breakdown.mot}`);
+      lines.push(`Note:                ${ownershipCost.excludedNote}`);
+      lines.push("");
+    }
+
     // ── MOT PASS RATE ──
     if (motPassRate && data.make) {
       const modelName = lookupModel ?? data.model ?? "this model";
@@ -2250,6 +2338,19 @@ END:VEVENT
         healthScore: healthScore ?? undefined,
         ecoScore: ecoScore ?? undefined,
         motPassRate: motPassRate ?? undefined,
+        motReadiness: motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0 ? {
+          score: motReadiness.score,
+          label: motReadiness.label,
+          advisoryCount: motReadiness.advisoryCount,
+          daysUntilMot: motReadiness.daysUntilMot,
+          totalEstimatedCost: motReadiness.totalEstimatedCost,
+        } : undefined,
+        ownershipCost: ownershipCost ? {
+          totalAnnual: ownershipCost.totalAnnual,
+          costPerMile: ownershipCost.costPerMile,
+          breakdown: ownershipCost.breakdown,
+          excludedNote: ownershipCost.excludedNote,
+        } : undefined,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");
@@ -3402,6 +3503,81 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* MOT READINESS CARD */}
+            {motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0 && (
+              <DataReveal delay={210}>
+                <div className={`mb-8 p-5 rounded-lg border ${
+                  motReadiness.score === "red" ? "border-red-800/40 bg-gradient-to-r from-red-950/30 to-rose-950/30" :
+                  motReadiness.score === "amber" ? "border-amber-800/40 bg-gradient-to-r from-amber-950/30 to-yellow-950/30" :
+                  "border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30"
+                }`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Wrench className={`w-5 h-5 ${
+                        motReadiness.score === "red" ? "text-red-400" :
+                        motReadiness.score === "amber" ? "text-amber-400" :
+                        "text-emerald-400"
+                      }`} />
+                      <h3 className="text-sm font-semibold text-slate-200">MOT Readiness</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      motReadiness.score === "red" ? "bg-red-900/40 text-red-300" :
+                      motReadiness.score === "amber" ? "bg-amber-900/40 text-amber-300" :
+                      "bg-emerald-900/40 text-emerald-300"
+                    }`}>
+                      {motReadiness.label}
+                    </span>
+                  </div>
+
+                  {motReadiness.daysUntilMot > 0 && (
+                    <p className="text-xs text-slate-400 mb-3">
+                      Next MOT due in {motReadiness.daysUntilMot} days
+                    </p>
+                  )}
+
+                  <div className="space-y-2">
+                    {motReadiness.riskItems.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <span className={`shrink-0 mt-0.5 px-1.5 py-0.5 rounded font-semibold uppercase ${
+                          item.risk === "high" ? "bg-red-900/40 text-red-300" :
+                          item.risk === "medium" ? "bg-amber-900/40 text-amber-300" :
+                          "bg-slate-700/60 text-slate-300"
+                        }`}>
+                          {item.risk}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium text-slate-300">{item.categoryLabel}</span>
+                            {item.isRecurring && (
+                              <span className="px-1 py-0.5 rounded bg-slate-700/60 text-slate-400 text-[10px] font-medium">
+                                RECURRING
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-slate-400 mt-0.5 break-words">{item.text}</p>
+                          <p className="text-slate-500 mt-0.5">Est. £{item.estimatedCost.low}–£{item.estimatedCost.high}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {motReadiness.totalEstimatedCost.high > 0 && (
+                    <div className={`mt-3 pt-3 border-t ${
+                      motReadiness.score === "red" ? "border-red-800/30" :
+                      motReadiness.score === "amber" ? "border-amber-800/30" :
+                      "border-emerald-800/30"
+                    }`}>
+                      <p className="text-sm font-semibold text-slate-200">
+                        Total estimated repair cost: £{motReadiness.totalEstimatedCost.low}–£{motReadiness.totalEstimatedCost.high}
+                      </p>
+                    </div>
+                  )}
+
+                  <p className="text-[10px] text-slate-600 mt-3">{motReadiness.disclaimer}</p>
+                </div>
+              </DataReveal>
+            )}
+
             {/* PDF REPORT CTA */}
             <DataReveal delay={250}>
               <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -3894,6 +4070,58 @@ END:VEVENT
                       ))}
                     </div>
                   )}
+                </div>
+              </DataReveal>
+            )}
+
+            {/* ANNUAL RUNNING COSTS CARD */}
+            {ownershipCost && (
+              <DataReveal delay={310}>
+                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <PoundSterling className="w-5 h-5 text-blue-400" />
+                    <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
+                  </div>
+
+                  <p className="text-2xl font-bold text-slate-100 mb-1">
+                    £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-normal text-slate-400">/year</span>
+                    <span className="text-sm font-normal text-slate-500 ml-2">({ownershipCost.costPerMile.toFixed(0)}p/mile)</span>
+                  </p>
+
+                  {/* Stacked horizontal bar */}
+                  {(() => {
+                    const total = ownershipCost.totalAnnual;
+                    if (total <= 0) return null;
+                    const segments: Array<{ label: string; value: number; color: string }> = [];
+                    if (ownershipCost.breakdown.fuel != null) segments.push({ label: "Fuel", value: ownershipCost.breakdown.fuel, color: "bg-blue-500" });
+                    if (ownershipCost.breakdown.ved != null) segments.push({ label: "VED", value: ownershipCost.breakdown.ved, color: "bg-emerald-500" });
+                    if (ownershipCost.breakdown.depreciation != null) segments.push({ label: "Depreciation", value: ownershipCost.breakdown.depreciation, color: "bg-amber-500" });
+                    if (ownershipCost.breakdown.mot != null) segments.push({ label: "MOT", value: ownershipCost.breakdown.mot, color: "bg-slate-500" });
+                    return (
+                      <>
+                        <div className="flex h-3 rounded-full overflow-hidden mt-3 mb-3">
+                          {segments.map((seg, i) => (
+                            <div
+                              key={i}
+                              className={`${seg.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
+                              style={{ width: `${Math.max((seg.value / total) * 100, 2)}%` }}
+                            />
+                          ))}
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                          {segments.map((seg, i) => (
+                            <div key={i} className="flex items-center gap-2 text-xs">
+                              <span className={`w-2.5 h-2.5 rounded-sm shrink-0 ${seg.color}`} />
+                              <span className="text-slate-400">{seg.label}</span>
+                              <span className="text-slate-200 font-medium ml-auto">£{seg.value.toLocaleString()}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
+
+                  <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
                 </div>
               </DataReveal>
             )}

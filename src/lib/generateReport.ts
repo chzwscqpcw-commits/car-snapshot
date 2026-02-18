@@ -107,6 +107,19 @@ export type ReportInput = {
     colourAdjustmentPercent?: number;
     disclaimer?: string;
   } | null;
+  motReadiness?: {
+    score: "green" | "amber" | "red";
+    label: string;
+    advisoryCount: number;
+    daysUntilMot: number;
+    totalEstimatedCost: { low: number; high: number };
+  } | null;
+  ownershipCost?: {
+    totalAnnual: number;
+    costPerMile: number;
+    breakdown: { fuel: number | null; ved: number | null; depreciation: number | null; mot: number | null };
+    excludedNote: string;
+  } | null;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -1056,7 +1069,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
 }
 
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
-  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity } = input;
+  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity, motReadiness, ownershipCost } = input;
 
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
@@ -1067,8 +1080,10 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   const hasRarityEarly = input.rarityResult && input.rarityResult.total > 0;
   const hasValuation = valuation && valuation.rangeLow > 0;
   const hasColour = colourPopularity && input.data.colour;
+  const hasMotReadiness = motReadiness && motReadiness.advisoryCount > 0;
+  const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices) return y;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices && !hasMotReadiness && !hasOwnershipCost) return y;
 
   y = startSection(doc, y, "Vehicle Insights", 20);
 
@@ -1238,6 +1253,38 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       lines.push(`Adjustments: ${adjustments.join(", ")}`);
     }
     y = drawInsightCard(doc, y, C.blue, "Estimated Value", lines);
+  }
+
+  // MOT Readiness
+  if (hasMotReadiness) {
+    const mr = motReadiness!;
+    const accent: RGB = mr.score === "red" ? C.red : mr.score === "amber" ? C.amber : C.emerald;
+    const lines: string[] = [
+      `${mr.advisoryCount} advisory item${mr.advisoryCount !== 1 ? "s" : ""} — ${mr.label}`,
+    ];
+    if (mr.daysUntilMot > 0) {
+      lines.push(`Next MOT due in ${mr.daysUntilMot} days`);
+    }
+    if (mr.totalEstimatedCost.high > 0) {
+      lines.push(`Estimated repair costs: \u00A3${mr.totalEstimatedCost.low}\u2013\u00A3${mr.totalEstimatedCost.high}`);
+    }
+    y = drawInsightCard(doc, y, accent, "MOT Readiness", lines);
+  }
+
+  // Annual Running Costs
+  if (hasOwnershipCost) {
+    const oc = ownershipCost!;
+    const lines: string[] = [
+      `\u00A3${oc.totalAnnual.toLocaleString()}/year (${oc.costPerMile.toFixed(0)}p/mile)`,
+    ];
+    const parts: string[] = [];
+    if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);
+    if (oc.breakdown.ved != null) parts.push(`VED \u00A3${oc.breakdown.ved}`);
+    if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
+    if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
+    if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
+    lines.push(oc.excludedNote);
+    y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines);
   }
 
   // Safety Recalls
