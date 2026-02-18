@@ -2,8 +2,16 @@
 title: "What Happens if You Drive Without an MOT?"
 description: "The penalties for driving without a valid MOT in the UK — fines, insurance issues, and the exceptions you need to know about."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["driving without MOT", "no MOT penalty", "MOT expired driving", "can I drive without MOT", "MOT fine UK", "MOT expired what happens"]
 author: "Free Plate Check"
+faqItems:
+  - question: "Is it illegal to drive without an MOT?"
+    answer: "Yes. Driving without a valid MOT is illegal in the UK and can result in a fine of up to £1,000. The only exception is driving directly to a pre-booked MOT test appointment at a registered test centre."
+  - question: "Can you drive to an MOT test without a valid MOT?"
+    answer: "Yes, but only if you are driving directly to a pre-booked MOT appointment at a registered test centre. You cannot make detours or drive to other destinations along the way."
+  - question: "What is the fine for driving without an MOT?"
+    answer: "You can receive a fine of up to £1,000. Additionally, driving without an MOT can invalidate your car insurance, leaving you personally liable for any damage or injury in an accident."
 ---
 
 Your MOT has expired and you need to get somewhere. Can you just drive to the garage and sort it out? The answer isn't as straightforward as you might think, and the consequences of getting it wrong can be surprisingly expensive.

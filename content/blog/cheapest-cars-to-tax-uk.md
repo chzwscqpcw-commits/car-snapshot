@@ -2,6 +2,7 @@
 title: "Cheapest Cars to Tax in the UK (2026 Guide)"
 description: "A guide to the cheapest cars to tax in the UK — which vehicles pay zero or low road tax, how VED bands work, and how to check what you'll pay."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["cheapest cars to tax", "zero road tax cars", "low tax cars UK", "car tax bands", "VED rates UK", "free road tax cars", "cheapest car tax"]
 author: "Free Plate Check"
 ---

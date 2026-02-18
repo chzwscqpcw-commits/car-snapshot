@@ -2,6 +2,7 @@
 title: "First Car Checklist for New Drivers"
 description: "Everything a new driver needs to know before buying their first car — insurance, tax, MOT, running costs, and the checks that could save you money."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["first car checklist", "new driver first car", "buying first car UK", "what to check first car", "new driver car tips", "first car buying guide"]
 author: "Free Plate Check"
 ---

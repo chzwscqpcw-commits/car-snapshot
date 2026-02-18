@@ -2,8 +2,18 @@
 title: "What Does Cat N and Cat S Mean? Insurance Write-Off Categories Explained"
 description: "A clear guide to insurance write-off categories in the UK — Cat A, B, S and N. What they mean, whether you can buy a written-off car, and what to check."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["cat N car", "cat S car", "insurance write-off categories", "what does cat N mean", "what does cat S mean", "written off car UK", "car write-off categories"]
 author: "Free Plate Check"
+faqItems:
+  - question: "What does Cat N mean?"
+    answer: "Cat N (Category N) means the vehicle has suffered non-structural damage — such as body panels, bumpers, lights, or mechanical parts — and has been written off by an insurer. It can be repaired and returned to the road."
+  - question: "What does Cat S mean?"
+    answer: "Cat S (Category S) means the vehicle has suffered structural damage to the chassis, frame, or body structure. It can be repaired, but the structural integrity must be fully restored and it must pass a new MOT before being re-registered."
+  - question: "Can you buy a Cat N or Cat S car?"
+    answer: "Yes, and many people do. Written-off cars are typically sold at 30–50% below market value. However, you should get a professional inspection, check the MOT history, and invest in a paid vehicle history check before buying."
+  - question: "Does a write-off affect car insurance?"
+    answer: "Yes. Insuring a previously written-off car typically costs more, and some insurers won't cover Cat S vehicles at all. The agreed value for insurance purposes will also be lower than an equivalent car with a clean history."
 ---
 
 If you're shopping for a used car, you'll occasionally see vehicles listed as "Cat N" or "Cat S" — often at significantly lower prices than similar models. These labels mean the car has been written off by an insurance company at some point in its history.

@@ -2,9 +2,17 @@
 title: "How Much Is My Car Worth? A Guide to Car Valuations"
 description: "Understand how car valuations work, what affects your vehicle's value, and how to get the best price when selling. Free, practical advice for UK car owners."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["how much is my car worth", "car valuation", "car value", "free car valuation", "car valuation UK", "vehicle valuation"]
 author: "Free Plate Check"
 readingTime: 6
+faqItems:
+  - question: "How do car valuations work?"
+    answer: "Car valuations estimate your vehicle's market value based on factors including age, mileage, condition, make and model, service history, and current market demand. Online tools provide instant estimates using these data points combined with real listing data."
+  - question: "What affects a car's value the most?"
+    answer: "The main factors are age, mileage, condition, and service history. A car with full service history is typically worth 10–20% more than one without. The number of previous owners, colour, and whether it has been in an accident also affect value."
+  - question: "How much does mileage affect car value?"
+    answer: "Mileage has a significant impact. A car with lower-than-average mileage for its age will typically be worth more, while high-mileage vehicles are worth less. The average annual mileage in the UK is around 7,000–8,000 miles."
 ---
 
 "How much is my car worth?" is one of the most common questions asked by UK car owners. Whether you're thinking about selling, negotiating a part-exchange, or just curious, knowing your vehicle's current market value puts you in a stronger position.

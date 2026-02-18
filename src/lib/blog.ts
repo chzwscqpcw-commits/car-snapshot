@@ -11,6 +11,11 @@ export interface HowToStep {
   text: string;
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface TocEntry {
   id: string;
   text: string;
@@ -30,6 +35,7 @@ export interface BlogPost {
   readingTime: number;
   wordCount: number;
   howToSteps?: HowToStep[];
+  faqItems?: FaqItem[];
 }
 
 export interface BlogPostMeta {
@@ -238,5 +244,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     readingTime: calculateReadingTime(content),
     wordCount: words,
     howToSteps: data.howToSteps || undefined,
+    faqItems: data.faqItems || undefined,
   };
 }

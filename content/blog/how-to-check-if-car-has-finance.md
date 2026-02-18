@@ -2,6 +2,7 @@
 title: "How to Check if a Car Has Outstanding Finance"
 description: "How to find out if a used car has outstanding finance before you buy, what happens if you buy a financed car, and how to protect yourself."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["car finance check", "outstanding finance check", "does my car have finance", "HPI check finance", "buying a car with finance", "car finance owed"]
 author: "Free Plate Check"
 ---

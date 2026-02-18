@@ -2,6 +2,7 @@
 title: "How to Check Mileage on a Used Car"
 description: "How to verify a used car's mileage history using MOT records — spot clocking, detect discrepancies, and protect yourself from mileage fraud."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["check mileage used car", "how to check car mileage", "mileage check UK", "car clocking check", "verify mileage used car", "odometer check"]
 author: "Free Plate Check"
 ---

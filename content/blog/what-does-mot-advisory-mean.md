@@ -2,9 +2,16 @@
 title: "What Does an MOT Advisory Mean?"
 description: "A plain-English guide to MOT advisories — what they are, when to worry, and what to do next."
 date: "2026-02-10"
-lastModified: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["MOT advisory meaning", "what is an MOT advisory", "advisory vs failure MOT", "MOT advisory examples", "do I need to fix MOT advisories"]
 author: "Free Plate Check"
+faqItems:
+  - question: "What is an MOT advisory?"
+    answer: "An MOT advisory is a note from the tester about an item that isn't bad enough to fail the test but may need attention in the future. It's a warning, not a failure — your car still passes its MOT."
+  - question: "Do you need to fix MOT advisories?"
+    answer: "You are not legally required to fix MOT advisories. However, advisories often highlight issues that will worsen over time and could become MOT failures at the next test. Addressing them early is usually cheaper than waiting."
+  - question: "What is the difference between an MOT advisory and a failure?"
+    answer: "A failure means the item does not meet the minimum legal standard and must be repaired before the vehicle can pass. An advisory means the item is deteriorating or borderline but still meets the standard for now."
 ---
 
 If you've ever looked at an MOT certificate and spotted a list of "advisories" underneath the pass result, you're not alone in wondering what they actually mean. The good news is that an advisory isn't a fail — but that doesn't mean you should ignore it entirely.

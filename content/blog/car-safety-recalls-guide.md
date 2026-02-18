@@ -2,10 +2,17 @@
 title: "Car Safety Recalls: Everything You Need to Know"
 description: "A practical guide to vehicle safety recalls in the UK — how they work, how to check if your car is affected, and what to do about it."
 date: "2026-02-09"
-lastModified: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["car safety recall", "vehicle recall UK", "DVSA recall check", "is my car recalled", "car recall what to do", "safety recall free repair"]
 author: "Free Plate Check"
 readingTime: 5
+faqItems:
+  - question: "What is a car safety recall?"
+    answer: "A safety recall is issued when a manufacturer or the DVSA identifies a safety defect that affects a batch of vehicles. The manufacturer is required to fix the defect free of charge, regardless of the vehicle's age or warranty status."
+  - question: "How do I check if my car has been recalled?"
+    answer: "Enter your registration number into a free recall check tool to see if any recalls apply to your vehicle. You can also check the DVSA's recall database or contact your manufacturer's dealer directly."
+  - question: "Do I have to pay for a recall repair?"
+    answer: "No. All safety recall repairs are carried out free of charge by the manufacturer's authorised dealers, regardless of whether the vehicle is under warranty or how old it is."
 ---
 
 Every year, hundreds of vehicle recalls are issued in the UK. They cover everything from faulty airbags to software glitches, and they affect cars of every age, make, and price point. Yet many drivers don't know their vehicle has been recalled until they happen to take it in for a service — or until something goes wrong.

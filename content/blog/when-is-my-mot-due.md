@@ -2,8 +2,18 @@
 title: "When Is My MOT Due? How to Check and Never Miss It"
 description: "How to check when your MOT is due, what happens if you miss it, and how to make sure you never forget — a quick guide for UK drivers."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["when is my MOT due", "MOT due date check", "check MOT expiry", "MOT due date", "how to check MOT date", "MOT reminder"]
 author: "Free Plate Check"
+faqItems:
+  - question: "How do I check when my MOT is due?"
+    answer: "Enter your registration number into a free car check tool to see your current MOT status and expiry date. The information comes directly from DVLA and MOT records and is available instantly."
+  - question: "When does a car need its first MOT?"
+    answer: "A new car needs its first MOT three years after its date of registration. After that, it must be tested every year."
+  - question: "Can you get your MOT done early?"
+    answer: "Yes. You can get your MOT done up to one month (minus a day) before the expiry date without losing any days. The new certificate will run from the current expiry date, not the date of the test."
+  - question: "What happens if your MOT expires?"
+    answer: "You cannot legally drive the vehicle on public roads, except directly to a pre-booked MOT test. You also cannot renew the vehicle's tax until the MOT is valid again."
 ---
 
 Missing your MOT expiry date is easier than you'd think. There's no reminder letter from the DVLA, no notification through the post, and no grace period. One day your MOT is valid, the next it isn't — and if you're still driving, you're breaking the law.

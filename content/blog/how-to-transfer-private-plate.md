@@ -2,6 +2,7 @@
 title: "How to Transfer a Private Number Plate in the UK"
 description: "Step-by-step guide to transferring a private number plate between vehicles, putting a plate on retention, and what it costs. DVLA rules explained."
 date: "2026-02-14"
+lastModified: "2026-02-18"
 keywords: ["transfer private plate", "private number plate transfer", "DVLA plate transfer", "personalised registration transfer", "how to change number plate", "number plate retention"]
 author: "Free Plate Check"
 ---

@@ -2,8 +2,16 @@
 title: "How to Check if a Car Is Stolen Before You Buy"
 description: "How to check whether a used car has been reported stolen, what the warning signs are, and how to protect yourself when buying privately."
 date: "2026-02-17"
+lastModified: "2026-02-18"
 keywords: ["is my car stolen", "stolen car check", "how to check if car is stolen", "stolen vehicle check UK", "PNC check car", "buying a stolen car"]
 author: "Free Plate Check"
+faqItems:
+  - question: "Can you check if a car is stolen for free?"
+    answer: "There is no free public tool that directly queries the Police National Computer (PNC). However, a free car check can reveal warning signs like mismatched vehicle details, suspicious mileage gaps, or inconsistencies in the MOT history."
+  - question: "What happens if you buy a stolen car?"
+    answer: "The police will seize the vehicle and you will not be compensated. Under UK law, a thief cannot transfer legal ownership, so even if you bought the car in good faith and paid a fair price, you do not legally own it."
+  - question: "How can you tell if a car is stolen?"
+    answer: "Warning signs include no V5C logbook, a V5C that doesn't match the seller, only one key, damaged ignition or door locks, tampered VIN plates, the seller insisting on cash, and a price significantly below market value."
 ---
 
 Buying a stolen car — even unknowingly — can leave you out of pocket with no legal recourse. The police will seize the vehicle, you won't get your money back from the thief, and your insurance won't cover it. Around 100,000 vehicles are stolen in the UK every year, and a significant number end up in the used car market.
