@@ -120,6 +120,28 @@ export type ReportInput = {
     breakdown: { fuel: number | null; ved: number | null; depreciation: number | null; mot: number | null };
     excludedNote: string;
   } | null;
+  theftRisk?: {
+    theftsPer1000: number;
+    rateMultiplier: number;
+    riskCategory: "very-high" | "high" | "moderate" | "low" | "very-low";
+    theftCount: number;
+    registeredCount: number;
+    nationalAverage: number;
+  } | null;
+  evSpecs?: {
+    batteryKwh: number;
+    rangeWltp: number;
+    chargeFast: string | null;
+    chargeSlow: string | null;
+    motorKw: number | null;
+    driveType: string | null;
+  } | null;
+  negotiation?: {
+    suggestedDiscountPercent: { low: number; high: number };
+    estimatedSaving: { low: number; high: number };
+    reasons: string[];
+    confidence: "high" | "medium" | "low";
+  } | null;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -1069,7 +1091,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
 }
 
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
-  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity, motReadiness, ownershipCost } = input;
+  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity, motReadiness, ownershipCost, theftRisk, evSpecs, negotiation } = input;
 
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
@@ -1082,8 +1104,11 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   const hasColour = colourPopularity && input.data.colour;
   const hasMotReadiness = motReadiness && motReadiness.advisoryCount > 0;
   const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
+  const hasTheftRisk = !!theftRisk;
+  const hasEvSpecs = !!evSpecs;
+  const hasNegotiation = !!negotiation;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices && !hasMotReadiness && !hasOwnershipCost) return y;
+  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices && !hasMotReadiness && !hasOwnershipCost && !hasTheftRisk && !hasEvSpecs && !hasNegotiation) return y;
 
   y = startSection(doc, y, "Vehicle Insights", 20);
 
@@ -1306,6 +1331,44 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       }
       y = drawInsightCard(doc, y, C.red, "Safety Recalls", lines);
     }
+  }
+
+  // Theft Risk
+  if (hasTheftRisk) {
+    const tr = theftRisk!;
+    const catLabel = tr.riskCategory === "very-high" ? "Very High" : tr.riskCategory === "high" ? "High" : tr.riskCategory === "moderate" ? "Moderate" : tr.riskCategory === "low" ? "Low" : "Very Low";
+    const accent = (tr.riskCategory === "very-high" || tr.riskCategory === "high") ? C.red : tr.riskCategory === "moderate" ? C.amber : C.emerald;
+    y = drawInsightCard(doc, y, accent, `Theft Risk: ${catLabel}`, [
+      `${tr.theftsPer1000} thefts per 1,000 vehicles (${tr.rateMultiplier}\u00D7 national average)`,
+      `National average: ${tr.nationalAverage} per 1,000 registered vehicles`,
+    ]);
+  }
+
+  // EV Specifications
+  if (hasEvSpecs) {
+    const ev = evSpecs!;
+    const lines: string[] = [
+      `Battery: ${ev.batteryKwh} kWh \u00B7 WLTP Range: ${ev.rangeWltp} miles`,
+    ];
+    if (ev.chargeFast) lines.push(`Fast charge: ${ev.chargeFast}`);
+    if (ev.chargeSlow) lines.push(`Home charge: ${ev.chargeSlow}`);
+    if (ev.motorKw) lines.push(`Motor: ${ev.motorKw} kW (${Math.round(ev.motorKw * 1.341)} bhp)`);
+    if (ev.driveType) lines.push(`Drive type: ${ev.driveType}`);
+    y = drawInsightCard(doc, y, C.cyan, "EV Specifications", lines);
+  }
+
+  // Negotiation Helper
+  if (hasNegotiation) {
+    const neg = negotiation!;
+    const lines: string[] = [
+      `Suggested discount: ${neg.suggestedDiscountPercent.low}\u2013${neg.suggestedDiscountPercent.high}% below asking`,
+      `Estimated saving: \u00A3${neg.estimatedSaving.low.toLocaleString()}\u2013\u00A3${neg.estimatedSaving.high.toLocaleString()}`,
+      `Confidence: ${neg.confidence}`,
+    ];
+    for (const reason of neg.reasons) {
+      lines.push(`\u2022 ${reason}`);
+    }
+    y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines);
   }
 
   return y;

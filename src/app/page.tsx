@@ -124,6 +124,8 @@ import {
   ChevronDown,
   ChevronUp,
   Wrench,
+  Battery,
+  ArrowDownCircle,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -143,6 +145,9 @@ import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
 import { calculateMotReadiness, type MotReadinessResult } from "@/lib/mot-readiness";
 import { calculateOwnershipCost, type OwnershipCostResult } from "@/lib/ownership-cost";
 import { lookupMotPassRate } from "@/lib/mot-pass-rate";
+import { lookupTheftRisk, type TheftRiskResult } from "@/lib/theft-risk";
+import { lookupEvSpecs, type EvSpecsResult } from "@/lib/ev-specs";
+import { calculateNegotiation, type NegotiationResult } from "@/lib/negotiation";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -1031,6 +1036,18 @@ export default function Home() {
     return lookupMotPassRate(data.make, lookupModel ?? data.model);
   }, [data?.make, data?.model, lookupModel]);
 
+  // Theft risk rating
+  const theftRisk = useMemo((): TheftRiskResult | null => {
+    if (!data?.make) return null;
+    return lookupTheftRisk(data.make, lookupModel ?? data.model);
+  }, [data?.make, data?.model, lookupModel]);
+
+  // EV specs (only for electric/hybrid vehicles)
+  const evSpecs = useMemo((): EvSpecsResult | null => {
+    if (!data?.make || !data?.fuelType) return null;
+    return lookupEvSpecs(data.make, lookupModel ?? data.model, data.fuelType);
+  }, [data?.make, data?.model, data?.fuelType, lookupModel]);
+
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
@@ -1100,6 +1117,21 @@ export default function Home() {
       isOver3Years,
     });
   }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel]);
+
+  // Negotiation helper
+  const negotiation = useMemo((): NegotiationResult | null => {
+    if (!data?.yearOfManufacture || !valuationResult?.estimatedValue || !motReadiness) return null;
+    if (motReadiness.isMotExempt || motReadiness.advisoryCount <= 0) return null;
+    const motInsights = data.motTests ? calculateMotInsights(data.motTests) : null;
+    return calculateNegotiation({
+      totalEstimatedCost: motReadiness.totalEstimatedCost,
+      motReadinessScore: motReadiness.score,
+      advisoryCount: motReadiness.advisoryCount,
+      estimatedValue: valuationResult.estimatedValue,
+      avgMilesPerYear: motInsights?.avgMilesPerYear ?? null,
+      vehicleAge: new Date().getFullYear() - data.yearOfManufacture,
+    });
+  }, [data, valuationResult, motReadiness]);
 
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
@@ -1486,8 +1518,37 @@ export default function Home() {
       });
     }
 
+    // Theft risk insight
+    if (theftRisk) {
+      const catLabel = theftRisk.riskCategory === "very-high" ? "Very High" : theftRisk.riskCategory === "high" ? "High" : theftRisk.riskCategory === "moderate" ? "Moderate" : theftRisk.riskCategory === "low" ? "Low" : "Very Low";
+      const tone: InsightTone = theftRisk.riskCategory === "very-high" || theftRisk.riskCategory === "high" ? "risk" : theftRisk.riskCategory === "moderate" ? "warn" : "good";
+      result.push({
+        tone,
+        title: `Theft risk: ${catLabel} (${theftRisk.theftsPer1000} per 1,000 vehicles)`,
+        detail: `${theftRisk.rateMultiplier}× the national average of ${theftRisk.nationalAverage} per 1,000. Consider tracker/immobiliser for higher-risk models.`,
+      });
+    }
+
+    // EV specs insight
+    if (evSpecs) {
+      result.push({
+        tone: "info",
+        title: `${evSpecs.rangeWltp} mile range · ${evSpecs.batteryKwh} kWh battery`,
+        detail: `${evSpecs.chargeFast ? `Fast charge: ${evSpecs.chargeFast}` : ""}${evSpecs.chargeFast && evSpecs.chargeSlow ? " · " : ""}${evSpecs.chargeSlow ? `Home charge: ${evSpecs.chargeSlow}` : ""}${evSpecs.motorKw ? ` · ${evSpecs.motorKw} kW motor` : ""}`,
+      });
+    }
+
+    // Negotiation helper insight
+    if (negotiation) {
+      result.push({
+        tone: "info",
+        title: `Negotiation range: ${negotiation.suggestedDiscountPercent.low}–${negotiation.suggestedDiscountPercent.high}% below asking`,
+        detail: `Estimated saving: £${negotiation.estimatedSaving.low.toLocaleString()}–£${negotiation.estimatedSaving.high.toLocaleString()} based on ${negotiation.reasons.length} factor${negotiation.reasons.length !== 1 ? "s" : ""}.`,
+      });
+    }
+
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices, motReadiness, ownershipCost]);
+  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices, motReadiness, ownershipCost, theftRisk, evSpecs, negotiation]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -2077,6 +2138,42 @@ END:VEVENT
       lines.push("");
     }
 
+    // ── THEFT RISK ──
+    if (theftRisk) {
+      const catLabel = theftRisk.riskCategory === "very-high" ? "Very High" : theftRisk.riskCategory === "high" ? "High" : theftRisk.riskCategory === "moderate" ? "Moderate" : theftRisk.riskCategory === "low" ? "Low" : "Very Low";
+      lines.push(sep, "THEFT RISK", sep, "");
+      lines.push(`Risk Category:       ${catLabel}`);
+      lines.push(`Rate:                ${theftRisk.theftsPer1000} per 1,000 vehicles (${theftRisk.rateMultiplier}× national average)`);
+      lines.push(`National Average:    ${theftRisk.nationalAverage} per 1,000 vehicles`);
+      lines.push("");
+    }
+
+    // ── EV SPECIFICATIONS ──
+    if (evSpecs) {
+      lines.push(sep, "EV SPECIFICATIONS", sep, "");
+      lines.push(`Battery:             ${evSpecs.batteryKwh} kWh`);
+      lines.push(`WLTP Range:          ${evSpecs.rangeWltp} miles`);
+      if (evSpecs.chargeFast) lines.push(`Fast Charge:         ${evSpecs.chargeFast}`);
+      if (evSpecs.chargeSlow) lines.push(`Home Charge:         ${evSpecs.chargeSlow}`);
+      if (evSpecs.motorKw) lines.push(`Motor Power:         ${evSpecs.motorKw} kW`);
+      if (evSpecs.driveType) lines.push(`Drive Type:          ${evSpecs.driveType}`);
+      lines.push("");
+    }
+
+    // ── NEGOTIATION HELPER ──
+    if (negotiation) {
+      lines.push(sep, "NEGOTIATION HELPER", sep, "");
+      lines.push(`Suggested Discount:  ${negotiation.suggestedDiscountPercent.low}–${negotiation.suggestedDiscountPercent.high}%`);
+      lines.push(`Estimated Saving:    £${negotiation.estimatedSaving.low.toLocaleString()}–£${negotiation.estimatedSaving.high.toLocaleString()}`);
+      lines.push(`Confidence:          ${negotiation.confidence}`);
+      lines.push("");
+      lines.push("Reasons:");
+      for (const reason of negotiation.reasons) {
+        lines.push(`  • ${reason}`);
+      }
+      lines.push("");
+    }
+
     // ── MOT PASS RATE ──
     if (motPassRate && data.make) {
       const modelName = lookupModel ?? data.model ?? "this model";
@@ -2351,6 +2448,9 @@ END:VEVENT
           breakdown: ownershipCost.breakdown,
           excludedNote: ownershipCost.excludedNote,
         } : undefined,
+        theftRisk: theftRisk ?? undefined,
+        evSpecs: evSpecs ?? undefined,
+        negotiation: negotiation ?? undefined,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");
@@ -3503,6 +3603,56 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* EV SPECS CARD */}
+            {evSpecs && (
+              <DataReveal delay={205}>
+                <div className="mb-8 p-5 rounded-lg border border-cyan-800/40 bg-gradient-to-r from-cyan-950/30 to-blue-950/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Battery className="w-5 h-5 text-cyan-400" />
+                    <h3 className="text-sm font-semibold text-slate-200">EV Specifications</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Battery</p>
+                      <p className="text-lg font-bold text-cyan-400">{evSpecs.batteryKwh} <span className="text-sm font-normal text-slate-400">kWh</span></p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">WLTP Range</p>
+                      <p className="text-lg font-bold text-cyan-400">{evSpecs.rangeWltp} <span className="text-sm font-normal text-slate-400">miles</span></p>
+                    </div>
+                    {evSpecs.chargeFast && (
+                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Fast Charge</p>
+                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeFast}</p>
+                      </div>
+                    )}
+                    {evSpecs.chargeSlow && (
+                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Home Charge</p>
+                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeSlow}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {(evSpecs.motorKw || evSpecs.driveType) && (
+                    <div className="flex gap-2 flex-wrap">
+                      {evSpecs.motorKw && (
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
+                          {evSpecs.motorKw} kW motor ({Math.round(evSpecs.motorKw * 1.341)} bhp)
+                        </span>
+                      )}
+                      {evSpecs.driveType && (
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
+                          {evSpecs.driveType}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </DataReveal>
+            )}
+
             {/* MOT READINESS CARD */}
             {motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0 && (
               <DataReveal delay={210}>
@@ -4122,6 +4272,48 @@ END:VEVENT
                   })()}
 
                   <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* NEGOTIATION HELPER CARD */}
+            {negotiation && (
+              <DataReveal delay={315}>
+                <div className="mb-8 p-5 rounded-lg border border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <ArrowDownCircle className="w-5 h-5 text-emerald-400" />
+                      <h3 className="text-sm font-semibold text-slate-200">Negotiation Helper</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      negotiation.confidence === "high" ? "bg-emerald-900/40 text-emerald-300" :
+                      negotiation.confidence === "medium" ? "bg-blue-900/40 text-blue-300" :
+                      "bg-amber-900/40 text-amber-300"
+                    }`}>
+                      {negotiation.confidence} confidence
+                    </span>
+                  </div>
+
+                  <p className="text-2xl font-bold text-emerald-400 mb-1">
+                    {negotiation.suggestedDiscountPercent.low}–{negotiation.suggestedDiscountPercent.high}%
+                    <span className="text-sm font-normal text-slate-400 ml-2">below asking price</span>
+                  </p>
+                  <p className="text-sm text-slate-300 mb-3">
+                    Estimated saving: <span className="font-semibold text-emerald-300">£{negotiation.estimatedSaving.low.toLocaleString()}–£{negotiation.estimatedSaving.high.toLocaleString()}</span>
+                  </p>
+
+                  <div className="space-y-1.5">
+                    {negotiation.reasons.map((reason, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <span className="text-emerald-400 mt-0.5 shrink-0">•</span>
+                        <span className="text-slate-300">{reason}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="text-[10px] text-slate-600 mt-3">
+                    This is an estimate based on MOT advisories and vehicle data. Actual negotiation outcomes depend on many factors including vehicle condition, local market, and seller motivation.
+                  </p>
                 </div>
               </DataReveal>
             )}
