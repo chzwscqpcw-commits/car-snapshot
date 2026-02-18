@@ -125,15 +125,14 @@ async function processFile(filePath: string): Promise<Map<string, MakeModelCount
         process.exit(1);
       }
 
-      // Find the rightmost numeric/year column for counts
-      // VEH0120 has year columns like "2024 Q4", "2024", or "TOTAL"
-      // We want the most recent year column (rightmost one that looks like a year/quarter)
+      // Find the most recent year column for counts
+      // VEH0120 columns go newest-to-oldest (e.g. "2025 Q3", "2025 Q2", ... "2014 Q3")
+      // We want the first (leftmost) year/quarter column — that's the most recent data
       let bestIdx = -1;
       let bestLabel = "";
 
-      for (let i = headers.length - 1; i >= 0; i--) {
+      for (let i = 0; i < headers.length; i++) {
         const h = headers[i];
-        // Match year columns like "2024 Q4", "2024", or "TOTAL"/"VALUE"/"COUNT"
         if (/^\d{4}(\s+Q\d)?$/.test(h) || h === "TOTAL" || h === "COUNT" || h === "VALUE") {
           bestIdx = i;
           bestLabel = h;
@@ -157,7 +156,11 @@ async function processFile(filePath: string): Promise<Map<string, MakeModelCount
     if (fields.length <= Math.max(makeIdx, modelIdx, countIdx)) continue;
 
     const make = normalize(fields[makeIdx]);
-    const model = normalize(fields[modelIdx]);
+    let model = normalize(fields[modelIdx]);
+    // GenModel often includes make prefix (e.g. "FORD FOCUS") — strip it
+    if (model.startsWith(make + " ")) {
+      model = model.slice(make.length + 1).trim();
+    }
     const count = parseInt(fields[countIdx].replace(/,/g, ""), 10) || 0;
 
     if (!make || !model || count <= 0) continue;

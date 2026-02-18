@@ -2,7 +2,7 @@
 
 import rarityData from "@/data/how-many-left.json";
 
-const data = rarityData as Record<string, [number, number]>;
+const data = rarityData as unknown as Record<string, [number, number]>;
 
 function normalize(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
