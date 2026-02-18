@@ -259,6 +259,25 @@ export default function TaxCheckPage() {
         </div>
       </div>
 
+      {/* Related guides */}
+      <div className="max-w-3xl mx-auto px-4 mt-16">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a href="/blog/how-to-tax-a-car-online" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Tax a Car Online</p>
+            <p className="text-xs text-slate-500 mt-2">Step-by-step guide to taxing your car with the DVLA, what you need, and what it costs.</p>
+          </a>
+          <a href="/blog/cheapest-cars-to-tax-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cheapest Cars to Tax in the UK</p>
+            <p className="text-xs text-slate-500 mt-2">Which vehicles pay zero or low road tax, how VED bands work, and how to check.</p>
+          </a>
+          <a href="/blog/how-to-sorn-a-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to SORN a Car Online</p>
+            <p className="text-xs text-slate-500 mt-2">When you need a SORN and how to declare one — a quick step-by-step guide.</p>
+          </a>
+        </div>
+      </div>
+
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
           <p>Free Plate Check &copy; 2026. All rights reserved.</p>

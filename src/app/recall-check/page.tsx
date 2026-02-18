@@ -241,6 +241,21 @@ export default function RecallCheckPage() {
         </div>
       </div>
 
+      {/* Related guides */}
+      <div className="max-w-3xl mx-auto px-4 mt-16">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a href="/blog/used-car-checks-before-buying" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
+            <p className="text-xs text-slate-500 mt-2">A practical checklist — from MOT history to mileage red flags.</p>
+          </a>
+          <a href="/blog/first-car-checklist-new-drivers" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">First Car Checklist for New Drivers</p>
+            <p className="text-xs text-slate-500 mt-2">Insurance, tax, MOT, running costs, and the checks that could save you money.</p>
+          </a>
+        </div>
+      </div>
+
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
           <p>Free Plate Check &copy; 2026. All rights reserved.</p>

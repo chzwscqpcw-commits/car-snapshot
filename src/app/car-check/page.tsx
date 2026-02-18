@@ -281,6 +281,29 @@ export default function CarCheckPage() {
         </div>
       </div>
 
+      {/* Related guides */}
+      <div className="max-w-3xl mx-auto px-4 mt-16">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a href="/blog/what-is-hpi-check" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">What Is an HPI Check?</p>
+            <p className="text-xs text-slate-500 mt-2">How HPI compares to free car checks and when you should pay for a full report.</p>
+          </a>
+          <a href="/blog/how-to-check-if-car-is-stolen" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Check if a Car Is Stolen</p>
+            <p className="text-xs text-slate-500 mt-2">Warning signs and how to protect yourself when buying privately.</p>
+          </a>
+          <a href="/blog/what-does-cat-n-s-mean" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">What Does Cat N and Cat S Mean?</p>
+            <p className="text-xs text-slate-500 mt-2">Insurance write-off categories explained — Cat A, B, S and N.</p>
+          </a>
+          <a href="/blog/how-to-spot-a-clocked-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Spot a Clocked Car</p>
+            <p className="text-xs text-slate-500 mt-2">8 warning signs to watch for using MOT history and wear patterns.</p>
+          </a>
+        </div>
+      </div>
+
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
           <p>Free Plate Check &copy; 2026. All rights reserved.</p>

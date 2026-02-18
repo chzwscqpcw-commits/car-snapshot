@@ -2304,7 +2304,7 @@ END:VEVENT
             <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
             <span className="text-slate-700">·</span>
             <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity" title={PARTNER_LINKS.bookMyGarage.description}>
-              <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" loading="lazy" />
+              <img src="/bmg-logo.png" alt="BookMyGarage" className="h-5" width={100} height={20} loading="lazy" />
             </a>
           </div>
 
@@ -3784,6 +3784,13 @@ END:VEVENT
           {signupMsg && <p className="mt-2 text-sm text-blue-200">{signupMsg}</p>}
         </div>
 
+        {/* ABOUT — descriptive paragraph for SEO */}
+        <div className="mt-10">
+          <p className="text-sm text-slate-400 leading-relaxed">
+            Free Plate Check is a free UK vehicle lookup tool. Enter any registration number to see official DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, and an instant valuation estimate. No signup, no email, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
+          </p>
+        </div>
+
         {/* WHAT CAN YOU CHECK? */}
         <div className="mt-10">
           {/* Share prompt sentinel — bottom of results */}
@@ -3842,6 +3849,29 @@ END:VEVENT
           </div>
         </div>
 
+        {/* FAQ */}
+        <div className="mt-10">
+          <h2 className="text-xl font-bold text-slate-100 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-slate-100">Is this really free?</h3>
+              <p className="text-sm text-slate-400 mt-1">Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. We use official DVLA and MOT data to show you tax status, MOT history, mileage records and vehicle details.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-100">What does a free plate check show?</h3>
+              <p className="text-sm text-slate-400 mt-1">You&apos;ll see the vehicle&apos;s make, model, colour, fuel type, engine size, CO2 emissions, year of manufacture, current tax and MOT status, full MOT history with advisories and failures, and mileage recorded at each MOT test. You also get ULEZ compliance, safety recall checks, and a valuation estimate.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-100">How do I check MOT history?</h3>
+              <p className="text-sm text-slate-400 mt-1">Enter your registration number above and you&apos;ll see every MOT test result since 2005 — including pass/fail outcomes, advisories, failures, mileage readings and the next MOT due date. It&apos;s free, instant and works for any UK-registered vehicle.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-100">Do you store my registration number?</h3>
+              <p className="text-sm text-slate-400 mt-1">No. We do not store registration numbers or any information that identifies which vehicles you look up. Your search is sent directly to the DVLA and MOT APIs, and nothing is saved on our servers. Recent lookups are stored only in your browser&apos;s local storage, which you can clear at any time.</p>
+            </div>
+          </div>
+        </div>
+
         {/* HELPFUL GUIDES */}
         {recentGuides.length > 0 && (
           <div className="mt-10">
@@ -3888,6 +3918,8 @@ END:VEVENT
               <img
                 src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
                 alt="Free Plate Check - Approved on SaaSHub"
+                width={120}
+                height={54}
                 className="max-w-[120px] opacity-70 hover:opacity-100 transition-opacity"
               />
             </a>

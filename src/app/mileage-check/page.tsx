@@ -264,6 +264,25 @@ export default function MileageCheckPage() {
         </div>
       </div>
 
+      {/* Related guides */}
+      <div className="max-w-3xl mx-auto px-4 mt-16">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a href="/blog/how-to-check-mileage-used-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Check Mileage on a Used Car</p>
+            <p className="text-xs text-slate-500 mt-2">Verify mileage history using MOT records and protect yourself from fraud.</p>
+          </a>
+          <a href="/blog/how-to-check-car-service-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Check a Car&apos;s Service History</p>
+            <p className="text-xs text-slate-500 mt-2">What a full service history means and why gaps should raise red flags.</p>
+          </a>
+          <a href="/blog/how-to-read-mot-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Read a Car&apos;s MOT History</p>
+            <p className="text-xs text-slate-500 mt-2">Understand test results, advisories, and how to spot red flags.</p>
+          </a>
+        </div>
+      </div>
+
       <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
         <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
           <p>Free Plate Check &copy; 2026. All rights reserved.</p>

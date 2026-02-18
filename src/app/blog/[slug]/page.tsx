@@ -32,20 +32,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       modifiedTime: post.lastModified || post.date,
       url: `https://www.freeplatecheck.co.uk/blog/${slug}`,
       siteName: "Free Plate Check",
-      images: [
-        {
-          url: "https://www.freeplatecheck.co.uk/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["https://www.freeplatecheck.co.uk/og-image.png"],
     },
   };
 }
@@ -92,7 +83,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     datePublished: post.date,
     dateModified: post.lastModified || post.date,
     wordCount: post.wordCount,
-    image: "https://www.freeplatecheck.co.uk/og-image.png",
+    image: `https://www.freeplatecheck.co.uk/blog/${slug}/opengraph-image`,
     author: {
       "@type": "Organization",
       name: "Free Plate Check",
