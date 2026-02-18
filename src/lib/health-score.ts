@@ -50,10 +50,16 @@ export function calculateHealthScore(params: {
   const breakdown: HealthBreakdown[] = [];
   let total = 0;
 
+  // Cars under 3 years old don't require MOT — award full marks for MOT-dependent categories
+  const motExempt = params.vehicleAge != null && params.vehicleAge <= 3;
+
   // 1. MOT History: 25 pts (pass rate scaled)
   const maxMot = 25;
   let motScore = 0;
-  if (params.passRate != null && params.totalTests != null && params.totalTests > 0) {
+  if (motExempt) {
+    motScore = maxMot;
+    breakdown.push({ category: "MOT History", score: motScore, maxScore: maxMot, detail: "Under 3 years — MOT not yet required" });
+  } else if (params.passRate != null && params.totalTests != null && params.totalTests > 0) {
     motScore = Math.round((params.passRate / 100) * maxMot);
     breakdown.push({
       category: "MOT History",
@@ -69,34 +75,47 @@ export function calculateHealthScore(params: {
   // 2. Current Advisories: 20 pts
   const maxAdv = 20;
   let advScore = 0;
-  const advCount = params.latestAdvisoryCount ?? 0;
-  if (advCount === 0) advScore = 20;
-  else if (advCount <= 2) advScore = 15;
-  else if (advCount <= 5) advScore = 10;
-  else advScore = 5;
-  breakdown.push({
-    category: "Advisories",
-    score: advScore,
-    maxScore: maxAdv,
-    detail: advCount === 0 ? "No current advisories" : `${advCount} current advisor${advCount !== 1 ? "ies" : "y"}`,
-  });
+  if (motExempt) {
+    advScore = maxAdv;
+    breakdown.push({ category: "Advisories", score: advScore, maxScore: maxAdv, detail: "No MOT advisories (too new)" });
+  } else {
+    const advCount = params.latestAdvisoryCount ?? 0;
+    if (advCount === 0) advScore = 20;
+    else if (advCount <= 2) advScore = 15;
+    else if (advCount <= 5) advScore = 10;
+    else advScore = 5;
+    breakdown.push({
+      category: "Advisories",
+      score: advScore,
+      maxScore: maxAdv,
+      detail: advCount === 0 ? "No current advisories" : `${advCount} current advisor${advCount !== 1 ? "ies" : "y"}`,
+    });
+  }
   total += advScore;
 
   // 3. Mileage Consistency: 15 pts
   const maxMileage = 15;
-  const mileageScore = params.hasMileageDiscrepancy ? 0 : 15;
-  breakdown.push({
-    category: "Mileage Consistency",
-    score: mileageScore,
-    maxScore: maxMileage,
-    detail: params.hasMileageDiscrepancy ? "Mileage discrepancy detected" : "No mileage discrepancies",
-  });
+  let mileageScore: number;
+  if (motExempt) {
+    mileageScore = maxMileage;
+    breakdown.push({ category: "Mileage Consistency", score: mileageScore, maxScore: maxMileage, detail: "No MOT mileage records yet" });
+  } else {
+    mileageScore = params.hasMileageDiscrepancy ? 0 : 15;
+    breakdown.push({
+      category: "Mileage Consistency",
+      score: mileageScore,
+      maxScore: maxMileage,
+      detail: params.hasMileageDiscrepancy ? "Mileage discrepancy detected" : "No mileage discrepancies",
+    });
+  }
   total += mileageScore;
 
   // 4. Age-Adjusted Mileage: 10 pts
   const maxAgeMileage = 10;
   let ageMileageScore = 10;
-  if (params.avgMilesPerYear != null && params.avgMilesPerYear > 0) {
+  if (motExempt) {
+    breakdown.push({ category: "Annual Mileage", score: ageMileageScore, maxScore: maxAgeMileage, detail: "New vehicle" });
+  } else if (params.avgMilesPerYear != null && params.avgMilesPerYear > 0) {
     if (params.avgMilesPerYear >= 5000 && params.avgMilesPerYear <= 12000) {
       ageMileageScore = 10;
     } else if (params.avgMilesPerYear > 12000 && params.avgMilesPerYear <= 20000) {
@@ -152,13 +171,18 @@ export function calculateHealthScore(params: {
   // 7. Tax & MOT Currency: 5 pts
   const maxCurrency = 5;
   let currencyScore = 0;
-  if (params.taxCurrent && params.motCurrent) currencyScore = 5;
-  else if (params.taxCurrent || params.motCurrent) currencyScore = 3;
+  // Cars under 3 years don't need MOT — treat as effectively "current"
+  const effectiveMotCurrent = params.motCurrent || motExempt;
+  if (params.taxCurrent && effectiveMotCurrent) currencyScore = 5;
+  else if (params.taxCurrent || effectiveMotCurrent) currencyScore = 3;
+  const currencyDetail = motExempt
+    ? (params.taxCurrent ? "Tax current, MOT not yet required" : "Tax expired, MOT not yet required")
+    : (params.taxCurrent && params.motCurrent ? "Both current" : !params.taxCurrent && !params.motCurrent ? "Both expired or unknown" : params.taxCurrent ? "Tax current, MOT expired" : "MOT current, tax expired");
   breakdown.push({
     category: "Tax & MOT",
     score: currencyScore,
     maxScore: maxCurrency,
-    detail: params.taxCurrent && params.motCurrent ? "Both current" : !params.taxCurrent && !params.motCurrent ? "Both expired or unknown" : params.taxCurrent ? "Tax current, MOT expired" : "MOT current, tax expired",
+    detail: currencyDetail,
   });
   total += currencyScore;
 
