@@ -101,8 +101,10 @@ export function calculateEcoScore(params: {
   // 3. Fuel Type: 20%
   if (fuelType) {
     let fuelScore: number;
-    if (fuelLower.includes("electric")) fuelScore = 100;
-    else if (fuelLower.includes("hybrid")) fuelScore = 80;
+    const isPureElectric = (fuelLower.includes("electric") || fuelLower === "electricity")
+      && !fuelLower.includes("hybrid") && !fuelLower.includes("petrol") && !fuelLower.includes("diesel");
+    if (isPureElectric) fuelScore = 100;
+    else if (fuelLower.includes("hybrid") || (fuelLower.includes("electric") && !isPureElectric)) fuelScore = 80;
     else if (fuelLower.includes("petrol") || fuelLower.includes("gas")) fuelScore = 50;
     else if (fuelLower.includes("diesel")) fuelScore = 40;
     else fuelScore = 50;

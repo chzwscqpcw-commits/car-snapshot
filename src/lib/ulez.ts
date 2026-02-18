@@ -49,8 +49,10 @@ export function calculateUlezCompliance(vehicle: {
   const { fuelType, euroStatus, monthOfFirstRegistration, yearOfManufacture } = vehicle;
   const fuelLower = (fuelType ?? "").toLowerCase();
 
-  // 1. Electric / hydrogen → exempt
-  if (fuelLower.includes("electric") || fuelLower.includes("hydrogen")) {
+  // 1. Pure electric / hydrogen → exempt (exclude hybrids like "HYBRID ELECTRIC" or "PETROL/ELECTRIC")
+  const isPureElectric = (fuelLower.includes("electric") || fuelLower === "electricity")
+    && !fuelLower.includes("hybrid") && !fuelLower.includes("petrol") && !fuelLower.includes("diesel");
+  if (isPureElectric || fuelLower.includes("hydrogen")) {
     return {
       status: "exempt",
       confidence: "confirmed",

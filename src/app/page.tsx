@@ -1241,13 +1241,15 @@ export default function Home() {
     // Fuel type insights
     if (data.fuelType) {
       const fuelLower = data.fuelType.toLowerCase();
-      if (fuelLower.includes("electric")) {
+      const isPureElectric = (fuelLower.includes("electric") || fuelLower === "electricity")
+        && !fuelLower.includes("hybrid") && !fuelLower.includes("petrol") && !fuelLower.includes("diesel");
+      if (isPureElectric) {
         result.push({
           tone: "good",
           title: "Electric vehicle — zero emissions",
           detail: "Check charging infrastructure in your area and battery health on older EVs.",
         });
-      } else if (fuelLower.includes("hybrid")) {
+      } else if (fuelLower.includes("hybrid") || fuelLower.includes("electric")) {
         result.push({
           tone: "good",
           title: "Hybrid — reduced emissions",
