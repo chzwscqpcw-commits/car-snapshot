@@ -64,6 +64,27 @@ const FUEL_TYPE_MAP: Record<string, string> = {
 
 const ASKING_PRICE_DISCOUNT = 0.92; // 8% discount: eBay asking → realistic
 
+// ── Quartile computation (QUARTILE.INC / linear interpolation) ─────────────
+
+function computeQuartiles(sorted: number[]): { q1: number; q3: number } | null {
+  if (sorted.length < 5) return null;
+
+  const n = sorted.length;
+  // QUARTILE.INC: position = 1 + p*(n-1), 0-indexed
+  const q1Pos = 0.25 * (n - 1);
+  const q3Pos = 0.75 * (n - 1);
+
+  const q1Floor = Math.floor(q1Pos);
+  const q1Frac = q1Pos - q1Floor;
+  const q1 = sorted[q1Floor] + q1Frac * (sorted[q1Floor + 1] - sorted[q1Floor]);
+
+  const q3Floor = Math.floor(q3Pos);
+  const q3Frac = q3Pos - q3Floor;
+  const q3 = sorted[q3Floor] + q3Frac * (sorted[q3Floor + 1] - sorted[q3Floor]);
+
+  return { q1, q3 };
+}
+
 // ── eBay comparables ────────────────────────────────────────────────────────
 
 type AspectDistribution = {
@@ -76,6 +97,8 @@ type AspectDistribution = {
 
 type EbayResult = {
   median: number;
+  q1Price: number | null;
+  q3Price: number | null;
   listingCount: number;
   minPrice: number;
   maxPrice: number;
@@ -203,8 +226,13 @@ async function searchEbay(
     }
   }
 
+  // Compute IQR (quartiles) from the sorted, filtered prices
+  const quartiles = computeQuartiles(filtered);
+
   return {
     median: Math.round(median * ASKING_PRICE_DISCOUNT),
+    q1Price: quartiles ? Math.round(quartiles.q1 * ASKING_PRICE_DISCOUNT) : null,
+    q3Price: quartiles ? Math.round(quartiles.q3 * ASKING_PRICE_DISCOUNT) : null,
     listingCount: filtered.length,
     minPrice: Math.round(filtered[0]),
     maxPrice: Math.round(filtered[filtered.length - 1]),
@@ -369,6 +397,8 @@ async function writeCache(params: {
 
 type ValuationResponse = {
   ebayMedian: number | null;
+  ebayQ1Price: number | null;
+  ebayQ3Price: number | null;
   ebayListingCount: number;
   ebayMinPrice: number | null;
   ebayMaxPrice: number | null;
@@ -454,6 +484,8 @@ export async function GET(
 
     return NextResponse.json({
       ebayMedian: ebayResult?.median ?? null,
+      ebayQ1Price: ebayResult?.q1Price ?? null,
+      ebayQ3Price: ebayResult?.q3Price ?? null,
       ebayListingCount: ebayResult?.listingCount ?? 0,
       ebayMinPrice: ebayResult?.minPrice ?? null,
       ebayMaxPrice: ebayResult?.maxPrice ?? null,

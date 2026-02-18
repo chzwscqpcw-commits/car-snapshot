@@ -18,6 +18,8 @@ export type ValuationResult = {
   ebayDominantTransmission: string | null;
   ebayDominantBodyType: string | null;
   ebayYearWidened: boolean;
+  ebayQ1Price: number | null;
+  ebayQ3Price: number | null;
   marketSupply: "good" | "moderate" | "limited" | null;
   disclaimer: string;
 };
@@ -274,6 +276,8 @@ export function combineValuationLayers(
   ebayDominantTransmission: string | null,
   ebayDominantBodyType: string | null,
   ebayYearWidened: boolean,
+  ebayQ1Price: number | null,
+  ebayQ3Price: number | null,
 ): ValuationResult | null {
   if (!depreciationEstimate) return null;
 
@@ -287,10 +291,9 @@ export function combineValuationLayers(
 
   let estimatedValue: number;
   let confidence: ValuationConfidence;
-  let rangePercent: number;
+  let fallbackPercent: number;
   const sources: string[] = ["depreciation model"];
 
-  const totalComparables = ebayListingCount + cacheEntryCount;
   const totalOnMarket = ebayTotalListings || 0;
 
   if (ebayMedian && cacheMedian) {
@@ -300,8 +303,8 @@ export function combineValuationLayers(
     } else {
       estimatedValue = depreciationEstimate * 0.20 + ebayMedian * 0.40 + cacheMedian * 0.40;
     }
-    confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "medium";
-    rangePercent = confidence === "high" ? 10 : 15;
+    confidence = totalOnMarket >= 100 ? "high" : "medium";
+    fallbackPercent = confidence === "high" ? 8 : 12;
     sources.push(
       `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
       "recent valuations",
@@ -311,11 +314,11 @@ export function combineValuationLayers(
     if (ebayYearWidened) {
       estimatedValue = depreciationEstimate * 0.55 + ebayMedian * 0.45;
       confidence = totalOnMarket >= 5 ? "medium" : "low";
-      rangePercent = confidence === "medium" ? 18 : 20;
+      fallbackPercent = confidence === "medium" ? 15 : 18;
     } else {
       estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
       confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "low";
-      rangePercent = confidence === "high" ? 10 : 15;
+      fallbackPercent = confidence === "high" ? 8 : 12;
     }
     sources.push(
       `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
@@ -324,18 +327,43 @@ export function combineValuationLayers(
     // Depreciation + cache
     estimatedValue = depreciationEstimate * 0.25 + cacheMedian * 0.75;
     confidence = "medium";
-    rangePercent = 15;
+    fallbackPercent = 12;
     sources.push("recent valuations");
   } else {
     // Depreciation only
     estimatedValue = depreciationEstimate;
     confidence = "low";
-    rangePercent = 25;
+    fallbackPercent = 20;
   }
 
   // Widened year search caps confidence at medium
   if (ebayYearWidened && confidence === "high") {
     confidence = "medium";
+  }
+
+  // ── Compute range (IQR path vs fallback percentage) ──────────────────────
+  let rangePercent: number;
+  const hasIQR = ebayQ1Price != null && ebayQ3Price != null && ebayListingCount >= 5;
+
+  if (hasIQR) {
+    // IQR half-width as percentage of estimatedValue
+    const iqrHalfRange = (ebayQ3Price - ebayQ1Price) / 2;
+    const iqrPercent = Math.max((iqrHalfRange / estimatedValue) * 100, 3); // min 3% half-range
+
+    // Blend IQR with fallback by confidence
+    let blended: number;
+    if (confidence === "high") {
+      blended = iqrPercent; // IQR direct
+    } else if (confidence === "medium") {
+      blended = iqrPercent * 0.70 + fallbackPercent * 0.30;
+    } else {
+      blended = iqrPercent * 0.50 + fallbackPercent * 0.50;
+    }
+
+    // Safety cap: never wider than fallback; safety floor: min 3% half-range (6% total spread)
+    rangePercent = Math.max(Math.min(blended, fallbackPercent), 3);
+  } else {
+    rangePercent = fallbackPercent;
   }
 
   // Apply condition + colour adjustments
@@ -370,6 +398,8 @@ export function combineValuationLayers(
     ebayDominantTransmission,
     ebayDominantBodyType,
     ebayYearWidened,
+    ebayQ1Price: ebayQ1Price ?? null,
+    ebayQ3Price: ebayQ3Price ?? null,
     marketSupply,
     disclaimer,
   };
