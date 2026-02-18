@@ -85,9 +85,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
+    keywords: post.keywords.join(", "),
     datePublished: post.date,
     dateModified: post.lastModified || post.date,
     wordCount: post.wordCount,
@@ -95,13 +96,26 @@ export default async function BlogPostPage({ params }: PageProps) {
     author: {
       "@type": "Organization",
       name: "Free Plate Check",
+      url: "https://www.freeplatecheck.co.uk",
     },
     publisher: {
       "@type": "Organization",
       name: "Free Plate Check",
       url: "https://www.freeplatecheck.co.uk",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.freeplatecheck.co.uk/og-image.png",
+      },
     },
-    mainEntityOfPage: `https://www.freeplatecheck.co.uk/blog/${slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.freeplatecheck.co.uk/blog/${slug}`,
+    },
+    isPartOf: {
+      "@type": "Blog",
+      name: "Free Plate Check Guides",
+      url: "https://www.freeplatecheck.co.uk/blog",
+    },
   };
 
   const howToJsonLd = post.howToSteps

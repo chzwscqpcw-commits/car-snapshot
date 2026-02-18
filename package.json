@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ping-sitemap": "npx tsx scripts/ping-sitemap.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
