@@ -185,6 +185,8 @@ const PAGE_H = 297; // A4 height
 const FOOTER_H = 12; // reserved footer zone
 const USABLE_H = PAGE_H - FOOTER_H; // max y before footer
 const GUTTER = 8;
+const SECTION_GAP = 10;
+const POST_BREAK_PAD = 10;
 
 // Font sizes in points
 const FONT = {
@@ -281,7 +283,7 @@ function paintBackground(doc: jsPDF) {
 function checkPageBreak(doc: jsPDF, currentY: number, neededHeight: number): number {
   if (currentY + neededHeight > USABLE_H) {
     addNewPage(doc);
-    return MARGIN + 5;
+    return MARGIN + POST_BREAK_PAD;
   }
   return currentY;
 }
@@ -290,13 +292,13 @@ function checkPageBreak(doc: jsPDF, currentY: number, neededHeight: number): num
  * Start a new section with a header. Only adds a page break if the title + minHeight won't fit.
  * Returns the y position after the section header.
  */
-function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 30): number {
+function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 40): number {
   const headerHeight = 20; // divider + title
   const needed = headerHeight + minHeight;
-  let y = currentY + 6; // gap before section
+  let y = currentY + SECTION_GAP; // gap before section
   if (y + needed > USABLE_H) {
     addNewPage(doc);
-    y = MARGIN + 5;
+    y = MARGIN + POST_BREAK_PAD;
   }
   // Divider line
   setDraw(doc, C.divider);
@@ -393,10 +395,17 @@ function drawInsightCard(
   const padTop = 5;
   const padBottom = 5;
 
-  const wrappedLines: string[] = [];
+  let wrappedLines: string[] = [];
   for (const line of lines) {
     const split = doc.splitTextToSize(line, cardW - padLeft - 6);
     wrappedLines.push(...split);
+  }
+  // Safety cap: truncate if card would exceed usable page height
+  const maxCardH = USABLE_H - MARGIN - POST_BREAK_PAD - 10;
+  const maxLines = Math.floor((maxCardH - padTop - titleH - padBottom) / lineH);
+  if (wrappedLines.length > maxLines) {
+    wrappedLines = wrappedLines.slice(0, maxLines - 1);
+    wrappedLines.push("(See full details at freeplatecheck.co.uk)");
   }
   const cardH = padTop + titleH + wrappedLines.length * lineH + padBottom;
 
@@ -765,7 +774,11 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
     // Check for page break and redraw header if needed
     if (y + rowH > USABLE_H) {
       addNewPage(doc);
-      y = MARGIN + 5;
+      y = MARGIN + POST_BREAK_PAD;
+      // Continuation line
+      setDraw(doc, C.divider);
+      doc.setLineWidth(0.3);
+      doc.line(MARGIN, y - 1, MARGIN + CONTENT_W, y - 1);
       y = drawTableHeader(y);
     }
 
@@ -1219,8 +1232,10 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   y = startSection(doc, y, "Annual Running Costs", 20);
 
   const oc = ownershipCost!;
+  const monthly = Math.round(oc.totalAnnual / 12);
+  const daily = Math.round((oc.totalAnnual / 365) * 100) / 100;
   const lines: string[] = [
-    `\u00A3${oc.totalAnnual.toLocaleString()}/year (${oc.costPerMile.toFixed(0)}p/mile)`,
+    `\u00A3${oc.totalAnnual.toLocaleString()}/year (\u00A3${monthly.toLocaleString()}/month \u00B7 \u00A3${daily.toFixed(2)}/day)`,
   ];
   const parts: string[] = [];
   if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);

@@ -11,6 +11,8 @@ const ASSUMED_ANNUAL_MILES = 8000;
 export type OwnershipCostResult = {
   totalAnnual: number;
   costPerMile: number;
+  monthlyCost: number;
+  dailyCost: number;
   breakdown: {
     fuel: number | null;
     ved: number | null;
@@ -71,6 +73,8 @@ export function calculateOwnershipCost(params: {
   if (motFee != null) totalAnnual += motFee;
 
   const costPerMile = totalAnnual / ASSUMED_ANNUAL_MILES;
+  const monthlyCost = Math.round(totalAnnual / 12);
+  const dailyCost = Math.round((totalAnnual / 365) * 100) / 100;
 
   // Build exclusion note
   const excluded: string[] = ["insurance", "servicing", "repairs", "parking"];
@@ -82,6 +86,8 @@ export function calculateOwnershipCost(params: {
   return {
     totalAnnual: Math.round(totalAnnual),
     costPerMile: Math.round(costPerMile * 100) / 100,
+    monthlyCost,
+    dailyCost,
     breakdown: {
       fuel,
       ved,

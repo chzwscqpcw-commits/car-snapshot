@@ -130,6 +130,7 @@ import {
   Lightbulb,
   History,
   ArrowRight,
+  Clock,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -392,14 +393,48 @@ function DataReveal({ delay = 0, children, className }: { delay?: number; childr
 }
 
 // Section group divider with uppercase label
-function SectionGroup({ icon: Icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
+function SectionGroup({ icon: Icon, label, children, id }: { icon: React.ReactNode; label: string; children: React.ReactNode; id?: string }) {
   return (
-    <div className="mt-10 first:mt-0">
+    <div className="mt-10 first:mt-0" id={id}>
       <div className="flex items-center gap-2 mb-5 pb-2 border-b border-slate-700/50">
         <div className="text-slate-400">{Icon}</div>
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</span>
       </div>
       {children}
+    </div>
+  );
+}
+
+// Quick navigation bar for jumping between section groups
+function QuickNav() {
+  const sections = [
+    { id: "section-health", label: "Health" },
+    { id: "section-money", label: "Money" },
+    { id: "section-facts", label: "Facts" },
+    { id: "section-mot", label: "MOT" },
+    { id: "section-next", label: "Next" },
+  ];
+  return (
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+      <nav className="flex items-center gap-1 bg-slate-900/95 border border-slate-700/80 backdrop-blur-sm rounded-full px-2 py-1.5 shadow-lg shadow-black/30 overflow-x-auto max-w-[calc(100vw-2rem)]">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="shrink-0 p-1.5 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
+          title="Back to top"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </button>
+        <div className="w-px h-5 bg-slate-700/60 shrink-0 mx-0.5" />
+        {sections.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="shrink-0 px-2.5 py-1 rounded-full text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors whitespace-nowrap"
+          >
+            {s.label}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
@@ -582,6 +617,7 @@ export default function Home() {
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
+  const [showRecallDetails, setShowRecallDetails] = useState(false);
   const [fuelPrices, setFuelPrices] = useState<{ petrol: number; diesel: number; date: string | null } | null>(null);
 
   // Fetch live fuel prices once on mount
@@ -637,6 +673,7 @@ export default function Home() {
 
   // Fetch recalls when vehicle data changes
   useEffect(() => {
+    setShowRecallDetails(false);
     if (!data?.make) {
       setRecalls([]);
       return;
@@ -958,6 +995,37 @@ export default function Home() {
     if (!latest?.rfrAndComments) return 0;
     return latest.rfrAndComments.filter(r => r.type === "ADVISORY").length;
   }, [data]);
+
+  // MOT banner for expired / expiring-soon vehicles
+  const showMotBanner = useMemo((): "expired" | "expiring" | null => {
+    if (!data || !isOver3Years) return null;
+    if (data.motStatus !== "Valid" || motDaysUntilExpiry < 0) return "expired";
+    if (motDaysUntilExpiry <= 30) return "expiring";
+    return null;
+  }, [data, isOver3Years, motDaysUntilExpiry]);
+
+  // Recall summary — categorise by freshness
+  const recallSummary = useMemo(() => {
+    if (!recalls || recalls.length === 0) return null;
+    const now = Date.now();
+    const twoYears = 2 * 365.25 * 86400000;
+    const fiveYears = 5 * 365.25 * 86400000;
+    const sorted = [...recalls].sort((a, b) =>
+      new Date(b.recallDate).getTime() - new Date(a.recallDate).getTime()
+    );
+    const recent = sorted.filter(r => now - new Date(r.recallDate).getTime() < twoYears);
+    const older = sorted.filter(r => {
+      const age = now - new Date(r.recallDate).getTime();
+      return age >= twoYears && age < fiveYears;
+    });
+    const historical = sorted.filter(r => now - new Date(r.recallDate).getTime() >= fiveYears);
+    const freshness: "Recent" | "Older" | "Historical" =
+      recent.length > 0 ? "Recent" : older.length > 0 ? "Older" : "Historical";
+    const most = sorted[0];
+    const defectSnippet = most.defect.length > 100
+      ? most.defect.substring(0, 100) + "..." : most.defect;
+    return { total: recalls.length, recent, older, historical, freshness, mostRelevant: most, defectSnippet };
+  }, [recalls]);
 
   // ULEZ compliance
   const ulezResult = useMemo((): UlezResult | null => {
@@ -3097,6 +3165,8 @@ END:VEVENT
 
         {data && !loading && (
           <>
+            <QuickNav />
+
             {/* VEHICLE JSON-LD */}
             <script
               type="application/ld+json"
@@ -3246,6 +3316,49 @@ END:VEVENT
 
             </DataReveal>
 
+            {/* MOT EXPIRED / EXPIRING BANNER */}
+            {showMotBanner && (
+              <DataReveal delay={50}>
+                <div className={`mb-6 p-4 rounded-lg border flex items-start gap-3 ${
+                  showMotBanner === "expired"
+                    ? "bg-red-950/40 border-red-700/60"
+                    : "bg-amber-950/40 border-amber-700/60"
+                }`}>
+                  {showMotBanner === "expired" ? (
+                    <AlertTriangle className="w-6 h-6 text-red-400 shrink-0 mt-0.5" />
+                  ) : (
+                    <Clock className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-bold ${showMotBanner === "expired" ? "text-red-200" : "text-amber-200"}`}>
+                      {showMotBanner === "expired"
+                        ? "MOT EXPIRED"
+                        : `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`}
+                    </p>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      {showMotBanner === "expired"
+                        ? `Expired ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — this vehicle cannot legally be driven on public roads without a valid MOT.`
+                        : `Expires ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — you can book an MOT up to 28 days before it expires without losing any days.`}
+                    </p>
+                  </div>
+                  <a
+                    href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url}
+                    target="_blank"
+                    rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                    onClick={() => trackPartnerClick("bookMyGarage", "mot-banner")}
+                    className={`shrink-0 px-3 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                      showMotBanner === "expired"
+                        ? "bg-red-600/30 hover:bg-red-600/50 border border-red-600/50 text-red-100"
+                        : "bg-amber-600/30 hover:bg-amber-600/50 border border-amber-600/50 text-amber-100"
+                    }`}
+                  >
+                    Book MOT
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </DataReveal>
+            )}
+
             {/* VEHICLE SPECS + STATUS (merged) */}
             <DataReveal delay={100}>
               <div className="mb-8">
@@ -3347,7 +3460,7 @@ END:VEVENT
             </DataReveal>
 
             {/* ═══ GROUP 2: HEALTH & SAFETY ═══ */}
-            <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety">
+            <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety" id="section-health">
 
             {/* VEHICLE HEALTH SCORE */}
             {healthScore && (
@@ -3493,31 +3606,74 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* SAFETY RECALLS */}
-            {recalls.length > 0 && (
+            {/* SAFETY RECALLS — Smart Summary */}
+            {recallSummary && (
               <DataReveal delay={260}>
                 <div className="mb-8">
                   <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Shield className="w-4 h-4 text-red-400" />
                     Safety Recalls
                   </h3>
-                  <div className="space-y-3">
-                    {recalls.map((recall, idx) => (
-                      <div key={idx} className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                          <p className="text-sm font-semibold text-red-200">{recall.defect}</p>
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{recall.recallNumber}</span>
-                        </div>
-                        <p className="text-xs text-slate-300 mb-2"><span className="font-medium text-slate-400">Remedy:</span> {recall.remedy}</p>
-                        <p className="text-xs text-slate-500">
-                          Recall date: {new Date(recall.recallDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                          {" · "}Affects: {recall.models.join(", ")}
-                          {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
-                        </p>
-                        <p className="text-xs text-emerald-400/80 mt-1.5">Recall repairs are always free at any authorised dealer.</p>
+
+                  {/* Compact summary card */}
+                  <div className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
+                    <div className="flex items-start gap-3">
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-900/50 text-red-300 text-sm font-bold">
+                          {recallSummary.total}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                          recallSummary.freshness === "Recent" ? "bg-red-900/50 text-red-300" :
+                          recallSummary.freshness === "Older" ? "bg-amber-900/50 text-amber-300" :
+                          "bg-slate-700/60 text-slate-300"
+                        }`}>
+                          {recallSummary.freshness}
+                        </span>
                       </div>
-                    ))}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-slate-200">{recallSummary.defectSnippet}</p>
+                        {recallSummary.recent.length > 0 && (
+                          <p className="text-xs text-amber-400 mt-1">
+                            Includes {recallSummary.recent.length} recall{recallSummary.recent.length !== 1 ? "s" : ""} from the last 2 years
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Toggle button */}
+                    <button
+                      onClick={() => setShowRecallDetails(!showRecallDetails)}
+                      className="mt-3 flex items-center gap-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      {showRecallDetails ? (
+                        <>Hide details <ChevronUp className="w-3.5 h-3.5" /></>
+                      ) : (
+                        <>View all {recallSummary.total} recall{recallSummary.total !== 1 ? "s" : ""} <ChevronDown className="w-3.5 h-3.5" /></>
+                      )}
+                    </button>
                   </div>
+
+                  {/* Expanded detail cards */}
+                  {showRecallDetails && (
+                    <div className="space-y-3 mt-3">
+                      {recalls.map((recall, idx) => (
+                        <div key={idx} className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
+                          <div className="flex items-start justify-between gap-3 mb-2">
+                            <p className="text-sm font-semibold text-red-200">{recall.defect}</p>
+                            <span className="text-xs text-slate-500 whitespace-nowrap">{recall.recallNumber}</span>
+                          </div>
+                          <p className="text-xs text-slate-300 mb-2"><span className="font-medium text-slate-400">Remedy:</span> {recall.remedy}</p>
+                          <p className="text-xs text-slate-500">
+                            Recall date: {new Date(recall.recallDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                            {" · "}Affects: {recall.models.join(", ")}
+                            {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
+                          </p>
+                          <p className="text-xs text-emerald-400/80 mt-1.5">Recall repairs are always free at any authorised dealer.</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <p className="text-[11px] text-slate-600 mt-3">
                     Recall data is matched by make, model, and year of manufacture. Individual vehicle recall status may differ — a recall may have already been completed on this specific vehicle. For vehicle-specific recall status, check at{" "}
                     <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
@@ -3528,7 +3684,7 @@ END:VEVENT
             )}
 
             {/* No recalls — positive signal */}
-            {data && recalls.length === 0 && data.make && (
+            {data && !recallSummary && recalls.length === 0 && data.make && (
               <DataReveal delay={260}>
                 <div className="mb-8 p-4 rounded-lg border border-emerald-800/30 bg-emerald-950/15">
                   <div className="flex items-center gap-3">
@@ -3633,7 +3789,7 @@ END:VEVENT
             </SectionGroup>
 
             {/* ═══ GROUP 3: FINANCIAL PICTURE ═══ */}
-            <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture">
+            <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture" id="section-money">
 
             {/* VEHICLE VALUATION ESTIMATE */}
             {valuationResult && (
@@ -3835,9 +3991,11 @@ END:VEVENT
                     <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
                   </div>
 
-                  <p className="text-2xl font-bold text-slate-100 mb-1">
+                  <p className="text-2xl font-bold text-slate-100 mb-0.5">
                     £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-normal text-slate-400">/year</span>
-                    <span className="text-sm font-normal text-slate-500 ml-2">({ownershipCost.costPerMile.toFixed(0)}p/mile)</span>
+                  </p>
+                  <p className="text-sm text-slate-400 mb-1">
+                    £{ownershipCost.monthlyCost.toLocaleString()}/month · £{ownershipCost.dailyCost.toFixed(2)}/day
                   </p>
 
                   {/* Stacked horizontal bar */}
@@ -3923,7 +4081,7 @@ END:VEVENT
             </SectionGroup>
 
             {/* ═══ GROUP 4: KEY FACTS ═══ */}
-            <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Facts">
+            <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Facts" id="section-facts">
 
             {/* EV SPECS CARD */}
             {evSpecs && (
@@ -3993,7 +4151,7 @@ END:VEVENT
             <div ref={shareSentinelMidRef} className="h-0" aria-hidden="true" />
 
             {/* ═══ GROUP 5: MOT HISTORY ═══ */}
-            <SectionGroup icon={<History className="w-4 h-4" />} label="MOT History">
+            <SectionGroup icon={<History className="w-4 h-4" />} label="MOT History" id="section-mot">
 
             {/* MOT HISTORY + MOT INSIGHTS (merged) */}
             {data.motTests && data.motTests.length > 0 && (
@@ -4278,7 +4436,7 @@ END:VEVENT
             </SectionGroup>
 
             {/* ═══ GROUP 6: NEXT STEPS ═══ */}
-            <SectionGroup icon={<ArrowRight className="w-4 h-4" />} label="Next Steps">
+            <SectionGroup icon={<ArrowRight className="w-4 h-4" />} label="Next Steps" id="section-next">
 
             {/* ACTION PROMPTS */}
             {actionPrompts.length > 0 && (
