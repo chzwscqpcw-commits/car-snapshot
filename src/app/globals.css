@@ -49,6 +49,10 @@ a {
   }
 }
 
+/* Scrollbar hide utility for horizontal scroll strips */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Blog article content */
 .blog-content {
   max-width: 700px;

@@ -101,3 +101,57 @@ export function calculateOwnershipCost(params: {
     disclaimer,
   };
 }
+
+// ── Vehicle Segment Classification & UK Average Benchmarks ──
+
+export type VehicleSegment = "city" | "small" | "family" | "premium" | "luxury" | "suv" | "ev" | "van";
+
+export const UK_AVERAGE_ANNUAL_COSTS: Record<VehicleSegment, { label: string; cost: number }> = {
+  city:    { label: "City Car",         cost: 2400 },
+  small:   { label: "Small Car",        cost: 3000 },
+  family:  { label: "Family Car",       cost: 3600 },
+  premium: { label: "Premium Car",      cost: 5000 },
+  luxury:  { label: "Luxury Car",       cost: 7500 },
+  suv:     { label: "SUV / Crossover",  cost: 4500 },
+  ev:      { label: "Electric Vehicle", cost: 2800 },
+  van:     { label: "Van / Commercial", cost: 4000 },
+};
+
+export function classifyVehicleSegment(params: {
+  fuelType?: string;
+  bodyType?: string | null;
+  newPrice?: number | null;
+  engineCapacity?: number;
+}): VehicleSegment {
+  const { fuelType, bodyType, newPrice, engineCapacity } = params;
+
+  // EV by fuel type
+  if (fuelType && /electric/i.test(fuelType)) return "ev";
+
+  const bt = (bodyType ?? "").toUpperCase();
+
+  // Van by body type
+  if (/VAN|COMMERCIAL|PANEL|PICK\s*UP/i.test(bt)) return "van";
+
+  // SUV by body type
+  if (/SUV|CROSSOVER|4X4/i.test(bt)) return "suv";
+
+  // Price-based tiers
+  if (newPrice != null) {
+    if (newPrice >= 60000) return "luxury";
+    if (newPrice >= 38000) return "premium";
+    if (newPrice >= 24000) return "family";
+    if (newPrice >= 18000) return "small";
+    return "city";
+  }
+
+  // Engine capacity fallback
+  if (engineCapacity != null) {
+    if (engineCapacity >= 3000) return "premium";
+    if (engineCapacity >= 1800) return "family";
+    if (engineCapacity >= 1200) return "small";
+    return "city";
+  }
+
+  return "family";
+}

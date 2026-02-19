@@ -148,7 +148,7 @@ import { lookupColourPopularity } from "@/lib/colour-popularity";
 import { calculateHealthScore, type HealthScoreResult } from "@/lib/health-score";
 import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
 import { calculateMotReadiness, type MotReadinessResult } from "@/lib/mot-readiness";
-import { calculateOwnershipCost, type OwnershipCostResult } from "@/lib/ownership-cost";
+import { calculateOwnershipCost, classifyVehicleSegment, UK_AVERAGE_ANNUAL_COSTS, type OwnershipCostResult, type VehicleSegment } from "@/lib/ownership-cost";
 import { lookupMotPassRate } from "@/lib/mot-pass-rate";
 import { lookupTheftRisk, type TheftRiskResult } from "@/lib/theft-risk";
 import { lookupEvSpecs, type EvSpecsResult } from "@/lib/ev-specs";
@@ -406,11 +406,11 @@ function SectionGroup({ icon: Icon, label, children, id }: { icon: React.ReactNo
 }
 
 // Quick navigation bar for jumping between section groups
-function QuickNav() {
+function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
   const sections = [
     { id: "section-health", label: "Health" },
     { id: "section-money", label: "Money" },
-    { id: "section-facts", label: "Facts" },
+    { id: "section-facts", label: "Insights" },
     { id: "section-mot", label: "MOT" },
     { id: "section-next", label: "Next" },
   ];
@@ -434,6 +434,14 @@ function QuickNav() {
             {s.label}
           </button>
         ))}
+        <div className="w-px h-5 bg-slate-700/60 shrink-0 mx-0.5" />
+        <button
+          onClick={onDownloadPDF}
+          className="shrink-0 p-1.5 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
+          title="Download PDF report"
+        >
+          <FileText className="w-4 h-4" />
+        </button>
       </nav>
     </div>
   );
@@ -584,7 +592,7 @@ export default function Home() {
   const [toastMsg, setToastMsg] = useState("");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
-  const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
+
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
   const [myVehicles, setMyVehicles] = useState<(VehicleData & { addedAt: number })[]>([]);
   const [confirmingClear, setConfirmingClear] = useState<string | null>(null);
@@ -1202,6 +1210,17 @@ export default function Home() {
       isOver3Years,
     });
   }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel]);
+
+  // Vehicle segment for running-cost benchmarks
+  const vehicleSegment = useMemo((): VehicleSegment => {
+    const newPrice = data?.make ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model) : null;
+    return classifyVehicleSegment({
+      fuelType: data?.fuelType,
+      bodyType: bodyStyle,
+      newPrice,
+      engineCapacity: data?.engineCapacity,
+    });
+  }, [data?.fuelType, data?.make, data?.model, data?.engineCapacity, bodyStyle, lookupModel]);
 
   // Negotiation helper
   const negotiation = useMemo((): NegotiationResult | null => {
@@ -2368,7 +2387,6 @@ END:VEVENT
     URL.revokeObjectURL(url);
 
     showToast("Text report downloaded!");
-    setDownloadMenuOpen(false);
   }
 
   async function downloadPDF() {
@@ -2502,7 +2520,6 @@ END:VEVENT
       }
 
       showToast("PDF report downloaded!");
-      setDownloadMenuOpen(false);
     } catch (error) {
       console.error("PDF generation failed:", error);
       showToast("PDF generation failed. Please try the text version.");
@@ -3165,7 +3182,7 @@ END:VEVENT
 
         {data && !loading && (
           <>
-            <QuickNav />
+            <QuickNav onDownloadPDF={() => downloadPDF()} />
 
             {/* VEHICLE JSON-LD */}
             <script
@@ -3194,107 +3211,65 @@ END:VEVENT
 
             {/* VEHICLE HEADER */}
             <DataReveal delay={0} className="relative z-20">
-              <div className="mb-8 p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                  <div className="flex-1">
-                    <div className="mb-4">
-                      <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-2 inline-flex items-center justify-center">
-                        <p className="text-lg font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em", width: "fit-content" }}>
-                          {data.registrationNumber}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                      <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
-                        <p className="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wide">Make</p>
-                        <p className="text-xl sm:text-2xl font-bold text-slate-100">{data.make || "—"}</p>
-                      </div>
-                      <div className="flex-1 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
-                        <p className="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wide">Model</p>
-                        <p className="text-xl sm:text-2xl font-bold text-slate-100">
-                          {data.model || "—"}
-                          {data.variant && (
-                            <span className="text-lg font-medium text-slate-300 ml-2">{data.variant}</span>
-                          )}
-                        </p>
-                        {(bodyStyle || parsedModel?.trim || vcaParsedModel?.trim || parsedModel?.driveType || vcaParsedModel?.driveType) && (
-                          <div className="flex flex-wrap gap-1.5 mt-2">
-                            {bodyStyle && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{bodyStyle}</span>
-                            )}
-                            {(parsedModel?.trim || vcaParsedModel?.trim) && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.trim || vcaParsedModel?.trim}</span>
-                            )}
-                            {(parsedModel?.driveType || vcaParsedModel?.driveType) && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.driveType || vcaParsedModel?.driveType}</span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-slate-400 mt-4">DVLA data • {new Date().toLocaleDateString()}</p>
+              <div className="mb-6 p-4 sm:p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
+                {/* Row 1: Reg plate + Make/Model + pills */}
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-1 inline-flex items-center shrink-0">
+                    <span className="text-sm font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em" }}>
+                      {data.registrationNumber}
+                    </span>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 overflow-visible">
-                    {/* Save button */}
-                    <button
-                      onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
-                      className={`border rounded-lg px-3 py-2.5 text-sm transition-colors flex items-center gap-2 min-h-[44px] ${
-                        isFavorited(data.registrationNumber)
-                          ? "border-red-500/50 bg-red-500/10 text-red-400"
-                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-300 hover:text-slate-100"
-                      }`}
-                      title={isFavorited(data.registrationNumber) ? "Remove from saved vehicles" : "Bookmark this vehicle to review later"}
-                    >
-                      <Heart className="w-4 h-4" fill={isFavorited(data.registrationNumber) ? "currentColor" : "none"} />
-                      Save
-                    </button>
-
-                    {/* My Car button */}
-                    <button
-                      onClick={isMyVehicle(data.registrationNumber) ? () => removeFromMyVehicles(data.registrationNumber) : addToMyVehicles}
-                      className={`border rounded-lg px-3 py-2.5 text-sm transition-colors flex items-center gap-2 min-h-[44px] ${
-                        isMyVehicle(data.registrationNumber)
-                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-300 hover:text-slate-100"
-                      }`}
-                      title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as your car to track MOT & tax reminders"}
-                    >
-                      <Car className="w-4 h-4" />
-                      {isMyVehicle(data.registrationNumber) ? "My Car ✓" : "My Car"}
-                    </button>
-
-                    {/* Report button */}
-                    <div className="relative">
-                      <button
-                        onClick={() => setDownloadMenuOpen(!downloadMenuOpen)}
-                        className="w-full border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
-                        title="Download the full vehicle report as PDF or text"
-                      >
-                        <FileText className="w-4 h-4" />
-                        Report
-                      </button>
-
-                      {downloadMenuOpen && (
-                        <div className="absolute left-0 bottom-full mb-1 w-40 bg-slate-950 border border-slate-500 rounded-lg shadow-2xl z-50 py-2">
-                          <button
-                            onClick={() => downloadPDF()}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            📄 PDF (Recommended)
-                          </button>
-                          <button
-                            onClick={() => downloadTXT()}
-                            className="w-full px-4 py-2 text-left text-sm text-slate-100 hover:bg-slate-700 transition-colors flex items-center gap-2"
-                          >
-                            📋 Text File
-                          </button>
-                        </div>
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-100 leading-tight">
+                    {data.make || "—"} {data.model || "—"}
+                    {data.variant && <span className="text-base font-medium text-slate-300 ml-1.5">{data.variant}</span>}
+                  </h2>
+                  {(bodyStyle || parsedModel?.trim || vcaParsedModel?.trim || parsedModel?.driveType || vcaParsedModel?.driveType) && (
+                    <div className="flex flex-wrap gap-1">
+                      {bodyStyle && (
+                        <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{bodyStyle}</span>
+                      )}
+                      {(parsedModel?.trim || vcaParsedModel?.trim) && (
+                        <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.trim || vcaParsedModel?.trim}</span>
+                      )}
+                      {(parsedModel?.driveType || vcaParsedModel?.driveType) && (
+                        <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-slate-600/50 text-slate-300 border border-slate-500/50">{parsedModel?.driveType || vcaParsedModel?.driveType}</span>
                       )}
                     </div>
+                  )}
+                </div>
 
-                    {/* Compare button */}
+                {/* Row 2: Timestamp */}
+                <p className="text-xs text-slate-500 mb-3">DVLA data · {new Date().toLocaleDateString()}</p>
+
+                {/* Row 3: Icon action buttons + primary PDF */}
+                <div className="flex items-center gap-1.5">
+                    {/* Save */}
+                    <button
+                      onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
+                      className={`p-2 rounded-lg border transition-colors ${
+                        isFavorited(data.registrationNumber)
+                          ? "border-red-500/50 bg-red-500/10 text-red-400"
+                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100"
+                      }`}
+                      title={isFavorited(data.registrationNumber) ? "Remove from saved" : "Save vehicle"}
+                    >
+                      <Heart className="w-4 h-4" fill={isFavorited(data.registrationNumber) ? "currentColor" : "none"} />
+                    </button>
+
+                    {/* My Car */}
+                    <button
+                      onClick={isMyVehicle(data.registrationNumber) ? () => removeFromMyVehicles(data.registrationNumber) : addToMyVehicles}
+                      className={`p-2 rounded-lg border transition-colors ${
+                        isMyVehicle(data.registrationNumber)
+                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
+                          : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100"
+                      }`}
+                      title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "My Car"}
+                    >
+                      <Car className="w-4 h-4" />
+                    </button>
+
+                    {/* Compare */}
                     <button
                       onClick={() => {
                         if (recentLookups.length >= 2) {
@@ -3305,14 +3280,33 @@ END:VEVENT
                           showToast("Look up another vehicle to compare");
                         }
                       }}
-                      className="border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:text-slate-100 transition-colors flex items-center gap-2 min-h-[44px]"
-                      title="Compare this vehicle side-by-side with another recent lookup"
+                      className="p-2 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
+                      title="Compare vehicles"
                     >
                       <ArrowLeftRight className="w-4 h-4" />
-                      Compare
                     </button>
-                  </div>
+
+                    {/* Text download */}
+                    <button
+                      onClick={() => downloadTXT()}
+                      className="p-2 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
+                      title="Download as text file"
+                    >
+                      <FileText className="w-4 h-4" />
+                    </button>
+
+                    {/* Primary PDF button */}
+                    <button
+                      onClick={() => downloadPDF()}
+                      className="ml-auto flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors"
+                      title="Download PDF report"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span className="hidden sm:inline">PDF Report</span>
+                      <span className="sm:hidden">PDF</span>
+                    </button>
                 </div>
+              </div>
 
             </DataReveal>
 
@@ -3363,53 +3357,71 @@ END:VEVENT
             <DataReveal delay={100}>
               <div className="mb-8">
                 <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">Vehicle Details</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {/* MOT Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getMotStatusColor(data.motStatus, data.motExpiryDate))}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">MOT</p>
-                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
-                      {data.motStatus === "Valid" && motDaysUntilExpiry > 0
-                        ? `${motDaysUntilExpiry}d left`
-                        : data.motStatus === "Valid" && motDaysUntilExpiry <= 0
-                        ? "Expired"
-                        : data.motStatus ?? "—"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.motExpiryDate)}</p>
-                  </div>
 
-                  {/* Tax Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getTaxStatusColor(data.taxStatus, data.taxDueDate))}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Tax</p>
-                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
-                      {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null && daysUntil(data.taxDueDate)! > 0
-                        ? `${daysUntil(data.taxDueDate)}d left`
-                        : data.taxStatus === "Taxed"
-                        ? "Overdue"
-                        : data.taxStatus === "SORN"
-                        ? "SORN"
-                        : data.taxStatus ?? "—"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.taxDueDate)}</p>
-                  </div>
+                {/* MOT / Tax status pills */}
+                <div className="flex gap-2 mb-3">
+                  {/* MOT pill */}
+                  {(() => {
+                    const motColor = getMotStatusColor(data.motStatus, data.motExpiryDate);
+                    const colorStyles: Record<string, string> = {
+                      emerald: "bg-emerald-950/50 border-emerald-800/50 text-emerald-300",
+                      amber: "bg-amber-950/50 border-amber-800/50 text-amber-300",
+                      red: "bg-red-950/50 border-red-800/50 text-red-300",
+                      slate: "bg-slate-800/50 border-slate-700/50 text-slate-300",
+                    };
+                    const motLabel = data.motStatus === "Valid" && motDaysUntilExpiry > 0
+                      ? `${motDaysUntilExpiry}d left`
+                      : data.motStatus === "Valid" && motDaysUntilExpiry <= 0
+                      ? "Expired"
+                      : data.motStatus ?? "—";
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${colorStyles[motColor] || colorStyles.slate}`}>
+                        <Shield className="w-3.5 h-3.5" />
+                        MOT: {motLabel}
+                      </span>
+                    );
+                  })()}
+                  {/* Tax pill */}
+                  {(() => {
+                    const taxColor = getTaxStatusColor(data.taxStatus, data.taxDueDate);
+                    const colorStyles: Record<string, string> = {
+                      emerald: "bg-emerald-950/50 border-emerald-800/50 text-emerald-300",
+                      amber: "bg-amber-950/50 border-amber-800/50 text-amber-300",
+                      red: "bg-red-950/50 border-red-800/50 text-red-300",
+                      slate: "bg-slate-800/50 border-slate-700/50 text-slate-300",
+                    };
+                    const taxLabel = data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null && daysUntil(data.taxDueDate)! > 0
+                      ? `${daysUntil(data.taxDueDate)}d left`
+                      : data.taxStatus === "Taxed"
+                      ? "Overdue"
+                      : data.taxStatus === "SORN"
+                      ? "SORN"
+                      : data.taxStatus ?? "—";
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${colorStyles[taxColor] || colorStyles.slate}`}>
+                        <PoundSterling className="w-3.5 h-3.5" />
+                        Tax: {taxLabel}
+                      </span>
+                    );
+                  })()}
+                </div>
 
-                  <IconBadge
-                    icon={<Calendar className="w-5 h-5" />}
-                    label="Year"
-                    value={String(data.yearOfManufacture ?? "—")}
-                  />
-                  <IconBadge icon={<Fuel className="w-5 h-5" />} label="Fuel" value={data.fuelType ?? "—"} />
-                  <IconBadge
-                    icon={<Gauge className="w-5 h-5" />}
-                    label="Engine"
-                    value={`${data.engineCapacity ?? "—"} cc`}
-                  />
-                  <IconBadge icon={<div>🎨</div>} label="Colour" value={data.colour ?? "—"} />
-                  {bodyStyle && (
-                    <IconBadge icon={<Car className="w-5 h-5" />} label="Body" value={bodyStyle} />
-                  )}
-                  {fuelEconomy?.enginePowerPS && (
-                    <IconBadge icon={<Zap className="w-5 h-5" />} label="Power" value={`${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}`} />
-                  )}
+                {/* Vehicle specs — horizontal scroll on mobile, wrap on desktop */}
+                <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible scrollbar-hide">
+                  {[
+                    { icon: <Calendar className="w-3.5 h-3.5" />, label: "Year", value: String(data.yearOfManufacture ?? "—") },
+                    { icon: <Fuel className="w-3.5 h-3.5" />, label: "Fuel", value: data.fuelType ?? "—" },
+                    ...(data.engineCapacity ? [{ icon: <Gauge className="w-3.5 h-3.5" />, label: "Engine", value: `${data.engineCapacity} cc` }] : []),
+                    { icon: <span className="text-xs">🎨</span>, label: "Colour", value: data.colour ?? "—" },
+                    ...(bodyStyle ? [{ icon: <Car className="w-3.5 h-3.5" />, label: "Body", value: bodyStyle }] : []),
+                    ...(fuelEconomy?.enginePowerPS ? [{ icon: <Zap className="w-3.5 h-3.5" />, label: "Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}` }] : []),
+                  ].map((spec, i) => (
+                    <span key={i} className="shrink-0 sm:shrink inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-xs">
+                      <span className="text-slate-400">{spec.icon}</span>
+                      <span className="text-slate-400">{spec.label}:</span>
+                      <span className="text-slate-100 font-semibold">{spec.value}</span>
+                    </span>
+                  ))}
                 </div>
 
                 {/* Collapsible Technical Details */}
@@ -3788,6 +3800,20 @@ END:VEVENT
 
             </SectionGroup>
 
+            {/* Mid-page PDF CTA */}
+            <DataReveal delay={320}>
+              <div className="mb-6 flex items-center gap-3 px-4 py-3 rounded-lg border border-blue-800/40 bg-blue-950/20">
+                <FileText className="w-5 h-5 text-blue-400 shrink-0" />
+                <p className="text-sm text-slate-300 flex-1">Save everything so far as a shareable report.</p>
+                <button
+                  onClick={() => downloadPDF()}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors"
+                >
+                  Get PDF
+                </button>
+              </div>
+            </DataReveal>
+
             {/* ═══ GROUP 3: FINANCIAL PICTURE ═══ */}
             <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture" id="section-money">
 
@@ -4031,6 +4057,48 @@ END:VEVENT
                     );
                   })()}
 
+                  {/* vs UK Average comparison */}
+                  {(() => {
+                    const avg = UK_AVERAGE_ANNUAL_COSTS[vehicleSegment];
+                    const thisCost = ownershipCost.totalAnnual;
+                    const diff = thisCost - avg.cost;
+                    const pct = Math.round(Math.abs(diff) / avg.cost * 100);
+                    const maxBar = Math.max(thisCost, avg.cost);
+                    const isBelow = diff < 0;
+                    return (
+                      <div className="mt-4 pt-4 border-t border-slate-700/40">
+                        <p className="text-xs font-medium text-slate-400 mb-2">vs UK Average ({avg.label})</p>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="w-14 text-slate-400 shrink-0">This car</span>
+                            <div className="flex-1 h-4 bg-slate-700/30 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full ${isBelow ? "bg-emerald-500" : "bg-amber-500"}`}
+                                style={{ width: `${Math.max((thisCost / maxBar) * 100, 4)}%` }}
+                              />
+                            </div>
+                            <span className="w-16 text-right text-slate-200 font-medium">£{thisCost.toLocaleString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="w-14 text-slate-400 shrink-0">UK avg</span>
+                            <div className="flex-1 h-4 bg-slate-700/30 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-slate-500"
+                                style={{ width: `${Math.max((avg.cost / maxBar) * 100, 4)}%` }}
+                              />
+                            </div>
+                            <span className="w-16 text-right text-slate-400 font-medium">£{avg.cost.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <p className={`text-xs mt-2 ${isBelow ? "text-emerald-400" : diff === 0 ? "text-slate-400" : "text-amber-400"}`}>
+                          {diff === 0
+                            ? "Exactly average for this segment"
+                            : `£${Math.abs(diff).toLocaleString()} ${isBelow ? "less" : "more"} than average (${pct}% ${isBelow ? "below" : "above"})`}
+                        </p>
+                      </div>
+                    );
+                  })()}
+
                   <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
                 </div>
               </DataReveal>
@@ -4081,7 +4149,7 @@ END:VEVENT
             </SectionGroup>
 
             {/* ═══ GROUP 4: KEY FACTS ═══ */}
-            <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Facts" id="section-facts">
+            <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Insights" id="section-facts">
 
             {/* EV SPECS CARD */}
             {evSpecs && (
@@ -4137,7 +4205,6 @@ END:VEVENT
             {insights.length > 0 && (
               <DataReveal delay={530}>
                 <div className="mb-8 space-y-3">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">Key Insights</h3>
                   {insights.map((insight, idx) => (
                     <InsightCard key={idx} insight={insight} delay={idx * 80} />
                   ))}
