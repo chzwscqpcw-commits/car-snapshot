@@ -3409,8 +3409,8 @@ END:VEVENT
                   })()}
                 </div>
 
-                {/* Vehicle specs — horizontal scroll on mobile, wrap on desktop */}
-                <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible scrollbar-hide">
+                {/* Vehicle specs — wrap on all sizes */}
+                <div className="flex flex-wrap gap-2">
                   {[
                     { icon: <Calendar className="w-3.5 h-3.5" />, label: "Year", value: String(data.yearOfManufacture ?? "—") },
                     { icon: <Fuel className="w-3.5 h-3.5" />, label: "Fuel", value: data.fuelType ?? "—" },
@@ -3419,7 +3419,7 @@ END:VEVENT
                     ...(bodyStyle ? [{ icon: <Car className="w-3.5 h-3.5" />, label: "Body", value: bodyStyle }] : []),
                     ...(fuelEconomy?.enginePowerPS ? [{ icon: <Zap className="w-3.5 h-3.5" />, label: "Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}` }] : []),
                   ].map((spec, i) => (
-                    <span key={i} className="shrink-0 sm:shrink inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-xs">
+                    <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-xs">
                       <span className="text-slate-400">{spec.icon}</span>
                       <span className="text-slate-400">{spec.label}:</span>
                       <span className="text-slate-100 font-semibold">{spec.value}</span>
