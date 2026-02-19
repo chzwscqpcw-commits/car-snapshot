@@ -149,13 +149,23 @@ export type ReportInput = {
 type RGB = [number, number, number];
 
 const C = {
-  slate900: [15, 23, 42] as RGB,
-  slate800: [30, 41, 59] as RGB,
-  slate700: [51, 65, 85] as RGB,
+  slate900: [15, 23, 42] as RGB,   // header/footer only
+  slate800: [30, 41, 59] as RGB,   // header/footer only
+  slate700: [51, 65, 85] as RGB,   // header/footer only
   slate400: [148, 163, 184] as RGB,
   slate300: [203, 213, 225] as RGB,
   slate100: [241, 245, 249] as RGB,
   white: [255, 255, 255] as RGB,
+  // Light theme additions
+  cardBg: [248, 250, 252] as RGB,
+  cardBorder: [226, 232, 240] as RGB,
+  bodyText: [30, 41, 59] as RGB,
+  secondaryText: [100, 116, 139] as RGB,
+  labelText: [148, 163, 184] as RGB,
+  headingText: [15, 23, 42] as RGB,
+  divider: [226, 232, 240] as RGB,
+  tableBgAlt: [241, 245, 249] as RGB,
+  // Keep accent colours
   emerald: [16, 185, 129] as RGB,
   amber: [245, 158, 11] as RGB,
   red: [239, 68, 68] as RGB,
@@ -228,20 +238,20 @@ function drawStatusBadge(
   value: string,
   accentColor: RGB,
 ) {
-  drawRoundedRect(doc, x, y, w, 26, 3, C.slate800, C.slate700);
+  drawRoundedRect(doc, x, y, w, 26, 3, C.cardBg, C.cardBorder);
   setFill(doc, accentColor);
   doc.roundedRect(x, y, w, 4, 3, 3, "F");
   doc.rect(x, y + 2, w, 2, "F");
-  setFill(doc, C.slate800);
+  setFill(doc, C.cardBg);
   doc.rect(x + 0.5, y + 3.5, w - 1, 1, "F");
 
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate400);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text(label, x + w / 2, y + 11, { align: "center" });
 
   doc.setFontSize(FONT.body);
-  setTextColor(doc, C.white);
+  setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
   doc.text(value, x + w / 2, y + 20, { align: "center" });
 }
@@ -263,7 +273,7 @@ function addNewPage(doc: jsPDF) {
 }
 
 function paintBackground(doc: jsPDF) {
-  setFill(doc, C.slate900);
+  setFill(doc, C.white);
   doc.rect(0, 0, 210, PAGE_H, "F");
 }
 
@@ -289,13 +299,13 @@ function startSection(doc: jsPDF, currentY: number, title: string, minHeight: nu
     y = MARGIN + 5;
   }
   // Divider line
-  setDraw(doc, C.slate700);
+  setDraw(doc, C.divider);
   doc.setLineWidth(0.3);
   doc.line(MARGIN, y, MARGIN + CONTENT_W, y);
   y += 6;
   // Title
   doc.setFontSize(FONT.h2);
-  setTextColor(doc, C.white);
+  setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
   doc.text(title, MARGIN, y + 5);
   y += 12;
@@ -392,20 +402,20 @@ function drawInsightCard(
 
   startY = checkPageBreak(doc, startY, cardH + 4);
 
-  drawRoundedRect(doc, cardX, startY, cardW, cardH, 3, C.slate800, C.slate700);
+  drawRoundedRect(doc, cardX, startY, cardW, cardH, 3, C.cardBg, C.cardBorder);
 
   setFill(doc, accentColor);
   doc.rect(cardX, startY + 2, accentW, cardH - 4, "F");
 
   let textY = startY + padTop;
   doc.setFontSize(FONT.body);
-  setTextColor(doc, C.white);
+  setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
   doc.text(title, cardX + padLeft, textY + 3);
   textY += titleH;
 
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate300);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   for (const line of wrappedLines) {
     doc.text(line, cardX + padLeft, textY + 3);
@@ -503,12 +513,12 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
 
   // ── Subtitle and date below the banner ──
   doc.setFontSize(FONT.h3);
-  setTextColor(doc, C.slate300);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text("Vehicle Report", 105, 30, { align: "center" });
 
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate400);
+  setTextColor(doc, C.labelText);
   const genDate = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
@@ -535,7 +545,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const vehicleLine = parts.join(" ") + (engineDesc.length ? " \u00B7 " + engineDesc.join(" \u00B7 ") : "");
 
   doc.setFontSize(FONT.h3);
-  setTextColor(doc, C.slate100);
+  setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "normal");
   doc.text(vehicleLine, 105, y, { align: "center" });
   y += 14;
@@ -608,15 +618,15 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     const cx = MARGIN + col * (cellW + GUTTER);
     const cy = y + row * (cellH + 4);
 
-    drawRoundedRect(doc, cx, cy, cellW, cellH, 3, C.slate800, C.slate700);
+    drawRoundedRect(doc, cx, cy, cellW, cellH, 3, C.cardBg, C.cardBorder);
 
     doc.setFontSize(FONT.small);
-    setTextColor(doc, C.slate400);
+    setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
     doc.text(stats[i].label, cx + 6, cy + 9);
 
     doc.setFontSize(FONT.h3);
-    setTextColor(doc, C.white);
+    setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
     doc.text(stats[i].value, cx + 6, cy + 18);
   }
@@ -624,15 +634,15 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
 
   // ── Latest MOT summary ──
   y = checkPageBreak(doc, y, 40);
-  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 34, 3, C.slate800, C.slate700);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 34, 3, C.cardBg, C.cardBorder);
 
   doc.setFontSize(FONT.body);
-  setTextColor(doc, C.slate300);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "bold");
   doc.text("Latest MOT", MARGIN + 6, y + 10);
 
   doc.setFont("helvetica", "normal");
-  setTextColor(doc, C.slate100);
+  setTextColor(doc, C.bodyText);
 
   if (data.motTests && data.motTests.length > 0) {
     const latest = data.motTests[0];
@@ -645,7 +655,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     doc.setFont("helvetica", "bold");
     doc.text(latest.testResult, MARGIN + 6, y + 18);
 
-    setTextColor(doc, C.slate100);
+    setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     const summaryParts = [
       formatDate(latest.completedDate),
@@ -669,7 +679,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     }
   } else {
     doc.setFontSize(FONT.body);
-    setTextColor(doc, C.slate400);
+    setTextColor(doc, C.secondaryText);
     doc.text("No MOT history available", MARGIN + 6, y + 20);
   }
 
@@ -699,9 +709,9 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
 
   // Draw table header
   function drawTableHeader(startY: number): number {
-    drawRoundedRect(doc, MARGIN, startY, CONTENT_W, rowH, 0, C.slate700);
+    drawRoundedRect(doc, MARGIN, startY, CONTENT_W, rowH, 0, C.divider);
     doc.setFontSize(FONT.small);
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
     let hx = MARGIN + 3;
     doc.text("Date", hx, startY + 5); hx += colDate;
@@ -722,7 +732,7 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
     let change = "";
     let milesPerYear = "";
     let notes = "";
-    let noteColor: RGB = C.slate300;
+    let noteColor: RGB = C.bodyText;
 
     if (i > 0) {
       const prev = mileageEntries[i - 1];
@@ -759,13 +769,13 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
       y = drawTableHeader(y);
     }
 
-    const bgColor = i % 2 === 0 ? C.slate800 : C.slate900;
+    const bgColor = i % 2 === 0 ? C.white : C.tableBgAlt;
     setFill(doc, bgColor);
     doc.rect(MARGIN, y, CONTENT_W, rowH, "F");
 
     doc.setFontSize(FONT.small);
     doc.setFont("helvetica", "normal");
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.bodyText);
 
     let cx = MARGIN + 3;
     doc.text(formatDate(entry.completedDate), cx, y + 5); cx += colDate;
@@ -775,7 +785,7 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
       setTextColor(doc, C.red);
     }
     doc.text(change, cx, y + 5); cx += colChange;
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.bodyText);
     doc.text(milesPerYear, cx, y + 5); cx += colMPY;
 
     if (notes) {
@@ -800,14 +810,14 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
 
   if (!tests || tests.length === 0) {
     doc.setFontSize(FONT.body);
-    setTextColor(doc, C.slate400);
+    setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
     doc.text("No MOT history available for this vehicle.", MARGIN, y + 5);
     return y + 10;
   }
 
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate400);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text(`${tests.length} test${tests.length !== 1 ? "s" : ""} on record`, MARGIN, y);
   y += 6;
@@ -828,7 +838,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
       y = checkPageBreak(doc, y, compactH + 2);
 
       // Background row
-      drawRoundedRect(doc, MARGIN, y, CONTENT_W, compactH, 2, C.slate800, C.slate700);
+      drawRoundedRect(doc, MARGIN, y, CONTENT_W, compactH, 2, C.cardBg, C.cardBorder);
       // Green accent stripe
       setFill(doc, C.emerald);
       doc.rect(MARGIN, y + 1.5, 3, compactH - 3, "F");
@@ -843,7 +853,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
       doc.text(badgeText, MARGIN + 6 + badgeW / 2, y + 5, { align: "center" });
 
       // Date
-      setTextColor(doc, C.slate300);
+      setTextColor(doc, C.bodyText);
       doc.setFont("helvetica", "normal");
       doc.text(formatDate(test.completedDate), MARGIN + 6 + badgeW + 4, y + 5.5);
 
@@ -860,7 +870,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
       // MOT test number
       if (test.motTestNumber) {
         doc.setFontSize(FONT.tiny);
-        setTextColor(doc, C.slate400);
+        setTextColor(doc, C.secondaryText);
         const mileageTextW = test.odometer?.value ? doc.getTextWidth(`${formatMileage(test.odometer.value)} mi`) + 8 : 0;
         doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 6 - mileageTextW, y + 5.5, { align: "right" });
       }
@@ -879,7 +889,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
 
     // Test header row
     doc.setFontSize(FONT.body);
-    setTextColor(doc, C.white);
+    setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
     doc.text(formatDate(test.completedDate), MARGIN + 8, y + 4);
 
@@ -894,7 +904,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     doc.text(badgeText, badgeX + badgeW / 2, y + 4, { align: "center" });
 
     // Mileage
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(FONT.body);
     if (test.odometer?.value) {
@@ -904,7 +914,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     // MOT test number reference
     if (test.motTestNumber) {
       doc.setFontSize(FONT.tiny);
-      setTextColor(doc, C.slate400);
+      setTextColor(doc, C.secondaryText);
       doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 8, y + 9, { align: "right" });
     }
 
@@ -914,7 +924,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     const allItems = [
       ...defects.map((d) => ({ ...d, prefix: "DEFECT", color: C.red })),
       ...advisories.map((a) => ({ ...a, prefix: "ADVISORY", color: C.amber })),
-      ...comments.map((c) => ({ ...c, prefix: "NOTE", color: C.slate400 })),
+      ...comments.map((c) => ({ ...c, prefix: "NOTE", color: C.secondaryText })),
     ];
 
     for (const item of allItems) {
@@ -925,7 +935,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
       doc.setFont("helvetica", "bold");
       doc.text(item.prefix, MARGIN + 10, y + 3);
 
-      setTextColor(doc, C.slate300);
+      setTextColor(doc, C.bodyText);
       doc.setFont("helvetica", "normal");
       const prefixW = doc.getTextWidth(item.prefix + "  ");
       const maxTextW = CONTENT_W - 18 - prefixW;
@@ -946,7 +956,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     const cardEndPage = doc.getNumberOfPages();
     if (cardEndPage === cardStartPage) {
       const cardH = y - cardStartY;
-      setDraw(doc, C.slate700);
+      setDraw(doc, C.cardBorder);
       doc.setLineWidth(0.3);
       doc.roundedRect(MARGIN, cardStartY, CONTENT_W, cardH, 3, 3, "S");
 
@@ -983,7 +993,7 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
   y = startSection(doc, y, "Recurring Advisories", 20);
 
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate400);
+  setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text("Advisories appearing on 2 or more MOT tests", MARGIN, y);
   y += 5;
@@ -992,7 +1002,7 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
     const cardH = 14;
     y = checkPageBreak(doc, y, cardH + 3);
 
-    drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.slate800, C.slate700);
+    drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
 
     // Left accent stripe
     setFill(doc, C.amber);
@@ -1008,7 +1018,7 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
     doc.text(countText, MARGIN + 8 + countW / 2, y + 8.5, { align: "center" });
 
     // Advisory text
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     const maxW = CONTENT_W - 20 - countW;
     const lines = doc.splitTextToSize(adv.text, maxW);
@@ -1032,7 +1042,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
 
   const cardH = 45;
   y = checkPageBreak(doc, y, cardH + 4);
-  drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.slate800, C.slate700);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
 
   // Grade badge
   const gradeColor: RGB = hs.grade === "A" ? C.emerald : hs.grade === "B" ? C.blue : hs.grade === "C" ? C.amber : C.red;
@@ -1047,7 +1057,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
 
   // Score text
   doc.setFontSize(FONT.h2);
-  setTextColor(doc, C.white);
+  setTextColor(doc, C.headingText);
   doc.text(`${hs.score}/100`, badgeX + badgeSize + 8, badgeY + 9);
   doc.setFontSize(FONT.body);
   setTextColor(doc, gradeColor);
@@ -1061,7 +1071,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
     const item = hs.breakdown[i];
     const cx = MARGIN + 8 + i * colW;
     doc.setFontSize(FONT.tiny);
-    setTextColor(doc, C.slate400);
+    setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
     doc.text(item.category, cx, breakdownY);
     const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
@@ -1076,7 +1086,7 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
       const item = hs.breakdown[i];
       const cx = MARGIN + 8 + (i - 4) * colW;
       doc.setFontSize(FONT.tiny);
-      setTextColor(doc, C.slate400);
+      setTextColor(doc, C.secondaryText);
       doc.setFont("helvetica", "normal");
       doc.text(item.category, cx, row2Y);
       const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
@@ -1090,56 +1100,175 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   return y;
 }
 
-function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
-  const { ulezResult, vedResult, fuelEconomy, fuelPrices, ncapRating, recalls, valuation, colourPopularity, motReadiness, ownershipCost, theftRisk, evSpecs, negotiation } = input;
+function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number {
+  const { recalls } = input;
+  const hasRecalls = recalls !== undefined;
+  if (!hasRecalls) return y;
 
+  y = startSection(doc, y, "Safety Recalls", 20);
+
+  if (recalls!.length === 0) {
+    y = drawInsightCard(doc, y, C.emerald, "No Recalls Found", [
+      "No known safety recalls found for this vehicle.",
+    ]);
+  } else {
+    const lines: string[] = [
+      `${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`,
+    ];
+    for (let i = 0; i < Math.min(3, recalls!.length); i++) {
+      const r = recalls![i];
+      lines.push(`${r.recallDate}: ${r.defect.substring(0, 100)}${r.defect.length > 100 ? "..." : ""}`);
+    }
+    if (recalls!.length > 3) {
+      lines.push(`...and ${recalls!.length - 3} more`);
+    }
+    y = drawInsightCard(doc, y, C.red, "Safety Recalls", lines);
+  }
+
+  return y;
+}
+
+function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number {
+  const { ulezResult } = input;
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
+  if (!hasUlez) return y;
+
+  y = startSection(doc, y, "ULEZ Compliance", 20);
+
+  const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
+  const accent = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.secondaryText;
+  const statusLabel = ulezResult!.status === "exempt" ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
+  const lines = [
+    ulezResult!.reason,
+    `Confidence: ${ulezResult!.confidence}`,
+  ];
+  // Add clean air zone daily charges for non-compliant vehicles
+  if (!isCompliant && ulezResult!.cleanAirZones && ulezResult!.cleanAirZones.length > 0) {
+    const carZones = ulezResult!.cleanAirZones.filter(z => z.carsCharged !== false);
+    const commercialOnly = ulezResult!.cleanAirZones.filter(z => z.carsCharged === false);
+    if (carZones.length > 0) {
+      lines.push("", "Zones charging cars:");
+      for (const zone of carZones) {
+        lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+      }
+    }
+    if (commercialOnly.length > 0) {
+      lines.push("", "Commercial vehicles only (cars exempt):");
+      for (const zone of commercialOnly) {
+        lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+      }
+    }
+  }
+  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines);
+
+  return y;
+}
+
+function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
+  const { valuation } = input;
+  const hasValuation = valuation && valuation.rangeLow > 0;
+  if (!hasValuation) return y;
+
+  y = startSection(doc, y, "Estimated Value", 20);
+
+  const confLabel = valuation!.confidence === "high" ? "High confidence" : valuation!.confidence === "medium" ? "Medium confidence" : "Estimate only";
+  const lines: string[] = [
+    `\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`,
+    `Confidence: ${confLabel}`,
+    `Sources: ${valuation!.sources.join(", ")}`,
+  ];
+  // Market snapshot
+  if (valuation!.ebayMinPrice && valuation!.ebayMaxPrice) {
+    lines.push(`Asking prices: \u00A3${valuation!.ebayMinPrice.toLocaleString()} \u2013 \u00A3${valuation!.ebayMaxPrice.toLocaleString()}`);
+  }
+  if (valuation!.ebayDominantTransmission || valuation!.ebayDominantBodyType) {
+    const specParts: string[] = [];
+    if (valuation!.ebayDominantTransmission) specParts.push(valuation!.ebayDominantTransmission);
+    if (valuation!.ebayDominantBodyType) specParts.push(valuation!.ebayDominantBodyType);
+    lines.push(`Most common spec: ${specParts.join(", ")}`);
+  }
+  if (valuation!.marketSupply) {
+    const supplyLabel = valuation!.marketSupply === "good" ? "Good" : valuation!.marketSupply === "moderate" ? "Moderate" : "Limited";
+    const countSuffix = valuation!.ebayTotalListings ? ` (${valuation!.ebayTotalListings} listings)` : "";
+    lines.push(`Market supply: ${supplyLabel}${countSuffix}`);
+  }
+  // Adjustment breakdown
+  const adjustments: string[] = [];
+  if (valuation!.mileageAdjustmentPercent != null && valuation!.mileageAdjustmentPercent !== 0) {
+    adjustments.push(`Mileage ${valuation!.mileageAdjustmentPercent > 0 ? "+" : ""}${valuation!.mileageAdjustmentPercent.toFixed(0)}%`);
+  }
+  if (valuation!.conditionAdjustmentPercent != null && valuation!.conditionAdjustmentPercent !== 0) {
+    adjustments.push(`Condition ${valuation!.conditionAdjustmentPercent > 0 ? "+" : ""}${valuation!.conditionAdjustmentPercent.toFixed(0)}%`);
+  }
+  if (valuation!.colourAdjustmentPercent != null && valuation!.colourAdjustmentPercent !== 0) {
+    adjustments.push(`Colour ${valuation!.colourAdjustmentPercent > 0 ? "+" : ""}${valuation!.colourAdjustmentPercent.toFixed(0)}%`);
+  }
+  if (adjustments.length > 0) {
+    lines.push(`Adjustments: ${adjustments.join(", ")}`);
+  }
+  y = drawInsightCard(doc, y, C.blue, "Estimated Value", lines);
+
+  return y;
+}
+
+function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
+  const { ownershipCost } = input;
+  const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
+  if (!hasOwnershipCost) return y;
+
+  y = startSection(doc, y, "Annual Running Costs", 20);
+
+  const oc = ownershipCost!;
+  const lines: string[] = [
+    `\u00A3${oc.totalAnnual.toLocaleString()}/year (${oc.costPerMile.toFixed(0)}p/mile)`,
+  ];
+  const parts: string[] = [];
+  if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);
+  if (oc.breakdown.ved != null) parts.push(`VED \u00A3${oc.breakdown.ved}`);
+  if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
+  if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
+  if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
+  lines.push(oc.excludedNote);
+  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines);
+
+  return y;
+}
+
+function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): number {
+  const { negotiation } = input;
+  if (!negotiation) return y;
+
+  y = startSection(doc, y, "Negotiation Helper", 20);
+
+  const neg = negotiation;
+  const lines: string[] = [
+    `Suggested discount: ${neg.suggestedDiscountPercent.low}\u2013${neg.suggestedDiscountPercent.high}% below asking`,
+    `Estimated saving: \u00A3${neg.estimatedSaving.low.toLocaleString()}\u2013\u00A3${neg.estimatedSaving.high.toLocaleString()}`,
+    `Confidence: ${neg.confidence}`,
+  ];
+  for (const reason of neg.reasons) {
+    lines.push(`\u2022 ${reason}`);
+  }
+  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines);
+
+  return y;
+}
+
+function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
+  const { vedResult, fuelEconomy, fuelPrices, ncapRating, colourPopularity, theftRisk, evSpecs } = input;
+
   const hasVed = vedResult && vedResult.estimatedAnnualRate !== null;
   const hasFuel = fuelEconomy && fuelEconomy.combinedMpg > 0;
   const hasFuelPrices = fuelPrices && (fuelPrices.petrol > 0 || fuelPrices.diesel > 0);
   const hasNcap = ncapRating && ncapRating.overallStars > 0;
-  const hasRecalls = recalls !== undefined;
-  const hasRarityEarly = input.rarityResult && input.rarityResult.total > 0;
-  const hasValuation = valuation && valuation.rangeLow > 0;
+  const hasRarity = input.rarityResult && input.rarityResult.total > 0;
   const hasColour = colourPopularity && input.data.colour;
-  const hasMotReadiness = motReadiness && motReadiness.advisoryCount > 0;
-  const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
   const hasTheftRisk = !!theftRisk;
   const hasEvSpecs = !!evSpecs;
-  const hasNegotiation = !!negotiation;
 
-  if (!hasUlez && !hasVed && !hasFuel && !hasNcap && !hasRecalls && !hasRarityEarly && !hasValuation && !hasColour && !hasFuelPrices && !hasMotReadiness && !hasOwnershipCost && !hasTheftRisk && !hasEvSpecs && !hasNegotiation) return y;
+  if (!hasVed && !hasFuel && !hasNcap && !hasRarity && !hasColour && !hasFuelPrices && !hasTheftRisk && !hasEvSpecs && !input.ecoScore && !input.motPassRate) return y;
 
-  y = startSection(doc, y, "Vehicle Insights", 20);
-
-  // ULEZ Compliance
-  if (hasUlez) {
-    const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
-    const accent = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.slate400;
-    const statusLabel = ulezResult!.status === "exempt" ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
-    const lines = [
-      ulezResult!.reason,
-      `Confidence: ${ulezResult!.confidence}`,
-    ];
-    // Add clean air zone daily charges for non-compliant vehicles
-    if (!isCompliant && ulezResult!.cleanAirZones && ulezResult!.cleanAirZones.length > 0) {
-      const carZones = ulezResult!.cleanAirZones.filter(z => z.carsCharged !== false);
-      const commercialOnly = ulezResult!.cleanAirZones.filter(z => z.carsCharged === false);
-      if (carZones.length > 0) {
-        lines.push("", "Zones charging cars:");
-        for (const zone of carZones) {
-          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
-        }
-      }
-      if (commercialOnly.length > 0) {
-        lines.push("", "Commercial vehicles only (cars exempt):");
-        for (const zone of commercialOnly) {
-          lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
-        }
-      }
-    }
-    y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines);
-  }
+  y = startSection(doc, y, "Key Insights", 20);
 
   // VED Road Tax
   if (hasVed) {
@@ -1189,7 +1318,6 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   }
 
   // UK Road Presence (rarity)
-  const hasRarity = input.rarityResult && input.rarityResult.total > 0;
   if (hasRarity) {
     const r = input.rarityResult!;
     const catLabel = r.category === "very-rare" ? "Very Rare" : r.category === "rare" ? "Rare" : r.category === "uncommon" ? "Uncommon" : r.category === "common" ? "Common" : "Very Common";
@@ -1240,99 +1368,6 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     ]);
   }
 
-  // Estimated Value (expanded with market snapshot)
-  if (hasValuation) {
-    const confLabel = valuation!.confidence === "high" ? "High confidence" : valuation!.confidence === "medium" ? "Medium confidence" : "Estimate only";
-    const lines: string[] = [
-      `\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`,
-      `Confidence: ${confLabel}`,
-      `Sources: ${valuation!.sources.join(", ")}`,
-    ];
-    // Market snapshot
-    if (valuation!.ebayMinPrice && valuation!.ebayMaxPrice) {
-      lines.push(`Asking prices: \u00A3${valuation!.ebayMinPrice.toLocaleString()} \u2013 \u00A3${valuation!.ebayMaxPrice.toLocaleString()}`);
-    }
-    if (valuation!.ebayDominantTransmission || valuation!.ebayDominantBodyType) {
-      const specParts: string[] = [];
-      if (valuation!.ebayDominantTransmission) specParts.push(valuation!.ebayDominantTransmission);
-      if (valuation!.ebayDominantBodyType) specParts.push(valuation!.ebayDominantBodyType);
-      lines.push(`Most common spec: ${specParts.join(", ")}`);
-    }
-    if (valuation!.marketSupply) {
-      const supplyLabel = valuation!.marketSupply === "good" ? "Good" : valuation!.marketSupply === "moderate" ? "Moderate" : "Limited";
-      const countSuffix = valuation!.ebayTotalListings ? ` (${valuation!.ebayTotalListings} listings)` : "";
-      lines.push(`Market supply: ${supplyLabel}${countSuffix}`);
-    }
-    // Adjustment breakdown
-    const adjustments: string[] = [];
-    if (valuation!.mileageAdjustmentPercent != null && valuation!.mileageAdjustmentPercent !== 0) {
-      adjustments.push(`Mileage ${valuation!.mileageAdjustmentPercent > 0 ? "+" : ""}${valuation!.mileageAdjustmentPercent.toFixed(0)}%`);
-    }
-    if (valuation!.conditionAdjustmentPercent != null && valuation!.conditionAdjustmentPercent !== 0) {
-      adjustments.push(`Condition ${valuation!.conditionAdjustmentPercent > 0 ? "+" : ""}${valuation!.conditionAdjustmentPercent.toFixed(0)}%`);
-    }
-    if (valuation!.colourAdjustmentPercent != null && valuation!.colourAdjustmentPercent !== 0) {
-      adjustments.push(`Colour ${valuation!.colourAdjustmentPercent > 0 ? "+" : ""}${valuation!.colourAdjustmentPercent.toFixed(0)}%`);
-    }
-    if (adjustments.length > 0) {
-      lines.push(`Adjustments: ${adjustments.join(", ")}`);
-    }
-    y = drawInsightCard(doc, y, C.blue, "Estimated Value", lines);
-  }
-
-  // MOT Readiness
-  if (hasMotReadiness) {
-    const mr = motReadiness!;
-    const accent: RGB = mr.score === "red" ? C.red : mr.score === "amber" ? C.amber : C.emerald;
-    const lines: string[] = [
-      `${mr.advisoryCount} advisory item${mr.advisoryCount !== 1 ? "s" : ""} — ${mr.label}`,
-    ];
-    if (mr.daysUntilMot > 0) {
-      lines.push(`Next MOT due in ${mr.daysUntilMot} days`);
-    }
-    if (mr.totalEstimatedCost.high > 0) {
-      lines.push(`Estimated repair costs: \u00A3${mr.totalEstimatedCost.low}\u2013\u00A3${mr.totalEstimatedCost.high}`);
-    }
-    y = drawInsightCard(doc, y, accent, "MOT Readiness", lines);
-  }
-
-  // Annual Running Costs
-  if (hasOwnershipCost) {
-    const oc = ownershipCost!;
-    const lines: string[] = [
-      `\u00A3${oc.totalAnnual.toLocaleString()}/year (${oc.costPerMile.toFixed(0)}p/mile)`,
-    ];
-    const parts: string[] = [];
-    if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);
-    if (oc.breakdown.ved != null) parts.push(`VED \u00A3${oc.breakdown.ved}`);
-    if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
-    if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
-    if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
-    lines.push(oc.excludedNote);
-    y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines);
-  }
-
-  // Safety Recalls
-  if (hasRecalls) {
-    if (recalls!.length === 0) {
-      y = drawInsightCard(doc, y, C.emerald, "Safety Recalls", [
-        "No known safety recalls found for this vehicle.",
-      ]);
-    } else {
-      const lines: string[] = [
-        `${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`,
-      ];
-      for (let i = 0; i < Math.min(3, recalls!.length); i++) {
-        const r = recalls![i];
-        lines.push(`${r.recallDate}: ${r.defect.substring(0, 100)}${r.defect.length > 100 ? "..." : ""}`);
-      }
-      if (recalls!.length > 3) {
-        lines.push(`...and ${recalls!.length - 3} more`);
-      }
-      y = drawInsightCard(doc, y, C.red, "Safety Recalls", lines);
-    }
-  }
-
   // Theft Risk
   if (hasTheftRisk) {
     const tr = theftRisk!;
@@ -1355,20 +1390,6 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     if (ev.motorKw) lines.push(`Motor: ${ev.motorKw} kW (${Math.round(ev.motorKw * 1.341)} bhp)`);
     if (ev.driveType) lines.push(`Drive type: ${ev.driveType}`);
     y = drawInsightCard(doc, y, C.cyan, "EV Specifications", lines);
-  }
-
-  // Negotiation Helper
-  if (hasNegotiation) {
-    const neg = negotiation!;
-    const lines: string[] = [
-      `Suggested discount: ${neg.suggestedDiscountPercent.low}\u2013${neg.suggestedDiscountPercent.high}% below asking`,
-      `Estimated saving: \u00A3${neg.estimatedSaving.low.toLocaleString()}\u2013\u00A3${neg.estimatedSaving.high.toLocaleString()}`,
-      `Confidence: ${neg.confidence}`,
-    ];
-    for (const reason of neg.reasons) {
-      lines.push(`\u2022 ${reason}`);
-    }
-    y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines);
   }
 
   return y;
@@ -1422,7 +1443,7 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
   for (let row = 0; row < totalRows; row++) {
     y = checkPageBreak(doc, y, rowH + 1);
 
-    const bgColor = row % 2 === 0 ? C.slate800 : C.slate900;
+    const bgColor = row % 2 === 0 ? C.white : C.tableBgAlt;
     setFill(doc, bgColor);
     doc.rect(MARGIN, y, CONTENT_W, rowH, "F");
 
@@ -1430,11 +1451,11 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
     const leftIdx = row;
     if (leftIdx < fields.length) {
       doc.setFontSize(FONT.small);
-      setTextColor(doc, C.slate400);
+      setTextColor(doc, C.secondaryText);
       doc.setFont("helvetica", "normal");
       doc.text(fields[leftIdx][0], MARGIN + 3, y + 5.5);
 
-      setTextColor(doc, C.white);
+      setTextColor(doc, C.headingText);
       doc.setFont("helvetica", "bold");
       const valueText = doc.splitTextToSize(fields[leftIdx][1], colW - labelW - 2);
       doc.text(valueText[0], MARGIN + labelW, y + 5.5);
@@ -1445,11 +1466,11 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
     if (rightIdx < fields.length) {
       const rightX = MARGIN + colW + 4;
       doc.setFontSize(FONT.small);
-      setTextColor(doc, C.slate400);
+      setTextColor(doc, C.secondaryText);
       doc.setFont("helvetica", "normal");
       doc.text(fields[rightIdx][0], rightX, y + 5.5);
 
-      setTextColor(doc, C.white);
+      setTextColor(doc, C.headingText);
       doc.setFont("helvetica", "bold");
       const valueText = doc.splitTextToSize(fields[rightIdx][1], colW - labelW - 2);
       doc.text(valueText[0], rightX + labelW, y + 5.5);
@@ -1494,12 +1515,12 @@ function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
       // Left column
       const leftIdx = row * 2;
       if (leftIdx < section.items.length) {
-        setDraw(doc, C.slate400);
+        setDraw(doc, C.secondaryText);
         doc.setLineWidth(0.3);
         doc.rect(MARGIN + 2, y, 3.5, 3.5, "S");
 
         doc.setFontSize(FONT.small);
-        setTextColor(doc, C.slate100);
+        setTextColor(doc, C.bodyText);
         doc.setFont("helvetica", "normal");
         const leftText = doc.splitTextToSize(section.items[leftIdx], colW - 10);
         doc.text(leftText[0], MARGIN + 8, y + 3);
@@ -1509,12 +1530,12 @@ function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
       const rightIdx = row * 2 + 1;
       if (rightIdx < section.items.length) {
         const rightX = MARGIN + colW + 6;
-        setDraw(doc, C.slate400);
+        setDraw(doc, C.secondaryText);
         doc.setLineWidth(0.3);
         doc.rect(rightX, y, 3.5, 3.5, "S");
 
         doc.setFontSize(FONT.small);
-        setTextColor(doc, C.slate100);
+        setTextColor(doc, C.bodyText);
         doc.setFont("helvetica", "normal");
         const rightText = doc.splitTextToSize(section.items[rightIdx], colW - 10);
         doc.text(rightText[0], rightX + 6, y + 3);
@@ -1555,13 +1576,13 @@ function renderFinalPage(doc: jsPDF, y: number): number {
     y = checkPageBreak(doc, y, 25);
 
     doc.setFontSize(FONT.h3);
-    setTextColor(doc, C.white);
+    setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
     doc.text(para.heading, MARGIN, y + 4);
     y += 8;
 
     doc.setFontSize(FONT.body);
-    setTextColor(doc, C.slate300);
+    setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     const lines = doc.splitTextToSize(para.text, CONTENT_W - 4);
     for (const line of lines) {
@@ -1631,7 +1652,31 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   // Page 1: Cover
   let y = renderCoverPage(doc, input);
 
-  // Mileage Progression Table
+  // Vehicle Details table (moved up)
+  y = renderVehicleDetails(doc, input, y);
+
+  // Health Score
+  y = renderHealthScore(doc, input, y);
+
+  // Safety Recalls (extracted)
+  y = renderSafetyRecalls(doc, input, y);
+
+  // ULEZ Compliance (extracted)
+  y = renderUlezCompliance(doc, input, y);
+
+  // Vehicle Valuation (extracted)
+  y = renderValuation(doc, input, y);
+
+  // Annual Running Costs (extracted)
+  y = renderRunningCosts(doc, input, y);
+
+  // Negotiation Helper (extracted)
+  y = renderNegotiationHelper(doc, input, y);
+
+  // Key Insights (remaining ~10)
+  y = renderEnrichedInsights(doc, input, y);
+
+  // Mileage Progression
   y = renderMileageProgression(doc, input, y);
 
   // MOT History
@@ -1643,19 +1688,10 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   // Recurring Advisories
   y = renderRecurringAdvisories(doc, input, y);
 
-  // Vehicle Insights (ULEZ, VED, fuel economy, NCAP, valuation, recalls)
-  // Health Score
-  y = renderHealthScore(doc, input, y);
-
-  y = renderEnrichedInsights(doc, input, y);
-
-  // Vehicle Details (two-column)
-  y = renderVehicleDetails(doc, input, y);
-
-  // Checklists (two-column)
+  // Checklists
   y = renderChecklist(doc, input, y);
 
-  // Disclaimer
+  // Disclaimer & Data Sources
   renderFinalPage(doc, y);
 
   // Global footer pass
