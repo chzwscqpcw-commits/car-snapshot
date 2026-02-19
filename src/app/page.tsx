@@ -126,6 +126,10 @@ import {
   Wrench,
   Battery,
   ArrowDownCircle,
+  ShieldCheck,
+  Lightbulb,
+  History,
+  ArrowRight,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -382,6 +386,19 @@ function DataReveal({ delay = 0, children, className }: { delay?: number; childr
         animationFillMode: "forwards",
       }}
     >
+      {children}
+    </div>
+  );
+}
+
+// Section group divider with uppercase label
+function SectionGroup({ icon: Icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
+  return (
+    <div className="mt-10 first:mt-0">
+      <div className="flex items-center gap-2 mb-5 pb-2 border-b border-slate-700/50">
+        <div className="text-slate-400">{Icon}</div>
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</span>
+      </div>
       {children}
     </div>
   );
@@ -1252,15 +1269,6 @@ export default function Home() {
       });
     }
 
-    // ULEZ insight — only for non-compliant (the ULEZ card handles compliant/exempt display)
-    if (ulezResult && ulezResult.status === "non-compliant") {
-      result.push({
-        tone: "risk",
-        title: "Likely not ULEZ compliant",
-        detail: `${ulezResult.reason}. Daily charges apply in London and other Clean Air Zones.`,
-      });
-    }
-
     const taxDays = daysSince(data.taxDueDate);
     if (taxDays !== null) {
       if (taxDays > 0) {
@@ -1423,24 +1431,6 @@ export default function Home() {
       });
     }
 
-    // Recalls insight
-    if (recalls.length > 0) {
-      result.push({
-        tone: "risk",
-        title: `${recalls.length} safety recall${recalls.length !== 1 ? "s" : ""} found`,
-        detail: "Check the Safety Recalls section below for details. Recall repairs are always free at authorised dealers.",
-      });
-    }
-
-    // Valuation insight
-    if (valuationResult) {
-      result.push({
-        tone: "info",
-        title: `Estimated value: £${valuationResult.rangeLow.toLocaleString()} – £${valuationResult.rangeHigh.toLocaleString()}`,
-        detail: `Based on ${valuationResult.sources.join(", ")}. See the full valuation breakdown below.`,
-      });
-    }
-
     // How many left (rarity) insight
     if (rarityResult) {
       const { licensed, category } = rarityResult;
@@ -1497,27 +1487,6 @@ export default function Home() {
       });
     }
 
-    // MOT Readiness insight
-    if (motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0) {
-      const costText = motReadiness.totalEstimatedCost.high > 0
-        ? ` Estimated repair costs: £${motReadiness.totalEstimatedCost.low}–£${motReadiness.totalEstimatedCost.high}.`
-        : "";
-      result.push({
-        tone: motReadiness.score === "red" ? "risk" : motReadiness.score === "amber" ? "warn" : "good",
-        title: `MOT Readiness: ${motReadiness.label}`,
-        detail: `${motReadiness.advisoryCount} advisory item${motReadiness.advisoryCount !== 1 ? "s" : ""} on last test.${costText}`,
-      });
-    }
-
-    // Ownership Cost insight
-    if (ownershipCost) {
-      result.push({
-        tone: "info",
-        title: `Estimated running cost: £${ownershipCost.totalAnnual.toLocaleString()}/year (${ownershipCost.costPerMile.toFixed(0)}p/mile)`,
-        detail: `Includes ${[ownershipCost.hasFuel ? "fuel" : null, ownershipCost.hasVed ? "road tax" : null, ownershipCost.hasDepreciation ? "depreciation" : null, ownershipCost.breakdown.mot != null ? "MOT fee" : null].filter(Boolean).join(", ")}. ${ownershipCost.excludedNote}`,
-      });
-    }
-
     // Theft risk insight
     if (theftRisk) {
       const catLabel = theftRisk.riskCategory === "very-high" ? "Very High" : theftRisk.riskCategory === "high" ? "High" : theftRisk.riskCategory === "moderate" ? "Moderate" : theftRisk.riskCategory === "low" ? "Low" : "Very Low";
@@ -1529,26 +1498,8 @@ export default function Home() {
       });
     }
 
-    // EV specs insight
-    if (evSpecs) {
-      result.push({
-        tone: "info",
-        title: `${evSpecs.rangeWltp} mile range · ${evSpecs.batteryKwh} kWh battery`,
-        detail: `${evSpecs.chargeFast ? `Fast charge: ${evSpecs.chargeFast}` : ""}${evSpecs.chargeFast && evSpecs.chargeSlow ? " · " : ""}${evSpecs.chargeSlow ? `Home charge: ${evSpecs.chargeSlow}` : ""}${evSpecs.motorKw ? ` · ${evSpecs.motorKw} kW motor` : ""}`,
-      });
-    }
-
-    // Negotiation helper insight
-    if (negotiation) {
-      result.push({
-        tone: "info",
-        title: `Negotiation range: ${negotiation.suggestedDiscountPercent.low}–${negotiation.suggestedDiscountPercent.high}% below asking`,
-        detail: `Estimated saving: £${negotiation.estimatedSaving.low.toLocaleString()}–£${negotiation.estimatedSaving.high.toLocaleString()} based on ${negotiation.reasons.length} factor${negotiation.reasons.length !== 1 ? "s" : ""}.`,
-      });
-    }
-
     return result;
-  }, [data, isOver3Years, ulezResult, vedResult, fuelEconomy, ncapRating, recalls, valuationResult, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices, motReadiness, ownershipCost, theftRisk, evSpecs, negotiation]);
+  }, [data, isOver3Years, vedResult, fuelEconomy, ncapRating, rarityResult, colourPopularity, ecoScore, motPassRate, lookupModel, liveAnnualCost, fuelPrices, theftRisk]);
 
   async function loadComparisonData() {
     if (!compareReg1 || !compareReg2) {
@@ -3295,11 +3246,39 @@ END:VEVENT
 
             </DataReveal>
 
-            {/* VEHICLE SPECS GRID */}
+            {/* VEHICLE SPECS + STATUS (merged) */}
             <DataReveal delay={100}>
               <div className="mb-8">
                 <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">Vehicle Details</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {/* MOT Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getMotStatusColor(data.motStatus, data.motExpiryDate))}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">MOT</p>
+                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
+                      {data.motStatus === "Valid" && motDaysUntilExpiry > 0
+                        ? `${motDaysUntilExpiry}d left`
+                        : data.motStatus === "Valid" && motDaysUntilExpiry <= 0
+                        ? "Expired"
+                        : data.motStatus ?? "—"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.motExpiryDate)}</p>
+                  </div>
+
+                  {/* Tax Badge */}
+                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getTaxStatusColor(data.taxStatus, data.taxDueDate))}`}>
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Tax</p>
+                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
+                      {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null && daysUntil(data.taxDueDate)! > 0
+                        ? `${daysUntil(data.taxDueDate)}d left`
+                        : data.taxStatus === "Taxed"
+                        ? "Overdue"
+                        : data.taxStatus === "SORN"
+                        ? "SORN"
+                        : data.taxStatus ?? "—"}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.taxDueDate)}</p>
+                  </div>
+
                   <IconBadge
                     icon={<Calendar className="w-5 h-5" />}
                     label="Year"
@@ -3367,64 +3346,205 @@ END:VEVENT
               </div>
             </DataReveal>
 
-            {/* STATUS DASHBOARD */}
-            <DataReveal delay={100}>
-              <div className="mb-8">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {/* MOT Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getMotStatusColor(data.motStatus, data.motExpiryDate))}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">MOT</p>
-                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getMotStatusColor(data.motStatus, data.motExpiryDate)]}`}>
-                      {data.motStatus === "Valid" && motDaysUntilExpiry > 0
-                        ? `${motDaysUntilExpiry}d left`
-                        : data.motStatus === "Valid" && motDaysUntilExpiry <= 0
-                        ? "Expired"
-                        : data.motStatus ?? "—"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.motExpiryDate)}</p>
-                  </div>
+            {/* ═══ GROUP 2: HEALTH & SAFETY ═══ */}
+            <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety">
 
-                  {/* Tax Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(getTaxStatusColor(data.taxStatus, data.taxDueDate))}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Tax</p>
-                    <p className={`text-sm font-bold leading-tight ${{ emerald: "text-emerald-300", amber: "text-amber-300", red: "text-red-300", slate: "text-slate-300" }[getTaxStatusColor(data.taxStatus, data.taxDueDate)]}`}>
-                      {data.taxStatus === "Taxed" && daysUntil(data.taxDueDate) !== null && daysUntil(data.taxDueDate)! > 0
-                        ? `${daysUntil(data.taxDueDate)}d left`
-                        : data.taxStatus === "Taxed"
-                        ? "Overdue"
-                        : data.taxStatus === "SORN"
-                        ? "SORN"
-                        : data.taxStatus ?? "—"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">{formatDate(data.taxDueDate)}</p>
+            {/* VEHICLE HEALTH SCORE */}
+            {healthScore && (
+              <DataReveal delay={160}>
+                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
+                  <div className="flex items-center gap-5">
+                    {/* Circular progress */}
+                    <div className="relative flex-shrink-0">
+                      <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-700" />
+                        <circle
+                          cx="40" cy="40" r="34"
+                          fill="none"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          strokeDasharray={`${(healthScore.score / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
+                          transform="rotate(-90 40 40)"
+                          className={
+                            healthScore.grade === "A" ? "stroke-emerald-400" :
+                            healthScore.grade === "B" ? "stroke-blue-400" :
+                            healthScore.grade === "C" ? "stroke-amber-400" :
+                            healthScore.grade === "D" ? "stroke-orange-400" :
+                            "stroke-red-400"
+                          }
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className={`text-2xl font-bold ${
+                          healthScore.grade === "A" ? "text-emerald-400" :
+                          healthScore.grade === "B" ? "text-blue-400" :
+                          healthScore.grade === "C" ? "text-amber-400" :
+                          healthScore.grade === "D" ? "text-orange-400" :
+                          "text-red-400"
+                        }`}>{healthScore.grade}</span>
+                        <span className="text-xs text-slate-400">{healthScore.score}/100</span>
+                      </div>
+                    </div>
+                    {/* Title and label */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-slate-100 mb-0.5">Vehicle Health Score</h3>
+                      <p className={`text-lg font-bold ${
+                        healthScore.grade === "A" ? "text-emerald-400" :
+                        healthScore.grade === "B" ? "text-blue-400" :
+                        healthScore.grade === "C" ? "text-amber-400" :
+                        healthScore.grade === "D" ? "text-orange-400" :
+                        "text-red-400"
+                      }`}>{healthScore.label}</p>
+                      <p className="text-xs text-slate-400 mt-1">Based on MOT history, advisories, mileage, safety, and compliance data.</p>
+                    </div>
                   </div>
-
-                  {/* Mileage Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass("slate")}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Mileage</p>
-                    <p className="text-sm font-bold text-slate-300 leading-tight">
-                      {data.motTests?.[0]?.odometer?.value
-                        ? data.motTests[0].odometer.value.toLocaleString()
-                        : "—"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">latest MOT</p>
-                  </div>
-
-                  {/* Advisories Badge */}
-                  <div className={`p-3 rounded-lg text-center ${getStatusBgClass(latestAdvisoryCount > 0 ? "amber" : "emerald")}`}>
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Advisories</p>
-                    <p className={`text-sm font-bold leading-tight ${latestAdvisoryCount > 0 ? "text-amber-300" : "text-emerald-300"}`}>
-                      {latestAdvisoryCount > 0 ? latestAdvisoryCount : "Clean"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-1">latest test</p>
+                  {/* Breakdown grid */}
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {healthScore.breakdown.map((item) => (
+                      <div key={item.category} className="bg-slate-900/50 rounded px-2.5 py-2 border border-slate-700/30">
+                        <div className="flex items-baseline justify-between mb-0.5">
+                          <span className="text-[10px] text-slate-500 uppercase tracking-wide">{item.category}</span>
+                          <span className={`text-xs font-semibold ${
+                            item.score >= item.maxScore * 0.8 ? "text-emerald-400" :
+                            item.score >= item.maxScore * 0.5 ? "text-amber-400" :
+                            "text-red-400"
+                          }`}>{item.score}/{item.maxScore}</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 leading-tight truncate">{item.detail}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-            </DataReveal>
+              </DataReveal>
+            )}
+
+            {/* MOT READINESS CARD */}
+            {motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0 && (
+              <DataReveal delay={210}>
+                <div className={`mb-8 p-5 rounded-lg border ${
+                  motReadiness.score === "red" ? "border-red-800/40 bg-gradient-to-r from-red-950/30 to-rose-950/30" :
+                  motReadiness.score === "amber" ? "border-amber-800/40 bg-gradient-to-r from-amber-950/30 to-yellow-950/30" :
+                  "border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30"
+                }`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Wrench className={`w-5 h-5 ${
+                        motReadiness.score === "red" ? "text-red-400" :
+                        motReadiness.score === "amber" ? "text-amber-400" :
+                        "text-emerald-400"
+                      }`} />
+                      <h3 className="text-sm font-semibold text-slate-200">MOT Readiness</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      motReadiness.score === "red" ? "bg-red-900/40 text-red-300" :
+                      motReadiness.score === "amber" ? "bg-amber-900/40 text-amber-300" :
+                      "bg-emerald-900/40 text-emerald-300"
+                    }`}>
+                      {motReadiness.label}
+                    </span>
+                  </div>
+
+                  {motReadiness.daysUntilMot > 0 && (
+                    <p className="text-xs text-slate-400 mb-3">
+                      Next MOT due in {motReadiness.daysUntilMot} days
+                    </p>
+                  )}
+
+                  <div className="space-y-2">
+                    {motReadiness.riskItems.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <span className={`shrink-0 mt-0.5 px-1.5 py-0.5 rounded font-semibold uppercase ${
+                          item.risk === "high" ? "bg-red-900/40 text-red-300" :
+                          item.risk === "medium" ? "bg-amber-900/40 text-amber-300" :
+                          "bg-slate-700/60 text-slate-300"
+                        }`}>
+                          {item.risk}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium text-slate-300">{item.categoryLabel}</span>
+                            {item.isRecurring && (
+                              <span className="px-1 py-0.5 rounded bg-slate-700/60 text-slate-400 text-[10px] font-medium">
+                                RECURRING
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-slate-400 mt-0.5 break-words">{item.text}</p>
+                          <p className="text-slate-500 mt-0.5">Est. £{item.estimatedCost.low}–£{item.estimatedCost.high}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {motReadiness.totalEstimatedCost.high > 0 && (
+                    <div className={`mt-3 pt-3 border-t ${
+                      motReadiness.score === "red" ? "border-red-800/30" :
+                      motReadiness.score === "amber" ? "border-amber-800/30" :
+                      "border-emerald-800/30"
+                    }`}>
+                      <p className="text-sm font-semibold text-slate-200">
+                        Total estimated repair cost: £{motReadiness.totalEstimatedCost.low}–£{motReadiness.totalEstimatedCost.high}
+                      </p>
+                    </div>
+                  )}
+
+                  <p className="text-[10px] text-slate-600 mt-3">{motReadiness.disclaimer}</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* SAFETY RECALLS */}
+            {recalls.length > 0 && (
+              <DataReveal delay={260}>
+                <div className="mb-8">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-red-400" />
+                    Safety Recalls
+                  </h3>
+                  <div className="space-y-3">
+                    {recalls.map((recall, idx) => (
+                      <div key={idx} className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <p className="text-sm font-semibold text-red-200">{recall.defect}</p>
+                          <span className="text-xs text-slate-500 whitespace-nowrap">{recall.recallNumber}</span>
+                        </div>
+                        <p className="text-xs text-slate-300 mb-2"><span className="font-medium text-slate-400">Remedy:</span> {recall.remedy}</p>
+                        <p className="text-xs text-slate-500">
+                          Recall date: {new Date(recall.recallDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                          {" · "}Affects: {recall.models.join(", ")}
+                          {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
+                        </p>
+                        <p className="text-xs text-emerald-400/80 mt-1.5">Recall repairs are always free at any authorised dealer.</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-3">
+                    Recall data is matched by make, model, and year of manufacture. Individual vehicle recall status may differ — a recall may have already been completed on this specific vehicle. For vehicle-specific recall status, check at{" "}
+                    <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
+                    {" "}or contact your manufacturer&apos;s dealer. Recall repairs are always free.
+                  </p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* No recalls — positive signal */}
+            {data && recalls.length === 0 && data.make && (
+              <DataReveal delay={260}>
+                <div className="mb-8 p-4 rounded-lg border border-emerald-800/30 bg-emerald-950/15">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-emerald-400" />
+                    <div>
+                      <p className="text-sm font-medium text-emerald-200">No known safety recalls</p>
+                      <p className="text-xs text-slate-400 mt-0.5">No matching recalls found in our database. Check with the manufacturer for a complete record.</p>
+                    </div>
+                  </div>
+                </div>
+              </DataReveal>
+            )}
 
             {/* ULEZ COMPLIANCE CARD */}
             {ulezResult && ulezResult.status !== "unknown" && (
-              <DataReveal delay={120}>
+              <DataReveal delay={310}>
                 <div className={`mb-8 p-5 rounded-lg border ${
                   ulezResult.status === "exempt" || ulezResult.status === "compliant"
                     ? "bg-emerald-950/30 border-emerald-800/40"
@@ -3510,243 +3630,14 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* VEHICLE HEALTH SCORE */}
-            {healthScore && (
-              <DataReveal delay={135}>
-                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
-                  <div className="flex items-center gap-5">
-                    {/* Circular progress */}
-                    <div className="relative flex-shrink-0">
-                      <svg width="80" height="80" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-700" />
-                        <circle
-                          cx="40" cy="40" r="34"
-                          fill="none"
-                          strokeWidth="6"
-                          strokeLinecap="round"
-                          strokeDasharray={`${(healthScore.score / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
-                          transform="rotate(-90 40 40)"
-                          className={
-                            healthScore.grade === "A" ? "stroke-emerald-400" :
-                            healthScore.grade === "B" ? "stroke-blue-400" :
-                            healthScore.grade === "C" ? "stroke-amber-400" :
-                            healthScore.grade === "D" ? "stroke-orange-400" :
-                            "stroke-red-400"
-                          }
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className={`text-2xl font-bold ${
-                          healthScore.grade === "A" ? "text-emerald-400" :
-                          healthScore.grade === "B" ? "text-blue-400" :
-                          healthScore.grade === "C" ? "text-amber-400" :
-                          healthScore.grade === "D" ? "text-orange-400" :
-                          "text-red-400"
-                        }`}>{healthScore.grade}</span>
-                        <span className="text-xs text-slate-400">{healthScore.score}/100</span>
-                      </div>
-                    </div>
-                    {/* Title and label */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-slate-100 mb-0.5">Vehicle Health Score</h3>
-                      <p className={`text-lg font-bold ${
-                        healthScore.grade === "A" ? "text-emerald-400" :
-                        healthScore.grade === "B" ? "text-blue-400" :
-                        healthScore.grade === "C" ? "text-amber-400" :
-                        healthScore.grade === "D" ? "text-orange-400" :
-                        "text-red-400"
-                      }`}>{healthScore.label}</p>
-                      <p className="text-xs text-slate-400 mt-1">Based on MOT history, advisories, mileage, safety, and compliance data.</p>
-                    </div>
-                  </div>
-                  {/* Breakdown grid */}
-                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {healthScore.breakdown.map((item) => (
-                      <div key={item.category} className="bg-slate-900/50 rounded px-2.5 py-2 border border-slate-700/30">
-                        <div className="flex items-baseline justify-between mb-0.5">
-                          <span className="text-[10px] text-slate-500 uppercase tracking-wide">{item.category}</span>
-                          <span className={`text-xs font-semibold ${
-                            item.score >= item.maxScore * 0.8 ? "text-emerald-400" :
-                            item.score >= item.maxScore * 0.5 ? "text-amber-400" :
-                            "text-red-400"
-                          }`}>{item.score}/{item.maxScore}</span>
-                        </div>
-                        <p className="text-[10px] text-slate-400 leading-tight truncate">{item.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </DataReveal>
-            )}
+            </SectionGroup>
 
-            {/* ACTION PROMPTS */}
-            {actionPrompts.length > 0 && (
-              <DataReveal delay={150}>
-                <div className="mb-8 space-y-3">
-                  {actionPrompts.map((prompt, idx) => (
-                    <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
-                  ))}
-                  <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
-                </div>
-              </DataReveal>
-            )}
-
-            {/* KEY INSIGHTS */}
-            {insights.length > 0 && (
-              <DataReveal delay={200}>
-                <div className="mb-8 space-y-3">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">Key Insights</h3>
-                  {insights.map((insight, idx) => (
-                    <InsightCard key={idx} insight={insight} delay={idx * 80} />
-                  ))}
-                </div>
-              </DataReveal>
-            )}
-
-            {/* EV SPECS CARD */}
-            {evSpecs && (
-              <DataReveal delay={205}>
-                <div className="mb-8 p-5 rounded-lg border border-cyan-800/40 bg-gradient-to-r from-cyan-950/30 to-blue-950/30">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Battery className="w-5 h-5 text-cyan-400" />
-                    <h3 className="text-sm font-semibold text-slate-200">EV Specifications</h3>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 mb-3">
-                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
-                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Battery</p>
-                      <p className="text-lg font-bold text-cyan-400">{evSpecs.batteryKwh} <span className="text-sm font-normal text-slate-400">kWh</span></p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
-                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">WLTP Range</p>
-                      <p className="text-lg font-bold text-cyan-400">{evSpecs.rangeWltp} <span className="text-sm font-normal text-slate-400">miles</span></p>
-                    </div>
-                    {evSpecs.chargeFast && (
-                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
-                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Fast Charge</p>
-                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeFast}</p>
-                      </div>
-                    )}
-                    {evSpecs.chargeSlow && (
-                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
-                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Home Charge</p>
-                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeSlow}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {(evSpecs.motorKw || evSpecs.driveType) && (
-                    <div className="flex gap-2 flex-wrap">
-                      {evSpecs.motorKw && (
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
-                          {evSpecs.motorKw} kW motor ({Math.round(evSpecs.motorKw * 1.341)} bhp)
-                        </span>
-                      )}
-                      {evSpecs.driveType && (
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
-                          {evSpecs.driveType}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </DataReveal>
-            )}
-
-            {/* MOT READINESS CARD */}
-            {motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0 && (
-              <DataReveal delay={210}>
-                <div className={`mb-8 p-5 rounded-lg border ${
-                  motReadiness.score === "red" ? "border-red-800/40 bg-gradient-to-r from-red-950/30 to-rose-950/30" :
-                  motReadiness.score === "amber" ? "border-amber-800/40 bg-gradient-to-r from-amber-950/30 to-yellow-950/30" :
-                  "border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30"
-                }`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Wrench className={`w-5 h-5 ${
-                        motReadiness.score === "red" ? "text-red-400" :
-                        motReadiness.score === "amber" ? "text-amber-400" :
-                        "text-emerald-400"
-                      }`} />
-                      <h3 className="text-sm font-semibold text-slate-200">MOT Readiness</h3>
-                    </div>
-                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                      motReadiness.score === "red" ? "bg-red-900/40 text-red-300" :
-                      motReadiness.score === "amber" ? "bg-amber-900/40 text-amber-300" :
-                      "bg-emerald-900/40 text-emerald-300"
-                    }`}>
-                      {motReadiness.label}
-                    </span>
-                  </div>
-
-                  {motReadiness.daysUntilMot > 0 && (
-                    <p className="text-xs text-slate-400 mb-3">
-                      Next MOT due in {motReadiness.daysUntilMot} days
-                    </p>
-                  )}
-
-                  <div className="space-y-2">
-                    {motReadiness.riskItems.map((item, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs">
-                        <span className={`shrink-0 mt-0.5 px-1.5 py-0.5 rounded font-semibold uppercase ${
-                          item.risk === "high" ? "bg-red-900/40 text-red-300" :
-                          item.risk === "medium" ? "bg-amber-900/40 text-amber-300" :
-                          "bg-slate-700/60 text-slate-300"
-                        }`}>
-                          {item.risk}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-medium text-slate-300">{item.categoryLabel}</span>
-                            {item.isRecurring && (
-                              <span className="px-1 py-0.5 rounded bg-slate-700/60 text-slate-400 text-[10px] font-medium">
-                                RECURRING
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-slate-400 mt-0.5 break-words">{item.text}</p>
-                          <p className="text-slate-500 mt-0.5">Est. £{item.estimatedCost.low}–£{item.estimatedCost.high}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {motReadiness.totalEstimatedCost.high > 0 && (
-                    <div className={`mt-3 pt-3 border-t ${
-                      motReadiness.score === "red" ? "border-red-800/30" :
-                      motReadiness.score === "amber" ? "border-amber-800/30" :
-                      "border-emerald-800/30"
-                    }`}>
-                      <p className="text-sm font-semibold text-slate-200">
-                        Total estimated repair cost: £{motReadiness.totalEstimatedCost.low}–£{motReadiness.totalEstimatedCost.high}
-                      </p>
-                    </div>
-                  )}
-
-                  <p className="text-[10px] text-slate-600 mt-3">{motReadiness.disclaimer}</p>
-                </div>
-              </DataReveal>
-            )}
-
-            {/* PDF REPORT CTA */}
-            <DataReveal delay={250}>
-              <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-medium text-slate-200">Save this report</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
-                </div>
-                <button
-                  onClick={() => downloadPDF()}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
-                >
-                  Download PDF
-                </button>
-              </div>
-            </DataReveal>
+            {/* ═══ GROUP 3: FINANCIAL PICTURE ═══ */}
+            <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture">
 
             {/* VEHICLE VALUATION ESTIMATE */}
             {valuationResult && (
-              <DataReveal delay={270}>
+              <DataReveal delay={360}>
                 <div className="mb-8 p-5 rounded-lg border border-blue-800/40 bg-gradient-to-r from-blue-900/30 to-cyan-900/30">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -3935,12 +3826,178 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* MOT HISTORY + MOT INSIGHTS (merged) */}
-            {/* Share prompt sentinel — mid-results */}
+            {/* ANNUAL RUNNING COSTS CARD */}
+            {ownershipCost && (
+              <DataReveal delay={410}>
+                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <PoundSterling className="w-5 h-5 text-blue-400" />
+                    <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
+                  </div>
+
+                  <p className="text-2xl font-bold text-slate-100 mb-1">
+                    £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-normal text-slate-400">/year</span>
+                    <span className="text-sm font-normal text-slate-500 ml-2">({ownershipCost.costPerMile.toFixed(0)}p/mile)</span>
+                  </p>
+
+                  {/* Stacked horizontal bar */}
+                  {(() => {
+                    const total = ownershipCost.totalAnnual;
+                    if (total <= 0) return null;
+                    const segments: Array<{ label: string; value: number; color: string }> = [];
+                    if (ownershipCost.breakdown.fuel != null) segments.push({ label: "Fuel", value: ownershipCost.breakdown.fuel, color: "bg-blue-500" });
+                    if (ownershipCost.breakdown.ved != null) segments.push({ label: "VED", value: ownershipCost.breakdown.ved, color: "bg-emerald-500" });
+                    if (ownershipCost.breakdown.depreciation != null) segments.push({ label: "Depreciation", value: ownershipCost.breakdown.depreciation, color: "bg-amber-500" });
+                    if (ownershipCost.breakdown.mot != null) segments.push({ label: "MOT", value: ownershipCost.breakdown.mot, color: "bg-slate-500" });
+                    return (
+                      <>
+                        <div className="flex h-3 rounded-full overflow-hidden mt-3 mb-3">
+                          {segments.map((seg, i) => (
+                            <div
+                              key={i}
+                              className={`${seg.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
+                              style={{ width: `${Math.max((seg.value / total) * 100, 2)}%` }}
+                            />
+                          ))}
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                          {segments.map((seg, i) => (
+                            <div key={i} className="flex items-center gap-2 text-xs">
+                              <span className={`w-2.5 h-2.5 rounded-sm shrink-0 ${seg.color}`} />
+                              <span className="text-slate-400">{seg.label}</span>
+                              <span className="text-slate-200 font-medium ml-auto">£{seg.value.toLocaleString()}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
+
+                  <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* NEGOTIATION HELPER CARD */}
+            {negotiation && (
+              <DataReveal delay={460}>
+                <div className="mb-8 p-5 rounded-lg border border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <ArrowDownCircle className="w-5 h-5 text-emerald-400" />
+                      <h3 className="text-sm font-semibold text-slate-200">Negotiation Helper</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      negotiation.confidence === "high" ? "bg-emerald-900/40 text-emerald-300" :
+                      negotiation.confidence === "medium" ? "bg-blue-900/40 text-blue-300" :
+                      "bg-amber-900/40 text-amber-300"
+                    }`}>
+                      {negotiation.confidence} confidence
+                    </span>
+                  </div>
+
+                  <p className="text-2xl font-bold text-emerald-400 mb-1">
+                    {negotiation.suggestedDiscountPercent.low}–{negotiation.suggestedDiscountPercent.high}%
+                    <span className="text-sm font-normal text-slate-400 ml-2">below asking price</span>
+                  </p>
+                  <p className="text-sm text-slate-300 mb-3">
+                    Estimated saving: <span className="font-semibold text-emerald-300">£{negotiation.estimatedSaving.low.toLocaleString()}–£{negotiation.estimatedSaving.high.toLocaleString()}</span>
+                  </p>
+
+                  <div className="space-y-1.5">
+                    {negotiation.reasons.map((reason, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <span className="text-emerald-400 mt-0.5 shrink-0">•</span>
+                        <span className="text-slate-300">{reason}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="text-[10px] text-slate-600 mt-3">
+                    This is an estimate based on MOT advisories and vehicle data. Actual negotiation outcomes depend on many factors including vehicle condition, local market, and seller motivation.
+                  </p>
+                </div>
+              </DataReveal>
+            )}
+
+            </SectionGroup>
+
+            {/* ═══ GROUP 4: KEY FACTS ═══ */}
+            <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Facts">
+
+            {/* EV SPECS CARD */}
+            {evSpecs && (
+              <DataReveal delay={510}>
+                <div className="mb-8 p-5 rounded-lg border border-cyan-800/40 bg-gradient-to-r from-cyan-950/30 to-blue-950/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Battery className="w-5 h-5 text-cyan-400" />
+                    <h3 className="text-sm font-semibold text-slate-200">EV Specifications</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Battery</p>
+                      <p className="text-lg font-bold text-cyan-400">{evSpecs.batteryKwh} <span className="text-sm font-normal text-slate-400">kWh</span></p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">WLTP Range</p>
+                      <p className="text-lg font-bold text-cyan-400">{evSpecs.rangeWltp} <span className="text-sm font-normal text-slate-400">miles</span></p>
+                    </div>
+                    {evSpecs.chargeFast && (
+                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Fast Charge</p>
+                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeFast}</p>
+                      </div>
+                    )}
+                    {evSpecs.chargeSlow && (
+                      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Home Charge</p>
+                        <p className="text-sm font-semibold text-slate-200">{evSpecs.chargeSlow}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {(evSpecs.motorKw || evSpecs.driveType) && (
+                    <div className="flex gap-2 flex-wrap">
+                      {evSpecs.motorKw && (
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
+                          {evSpecs.motorKw} kW motor ({Math.round(evSpecs.motorKw * 1.341)} bhp)
+                        </span>
+                      )}
+                      {evSpecs.driveType && (
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700/60 text-slate-300">
+                          {evSpecs.driveType}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </DataReveal>
+            )}
+
+            {/* KEY INSIGHTS */}
+            {insights.length > 0 && (
+              <DataReveal delay={530}>
+                <div className="mb-8 space-y-3">
+                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">Key Insights</h3>
+                  {insights.map((insight, idx) => (
+                    <InsightCard key={idx} insight={insight} delay={idx * 80} />
+                  ))}
+                </div>
+              </DataReveal>
+            )}
+
+            </SectionGroup>
+
+            {/* Share prompt sentinel — between Groups 4 and 5 */}
             <div ref={shareSentinelMidRef} className="h-0" aria-hidden="true" />
 
+            {/* ═══ GROUP 5: MOT HISTORY ═══ */}
+            <SectionGroup icon={<History className="w-4 h-4" />} label="MOT History">
+
+            {/* MOT HISTORY + MOT INSIGHTS (merged) */}
             {data.motTests && data.motTests.length > 0 && (
-              <DataReveal delay={300}>
+              <DataReveal delay={610}>
                 <div className="mb-8">
                   <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4">MOT History &amp; Insights</h3>
 
@@ -3951,7 +4008,7 @@ END:VEVENT
 
                     return (
                       <div className="mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="p-4 rounded-lg border border-emerald-500/50 bg-emerald-950/20">
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Pass Rate</p>
                             <p className="text-2xl font-bold text-emerald-400">{motInsights.passRate}%</p>
@@ -3980,12 +4037,6 @@ END:VEVENT
                             <p className="text-xs text-slate-300 mt-1">
                               {motInsights.daysUntilExpiry < 0 ? "MOT expired" : motInsights.daysUntilExpiry < 30 ? "Due soon" : ""}
                             </p>
-                          </div>
-
-                          <div className="p-4 rounded-lg border border-slate-500/50 bg-slate-900/20">
-                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Current Mileage</p>
-                            <p className="text-2xl font-bold text-slate-100">{motInsights.latestMileage?.toLocaleString() || "—"}</p>
-                            <p className="text-xs text-slate-300 mt-1">from latest MOT test</p>
                           </div>
                         </div>
 
@@ -4224,151 +4275,41 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* ANNUAL RUNNING COSTS CARD */}
-            {ownershipCost && (
-              <DataReveal delay={310}>
-                <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">
-                  <div className="flex items-center gap-2 mb-3">
-                    <PoundSterling className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
-                  </div>
+            </SectionGroup>
 
-                  <p className="text-2xl font-bold text-slate-100 mb-1">
-                    £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-normal text-slate-400">/year</span>
-                    <span className="text-sm font-normal text-slate-500 ml-2">({ownershipCost.costPerMile.toFixed(0)}p/mile)</span>
-                  </p>
+            {/* ═══ GROUP 6: NEXT STEPS ═══ */}
+            <SectionGroup icon={<ArrowRight className="w-4 h-4" />} label="Next Steps">
 
-                  {/* Stacked horizontal bar */}
-                  {(() => {
-                    const total = ownershipCost.totalAnnual;
-                    if (total <= 0) return null;
-                    const segments: Array<{ label: string; value: number; color: string }> = [];
-                    if (ownershipCost.breakdown.fuel != null) segments.push({ label: "Fuel", value: ownershipCost.breakdown.fuel, color: "bg-blue-500" });
-                    if (ownershipCost.breakdown.ved != null) segments.push({ label: "VED", value: ownershipCost.breakdown.ved, color: "bg-emerald-500" });
-                    if (ownershipCost.breakdown.depreciation != null) segments.push({ label: "Depreciation", value: ownershipCost.breakdown.depreciation, color: "bg-amber-500" });
-                    if (ownershipCost.breakdown.mot != null) segments.push({ label: "MOT", value: ownershipCost.breakdown.mot, color: "bg-slate-500" });
-                    return (
-                      <>
-                        <div className="flex h-3 rounded-full overflow-hidden mt-3 mb-3">
-                          {segments.map((seg, i) => (
-                            <div
-                              key={i}
-                              className={`${seg.color} ${i === 0 ? "rounded-l-full" : ""} ${i === segments.length - 1 ? "rounded-r-full" : ""}`}
-                              style={{ width: `${Math.max((seg.value / total) * 100, 2)}%` }}
-                            />
-                          ))}
-                        </div>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                          {segments.map((seg, i) => (
-                            <div key={i} className="flex items-center gap-2 text-xs">
-                              <span className={`w-2.5 h-2.5 rounded-sm shrink-0 ${seg.color}`} />
-                              <span className="text-slate-400">{seg.label}</span>
-                              <span className="text-slate-200 font-medium ml-auto">£{seg.value.toLocaleString()}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    );
-                  })()}
-
-                  <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
+            {/* ACTION PROMPTS */}
+            {actionPrompts.length > 0 && (
+              <DataReveal delay={710}>
+                <div className="mb-8 space-y-3">
+                  {actionPrompts.map((prompt, idx) => (
+                    <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
+                  ))}
+                  <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
                 </div>
               </DataReveal>
             )}
 
-            {/* NEGOTIATION HELPER CARD */}
-            {negotiation && (
-              <DataReveal delay={315}>
-                <div className="mb-8 p-5 rounded-lg border border-emerald-800/40 bg-gradient-to-r from-emerald-950/30 to-green-950/30">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <ArrowDownCircle className="w-5 h-5 text-emerald-400" />
-                      <h3 className="text-sm font-semibold text-slate-200">Negotiation Helper</h3>
-                    </div>
-                    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                      negotiation.confidence === "high" ? "bg-emerald-900/40 text-emerald-300" :
-                      negotiation.confidence === "medium" ? "bg-blue-900/40 text-blue-300" :
-                      "bg-amber-900/40 text-amber-300"
-                    }`}>
-                      {negotiation.confidence} confidence
-                    </span>
-                  </div>
-
-                  <p className="text-2xl font-bold text-emerald-400 mb-1">
-                    {negotiation.suggestedDiscountPercent.low}–{negotiation.suggestedDiscountPercent.high}%
-                    <span className="text-sm font-normal text-slate-400 ml-2">below asking price</span>
-                  </p>
-                  <p className="text-sm text-slate-300 mb-3">
-                    Estimated saving: <span className="font-semibold text-emerald-300">£{negotiation.estimatedSaving.low.toLocaleString()}–£{negotiation.estimatedSaving.high.toLocaleString()}</span>
-                  </p>
-
-                  <div className="space-y-1.5">
-                    {negotiation.reasons.map((reason, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs">
-                        <span className="text-emerald-400 mt-0.5 shrink-0">•</span>
-                        <span className="text-slate-300">{reason}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <p className="text-[10px] text-slate-600 mt-3">
-                    This is an estimate based on MOT advisories and vehicle data. Actual negotiation outcomes depend on many factors including vehicle condition, local market, and seller motivation.
-                  </p>
+            {/* PDF REPORT CTA */}
+            <DataReveal delay={750}>
+              <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-200">Save this report</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
                 </div>
-              </DataReveal>
-            )}
-
-            {/* SAFETY RECALLS */}
-            {recalls.length > 0 && (
-              <DataReveal delay={320}>
-                <div className="mb-8">
-                  <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-red-400" />
-                    Safety Recalls
-                  </h3>
-                  <div className="space-y-3">
-                    {recalls.map((recall, idx) => (
-                      <div key={idx} className="p-4 rounded-lg border border-red-800/40 bg-red-950/20">
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                          <p className="text-sm font-semibold text-red-200">{recall.defect}</p>
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{recall.recallNumber}</span>
-                        </div>
-                        <p className="text-xs text-slate-300 mb-2"><span className="font-medium text-slate-400">Remedy:</span> {recall.remedy}</p>
-                        <p className="text-xs text-slate-500">
-                          Recall date: {new Date(recall.recallDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                          {" · "}Affects: {recall.models.join(", ")}
-                          {" · "}Build dates: {new Date(recall.buildDateStart).getFullYear()}–{new Date(recall.buildDateEnd).getFullYear()}
-                        </p>
-                        <p className="text-xs text-emerald-400/80 mt-1.5">Recall repairs are always free at any authorised dealer.</p>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[11px] text-slate-600 mt-3">
-                    Recall data is matched by make, model, and year of manufacture. Individual vehicle recall status may differ — a recall may have already been completed on this specific vehicle. For vehicle-specific recall status, check at{" "}
-                    <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
-                    {" "}or contact your manufacturer&apos;s dealer. Recall repairs are always free.
-                  </p>
-                </div>
-              </DataReveal>
-            )}
-
-            {/* No recalls — positive signal */}
-            {data && recalls.length === 0 && data.make && (
-              <DataReveal delay={320}>
-                <div className="mb-8 p-4 rounded-lg border border-emerald-800/30 bg-emerald-950/15">
-                  <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-emerald-400" />
-                    <div>
-                      <p className="text-sm font-medium text-emerald-200">No known safety recalls</p>
-                      <p className="text-xs text-slate-400 mt-0.5">No matching recalls found in our database. Check with the manufacturer for a complete record.</p>
-                    </div>
-                  </div>
-                </div>
-              </DataReveal>
-            )}
+                <button
+                  onClick={() => downloadPDF()}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
+                >
+                  Download PDF
+                </button>
+              </div>
+            </DataReveal>
 
             {/* BUYING CHECKLIST */}
-            <DataReveal delay={400}>
+            <DataReveal delay={780}>
               <div className="mb-8 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
@@ -4434,7 +4375,7 @@ END:VEVENT
             </DataReveal>
 
             {/* WHAT TO CHECK NEXT */}
-            <DataReveal delay={450}>
+            <DataReveal delay={820}>
             <div className="mb-8">
               <h3 className="text-base font-semibold text-slate-100 mb-4">What to check next</h3>
               <div className="space-y-3">
@@ -4477,6 +4418,8 @@ END:VEVENT
               </div>
             </div>
             </DataReveal>
+
+            </SectionGroup>
           </>
         )}
 
