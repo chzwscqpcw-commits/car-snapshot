@@ -142,6 +142,9 @@ export type ReportInput = {
     reasons: string[];
     confidence: "high" | "medium" | "low";
   } | null;
+  vehicleSegment?: string;
+  ukAverageCost?: number;
+  ukAverageLabel?: string;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -149,14 +152,13 @@ export type ReportInput = {
 type RGB = [number, number, number];
 
 const C = {
-  slate900: [15, 23, 42] as RGB,   // header/footer only
-  slate800: [30, 41, 59] as RGB,   // header/footer only
-  slate700: [51, 65, 85] as RGB,   // header/footer only
+  slate900: [15, 23, 42] as RGB,
+  slate800: [30, 41, 59] as RGB,
+  slate700: [51, 65, 85] as RGB,
   slate400: [148, 163, 184] as RGB,
   slate300: [203, 213, 225] as RGB,
   slate100: [241, 245, 249] as RGB,
   white: [255, 255, 255] as RGB,
-  // Light theme additions
   cardBg: [248, 250, 252] as RGB,
   cardBorder: [226, 232, 240] as RGB,
   bodyText: [30, 41, 59] as RGB,
@@ -165,7 +167,6 @@ const C = {
   headingText: [15, 23, 42] as RGB,
   divider: [226, 232, 240] as RGB,
   tableBgAlt: [241, 245, 249] as RGB,
-  // Keep accent colours
   emerald: [16, 185, 129] as RGB,
   amber: [245, 158, 11] as RGB,
   red: [239, 68, 68] as RGB,
@@ -179,24 +180,32 @@ const C = {
 
 // ── Layout Constants ─────────────────────────────────────────────────────────
 
-const MARGIN = 15;
-const CONTENT_W = 180; // A4 width (210) - 2×15 margins
-const PAGE_H = 297; // A4 height
-const FOOTER_H = 12; // reserved footer zone
-const USABLE_H = PAGE_H - FOOTER_H; // max y before footer
-const GUTTER = 8;
-const SECTION_GAP = 10;
-const POST_BREAK_PAD = 10;
+const MARGIN = 12;
+const CONTENT_W = 186; // A4 width (210) - 2×12 margins
+const PAGE_H = 297;
+const FOOTER_H = 9;
+const USABLE_H = PAGE_H - FOOTER_H;
+const GUTTER = 5;
+const SECTION_GAP = 5;
+const POST_BREAK_PAD = 6;
 
-// Font sizes in points
 const FONT = {
-  h1: 22,
-  h2: 16,
-  h3: 13,
-  body: 10,
-  small: 8,
+  h1: 18,
+  h2: 13,
+  h3: 11,
+  body: 9,
+  small: 7.5,
   tiny: 6,
 };
+
+// Insight card internal constants
+const CARD_ACCENT_W = 2;
+const CARD_PAD_LEFT = CARD_ACCENT_W + 5;
+const CARD_LINE_H = 4;
+const CARD_TITLE_H = 5.5;
+const CARD_PAD_TOP = 3;
+const CARD_PAD_BOTTOM = 3;
+const CARD_GAP = 2;
 
 // ── Drawing Primitives ───────────────────────────────────────────────────────
 
@@ -240,33 +249,34 @@ function drawStatusBadge(
   value: string,
   accentColor: RGB,
 ) {
-  drawRoundedRect(doc, x, y, w, 26, 3, C.cardBg, C.cardBorder);
+  const badgeH = 18;
+  drawRoundedRect(doc, x, y, w, badgeH, 3, C.cardBg, C.cardBorder);
   setFill(doc, accentColor);
-  doc.roundedRect(x, y, w, 4, 3, 3, "F");
-  doc.rect(x, y + 2, w, 2, "F");
+  doc.roundedRect(x, y, w, 3, 3, 3, "F");
+  doc.rect(x, y + 1.5, w, 1.5, "F");
   setFill(doc, C.cardBg);
-  doc.rect(x + 0.5, y + 3.5, w - 1, 1, "F");
+  doc.rect(x + 0.5, y + 2.5, w - 1, 1, "F");
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
-  doc.text(label, x + w / 2, y + 11, { align: "center" });
+  doc.text(label, x + w / 2, y + 9, { align: "center" });
 
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
-  doc.text(value, x + w / 2, y + 20, { align: "center" });
+  doc.text(value, x + w / 2, y + 15, { align: "center" });
 }
 
 function drawNumberPlate(doc: jsPDF, x: number, y: number, reg: string) {
-  const plateW = 90;
-  const plateH = 18;
+  const plateW = 70;
+  const plateH = 14;
   const px = x - plateW / 2;
   drawRoundedRect(doc, px, y, plateW, plateH, 3, C.yellow);
-  doc.setFontSize(20);
+  doc.setFontSize(16);
   setTextColor(doc, C.yellowDark);
   doc.setFont("helvetica", "bold");
-  doc.text(reg, x, y + 12.5, { align: "center" });
+  doc.text(reg, x, y + 10, { align: "center" });
 }
 
 function addNewPage(doc: jsPDF) {
@@ -279,7 +289,6 @@ function paintBackground(doc: jsPDF) {
   doc.rect(0, 0, 210, PAGE_H, "F");
 }
 
-/** Check if content fits on current page; if not, add a new page. Returns the y to draw at. */
 function checkPageBreak(doc: jsPDF, currentY: number, neededHeight: number): number {
   if (currentY + neededHeight > USABLE_H) {
     addNewPage(doc);
@@ -288,29 +297,23 @@ function checkPageBreak(doc: jsPDF, currentY: number, neededHeight: number): num
   return currentY;
 }
 
-/**
- * Start a new section with a header. Only adds a page break if the title + minHeight won't fit.
- * Returns the y position after the section header.
- */
-function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 40): number {
-  const headerHeight = 20; // divider + title
+function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 30): number {
+  const headerHeight = 16;
   const needed = headerHeight + minHeight;
-  let y = currentY + SECTION_GAP; // gap before section
+  let y = currentY + SECTION_GAP;
   if (y + needed > USABLE_H) {
     addNewPage(doc);
     y = MARGIN + POST_BREAK_PAD;
   }
-  // Divider line
   setDraw(doc, C.divider);
   doc.setLineWidth(0.3);
   doc.line(MARGIN, y, MARGIN + CONTENT_W, y);
-  y += 6;
-  // Title
+  y += 5;
   doc.setFontSize(FONT.h2);
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
-  doc.text(title, MARGIN, y + 5);
-  y += 12;
+  doc.text(title, MARGIN, y + 4);
+  y += 10;
   return y;
 }
 
@@ -373,65 +376,90 @@ function getMotStatusColor(motStatus?: string, motExpiryDate?: string): string {
   return "slate";
 }
 
-/** Strip emoji prefixes from mileage warning strings for clean PDF output */
 function stripEmoji(text: string): string {
   return text.replace(/^[\u{1F600}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{200D}\u{20E3}\u{E0020}-\u{E007F}\u26A0\uFE0F\u{1F6A8}\u2139\uFE0F\u{1F4C9}\u{2757}]+\s*/u, "").trim();
 }
 
-/** Shared insight card drawer used across sections */
+// ── Insight Card: measure + draw ─────────────────────────────────────────────
+
+type InsightCardOptions = {
+  x?: number;
+  width?: number;
+  skipPageBreak?: boolean;
+};
+
+/** Measure the height an insight card would occupy without drawing it */
+function measureInsightCard(
+  doc: jsPDF,
+  title: string,
+  lines: string[],
+  width: number,
+): number {
+  // Temporarily set font to measure text
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "normal");
+  let wrappedCount = 0;
+  for (const line of lines) {
+    const split = doc.splitTextToSize(line, width - CARD_PAD_LEFT - 4);
+    wrappedCount += split.length;
+  }
+  // Title is always 1 line
+  void title; // title used for API consistency
+  return CARD_PAD_TOP + CARD_TITLE_H + wrappedCount * CARD_LINE_H + CARD_PAD_BOTTOM;
+}
+
+/** Draw an insight card. Returns { endY, height }. */
 function drawInsightCard(
   doc: jsPDF,
   startY: number,
   accentColor: RGB,
   title: string,
   lines: string[],
-): number {
-  const cardX = MARGIN;
-  const cardW = CONTENT_W;
-  const accentW = 3;
-  const padLeft = accentW + 6;
-  const lineH = 4.5;
-  const titleH = 6;
-  const padTop = 5;
-  const padBottom = 5;
+  options?: InsightCardOptions,
+): { endY: number; height: number } {
+  const cardX = options?.x ?? MARGIN;
+  const cardW = options?.width ?? CONTENT_W;
 
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "normal");
   let wrappedLines: string[] = [];
   for (const line of lines) {
-    const split = doc.splitTextToSize(line, cardW - padLeft - 6);
+    const split = doc.splitTextToSize(line, cardW - CARD_PAD_LEFT - 4);
     wrappedLines.push(...split);
   }
-  // Safety cap: truncate if card would exceed usable page height
   const maxCardH = USABLE_H - MARGIN - POST_BREAK_PAD - 10;
-  const maxLines = Math.floor((maxCardH - padTop - titleH - padBottom) / lineH);
+  const maxLines = Math.floor((maxCardH - CARD_PAD_TOP - CARD_TITLE_H - CARD_PAD_BOTTOM) / CARD_LINE_H);
   if (wrappedLines.length > maxLines) {
     wrappedLines = wrappedLines.slice(0, maxLines - 1);
     wrappedLines.push("(See full details at freeplatecheck.co.uk)");
   }
-  const cardH = padTop + titleH + wrappedLines.length * lineH + padBottom;
+  const cardH = CARD_PAD_TOP + CARD_TITLE_H + wrappedLines.length * CARD_LINE_H + CARD_PAD_BOTTOM;
 
-  startY = checkPageBreak(doc, startY, cardH + 4);
+  if (!options?.skipPageBreak) {
+    startY = checkPageBreak(doc, startY, cardH + CARD_GAP);
+  }
 
-  drawRoundedRect(doc, cardX, startY, cardW, cardH, 3, C.cardBg, C.cardBorder);
+  drawRoundedRect(doc, cardX, startY, cardW, cardH, 2, C.cardBg, C.cardBorder);
 
   setFill(doc, accentColor);
-  doc.rect(cardX, startY + 2, accentW, cardH - 4, "F");
+  doc.rect(cardX, startY + 1.5, CARD_ACCENT_W, cardH - 3, "F");
 
-  let textY = startY + padTop;
+  let textY = startY + CARD_PAD_TOP;
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
-  doc.text(title, cardX + padLeft, textY + 3);
-  textY += titleH;
+  doc.text(title, cardX + CARD_PAD_LEFT, textY + 2.5);
+  textY += CARD_TITLE_H;
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   for (const line of wrappedLines) {
-    doc.text(line, cardX + padLeft, textY + 3);
-    textY += lineH;
+    doc.text(line, cardX + CARD_PAD_LEFT, textY + 2.5);
+    textY += CARD_LINE_H;
   }
 
-  return startY + cardH + 4;
+  return { endY: startY + cardH + CARD_GAP, height: cardH };
 }
 
 // ── Page Renderers ───────────────────────────────────────────────────────────
@@ -440,106 +468,32 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const { data, motInsights } = input;
   paintBackground(doc);
 
-  let y = 0;
-
-  // ── Header banner (dark branded banner matching website) ──
-  drawRoundedRect(doc, 0, 0, 210, 24, 0, C.slate800);
+  // ── Header banner (simplified — no SVG icon) ──
+  drawRoundedRect(doc, 0, 0, 210, 18, 0, C.slate800);
   setFill(doc, C.blue400);
-  doc.rect(0, 0, 210, 1.5, "F"); // accent line matching title
+  doc.rect(0, 0, 210, 1.2, "F");
 
-  // Measure title for horizontal centering
-  const titleText = "Free Plate Check";
   doc.setFontSize(FONT.h1);
   doc.setFont("helvetica", "bold");
-  const titleW = doc.getTextWidth(titleText);
+  setTextColor(doc, C.blue400);
+  doc.text("Free Plate Check", 105, 12, { align: "center" });
 
-  // Zap icon — exact lucide-react SVG path from 24×24 viewBox:
-  // M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02
-  // A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46
-  // l1.92-6.02A1 1 0 0 0 11 14z
-  // Bounding box: x∈[3.22,20.78] y∈[2.17,21.83] → 17.56 × 19.66 units
-  const zapScale = 0.4;                    // mm per SVG unit
-  const zapPathW = 17.56 * zapScale;       // 7.02 mm
-  const zapPathH = 19.66 * zapScale;       // 7.86 mm
-  const zapStrokeW = 2 * zapScale;         // 0.80 mm (SVG stroke-width="2")
-  const zapGap = 2.5;                      // space between icon and text
-
-  // Horizontal: icon + gap + title, centred on page
-  const compositeW = zapPathW + zapStrokeW + zapGap + titleW;
-  const compositeX = (210 - compositeW) / 2;
-
-  // Vertical: both icon and text visually centred in banner
-  const bannerMid = (1.5 + 24) / 2;       // 12.75 mm
-  const zapTopY = bannerMid - zapPathH / 2;
-
-  // SVG path starts at M4,14 → offset from path bbox origin (3.22, 2.17)
-  const zapStartX = compositeX + zapStrokeW / 2 + (4 - 3.22) * zapScale;
-  const zapStartY = zapTopY + (14 - 2.17) * zapScale;
-
-  setDraw(doc, C.blue400);
-  doc.setLineWidth(zapStrokeW);
-  doc.setLineCap("round");
-  doc.setLineJoin("round");
-
-  // Exact path vertices as relative movements (matches lucide SVG)
-  doc.lines(
-    [
-      [-0.78, -1.63],   // arc → left-middle
-      [9.9, -10.2],     // line → top
-      [0.86, 0.46],     // arc → rounded top
-      [-1.92, 6.02],    // line → back down
-      [0.94, 1.35],     // arc → middle junction
-      [7, 0],           // line → far right
-      [0.78, 1.63],     // arc → rounded right
-      [-9.9, 10.2],     // line → bottom
-      [-0.86, -0.46],   // arc → rounded bottom
-      [1.92, -6.02],    // line → back up
-      [-0.94, -1.35],   // arc → middle junction
-      [-7, 0],          // close → left
-    ],
-    zapStartX, zapStartY,
-    [zapScale, zapScale],
-    "S",   // stroke only — no fill, matching lucide fill="none"
-    true,  // closed path
-  );
-
-  // Title text with gradient: blue-400 → cyan-300 (matches website bg-gradient-to-r)
-  const textX = compositeX + zapPathW + zapStrokeW + zapGap;
-  const textY = bannerMid + 2; // baseline offset for visual centering
-  const gradFrom: RGB = C.blue400;   // [96, 165, 250]
-  const gradTo: RGB = C.cyan300;     // [103, 232, 249]
-  const chars = titleText.split("");
-  let charX = textX;
-  for (let i = 0; i < chars.length; i++) {
-    const t = chars.length > 1 ? i / (chars.length - 1) : 0;
-    const r = Math.round(gradFrom[0] + (gradTo[0] - gradFrom[0]) * t);
-    const g = Math.round(gradFrom[1] + (gradTo[1] - gradFrom[1]) * t);
-    const b = Math.round(gradFrom[2] + (gradTo[2] - gradFrom[2]) * t);
-    doc.setTextColor(r, g, b);
-    doc.text(chars[i], charX, textY);
-    charX += doc.getTextWidth(chars[i]);
-  }
-
-  // ── Subtitle and date below the banner ──
-  doc.setFontSize(FONT.h3);
-  setTextColor(doc, C.secondaryText);
-  doc.setFont("helvetica", "normal");
-  doc.text("Vehicle Report", 105, 30, { align: "center" });
-
+  // Date below banner
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.labelText);
+  doc.setFont("helvetica", "normal");
   const genDate = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  doc.text(`Generated ${genDate}`, 105, 36, { align: "center" });
+  doc.text(`Vehicle Report \u00B7 ${genDate}`, 105, 24, { align: "center" });
 
-  y = 44;
+  let y = 30;
 
   // ── Number plate ──
   drawNumberPlate(doc, 105, y, data.registrationNumber);
-  y += 26;
+  y += 20;
 
   // ── Vehicle description ──
   const parts: string[] = [];
@@ -557,7 +511,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "normal");
   doc.text(vehicleLine, 105, y, { align: "center" });
-  y += 14;
+  y += 10;
 
   // ── Status badges row ──
   const badgeW = (CONTENT_W - 3 * GUTTER) / 4;
@@ -595,60 +549,43 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     String(totalAdvisories),
     advisoryColor,
   );
-  y += 34;
+  y += 24;
 
-  // ── Key stats grid (2×2) ──
-  const cellW = (CONTENT_W - GUTTER) / 2;
-  const cellH = 22;
+  // ── Key stats: 1×4 row ──
+  const statW = (CONTENT_W - 3 * GUTTER) / 4;
+  const statH = 14;
   const stats = [
-    {
-      label: "Pass Rate",
-      value: motInsights ? `${motInsights.passRate}%` : "\u2014",
-    },
-    {
-      label: "Total Tests",
-      value: motInsights ? String(motInsights.totalTests) : "\u2014",
-    },
-    {
-      label: "Avg Miles/Year",
-      value: motInsights?.avgMilesPerYear ? formatMileage(motInsights.avgMilesPerYear) : "\u2014",
-    },
-    {
-      label: "Vehicle Age",
-      value: data.yearOfManufacture
-        ? `${new Date().getFullYear() - data.yearOfManufacture} years`
-        : "\u2014",
-    },
+    { label: "Pass Rate", value: motInsights ? `${motInsights.passRate}%` : "\u2014" },
+    { label: "Total Tests", value: motInsights ? String(motInsights.totalTests) : "\u2014" },
+    { label: "Avg Miles/Yr", value: motInsights?.avgMilesPerYear ? formatMileage(motInsights.avgMilesPerYear) : "\u2014" },
+    { label: "Vehicle Age", value: data.yearOfManufacture ? `${new Date().getFullYear() - data.yearOfManufacture} yrs` : "\u2014" },
   ];
 
   for (let i = 0; i < 4; i++) {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const cx = MARGIN + col * (cellW + GUTTER);
-    const cy = y + row * (cellH + 4);
+    const cx = MARGIN + i * (statW + GUTTER);
+    drawRoundedRect(doc, cx, y, statW, statH, 2, C.cardBg, C.cardBorder);
 
-    drawRoundedRect(doc, cx, cy, cellW, cellH, 3, C.cardBg, C.cardBorder);
-
-    doc.setFontSize(FONT.small);
+    doc.setFontSize(FONT.tiny);
     setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
-    doc.text(stats[i].label, cx + 6, cy + 9);
+    doc.text(stats[i].label, cx + 3, y + 5);
 
     doc.setFontSize(FONT.h3);
     setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
-    doc.text(stats[i].value, cx + 6, cy + 18);
+    doc.text(stats[i].value, cx + 3, y + 12);
   }
-  y += 2 * (cellH + 4) + 8;
+  y += statH + 6;
 
-  // ── Latest MOT summary ──
-  y = checkPageBreak(doc, y, 40);
-  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 34, 3, C.cardBg, C.cardBorder);
+  // ── Latest MOT summary (dynamic height) ──
+  const motSummaryH = 22;
+  y = checkPageBreak(doc, y, motSummaryH + 4);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, motSummaryH, 3, C.cardBg, C.cardBorder);
 
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "bold");
-  doc.text("Latest MOT", MARGIN + 6, y + 10);
+  doc.text("Latest MOT", MARGIN + 5, y + 7);
 
   doc.setFont("helvetica", "normal");
   setTextColor(doc, C.bodyText);
@@ -662,17 +599,17 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     doc.setFontSize(FONT.body);
     setTextColor(doc, resultColor);
     doc.setFont("helvetica", "bold");
-    doc.text(latest.testResult, MARGIN + 6, y + 18);
+    doc.text(latest.testResult, MARGIN + 5, y + 14);
 
     setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     const summaryParts = [
       formatDate(latest.completedDate),
-      latest.odometer?.value ? `${formatMileage(latest.odometer.value)} miles` : null,
+      latest.odometer?.value ? `${formatMileage(latest.odometer.value)} mi` : null,
       advisoryCount > 0 ? `${advisoryCount} advisor${advisoryCount !== 1 ? "ies" : "y"}` : null,
       defectCount > 0 ? `${defectCount} defect${defectCount !== 1 ? "s" : ""}` : null,
     ].filter(Boolean);
-    doc.text(summaryParts.join("  \u00B7  "), MARGIN + 6, y + 26);
+    doc.text(summaryParts.join("  \u00B7  "), MARGIN + 5, y + 20);
 
     if (data.motExpiryDate) {
       const daysLeft = daysUntil(data.motExpiryDate);
@@ -684,15 +621,15 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
       const expiryColor = daysLeft !== null && daysLeft < 0 ? C.red : daysLeft !== null && daysLeft < 30 ? C.amber : C.emerald;
       doc.setFontSize(FONT.small);
       setTextColor(doc, expiryColor);
-      doc.text(expiryText, MARGIN + CONTENT_W - 6, y + 18, { align: "right" });
+      doc.text(expiryText, MARGIN + CONTENT_W - 5, y + 14, { align: "right" });
     }
   } else {
     doc.setFontSize(FONT.body);
     setTextColor(doc, C.secondaryText);
-    doc.text("No MOT history available", MARGIN + 6, y + 20);
+    doc.text("No MOT history available", MARGIN + 5, y + 14);
   }
 
-  y += 38;
+  y += motSummaryH + 4;
   return y;
 }
 
@@ -700,34 +637,31 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
   const tests = input.data.motTests;
   if (!tests || tests.length < 2) return y;
 
-  // Build sorted mileage entries (oldest first)
   const mileageEntries = [...tests]
     .filter((t) => t.odometer?.value != null)
     .sort((a, b) => new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime());
 
   if (mileageEntries.length < 2) return y;
 
-  y = startSection(doc, y, "Mileage Progression", 30);
+  y = startSection(doc, y, "Mileage Progression", 20);
 
-  // Column widths
   const colDate = 28;
   const colMileage = 28;
   const colChange = 25;
   const colMPY = 25;
-  const rowH = 7;
+  const rowH = 6;
 
-  // Draw table header
   function drawTableHeader(startY: number): number {
     drawRoundedRect(doc, MARGIN, startY, CONTENT_W, rowH, 0, C.divider);
     doc.setFontSize(FONT.small);
     setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
     let hx = MARGIN + 3;
-    doc.text("Date", hx, startY + 5); hx += colDate;
-    doc.text("Mileage", hx, startY + 5); hx += colMileage;
-    doc.text("Change", hx, startY + 5); hx += colChange;
-    doc.text("Miles/Yr", hx, startY + 5); hx += colMPY;
-    doc.text("Notes", hx, startY + 5);
+    doc.text("Date", hx, startY + 4.5); hx += colDate;
+    doc.text("Mileage", hx, startY + 4.5); hx += colMileage;
+    doc.text("Change", hx, startY + 4.5); hx += colChange;
+    doc.text("Miles/Yr", hx, startY + 4.5); hx += colMPY;
+    doc.text("Notes", hx, startY + 4.5);
     return startY + rowH + 1;
   }
 
@@ -771,11 +705,9 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
       }
     }
 
-    // Check for page break and redraw header if needed
     if (y + rowH > USABLE_H) {
       addNewPage(doc);
       y = MARGIN + POST_BREAK_PAD;
-      // Continuation line
       setDraw(doc, C.divider);
       doc.setLineWidth(0.3);
       doc.line(MARGIN, y - 1, MARGIN + CONTENT_W, y - 1);
@@ -791,27 +723,27 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
     setTextColor(doc, C.bodyText);
 
     let cx = MARGIN + 3;
-    doc.text(formatDate(entry.completedDate), cx, y + 5); cx += colDate;
-    doc.text(formatMileage(mileage), cx, y + 5); cx += colMileage;
+    doc.text(formatDate(entry.completedDate), cx, y + 4.5); cx += colDate;
+    doc.text(formatMileage(mileage), cx, y + 4.5); cx += colMileage;
 
     if (change.startsWith("-")) {
       setTextColor(doc, C.red);
     }
-    doc.text(change, cx, y + 5); cx += colChange;
+    doc.text(change, cx, y + 4.5); cx += colChange;
     setTextColor(doc, C.bodyText);
-    doc.text(milesPerYear, cx, y + 5); cx += colMPY;
+    doc.text(milesPerYear, cx, y + 4.5); cx += colMPY;
 
     if (notes) {
       setTextColor(doc, noteColor);
       doc.setFont("helvetica", "bold");
-      doc.text(notes, cx, y + 5);
+      doc.text(notes, cx, y + 4.5);
       doc.setFont("helvetica", "normal");
     }
 
     y += rowH;
   }
 
-  y += 4;
+  y += 3;
   return y;
 }
 
@@ -819,21 +751,21 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
   const { data } = input;
   const tests = data.motTests;
 
-  y = startSection(doc, y, "MOT History", 20);
+  y = startSection(doc, y, "MOT History", 15);
 
   if (!tests || tests.length === 0) {
     doc.setFontSize(FONT.body);
     setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
-    doc.text("No MOT history available for this vehicle.", MARGIN, y + 5);
-    return y + 10;
+    doc.text("No MOT history available for this vehicle.", MARGIN, y + 4);
+    return y + 8;
   }
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text(`${tests.length} test${tests.length !== 1 ? "s" : ""} on record`, MARGIN, y);
-  y += 6;
+  y += 5;
 
   for (let i = 0; i < tests.length; i++) {
     const test = tests[i];
@@ -847,45 +779,39 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
 
     // ── Compact single-line row for clean PASS (0 items) ──
     if (isPassed && itemCount === 0) {
-      const compactH = 8;
+      const compactH = 7;
       y = checkPageBreak(doc, y, compactH + 2);
 
-      // Background row
       drawRoundedRect(doc, MARGIN, y, CONTENT_W, compactH, 2, C.cardBg, C.cardBorder);
-      // Green accent stripe
       setFill(doc, C.emerald);
-      doc.rect(MARGIN, y + 1.5, 3, compactH - 3, "F");
+      doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, compactH - 3, "F");
 
-      // PASS badge
       const badgeText = "PASS";
       doc.setFontSize(FONT.small);
       doc.setFont("helvetica", "bold");
-      const badgeW = doc.getTextWidth(badgeText) + 5;
-      drawRoundedRect(doc, MARGIN + 6, y + 1.5, badgeW, 5, 1.5, C.emerald);
+      const badgeW = doc.getTextWidth(badgeText) + 4;
+      drawRoundedRect(doc, MARGIN + 5, y + 1.5, badgeW, 4, 1.5, C.emerald);
       setTextColor(doc, C.white);
-      doc.text(badgeText, MARGIN + 6 + badgeW / 2, y + 5, { align: "center" });
+      doc.text(badgeText, MARGIN + 5 + badgeW / 2, y + 4.5, { align: "center" });
 
-      // Date
       setTextColor(doc, C.bodyText);
       doc.setFont("helvetica", "normal");
-      doc.text(formatDate(test.completedDate), MARGIN + 6 + badgeW + 4, y + 5.5);
+      doc.text(formatDate(test.completedDate), MARGIN + 5 + badgeW + 3, y + 4.5);
 
-      // Mileage right-aligned
       if (test.odometer?.value) {
         doc.text(
           `${formatMileage(test.odometer.value)} mi`,
-          MARGIN + CONTENT_W - 6,
-          y + 5.5,
+          MARGIN + CONTENT_W - 5,
+          y + 4.5,
           { align: "right" },
         );
       }
 
-      // MOT test number
       if (test.motTestNumber) {
         doc.setFontSize(FONT.tiny);
         setTextColor(doc, C.secondaryText);
-        const mileageTextW = test.odometer?.value ? doc.getTextWidth(`${formatMileage(test.odometer.value)} mi`) + 8 : 0;
-        doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 6 - mileageTextW, y + 5.5, { align: "right" });
+        const mileageTextW = test.odometer?.value ? doc.getTextWidth(`${formatMileage(test.odometer.value)} mi`) + 6 : 0;
+        doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 5 - mileageTextW, y + 4.5, { align: "right" });
       }
 
       y += compactH + 2;
@@ -893,47 +819,42 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     }
 
     // ── Full card for tests with items or FAILED ──
-    const estimatedHeight = 24 + itemCount * 5.5 + 6;
+    const estimatedHeight = 20 + itemCount * 5 + 5;
     y = checkPageBreak(doc, y, Math.min(estimatedHeight, USABLE_H - MARGIN - 5));
 
     const cardStartY = y;
     const cardStartPage = doc.getNumberOfPages();
-    y += 6; // top padding
+    y += 5;
 
-    // Test header row
     doc.setFontSize(FONT.body);
     setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
-    doc.text(formatDate(test.completedDate), MARGIN + 8, y + 4);
+    doc.text(formatDate(test.completedDate), MARGIN + 7, y + 3);
 
-    // Result badge
     const badgeText = test.testResult === "PASSED" ? "PASS" : test.testResult === "FAILED" ? "FAIL" : "N/A";
-    const badgeW = doc.getTextWidth(badgeText) + 6;
-    const badgeX = MARGIN + 55;
-    drawRoundedRect(doc, badgeX, y - 1, badgeW, 7, 2, accentColor);
+    const badgeW = doc.getTextWidth(badgeText) + 5;
+    const badgeX = MARGIN + 50;
+    drawRoundedRect(doc, badgeX, y - 1, badgeW, 6, 2, accentColor);
     doc.setFontSize(FONT.small);
     setTextColor(doc, C.white);
     doc.setFont("helvetica", "bold");
-    doc.text(badgeText, badgeX + badgeW / 2, y + 4, { align: "center" });
+    doc.text(badgeText, badgeX + badgeW / 2, y + 3, { align: "center" });
 
-    // Mileage
     setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(FONT.body);
     if (test.odometer?.value) {
-      doc.text(`${formatMileage(test.odometer.value)} miles`, MARGIN + CONTENT_W - 8, y + 4, { align: "right" });
+      doc.text(`${formatMileage(test.odometer.value)} miles`, MARGIN + CONTENT_W - 7, y + 3, { align: "right" });
     }
 
-    // MOT test number reference
     if (test.motTestNumber) {
       doc.setFontSize(FONT.tiny);
       setTextColor(doc, C.secondaryText);
-      doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 8, y + 9, { align: "right" });
+      doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 7, y + 8, { align: "right" });
     }
 
-    y += 10;
+    y += 9;
 
-    // Advisory/defect items
     const allItems = [
       ...defects.map((d) => ({ ...d, prefix: "DEFECT", color: C.red })),
       ...advisories.map((a) => ({ ...a, prefix: "ADVISORY", color: C.amber })),
@@ -941,43 +862,42 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     ];
 
     for (const item of allItems) {
-      y = checkPageBreak(doc, y, 6);
+      y = checkPageBreak(doc, y, 5);
 
       doc.setFontSize(FONT.small);
       setTextColor(doc, item.color);
       doc.setFont("helvetica", "bold");
-      doc.text(item.prefix, MARGIN + 10, y + 3);
+      doc.text(item.prefix, MARGIN + 9, y + 2.5);
 
       setTextColor(doc, C.bodyText);
       doc.setFont("helvetica", "normal");
       const prefixW = doc.getTextWidth(item.prefix + "  ");
-      const maxTextW = CONTENT_W - 18 - prefixW;
+      const maxTextW = CONTENT_W - 16 - prefixW;
       const lines = doc.splitTextToSize(item.text, maxTextW);
       for (let li = 0; li < lines.length; li++) {
         if (li > 0) {
-          y += 4;
-          y = checkPageBreak(doc, y, 5);
+          y += 3.5;
+          y = checkPageBreak(doc, y, 4);
         }
-        doc.text(lines[li], MARGIN + 10 + prefixW, y + 3);
+        doc.text(lines[li], MARGIN + 9 + prefixW, y + 2.5);
       }
-      y += 5;
+      y += 4.5;
     }
 
-    y += 3; // bottom padding
+    y += 2;
 
-    // Draw card outline and accent stripe — only if card didn't span pages
     const cardEndPage = doc.getNumberOfPages();
     if (cardEndPage === cardStartPage) {
       const cardH = y - cardStartY;
       setDraw(doc, C.cardBorder);
       doc.setLineWidth(0.3);
-      doc.roundedRect(MARGIN, cardStartY, CONTENT_W, cardH, 3, 3, "S");
+      doc.roundedRect(MARGIN, cardStartY, CONTENT_W, cardH, 2, 2, "S");
 
       setFill(doc, accentColor);
-      doc.rect(MARGIN, cardStartY + 2, 3, cardH - 4, "F");
+      doc.rect(MARGIN, cardStartY + 1.5, CARD_ACCENT_W, cardH - 3, "F");
     }
 
-    y += 4; // gap between cards
+    y += 2;
   }
 
   return y;
@@ -987,13 +907,13 @@ function renderMileageWarnings(doc: jsPDF, input: ReportInput, y: number): numbe
   const warnings = input.motInsights?.mileageWarnings;
   if (!warnings || warnings.length === 0) return y;
 
-  y = startSection(doc, y, "Mileage Warnings", 20);
+  y = startSection(doc, y, "Mileage Warnings", 15);
 
   for (const warning of warnings) {
     const cleaned = stripEmoji(warning);
     const isClocking = cleaned.toUpperCase().includes("ALERT") || cleaned.toUpperCase().includes("DECREASED");
     const accent = isClocking ? C.red : C.amber;
-    y = drawInsightCard(doc, y, accent, isClocking ? "Clocking Alert" : "Mileage Anomaly", [cleaned]);
+    y = drawInsightCard(doc, y, accent, isClocking ? "Clocking Alert" : "Mileage Anomaly", [cleaned]).endY;
   }
 
   return y;
@@ -1003,42 +923,45 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
   const recurring = input.motInsights?.recurringAdvisories;
   if (!recurring || recurring.length === 0) return y;
 
-  y = startSection(doc, y, "Recurring Advisories", 20);
+  y = startSection(doc, y, "Recurring Advisories", 15);
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   doc.text("Advisories appearing on 2 or more MOT tests", MARGIN, y);
-  y += 5;
+  y += 4;
 
   for (const adv of recurring) {
-    const cardH = 14;
-    y = checkPageBreak(doc, y, cardH + 3);
-
-    drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
-
-    // Left accent stripe
-    setFill(doc, C.amber);
-    doc.rect(MARGIN, y + 2, 3, cardH - 4, "F");
-
-    // Count badge
+    // Dynamic height based on text
+    doc.setFontSize(FONT.small);
+    doc.setFont("helvetica", "normal");
     const countText = `${adv.count}x`;
+    doc.setFont("helvetica", "bold");
+    const countW = doc.getTextWidth(countText) + 4;
+    doc.setFont("helvetica", "normal");
+    const maxW = CONTENT_W - 18 - countW;
+    const lines = doc.splitTextToSize(adv.text, maxW);
+    const cardH = Math.max(12, 6 + lines.length * 3.5 + 2);
+
+    y = checkPageBreak(doc, y, cardH + 2);
+
+    drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 2, C.cardBg, C.cardBorder);
+
+    setFill(doc, C.amber);
+    doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, cardH - 3, "F");
+
     doc.setFontSize(FONT.small);
     doc.setFont("helvetica", "bold");
-    const countW = doc.getTextWidth(countText) + 5;
-    drawRoundedRect(doc, MARGIN + 8, y + 4, countW, 6, 2, C.amber);
+    drawRoundedRect(doc, MARGIN + 7, y + 3, countW, 5, 1.5, C.amber);
     setTextColor(doc, C.white);
-    doc.text(countText, MARGIN + 8 + countW / 2, y + 8.5, { align: "center" });
+    doc.text(countText, MARGIN + 7 + countW / 2, y + 6.5, { align: "center" });
 
-    // Advisory text
     setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
-    const maxW = CONTENT_W - 20 - countW;
-    const lines = doc.splitTextToSize(adv.text, maxW);
-    doc.text(lines[0], MARGIN + 12 + countW, y + 8.5);
-    if (lines.length > 1) {
-      doc.setFontSize(FONT.tiny);
-      doc.text(lines[1] + (lines.length > 2 ? "..." : ""), MARGIN + 12 + countW, y + 12);
+    let textY = y + 6.5;
+    for (let li = 0; li < lines.length; li++) {
+      doc.text(lines[li], MARGIN + 11 + countW, textY);
+      textY += 3.5;
     }
 
     y += cardH + 2;
@@ -1051,65 +974,57 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   const hs = input.healthScore;
   if (!hs) return y;
 
-  y = startSection(doc, y, "Vehicle Health Score", 40);
+  y = startSection(doc, y, "Vehicle Health Score", 30);
 
-  const cardH = 45;
-  y = checkPageBreak(doc, y, cardH + 4);
+  // Dynamic card height: top section (grade + score) + breakdown rows
+  const topH = 24;
+  const itemsPerRow = 4;
+  const rowH = 10;
+  const breakdownRows = Math.ceil(hs.breakdown.length / itemsPerRow);
+  const cardH = topH + breakdownRows * rowH + 3;
+
+  y = checkPageBreak(doc, y, cardH + 3);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
 
   // Grade badge
   const gradeColor: RGB = hs.grade === "A" ? C.emerald : hs.grade === "B" ? C.blue : hs.grade === "C" ? C.amber : C.red;
-  const badgeSize = 22;
-  const badgeX = MARGIN + 8;
-  const badgeY = y + 6;
-  drawRoundedRect(doc, badgeX, badgeY, badgeSize, badgeSize, 4, gradeColor);
-  doc.setFontSize(18);
+  const badgeSize = 18;
+  const badgeX = MARGIN + 6;
+  const badgeY = y + 4;
+  drawRoundedRect(doc, badgeX, badgeY, badgeSize, badgeSize, 3, gradeColor);
+  doc.setFontSize(15);
   setTextColor(doc, C.white);
   doc.setFont("helvetica", "bold");
-  doc.text(hs.grade, badgeX + badgeSize / 2, badgeY + 15, { align: "center" });
+  doc.text(hs.grade, badgeX + badgeSize / 2, badgeY + 12.5, { align: "center" });
 
   // Score text
   doc.setFontSize(FONT.h2);
   setTextColor(doc, C.headingText);
-  doc.text(`${hs.score}/100`, badgeX + badgeSize + 8, badgeY + 9);
+  doc.text(`${hs.score}/100`, badgeX + badgeSize + 6, badgeY + 7);
   doc.setFontSize(FONT.body);
   setTextColor(doc, gradeColor);
-  doc.text(hs.label, badgeX + badgeSize + 8, badgeY + 17);
+  doc.text(hs.label, badgeX + badgeSize + 6, badgeY + 14);
 
-  // Breakdown row
-  const breakdownY = y + 32;
-  const colCount = Math.min(hs.breakdown.length, 4);
-  const colW = (CONTENT_W - 16) / colCount;
-  for (let i = 0; i < colCount; i++) {
+  // Breakdown rows (4 items per row, dynamic rows)
+  const colW = (CONTENT_W - 12) / itemsPerRow;
+  for (let i = 0; i < hs.breakdown.length; i++) {
     const item = hs.breakdown[i];
-    const cx = MARGIN + 8 + i * colW;
+    const row = Math.floor(i / itemsPerRow);
+    const col = i % itemsPerRow;
+    const cx = MARGIN + 6 + col * colW;
+    const cy = y + topH + row * rowH;
+
     doc.setFontSize(FONT.tiny);
     setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
-    doc.text(item.category, cx, breakdownY);
+    doc.text(item.category, cx, cy);
     const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
     setTextColor(doc, itemColor);
     doc.setFont("helvetica", "bold");
-    doc.text(`${item.score}/${item.maxScore}`, cx, breakdownY + 4);
-  }
-  // Second row of breakdown items
-  if (hs.breakdown.length > 4) {
-    const row2Y = breakdownY + 10;
-    for (let i = 4; i < hs.breakdown.length; i++) {
-      const item = hs.breakdown[i];
-      const cx = MARGIN + 8 + (i - 4) * colW;
-      doc.setFontSize(FONT.tiny);
-      setTextColor(doc, C.secondaryText);
-      doc.setFont("helvetica", "normal");
-      doc.text(item.category, cx, row2Y);
-      const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
-      setTextColor(doc, itemColor);
-      doc.setFont("helvetica", "bold");
-      doc.text(`${item.score}/${item.maxScore}`, cx, row2Y + 4);
-    }
+    doc.text(`${item.score}/${item.maxScore}`, cx, cy + 4);
   }
 
-  y += cardH + 4;
+  y += cardH + 3;
   return y;
 }
 
@@ -1118,24 +1033,29 @@ function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number 
   const hasRecalls = recalls !== undefined;
   if (!hasRecalls) return y;
 
-  y = startSection(doc, y, "Safety Recalls", 20);
+  y = startSection(doc, y, "Safety Recalls", 15);
 
   if (recalls!.length === 0) {
     y = drawInsightCard(doc, y, C.emerald, "No Recalls Found", [
       "No known safety recalls found for this vehicle.",
-    ]);
+    ]).endY;
   } else {
-    const lines: string[] = [
-      `${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`,
-    ];
-    for (let i = 0; i < Math.min(3, recalls!.length); i++) {
-      const r = recalls![i];
-      lines.push(`${r.recallDate}: ${r.defect.substring(0, 100)}${r.defect.length > 100 ? "..." : ""}`);
+    // Show ALL recalls with full detail
+    doc.setFontSize(FONT.body);
+    setTextColor(doc, C.headingText);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`, MARGIN, y + 3);
+    y += 7;
+
+    for (const r of recalls!) {
+      // Build lines for this recall
+      const lines: string[] = [];
+      if (r.defect) lines.push(`Defect: ${r.defect}`);
+      if (r.remedy) lines.push(`Remedy: ${r.remedy}`);
+
+      const title = `${r.recallDate} \u2014 Recall ${r.recallNumber}`;
+      y = drawInsightCard(doc, y, C.red, title, lines).endY;
     }
-    if (recalls!.length > 3) {
-      lines.push(`...and ${recalls!.length - 3} more`);
-    }
-    y = drawInsightCard(doc, y, C.red, "Safety Recalls", lines);
   }
 
   return y;
@@ -1146,7 +1066,7 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   if (!hasUlez) return y;
 
-  y = startSection(doc, y, "ULEZ Compliance", 20);
+  y = startSection(doc, y, "ULEZ Compliance", 15);
 
   const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
   const accent = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.secondaryText;
@@ -1155,7 +1075,6 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
     ulezResult!.reason,
     `Confidence: ${ulezResult!.confidence}`,
   ];
-  // Add clean air zone daily charges for non-compliant vehicles
   if (!isCompliant && ulezResult!.cleanAirZones && ulezResult!.cleanAirZones.length > 0) {
     const carZones = ulezResult!.cleanAirZones.filter(z => z.carsCharged !== false);
     const commercialOnly = ulezResult!.cleanAirZones.filter(z => z.carsCharged === false);
@@ -1172,7 +1091,7 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
       }
     }
   }
-  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines);
+  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines).endY;
 
   return y;
 }
@@ -1184,28 +1103,48 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
 
   y = startSection(doc, y, "Estimated Value", 20);
 
-  const confLabel = valuation!.confidence === "high" ? "High confidence" : valuation!.confidence === "medium" ? "Medium confidence" : "Estimate only";
-  const lines: string[] = [
-    `\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`,
-    `Confidence: ${confLabel}`,
-    `Sources: ${valuation!.sources.join(", ")}`,
-  ];
-  // Market snapshot
+  // Headline price card
+  const headlineH = 16;
+  y = checkPageBreak(doc, y, headlineH + 4);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, headlineH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, C.blue);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headlineH - 3, "F");
+
+  doc.setFontSize(FONT.h2);
+  setTextColor(doc, C.headingText);
+  doc.setFont("helvetica", "bold");
+  doc.text(`\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`, MARGIN + 8, y + 10);
+
+  // Confidence badge
+  const confLabel = valuation!.confidence === "high" ? "High" : valuation!.confidence === "medium" ? "Medium" : "Low";
+  const confColor = valuation!.confidence === "high" ? C.emerald : valuation!.confidence === "medium" ? C.amber : C.red;
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "bold");
+  const confText = `${confLabel} confidence`;
+  const confW = doc.getTextWidth(confText) + 4;
+  drawRoundedRect(doc, MARGIN + CONTENT_W - 5 - confW, y + 5, confW, 5, 1.5, confColor);
+  setTextColor(doc, C.white);
+  doc.text(confText, MARGIN + CONTENT_W - 5 - confW / 2, y + 8.5, { align: "center" });
+
+  y += headlineH + 3;
+
+  // Detail grid — 2-column
+  const detailLines: string[] = [];
+  detailLines.push(`Sources: ${valuation!.sources.join(", ")}`);
   if (valuation!.ebayMinPrice && valuation!.ebayMaxPrice) {
-    lines.push(`Asking prices: \u00A3${valuation!.ebayMinPrice.toLocaleString()} \u2013 \u00A3${valuation!.ebayMaxPrice.toLocaleString()}`);
+    detailLines.push(`Asking prices: \u00A3${valuation!.ebayMinPrice.toLocaleString()} \u2013 \u00A3${valuation!.ebayMaxPrice.toLocaleString()}`);
   }
   if (valuation!.ebayDominantTransmission || valuation!.ebayDominantBodyType) {
     const specParts: string[] = [];
     if (valuation!.ebayDominantTransmission) specParts.push(valuation!.ebayDominantTransmission);
     if (valuation!.ebayDominantBodyType) specParts.push(valuation!.ebayDominantBodyType);
-    lines.push(`Most common spec: ${specParts.join(", ")}`);
+    detailLines.push(`Common spec: ${specParts.join(", ")}`);
   }
   if (valuation!.marketSupply) {
     const supplyLabel = valuation!.marketSupply === "good" ? "Good" : valuation!.marketSupply === "moderate" ? "Moderate" : "Limited";
     const countSuffix = valuation!.ebayTotalListings ? ` (${valuation!.ebayTotalListings} listings)` : "";
-    lines.push(`Market supply: ${supplyLabel}${countSuffix}`);
+    detailLines.push(`Market supply: ${supplyLabel}${countSuffix}`);
   }
-  // Adjustment breakdown
   const adjustments: string[] = [];
   if (valuation!.mileageAdjustmentPercent != null && valuation!.mileageAdjustmentPercent !== 0) {
     adjustments.push(`Mileage ${valuation!.mileageAdjustmentPercent > 0 ? "+" : ""}${valuation!.mileageAdjustmentPercent.toFixed(0)}%`);
@@ -1217,9 +1156,25 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
     adjustments.push(`Colour ${valuation!.colourAdjustmentPercent > 0 ? "+" : ""}${valuation!.colourAdjustmentPercent.toFixed(0)}%`);
   }
   if (adjustments.length > 0) {
-    lines.push(`Adjustments: ${adjustments.join(", ")}`);
+    detailLines.push(`Adjustments: ${adjustments.join(", ")}`);
   }
-  y = drawInsightCard(doc, y, C.blue, "Estimated Value", lines);
+
+  if (detailLines.length > 0) {
+    // Draw as a mini table
+    const rowH = 5;
+    for (let i = 0; i < detailLines.length; i++) {
+      y = checkPageBreak(doc, y, rowH + 1);
+      const bgColor = i % 2 === 0 ? C.white : C.tableBgAlt;
+      setFill(doc, bgColor);
+      doc.rect(MARGIN, y, CONTENT_W, rowH, "F");
+      doc.setFontSize(FONT.small);
+      setTextColor(doc, C.bodyText);
+      doc.setFont("helvetica", "normal");
+      doc.text(detailLines[i], MARGIN + 4, y + 3.5);
+      y += rowH;
+    }
+    y += 2;
+  }
 
   return y;
 }
@@ -1229,7 +1184,7 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
   if (!hasOwnershipCost) return y;
 
-  y = startSection(doc, y, "Annual Running Costs", 20);
+  y = startSection(doc, y, "Annual Running Costs", 15);
 
   const oc = ownershipCost!;
   const monthly = Math.round(oc.totalAnnual / 12);
@@ -1243,8 +1198,20 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
   if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
   if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
+
+  // UK average benchmark
+  if (input.ukAverageCost && input.ukAverageLabel) {
+    const diff = oc.totalAnnual - input.ukAverageCost;
+    const comparison = diff > 0
+      ? `\u00A3${Math.abs(diff).toLocaleString()} above`
+      : diff < 0
+        ? `\u00A3${Math.abs(diff).toLocaleString()} below`
+        : "equal to";
+    lines.push(`vs UK avg (${input.ukAverageLabel}): \u00A3${input.ukAverageCost.toLocaleString()}/yr \u2014 ${comparison}`);
+  }
+
   lines.push(oc.excludedNote);
-  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines);
+  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines).endY;
 
   return y;
 }
@@ -1253,7 +1220,7 @@ function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): num
   const { negotiation } = input;
   if (!negotiation) return y;
 
-  y = startSection(doc, y, "Negotiation Helper", 20);
+  y = startSection(doc, y, "Negotiation Helper", 15);
 
   const neg = negotiation;
   const lines: string[] = [
@@ -1264,7 +1231,7 @@ function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): num
   for (const reason of neg.reasons) {
     lines.push(`\u2022 ${reason}`);
   }
-  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines);
+  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines).endY;
 
   return y;
 }
@@ -1283,7 +1250,11 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
 
   if (!hasVed && !hasFuel && !hasNcap && !hasRarity && !hasColour && !hasFuelPrices && !hasTheftRisk && !hasEvSpecs && !input.ecoScore && !input.motPassRate) return y;
 
-  y = startSection(doc, y, "Key Insights", 20);
+  y = startSection(doc, y, "Key Insights", 15);
+
+  // Build all cards as data for 2-column layout
+  type CardData = { accentColor: RGB; title: string; lines: string[] };
+  const cards: CardData[] = [];
 
   // VED Road Tax
   if (hasVed) {
@@ -1294,7 +1265,7 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       const firstSentence = vedResult!.details.split(".")[0];
       if (firstSentence) lines.push(firstSentence + ".");
     }
-    y = drawInsightCard(doc, y, C.blue, "VED Road Tax", lines);
+    cards.push({ accentColor: C.blue, title: "VED Road Tax", lines });
   }
 
   // Fuel Economy
@@ -1302,34 +1273,37 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     const lines: string[] = [`${fuelEconomy!.combinedMpg.toFixed(1)} MPG (combined)`];
     if (fuelEconomy!.urbanMpg) lines.push(`Urban: ${fuelEconomy!.urbanMpg.toFixed(1)} MPG`);
     if (fuelEconomy!.extraUrbanMpg) lines.push(`Extra-urban: ${fuelEconomy!.extraUrbanMpg.toFixed(1)} MPG`);
-    lines.push(`Estimated annual fuel cost: \u00A3${fuelEconomy!.estimatedAnnualCost}`);
+    lines.push(`Est. annual fuel cost: \u00A3${fuelEconomy!.estimatedAnnualCost}`);
     if (hasFuelPrices) {
-      lines.push(`Based on ${fuelPrices!.petrol.toFixed(1)}p/litre petrol, ${fuelPrices!.diesel.toFixed(1)}p/litre diesel`);
+      lines.push(`${fuelPrices!.petrol.toFixed(1)}p petrol, ${fuelPrices!.diesel.toFixed(1)}p diesel`);
     }
-    y = drawInsightCard(doc, y, C.blue, "Fuel Economy", lines);
+    cards.push({ accentColor: C.blue, title: "Fuel Economy", lines });
   }
 
-  // Current Fuel Prices
+  // Current Fuel Prices (only if no fuel economy)
   if (hasFuelPrices && !hasFuel) {
     const dateStr = fuelPrices!.date ? formatDate(fuelPrices!.date) : null;
-    y = drawInsightCard(doc, y, C.blue, "Current UK Fuel Prices", [
-      `Petrol: ${fuelPrices!.petrol.toFixed(1)}p/litre \u00B7 Diesel: ${fuelPrices!.diesel.toFixed(1)}p/litre`,
-      `National average pump prices${dateStr ? ` as of ${dateStr}` : ""}`,
-    ]);
+    cards.push({
+      accentColor: C.blue,
+      title: "UK Fuel Prices",
+      lines: [
+        `Petrol: ${fuelPrices!.petrol.toFixed(1)}p/litre`,
+        `Diesel: ${fuelPrices!.diesel.toFixed(1)}p/litre`,
+        `National average${dateStr ? ` as of ${dateStr}` : ""}`,
+      ],
+    });
   }
 
   // NCAP Rating
   if (hasNcap) {
-    const lines: string[] = [
-      `${ncapRating!.overallStars}/5 stars (tested ${ncapRating!.yearTested})`,
-    ];
+    const lines: string[] = [`${ncapRating!.overallStars}/5 stars (tested ${ncapRating!.yearTested})`];
     const scores: string[] = [];
     if (ncapRating!.adultOccupant != null) scores.push(`Adult ${ncapRating!.adultOccupant}%`);
     if (ncapRating!.childOccupant != null) scores.push(`Child ${ncapRating!.childOccupant}%`);
     if (ncapRating!.pedestrian != null) scores.push(`Pedestrian ${ncapRating!.pedestrian}%`);
-    if (ncapRating!.safetyAssist != null) scores.push(`Safety Assist ${ncapRating!.safetyAssist}%`);
+    if (ncapRating!.safetyAssist != null) scores.push(`Safety ${ncapRating!.safetyAssist}%`);
     if (scores.length > 0) lines.push(scores.join(" \u00B7 "));
-    y = drawInsightCard(doc, y, C.cyan, "Euro NCAP Safety Rating", lines);
+    cards.push({ accentColor: C.cyan, title: "Euro NCAP Safety", lines });
   }
 
   // UK Road Presence (rarity)
@@ -1337,12 +1311,15 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     const r = input.rarityResult!;
     const catLabel = r.category === "very-rare" ? "Very Rare" : r.category === "rare" ? "Rare" : r.category === "uncommon" ? "Uncommon" : r.category === "common" ? "Common" : "Very Common";
     const accent = (r.category === "very-rare" || r.category === "rare") ? C.amber : C.blue;
-    const lines: string[] = [
-      `${r.licensed.toLocaleString()} currently licensed in the UK`,
-      `${r.sorn.toLocaleString()} declared SORN`,
-      `Category: ${catLabel}`,
-    ];
-    y = drawInsightCard(doc, y, accent, "UK Road Presence", lines);
+    cards.push({
+      accentColor: accent,
+      title: "UK Road Presence",
+      lines: [
+        `${r.licensed.toLocaleString()} licensed in UK`,
+        `${r.sorn.toLocaleString()} SORN`,
+        `Category: ${catLabel}`,
+      ],
+    });
   }
 
   // Environmental Eco Score
@@ -1353,7 +1330,7 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       `Grade ${eco.grade} \u2014 ${eco.label} (${eco.score}/100)`,
       ...eco.factors.map(f => `${f.name}: ${f.detail}`),
     ];
-    y = drawInsightCard(doc, y, accent, "Environmental Eco Score", lines);
+    cards.push({ accentColor: accent, title: "Eco Score", lines });
   }
 
   // National MOT Pass Rate
@@ -1366,21 +1343,29 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     const comparison = diff >= 0
       ? `${diff.toFixed(1)}% above`
       : `${Math.abs(diff).toFixed(1)}% below`;
-    y = drawInsightCard(doc, y, accent, "National MOT Pass Rate", [
-      `${makeName} ${modelName}: ${mpr.passRate}% pass rate`,
-      `${comparison} the ${mpr.nationalAverage}% UK average`,
-      `Based on ${mpr.testCount.toLocaleString()} MOT tests`,
-    ]);
+    cards.push({
+      accentColor: accent,
+      title: "MOT Pass Rate",
+      lines: [
+        `${makeName} ${modelName}: ${mpr.passRate}%`,
+        `${comparison} ${mpr.nationalAverage}% UK avg`,
+        `${mpr.testCount.toLocaleString()} tests`,
+      ],
+    });
   }
 
   // Colour Popularity
   if (hasColour) {
     const cp = colourPopularity!;
     const accent = cp.isTopFive ? C.emerald : C.blue;
-    y = drawInsightCard(doc, y, accent, "Colour Popularity", [
-      `${input.data.colour} \u2014 ${cp.label}`,
-      `${cp.share}% of new UK registrations (ranked #${cp.rank})`,
-    ]);
+    cards.push({
+      accentColor: accent,
+      title: "Colour Popularity",
+      lines: [
+        `${input.data.colour} \u2014 ${cp.label}`,
+        `${cp.share}% of new registrations (#${cp.rank})`,
+      ],
+    });
   }
 
   // Theft Risk
@@ -1388,32 +1373,83 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     const tr = theftRisk!;
     const catLabel = tr.riskCategory === "very-high" ? "Very High" : tr.riskCategory === "high" ? "High" : tr.riskCategory === "moderate" ? "Moderate" : tr.riskCategory === "low" ? "Low" : "Very Low";
     const accent = (tr.riskCategory === "very-high" || tr.riskCategory === "high") ? C.red : tr.riskCategory === "moderate" ? C.amber : C.emerald;
-    y = drawInsightCard(doc, y, accent, `Theft Risk: ${catLabel}`, [
-      `${tr.theftsPer1000} thefts per 1,000 vehicles (${tr.rateMultiplier}\u00D7 national average)`,
-      `National average: ${tr.nationalAverage} per 1,000 registered vehicles`,
-    ]);
+    cards.push({
+      accentColor: accent,
+      title: `Theft Risk: ${catLabel}`,
+      lines: [
+        `${tr.theftsPer1000}/1,000 vehicles (${tr.rateMultiplier}\u00D7 avg)`,
+        `National avg: ${tr.nationalAverage}/1,000`,
+      ],
+    });
   }
 
   // EV Specifications
   if (hasEvSpecs) {
     const ev = evSpecs!;
     const lines: string[] = [
-      `Battery: ${ev.batteryKwh} kWh \u00B7 WLTP Range: ${ev.rangeWltp} miles`,
+      `Battery: ${ev.batteryKwh} kWh`,
+      `WLTP Range: ${ev.rangeWltp} miles`,
     ];
-    if (ev.chargeFast) lines.push(`Fast charge: ${ev.chargeFast}`);
-    if (ev.chargeSlow) lines.push(`Home charge: ${ev.chargeSlow}`);
-    if (ev.motorKw) lines.push(`Motor: ${ev.motorKw} kW (${Math.round(ev.motorKw * 1.341)} bhp)`);
-    if (ev.driveType) lines.push(`Drive type: ${ev.driveType}`);
-    y = drawInsightCard(doc, y, C.cyan, "EV Specifications", lines);
+    if (ev.chargeFast) lines.push(`Fast: ${ev.chargeFast}`);
+    if (ev.chargeSlow) lines.push(`Home: ${ev.chargeSlow}`);
+    if (ev.motorKw) lines.push(`${ev.motorKw} kW (${Math.round(ev.motorKw * 1.341)} bhp)`);
+    if (ev.driveType) lines.push(`Drive: ${ev.driveType}`);
+    cards.push({ accentColor: C.cyan, title: "EV Specifications", lines });
   }
 
-  return y;
+  if (cards.length === 0) return y;
+
+  // ── 2-column rendering algorithm ──
+  const COL_W = (CONTENT_W - GUTTER) / 2;
+  const leftX = MARGIN;
+  const rightX = MARGIN + COL_W + GUTTER;
+  let leftY = y;
+  let rightY = y;
+
+  for (const card of cards) {
+    const cardH = measureInsightCard(doc, card.title, card.lines, COL_W);
+
+    // Place in shorter column
+    const placeLeft = leftY <= rightY;
+    const placeY = placeLeft ? leftY : rightY;
+    const placeX = placeLeft ? leftX : rightX;
+
+    // Check if card fits on page. If not, page break both columns
+    if (placeY + cardH + CARD_GAP > USABLE_H) {
+      addNewPage(doc);
+      const newY = MARGIN + POST_BREAK_PAD;
+      leftY = newY;
+      rightY = newY;
+      // Re-evaluate placement after break
+      const result = drawInsightCard(doc, newY, card.accentColor, card.title, card.lines, {
+        x: leftX,
+        width: COL_W,
+        skipPageBreak: true,
+      });
+      leftY = result.endY;
+      continue;
+    }
+
+    const result = drawInsightCard(doc, placeY, card.accentColor, card.title, card.lines, {
+      x: placeX,
+      width: COL_W,
+      skipPageBreak: true,
+    });
+
+    if (placeLeft) {
+      leftY = result.endY;
+    } else {
+      rightY = result.endY;
+    }
+  }
+
+  return Math.max(leftY, rightY);
 }
 
 function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number {
   const { data } = input;
 
-  y = startSection(doc, y, "Vehicle Details", 24);
+  y = startSection(doc, y, "Vehicle Details", 20);
 
   const fields: Array<[string, string]> = [];
   const add = (label: string, value: string | number | boolean | undefined | null) => {
@@ -1449,10 +1485,9 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
   add("Last V5C Issued", formatDate(data.dateOfLastV5CIssued));
   add("Marked for Export", data.markedForExport != null ? (data.markedForExport ? "Yes" : "No") : undefined);
 
-  // Two-column layout
-  const rowH = 8;
-  const colW = (CONTENT_W - 4) / 2; // 4mm gap between columns
-  const labelW = 42;
+  const rowH = 7;
+  const colW = (CONTENT_W - 4) / 2;
+  const labelW = 38;
   const totalRows = Math.ceil(fields.length / 2);
 
   for (let row = 0; row < totalRows; row++) {
@@ -1462,44 +1497,42 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
     setFill(doc, bgColor);
     doc.rect(MARGIN, y, CONTENT_W, rowH, "F");
 
-    // Left column
     const leftIdx = row;
     if (leftIdx < fields.length) {
       doc.setFontSize(FONT.small);
       setTextColor(doc, C.secondaryText);
       doc.setFont("helvetica", "normal");
-      doc.text(fields[leftIdx][0], MARGIN + 3, y + 5.5);
+      doc.text(fields[leftIdx][0], MARGIN + 3, y + 5);
 
       setTextColor(doc, C.headingText);
       doc.setFont("helvetica", "bold");
       const valueText = doc.splitTextToSize(fields[leftIdx][1], colW - labelW - 2);
-      doc.text(valueText[0], MARGIN + labelW, y + 5.5);
+      doc.text(valueText[0], MARGIN + labelW, y + 5);
     }
 
-    // Right column
     const rightIdx = row + totalRows;
     if (rightIdx < fields.length) {
       const rightX = MARGIN + colW + 4;
       doc.setFontSize(FONT.small);
       setTextColor(doc, C.secondaryText);
       doc.setFont("helvetica", "normal");
-      doc.text(fields[rightIdx][0], rightX, y + 5.5);
+      doc.text(fields[rightIdx][0], rightX, y + 5);
 
       setTextColor(doc, C.headingText);
       doc.setFont("helvetica", "bold");
       const valueText = doc.splitTextToSize(fields[rightIdx][1], colW - labelW - 2);
-      doc.text(valueText[0], rightX + labelW, y + 5.5);
+      doc.text(valueText[0], rightX + labelW, y + 5);
     }
 
     y += rowH;
   }
 
-  y += 4;
+  y += 3;
   return y;
 }
 
 function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
-  y = startSection(doc, y, "Vehicle Checklists", 20);
+  y = startSection(doc, y, "Vehicle Checklists", 15);
 
   const sections: Array<{ title: string; items: string[] }> = [
     { title: "Owner Checklist", items: input.checklist.owner },
@@ -1510,118 +1543,107 @@ function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
   for (const section of sections) {
     if (section.items.length === 0) continue;
 
-    y = checkPageBreak(doc, y, 16);
+    y = checkPageBreak(doc, y, 14);
 
-    // Sub-header
     doc.setFontSize(FONT.h3);
     setTextColor(doc, C.cyan);
     doc.setFont("helvetica", "bold");
-    doc.text(section.title, MARGIN, y + 4);
-    y += 10;
+    doc.text(section.title, MARGIN, y + 3);
+    y += 8;
 
-    // Two-column layout
     const colW = (CONTENT_W - 6) / 2;
-    const itemH = 6;
+    const itemH = 5;
     const totalRows = Math.ceil(section.items.length / 2);
 
     for (let row = 0; row < totalRows; row++) {
       y = checkPageBreak(doc, y, itemH + 1);
 
-      // Left column
       const leftIdx = row * 2;
       if (leftIdx < section.items.length) {
         setDraw(doc, C.secondaryText);
         doc.setLineWidth(0.3);
-        doc.rect(MARGIN + 2, y, 3.5, 3.5, "S");
+        doc.rect(MARGIN + 2, y, 3, 3, "S");
 
         doc.setFontSize(FONT.small);
         setTextColor(doc, C.bodyText);
         doc.setFont("helvetica", "normal");
-        const leftText = doc.splitTextToSize(section.items[leftIdx], colW - 10);
-        doc.text(leftText[0], MARGIN + 8, y + 3);
+        const leftText = doc.splitTextToSize(section.items[leftIdx], colW - 8);
+        doc.text(leftText[0], MARGIN + 7, y + 2.5);
       }
 
-      // Right column
       const rightIdx = row * 2 + 1;
       if (rightIdx < section.items.length) {
         const rightX = MARGIN + colW + 6;
         setDraw(doc, C.secondaryText);
         doc.setLineWidth(0.3);
-        doc.rect(rightX, y, 3.5, 3.5, "S");
+        doc.rect(rightX, y, 3, 3, "S");
 
         doc.setFontSize(FONT.small);
         setTextColor(doc, C.bodyText);
         doc.setFont("helvetica", "normal");
-        const rightText = doc.splitTextToSize(section.items[rightIdx], colW - 10);
-        doc.text(rightText[0], rightX + 6, y + 3);
+        const rightText = doc.splitTextToSize(section.items[rightIdx], colW - 8);
+        doc.text(rightText[0], rightX + 5, y + 2.5);
       }
 
       y += itemH;
     }
 
-    y += 4; // gap between checklist sections
+    y += 3;
   }
 
   return y;
 }
 
 function renderFinalPage(doc: jsPDF, y: number): number {
-  y = startSection(doc, y, "Disclaimer & Data Sources", 25);
+  y = startSection(doc, y, "Disclaimer & Data Sources", 20);
 
+  // Condensed: 4 paragraphs → 2
   const paragraphs = [
     {
-      heading: "Data Sources",
-      text: "This report contains data sourced from the Driver and Vehicle Licensing Agency (DVLA) and the MOT testing service. Vehicle details, tax status, and MOT history are retrieved from official government databases.",
+      heading: "Data Sources & Disclaimer",
+      text: "This report contains data from the DVLA and MOT testing service. It is provided for informational purposes only. Free Plate Check does not guarantee the accuracy, completeness, or timeliness of the information. Vehicle data may be subject to delays in government database updates.",
     },
     {
-      heading: "Disclaimer",
-      text: "This report is provided for informational purposes only. Free Plate Check does not guarantee the accuracy, completeness, or timeliness of the information contained in this report. Vehicle data may be subject to delays in government database updates.",
-    },
-    {
-      heading: "Limitations",
-      text: "This report does not cover: outstanding finance, insurance write-off history, stolen vehicle checks, or private sale history. For a comprehensive vehicle history, consider using an official HPI or vehicle history check service.",
-    },
-    {
-      heading: "Usage",
-      text: "This report should not be used as the sole basis for purchasing a vehicle. Always conduct a thorough physical inspection, verify documents with the seller, and consider obtaining a professional mechanic's assessment.",
+      heading: "Limitations & Usage",
+      text: "This report does not cover outstanding finance, insurance write-off history, stolen vehicle checks, or private sale history. It should not be used as the sole basis for purchasing a vehicle. Always conduct a physical inspection, verify documents, and consider a professional mechanic's assessment.",
     },
   ];
 
   for (const para of paragraphs) {
-    y = checkPageBreak(doc, y, 25);
+    y = checkPageBreak(doc, y, 20);
 
     doc.setFontSize(FONT.h3);
     setTextColor(doc, C.headingText);
     doc.setFont("helvetica", "bold");
-    doc.text(para.heading, MARGIN, y + 4);
-    y += 8;
+    doc.text(para.heading, MARGIN, y + 3);
+    y += 7;
 
     doc.setFontSize(FONT.body);
     setTextColor(doc, C.bodyText);
     doc.setFont("helvetica", "normal");
     const lines = doc.splitTextToSize(para.text, CONTENT_W - 4);
     for (const line of lines) {
-      y = checkPageBreak(doc, y, 5);
-      doc.text(line, MARGIN, y + 3);
-      y += 5;
+      y = checkPageBreak(doc, y, 4);
+      doc.text(line, MARGIN, y + 2.5);
+      y += 4;
     }
-    y += 6;
+    y += 4;
   }
 
-  // Timestamp & branding
-  y = checkPageBreak(doc, y, 30);
-  y += 6;
-  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 28, 3, C.slate800, C.slate700);
+  // Timestamp & branding (compact)
+  y = checkPageBreak(doc, y, 24);
+  y += 3;
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 20, 3, C.slate800, C.slate700);
 
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.cyan);
   doc.setFont("helvetica", "bold");
-  doc.text("Free Plate Check", MARGIN + 6, y + 10);
+  doc.text("Free Plate Check", MARGIN + 5, y + 7);
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.slate300);
   doc.setFont("helvetica", "normal");
-  doc.text("freeplatecheck.co.uk", MARGIN + 6, y + 17);
+  doc.text("freeplatecheck.co.uk", MARGIN + 5, y + 13);
 
   const ts = new Date().toLocaleString("en-GB", {
     day: "numeric",
@@ -1630,9 +1652,9 @@ function renderFinalPage(doc: jsPDF, y: number): number {
     hour: "2-digit",
     minute: "2-digit",
   });
-  doc.text(`Report generated: ${ts}`, MARGIN + 6, y + 23);
+  doc.text(`Report generated: ${ts}`, MARGIN + 5, y + 18);
 
-  return y + 30;
+  return y + 22;
 }
 
 function addFooterPass(doc: jsPDF) {
@@ -1641,20 +1663,20 @@ function addFooterPass(doc: jsPDF) {
     doc.setPage(i);
 
     setFill(doc, C.slate800);
-    doc.rect(0, PAGE_H - 10, 210, 10, "F");
+    doc.rect(0, PAGE_H - 7, 210, 7, "F");
     setDraw(doc, C.slate700);
     doc.setLineWidth(0.2);
-    doc.line(0, PAGE_H - 10, 210, PAGE_H - 10);
+    doc.line(0, PAGE_H - 7, 210, PAGE_H - 7);
 
     doc.setFontSize(FONT.small);
     setTextColor(doc, C.slate400);
     doc.setFont("helvetica", "normal");
-    doc.text(`Page ${i} of ${totalPages}`, 105, PAGE_H - 4, { align: "center" });
+    doc.text(`Page ${i} of ${totalPages}`, 105, PAGE_H - 2.5, { align: "center" });
 
     setTextColor(doc, C.slate400);
-    doc.text("freeplatecheck.co.uk", MARGIN, PAGE_H - 4);
+    doc.text("freeplatecheck.co.uk", MARGIN, PAGE_H - 2.5);
 
-    doc.text("Free Plate Check", MARGIN + CONTENT_W, PAGE_H - 4, { align: "right" });
+    doc.text("Free Plate Check", MARGIN + CONTENT_W, PAGE_H - 2.5, { align: "right" });
   }
 }
 
@@ -1667,28 +1689,28 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   // Page 1: Cover
   let y = renderCoverPage(doc, input);
 
-  // Vehicle Details table (moved up)
+  // Vehicle Details table
   y = renderVehicleDetails(doc, input, y);
 
   // Health Score
   y = renderHealthScore(doc, input, y);
 
-  // Safety Recalls (extracted)
+  // Safety Recalls
   y = renderSafetyRecalls(doc, input, y);
 
-  // ULEZ Compliance (extracted)
+  // ULEZ Compliance
   y = renderUlezCompliance(doc, input, y);
 
-  // Vehicle Valuation (extracted)
+  // Vehicle Valuation
   y = renderValuation(doc, input, y);
 
-  // Annual Running Costs (extracted)
+  // Annual Running Costs
   y = renderRunningCosts(doc, input, y);
 
-  // Negotiation Helper (extracted)
+  // Negotiation Helper
   y = renderNegotiationHelper(doc, input, y);
 
-  // Key Insights (remaining ~10)
+  // Key Insights (2-column)
   y = renderEnrichedInsights(doc, input, y);
 
   // Mileage Progression
@@ -1712,6 +1734,5 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
   // Global footer pass
   addFooterPass(doc);
 
-  // Return blob for caller to handle download (mobile vs desktop)
   return doc.output("blob");
 }

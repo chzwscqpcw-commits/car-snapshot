@@ -2488,6 +2488,9 @@ END:VEVENT
         theftRisk: theftRisk ?? undefined,
         evSpecs: evSpecs ?? undefined,
         negotiation: negotiation ?? undefined,
+        vehicleSegment,
+        ukAverageCost: UK_AVERAGE_ANNUAL_COSTS[vehicleSegment]?.cost,
+        ukAverageLabel: UK_AVERAGE_ANNUAL_COSTS[vehicleSegment]?.label,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");
@@ -2739,7 +2742,7 @@ END:VEVENT
 
       <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset relative z-10">
         {/* HEADER WITH BRAND */}
-        <header className="mb-10 sm:mb-12">
+        <header className="mb-6">
           <div className="flex items-baseline gap-2 mb-4">
             <Zap className="w-6 h-6 text-blue-400" />
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
@@ -2765,24 +2768,24 @@ END:VEVENT
 
           {/* TABBED SECTION: Recent / Saved / My Cars */}
           {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
-            <div className="mt-6 pt-6 border-t border-slate-700/50">
+            <div className="mt-4 pt-4 border-t border-slate-700/50">
               {/* Tab bar */}
               <div className="flex gap-1 mb-4 border-b border-slate-700/50">
                 <button
                   onClick={() => { setActiveVehicleTab("recent"); localStorage.setItem("fpc-active-tab", "recent"); }}
-                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "recent" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+                  className={`pb-1.5 px-2.5 py-1.5 text-xs font-medium transition-colors ${activeVehicleTab === "recent" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
                 >
                   Recent
                 </button>
                 <button
                   onClick={() => { setActiveVehicleTab("saved"); localStorage.setItem("fpc-active-tab", "saved"); }}
-                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "saved" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+                  className={`pb-1.5 px-2.5 py-1.5 text-xs font-medium transition-colors ${activeVehicleTab === "saved" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
                 >
                   Saved{favorites.length > 0 ? ` (${favorites.length})` : ""}
                 </button>
                 <button
                   onClick={() => { setActiveVehicleTab("mycars"); localStorage.setItem("fpc-active-tab", "mycars"); }}
-                  className={`pb-2 px-3 py-2 text-sm font-medium transition-colors ${activeVehicleTab === "mycars" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+                  className={`pb-1.5 px-2.5 py-1.5 text-xs font-medium transition-colors ${activeVehicleTab === "mycars" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
                 >
                   My Cars{myVehicles.length > 0 ? ` (${myVehicles.length})` : ""}
                 </button>
@@ -2793,7 +2796,7 @@ END:VEVENT
                 <div>
                   {recentLookups.length > 0 ? (
                     <>
-                      <div className="flex items-center justify-end mb-3">
+                      <div className="flex items-center justify-end mb-2">
                         <button
                           onClick={() => handleClearConfirm("recent")}
                           className={`text-xs transition-colors ${confirmingClear === "recent" ? "text-red-400 font-semibold" : "text-slate-500 hover:text-slate-400"}`}
@@ -2825,7 +2828,7 @@ END:VEVENT
                 <div>
                   {favorites.length > 0 ? (
                     <>
-                      <div className="flex items-center justify-end mb-3">
+                      <div className="flex items-center justify-end mb-2">
                         <button
                           onClick={() => handleClearConfirm("favorites")}
                           className={`text-xs transition-colors ${confirmingClear === "favorites" ? "text-red-400 font-semibold" : "text-slate-500 hover:text-slate-400"}`}
@@ -2881,7 +2884,7 @@ END:VEVENT
                       </div>
                       <div className="space-y-2">
                         {myVehicles.map((vehicle, idx) => (
-                          <div key={idx} className="p-3 bg-emerald-900/20 border border-emerald-700/50 rounded-lg">
+                          <div key={idx} className="p-2.5 bg-emerald-900/20 border border-emerald-700/50 rounded-lg">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
                                 <button
@@ -3114,7 +3117,7 @@ END:VEVENT
         )}
 
         {/* SEARCH SECTION */}
-        <div className="mb-10 sm:mb-12">
+        <div className="mb-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
@@ -3129,13 +3132,13 @@ END:VEVENT
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleLookup();
                 }}
-                className="w-full pl-12 pr-4 py-3.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-12 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
             <button
               onClick={handleLookup}
               disabled={loading}
-              className="px-6 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
             >
               {loading ? (
                 <>
@@ -3157,7 +3160,7 @@ END:VEVENT
                   setCompareData1(null);
                   setCompareData2(null);
                 }}
-                className="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 🔄 Compare
               </button>

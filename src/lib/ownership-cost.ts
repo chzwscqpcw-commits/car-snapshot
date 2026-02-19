@@ -131,7 +131,7 @@ export function classifyVehicleSegment(params: {
   const bt = (bodyType ?? "").toUpperCase();
 
   // Van by body type
-  if (/VAN|COMMERCIAL|PANEL|PICK\s*UP/i.test(bt)) return "van";
+  if (/\bVAN\b|\bCOMMERCIAL\b|\bPANEL\b|\bPICK[\s-]*UP\b/i.test(bt)) return "van";
 
   // SUV by body type
   if (/SUV|CROSSOVER|4X4/i.test(bt)) return "suv";
