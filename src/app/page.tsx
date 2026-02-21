@@ -157,6 +157,7 @@ import { lookupVehicleDimensions, type VehicleDimensionsResult } from "@/lib/veh
 import { lookupTheftRisk, type TheftRiskResult } from "@/lib/theft-risk";
 import { lookupEvSpecs, type EvSpecsResult } from "@/lib/ev-specs";
 import { calculateNegotiation, type NegotiationResult } from "@/lib/negotiation";
+import { buildChecklist, buildAllChecklists, type ChecklistSignals } from "@/lib/checklist";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -930,71 +931,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, [data, sharePromptDismissed]);
 
-  const checklist = useMemo((): string[] => {
-    if (!data) return [];
-
-    // OWNER - Checking their own vehicle
-    if (checklistRole === "owner") {
-      return [
-        "MOT status is valid",
-        "Tax status is current",
-        "Service history up to date",
-        "Insurance is active",
-        "Check for recalls",
-      ];
-    }
-
-    // BUYER - Purchasing a vehicle
-    if (checklistRole === "buyer") {
-      const items = [
-        "Service history verified",
-        "VIN matches logbook (V5C)",
-        "Tyres: tread and wear acceptable",
-        "History check: write-offs, theft, finance",
-        "Get pre-purchase mechanic inspection",
-        "Arrange new insurance quotes",
-        "Check warranty or guarantee",
-        "Test drive thoroughly",
-      ];
-      
-      // Add MOT warning if 3+ years old and invalid
-      if (data.yearOfManufacture) {
-        let isOver3Years = false;
-        if (data.monthOfFirstRegistration) {
-          const [regYear, regMonth] = data.monthOfFirstRegistration.split("-");
-          const regDate = new Date(parseInt(regYear), parseInt(regMonth) - 1);
-          const threeYearsAgo = new Date();
-          threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
-          isOver3Years = regDate <= threeYearsAgo;
-        } else {
-          const currentYear = new Date().getFullYear();
-          isOver3Years = currentYear - data.yearOfManufacture > 3;
-        }
-        
-        if (isOver3Years && (!data.motStatus || data.motStatus.toLowerCase() !== "valid")) {
-          items.unshift("MOT valid (car is 3+ years old)");
-        }
-      }
-      
-      return items;
-    }
-
-    // SELLER - Selling a vehicle
-    if (checklistRole === "seller") {
-      return [
-        "MOT status is current",
-        "Tax status is current",
-        "Gather service history and receipts",
-        "Cancel existing insurance",
-        "Verify no outstanding finance",
-        "Prepare V5C logbook",
-        "Get recent valuation",
-        "Take clear photos of vehicle",
-      ];
-    }
-
-    return [];
-  }, [data, checklistRole]);
+  // checklist is now computed below (after enrichment useMemos) via buildChecklist()
 
   // Shared computed values — deduplicate isOver3Years calculation
   const isOver3Years = useMemo(() => {
@@ -1264,6 +1201,45 @@ export default function Home() {
       vehicleAge: new Date().getFullYear() - data.yearOfManufacture,
     });
   }, [data, valuationResult, motReadiness]);
+
+  // Assemble all enrichment signals for dynamic checklists
+  const checklistSignals = useMemo((): ChecklistSignals | null => {
+    if (!data) return null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    return {
+      motStatus: data.motStatus,
+      taxStatus: data.taxStatus,
+      yearOfManufacture: data.yearOfManufacture,
+      isOver3Years,
+      fuelType: data.fuelType,
+      motInsights: motInsightsData ? {
+        passRate: motInsightsData.passRate,
+        avgMilesPerYear: motInsightsData.avgMilesPerYear,
+        mileageWarnings: motInsightsData.mileageWarnings,
+        recurringAdvisories: motInsightsData.recurringAdvisories,
+        daysUntilExpiry: motInsightsData.daysUntilExpiry,
+      } : null,
+      motReadiness: motReadiness ? {
+        score: motReadiness.score,
+        advisoryCount: motReadiness.advisoryCount,
+        totalEstimatedCost: motReadiness.totalEstimatedCost,
+        isMotExempt: motReadiness.isMotExempt,
+      } : null,
+      ulezResult: ulezResult ? { status: ulezResult.status } : null,
+      recalls: recalls.map(r => ({ defect: r.defect })),
+      healthScore: healthScore ? { score: healthScore.score, grade: healthScore.grade } : null,
+      ncapRating: ncapRating ? { overallStars: ncapRating.overallStars } : null,
+      theftRisk: theftRisk ? { riskCategory: theftRisk.riskCategory } : null,
+      valuationResult: valuationResult ? { rangeLow: valuationResult.rangeLow, rangeHigh: valuationResult.rangeHigh } : null,
+      ownershipCost: ownershipCost ? { totalAnnual: ownershipCost.totalAnnual } : null,
+      fuelEconomy: fuelEconomy ? { combinedMpg: fuelEconomy.combinedMpg } : null,
+    };
+  }, [data, isOver3Years, motReadiness, ulezResult, recalls, healthScore, ncapRating, theftRisk, valuationResult, ownershipCost, fuelEconomy]);
+
+  const checklist = useMemo((): string[] => {
+    if (!checklistSignals) return [];
+    return buildChecklist(checklistRole, checklistSignals);
+  }, [checklistSignals, checklistRole]);
 
   type ActionPromptVariant = "urgent" | "warning" | "info" | "subtle";
   type ActionPromptConfig = {
@@ -2478,44 +2454,15 @@ END:VEVENT
     try {
       const { generateVehicleReport } = await import("@/lib/generateReport");
 
-      // Build checklists for all three roles
-      const ownerItems = [
-        "MOT status is valid",
-        "Tax status is current",
-        "Service history up to date",
-        "Insurance is active",
-        "Check for recalls",
-      ];
-
-      const buyerItems = [
-        "Service history verified",
-        "VIN matches logbook (V5C)",
-        "Tyres: tread and wear acceptable",
-        "History check: write-offs, theft, finance",
-        "Get pre-purchase mechanic inspection",
-        "Arrange new insurance quotes",
-        "Check warranty or guarantee",
-        "Test drive thoroughly",
-      ];
-      if (isOver3Years && (!data.motStatus || data.motStatus.toLowerCase() !== "valid")) {
-        buyerItems.unshift("MOT valid (car is 3+ years old)");
-      }
-
-      const sellerItems = [
-        "MOT status is current",
-        "Tax status is current",
-        "Gather service history and receipts",
-        "Cancel existing insurance",
-        "Verify no outstanding finance",
-        "Prepare V5C logbook",
-        "Get recent valuation",
-        "Take clear photos of vehicle",
-      ];
+      // Build dynamic checklists for all three roles
+      const allChecklists = checklistSignals
+        ? buildAllChecklists(checklistSignals)
+        : { owner: [], buyer: [], seller: [] };
 
       const blob = await generateVehicleReport({
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
-        checklist: { owner: ownerItems, buyer: buyerItems, seller: sellerItems },
+        checklist: allChecklists,
         parsedModel: (parsedModel || vcaParsedModel) ? {
           bodyStyle: bodyStyle,
           trim: parsedModel?.trim || vcaParsedModel?.trim || null,
