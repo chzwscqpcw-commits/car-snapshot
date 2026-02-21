@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npx tsx scripts/validate-data.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "validate-data": "npx tsx scripts/validate-data.ts",
+    "check-freshness": "npx tsx scripts/check-freshness.ts",
+    "refresh-data": "npx tsx scripts/refresh-data.ts",
     "ping-sitemap": "npx tsx scripts/ping-sitemap.ts"
   },
   "dependencies": {

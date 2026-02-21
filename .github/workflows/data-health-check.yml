@@ -1,0 +1,200 @@
+name: Data Health Check
+
+on:
+  schedule:
+    - cron: '0 9 1 * *' # 1st of each month, 9am UTC
+  workflow_dispatch:
+    inputs:
+      how_many_left_url:
+        description: 'VEH0120 CSV URL (optional — for How Many Left data)'
+        required: false
+      body_types_url:
+        description: 'VEH0220 CSV URL (optional — for Body Types data)'
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for git log freshness checks
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 1: Validate existing data
+      - name: Validate existing data
+        id: pre_validate
+        run: npx tsx scripts/validate-data.ts --json > /tmp/pre-validation.json
+        continue-on-error: true
+
+      - name: Report pre-validation
+        if: steps.pre_validate.outcome == 'failure'
+        run: |
+          echo "::warning::Pre-refresh validation found issues"
+          cat /tmp/pre-validation.json
+
+      # Step 2: Refresh automatable data
+      - name: Refresh recalls
+        id: refresh_recalls
+        run: npx tsx scripts/refresh-data.ts --recalls --json > /tmp/refresh-recalls.json 2>&1
+        continue-on-error: true
+
+      - name: Refresh How Many Left (if URL provided)
+        id: refresh_hml
+        if: inputs.how_many_left_url != ''
+        run: npx tsx scripts/refresh-data.ts --how-many-left "${{ inputs.how_many_left_url }}" --json > /tmp/refresh-hml.json 2>&1
+        continue-on-error: true
+
+      - name: Refresh Body Types (if URL provided)
+        id: refresh_bt
+        if: inputs.body_types_url != ''
+        run: npx tsx scripts/refresh-data.ts --body-types "${{ inputs.body_types_url }}" --json > /tmp/refresh-bt.json 2>&1
+        continue-on-error: true
+
+      # Step 3: Re-validate after refresh
+      - name: Validate after refresh
+        id: post_validate
+        run: npx tsx scripts/validate-data.ts --json > /tmp/post-validation.json
+
+      # Step 4: Check freshness
+      - name: Check freshness
+        id: freshness
+        run: npx tsx scripts/check-freshness.ts --json > /tmp/freshness.json
+
+      # Step 5: Create PR if data changed and valid
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet src/data/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "diff<<EOF" >> $GITHUB_OUTPUT
+            git diff --stat src/data/ >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true' && steps.post_validate.outcome == 'success'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: data-refresh/${{ github.run_id }}
+          commit-message: 'chore: automated data refresh'
+          title: 'chore: automated data refresh'
+          body: |
+            ## Automated Data Refresh
+
+            This PR was created by the monthly data health check workflow.
+
+            ### Changes
+            ```
+            ${{ steps.changes.outputs.diff }}
+            ```
+
+            ### Validation
+            All 13 data files passed validation after refresh.
+
+            ### Review Checklist
+            - [ ] Entry counts look reasonable
+            - [ ] No unexpected data changes
+            - [ ] Spot-check a few entries
+          labels: automated,data-refresh
+
+      # Step 6: Create issue if validation failed
+      - name: Create validation failure issue
+        if: steps.post_validate.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '## Data Validation Failure\n\n';
+            body += 'The monthly data health check found validation errors.\n\n';
+            try {
+              const results = JSON.parse(fs.readFileSync('/tmp/post-validation.json', 'utf-8'));
+              const failures = results.filter(r => r.status === 'fail');
+              body += '### Failed Files\n\n';
+              for (const f of failures) {
+                body += `**${f.file}** (${f.entryCount} entries)\n`;
+                for (const err of f.errors) {
+                  body += `- ${err}\n`;
+                }
+                body += '\n';
+              }
+            } catch {
+              body += 'Could not parse validation results.\n';
+            }
+            body += '\n---\n*Created by data-health-check workflow*';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Data validation failure detected',
+              body,
+              labels: ['bug', 'data-quality'],
+            });
+
+      # Step 7: Create freshness reminder issue
+      - name: Check for stale files
+        id: stale
+        run: |
+          STALE_COUNT=$(node -e "const d=require('/tmp/freshness.json'); console.log(d.staleCount)")
+          echo "count=$STALE_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Create freshness reminder issue
+        if: steps.stale.outputs.count != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Check for existing open freshness issue to avoid duplicates
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'data-freshness',
+              state: 'open',
+            });
+            if (existing.data.length > 0) {
+              console.log('Freshness reminder issue already exists, skipping.');
+              return;
+            }
+
+            let body = '## Stale Data Files\n\n';
+            body += 'The following data files have not been updated recently and may contain outdated information.\n\n';
+            try {
+              const data = JSON.parse(fs.readFileSync('/tmp/freshness.json', 'utf-8'));
+              const stale = data.entries.filter(e => e.stale);
+              body += '| File | Last Modified | Age | Threshold | Source |\n';
+              body += '|------|--------------|-----|-----------|--------|\n';
+              for (const e of stale) {
+                body += `| ${e.file} | ${e.lastModified} | ${e.daysAgo}d | ${e.threshold}d | ${e.source} |\n`;
+              }
+            } catch {
+              body += 'Could not parse freshness data.\n';
+            }
+            body += '\n### How to Update\n\n';
+            body += '- **Automatable sources**: Run `npx tsx scripts/refresh-data.ts --all`\n';
+            body += '- **Curated sources**: See the script headers for download URLs and run the relevant processing script\n';
+            body += '\n---\n*Created by data-health-check workflow*';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Data freshness reminder — stale files detected',
+              body,
+              labels: ['data-freshness', 'maintenance'],
+            });
