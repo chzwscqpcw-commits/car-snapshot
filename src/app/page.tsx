@@ -807,7 +807,7 @@ export default function Home() {
       }
       robots.setAttribute("content", "noindex, follow");
     } else {
-      document.title = "Free Plate Check — Free UK Vehicle Check | MOT History, Tax Status & More";
+      document.title = "Free Plate Check — Free UK Vehicle Check | MOT, Tax, Valuation & More";
       const robots = document.querySelector('meta[name="robots"]');
       if (robots) robots.setAttribute("content", "index, follow");
     }
@@ -2671,7 +2671,7 @@ END:VEVENT
               "name": "Is this car check really free?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. We use official DVLA and MOT data to show you tax status, MOT history, mileage records and vehicle details."
+                "text": "Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. You get MOT history, tax status, mileage records, a valuation estimate, ULEZ compliance, safety recalls, running costs, NCAP safety ratings and a downloadable PDF report, all from official data sources."
               }
             },
             {
@@ -2679,7 +2679,7 @@ END:VEVENT
               "name": "What information does a free plate check show?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "You'll see the vehicle's make, model, colour, fuel type, engine size, CO2 emissions, year of manufacture, current tax and MOT status, full MOT history with advisories and failures, and mileage recorded at each MOT test. You also get checklists tailored to buyers, sellers and owners."
+                "text": "You'll see the vehicle's make, model, colour, fuel type, engine size, CO2 emissions, year of manufacture, current tax and MOT status, full MOT history with advisories and failures, mileage recorded at each MOT test, ULEZ compliance, safety recalls, an instant valuation estimate, estimated running costs, Euro NCAP safety rating, vehicle dimensions, and a downloadable PDF report. You also get a health score, negotiation helper, and checklists tailored to buyers, sellers and owners."
               }
             },
             {
@@ -2710,7 +2710,7 @@ END:VEVENT
           "url": "https://www.freeplatecheck.co.uk",
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "Web",
-          "featureList": "MOT History Check, Tax Status Check, Mileage Check, ULEZ Compliance Check, Safety Recall Check, VED Road Tax Calculator, Fuel Economy Lookup, Euro NCAP Ratings, Vehicle Valuation Estimator, Vehicle Comparison, PDF Report Download",
+          "featureList": "MOT History Check, Tax Status Check, Mileage Check, ULEZ Compliance Check, Safety Recall Check, Car Valuation, Running Costs Calculator, VED Road Tax Calculator, Fuel Economy Lookup, Euro NCAP Safety Ratings, Vehicle Health Score, Negotiation Helper, Vehicle Dimensions, Vehicle Comparison, PDF Report Download",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -2842,7 +2842,7 @@ END:VEVENT
               Free Plate Check
             </h1>
           </div>
-          <p className="text-slate-300 text-lg font-medium">Look up any UK vehicle instantly. Tax, MOT & checklists for owners, buyers & sellers.</p>
+          <p className="text-slate-300 text-lg font-medium">The free UK vehicle check. MOT history, tax, valuation, ULEZ, safety recalls, running costs and more — no signup required.</p>
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
             Your data is private. We don't store registration numbers or track who you are.
           </p>
@@ -4846,7 +4846,7 @@ END:VEVENT
         {/* ABOUT — descriptive paragraph for SEO */}
         <div className="mt-10">
           <p className="text-sm text-slate-400 leading-relaxed">
-            Free Plate Check is a free UK vehicle lookup tool. Enter any registration number to see official DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, and an instant valuation estimate. No signup, no email, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
+            Free Plate Check is a comprehensive, free UK vehicle check. Enter any registration number to see DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, a free car valuation, estimated running costs, Euro NCAP safety ratings, vehicle dimensions, and a health score. Compare two vehicles side by side or download a detailed PDF report. No signup, no email, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
           </p>
         </div>
 
@@ -4861,49 +4861,49 @@ END:VEVENT
                 <Search className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT History Check</h3>
               </div>
-              <p className="text-sm text-slate-400">See every MOT result, advisory and failure since 2005.</p>
+              <p className="text-sm text-slate-400">Full MOT history since 2005 — pass/fail results, advisories, failures and mileage readings.</p>
             </a>
             <a href="/car-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <CheckCircle2 className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Look up make, model, colour, engine size and fuel type from DVLA data.</p>
+              <p className="text-sm text-slate-400">Vehicle specs, health score, NCAP safety rating, dimensions, running costs and a full PDF report.</p>
             </a>
             <a href="/tax-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Calendar className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Tax Check</h3>
               </div>
-              <p className="text-sm text-slate-400">See if a vehicle is taxed, SORN&apos;d or untaxed, plus the expiry date.</p>
+              <p className="text-sm text-slate-400">Check if a vehicle is taxed, SORN&apos;d or untaxed, with the due date and VED band estimate.</p>
             </a>
             <a href="/mileage-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Gauge className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Mileage Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Track odometer readings across MOT tests to spot clocking.</p>
+              <p className="text-sm text-slate-400">Track odometer readings across every MOT test to spot clocking or unusual mileage jumps.</p>
             </a>
             <a href="/ulez-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Leaf className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">ULEZ Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Find out if a vehicle is ULEZ compliant and see Clean Air Zone charges.</p>
+              <p className="text-sm text-slate-400">Check if a vehicle meets ULEZ standards based on its Euro emission class and fuel type.</p>
             </a>
             <a href="/recall-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Shield className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Recall Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Check for safety recalls on any UK car model. Free repairs at dealers.</p>
+              <p className="text-sm text-slate-400">Search DVSA safety recalls for any UK car model. Outstanding recalls mean free repairs at dealers.</p>
             </a>
             <a href="/car-valuation" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <PoundSterling className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>
               </div>
-              <p className="text-sm text-slate-400">Get a free instant car valuation. No signup required — just enter a reg.</p>
+              <p className="text-sm text-slate-400">Free instant valuation based on age, mileage and market data. Plus a negotiation helper for buyers.</p>
             </a>
           </div>
         </div>
@@ -4914,11 +4914,11 @@ END:VEVENT
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold text-slate-100">Is this really free?</h3>
-              <p className="text-sm text-slate-400 mt-1">Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. We use official DVLA and MOT data to show you tax status, MOT history, mileage records and vehicle details.</p>
+              <p className="text-sm text-slate-400 mt-1">Yes, completely free. Free Plate Check lets you look up any UK vehicle at no cost — no signup, no account, no hidden charges. You get MOT history, tax status, mileage records, a valuation estimate, ULEZ compliance, safety recalls, running costs, NCAP safety ratings and a downloadable PDF report, all from official data sources.</p>
             </div>
             <div>
               <h3 className="font-semibold text-slate-100">What does a free plate check show?</h3>
-              <p className="text-sm text-slate-400 mt-1">You&apos;ll see the vehicle&apos;s make, model, colour, fuel type, engine size, CO2 emissions, year of manufacture, current tax and MOT status, full MOT history with advisories and failures, and mileage recorded at each MOT test. You also get ULEZ compliance, safety recall checks, and a valuation estimate.</p>
+              <p className="text-sm text-slate-400 mt-1">You&apos;ll see make, model, colour, fuel type, engine size, CO2, year of manufacture, tax and MOT status, full MOT history with advisories and failures, mileage at each test, ULEZ compliance, safety recalls, a free valuation, estimated running costs, Euro NCAP safety rating, vehicle dimensions, health score, and a negotiation helper. You can compare two vehicles side by side and download a full PDF report.</p>
             </div>
             <div>
               <h3 className="font-semibold text-slate-100">How do I check MOT history?</h3>
@@ -4963,7 +4963,7 @@ END:VEVENT
         {/* FOOTER */}
         <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-2">
           <p>
-            Built with DVLA vehicle data. Always verify details with the seller and official documents before making any decisions.
+            Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
           </p>
           <p className="text-slate-600">
             Free Plate Check may earn a commission from partner links. This doesn't affect our recommendations or the data we show.
