@@ -228,6 +228,17 @@ type LookupResponse =
 type InsightTone = "good" | "warn" | "risk" | "info";
 type Insight = { tone: InsightTone; title: string; detail: string };
 
+interface CompareEnriched {
+  data: VehicleData;
+  dimensions: VehicleDimensionsResult | null;
+  tyreSizes: TyreSizeResult | null;
+  ncap: NcapRating | null;
+  rarity: { licensed: number; sorn: number; category: string } | null;
+  evSpecs: EvSpecsResult | null;
+  ulez: UlezResult | null;
+  fuelEconomy: FuelEconomyResult | null;
+}
+
 function cleanReg(s: string) {
   return s.replace(/\s+/g, "").toUpperCase();
 }
@@ -615,8 +626,8 @@ export default function Home() {
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
   const [compareReg2, setCompareReg2] = useState<string>("");
-  const [compareData1, setCompareData1] = useState<VehicleData | null>(null);
-  const [compareData2, setCompareData2] = useState<VehicleData | null>(null);
+  const [compareVehicle1, setCompareVehicle1] = useState<CompareEnriched | null>(null);
+  const [compareVehicle2, setCompareVehicle2] = useState<CompareEnriched | null>(null);
   const [compareLoading, setCompareLoading] = useState(false);
   const [insuranceModalOpen, setInsuranceModalOpen] = useState(false);
   const [insuranceModalVrm, setInsuranceModalVrm] = useState<string>("");
@@ -1640,19 +1651,57 @@ export default function Home() {
       const json1 = (await res1.json()) as LookupResponse;
       const json2 = (await res2.json()) as LookupResponse;
 
-      // Check if both responses are successful
       if (!json1.ok) {
         setError(`Vehicle 1 error: ${json1.error}`);
         return;
       }
-      
+
       if (!json2.ok) {
         setError(`Vehicle 2 error: ${json2.error}`);
         return;
       }
 
-      setCompareData1(json1.data);
-      setCompareData2(json2.data);
+      // Enrich both vehicles with client-side lookups
+      async function enrichVehicle(vData: VehicleData): Promise<CompareEnriched> {
+        const parsed = vData.model ? parseModel(vData.model, vData.make) : null;
+        const model = parsed ? expandBaseModelForLookup(vData.make ?? "", parsed) : (vData.model ?? null);
+
+        const dimensions = vData.make ? lookupVehicleDimensions(vData.make, model ?? vData.model ?? "") : null;
+        const tyres = vData.make ? lookupTyreSizes(vData.make, model ?? vData.model ?? "") : null;
+        const ncap = vData.make ? lookupNcap(vData.make, model ?? vData.model ?? "") : null;
+        const rarity = vData.make ? lookupRarity(vData.make, model ?? vData.model ?? "") : null;
+        const ev = (vData.make && vData.fuelType) ? lookupEvSpecs(vData.make, model ?? vData.model ?? "", vData.fuelType) : null;
+        const ulez = calculateUlezCompliance({
+          fuelType: vData.fuelType,
+          euroStatus: vData.euroStatus,
+          monthOfFirstRegistration: vData.monthOfFirstRegistration,
+          co2Emissions: vData.co2Emissions,
+          yearOfManufacture: vData.yearOfManufacture,
+        });
+
+        // Fetch fuel economy from server
+        let fuel: FuelEconomyResult | null = null;
+        if (vData.make && vData.model) {
+          try {
+            const params = new URLSearchParams({ make: vData.make, model: model || vData.model });
+            if (vData.engineCapacity) params.set("engine", String(vData.engineCapacity));
+            if (vData.fuelType) params.set("fuel", vData.fuelType);
+            if (parsed?.bodyStyle) params.set("bodyStyle", parsed.bodyStyle);
+            const fuelRes = await fetch(`/api/fuel-economy?${params}`);
+            if (fuelRes.ok) fuel = await fuelRes.json();
+          } catch {}
+        }
+
+        return { data: vData, dimensions, tyreSizes: tyres, ncap, rarity, evSpecs: ev, ulez, fuelEconomy: fuel };
+      }
+
+      const [enriched1, enriched2] = await Promise.all([
+        enrichVehicle(json1.data),
+        enrichVehicle(json2.data),
+      ]);
+
+      setCompareVehicle1(enriched1);
+      setCompareVehicle2(enriched2);
     } catch (err: any) {
       setError(err?.message ? String(err.message) : "Could not load comparison data.");
     } finally {
@@ -3001,8 +3050,8 @@ END:VEVENT
               <button
                 onClick={() => {
                   setComparisonMode(false);
-                  setCompareData1(null);
-                  setCompareData2(null);
+                  setCompareVehicle1(null);
+                  setCompareVehicle2(null);
                   setCompareReg1("");
                   setCompareReg2("");
                 }}
@@ -3064,101 +3113,151 @@ END:VEVENT
         )}
 
         {/* COMPARISON RESULTS */}
-        {compareData1 && compareData2 && comparisonMode && (
-          <div className="mb-10 p-6 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Vehicle 1 */}
-              <div>
-                <h3 className="text-lg font-bold text-slate-100 mb-4">
-                  {compareData1.make} {[compareData1.model, compareData1.variant].filter(Boolean).join(" ")} — {compareData1.registrationNumber}
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Year</span>
-                    <span className="font-semibold text-slate-100">{compareData1.yearOfManufacture || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Colour</span>
-                    <span className="font-semibold text-slate-100">{compareData1.colour || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Fuel Type</span>
-                    <span className="font-semibold text-slate-100">{compareData1.fuelType || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Engine</span>
-                    <span className="font-semibold text-slate-100">{compareData1.engineCapacity ? `${compareData1.engineCapacity}cc` : "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">CO2</span>
-                    <span className="font-semibold text-slate-100">{compareData1.co2Emissions ? `${compareData1.co2Emissions}g/km` : "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Tax Status</span>
-                    <span className="font-semibold text-emerald-300">{compareData1.taxStatus || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Tax Due</span>
-                    <span className="font-semibold text-slate-100">{formatDate(compareData1.taxDueDate)}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">MOT Status</span>
-                    <span className="font-semibold text-slate-100">{compareData1.motStatus || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-slate-400">MOT Expires</span>
-                    <span className="font-semibold text-slate-100">{formatDate(compareData1.motExpiryDate)}</span>
-                  </div>
-                </div>
-              </div>
+        {compareVehicle1 && compareVehicle2 && comparisonMode && (() => {
+          const v1 = compareVehicle1.data;
+          const v2 = compareVehicle2.data;
+          const showEv = !!(compareVehicle1.evSpecs || compareVehicle2.evSpecs);
 
-              {/* Vehicle 2 */}
-              <div>
-                <h3 className="text-lg font-bold text-slate-100 mb-4">
-                  {compareData2.make} {[compareData2.model, compareData2.variant].filter(Boolean).join(" ")} — {compareData2.registrationNumber}
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Year</span>
-                    <span className="font-semibold text-slate-100">{compareData2.yearOfManufacture || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Colour</span>
-                    <span className="font-semibold text-slate-100">{compareData2.colour || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Fuel Type</span>
-                    <span className="font-semibold text-slate-100">{compareData2.fuelType || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Engine</span>
-                    <span className="font-semibold text-slate-100">{compareData2.engineCapacity ? `${compareData2.engineCapacity}cc` : "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">CO2</span>
-                    <span className="font-semibold text-slate-100">{compareData2.co2Emissions ? `${compareData2.co2Emissions}g/km` : "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Tax Status</span>
-                    <span className="font-semibold text-emerald-300">{compareData2.taxStatus || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">Tax Due</span>
-                    <span className="font-semibold text-slate-100">{formatDate(compareData2.taxDueDate)}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-slate-700/50">
-                    <span className="text-slate-400">MOT Status</span>
-                    <span className="font-semibold text-slate-100">{compareData2.motStatus || "—"}</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-slate-400">MOT Expires</span>
-                    <span className="font-semibold text-slate-100">{formatDate(compareData2.motExpiryDate)}</span>
-                  </div>
-                </div>
-              </div>
+          const CompareRow = ({ label, val1, val2 }: { label: string; val1: string; val2: string }) => (
+            <tr className="border-b border-slate-700/30">
+              <td className="py-2 pr-2 text-xs sm:text-sm text-slate-400 font-medium whitespace-nowrap">{label}</td>
+              <td className="py-2 px-2 text-xs sm:text-sm text-slate-100 font-semibold text-center">{val1}</td>
+              <td className="py-2 pl-2 text-xs sm:text-sm text-slate-100 font-semibold text-center">{val2}</td>
+            </tr>
+          );
+
+          const GroupHeader = ({ title }: { title: string }) => (
+            <tr>
+              <td colSpan={3} className="pt-4 pb-2">
+                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-widest">{title}</span>
+              </td>
+            </tr>
+          );
+
+          return (
+            <div className="mb-10 bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-hidden">
+              <table className="w-full text-left">
+                {/* Column headers — vehicle names */}
+                <thead>
+                  <tr className="border-b border-slate-700/50 bg-slate-800/80">
+                    <th className="p-3 sm:p-4 text-xs sm:text-sm text-slate-400 font-medium w-[30%]"></th>
+                    <th className="p-3 sm:p-4 text-center w-[35%]">
+                      <div className="text-xs sm:text-sm font-bold text-slate-100 leading-tight">{v1.make} {v1.model}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-400 mt-0.5 font-mono">{v1.registrationNumber}</div>
+                    </th>
+                    <th className="p-3 sm:p-4 text-center w-[35%]">
+                      <div className="text-xs sm:text-sm font-bold text-slate-100 leading-tight">{v2.make} {v2.model}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-400 mt-0.5 font-mono">{v2.registrationNumber}</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="px-3 sm:px-4">
+                  <tr><td colSpan={3} className="px-3 sm:px-4">
+                    <table className="w-full">
+                      {/* At a Glance */}
+                      <tbody>
+                        <GroupHeader title="At a Glance" />
+                        <CompareRow label="Year" val1={String(v1.yearOfManufacture || "—")} val2={String(v2.yearOfManufacture || "—")} />
+                        <CompareRow label="Colour" val1={v1.colour || "—"} val2={v2.colour || "—"} />
+                        <CompareRow label="Fuel Type" val1={v1.fuelType || "—"} val2={v2.fuelType || "—"} />
+                        <CompareRow label="Engine" val1={v1.engineCapacity ? `${v1.engineCapacity}cc` : "—"} val2={v2.engineCapacity ? `${v2.engineCapacity}cc` : "—"} />
+                        <CompareRow label="CO2" val1={v1.co2Emissions ? `${v1.co2Emissions} g/km` : "—"} val2={v2.co2Emissions ? `${v2.co2Emissions} g/km` : "—"} />
+
+                        {/* Status */}
+                        <GroupHeader title="Status" />
+                        <CompareRow label="Tax Status" val1={v1.taxStatus || "—"} val2={v2.taxStatus || "—"} />
+                        <CompareRow label="Tax Due" val1={formatDate(v1.taxDueDate)} val2={formatDate(v2.taxDueDate)} />
+                        <CompareRow label="MOT Status" val1={v1.motStatus || "—"} val2={v2.motStatus || "—"} />
+                        <CompareRow label="MOT Expires" val1={formatDate(v1.motExpiryDate)} val2={formatDate(v2.motExpiryDate)} />
+
+                        {/* Dimensions */}
+                        <GroupHeader title="Dimensions" />
+                        <CompareRow
+                          label="Length"
+                          val1={compareVehicle1.dimensions?.lengthMm ? `${(compareVehicle1.dimensions.lengthMm / 1000).toFixed(2)}m` : "—"}
+                          val2={compareVehicle2.dimensions?.lengthMm ? `${(compareVehicle2.dimensions.lengthMm / 1000).toFixed(2)}m` : "—"}
+                        />
+                        <CompareRow
+                          label="Width"
+                          val1={compareVehicle1.dimensions?.widthMm ? `${(compareVehicle1.dimensions.widthMm / 1000).toFixed(2)}m` : "—"}
+                          val2={compareVehicle2.dimensions?.widthMm ? `${(compareVehicle2.dimensions.widthMm / 1000).toFixed(2)}m` : "—"}
+                        />
+                        <CompareRow
+                          label="Height"
+                          val1={compareVehicle1.dimensions?.heightMm ? `${(compareVehicle1.dimensions.heightMm / 1000).toFixed(2)}m` : "—"}
+                          val2={compareVehicle2.dimensions?.heightMm ? `${(compareVehicle2.dimensions.heightMm / 1000).toFixed(2)}m` : "—"}
+                        />
+                        <CompareRow
+                          label="Boot"
+                          val1={compareVehicle1.dimensions?.bootLitres ? `${compareVehicle1.dimensions.bootLitres}L` : "—"}
+                          val2={compareVehicle2.dimensions?.bootLitres ? `${compareVehicle2.dimensions.bootLitres}L` : "—"}
+                        />
+                        <CompareRow
+                          label="Kerb Weight"
+                          val1={compareVehicle1.dimensions?.kerbWeightKg ? `${compareVehicle1.dimensions.kerbWeightKg} kg` : "—"}
+                          val2={compareVehicle2.dimensions?.kerbWeightKg ? `${compareVehicle2.dimensions.kerbWeightKg} kg` : "—"}
+                        />
+
+                        {/* Performance & Economy */}
+                        <GroupHeader title="Performance & Economy" />
+                        <CompareRow
+                          label="Combined MPG"
+                          val1={compareVehicle1.fuelEconomy?.combinedMpg ? `${compareVehicle1.fuelEconomy.combinedMpg}` : "—"}
+                          val2={compareVehicle2.fuelEconomy?.combinedMpg ? `${compareVehicle2.fuelEconomy.combinedMpg}` : "—"}
+                        />
+                        <CompareRow
+                          label="Urban MPG"
+                          val1={compareVehicle1.fuelEconomy?.urbanMpg ? `${compareVehicle1.fuelEconomy.urbanMpg}` : "—"}
+                          val2={compareVehicle2.fuelEconomy?.urbanMpg ? `${compareVehicle2.fuelEconomy.urbanMpg}` : "—"}
+                        />
+                        <CompareRow
+                          label="ULEZ"
+                          val1={compareVehicle1.ulez ? (compareVehicle1.ulez.status === "compliant" ? "Compliant" : compareVehicle1.ulez.status === "exempt" ? "Exempt" : "Non-compliant") : "—"}
+                          val2={compareVehicle2.ulez ? (compareVehicle2.ulez.status === "compliant" ? "Compliant" : compareVehicle2.ulez.status === "exempt" ? "Exempt" : "Non-compliant") : "—"}
+                        />
+
+                        {/* Safety & Rarity */}
+                        <GroupHeader title="Safety & Rarity" />
+                        <CompareRow
+                          label="NCAP Stars"
+                          val1={compareVehicle1.ncap?.overallStars != null ? `${compareVehicle1.ncap.overallStars}/5` : "—"}
+                          val2={compareVehicle2.ncap?.overallStars != null ? `${compareVehicle2.ncap.overallStars}/5` : "—"}
+                        />
+                        <CompareRow
+                          label="How Many Left"
+                          val1={compareVehicle1.rarity?.licensed != null ? compareVehicle1.rarity.licensed.toLocaleString() : "—"}
+                          val2={compareVehicle2.rarity?.licensed != null ? compareVehicle2.rarity.licensed.toLocaleString() : "—"}
+                        />
+                        <CompareRow
+                          label="Tyre Sizes"
+                          val1={compareVehicle1.tyreSizes?.sizes?.length ? compareVehicle1.tyreSizes.sizes[0] : "—"}
+                          val2={compareVehicle2.tyreSizes?.sizes?.length ? compareVehicle2.tyreSizes.sizes[0] : "—"}
+                        />
+
+                        {/* EV Specs — only if either vehicle has EV data */}
+                        {showEv && (
+                          <>
+                            <GroupHeader title="EV Specs" />
+                            <CompareRow
+                              label="Battery"
+                              val1={compareVehicle1.evSpecs?.batteryKwh ? `${compareVehicle1.evSpecs.batteryKwh} kWh` : "—"}
+                              val2={compareVehicle2.evSpecs?.batteryKwh ? `${compareVehicle2.evSpecs.batteryKwh} kWh` : "—"}
+                            />
+                            <CompareRow
+                              label="Range (WLTP)"
+                              val1={compareVehicle1.evSpecs?.rangeWltp ? `${compareVehicle1.evSpecs.rangeWltp} mi` : "—"}
+                              val2={compareVehicle2.evSpecs?.rangeWltp ? `${compareVehicle2.evSpecs.rangeWltp} mi` : "—"}
+                            />
+                          </>
+                        )}
+                      </tbody>
+                    </table>
+                  </td></tr>
+                </tbody>
+              </table>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* SEARCH SECTION */}
         <div className="mb-6">
@@ -3201,8 +3300,8 @@ END:VEVENT
               <button
                 onClick={() => {
                   setComparisonMode(!comparisonMode);
-                  setCompareData1(null);
-                  setCompareData2(null);
+                  setCompareVehicle1(null);
+                  setCompareVehicle2(null);
                 }}
                 className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
               >
@@ -3321,8 +3420,8 @@ END:VEVENT
                       onClick={() => {
                         if (recentLookups.length >= 2) {
                           setComparisonMode(true);
-                          setCompareData1(null);
-                          setCompareData2(null);
+                          setCompareVehicle1(null);
+                          setCompareVehicle2(null);
                         } else {
                           showToast("Look up another vehicle to compare");
                         }
