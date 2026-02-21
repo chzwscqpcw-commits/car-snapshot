@@ -1,4 +1,5 @@
 import type { jsPDF } from "jspdf";
+import { drawIcon, drawToneIcon, toneFromAccent, type Tone } from "./pdf-icons";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -318,6 +319,23 @@ function checkPageBreak(doc: jsPDF, currentY: number, neededHeight: number): num
   return currentY;
 }
 
+const SECTION_ICONS: Record<string, string> = {
+  "Vehicle Health Score": "shieldCheck",
+  "MOT Readiness": "wrench",
+  "Safety Recalls": "shield",
+  "ULEZ Compliance": "leaf",
+  "Estimated Value": "poundSterling",
+  "Annual Running Costs": "poundSterling",
+  "Negotiation Helper": "circleArrowDown",
+  "Key Insights": "lightbulb",
+  "MOT History": "history",
+  "Vehicle Details": "car",
+  "Mileage Progression": "gauge",
+  "Vehicle Checklists": "fileText",
+  "Mileage Warnings": "alertTriangle",
+  "Recurring Advisories": "wrench",
+};
+
 function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 30): number {
   const headerHeight = 16;
   const needed = headerHeight + minHeight;
@@ -330,10 +348,19 @@ function startSection(doc: jsPDF, currentY: number, title: string, minHeight: nu
   doc.setLineWidth(0.3);
   doc.line(MARGIN, y, MARGIN + CONTENT_W, y);
   y += 5;
+
+  const iconName = SECTION_ICONS[title];
+  let textX = MARGIN;
+  if (iconName) {
+    const iconSize = 5;
+    drawIcon(doc, iconName, MARGIN, y - 0.5, iconSize, C.secondaryText);
+    textX = MARGIN + iconSize + 2;
+  }
+
   doc.setFontSize(FONT.h2);
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
-  doc.text(title, MARGIN, y + 4);
+  doc.text(title, textX, y + 4);
   y += 10;
   return y;
 }
@@ -407,7 +434,12 @@ type InsightCardOptions = {
   x?: number;
   width?: number;
   skipPageBreak?: boolean;
+  tone?: Tone;
 };
+
+const TONE_ICON_SIZE = 3.5;
+const TONE_ICON_GAP = 1.5;
+const TONE_ICON_SHIFT = TONE_ICON_SIZE + TONE_ICON_GAP;
 
 /** Measure the height an insight card would occupy without drawing it */
 function measureInsightCard(
@@ -415,13 +447,15 @@ function measureInsightCard(
   title: string,
   lines: string[],
   width: number,
+  tone?: Tone,
 ): number {
+  const iconShift = tone ? TONE_ICON_SHIFT : 0;
   // Temporarily set font to measure text
   doc.setFontSize(FONT.small);
   doc.setFont("helvetica", "normal");
   let wrappedCount = 0;
   for (const line of lines) {
-    const split = doc.splitTextToSize(line, width - CARD_PAD_LEFT - 4);
+    const split = doc.splitTextToSize(line, width - CARD_PAD_LEFT - 4 - iconShift);
     wrappedCount += split.length;
   }
   // Title is always 1 line
@@ -440,12 +474,14 @@ function drawInsightCard(
 ): { endY: number; height: number } {
   const cardX = options?.x ?? MARGIN;
   const cardW = options?.width ?? CONTENT_W;
+  const tone = options?.tone;
+  const iconShift = tone ? TONE_ICON_SHIFT : 0;
 
   doc.setFontSize(FONT.small);
   doc.setFont("helvetica", "normal");
   let wrappedLines: string[] = [];
   for (const line of lines) {
-    const split = doc.splitTextToSize(line, cardW - CARD_PAD_LEFT - 4);
+    const split = doc.splitTextToSize(line, cardW - CARD_PAD_LEFT - 4 - iconShift);
     wrappedLines.push(...split);
   }
   const maxCardH = USABLE_H - MARGIN - POST_BREAK_PAD - 10;
@@ -465,18 +501,23 @@ function drawInsightCard(
   setFill(doc, accentColor);
   doc.rect(cardX, startY + 1.5, CARD_ACCENT_W, cardH - 3, "F");
 
+  // Draw tone icon if provided
+  if (tone) {
+    drawToneIcon(doc, tone, cardX + CARD_ACCENT_W + 2, startY + CARD_PAD_TOP, TONE_ICON_SIZE);
+  }
+
   let textY = startY + CARD_PAD_TOP;
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.headingText);
   doc.setFont("helvetica", "bold");
-  doc.text(title, cardX + CARD_PAD_LEFT, textY + 2.5);
+  doc.text(title, cardX + CARD_PAD_LEFT + iconShift, textY + 2.5);
   textY += CARD_TITLE_H;
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "normal");
   for (const line of wrappedLines) {
-    doc.text(line, cardX + CARD_PAD_LEFT, textY + 2.5);
+    doc.text(line, cardX + CARD_PAD_LEFT + iconShift, textY + 2.5);
     textY += CARD_LINE_H;
   }
 
@@ -489,7 +530,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const { data, motInsights } = input;
   paintBackground(doc);
 
-  // ── Header banner (simplified — no SVG icon) ──
+  // ── Header banner ──
   drawRoundedRect(doc, 0, 0, 210, 18, 0, C.slate800);
   setFill(doc, C.blue400);
   doc.rect(0, 0, 210, 1.2, "F");
@@ -497,7 +538,12 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   doc.setFontSize(FONT.h1);
   doc.setFont("helvetica", "bold");
   setTextColor(doc, C.blue400);
-  doc.text("Free Plate Check", 105, 12, { align: "center" });
+  const brandTextW = doc.getTextWidth("Free Plate Check");
+  const brandIconSize = 7;
+  const brandTotalW = brandIconSize + 2 + brandTextW;
+  const brandStartX = (210 - brandTotalW) / 2;
+  drawIcon(doc, "shieldCheck", brandStartX, 4.5, brandIconSize, C.blue400 as RGB);
+  doc.text("Free Plate Check", brandStartX + brandIconSize + 2, 12);
 
   // Date below banner
   doc.setFontSize(FONT.small);
@@ -934,7 +980,7 @@ function renderMileageWarnings(doc: jsPDF, input: ReportInput, y: number): numbe
     const cleaned = stripEmoji(warning);
     const isClocking = cleaned.toUpperCase().includes("ALERT") || cleaned.toUpperCase().includes("DECREASED");
     const accent = isClocking ? C.red : C.amber;
-    y = drawInsightCard(doc, y, accent, isClocking ? "Clocking Alert" : "Mileage Anomaly", [cleaned]).endY;
+    y = drawInsightCard(doc, y, accent, isClocking ? "Clocking Alert" : "Mileage Anomaly", [cleaned], { tone: isClocking ? "risk" : "warn" }).endY;
   }
 
   return y;
@@ -1188,7 +1234,7 @@ function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number 
   if (recalls!.length === 0) {
     y = drawInsightCard(doc, y, C.emerald, "No Recalls Found", [
       "No known safety recalls found for this vehicle.",
-    ]).endY;
+    ], { tone: "good" }).endY;
   } else {
     // Show ALL recalls with full detail
     doc.setFontSize(FONT.body);
@@ -1204,7 +1250,7 @@ function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number 
       if (r.remedy) lines.push(`Remedy: ${r.remedy}`);
 
       const title = `${r.recallDate} \u2014 Recall ${r.recallNumber}`;
-      y = drawInsightCard(doc, y, C.red, title, lines).endY;
+      y = drawInsightCard(doc, y, C.red, title, lines, { tone: "risk" }).endY;
     }
   }
 
@@ -1241,7 +1287,8 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
       }
     }
   }
-  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines).endY;
+  const ulezTone: Tone = isCompliant ? "good" : ulezResult!.status === "non-compliant" ? "risk" : "info";
+  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines, { tone: ulezTone }).endY;
 
   return y;
 }
@@ -1362,7 +1409,7 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   }
 
   lines.push(oc.excludedNote);
-  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines).endY;
+  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines, { tone: "info" }).endY;
 
   return y;
 }
@@ -1382,7 +1429,7 @@ function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): num
   for (const reason of neg.reasons) {
     lines.push(`\u2022 ${reason}`);
   }
-  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines).endY;
+  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines, { tone: "good" }).endY;
 
   return y;
 }
@@ -1404,7 +1451,7 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   y = startSection(doc, y, "Key Insights", 15);
 
   // Build all cards as data for 2-column layout
-  type CardData = { accentColor: RGB; title: string; lines: string[] };
+  type CardData = { accentColor: RGB; title: string; lines: string[]; tone?: Tone };
   const cards: CardData[] = [];
 
   // VED Road Tax
@@ -1562,7 +1609,8 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
   let rightY = y;
 
   for (const card of cards) {
-    const cardH = measureInsightCard(doc, card.title, card.lines, COL_W);
+    const measuredTone = card.tone ?? toneFromAccent(card.accentColor) ?? undefined;
+    const cardH = measureInsightCard(doc, card.title, card.lines, COL_W, measuredTone);
 
     // Place in shorter column
     const placeLeft = leftY <= rightY;
@@ -1576,19 +1624,23 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       leftY = newY;
       rightY = newY;
       // Re-evaluate placement after break
+      const cardTone = card.tone ?? toneFromAccent(card.accentColor) ?? undefined;
       const result = drawInsightCard(doc, newY, card.accentColor, card.title, card.lines, {
         x: leftX,
         width: COL_W,
         skipPageBreak: true,
+        tone: cardTone,
       });
       leftY = result.endY;
       continue;
     }
 
+    const cardTone2 = card.tone ?? toneFromAccent(card.accentColor) ?? undefined;
     const result = drawInsightCard(doc, placeY, card.accentColor, card.title, card.lines, {
       x: placeX,
       width: COL_W,
       skipPageBreak: true,
+      tone: cardTone2,
     });
 
     if (placeLeft) {
