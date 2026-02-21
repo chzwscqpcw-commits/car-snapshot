@@ -3,8 +3,10 @@
 // Format: { "MAKE|MODEL": [testCount, passRate] }
 
 import motPassData from "@/data/mot-pass-rates.json";
+import motFailureData from "@/data/mot-failure-reasons.json";
 
 const data = motPassData as unknown as Record<string, [number, number]>;
+const failureData = motFailureData as Record<string, string[]>;
 
 const UK_AVERAGE_PASS_RATE = 72;
 
@@ -24,6 +26,7 @@ export type MotPassRateResult = {
   testCount: number;
   aboveAverage: boolean;
   nationalAverage: number;
+  commonFailureReasons: string[] | null;
 };
 
 /**
@@ -36,25 +39,26 @@ export function lookupMotPassRate(make?: string, model?: string): MotPassRateRes
   const normMake = normalize(make);
   const normModel = normalize(model);
 
-  function buildResult(entry: [number, number]): MotPassRateResult {
+  function buildResult(entry: [number, number], matchedKey: string): MotPassRateResult {
     const [testCount, passRate] = entry;
     return {
       passRate,
       testCount,
       aboveAverage: passRate >= UK_AVERAGE_PASS_RATE,
       nationalAverage: UK_AVERAGE_PASS_RATE,
+      commonFailureReasons: failureData[matchedKey] ?? null,
     };
   }
 
   // Exact match
   const key = `${normMake}|${normModel}`;
-  if (data[key]) return buildResult(data[key]);
+  if (data[key]) return buildResult(data[key], key);
 
   // Try make alias
   const aliasedMake = MAKE_ALIASES[normMake];
   if (aliasedMake) {
     const aliasKey = `${aliasedMake}|${normModel}`;
-    if (data[aliasKey]) return buildResult(data[aliasKey]);
+    if (data[aliasKey]) return buildResult(data[aliasKey], aliasKey);
   }
 
   // Fuzzy: model contains lookup key's model or vice versa
@@ -64,7 +68,7 @@ export function lookupMotPassRate(make?: string, model?: string): MotPassRateRes
       const [entryMake, entryModel] = entryKey.split("|");
       if (entryMake !== mk) continue;
       if (normModel.includes(entryModel) || entryModel.includes(normModel)) {
-        return buildResult(entry);
+        return buildResult(entry, entryKey);
       }
     }
   }

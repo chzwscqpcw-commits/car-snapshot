@@ -131,6 +131,8 @@ import {
   History,
   ArrowRight,
   Clock,
+  Ruler,
+  Weight,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -148,8 +150,10 @@ import { lookupColourPopularity } from "@/lib/colour-popularity";
 import { calculateHealthScore, type HealthScoreResult } from "@/lib/health-score";
 import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
 import { calculateMotReadiness, type MotReadinessResult } from "@/lib/mot-readiness";
-import { calculateOwnershipCost, classifyVehicleSegment, UK_AVERAGE_ANNUAL_COSTS, type OwnershipCostResult, type VehicleSegment } from "@/lib/ownership-cost";
+import { calculateOwnershipCost, classifyVehicleSegment, SEGMENT_MEDIAN_COSTS, type OwnershipCostResult, type VehicleSegment } from "@/lib/ownership-cost";
 import { lookupMotPassRate } from "@/lib/mot-pass-rate";
+import { lookupTyreSizes, type TyreSizeResult } from "@/lib/tyre-sizes";
+import { lookupVehicleDimensions, type VehicleDimensionsResult } from "@/lib/vehicle-dimensions";
 import { lookupTheftRisk, type TheftRiskResult } from "@/lib/theft-risk";
 import { lookupEvSpecs, type EvSpecsResult } from "@/lib/ev-specs";
 import { calculateNegotiation, type NegotiationResult } from "@/lib/negotiation";
@@ -1141,6 +1145,18 @@ export default function Home() {
     return lookupEvSpecs(data.make, lookupModel ?? data.model, data.fuelType);
   }, [data?.make, data?.model, data?.fuelType, lookupModel]);
 
+  // Tyre sizes
+  const tyreSizes = useMemo((): TyreSizeResult | null => {
+    if (!data?.make) return null;
+    return lookupTyreSizes(data.make, lookupModel ?? data.model);
+  }, [data?.make, data?.model, lookupModel]);
+
+  // Vehicle dimensions
+  const vehicleDimensions = useMemo((): VehicleDimensionsResult | null => {
+    if (!data?.make) return null;
+    return lookupVehicleDimensions(data.make, lookupModel ?? data.model);
+  }, [data?.make, data?.model, lookupModel]);
+
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
@@ -1194,6 +1210,17 @@ export default function Home() {
   }, [data, valuationServerData, valuationCondition, lookupModel]);
 
   // Ownership Cost Calculator
+  // Vehicle segment for running-cost benchmarks (must be before ownershipCost)
+  const vehicleSegment = useMemo((): VehicleSegment => {
+    const newPrice = data?.make ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model) : null;
+    return classifyVehicleSegment({
+      fuelType: data?.fuelType,
+      bodyType: bodyStyle,
+      newPrice,
+      engineCapacity: data?.engineCapacity,
+    });
+  }, [data?.fuelType, data?.make, data?.model, data?.engineCapacity, bodyStyle, lookupModel]);
+
   const ownershipCost = useMemo((): OwnershipCostResult | null => {
     if (!data?.yearOfManufacture) return null;
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
@@ -1208,19 +1235,9 @@ export default function Home() {
       make: data.make,
       model: data.model,
       isOver3Years,
+      segment: vehicleSegment,
     });
-  }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel]);
-
-  // Vehicle segment for running-cost benchmarks
-  const vehicleSegment = useMemo((): VehicleSegment => {
-    const newPrice = data?.make ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model) : null;
-    return classifyVehicleSegment({
-      fuelType: data?.fuelType,
-      bodyType: bodyStyle,
-      newPrice,
-      engineCapacity: data?.engineCapacity,
-    });
-  }, [data?.fuelType, data?.make, data?.model, data?.engineCapacity, bodyStyle, lookupModel]);
+  }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel, vehicleSegment]);
 
   // Negotiation helper
   const negotiation = useMemo((): NegotiationResult | null => {
@@ -1549,10 +1566,13 @@ export default function Home() {
       const comparison = diff >= 0
         ? `${diff.toFixed(1)}% above`
         : `${Math.abs(diff).toFixed(1)}% below`;
+      const failureText = motPassRate.commonFailureReasons?.length
+        ? ` Common failure areas: ${motPassRate.commonFailureReasons.join(", ")}.`
+        : "";
       result.push({
         tone: motPassRate.aboveAverage ? "good" : "warn",
         title: `${data.make} ${modelName}: ${motPassRate.passRate}% national MOT pass rate`,
-        detail: `${comparison} the ${motPassRate.nationalAverage}% UK average (based on ${motPassRate.testCount.toLocaleString()} tests).`,
+        detail: `${comparison} the ${motPassRate.nationalAverage}% UK average (based on ${motPassRate.testCount.toLocaleString()} tests).${failureText}`,
       });
     }
 
@@ -2083,6 +2103,19 @@ END:VEVENT
       `Revenue Weight:      ${data.revenueWeight ? `${data.revenueWeight} kg` : "—"}`,
       `Type Approval:       ${data.typeApproval || "—"}`,
       `Automated Vehicle:   ${data.automatedVehicle != null ? (data.automatedVehicle ? "Yes" : "No") : "—"}`,
+      ...(vehicleDimensions ? [
+        `Length:              ${vehicleDimensions.lengthMm ? `${vehicleDimensions.lengthMm} mm` : "—"}`,
+        `Width:               ${vehicleDimensions.widthMm ? `${vehicleDimensions.widthMm} mm` : "—"}`,
+        `Height:              ${vehicleDimensions.heightMm ? `${vehicleDimensions.heightMm} mm` : "—"}`,
+        `Wheelbase:           ${vehicleDimensions.wheelbaseMm ? `${vehicleDimensions.wheelbaseMm} mm` : "—"}`,
+        `Kerb Weight:         ${vehicleDimensions.kerbWeightKg ? `${vehicleDimensions.kerbWeightKg} kg` : "—"}`,
+        `Boot Capacity:       ${vehicleDimensions.bootLitres ? `${vehicleDimensions.bootLitres} litres` : "—"}`,
+      ] : []),
+      ...(tyreSizes ? [
+        `Tyre Sizes:          ${tyreSizes.sizes.join(", ")}`,
+        `Bolt Pattern:        ${tyreSizes.boltPattern || "—"}`,
+        `Centre Bore:         ${tyreSizes.centrebore || "—"}`,
+      ] : []),
       "",
 
       // ── COMPLIANCE STATUS ──
@@ -2171,6 +2204,7 @@ END:VEVENT
       if (ownershipCost.breakdown.fuel != null) lines.push(`  Fuel:              £${ownershipCost.breakdown.fuel.toLocaleString()}`);
       if (ownershipCost.breakdown.ved != null) lines.push(`  Road Tax (VED):    £${ownershipCost.breakdown.ved}`);
       if (ownershipCost.breakdown.depreciation != null) lines.push(`  Depreciation:      £${ownershipCost.breakdown.depreciation.toLocaleString()}`);
+      if (ownershipCost.breakdown.maintenance != null) lines.push(`  Maintenance:       £${ownershipCost.breakdown.maintenance.toLocaleString()}`);
       if (ownershipCost.breakdown.mot != null) lines.push(`  MOT Fee:           £${ownershipCost.breakdown.mot}`);
       lines.push(`Note:                ${ownershipCost.excludedNote}`);
       lines.push("");
@@ -2478,6 +2512,14 @@ END:VEVENT
           advisoryCount: motReadiness.advisoryCount,
           daysUntilMot: motReadiness.daysUntilMot,
           totalEstimatedCost: motReadiness.totalEstimatedCost,
+          riskItems: motReadiness.riskItems.map(item => ({
+            risk: item.risk,
+            categoryLabel: item.categoryLabel,
+            text: item.text,
+            isRecurring: item.isRecurring,
+            estimatedCost: item.estimatedCost,
+          })),
+          disclaimer: motReadiness.disclaimer,
         } : undefined,
         ownershipCost: ownershipCost ? {
           totalAnnual: ownershipCost.totalAnnual,
@@ -2488,9 +2530,11 @@ END:VEVENT
         theftRisk: theftRisk ?? undefined,
         evSpecs: evSpecs ?? undefined,
         negotiation: negotiation ?? undefined,
+        tyreSizes: tyreSizes ?? undefined,
+        vehicleDimensions: vehicleDimensions ?? undefined,
         vehicleSegment,
-        ukAverageCost: UK_AVERAGE_ANNUAL_COSTS[vehicleSegment]?.cost,
-        ukAverageLabel: UK_AVERAGE_ANNUAL_COSTS[vehicleSegment]?.label,
+        ukAverageCost: SEGMENT_MEDIAN_COSTS[vehicleSegment]?.cost || undefined,
+        ukAverageLabel: SEGMENT_MEDIAN_COSTS[vehicleSegment]?.label,
       });
 
       const reg = data.registrationNumber.replace(/\s+/g, "");
@@ -3418,6 +3462,8 @@ END:VEVENT
                     { icon: <span className="text-xs">🎨</span>, label: "Colour", value: data.colour ?? "—" },
                     ...(bodyStyle ? [{ icon: <Car className="w-3.5 h-3.5" />, label: "Body", value: bodyStyle }] : []),
                     ...(fuelEconomy?.enginePowerPS ? [{ icon: <Zap className="w-3.5 h-3.5" />, label: "Power", value: `${fuelEconomy.enginePowerPS} PS${fuelEconomy.enginePowerKW ? ` (${fuelEconomy.enginePowerKW} kW)` : ""}` }] : []),
+                    ...(vehicleDimensions?.lengthMm ? [{ icon: <Ruler className="w-3.5 h-3.5" />, label: "Length", value: `${(vehicleDimensions.lengthMm / 1000).toFixed(2)} m` }] : []),
+                    ...(vehicleDimensions?.kerbWeightKg ? [{ icon: <Weight className="w-3.5 h-3.5" />, label: "Weight", value: `${vehicleDimensions.kerbWeightKg.toLocaleString()} kg` }] : []),
                   ].map((spec, i) => (
                     <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-xs">
                       <span className="text-slate-400">{spec.icon}</span>
@@ -3444,6 +3490,19 @@ END:VEVENT
                   if (data.wheelplan) techRows.push({ label: "Wheelplan", value: data.wheelplan });
                   if (data.typeApproval) techRows.push({ label: "Type Approval", value: data.typeApproval });
                   if (data.revenueWeight) techRows.push({ label: "Revenue Weight", value: `${data.revenueWeight.toLocaleString()} kg` });
+                  if (vehicleDimensions) {
+                    if (vehicleDimensions.lengthMm) techRows.push({ label: "Length", value: `${vehicleDimensions.lengthMm.toLocaleString()} mm` });
+                    if (vehicleDimensions.widthMm) techRows.push({ label: "Width", value: `${vehicleDimensions.widthMm.toLocaleString()} mm` });
+                    if (vehicleDimensions.heightMm) techRows.push({ label: "Height", value: `${vehicleDimensions.heightMm.toLocaleString()} mm` });
+                    if (vehicleDimensions.wheelbaseMm) techRows.push({ label: "Wheelbase", value: `${vehicleDimensions.wheelbaseMm.toLocaleString()} mm` });
+                    if (vehicleDimensions.kerbWeightKg) techRows.push({ label: "Kerb Weight", value: `${vehicleDimensions.kerbWeightKg.toLocaleString()} kg` });
+                    if (vehicleDimensions.bootLitres) techRows.push({ label: "Boot Capacity", value: `${vehicleDimensions.bootLitres} litres` });
+                  }
+                  if (tyreSizes) {
+                    techRows.push({ label: "Tyre Sizes", value: tyreSizes.sizes.join(", ") });
+                    if (tyreSizes.boltPattern) techRows.push({ label: "Bolt Pattern", value: tyreSizes.boltPattern });
+                    if (tyreSizes.centrebore) techRows.push({ label: "Centre Bore", value: tyreSizes.centrebore });
+                  }
                   if (data.markedForExport) techRows.push({ label: "Marked for Export", value: "Yes", warn: true });
                   if (data.automatedVehicle) techRows.push({ label: "Automated Vehicle", value: "Yes" });
 
@@ -4035,6 +4094,7 @@ END:VEVENT
                     if (ownershipCost.breakdown.fuel != null) segments.push({ label: "Fuel", value: ownershipCost.breakdown.fuel, color: "bg-blue-500" });
                     if (ownershipCost.breakdown.ved != null) segments.push({ label: "VED", value: ownershipCost.breakdown.ved, color: "bg-emerald-500" });
                     if (ownershipCost.breakdown.depreciation != null) segments.push({ label: "Depreciation", value: ownershipCost.breakdown.depreciation, color: "bg-amber-500" });
+                    if (ownershipCost.breakdown.maintenance != null) segments.push({ label: "Maintenance", value: ownershipCost.breakdown.maintenance, color: "bg-purple-500" });
                     if (ownershipCost.breakdown.mot != null) segments.push({ label: "MOT", value: ownershipCost.breakdown.mot, color: "bg-slate-500" });
                     return (
                       <>
@@ -4060,17 +4120,18 @@ END:VEVENT
                     );
                   })()}
 
-                  {/* vs UK Average comparison */}
+                  {/* vs Segment median comparison */}
                   {(() => {
-                    const avg = UK_AVERAGE_ANNUAL_COSTS[vehicleSegment];
+                    const median = SEGMENT_MEDIAN_COSTS[vehicleSegment];
+                    if (!median || median.cost === 0) return null;
                     const thisCost = ownershipCost.totalAnnual;
-                    const diff = thisCost - avg.cost;
-                    const pct = Math.round(Math.abs(diff) / avg.cost * 100);
-                    const maxBar = Math.max(thisCost, avg.cost);
+                    const diff = thisCost - median.cost;
+                    const pct = Math.round(Math.abs(diff) / median.cost * 100);
+                    const maxBar = Math.max(thisCost, median.cost);
                     const isBelow = diff < 0;
                     return (
                       <div className="mt-4 pt-4 border-t border-slate-700/40">
-                        <p className="text-xs font-medium text-slate-400 mb-2">vs UK Average ({avg.label})</p>
+                        <p className="text-xs font-medium text-slate-400 mb-2">vs Typical {median.label}</p>
                         <div className="space-y-1.5">
                           <div className="flex items-center gap-2 text-xs">
                             <span className="w-14 text-slate-400 shrink-0">This car</span>
@@ -4083,21 +4144,22 @@ END:VEVENT
                             <span className="w-16 text-right text-slate-200 font-medium">£{thisCost.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
-                            <span className="w-14 text-slate-400 shrink-0">UK avg</span>
+                            <span className="w-14 text-slate-400 shrink-0">Typical</span>
                             <div className="flex-1 h-4 bg-slate-700/30 rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full bg-slate-500"
-                                style={{ width: `${Math.max((avg.cost / maxBar) * 100, 4)}%` }}
+                                style={{ width: `${Math.max((median.cost / maxBar) * 100, 4)}%` }}
                               />
                             </div>
-                            <span className="w-16 text-right text-slate-400 font-medium">£{avg.cost.toLocaleString()}</span>
+                            <span className="w-16 text-right text-slate-400 font-medium">£{median.cost.toLocaleString()}</span>
                           </div>
                         </div>
                         <p className={`text-xs mt-2 ${isBelow ? "text-emerald-400" : diff === 0 ? "text-slate-400" : "text-amber-400"}`}>
                           {diff === 0
                             ? "Exactly average for this segment"
-                            : `£${Math.abs(diff).toLocaleString()} ${isBelow ? "less" : "more"} than average (${pct}% ${isBelow ? "below" : "above"})`}
+                            : `£${Math.abs(diff).toLocaleString()} ${isBelow ? "less" : "more"} than typical (${pct}% ${isBelow ? "below" : "above"})`}
                         </p>
+                        <p className="text-[10px] text-slate-600 mt-1">Based on median of 140+ popular UK models</p>
                       </div>
                     );
                   })()}

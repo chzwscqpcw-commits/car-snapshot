@@ -89,7 +89,7 @@ export type ReportInput = {
   colourPopularity?: { rank: number; share: number; label: string; isTopFive: boolean } | null;
   healthScore?: { score: number; grade: string; label: string; breakdown: Array<{ category: string; score: number; maxScore: number; detail: string }> } | null;
   ecoScore?: { grade: string; score: number; label: string; factors: Array<{ name: string; score: number; maxScore: number; detail: string }> } | null;
-  motPassRate?: { passRate: number; testCount: number; aboveAverage: boolean; nationalAverage: number } | null;
+  motPassRate?: { passRate: number; testCount: number; aboveAverage: boolean; nationalAverage: number; commonFailureReasons?: string[] | null } | null;
   valuation?: {
     rangeLow: number;
     rangeHigh: number;
@@ -113,11 +113,19 @@ export type ReportInput = {
     advisoryCount: number;
     daysUntilMot: number;
     totalEstimatedCost: { low: number; high: number };
+    riskItems?: Array<{
+      risk: "high" | "medium" | "low";
+      categoryLabel: string;
+      text: string;
+      isRecurring: boolean;
+      estimatedCost: { low: number; high: number };
+    }>;
+    disclaimer?: string;
   } | null;
   ownershipCost?: {
     totalAnnual: number;
     costPerMile: number;
-    breakdown: { fuel: number | null; ved: number | null; depreciation: number | null; mot: number | null };
+    breakdown: { fuel: number | null; ved: number | null; depreciation: number | null; mot: number | null; maintenance: number | null };
     excludedNote: string;
   } | null;
   theftRisk?: {
@@ -145,6 +153,19 @@ export type ReportInput = {
   vehicleSegment?: string;
   ukAverageCost?: number;
   ukAverageLabel?: string;
+  tyreSizes?: {
+    sizes: string[];
+    boltPattern: string;
+    centrebore: string;
+  } | null;
+  vehicleDimensions?: {
+    lengthMm: number;
+    widthMm: number;
+    heightMm: number;
+    wheelbaseMm: number;
+    kerbWeightKg: number;
+    bootLitres: number;
+  } | null;
 };
 
 // ── Color Palette (RGB) ─────────────────────────────────────────────────────
@@ -1028,6 +1049,135 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   return y;
 }
 
+function renderMotReadiness(doc: jsPDF, input: ReportInput, y: number): number {
+  const mr = input.motReadiness;
+  if (!mr || mr.advisoryCount <= 0) return y;
+
+  y = startSection(doc, y, "MOT Readiness", 20);
+
+  // Score badge
+  const scoreColor: RGB = mr.score === "red" ? C.red : mr.score === "amber" ? C.amber : C.emerald;
+  const scoreLabel = mr.score.toUpperCase();
+
+  // Header card with score + advisory count + days until MOT
+  const headerH = 14;
+  y = checkPageBreak(doc, y, headerH + 4);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, headerH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, scoreColor);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headerH - 3, "F");
+
+  // Score badge pill
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "bold");
+  const badgeW = doc.getTextWidth(scoreLabel) + 6;
+  drawRoundedRect(doc, MARGIN + 7, y + 4, badgeW, 6, 2, scoreColor);
+  setTextColor(doc, C.white);
+  doc.text(scoreLabel, MARGIN + 7 + badgeW / 2, y + 8, { align: "center" });
+
+  // Label and counts
+  doc.setFontSize(FONT.body);
+  setTextColor(doc, C.headingText);
+  doc.setFont("helvetica", "bold");
+  doc.text(mr.label, MARGIN + 7 + badgeW + 4, y + 8);
+
+  const rightParts: string[] = [];
+  rightParts.push(`${mr.advisoryCount} advisor${mr.advisoryCount !== 1 ? "ies" : "y"}`);
+  if (mr.daysUntilMot > 0) rightParts.push(`MOT in ${mr.daysUntilMot} days`);
+  doc.setFontSize(FONT.small);
+  setTextColor(doc, C.secondaryText);
+  doc.setFont("helvetica", "normal");
+  doc.text(rightParts.join(" \u00B7 "), MARGIN + CONTENT_W - 5, y + 8, { align: "right" });
+
+  y += headerH + 2;
+
+  // Risk items table
+  if (mr.riskItems && mr.riskItems.length > 0) {
+    const rowH = 6;
+
+    // Table header
+    y = checkPageBreak(doc, y, rowH + 2);
+    drawRoundedRect(doc, MARGIN, y, CONTENT_W, rowH, 0, C.divider);
+    doc.setFontSize(FONT.small);
+    setTextColor(doc, C.headingText);
+    doc.setFont("helvetica", "bold");
+    doc.text("Risk", MARGIN + 3, y + 4.5);
+    doc.text("Category", MARGIN + 22, y + 4.5);
+    doc.text("Advisory", MARGIN + 55, y + 4.5);
+    doc.text("Est. Cost", MARGIN + CONTENT_W - 5, y + 4.5, { align: "right" });
+    y += rowH + 1;
+
+    for (let i = 0; i < mr.riskItems.length; i++) {
+      const item = mr.riskItems[i];
+      y = checkPageBreak(doc, y, rowH + 1);
+
+      const bgColor = i % 2 === 0 ? C.white : C.tableBgAlt;
+      setFill(doc, bgColor);
+      doc.rect(MARGIN, y, CONTENT_W, rowH, "F");
+
+      // Risk level badge
+      const riskColor: RGB = item.risk === "high" ? C.red : item.risk === "medium" ? C.amber : C.emerald;
+      const riskText = item.risk.toUpperCase();
+      doc.setFontSize(FONT.tiny);
+      doc.setFont("helvetica", "bold");
+      const riskW = doc.getTextWidth(riskText) + 3;
+      drawRoundedRect(doc, MARGIN + 3, y + 1.5, riskW, 3.5, 1, riskColor);
+      setTextColor(doc, C.white);
+      doc.text(riskText, MARGIN + 3 + riskW / 2, y + 4, { align: "center" });
+
+      // Category
+      doc.setFontSize(FONT.small);
+      setTextColor(doc, C.bodyText);
+      doc.setFont("helvetica", "normal");
+      doc.text(item.categoryLabel, MARGIN + 22, y + 4.5);
+
+      // Advisory text (truncated)
+      const maxTextW = CONTENT_W - 90;
+      const truncText = doc.splitTextToSize(item.text, maxTextW);
+      doc.text(truncText[0], MARGIN + 55, y + 4.5);
+
+      // Cost range
+      setTextColor(doc, C.secondaryText);
+      doc.text(`\u00A3${item.estimatedCost.low}\u2013\u00A3${item.estimatedCost.high}`, MARGIN + CONTENT_W - 5, y + 4.5, { align: "right" });
+
+      y += rowH;
+    }
+    y += 2;
+  }
+
+  // Total estimated cost
+  if (mr.totalEstimatedCost.high > 0) {
+    y = checkPageBreak(doc, y, 8);
+    drawRoundedRect(doc, MARGIN, y, CONTENT_W, 7, 2, C.cardBg, C.cardBorder);
+    doc.setFontSize(FONT.body);
+    setTextColor(doc, C.headingText);
+    doc.setFont("helvetica", "bold");
+    doc.text("Total estimated repair cost", MARGIN + 5, y + 5);
+    doc.text(
+      `\u00A3${mr.totalEstimatedCost.low.toLocaleString()}\u2013\u00A3${mr.totalEstimatedCost.high.toLocaleString()}`,
+      MARGIN + CONTENT_W - 5,
+      y + 5,
+      { align: "right" },
+    );
+    y += 9;
+  }
+
+  // Disclaimer
+  if (mr.disclaimer) {
+    y = checkPageBreak(doc, y, 6);
+    doc.setFontSize(FONT.tiny);
+    setTextColor(doc, C.secondaryText);
+    doc.setFont("helvetica", "normal");
+    const disclaimerLines = doc.splitTextToSize(mr.disclaimer, CONTENT_W - 4);
+    for (const line of disclaimerLines) {
+      doc.text(line, MARGIN, y + 2.5);
+      y += 3;
+    }
+    y += 2;
+  }
+
+  return y;
+}
+
 function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number {
   const { recalls } = input;
   const hasRecalls = recalls !== undefined;
@@ -1196,6 +1346,7 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);
   if (oc.breakdown.ved != null) parts.push(`VED \u00A3${oc.breakdown.ved}`);
   if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
+  if (oc.breakdown.maintenance != null) parts.push(`Maintenance \u00A3${oc.breakdown.maintenance.toLocaleString()}`);
   if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
   if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
 
@@ -1207,7 +1358,7 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
       : diff < 0
         ? `\u00A3${Math.abs(diff).toLocaleString()} below`
         : "equal to";
-    lines.push(`vs UK avg (${input.ukAverageLabel}): \u00A3${input.ukAverageCost.toLocaleString()}/yr \u2014 ${comparison}`);
+    lines.push(`vs Typical ${input.ukAverageLabel}: \u00A3${input.ukAverageCost.toLocaleString()}/yr \u2014 ${comparison}`);
   }
 
   lines.push(oc.excludedNote);
@@ -1343,14 +1494,18 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
     const comparison = diff >= 0
       ? `${diff.toFixed(1)}% above`
       : `${Math.abs(diff).toFixed(1)}% below`;
+    const lines = [
+      `${makeName} ${modelName}: ${mpr.passRate}%`,
+      `${comparison} ${mpr.nationalAverage}% UK avg`,
+      `${mpr.testCount.toLocaleString()} tests`,
+    ];
+    if (mpr.commonFailureReasons?.length) {
+      lines.push(`Common failures: ${mpr.commonFailureReasons.join(", ")}`);
+    }
     cards.push({
       accentColor: accent,
       title: "MOT Pass Rate",
-      lines: [
-        `${makeName} ${modelName}: ${mpr.passRate}%`,
-        `${comparison} ${mpr.nationalAverage}% UK avg`,
-        `${mpr.testCount.toLocaleString()} tests`,
-      ],
+      lines,
     });
   }
 
@@ -1484,6 +1639,22 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
   add("Automated Vehicle", data.automatedVehicle != null ? (data.automatedVehicle ? "Yes" : "No") : undefined);
   add("Last V5C Issued", formatDate(data.dateOfLastV5CIssued));
   add("Marked for Export", data.markedForExport != null ? (data.markedForExport ? "Yes" : "No") : undefined);
+  // Tyre sizes
+  if (input.tyreSizes) {
+    add("Tyre Sizes", input.tyreSizes.sizes.join(", "));
+    add("Bolt Pattern", input.tyreSizes.boltPattern);
+    add("Centre Bore", input.tyreSizes.centrebore);
+  }
+  // Vehicle dimensions
+  if (input.vehicleDimensions) {
+    const dim = input.vehicleDimensions;
+    add("Length", `${dim.lengthMm.toLocaleString()} mm`);
+    add("Width", `${dim.widthMm.toLocaleString()} mm`);
+    add("Height", `${dim.heightMm.toLocaleString()} mm`);
+    add("Wheelbase", `${dim.wheelbaseMm.toLocaleString()} mm`);
+    add("Kerb Weight", `${dim.kerbWeightKg.toLocaleString()} kg`);
+    add("Boot Capacity", `${dim.bootLitres} litres`);
+  }
 
   const rowH = 7;
   const colW = (CONTENT_W - 4) / 2;
@@ -1694,6 +1865,9 @@ export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
 
   // Health Score
   y = renderHealthScore(doc, input, y);
+
+  // MOT Readiness
+  y = renderMotReadiness(doc, input, y);
 
   // Safety Recalls
   y = renderSafetyRecalls(doc, input, y);
