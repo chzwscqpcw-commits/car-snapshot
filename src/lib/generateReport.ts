@@ -542,7 +542,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const brandIconSize = 7;
   const brandTotalW = brandIconSize + 2 + brandTextW;
   const brandStartX = (210 - brandTotalW) / 2;
-  drawIcon(doc, "shieldCheck", brandStartX, 4.5, brandIconSize, C.blue400 as RGB);
+  drawIcon(doc, "zap", brandStartX, 4.5, brandIconSize, C.blue400 as RGB);
   doc.text("Free Plate Check", brandStartX + brandIconSize + 2, 12);
 
   // Date below banner
