@@ -45,7 +45,12 @@ async function sendConfirmation(
     }),
     unsubscribeUrl,
   });
-  if (!result.ok) console.error("confirmation_email_error:", result.error);
+
+  if (!result.ok) {
+    console.error("confirmation_email_error:", result.error);
+  } else {
+    console.log("confirmation_email_sent:", result.id, "to:", email, "vrm:", vrm);
+  }
 }
 
 export async function POST(req: Request) {
@@ -72,29 +77,24 @@ export async function POST(req: Request) {
 
     const sb = supabaseServer();
 
-    // Try insert first
-    const { error: insertError } = await sb.from("mot_reminders").insert({
-      email,
-      vrm,
-      make_model: makeModel || null,
-      mot_expiry: motExpiry,
-      reminder_28d_sent: false,
-      reminder_7d_sent: false,
-      active: true,
-    });
+    // Try insert first — return the unsubscribe_token in one atomic operation
+    const { data: inserted, error: insertError } = await sb
+      .from("mot_reminders")
+      .insert({
+        email,
+        vrm,
+        make_model: makeModel || null,
+        mot_expiry: motExpiry,
+        reminder_28d_sent: false,
+        reminder_7d_sent: false,
+        active: true,
+      })
+      .select("unsubscribe_token")
+      .single();
 
-    if (!insertError) {
-      // Fetch the unsubscribe token for the confirmation email
-      const { data: row } = await sb
-        .from("mot_reminders")
-        .select("unsubscribe_token")
-        .eq("email", email)
-        .eq("vrm", vrm)
-        .single();
-
-      if (row?.unsubscribe_token) {
-        await sendConfirmation(email, vrm, makeModel, motExpiry, row.unsubscribe_token);
-      }
+    if (!insertError && inserted) {
+      console.log("mot_reminder_created:", email, vrm);
+      await sendConfirmation(email, vrm, makeModel, motExpiry, inserted.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
     }
 
     // Handle duplicate (email + vrm unique constraint)
-    if (insertError.code === "23505") {
+    if (insertError?.code === "23505") {
       const { data: updated, error: updateError } = await sb
         .from("mot_reminders")
         .update({
@@ -117,16 +117,25 @@ export async function POST(req: Request) {
         })
         .eq("email", email)
         .eq("vrm", vrm)
-        .select("unsubscribe_token");
+        .select("unsubscribe_token")
+        .single();
 
       if (updateError) {
         console.error("mot_reminder_update_error:", updateError);
         return NextResponse.json({ ok: false, error: "Could not update reminder." }, { status: 500 });
       }
 
-      if (updated?.[0]?.unsubscribe_token) {
-        await sendConfirmation(email, vrm, makeModel, motExpiry, updated[0].unsubscribe_token);
+      if (!updated?.unsubscribe_token) {
+        console.error("mot_reminder_update_no_token:", email, vrm);
+        return NextResponse.json({
+          ok: true,
+          status: "updated",
+          message: "MOT reminder updated.",
+        });
       }
+
+      console.log("mot_reminder_updated:", email, vrm);
+      await sendConfirmation(email, vrm, makeModel, motExpiry, updated.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
@@ -137,7 +146,8 @@ export async function POST(req: Request) {
 
     console.error("mot_reminder_insert_error:", insertError);
     return NextResponse.json({ ok: false, error: "Could not save reminder." }, { status: 500 });
-  } catch {
+  } catch (err) {
+    console.error("mot_reminder_route_error:", err);
     return NextResponse.json({ ok: false, error: "Bad request." }, { status: 400 });
   }
 }

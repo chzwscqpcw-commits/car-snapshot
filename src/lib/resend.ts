@@ -2,6 +2,16 @@ import { Resend } from "resend";
 
 const FROM_ADDRESS = "MOT Reminders <reminders@freeplatecheck.co.uk>";
 
+let _resend: Resend | null = null;
+
+function getResend(): Resend | null {
+  if (_resend) return _resend;
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+  _resend = new Resend(apiKey);
+  return _resend;
+}
+
 interface SendEmailResult {
   ok: boolean;
   id?: string;
@@ -21,14 +31,12 @@ export async function sendEmail({
   react,
   unsubscribeUrl,
 }: SendEmailParams): Promise<SendEmailResult> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  const resend = getResend();
+  if (!resend) {
     return { ok: false, error: "RESEND_API_KEY not configured" };
   }
 
   try {
-    const resend = new Resend(apiKey);
-
     const { data, error } = await resend.emails.send({
       from: FROM_ADDRESS,
       to,
