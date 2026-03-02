@@ -26,10 +26,8 @@ async function sendConfirmation(
     expiryDate: motExpiry,
     unsubscribeToken,
   });
-  sendEmail({ to: email, subject, html }).then(
-    (r) => { if (!r.ok) console.error("confirmation_email_error:", r.error); },
-    (err) => console.error("confirmation_email_error:", err),
-  );
+  const result = await sendEmail({ to: email, subject, html });
+  if (!result.ok) console.error("confirmation_email_error:", result.error);
 }
 
 export async function POST(req: Request) {
@@ -77,7 +75,7 @@ export async function POST(req: Request) {
         .single();
 
       if (row?.unsubscribe_token) {
-        sendConfirmation(email, vrm, makeModel, motExpiry, row.unsubscribe_token);
+        await sendConfirmation(email, vrm, makeModel, motExpiry, row.unsubscribe_token);
       }
 
       return NextResponse.json({
@@ -109,7 +107,7 @@ export async function POST(req: Request) {
       }
 
       if (updated?.[0]?.unsubscribe_token) {
-        sendConfirmation(email, vrm, makeModel, motExpiry, updated[0].unsubscribe_token);
+        await sendConfirmation(email, vrm, makeModel, motExpiry, updated[0].unsubscribe_token);
       }
 
       return NextResponse.json({
