@@ -9,13 +9,13 @@ export interface PartnerLink {
 
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
   bookMyGarage: {
-    url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com",
+    url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F",
     name: "BookMyGarage",
     isAffiliate: true,
-    description: "Compare MOT, servicing & repair prices at local garages",
-    shortDescription: "MOT & servicing",
+    description: "Compare MOT prices at local garages",
+    shortDescription: "MOT quotes",
     buildLink: (reg: string) => {
-      const destination = encodeURIComponent(`https://www.bookmygarage.com/?vrm=${reg}`);
+      const destination = encodeURIComponent(`https://www.bookmygarage.com/mot/?vrm=${reg}`);
       return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
     },
   },
