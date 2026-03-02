@@ -4,7 +4,9 @@ export const maxDuration = 10;
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
-import { buildMotReminderEmail } from "@/lib/mot-reminder-email";
+import { PARTNER_LINKS } from "@/config/partners";
+import MOTReminder28d from "@/emails/mot-reminder-28d";
+import MOTReminder7d from "@/emails/mot-reminder-7d";
 
 const MAX_EMAILS_PER_RUN = 80;
 
@@ -17,6 +19,19 @@ interface MotReminder {
   reminder_28d_sent: boolean;
   reminder_7d_sent: boolean;
   unsubscribe_token: string;
+}
+
+function formatDateDDMMYYYY(iso: string): string {
+  const d = new Date(iso);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function parseMakeModel(makeModel: string): { make: string; model: string } {
+  const parts = (makeModel || "").split(" ");
+  return { make: parts[0] || "Your", model: parts.slice(1).join(" ") || "vehicle" };
 }
 
 export async function GET(req: Request) {
@@ -60,15 +75,24 @@ export async function GET(req: Request) {
         (new Date(reminder.mot_expiry).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       );
 
-      const { subject, html } = buildMotReminderEmail({
-        vrm: reminder.vrm,
-        makeModel: reminder.make_model || "Your vehicle",
-        expiryDate: reminder.mot_expiry,
-        daysRemaining,
-        unsubscribeToken: reminder.unsubscribe_token,
-      });
+      const { make, model } = parseMakeModel(reminder.make_model || "");
+      const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
+      const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm);
 
-      const result = await sendEmail({ to: reminder.email, subject, html });
+      const result = await sendEmail({
+        to: reminder.email,
+        subject: `MOT due in ${daysRemaining} days — ${reminder.vrm} (${make} ${model})`,
+        react: MOTReminder28d({
+          make,
+          model,
+          regNumber: reminder.vrm,
+          expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
+          daysRemaining,
+          bmgAffiliateUrl: bmgUrl,
+          unsubscribeUrl,
+        }),
+        unsubscribeUrl,
+      });
 
       if (result.ok) {
         await sb
@@ -112,15 +136,24 @@ export async function GET(req: Request) {
           (new Date(reminder.mot_expiry).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
         );
 
-        const { subject, html } = buildMotReminderEmail({
-          vrm: reminder.vrm,
-          makeModel: reminder.make_model || "Your vehicle",
-          expiryDate: reminder.mot_expiry,
-          daysRemaining,
-          unsubscribeToken: reminder.unsubscribe_token,
-        });
+        const { make, model } = parseMakeModel(reminder.make_model || "");
+        const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
+        const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm);
 
-        const result = await sendEmail({ to: reminder.email, subject, html });
+        const result = await sendEmail({
+          to: reminder.email,
+          subject: `⚠️ MOT expires in ${daysRemaining} day${daysRemaining !== 1 ? "s" : ""} — ${reminder.vrm}`,
+          react: MOTReminder7d({
+            make,
+            model,
+            regNumber: reminder.vrm,
+            expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
+            daysRemaining,
+            bmgAffiliateUrl: bmgUrl,
+            unsubscribeUrl,
+          }),
+          unsubscribeUrl,
+        });
 
         if (result.ok) {
           await sb

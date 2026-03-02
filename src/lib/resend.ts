@@ -1,11 +1,6 @@
-const RESEND_API_URL = "https://api.resend.com/emails";
-const FROM_ADDRESS = "MOT Reminders <reminders@freeplatecheck.co.uk>";
+import { Resend } from "resend";
 
-interface SendEmailParams {
-  to: string;
-  subject: string;
-  html: string;
-}
+const FROM_ADDRESS = "MOT Reminders <reminders@freeplatecheck.co.uk>";
 
 interface SendEmailResult {
   ok: boolean;
@@ -13,38 +8,47 @@ interface SendEmailResult {
   error?: string;
 }
 
-export async function sendEmail({ to, subject, html }: SendEmailParams): Promise<SendEmailResult> {
+interface SendEmailParams {
+  to: string;
+  subject: string;
+  react: React.ReactElement;
+  unsubscribeUrl: string;
+}
+
+export async function sendEmail({
+  to,
+  subject,
+  react,
+  unsubscribeUrl,
+}: SendEmailParams): Promise<SendEmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return { ok: false, error: "RESEND_API_KEY not configured" };
   }
 
   try {
-    const res = await fetch(RESEND_API_URL, {
-      method: "POST",
+    const resend = new Resend(apiKey);
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_ADDRESS,
+      to,
+      subject,
+      react,
       headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+        "List-Unsubscribe": `<${unsubscribeUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
       },
-      body: JSON.stringify({
-        from: FROM_ADDRESS,
-        to,
-        subject,
-        html,
-      }),
     });
 
-    if (!res.ok) {
-      const body = await res.text();
-      console.error("resend_error:", res.status, body);
-      return { ok: false, error: `Resend API ${res.status}` };
+    if (error) {
+      console.error("resend_error:", error);
+      return { ok: false, error: error.message };
     }
 
-    const json = await res.json();
-    return { ok: true, id: json.id };
+    return { ok: true, id: data?.id };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("resend_fetch_error:", message);
+    console.error("resend_send_error:", message);
     return { ok: false, error: message };
   }
 }

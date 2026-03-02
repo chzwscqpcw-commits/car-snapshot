@@ -14,6 +14,7 @@
     "ping-sitemap": "npx tsx scripts/ping-sitemap.ts"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.8",
     "@supabase/supabase-js": "^2.90.1",
     "gray-matter": "^4.0.3",
     "jspdf": "^4.0.0",
@@ -22,7 +23,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remark": "^15.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "resend": "^6.9.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",

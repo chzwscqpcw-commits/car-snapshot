@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
-import { buildConfirmationEmail } from "@/lib/mot-reminder-email";
+import MOTReminderSet from "@/emails/mot-reminder-set";
 
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -13,6 +13,14 @@ function isValidVrm(vrm: string) {
   return /^[A-Z0-9]{2,7}$/.test(vrm);
 }
 
+function formatDateDDMMYYYY(iso: string): string {
+  const d = new Date(iso);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 async function sendConfirmation(
   email: string,
   vrm: string,
@@ -20,13 +28,23 @@ async function sendConfirmation(
   motExpiry: string,
   unsubscribeToken: string,
 ) {
-  const { subject, html } = buildConfirmationEmail({
-    vrm,
-    makeModel: makeModel || "Your vehicle",
-    expiryDate: motExpiry,
-    unsubscribeToken,
+  const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${unsubscribeToken}`;
+  const parts = makeModel.split(" ");
+  const make = parts[0] || "Your";
+  const model = parts.slice(1).join(" ") || "vehicle";
+
+  const result = await sendEmail({
+    to: email,
+    subject: `MOT reminder set — ${vrm}`,
+    react: MOTReminderSet({
+      make,
+      model,
+      regNumber: vrm,
+      expiryDate: formatDateDDMMYYYY(motExpiry),
+      unsubscribeUrl,
+    }),
+    unsubscribeUrl,
   });
-  const result = await sendEmail({ to: email, subject, html });
   if (!result.ok) console.error("confirmation_email_error:", result.error);
 }
 
