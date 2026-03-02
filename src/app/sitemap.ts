@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, getAllTags } from "@/lib/blog";
+import { MODEL_REGISTRY, getUniqueMakes } from "@/lib/model-guides";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
@@ -14,6 +15,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date("2026-02-14"),
     changeFrequency: "weekly" as const,
     priority: 0.6,
+  }));
+
+  const carMakePages = getUniqueMakes().map((m) => ({
+    url: `https://www.freeplatecheck.co.uk/cars/${m.makeSlug}`,
+    lastModified: new Date("2026-02-20"),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  const carModelPages = MODEL_REGISTRY.map((m) => ({
+    url: `https://www.freeplatecheck.co.uk/cars/${m.makeSlug}/${m.modelSlug}`,
+    lastModified: new Date("2026-02-20"),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
   return [
@@ -72,6 +87,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/mot-reminder",
+      lastModified: new Date("2026-03-02"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/privacy",
       lastModified: new Date("2026-01-01"),
       changeFrequency: "yearly",
@@ -83,6 +104,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: "https://www.freeplatecheck.co.uk/cars",
+      lastModified: new Date("2026-02-20"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    ...carMakePages,
+    ...carModelPages,
     ...blogPosts,
     ...tagPages,
   ];
