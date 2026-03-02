@@ -134,6 +134,7 @@ import {
   Ruler,
   Weight,
 } from "lucide-react";
+import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
@@ -602,9 +603,6 @@ export default function Home() {
   const [checklistRole, setChecklistRole] = useState<"owner" | "buyer" | "seller">("owner");
   const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set([0, 1, 2]));
   const [showAllMotTests, setShowAllMotTests] = useState(false);
-  const [email, setEmail] = useState("");
-  const [signupLoading, setSignupLoading] = useState(false);
-  const [signupMsg, setSignupMsg] = useState("");
   const [toastMsg, setToastMsg] = useState("");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
@@ -1822,46 +1820,6 @@ export default function Home() {
 
     const cleanedReg = cleanReg(inputVrm);
     performLookup(cleanedReg, skipCache);
-  }
-
-  async function handleSignup() {
-    if (!looksLikeEmail(email)) {
-      setSignupMsg("Please enter a valid email.");
-      return;
-    }
-
-    setSignupLoading(true);
-    setSignupMsg("");
-
-    try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          taxDueDate: data?.taxDueDate ?? null,
-        }),
-      });
-
-      const json = await res.json();
-
-      if (!json?.ok) {
-        setSignupMsg(json?.error || "Could not save email.");
-        return;
-      }
-
-      if (json?.status === "updated") {
-        setSignupMsg("You're already on the list.");
-      } else {
-        setSignupMsg("Saved. We'll keep you posted.");
-      }
-
-      setEmail("");
-    } catch (err: any) {
-      setSignupMsg(err?.message ? String(err.message) : "Could not save email.");
-    } finally {
-      setSignupLoading(false);
-    }
   }
 
   async function handleMotReminder() {
@@ -3696,6 +3654,9 @@ END:VEVENT
               </div>
             </DataReveal>
 
+            {/* RAC demo — inline banner after vehicle specs (highest intent placement) */}
+            <RacDemoInlineBanner />
+
             {/* ═══ GROUP 2: HEALTH & SAFETY ═══ */}
             <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety" id="section-health">
 
@@ -4873,39 +4834,11 @@ END:VEVENT
             </DataReveal>
 
             </SectionGroup>
+
+            {/* RAC demo — second banner after all result sections */}
+            <RacDemoSidebarBanner />
           </>
         )}
-
-        {/* EMAIL SIGNUP */}
-        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg backdrop-blur">
-          <h3 className="text-lg font-semibold text-slate-100 mb-2 flex items-center gap-2">
-            <Bell className="w-5 h-5 text-blue-400" />
-            Stay Updated
-          </h3>
-          <p className="text-sm text-slate-300 mb-4">
-            We'll let you know about significant updates to Free Plate Check.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSignup();
-              }}
-              className="flex-1 px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-            <button
-              onClick={handleSignup}
-              disabled={signupLoading}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition-all whitespace-nowrap disabled:cursor-not-allowed"
-            >
-              {signupLoading ? "Saving..." : "Notify me"}
-            </button>
-          </div>
-          {signupMsg && <p className="mt-2 text-sm text-blue-200">{signupMsg}</p>}
-        </div>
 
         {/* ABOUT — descriptive paragraph for SEO */}
         <div className="mt-10">

@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { RacDemoProvider } from "@/components/RacDemoContext";
+import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.freeplatecheck.co.uk"),
@@ -128,7 +130,11 @@ export default function RootLayout({
         <Script id="google-analytics" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`}
         </Script>
-        {children}
+        <RacDemoProvider>
+          {children}
+          <RacDemoFloatingBadge />
+          <RacDemoBottomBar />
+        </RacDemoProvider>
       </body>
     </html>
   );
