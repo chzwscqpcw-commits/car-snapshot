@@ -3503,6 +3503,66 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* MOT REMINDER SIGNUP — shown right after the expiring/expired banner */}
+            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 0 && (
+              <DataReveal delay={60}>
+                <div className="mb-6">
+                  {motReminderSuccess ? (
+                    <div className="rounded-xl border border-green-500/30 bg-gradient-to-r from-green-950/30 to-emerald-950/30 p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-green-500/20 flex items-center justify-center">
+                          <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-green-300">Reminder set!</p>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            Check your inbox for a confirmation email. We&apos;ll remind you before your MOT expires on {formatDate(data.motExpiryDate)}.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/30 to-blue-950/30 p-4">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-cyan-500/20 flex items-center justify-center mt-0.5">
+                          <Bell className="w-5 h-5 text-cyan-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white">Get free MOT reminders</p>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            We&apos;ll email you 28 days and 7 days before your MOT expires so you never miss it.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="email"
+                          placeholder="your@email.com"
+                          value={motReminderEmail}
+                          onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
+                          onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
+                          className="flex-1 min-w-0 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                        />
+                        <button
+                          onClick={handleMotReminder}
+                          disabled={motReminderLoading}
+                          className="flex-shrink-0 rounded-lg bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white transition-colors"
+                        >
+                          {motReminderLoading ? "..." : "Remind me"}
+                        </button>
+                      </div>
+                      {motReminderMsg && (
+                        <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
+                      )}
+                      <p className="text-[10px] text-slate-600 mt-2">
+                        Free service. Unsubscribe anytime. Reminder emails include an affiliate link to BookMyGarage.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </DataReveal>
+            )}
+
             {/* VEHICLE SPECS + STATUS (merged) */}
             <DataReveal delay={100}>
               <div className="mb-8">
@@ -4662,66 +4722,6 @@ END:VEVENT
                           )}
                         </div>
                       ))}
-                    </div>
-                  )}
-                </div>
-              </DataReveal>
-            )}
-
-            {/* MOT REMINDER SIGNUP */}
-            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 0 && (
-              <DataReveal delay={720}>
-                <div className="mb-8">
-                  {motReminderSuccess ? (
-                    <div className="rounded-xl border border-green-500/30 bg-gradient-to-r from-green-950/30 to-emerald-950/30 p-5">
-                      <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <CheckCircle2 className="w-5 h-5 text-green-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-green-300">Reminder set!</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            We&apos;ll email you 28 days and 7 days before your MOT expires on {formatDate(data.motExpiryDate)}.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/30 to-blue-950/30 p-5">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center mt-0.5">
-                          <Bell className="w-5 h-5 text-cyan-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-white">Get free MOT reminders</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            We&apos;ll email you 28 days and 7 days before your MOT expires so you never miss it.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <input
-                          type="email"
-                          placeholder="your@email.com"
-                          value={motReminderEmail}
-                          onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
-                          onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
-                          className="flex-1 min-w-0 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
-                        />
-                        <button
-                          onClick={handleMotReminder}
-                          disabled={motReminderLoading}
-                          className="flex-shrink-0 rounded-lg bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white transition-colors"
-                        >
-                          {motReminderLoading ? "..." : "Remind me"}
-                        </button>
-                      </div>
-                      {motReminderMsg && (
-                        <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
-                      )}
-                      <p className="text-[10px] text-slate-600 mt-2">
-                        Free service. Unsubscribe anytime. Reminder emails include an affiliate link to BookMyGarage.
-                      </p>
                     </div>
                   )}
                 </div>

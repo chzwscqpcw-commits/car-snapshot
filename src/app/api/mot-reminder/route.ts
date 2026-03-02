@@ -2,6 +2,8 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { sendEmail } from "@/lib/resend";
+import { buildConfirmationEmail } from "@/lib/mot-reminder-email";
 
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -9,6 +11,25 @@ function looksLikeEmail(email: string) {
 
 function isValidVrm(vrm: string) {
   return /^[A-Z0-9]{2,7}$/.test(vrm);
+}
+
+async function sendConfirmation(
+  email: string,
+  vrm: string,
+  makeModel: string,
+  motExpiry: string,
+  unsubscribeToken: string,
+) {
+  const { subject, html } = buildConfirmationEmail({
+    vrm,
+    makeModel: makeModel || "Your vehicle",
+    expiryDate: motExpiry,
+    unsubscribeToken,
+  });
+  sendEmail({ to: email, subject, html }).then(
+    (r) => { if (!r.ok) console.error("confirmation_email_error:", r.error); },
+    (err) => console.error("confirmation_email_error:", err),
+  );
 }
 
 export async function POST(req: Request) {
@@ -47,16 +68,28 @@ export async function POST(req: Request) {
     });
 
     if (!insertError) {
+      // Fetch the unsubscribe token for the confirmation email
+      const { data: row } = await sb
+        .from("mot_reminders")
+        .select("unsubscribe_token")
+        .eq("email", email)
+        .eq("vrm", vrm)
+        .single();
+
+      if (row?.unsubscribe_token) {
+        sendConfirmation(email, vrm, makeModel, motExpiry, row.unsubscribe_token);
+      }
+
       return NextResponse.json({
         ok: true,
         status: "created",
-        message: "MOT reminder set! We'll email you before it expires.",
+        message: "MOT reminder set! Check your inbox for confirmation.",
       });
     }
 
     // Handle duplicate (email + vrm unique constraint)
     if (insertError.code === "23505") {
-      const { error: updateError } = await sb
+      const { data: updated, error: updateError } = await sb
         .from("mot_reminders")
         .update({
           mot_expiry: motExpiry,
@@ -67,17 +100,22 @@ export async function POST(req: Request) {
           updated_at: new Date().toISOString(),
         })
         .eq("email", email)
-        .eq("vrm", vrm);
+        .eq("vrm", vrm)
+        .select("unsubscribe_token");
 
       if (updateError) {
         console.error("mot_reminder_update_error:", updateError);
         return NextResponse.json({ ok: false, error: "Could not update reminder." }, { status: 500 });
       }
 
+      if (updated?.[0]?.unsubscribe_token) {
+        sendConfirmation(email, vrm, makeModel, motExpiry, updated[0].unsubscribe_token);
+      }
+
       return NextResponse.json({
         ok: true,
         status: "updated",
-        message: "MOT reminder updated with new expiry date.",
+        message: "MOT reminder updated. Check your inbox for confirmation.",
       });
     }
 
