@@ -186,10 +186,12 @@ The following high-value topics are NOT covered by any existing or scheduled pos
 - **CTA text is static:** Same "Get free MOT reminders" regardless of urgency — doesn't adapt to 365 days vs 5 days remaining
 - **Reminder emails (28d + 7d):** Well-designed with BMG affiliate links, proper disclosure, one-click unsubscribe
 
-### Gaps
-1. `/mot-reminder` landing page has zero inbound internal links
-2. `/mot-check` landing page doesn't mention the reminder service
-3. No blog posts link to `/mot-reminder`
+### Gaps (FIXED)
+1. ~~`/mot-reminder` landing page has zero inbound internal links~~ — Fixed: now linked from /mot-check, 2 blog posts, and 4 new posts
+2. ~~`/mot-check` landing page doesn't mention the reminder service~~ — Fixed: added "Never miss your MOT" section
+3. ~~No blog posts link to `/mot-reminder`~~ — Fixed: when-is-my-mot-due, what-happens-driving-without-mot, + 4 new posts
+
+### Remaining Gaps
 4. `when-is-my-mot-due` blog post discusses reminders but doesn't link to the feature
 5. No BookMyGarage CTA on the `/mot-reminder` landing page itself
 6. Homepage "What Can You Check?" cards don't include MOT reminder
@@ -209,7 +211,16 @@ The following high-value topics are NOT covered by any existing or scheduled pos
 
 ## Phase 5: New Posts Created
 
-*See Phase 5 implementation below — posts will be listed here after creation.*
+| # | Title | Slug | Date | Words | FAQ Items | MOT Reminder | BMG CTA |
+|---|-------|------|------|-------|-----------|-------------|---------|
+| 1 | How Much Does an MOT Cost in 2026? | `how-much-does-mot-cost` | Mar 14 | ~1,200 | 5 | Yes | Yes |
+| 2 | Can You Get Your MOT Done Early? | `can-you-get-mot-done-early` | Mar 16 | ~1,100 | 4 | Yes | Yes |
+| 3 | Most Common MOT Failures and How to Avoid Them | `most-common-mot-failures` | Mar 18 | ~1,700 | 5 | Yes | Yes |
+| 4 | How Long Does an MOT Take? | `how-long-does-mot-take` | Mar 20 | ~1,200 | 5 | Yes | Yes |
+| 5 | Do Electric Cars Need an MOT? | `do-electric-cars-need-mot` | Mar 22 | ~1,200 | 5 | Yes | No |
+| 6 | What Happens if Your Car Tax Expires? | `what-happens-car-tax-expires` | Mar 24 | ~1,500 | 5 | No | No |
+
+All posts include proper frontmatter with FAQ schema, at least 2 internal links to tool pages, and follow the existing blog format exactly. Posts are scheduled every 2 days from Mar 14-24.
 
 ---
 
