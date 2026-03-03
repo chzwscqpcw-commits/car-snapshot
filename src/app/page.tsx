@@ -2653,6 +2653,14 @@ END:VEVENT
             },
             {
               "@type": "Question",
+              "name": "Can I get a free MOT reminder?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. After looking up a vehicle, you can enter your email to set up a free MOT reminder. We'll email you 28 days and 7 days before the MOT expires so you have time to book. It's completely free, there's no account to create, and you can unsubscribe at any time."
+              }
+            },
+            {
+              "@type": "Question",
               "name": "Do you store my registration number?",
               "acceptedAnswer": {
                 "@type": "Answer",
@@ -2807,8 +2815,13 @@ END:VEVENT
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
             Your data is private. We don't store registration numbers or track who you are.
           </p>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
             <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
+            <span className="text-slate-700 hidden sm:inline">&middot;</span>
+            <a href="/mot-reminder" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+              <Bell className="w-3.5 h-3.5" />
+              Free MOT Reminders
+            </a>
           </div>
 
 {/* OUR PARTNERS */}
@@ -3480,15 +3493,15 @@ END:VEVENT
                       </div>
                     </div>
                   ) : (
-                    <div className="rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/30 to-blue-950/30 p-4">
+                    <div className="rounded-xl border border-cyan-500/40 bg-gradient-to-r from-cyan-950/40 to-blue-950/40 p-5">
                       <div className="flex items-start gap-3 mb-3">
-                        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-cyan-500/20 flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mt-0.5">
                           <Bell className="w-5 h-5 text-cyan-400" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-white">Get free MOT reminders</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            We&apos;ll email you 28 days and 7 days before your MOT expires so you never miss it.
+                          <p className="text-base font-bold text-white">Never miss your MOT</p>
+                          <p className="text-sm text-slate-300 mt-0.5">
+                            Get a free email reminder 28 days and 7 days before your MOT expires.
                           </p>
                         </div>
                       </div>
@@ -4843,7 +4856,7 @@ END:VEVENT
         {/* ABOUT — descriptive paragraph for SEO */}
         <div className="mt-10">
           <p className="text-sm text-slate-400 leading-relaxed">
-            Free Plate Check is a comprehensive, free UK vehicle check. Enter any registration number to see DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, a free car valuation, estimated running costs, Euro NCAP safety ratings, vehicle dimensions, and a health score. Compare two vehicles side by side or download a detailed PDF report. No signup, no email, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
+            Free Plate Check is a comprehensive, free UK vehicle check. Enter any registration number to see DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, a free car valuation, estimated running costs, Euro NCAP safety ratings, vehicle dimensions, and a health score. Set up a free MOT reminder and we&apos;ll email you before your MOT expires. Compare two vehicles side by side or download a detailed PDF report. No signup, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
           </p>
         </div>
 
@@ -4902,6 +4915,13 @@ END:VEVENT
               </div>
               <p className="text-sm text-slate-400">Free instant valuation based on age, mileage and market data. Plus a negotiation helper for buyers.</p>
             </a>
+            <a href="/mot-reminder" className="p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Bell className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">Free MOT Reminder</h3>
+              </div>
+              <p className="text-sm text-slate-400">Get a free email reminder before your MOT expires. Never miss it, never get fined.</p>
+            </a>
           </div>
         </div>
 
@@ -4920,6 +4940,10 @@ END:VEVENT
             <div>
               <h3 className="font-semibold text-slate-100">How do I check MOT history?</h3>
               <p className="text-sm text-slate-400 mt-1">Enter your registration number above and you&apos;ll see every MOT test result since 2005 — including pass/fail outcomes, advisories, failures, mileage readings and the next MOT due date. It&apos;s free, instant and works for any UK-registered vehicle.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-100">Can I get a free MOT reminder?</h3>
+              <p className="text-sm text-slate-400 mt-1">Yes. After looking up a vehicle, you can enter your email to set up a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a>. We&apos;ll email you 28 days and 7 days before the MOT expires so you have time to book. It&apos;s completely free, there&apos;s no account to create, and you can unsubscribe at any time.</p>
             </div>
             <div>
               <h3 className="font-semibold text-slate-100">Do you store my registration number?</h3>

@@ -92,6 +92,14 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
     },
   },
   {
+    keywords: ["mot check", "mot history", "mot test", "mot expiry", "mot due", "mot reminder", "mot cost", "mot fail"],
+    cta: {
+      path: "/mot-reminder",
+      label: "Set a free MOT reminder",
+      description: "Get a free email reminder before your MOT expires — never miss it.",
+    },
+  },
+  {
     keywords: ["car tax", "road tax", "ved", "sorn", "vehicle excise duty"],
     cta: {
       path: "/tax-check",
