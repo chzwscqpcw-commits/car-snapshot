@@ -42,7 +42,7 @@ export default function PrivacyPage() {
             ← Back to Free Plate Check
           </a>
           <h1 className="text-3xl font-bold text-slate-100">Privacy Policy</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: January 14, 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: March 2026</p>
         </div>
       </div>
 
@@ -86,14 +86,33 @@ export default function PrivacyPage() {
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Information You Voluntarily Provide</h3>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong>Email:</strong> Only if you voluntarily sign up for updates</li>
+              <li><strong>Email:</strong> If you sign up for MOT reminders, general updates, or contact us</li>
               <li><strong>Feedback:</strong> If you contact us with feedback or questions</li>
               <li><strong>No payment data:</strong> Free Plate Check is free and doesn't process payments</li>
             </ul>
 
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">MOT Reminder Service</h3>
+            <p className="mb-3">
+              If you opt in to MOT reminders, we collect and store additional information to deliver the service:
+            </p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong>Email address:</strong> To send you reminder emails</li>
+              <li><strong>Vehicle registration number:</strong> To identify the vehicle and check its MOT expiry</li>
+              <li><strong>Vehicle make and model:</strong> To personalise your reminder emails</li>
+              <li><strong>MOT expiry date:</strong> To time your reminders correctly</li>
+              <li><strong>Unsubscribe token:</strong> A random identifier (UUID) used to manage your subscription — not linked to your identity</li>
+            </ul>
+            <p className="mt-3 bg-slate-900 border-l-4 border-amber-500 p-4 rounded">
+              <strong>Important distinction:</strong> The MOT reminder service is separate from the vehicle lookup.
+              When you look up a vehicle, we do NOT store the registration number.
+              When you sign up for a reminder, we DO store the registration number because it's necessary to send you timed reminders.
+              This data is only used for delivering reminders and is never shared for marketing purposes.
+            </p>
+
             <p className="mt-4 bg-slate-900 border-l-4 border-blue-500 p-4 rounded">
-              <strong>Privacy-First Approach:</strong> We collect only what's necessary to provide the Service. 
-              We do not collect or store identifiable information about which vehicles you look up.
+              <strong>Privacy-First Approach:</strong> We collect only what's necessary to provide the Service.
+              Vehicle lookups are anonymous — we do not store which vehicles you look up. MOT reminder data is stored only
+              because the service requires it, and you can unsubscribe at any time.
             </p>
           </section>
 
@@ -104,6 +123,7 @@ export default function PrivacyPage() {
               <li>✅ <strong>Service provision</strong> - To provide vehicle lookup functionality</li>
               <li>✅ <strong>Improvement</strong> - To understand how users interact with Free Plate Check</li>
               <li>✅ <strong>Analytics</strong> - To track usage patterns and optimize the service</li>
+              <li>✅ <strong>MOT reminders</strong> - To send you email reminders before your MOT expires (if you opted in)</li>
               <li>✅ <strong>Communication</strong> - To respond to inquiries or send updates (if opted in)</li>
               <li>✅ <strong>Legal compliance</strong> - To comply with GDPR, FCA, or other legal requirements</li>
             </ul>
@@ -114,6 +134,7 @@ export default function PrivacyPage() {
             <p>We process your information under:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li><strong>Consent</strong> - You agree by using the Service</li>
+              <li><strong>Explicit Consent</strong> - When you sign up for MOT reminders, you explicitly consent to us storing your email and vehicle details for that purpose</li>
               <li><strong>Legitimate Interest</strong> - To improve and maintain the Service</li>
               <li><strong>Legal Obligation</strong> - To comply with applicable laws</li>
               <li><strong>Contract</strong> - To provide the Service you've requested</li>
@@ -123,10 +144,11 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">5. Data Retention</h2>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong>Registration Numbers:</strong> Never stored (hashed for session use, immediately deleted)</li>
+              <li><strong>Registration Numbers (lookups):</strong> Never stored — hashed for session use, immediately deleted</li>
+              <li><strong>MOT Reminder Data:</strong> Your email, vehicle registration, make/model, and MOT expiry date are retained while your reminder is active. If you unsubscribe, the record is marked inactive and no further emails are sent. You can request full deletion at any time</li>
               <li><strong>Server Logs:</strong> Retained for 7-30 days for security purposes</li>
               <li><strong>Analytics Data:</strong> Retained by Google Analytics for up to 26 months (anonymized)</li>
-              <li><strong>Email Signup Data:</strong> Retained until you request deletion</li>
+              <li><strong>Email Signup Data:</strong> Retained until you unsubscribe or request deletion</li>
               <li><strong>Feedback/Messages:</strong> Retained until you request deletion</li>
               <li><strong>Cookies:</strong> Retained per cookie policy (typically 1-2 years)</li>
             </ul>
@@ -138,10 +160,16 @@ export default function PrivacyPage() {
             <p className="mt-4"><strong>We MAY share data with:</strong></p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li><strong>DVLA</strong> - To retrieve vehicle information (their API)</li>
+              <li><strong>Resend</strong> - Our email delivery provider, used to send MOT reminder emails. Resend processes your email address on our behalf</li>
               <li><strong>Analytics providers</strong> - Google Analytics (anonymized data)</li>
-              <li><strong>Service providers</strong> - Hosting providers, email services</li>
+              <li><strong>Service providers</strong> - Hosting providers</li>
               <li><strong>Legal authorities</strong> - If required by law</li>
             </ul>
+            <p className="mt-4">
+              <strong>Affiliate links in emails:</strong> MOT reminder emails contain links to partner services (such as BookMyGarage)
+              that help you book an MOT. These are affiliate links — we may earn a commission at no cost to you.
+              Clicking these links takes you to third-party sites with their own privacy policies.
+            </p>
             <p className="mt-4"><strong>We do NOT share with:</strong></p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Advertisers or marketing companies</li>
@@ -184,9 +212,10 @@ export default function PrivacyPage() {
               <li>❌ Personal payment information</li>
             </ul>
 
-            <p className="mt-4 mb-3"><strong>We MAY hold (only if you contacted us):</strong></p>
+            <p className="mt-4 mb-3"><strong>We MAY hold (only if you opted in or contacted us):</strong></p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>✅ Email address (only if you signed up for updates)</li>
+              <li>✅ Email address (if you signed up for updates or MOT reminders)</li>
+              <li>✅ MOT reminder data: vehicle registration, make/model, and MOT expiry date (if you signed up for reminders)</li>
               <li>✅ Feedback or inquiry messages</li>
               <li>✅ Brief server logs (temporary, not linked to identity)</li>
             </ul>
@@ -204,13 +233,19 @@ export default function PrivacyPage() {
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Our Response to Data Requests</h3>
             <p>
-              If you request your data, we will provide any email address associated with your account, 
-              copies of any feedback or messages you've sent us, and confirmation that we don't store vehicle 
-              registration numbers or analytics data linked to your identity.
+              If you request your data, we will provide any email address associated with your account,
+              any MOT reminder records linked to your email, copies of any feedback or messages you've sent us,
+              and confirmation that vehicle lookups do not store registration numbers or analytics data linked to your identity.
+            </p>
+
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">MOT Reminder Unsubscribe</h3>
+            <p>
+              Every MOT reminder email contains a one-click unsubscribe link. Clicking it immediately stops future
+              reminders for that vehicle. You can also contact us to request full deletion of your reminder data.
             </p>
 
             <p className="mt-4">
-              <strong>To exercise these rights, contact us at:</strong> [Your email address]
+              <strong>To exercise these rights, contact us at:</strong> hello@freeplatecheck.co.uk
             </p>
             <p className="mt-2">
               We will respond to all valid requests within 30 days as required by GDPR.
@@ -275,8 +310,8 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-bold text-slate-100 mb-4">15. Contact Information</h2>
             <p>For questions about this Privacy Policy, contact:</p>
             <ul className="ml-2">
-              <li><strong>Email:</strong> [Your email address]</li>
-              <li><strong>Website:</strong> [Your website]</li>
+              <li><strong>Email:</strong> hello@freeplatecheck.co.uk</li>
+              <li><strong>Website:</strong> www.freeplatecheck.co.uk</li>
             </ul>
           </section>
 

@@ -42,7 +42,7 @@ export default function TermsPage() {
             ← Back to Free Plate Check
           </a>
           <h1 className="text-3xl font-bold text-slate-100">Terms of Service</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: January 14, 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: March 2026</p>
         </div>
       </div>
 
@@ -61,8 +61,9 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">2. Description of Service</h2>
             <p>
-              Free Plate Check is a vehicle information lookup tool that provides publicly available data about UK registered vehicles, 
+              Free Plate Check is a vehicle information lookup tool that provides publicly available data about UK registered vehicles,
               including tax status, MOT information, and checklists for vehicle owners, buyers, and sellers.
+              We also offer an optional MOT reminder email service that notifies you before your vehicle's MOT expires.
             </p>
           </section>
 
@@ -103,7 +104,36 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">6. Liability Disclaimer</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">6. Email Communications & MOT Reminders</h2>
+            <p className="mb-4">
+              If you sign up for MOT reminders, you agree to receive email communications related to your vehicle's MOT status.
+            </p>
+
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">What we send</h3>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li>A confirmation email when you sign up</li>
+              <li>A reminder approximately 28 days before your MOT expires</li>
+              <li>A final reminder approximately 7 days before your MOT expires</li>
+            </ul>
+            <p className="mt-3">
+              That's a maximum of 3 emails per vehicle per year. We do not send marketing emails, newsletters, or promotional content.
+            </p>
+
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Affiliate links in reminder emails</h3>
+            <p>
+              MOT reminder emails contain links to partner services (such as BookMyGarage) that help you book an MOT.
+              These are affiliate links — we may earn a commission at no extra cost to you. You are under no obligation to use them.
+            </p>
+
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Unsubscribe</h3>
+            <p>
+              Every reminder email contains a one-click unsubscribe link. Clicking it immediately stops future reminders
+              for that vehicle. You do not need to create an account or log in to unsubscribe.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">7. Liability Disclaimer</h2>
             <p className="mb-4 font-semibold text-slate-200">TO THE FULLEST EXTENT PERMITTED BY LAW:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Free Plate Check is provided "AS-IS" without warranties</li>
@@ -124,7 +154,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">7. User Responsibility</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">8. User Responsibility</h2>
             <p>You are responsible for:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Verifying all information independently</li>
@@ -135,14 +165,14 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">8. Changes to Terms</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">9. Changes to Terms</h2>
             <p>
               We may update these Terms of Service at any time. Continued use of the Service after changes means you accept the new terms.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">9. Limitation of Liability</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">10. Limitation of Liability</h2>
             <p>
               To the maximum extent permitted by law:
             </p>
@@ -153,26 +183,27 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">10. Privacy</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">11. Privacy</h2>
             <p>
-              Your privacy is important. We collect minimal data and do not store registration numbers. 
+              Your privacy is important. Vehicle lookups do not store registration numbers. The MOT reminder
+              service stores registration numbers and email addresses as needed to deliver reminders.
               For full details, see our <a href="/privacy" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">11. Contact</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Contact</h2>
             <p>
               For questions about these Terms of Service, contact us at:
             </p>
             <ul className="ml-2">
-              <li>[Your email address]</li>
-              <li>[Your website]</li>
+              <li>hello@freeplatecheck.co.uk</li>
+              <li>www.freeplatecheck.co.uk</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Governing Law</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">13. Governing Law</h2>
             <p>
               These Terms of Service are governed by the laws of England and Wales.
             </p>
