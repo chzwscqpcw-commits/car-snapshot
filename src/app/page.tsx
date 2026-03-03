@@ -3363,31 +3363,35 @@ END:VEVENT
                 <p className="text-xs text-slate-500 mb-3">DVLA data · {new Date().toLocaleDateString()}</p>
 
                 {/* Row 3: Icon action buttons + primary PDF */}
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1">
                     {/* Save */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
-                      className={`p-2 rounded-lg border transition-colors ${
+                      className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg border transition-colors ${
                         isFavorited(data.registrationNumber)
                           ? "border-red-500/50 bg-red-500/10 text-red-400"
                           : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100"
                       }`}
                       title={isFavorited(data.registrationNumber) ? "Remove from saved" : "Save vehicle"}
+                      aria-label={isFavorited(data.registrationNumber) ? "Remove from saved vehicles" : "Save this vehicle"}
                     >
                       <Heart className="w-4 h-4" fill={isFavorited(data.registrationNumber) ? "currentColor" : "none"} />
+                      <span className="text-[10px] font-medium leading-tight">Save</span>
                     </button>
 
                     {/* My Car */}
                     <button
                       onClick={isMyVehicle(data.registrationNumber) ? () => removeFromMyVehicles(data.registrationNumber) : addToMyVehicles}
-                      className={`p-2 rounded-lg border transition-colors ${
+                      className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg border transition-colors ${
                         isMyVehicle(data.registrationNumber)
                           ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
                           : "border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100"
                       }`}
                       title={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "My Car"}
+                      aria-label={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as My Car"}
                     >
                       <Car className="w-4 h-4" />
+                      <span className="text-[10px] font-medium leading-tight">My Car</span>
                     </button>
 
                     {/* Compare */}
@@ -3401,19 +3405,23 @@ END:VEVENT
                           showToast("Look up another vehicle to compare");
                         }
                       }}
-                      className="p-2 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
+                      className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
                       title="Compare vehicles"
+                      aria-label="Compare vehicles"
                     >
                       <ArrowLeftRight className="w-4 h-4" />
+                      <span className="text-[10px] font-medium leading-tight">Compare</span>
                     </button>
 
                     {/* Text download */}
                     <button
                       onClick={() => downloadTXT()}
-                      className="p-2 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
+                      className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500 bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-slate-100 transition-colors"
                       title="Download as text file"
+                      aria-label="Export as text file"
                     >
                       <FileText className="w-4 h-4" />
+                      <span className="text-[10px] font-medium leading-tight">Export</span>
                     </button>
 
                     {/* Primary PDF button */}
