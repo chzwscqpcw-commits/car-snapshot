@@ -60,6 +60,21 @@ async function countTable(
   return count ?? 0;
 }
 
+async function countActiveReminders(
+  sb: ReturnType<typeof supabaseServer>,
+): Promise<number> {
+  const { count, error } = await sb
+    .from("mot_reminders")
+    .select("*", { count: "exact", head: true })
+    .eq("active", true);
+
+  if (error) {
+    console.error("[STATS] Error counting active mot_reminders:", error.message);
+    return 0;
+  }
+  return count ?? 0;
+}
+
 export async function GET(): Promise<NextResponse<StatsResponse>> {
   const sb = supabaseServer();
 
@@ -89,7 +104,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countUniqueVisitors(sb, sevenDaysAgo),
     countTable(sb, "email_signups"),
     countTable(sb, "vehicle_valuations"),
-    countTable(sb, "mot_reminders"),
+    countActiveReminders(sb),
   ]);
 
   return NextResponse.json({

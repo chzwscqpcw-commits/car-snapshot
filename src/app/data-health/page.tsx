@@ -338,7 +338,7 @@ export default function DataHealthPage() {
                   <StatCard label="Unique Visitors (24h)" value={stats.uniqueVisitors.last24h} sub={`${stats.uniqueVisitors.last7d.toLocaleString()} last 7d`} />
                   <StatCard label="Email Signups" value={stats.emailSignups} sub="all time" />
                   <StatCard label="Valuations" value={stats.valuations} sub="all time" />
-                  <StatCard label="MOT Reminders" value={stats.motReminders} sub="all time" />
+                  <StatCard label="MOT Reminders" value={stats.motReminders} sub="active" />
                   {/* Fuel Prices Card */}
                   {fuelPrices && (
                     <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
