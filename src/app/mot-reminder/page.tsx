@@ -236,6 +236,23 @@ export default function MotReminderPage() {
           </section>
 
           <section>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">Ready to book your MOT?</h2>
+            <p className="leading-relaxed mb-3">
+              If your MOT is coming up soon and you&apos;d rather book now, you can compare prices at local garages through our partner BookMyGarage. Enter your registration and postcode to see available slots and prices near you.
+            </p>
+            <p className="leading-relaxed">
+              <a
+                href="https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F"
+                rel="noopener sponsored"
+                className="text-blue-400 hover:text-blue-300"
+              >Compare MOT prices on BookMyGarage &rarr;</a>
+            </p>
+            <p className="text-[10px] text-slate-600 mt-2">
+              Affiliate link. Free Plate Check may earn a commission at no cost to you.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
             <div className="space-y-4">
               <div>

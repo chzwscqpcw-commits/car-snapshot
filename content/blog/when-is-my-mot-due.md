@@ -76,9 +76,9 @@ Unlike tax, the DVLA doesn't issue automatic penalties for an expired MOT. Howev
 
 The simplest approach. Check your [MOT expiry date](/mot-check), then set a reminder in your phone for one month before. When the reminder goes off, book the test.
 
-### Use a reminder service
+### Use our free MOT reminder
 
-Several free services will email or text you when your MOT is approaching. Your garage may also offer a reminder service — ask next time you visit.
+We offer a [free MOT reminder service](/mot-reminder) that emails you 28 days and 7 days before your MOT expires. Just look up your vehicle on our homepage and enter your email — no account needed, no spam. It's the easiest way to make sure you never miss your MOT.
 
 ### Link it to another annual event
 

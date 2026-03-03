@@ -97,4 +97,4 @@ If a **dangerous defect** is found during the test, the car must not be driven a
 
 Driving without an MOT is a risk that's simply not worth taking. The fine alone can be up to £1,000, but the real danger is the insurance implications. If you're involved in an accident without a valid MOT, you could be facing costs that dwarf any fine.
 
-Check your MOT status regularly, set a reminder before it's due, and book your test with time to spare. It takes two minutes to [check your MOT expiry date](/mot-check) — and those two minutes could save you from a very expensive mistake.
+Check your MOT status regularly and book your test with time to spare. It takes two minutes to [check your MOT expiry date](/mot-check) — and those two minutes could save you from a very expensive mistake. You can also set up a [free MOT reminder](/mot-reminder) so you never miss it again.
