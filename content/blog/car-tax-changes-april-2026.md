@@ -76,18 +76,21 @@ Cars registered before April 2017 use the older A-to-M band system. These rates 
 
 | Band | CO2 (g/km) | 2025/26 | 2026/27 |
 |---|---|---|---|
-| A–C | 0–120 | £0–£35 | £0–£35 |
+| A | 0–100 | £20 | £20 |
+| B | 101–110 | £20 | £20 |
+| C | 111–120 | £35 | £35 |
 | D | 121–130 | £165 | £170 |
 | E | 131–140 | £195 | £200 |
 | F | 141–150 | £215 | £225 |
 | G | 151–165 | £265 | £275 |
 | H | 166–175 | £315 | £325 |
-| I–J | 176–200 | £345–£395 | £360–£410 |
+| I | 176–185 | £345 | £360 |
+| J | 186–200 | £395 | £410 |
 | K | 201–225 | £430 | £445 |
 | L | 226–255 | £735 | £760 |
 | M | Over 255 | £760 | £790 |
 
-The lowest bands remain unchanged — pre-2017 Band A cars (0–100 g/km) still pay just £20 per year.
+The lowest bands remain unchanged — pre-2017 Band A and B cars still pay just £20 per year.
 
 ## What you should do before April
 
