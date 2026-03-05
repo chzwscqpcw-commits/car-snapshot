@@ -164,3 +164,28 @@ a {
   background: none;
   padding: 0;
 }
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.blog-content th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid rgba(51, 65, 85, 0.7);
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.blog-content td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+  color: #cbd5e1;
+}
+
+.blog-content tbody tr:hover {
+  background: rgba(51, 65, 85, 0.2);
+}

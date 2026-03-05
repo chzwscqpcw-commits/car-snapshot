@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import remarkGfm from "remark-gfm";
 import html from "remark-html";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
@@ -227,7 +228,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   if (!isPublished(data.date)) return null;
 
-  const result = await remark().use(html).process(content);
+  const result = await remark().use(remarkGfm).use(html).process(content);
   const words = content.trim().split(/\s+/).length;
   const { html: contentWithIds, toc } = addHeadingIds(result.toString());
 
