@@ -92,12 +92,9 @@ export default function FuelPriceChart() {
 
   return (
     <div className="space-y-4">
-      <ChartContainer
-        title="UK Fuel Prices Over Time"
-        subtitle={`Annual average prices \u00b7 Last updated ${lastUpdated}`}
-      >
-        {/* Range selector */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
+      {/* Controls above the chart card */}
+      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-3 sm:px-6 sm:py-4 space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-gray-500 mr-1">Range:</span>
           {(["1Y", "5Y", "10Y", "All"] as Range[]).map((r) => (
             <button
@@ -114,8 +111,7 @@ export default function FuelPriceChart() {
           ))}
         </div>
 
-        {/* Tank size calculator */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-gray-500 mr-1">Tank size:</span>
           {TANK_PRESETS.map((litres) => (
             <button
@@ -151,7 +147,12 @@ export default function FuelPriceChart() {
             </button>
           )}
         </div>
+      </div>
 
+      <ChartContainer
+        title="UK Fuel Prices Over Time"
+        subtitle={`Annual average prices \u00b7 Last updated ${lastUpdated}`}
+      >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={chartData}
