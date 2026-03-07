@@ -101,9 +101,9 @@ export default function PopularCarsCharts() {
       <ChartContainer
         title="Top 10 Makes by Fleet Size"
         subtitle="Number of registered vehicles in the UK (thousands)"
-        className="!h-auto"
+        className="[&>div:last-child]:!h-[320px] sm:[&>div:last-child]:!h-[380px] md:[&>div:last-child]:!h-[420px]"
       >
-        <ResponsiveContainer width="100%" height={420}>
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={makesBarData}
             layout="vertical"
@@ -130,6 +130,7 @@ export default function PopularCarsCharts() {
               tick={{ fill: "#d1d5db" }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) =>
@@ -173,6 +174,7 @@ export default function PopularCarsCharts() {
               tick={{ fill: "#9ca3af" }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) =>
@@ -213,9 +215,9 @@ export default function PopularCarsCharts() {
       <ChartContainer
         title="Most Popular Car Colours"
         subtitle="Share of UK registered vehicles by colour"
-        className="!h-auto"
+        className="[&>div:last-child]:!h-[380px] sm:[&>div:last-child]:!h-[440px] md:[&>div:last-child]:!h-[500px]"
       >
-        <ResponsiveContainer width="100%" height={500}>
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={colourChartData}
             layout="vertical"
@@ -242,6 +244,7 @@ export default function PopularCarsCharts() {
               tick={{ fill: "#d1d5db" }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) => `${v}%`}

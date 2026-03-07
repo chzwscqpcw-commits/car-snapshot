@@ -132,6 +132,7 @@ export default function UsedCarPriceChart() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 const dataPoint = usedCarPriceData.find(

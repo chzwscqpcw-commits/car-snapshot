@@ -164,8 +164,12 @@ export default function FuelPriceChart() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -183,6 +187,7 @@ export default function FuelPriceChart() {
               }
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (

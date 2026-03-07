@@ -94,8 +94,12 @@ export default function MileageCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -112,6 +116,7 @@ export default function MileageCharts() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
@@ -171,8 +176,12 @@ export default function MileageCharts() {
             <XAxis
               dataKey="ageGroup"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tick={{ fill: "#6b7280", fontSize: 10 }}
               tickLine={false}
+              angle={-45}
+              textAnchor="end"
+              height={55}
+              interval={0}
             />
             <YAxis
               stroke="#6b7280"
@@ -189,6 +198,7 @@ export default function MileageCharts() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (

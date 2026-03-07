@@ -163,6 +163,7 @@ export default function CarTheftCharts() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
@@ -235,6 +236,7 @@ export default function CarTheftCharts() {
               width={160}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const entry = payload[0];

@@ -93,6 +93,7 @@ export default function FuelComparisonChart() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (

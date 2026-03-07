@@ -13,7 +13,6 @@ import {
   PieChart,
   Pie,
 } from "recharts";
-import type { PieLabelRenderProps } from "recharts";
 import passRateData from "@/data/mot-pass-rates.json";
 import failureReasonData from "@/data/mot-failure-reasons.json";
 import ChartContainer from "@/components/stats/ChartContainer";
@@ -293,6 +292,7 @@ export default function MotPassRateCharts() {
               tickLine={false}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={<BarTooltip />}
               cursor={{ fill: "rgba(255,255,255,0.03)" }}
             />
@@ -352,12 +352,6 @@ export default function MotPassRateCharts() {
               innerRadius="40%"
               outerRadius="75%"
               paddingAngle={2}
-              label={(props: PieLabelRenderProps) => {
-                const name = props.name as string;
-                const pct = (props as unknown as FailureCategory).percentage;
-                return `${name} (${pct}%)`;
-              }}
-              labelLine={{ stroke: "#4b5563" }}
             >
               {failureCategories.map((entry, i) => (
                 <Cell
@@ -366,10 +360,26 @@ export default function MotPassRateCharts() {
                 />
               ))}
             </Pie>
-            <Tooltip content={<PieTooltip />} />
+            <Tooltip content={<PieTooltip />} wrapperStyle={{ zIndex: 10 }} />
           </PieChart>
         </ResponsiveContainer>
       </ChartContainer>
+
+      {/* Donut legend */}
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 px-2">
+        {failureCategories.map((entry, i) => (
+          <div key={entry.name} className="flex items-center gap-2 text-xs">
+            <span
+              className="h-2.5 w-2.5 rounded-sm flex-shrink-0"
+              style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
+            />
+            <span className="text-gray-400 truncate">{entry.name}</span>
+            <span className="ml-auto text-gray-300 font-medium tabular-nums">
+              {entry.percentage}%
+            </span>
+          </div>
+        ))}
+      </div>
 
       <p className="text-xs text-gray-500 text-right">
         Source: DVSA MOT testing data (2024/25 test year)

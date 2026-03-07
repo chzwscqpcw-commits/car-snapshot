@@ -144,7 +144,7 @@ export default function ReliabilityCharts() {
         <p className="mb-4 text-sm text-gray-400">
           Models with 50,000+ MOT tests, ranked by pass rate
         </p>
-        <div className="w-full" style={{ height: 620 }}>
+        <div className="w-full h-[420px] sm:h-[520px] md:h-[620px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={barData}
@@ -172,6 +172,7 @@ export default function ReliabilityCharts() {
                 tick={{ fill: "#d1d5db" }}
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 10 }}
                 content={
                   <CustomTooltip
                     formatter={(v: number) => `${v.toFixed(1)}%`}
@@ -236,6 +237,7 @@ export default function ReliabilityCharts() {
               tick={{ fill: "#9ca3af" }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) => `${v}%`}

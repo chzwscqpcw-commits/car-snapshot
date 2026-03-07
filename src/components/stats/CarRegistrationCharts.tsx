@@ -66,8 +66,12 @@ export default function CarRegistrationCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -83,6 +87,7 @@ export default function CarRegistrationCharts() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
@@ -149,6 +154,7 @@ export default function CarRegistrationCharts() {
               tickFormatter={(v: number) => `${Math.round(v * 100)}%`}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (

@@ -47,8 +47,12 @@ export default function RoadSafetyCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -64,6 +68,7 @@ export default function RoadSafetyCharts() {
               tickFormatter={(v: number) => v.toLocaleString()}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
@@ -139,8 +144,9 @@ export default function RoadSafetyCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -155,6 +161,7 @@ export default function RoadSafetyCharts() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 const total = payload.reduce(

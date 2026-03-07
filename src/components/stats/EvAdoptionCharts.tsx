@@ -68,6 +68,7 @@ export default function EvAdoptionCharts() {
               }
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) => v.toLocaleString()}
@@ -132,6 +133,7 @@ export default function EvAdoptionCharts() {
               tickFormatter={(v: number) => `${v}%`}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={
                 <CustomTooltip
                   formatter={(v: number) => `${v}%`}

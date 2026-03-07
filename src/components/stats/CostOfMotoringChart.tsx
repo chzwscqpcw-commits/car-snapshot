@@ -164,8 +164,9 @@ export default function CostOfMotoringChart() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#6b7280"
@@ -181,6 +182,7 @@ export default function CostOfMotoringChart() {
               }}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 10 }}
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (

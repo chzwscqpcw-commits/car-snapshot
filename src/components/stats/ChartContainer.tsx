@@ -23,7 +23,7 @@ export default function ChartContainer({
       {subtitle && (
         <p className="mb-4 text-sm text-gray-400">{subtitle}</p>
       )}
-      <div className="h-[260px] sm:h-[400px] w-full">{children}</div>
+      <div className="h-[240px] sm:h-[320px] md:h-[400px] w-full">{children}</div>
     </div>
   );
 }
