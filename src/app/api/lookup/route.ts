@@ -432,6 +432,12 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     if (!skipCache && cached?.expires_at && new Date(cached.expires_at) > new Date()) {
       if (!(hasDvlaKey && cached.source === "mock")) {
         console.log(`[LOOKUP] Using cached data for VRM: ${vrm}`);
+        const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
+        sb.from("site_events").insert({
+          event_type: "lookup",
+          metadata: { cached: true },
+          ip_hash: ipHash,
+        }).then(() => {}, () => {});
         return NextResponse.json({
           ok: true,
           data: cached.data,
@@ -482,6 +488,13 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     if (upsertErr) {
       console.error("cache_write_error:", upsertErr.message);
     }
+
+    const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
+    sb.from("site_events").insert({
+      event_type: "lookup",
+      metadata: { make: combinedData.make || null, cached: false },
+      ip_hash: ipHash,
+    }).then(() => {}, () => {});
 
     return NextResponse.json({
       ok: true,

@@ -460,6 +460,13 @@ export async function GET(
     // Parse colour adjustment for cache write
     const colourAdj = colourStr ? parseFloat(colourStr) : undefined;
 
+    // Track valuation event
+    const sb = supabaseServer();
+    sb.from("site_events").insert({
+      event_type: "valuation",
+      metadata: { make, model, year },
+    }).then(() => {}, () => {});
+
     // Write to cache asynchronously (don't block response)
     if (ebayResult) {
       writeCache({
