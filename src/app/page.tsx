@@ -171,6 +171,7 @@ import {
 } from "@/lib/valuation";
 
 import newPricesData from "@/data/new-prices.json";
+import DidYouKnow from "@/components/DidYouKnow";
 
 type VehicleData = {
   registrationNumber: string;
@@ -2832,6 +2833,10 @@ END:VEVENT
               <img src="/bmg-logo.png" alt="BookMyGarage" className="h-7" width={49} height={28} loading="lazy" />
               <span className="text-xs text-slate-400 font-medium">BookMyGarage</span>
             </a>
+          </div>
+
+          <div className="mt-4">
+            <DidYouKnow />
           </div>
 
           {/* TABBED SECTION: Recent / Saved / My Cars */}
