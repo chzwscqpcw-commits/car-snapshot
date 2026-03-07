@@ -18,6 +18,7 @@ import {
   source,
 } from "@/lib/stats-data/used-car-prices";
 import ChartContainer from "@/components/stats/ChartContainer";
+import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
 const CATEGORY_MULTIPLIERS = [
   { label: "Economy", value: 0.85 },
@@ -98,6 +99,7 @@ export default function UsedCarPriceChart() {
           <AreaChart
             data={usedCarPriceData}
             margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+            {...annotatedChartProps}
           >
             <defs>
               <linearGradient id="indexFill" x1="0" y1="0" x2="0" y2="1">
@@ -169,18 +171,13 @@ export default function UsedCarPriceChart() {
               }}
             />
             {/* Event annotation reference lines */}
-            {annotations.map((a) => (
+            {annotations.map((a, i) => (
               <ReferenceLine
                 key={a.quarter}
                 x={a.quarter}
                 stroke="#4b5563"
                 strokeDasharray="4 4"
-                label={{
-                  value: a.label!,
-                  position: "top",
-                  fill: "#9ca3af",
-                  fontSize: 10,
-                }}
+                label={annotationLabel(a.label!, i)}
               />
             ))}
             <Area

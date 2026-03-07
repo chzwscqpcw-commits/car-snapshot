@@ -21,6 +21,7 @@ import {
   source,
 } from "@/lib/stats-data/road-safety";
 import ChartContainer from "@/components/stats/ChartContainer";
+import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
 export default function RoadSafetyCharts() {
   return (
@@ -34,6 +35,7 @@ export default function RoadSafetyCharts() {
           <AreaChart
             data={roadSafetyData}
             margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+            {...annotatedChartProps}
           >
             <defs>
               <linearGradient id="fatalityFill" x1="0" y1="0" x2="0" y2="1">
@@ -89,18 +91,13 @@ export default function RoadSafetyCharts() {
                 );
               }}
             />
-            {safetyAnnotations.map((a) => (
+            {safetyAnnotations.map((a, i) => (
               <ReferenceLine
                 key={a.year}
                 x={a.year}
                 stroke="#4b5563"
                 strokeDasharray="4 4"
-                label={{
-                  value: a.label,
-                  position: "top",
-                  fill: "#9ca3af",
-                  fontSize: 10,
-                }}
+                label={annotationLabel(a.label, i)}
               />
             ))}
             <Area

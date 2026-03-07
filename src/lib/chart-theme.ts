@@ -30,6 +30,23 @@ export const chartConfig = {
   animationDuration: 800,
 } as const;
 
+// Shared annotation label config for ReferenceLine components.
+// Staggers labels vertically so adjacent annotations don't overlap.
+export function annotationLabel(text: string, index: number) {
+  return {
+    value: text,
+    position: "insideTopLeft" as const,
+    fill: "#9ca3af",
+    fontSize: 10,
+    dy: index % 2 === 0 ? 12 : 28,
+  };
+}
+
+// Standard props for charts that contain annotation ReferenceLines
+export const annotatedChartProps = {
+  style: { overflow: "visible" as const },
+};
+
 // Palette array for multi-series charts
 export const seriesPalette = [
   chartColors.emerald,

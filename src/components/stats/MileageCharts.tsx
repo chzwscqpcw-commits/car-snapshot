@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { mileageData, mileageByAgeData } from "@/lib/stats-data/uk-mileage";
 import ChartContainer from "@/components/stats/ChartContainer";
+import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
 /* ---------- age-group average lookup ---------- */
 function getExpectedMileage(ageYears: number): number {
@@ -86,7 +87,8 @@ export default function MileageCharts() {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={mileageData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+            {...annotatedChartProps}
           >
             <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
             <XAxis
@@ -140,12 +142,7 @@ export default function MileageCharts() {
               x={2020}
               stroke="#4b5563"
               strokeDasharray="4 4"
-              label={{
-                value: "COVID-19",
-                position: "top",
-                fill: "#9ca3af",
-                fontSize: 10,
-              }}
+              label={annotationLabel("COVID-19", 0)}
             />
             <Line
               type="monotone"

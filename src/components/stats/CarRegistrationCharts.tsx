@@ -20,6 +20,7 @@ import {
   source,
 } from "@/lib/stats-data/car-registrations";
 import ChartContainer from "@/components/stats/ChartContainer";
+import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
 const FUEL_COLORS: Record<string, string> = {
   petrol: "#f59e0b",
@@ -52,7 +53,8 @@ export default function CarRegistrationCharts() {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={registrationData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+            {...annotatedChartProps}
           >
             <defs>
               <linearGradient id="regFill" x1="0" y1="0" x2="0" y2="1">
@@ -99,18 +101,13 @@ export default function CarRegistrationCharts() {
                 );
               }}
             />
-            {registrationAnnotations.map((a) => (
+            {registrationAnnotations.map((a, i) => (
               <ReferenceLine
                 key={a.year}
                 x={a.year}
                 stroke="#4b5563"
                 strokeDasharray="4 4"
-                label={{
-                  value: a.label,
-                  position: "top",
-                  fill: "#9ca3af",
-                  fontSize: 10,
-                }}
+                label={annotationLabel(a.label, i)}
               />
             ))}
             <Area

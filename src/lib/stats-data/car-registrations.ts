@@ -46,7 +46,7 @@ export const registrationData: RegistrationYear[] = [
 
 export const registrationAnnotations = [
   { year: 2008, label: "Financial crisis" },
-  { year: 2017, label: "Diesel decline begins" },
+  { year: 2017, label: "Diesel decline" },
   { year: 2020, label: "COVID-19" },
 ];
 

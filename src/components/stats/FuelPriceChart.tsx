@@ -18,6 +18,7 @@ import {
   source,
 } from "@/lib/stats-data/fuel-prices";
 import ChartContainer from "@/components/stats/ChartContainer";
+import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
 type Range = "1Y" | "5Y" | "10Y" | "All";
 const TANK_PRESETS = [30, 40, 50, 60, 70, 80] as const;
@@ -157,7 +158,7 @@ export default function FuelPriceChart() {
           <LineChart
             data={chartData}
             margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
-            style={{ overflow: "visible" }}
+            {...annotatedChartProps}
           >
             <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
             <XAxis
@@ -218,13 +219,7 @@ export default function FuelPriceChart() {
                 x={a.year}
                 stroke="#4b5563"
                 strokeDasharray="4 4"
-                label={{
-                  value: a.label,
-                  position: "insideTopLeft",
-                  fill: "#9ca3af",
-                  fontSize: 10,
-                  dy: i % 2 === 0 ? 12 : 28,
-                }}
+                label={annotationLabel(a.label, i)}
               />
             ))}
             <Line
