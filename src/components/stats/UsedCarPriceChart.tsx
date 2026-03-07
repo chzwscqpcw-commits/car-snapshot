@@ -29,7 +29,7 @@ const CATEGORY_MULTIPLIERS = [
 const PURCHASE_YEARS = Array.from({ length: 11 }, (_, i) => 2015 + i);
 
 function formatCurrency(value: number): string {
-  return `\u00a3${value.toLocaleString("en-GB", { maximumFractionDigits: 0 })}`;
+  return `£${value.toLocaleString("en-GB", { maximumFractionDigits: 0 })}`;
 }
 
 export default function UsedCarPriceChart() {
@@ -92,7 +92,7 @@ export default function UsedCarPriceChart() {
       {/* Chart 1: Price Index Area Chart */}
       <ChartContainer
         title="UK Used Car Price Index"
-        subtitle={`Quarterly index (100 = Q1 2019) \u00b7 Last updated ${lastUpdated}`}
+        subtitle={`Quarterly index (100 = Q1 2019) · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
@@ -244,7 +244,7 @@ export default function UsedCarPriceChart() {
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">
-                {"\u00a3"}
+                {"£"}
               </span>
               <input
                 type="number"

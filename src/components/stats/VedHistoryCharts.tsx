@@ -109,7 +109,7 @@ export default function VedHistoryCharts() {
       {/* Chart 1: Band A vs Band M grouped bar */}
       <ChartContainer
         title="Band A vs Band M Annual Rates"
-        subtitle={`Zero-emission vs highest-emission VED rates 2001\u20132025 \u00b7 Last updated ${lastUpdated}`}
+        subtitle={`Zero-emission vs highest-emission VED rates 2001–2025 · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -127,12 +127,12 @@ export default function VedHistoryCharts() {
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 12 }}
               tickLine={false}
-              tickFormatter={(v: number) => `\u00a3${v}`}
+              tickFormatter={(v: number) => `£${v}`}
             />
             <Tooltip
               content={
                 <CustomTooltip
-                  formatter={(v: number) => `\u00a3${v}`}
+                  formatter={(v: number) => `£${v}`}
                 />
               }
             />
@@ -174,12 +174,12 @@ export default function VedHistoryCharts() {
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 12 }}
               tickLine={false}
-              tickFormatter={(v: number) => `\u00a3${v.toLocaleString()}`}
+              tickFormatter={(v: number) => `£${v.toLocaleString()}`}
             />
             <Tooltip
               content={
                 <CustomTooltip
-                  formatter={(v: number) => `\u00a3${v.toLocaleString()}`}
+                  formatter={(v: number) => `£${v.toLocaleString()}`}
                 />
               }
             />
@@ -271,7 +271,7 @@ export default function VedHistoryCharts() {
           <div className="mt-4 rounded-lg border border-emerald-800/40 bg-emerald-900/20 p-4">
             <div className="flex items-baseline gap-3">
               <span className="text-2xl font-bold text-emerald-400">
-                {"\u00a3"}{calcResult.cost}/yr
+                {"£"}{calcResult.cost}/yr
               </span>
               <span className="text-sm text-gray-400">
                 Band {calcResult.band} &middot; {calcResult.co2} g/km CO2
@@ -280,7 +280,7 @@ export default function VedHistoryCharts() {
             </div>
             <p className="mt-2 text-xs text-gray-500">
               This shows the standard annual rate for the selected year. Actual
-              rates may vary for vehicles with a list price over {"\u00a3"}40,000
+              rates may vary for vehicles with a list price over {"£"}40,000
               (premium supplement applies from April 2017).
             </p>
           </div>

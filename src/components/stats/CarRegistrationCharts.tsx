@@ -47,7 +47,7 @@ export default function CarRegistrationCharts() {
       {/* Chart 1: Annual registrations area chart */}
       <ChartContainer
         title="UK Annual New Car Registrations"
-        subtitle={`Thousands of vehicles registered per year \u00b7 Last updated ${lastUpdated}`}
+        subtitle={`Thousands of vehicles registered per year · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
@@ -129,7 +129,7 @@ export default function CarRegistrationCharts() {
       {/* Chart 2: Fuel type split stacked bar */}
       <ChartContainer
         title="New Car Registrations by Fuel Type"
-        subtitle="Percentage share of annual registrations 2015\u20132025"
+        subtitle="Percentage share of annual registrations 2015–2025"
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart

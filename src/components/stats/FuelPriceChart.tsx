@@ -35,7 +35,7 @@ function tooltipFormatter(
 ) {
   if (tankLitres) {
     // chartData is already converted to £ when tankLitres is set
-    return `\u00a3${value.toFixed(2)}`;
+    return `£${value.toFixed(2)}`;
   }
   return `${value.toFixed(1)}p`;
 }
@@ -73,7 +73,7 @@ export default function FuelPriceChart() {
     return fuelPriceAnnotations.filter((a) => a.year >= minYear);
   }, [filteredData]);
 
-  const yLabel = tankLitres ? `Fill cost (\u00a3)` : "Pence per litre (PPL)";
+  const yLabel = tankLitres ? `Fill cost (£)` : "Pence per litre (PPL)";
 
   function handleTankPreset(litres: number) {
     setTankLitres(tankLitres === litres ? null : litres);
@@ -151,7 +151,7 @@ export default function FuelPriceChart() {
 
       <ChartContainer
         title="UK Fuel Prices Over Time"
-        subtitle={`Annual average prices \u00b7 Last updated ${lastUpdated}`}
+        subtitle={`Annual average prices · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
@@ -177,7 +177,7 @@ export default function FuelPriceChart() {
                 offset: 10,
               }}
               tickFormatter={(v: number) =>
-                tankLitres ? `\u00a3${v}` : `${v}p`
+                tankLitres ? `£${v}` : `${v}p`
               }
             />
             <Tooltip

@@ -83,9 +83,9 @@ export default function FuelComparisonChart() {
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 12 }}
               tickLine={false}
-              tickFormatter={(v: number) => `\u00a3${v.toLocaleString()}`}
+              tickFormatter={(v: number) => `£${v.toLocaleString()}`}
               label={{
-                value: "Annual cost (\u00a3)",
+                value: "Annual cost (£)",
                 angle: -90,
                 position: "insideLeft",
                 style: { fill: "#6b7280", fontSize: 11 },
@@ -111,7 +111,7 @@ export default function FuelComparisonChart() {
                         />
                         <span className="text-gray-400">{entry.name}:</span>
                         <span className="font-medium">
-                          {"\u00a3"}
+                          {"£"}
                           {(entry.value as number).toLocaleString()}
                         </span>
                       </div>
@@ -243,7 +243,7 @@ export default function FuelComparisonChart() {
                         isCheapest ? "text-emerald-400" : "text-gray-200"
                       }`}
                     >
-                      {"\u00a3"}
+                      {"£"}
                       {row.annualCost.toLocaleString()}
                     </td>
                     <td className="py-3 text-right text-gray-300">
@@ -268,7 +268,7 @@ export default function FuelComparisonChart() {
         <p className="text-sm leading-relaxed text-gray-400">
           Assuming an EV costs around{" "}
           <span className="text-gray-200 font-medium">
-            {"\u00a3"}
+            {"£"}
             {EV_PREMIUM.toLocaleString()}
           </span>{" "}
           more than an equivalent petrol car, and you save{" "}

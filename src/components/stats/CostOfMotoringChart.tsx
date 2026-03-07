@@ -95,10 +95,10 @@ const SERVICING_BASE: Record<FuelType, number> = {
 };
 
 const VALUE_BAND_LABELS: Record<ValueBand, string> = {
-  under10k: "Under \u00a310k",
-  "10to20k": "\u00a310\u201320k",
-  "20to30k": "\u00a320\u201330k",
-  over30k: "\u00a330k+",
+  under10k: "Under £10k",
+  "10to20k": "£10–20k",
+  "20to30k": "£20–30k",
+  over30k: "£30k+",
 };
 
 interface ChartDataPoint {
@@ -152,8 +152,8 @@ export default function CostOfMotoringChart() {
   return (
     <div className="space-y-6">
       <ChartContainer
-        title="Annual Cost of Motoring (2010\u20132025)"
-        subtitle={`Stacked breakdown by category \u00b7 Last updated ${lastUpdated}`}
+        title="Annual Cost of Motoring (2010–2025)"
+        subtitle={`Stacked breakdown by category · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
@@ -171,9 +171,9 @@ export default function CostOfMotoringChart() {
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 12 }}
               tickLine={false}
-              tickFormatter={(v: number) => `\u00a3${(v / 1000).toFixed(0)}k`}
+              tickFormatter={(v: number) => `£${(v / 1000).toFixed(0)}k`}
               label={{
-                value: "Annual cost (\u00a3)",
+                value: "Annual cost (£)",
                 angle: -90,
                 position: "insideLeft",
                 style: { fill: "#6b7280", fontSize: 11 },
@@ -203,7 +203,7 @@ export default function CostOfMotoringChart() {
                           :
                         </span>
                         <span className="font-medium">
-                          {"\u00a3"}
+                          {"£"}
                           {(entry.value as number).toLocaleString()}
                         </span>
                       </div>
@@ -420,7 +420,7 @@ export default function CostOfMotoringChart() {
               Estimated Annual Cost
             </span>
             <span className="text-2xl font-bold text-emerald-400">
-              {"\u00a3"}
+              {"£"}
               {personalCosts.total.toLocaleString()}
             </span>
           </div>
@@ -449,18 +449,18 @@ export default function CostOfMotoringChart() {
                   />
                 </div>
                 <span className="w-16 shrink-0 text-right text-xs font-medium text-gray-200">
-                  {"\u00a3"}
+                  {"£"}
                   {personalCosts[key].toLocaleString()}
                 </span>
               </div>
             ))}
           </div>
           <div className="mt-3 border-t border-[#2a2a2a] pt-2 text-xs text-gray-500">
-            {"\u00a3"}
+            {"£"}
             {Math.round(personalCosts.total / 12).toLocaleString()} per month
-            {" \u00b7 \u00a3"}
+            {" · £"}
             {Math.round(personalCosts.total / 52).toLocaleString()} per week
-            {" \u00b7 "}
+            {" · "}
             {(personalCosts.total / mileage).toFixed(2)}p per mile
           </div>
         </div>
