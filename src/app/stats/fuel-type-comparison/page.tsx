@@ -87,7 +87,7 @@ export default function FuelTypeComparisonPage() {
             alone, while a fully electric vehicle costs just 5p per mile when
             charged at home on a standard tariff. That difference may sound
             small, but over 10,000 miles a year it adds up to more than
-            {"\u00a3"}1,100 in annual savings -- enough to cover a year of car
+            {"£"}1,100 in annual savings -- enough to cover a year of car
             insurance for many drivers.
           </p>
 
@@ -96,10 +96,10 @@ export default function FuelTypeComparisonPage() {
             and the numbers still support that logic. Despite costing more per
             litre at the pump, diesel engines squeeze more miles from each litre,
             bringing the per-mile cost down to around 14p. For drivers covering
-            20,000 miles or more annually, diesel saves roughly {"\u00a3"}400
+            20,000 miles or more annually, diesel saves roughly {"£"}400
             over petrol each year. However, diesel&apos;s advantage is
             narrowing as pump prices converge and clean air zones penalise older
-            diesel vehicles with daily charges of {"\u00a3"}12.50 or more.
+            diesel vehicles with daily charges of {"£"}12.50 or more.
           </p>
 
           <p>
@@ -121,8 +121,8 @@ export default function FuelTypeComparisonPage() {
             Electric vehicles benefit from zero road tax (VED), lower servicing
             costs due to fewer moving parts, and reduced brake wear thanks to
             regenerative braking. Against this, EVs carry a purchase price
-            premium of around {"\u00a3"}8,000 to {"\u00a3"}12,000 over an
-            equivalent petrol car. Using a conservative {"\u00a3"}8,000 premium
+            premium of around {"£"}8,000 to {"£"}12,000 over an
+            equivalent petrol car. Using a conservative {"£"}8,000 premium
             and fuel savings of 11p per mile, a driver covering 10,000 miles
             annually would break even in roughly 7.3 years. At 20,000 miles a
             year, that drops to under 4 years.

@@ -29,12 +29,12 @@ const faqItems = [
   {
     question: "How much does it cost to run a car in the UK per year?",
     answer:
-      "The average annual cost of running a car in the UK in 2025 is approximately \u00a36,980. This includes fuel (\u00a32,180), insurance (\u00a31,120), depreciation (\u00a32,550), road tax/VED (\u00a3270) and servicing and repairs (\u00a3860). Actual costs vary significantly depending on vehicle age, mileage, fuel type and where you live.",
+      "The average annual cost of running a car in the UK in 2025 is approximately £6,980. This includes fuel (£2,180), insurance (£1,120), depreciation (£2,550), road tax/VED (£270) and servicing and repairs (£860). Actual costs vary significantly depending on vehicle age, mileage, fuel type and where you live.",
   },
   {
     question: "What is the biggest cost of owning a car?",
     answer:
-      "Depreciation is consistently the single largest cost of car ownership, accounting for roughly 37% of the total annual running cost. A typical car loses between 15\u201320% of its value each year in the first few years, with the steepest drop occurring in the first twelve months. Buying a car that is two or three years old is one of the most effective ways to reduce this cost.",
+      "Depreciation is consistently the single largest cost of car ownership, accounting for roughly 37% of the total annual running cost. A typical car loses between 15–20% of its value each year in the first few years, with the steepest drop occurring in the first twelve months. Buying a car that is two or three years old is one of the most effective ways to reduce this cost.",
   },
   {
     question: "Why has car insurance gone up so much?",
@@ -44,12 +44,12 @@ const faqItems = [
   {
     question: "Are electric cars cheaper to run than petrol?",
     answer:
-      "Electric vehicles are significantly cheaper to fuel \u2014 typically costing around 5p per mile compared to 14\u201316p for petrol or diesel. Servicing costs are also lower because EVs have fewer moving parts and do not need oil changes. However, EVs tend to have higher insurance premiums and steeper initial depreciation. Over a five-year ownership period, an EV can save \u00a32,000\u2013\u00a34,000 in running costs compared to an equivalent petrol car.",
+      "Electric vehicles are significantly cheaper to fuel — typically costing around 5p per mile compared to 14–16p for petrol or diesel. Servicing costs are also lower because EVs have fewer moving parts and do not need oil changes. However, EVs tend to have higher insurance premiums and steeper initial depreciation. Over a five-year ownership period, an EV can save £2,000–£4,000 in running costs compared to an equivalent petrol car.",
   },
   {
     question: "How can I reduce my annual motoring costs?",
     answer:
-      "There are several practical ways to cut your running costs. Buy a two or three year old car to avoid the worst depreciation. Shop around for insurance each year rather than auto-renewing. Drive smoothly and keep tyres correctly inflated to improve fuel economy. Consider a telematics policy if you are a low-mileage driver. Service your car on schedule to prevent expensive repairs. Finally, compare fuel prices locally \u2014 supermarket stations are often 3\u20135p per litre cheaper than branded forecourts.",
+      "There are several practical ways to cut your running costs. Buy a two or three year old car to avoid the worst depreciation. Shop around for insurance each year rather than auto-renewing. Drive smoothly and keep tyres correctly inflated to improve fuel economy. Consider a telematics policy if you are a low-mileage driver. Service your car on schedule to prevent expensive repairs. Finally, compare fuel prices locally — supermarket stations are often 3–5p per litre cheaper than branded forecourts.",
   },
 ];
 
@@ -58,7 +58,7 @@ export default function CostOfMotoringPage() {
     <>
       <StatsHeroSection
         title="Cost of Motoring UK 2025"
-        subtitle="Full annual breakdown of what it really costs to own and run a car in the UK \u2014 from fuel and insurance to depreciation and road tax."
+        subtitle="Full annual breakdown of what it really costs to own and run a car in the UK — from fuel and insurance to depreciation and road tax."
         breadcrumb="Cost of Motoring"
       />
 
@@ -66,22 +66,22 @@ export default function CostOfMotoringPage() {
         {/* Stat Callouts */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-8">
           <StatCallout
-            value="\u00a36,980"
+            value="£6,980"
             label="Avg. annual cost (2025)"
             color="emerald"
           />
           <StatCallout
-            value="\u00a32,180"
+            value="£2,180"
             label="Avg. fuel cost"
             color="amber"
           />
           <StatCallout
-            value="\u00a31,120"
+            value="£1,120"
             label="Avg. insurance"
             color="red"
           />
           <StatCallout
-            value="\u00a32,550"
+            value="£2,550"
             label="Avg. depreciation"
             color="sky"
           />

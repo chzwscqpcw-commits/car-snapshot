@@ -50,7 +50,7 @@ const faqItems = [
   {
     question: "How much does it cost to fill a typical car?",
     answer:
-      "At current prices of around 140p per litre, filling a typical 50-litre family car tank costs roughly \u00a370. A larger SUV with a 70-litre tank costs about \u00a398. You can use the tank size calculator on this page to see fill costs at any historical price point.",
+      "At current prices of around 140p per litre, filling a typical 50-litre family car tank costs roughly £70. A larger SUV with a 70-litre tank costs about £98. You can use the tank size calculator on this page to see fill costs at any historical price point.",
   },
   {
     question: "What affects UK fuel prices the most?",

@@ -50,7 +50,7 @@ const faqItems = [
   {
     question: "What is the ZEV mandate and how does it affect registrations?",
     answer:
-      "The Zero Emission Vehicle (ZEV) mandate requires manufacturers to ensure that a rising percentage of their new car sales are zero-emission. Targets started at 22% in 2024 and will increase annually, reaching 80% by 2030 and 100% by 2035. Manufacturers that miss targets face fines of up to \u00a315,000 per non-compliant vehicle, which is driving rapid growth in BEV offerings and marketing incentives.",
+      "The Zero Emission Vehicle (ZEV) mandate requires manufacturers to ensure that a rising percentage of their new car sales are zero-emission. Targets started at 22% in 2024 and will increase annually, reaching 80% by 2030 and 100% by 2035. Manufacturers that miss targets face fines of up to £15,000 per non-compliant vehicle, which is driving rapid growth in BEV offerings and marketing incentives.",
   },
   {
     question: "Where does UK car registration data come from?",
@@ -63,7 +63,7 @@ export default function CarRegistrationsPage() {
   return (
     <>
       <StatsHeroSection
-        title="UK New Car Registrations 1990\u20132025"
+        title="UK New Car Registrations 1990–2025"
         subtitle="Explore how many new cars the UK buys each year and how the fuel type mix has shifted from petrol and diesel dominance toward electrified powertrains."
         breadcrumb="Car Registrations"
       />

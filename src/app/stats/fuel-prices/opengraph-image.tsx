@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "UK Fuel Prices 1988\u20132025",
+    "UK Fuel Prices 1988–2025",
     "Petrol & diesel price trends, fill-cost calculator and key event timeline."
   );
 }
