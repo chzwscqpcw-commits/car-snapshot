@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import StatsHubFeaturedCard from "@/components/stats/StatsHubFeaturedCard";
-import StatsHubCompactCard from "@/components/stats/StatsHubCompactCard";
+import StatsHubPreviewCard from "@/components/stats/StatsHubPreviewCard";
 import StatsHubCategoryGroup from "@/components/stats/StatsHubCategoryGroup";
 import FuelPricesSparkline from "@/components/stats/sparklines/FuelPricesSparkline";
 
@@ -102,146 +102,181 @@ export default function StatsIndex() {
 
         {/* ── Group 1: Costs & Prices ── */}
         <StatsHubCategoryGroup title="Costs &amp; Prices" headerDelay={200}>
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/cost-of-motoring"
             icon="💰"
             title="Cost of Motoring"
             description="Full annual breakdown — fuel, insurance, depreciation, tax and servicing costs since 2010."
-            keyStat="~£3,800/yr average"
-            keyStatColour="amber"
+            stats={[
+              { value: "~£6,980/yr", label: "average", colour: "amber" },
+              { value: "£2,550", label: "depreciation", colour: "red" },
+              { value: "£1,120", label: "insurance", colour: "amber" },
+            ]}
             delay={250}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/road-tax-history"
             icon="📋"
             title="Road Tax (VED) History"
-            description="How VED rates have changed since 2001 — from CO2 bands to the new EV charges in 2025."
-            keyStat="£640 Band M now"
-            keyStatColour="amber"
+            description="How VED rates have changed since 2001 — from CO₂ bands to the new EV charges in 2025."
+            stats={[
+              { value: "£640", label: "Band M", colour: "amber" },
+              { value: "2025", label: "EVs now taxed", colour: "red" },
+            ]}
             delay={300}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/used-car-prices"
             icon="📈"
             title="Used Car Prices"
             description="Quarterly price index showing the COVID spike, the 2023 correction, and current market."
-            keyStat="+38% peak (2022)"
-            keyStatColour="red"
+            stats={[
+              { value: "+38%", label: "peak 2022", colour: "red" },
+              { value: "+13%", label: "vs pre-COVID", colour: "amber" },
+            ]}
             delay={350}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/fuel-type-comparison"
             icon="⚖️"
             title="Fuel Type Comparison"
             description="Compare running costs for petrol, diesel, hybrid and electric at any annual mileage."
-            keyStat="EV breaks even ~10k mi"
-            keyStatColour="emerald"
+            stats={[
+              { value: "~10k mi", label: "EV break-even", colour: "emerald" },
+              { value: "5p/mi", label: "EV", colour: "emerald" },
+              { value: "15p/mi", label: "petrol", colour: "amber" },
+            ]}
             delay={400}
           />
         </StatsHubCategoryGroup>
 
         {/* ── Group 2: Vehicle Data ── */}
         <StatsHubCategoryGroup title="Vehicle Data" headerDelay={450}>
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/mot-pass-rates"
             icon="🔧"
             title="MOT Pass Rates"
             description="National first-time pass rates by make, plus the most common failure categories."
-            keyStat="84.2% avg pass rate"
-            keyStatColour="emerald"
+            stats={[
+              { value: "84.2%", label: "avg pass", colour: "emerald" },
+              { value: "1 in 5", label: "fail", colour: "red" },
+              { value: "#1", label: "suspension", colour: "amber" },
+            ]}
             delay={500}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/most-reliable-cars"
             icon="🏆"
             title="Most Reliable Cars"
             description="Rankings based on millions of real MOT test results — which models hold up best?"
-            keyStat="Toyota tops the table"
-            keyStatColour="emerald"
+            stats={[
+              { value: "Toyota", label: "tops table", colour: "emerald" },
+              { value: "EVs", label: "outperform", colour: "emerald" },
+            ]}
             delay={550}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/uk-mileage"
             icon="🛣️"
             title="UK Mileage Trends"
             description="Average annual mileage over the decades, plus how mileage varies by vehicle age."
-            keyStat="7,400 miles avg (2024)"
-            keyStatColour="sky"
+            stats={[
+              { value: "7,400", label: "avg miles 2024", colour: "sky" },
+              { value: "-20%", label: "since 2002", colour: "amber" },
+            ]}
             delay={600}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/popular-cars"
             icon="🚗"
             title="Most Popular Cars"
             description="The top makes and models on UK roads by fleet size, plus how best-sellers have changed."
-            keyStat="Ford #1 for 40 years"
-            keyStatColour="amber"
+            stats={[
+              { value: "Ford", label: "#1 for 40 yrs", colour: "amber" },
+              { value: "Fiesta", label: "most registered", colour: "sky" },
+            ]}
             delay={650}
           />
         </StatsHubCategoryGroup>
 
         {/* ── Group 3: Market & Safety ── */}
         <StatsHubCategoryGroup title="Market &amp; Safety" headerDelay={700}>
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/ev-adoption"
             icon="⚡"
             title="EV Adoption"
             description="Electric vehicle fleet growth, new sales share, and regional EV density across the UK."
-            keyStat="1.1M+ EVs on UK roads"
-            keyStatColour="emerald"
+            stats={[
+              { value: "1.58M", label: "EVs", colour: "emerald" },
+              { value: "22.8%", label: "new sales", colour: "emerald" },
+              { value: "60%", label: "CAGR", colour: "sky" },
+            ]}
             delay={750}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/car-registrations"
             icon="📊"
             title="Car Registrations"
             description="Annual new car sales since 1990, with fuel type split showing the shift from diesel to electric."
-            keyStat="2.69M peak (2016)"
-            keyStatColour="sky"
+            stats={[
+              { value: "2.69M", label: "peak 2016", colour: "sky" },
+              { value: "2025", label: "recovery year", colour: "emerald" },
+            ]}
             delay={800}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/car-theft"
             icon="🔒"
             title="Car Theft Statistics"
             description="The most stolen cars ranked by theft rate, plus national vehicle theft trends over time."
-            keyStat="Rising since 2014"
-            keyStatColour="red"
+            stats={[
+              { value: "105k", label: "thefts/yr", colour: "red" },
+              { value: "Range Rover", label: "most stolen", colour: "red" },
+              { value: "<60s", label: "keyless", colour: "amber" },
+            ]}
             delay={850}
           />
-          <StatsHubCompactCard
+          <StatsHubPreviewCard
             href="/stats/road-safety"
             icon="🛡️"
             title="Road Safety"
             description="UK road fatalities since 1970, casualties by road user type, and key safety milestones."
-            keyStat="-80% deaths since 1972"
-            keyStatColour="emerald"
+            stats={[
+              { value: "-79%", label: "deaths since 1970", colour: "emerald" },
+              { value: "3x", label: "more cars", colour: "sky" },
+            ]}
             delay={900}
           />
         </StatsHubCategoryGroup>
 
-        {/* ── Bottom CTA ── */}
+        {/* ── Bottom CTA — Premium Gradient ── */}
         <section
-          className="stats-reveal mt-10 rounded-xl bg-emerald-950/40 border border-emerald-500/30 p-8 text-center"
+          className="stats-reveal relative mt-10 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 p-px overflow-hidden"
           style={{ animationDelay: "950ms" }}
         >
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Check Your Own Vehicle
-          </h2>
-          <p className="text-gray-400 mb-6">
-            Run a free MOT history check, see tax status, mileage records and
-            more — instantly, no sign-up required.
-          </p>
-          <Link
-            href="/"
-            className="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-lg px-10 py-4 rounded-lg transition-colors"
-          >
-            Search UK Vehicles Free &rarr;
-          </Link>
-          <p className="text-gray-500 text-sm mt-3">
-            Covers MOT history &middot; Tax status &middot; Mileage &middot;
-            ULEZ &middot; Safety recalls
-          </p>
+          {/* Corner glows */}
+          <div className="absolute -top-20 -left-20 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative rounded-2xl bg-[#141414] p-8 text-center">
+            <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              Check Your Own Vehicle
+            </h2>
+            <p className="text-gray-400 mb-6">
+              Run a free MOT history check, see tax status, mileage records and
+              more — instantly, no sign-up required.
+            </p>
+            <Link
+              href="/"
+              className="inline-block bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-bold text-lg px-10 py-4 rounded-lg transition-all active:scale-95"
+            >
+              Search UK Vehicles Free &rarr;
+            </Link>
+            <p className="text-gray-500 text-sm mt-3">
+              Covers MOT history &middot; Tax status &middot; Mileage &middot;
+              ULEZ &middot; Safety recalls
+            </p>
+          </div>
         </section>
       </div>
     </>
