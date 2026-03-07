@@ -53,7 +53,7 @@ export const fuelPriceAnnotations = [
   { year: 2000, label: "Fuel protests" },
   { year: 2008, label: "Financial crisis" },
   { year: 2020, label: "COVID-19" },
-  { year: 2022, label: "Ukraine conflict" },
+  { year: 2022, label: "Ukraine" },
 ];
 
 export const lastUpdated = "January 2025";

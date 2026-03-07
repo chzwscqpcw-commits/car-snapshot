@@ -156,7 +156,8 @@ export default function FuelPriceChart() {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={chartData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+            style={{ overflow: "visible" }}
           >
             <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
             <XAxis
@@ -211,7 +212,7 @@ export default function FuelPriceChart() {
                 );
               }}
             />
-            {visibleAnnotations.map((a) => (
+            {visibleAnnotations.map((a, i) => (
               <ReferenceLine
                 key={a.year}
                 x={a.year}
@@ -219,9 +220,10 @@ export default function FuelPriceChart() {
                 strokeDasharray="4 4"
                 label={{
                   value: a.label,
-                  position: "top",
+                  position: "insideTopLeft",
                   fill: "#9ca3af",
                   fontSize: 10,
+                  dy: i % 2 === 0 ? 12 : 28,
                 }}
               />
             ))}
