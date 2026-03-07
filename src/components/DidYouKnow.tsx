@@ -64,7 +64,7 @@ export default function DidYouKnow() {
         className="transition-opacity duration-400"
         style={{ opacity: visible ? 1 : 0 }}
       >
-        <span className="text-slate-400 font-medium">Did you know? </span>
+        <span className="text-slate-500">Did you know? </span>
         {fact.href ? (
           <Link
             href={fact.href}
