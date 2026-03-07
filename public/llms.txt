@@ -11,6 +11,24 @@
 - [ULEZ Compliance Check](https://www.freeplatecheck.co.uk/ulez-check): Check if any UK vehicle is ULEZ compliant. See emission standards, Euro status and whether the vehicle meets London's Ultra Low Emission Zone requirements.
 - [Safety Recall Check](https://www.freeplatecheck.co.uk/recall-check): Check if any UK vehicle has outstanding safety recalls from the DVSA. Free lookup by registration number.
 - [Free Car Valuation](https://www.freeplatecheck.co.uk/car-valuation): Get a free estimated valuation for any UK vehicle based on age, mileage and market data. No signup required.
+- [MOT Reminder](https://www.freeplatecheck.co.uk/mot-reminder): Set up a free MOT reminder for any UK vehicle. Get notified before your MOT expires so you never miss a test.
+
+## UK Motoring Statistics
+
+- [Stats Hub](https://www.freeplatecheck.co.uk/stats): Interactive charts and data covering every aspect of UK motoring — fuel prices, MOT pass rates, car theft, EV adoption and more.
+- [Fuel Prices](https://www.freeplatecheck.co.uk/stats/fuel-prices): UK petrol and diesel price history from 1988 to present with interactive charts.
+- [Cost of Motoring](https://www.freeplatecheck.co.uk/stats/cost-of-motoring): Full annual breakdown of UK driving costs — fuel, insurance, depreciation, tax and servicing since 2010.
+- [Road Tax (VED) History](https://www.freeplatecheck.co.uk/stats/road-tax-history): How VED rates have changed since 2001, from CO₂ bands to the 2025 EV charges.
+- [Used Car Prices](https://www.freeplatecheck.co.uk/stats/used-car-prices): Quarterly used car price index showing market trends, the COVID spike and correction.
+- [Fuel Type Comparison](https://www.freeplatecheck.co.uk/stats/fuel-type-comparison): Compare running costs for petrol, diesel, hybrid and electric vehicles at any annual mileage.
+- [MOT Pass Rates](https://www.freeplatecheck.co.uk/stats/mot-pass-rates): National first-time MOT pass rates by make and the most common failure categories.
+- [Most Reliable Cars](https://www.freeplatecheck.co.uk/stats/most-reliable-cars): Car reliability rankings based on millions of real MOT test results.
+- [UK Mileage Trends](https://www.freeplatecheck.co.uk/stats/uk-mileage): Average annual mileage trends over the decades and how mileage varies by vehicle age.
+- [Most Popular Cars](https://www.freeplatecheck.co.uk/stats/popular-cars): Top makes and models on UK roads by fleet size and how best-sellers have changed.
+- [EV Adoption](https://www.freeplatecheck.co.uk/stats/ev-adoption): Electric vehicle fleet growth, new sales share and regional EV density across the UK.
+- [Car Registrations](https://www.freeplatecheck.co.uk/stats/car-registrations): Annual new car sales since 1990 with fuel type split showing the shift to electric.
+- [Car Theft Statistics](https://www.freeplatecheck.co.uk/stats/car-theft): Most stolen cars ranked by theft rate and national vehicle theft trends.
+- [Road Safety](https://www.freeplatecheck.co.uk/stats/road-safety): UK road fatalities since 1970, casualties by road user type and key safety milestones.
 
 ## Guides & Articles
 
