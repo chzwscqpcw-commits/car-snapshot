@@ -144,8 +144,9 @@ export default function CarRegistrationCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
+              interval={0}
             />
             <YAxis
               stroke="#6b7280"

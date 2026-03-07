@@ -290,6 +290,7 @@ export default function MotPassRateCharts() {
               stroke="#6b7280"
               tick={{ fill: "#9ca3af", fontSize: 11 }}
               tickLine={false}
+              interval={0}
             />
             <Tooltip
               wrapperStyle={{ zIndex: 10 }}

@@ -144,9 +144,9 @@ export default function RoadSafetyCharts() {
             <XAxis
               dataKey="year"
               stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tick={{ fill: "#6b7280", fontSize: 10 }}
               tickLine={false}
-              interval="preserveStartEnd"
+              interval={0}
             />
             <YAxis
               stroke="#6b7280"

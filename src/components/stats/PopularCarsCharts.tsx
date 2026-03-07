@@ -128,6 +128,7 @@ export default function PopularCarsCharts() {
               stroke="#6b7280"
               fontSize={12}
               tick={{ fill: "#d1d5db" }}
+              interval={0}
             />
             <Tooltip
               wrapperStyle={{ zIndex: 10 }}
@@ -240,8 +241,9 @@ export default function PopularCarsCharts() {
               dataKey="colour"
               width={80}
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={11}
               tick={{ fill: "#d1d5db" }}
+              interval={0}
             />
             <Tooltip
               wrapperStyle={{ zIndex: 10 }}

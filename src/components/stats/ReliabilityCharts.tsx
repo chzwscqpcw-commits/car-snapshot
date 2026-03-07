@@ -170,6 +170,7 @@ export default function ReliabilityCharts() {
                 stroke="#6b7280"
                 fontSize={11}
                 tick={{ fill: "#d1d5db" }}
+                interval={0}
               />
               <Tooltip
                 wrapperStyle={{ zIndex: 10 }}

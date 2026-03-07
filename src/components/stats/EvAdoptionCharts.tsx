@@ -125,6 +125,7 @@ export default function EvAdoptionCharts() {
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 12 }}
               tickLine={false}
+              interval={0}
             />
             <YAxis
               stroke="#6b7280"

@@ -234,6 +234,7 @@ export default function CarTheftCharts() {
               tick={{ fill: "#d1d5db", fontSize: 11 }}
               tickLine={false}
               width={160}
+              interval={0}
             />
             <Tooltip
               wrapperStyle={{ zIndex: 10 }}
