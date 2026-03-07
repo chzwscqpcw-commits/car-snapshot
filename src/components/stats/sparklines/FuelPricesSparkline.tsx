@@ -21,7 +21,7 @@ export default function FuelPricesSparkline() {
             <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <Area type="monotone" dataKey="v" stroke="#10b981" strokeWidth={2} fill="url(#fuelGrad)" dot={false} isAnimationActive={false} />
+        <Area type="monotone" dataKey="v" stroke="#10b981" strokeWidth={2} fill="url(#fuelGrad)" dot={false} isAnimationActive={true} animationDuration={2000} animationBegin={400} animationEasing="ease-out" />
       </AreaChart>
     </ResponsiveContainer>
   );

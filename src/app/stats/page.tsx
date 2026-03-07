@@ -1,22 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import StatsHubFeaturedCard from "@/components/stats/StatsHubFeaturedCard";
-import StatsHubCard from "@/components/stats/StatsHubCard";
+import StatsHubCompactCard from "@/components/stats/StatsHubCompactCard";
 import StatsHubCategoryGroup from "@/components/stats/StatsHubCategoryGroup";
-
 import FuelPricesSparkline from "@/components/stats/sparklines/FuelPricesSparkline";
-import CostOfMotoringSparkline from "@/components/stats/sparklines/CostOfMotoringSparkline";
-import RoadTaxSparkline from "@/components/stats/sparklines/RoadTaxSparkline";
-import UsedCarPricesSparkline from "@/components/stats/sparklines/UsedCarPricesSparkline";
-import FuelTypeSparkline from "@/components/stats/sparklines/FuelTypeSparkline";
-import MotPassRatesSparkline from "@/components/stats/sparklines/MotPassRatesSparkline";
-import ReliableCarsSparkline from "@/components/stats/sparklines/ReliableCarsSparkline";
-import MileageSparkline from "@/components/stats/sparklines/MileageSparkline";
-import PopularCarsSparkline from "@/components/stats/sparklines/PopularCarsSparkline";
-import EvAdoptionSparkline from "@/components/stats/sparklines/EvAdoptionSparkline";
-import CarRegistrationsSparkline from "@/components/stats/sparklines/CarRegistrationsSparkline";
-import CarTheftSparkline from "@/components/stats/sparklines/CarTheftSparkline";
-import RoadSafetySparkline from "@/components/stats/sparklines/RoadSafetySparkline";
 
 export const metadata: Metadata = {
   title: "UK Motoring Statistics 2025 | Free Plate Check",
@@ -37,6 +24,43 @@ export const metadata: Metadata = {
 export default function StatsIndex() {
   return (
     <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes statsReveal {
+              from { opacity: 0; transform: translateY(16px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes statsSlideIn {
+              from { opacity: 0; transform: translateX(-12px); }
+              to   { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes sparklineGlow {
+              0%   { box-shadow: inset 0 0 0 rgba(16,185,129,0); }
+              50%  { box-shadow: inset 0 -20px 40px rgba(16,185,129,0.08); }
+              100% { box-shadow: inset 0 -10px 30px rgba(16,185,129,0.04); }
+            }
+            .stats-reveal {
+              opacity: 0;
+              animation: statsReveal 0.5s ease-out forwards;
+            }
+            .stats-slide-in {
+              opacity: 0;
+              animation: statsSlideIn 0.4s ease-out forwards;
+            }
+            .sparkline-glow {
+              animation: statsReveal 0.5s ease-out forwards, sparklineGlow 2s ease-in-out 0.6s forwards;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .stats-reveal, .stats-slide-in, .sparkline-glow {
+                animation: none !important;
+                opacity: 1 !important;
+              }
+            }
+          `,
+        }}
+      />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -52,164 +76,155 @@ export default function StatsIndex() {
       />
 
       {/* ── Hero ── */}
-      <div className="border-b border-[#2a2a2a] pb-8 pt-10">
+      <div className="border-b border-[#2a2a2a] pb-5 pt-8">
         <div className="mx-auto max-w-4xl px-4">
-          <nav className="mb-4 text-sm text-gray-500">
+          <nav className="stats-reveal mb-4 text-sm text-gray-500" style={{ animationDelay: "0ms" }}>
             <Link href="/" className="hover:text-gray-300 transition-colors">
               Home
             </Link>
             <span className="mx-2">/</span>
             <span className="text-gray-400">Statistics</span>
           </nav>
-          <h1 className="text-3xl font-bold tracking-tight text-[#f9fafb] sm:text-4xl">
+          <h1 className="stats-reveal text-3xl font-bold tracking-tight text-[#f9fafb] sm:text-4xl" style={{ animationDelay: "0ms" }}>
             UK Motoring Statistics
           </h1>
-          <p className="mt-3 text-base text-gray-400 max-w-2xl">
+          <p className="stats-reveal mt-3 text-base text-gray-400 max-w-2xl" style={{ animationDelay: "50ms" }}>
             Interactive charts and data for every UK driver
           </p>
-          <div className="flex flex-wrap gap-3 mt-6">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              13 interactive charts
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1a1a1a] border border-[#2a2a2a] px-3 py-1 text-xs text-gray-400">
-              Free &middot; No sign-up required
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1a1a1a] border border-[#2a2a2a] px-3 py-1 text-xs text-gray-400">
-              Updated 2025
-            </span>
-          </div>
         </div>
       </div>
 
       {/* ── Content ── */}
-      <div className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-8">
 
         {/* Featured card — Fuel Prices */}
-        <StatsHubFeaturedCard sparkline={<FuelPricesSparkline />} />
+        <StatsHubFeaturedCard sparkline={<FuelPricesSparkline />} delay={100} />
 
         {/* ── Group 1: Costs & Prices ── */}
-        <StatsHubCategoryGroup title="Costs &amp; Prices">
-          <StatsHubCard
+        <StatsHubCategoryGroup title="Costs &amp; Prices" headerDelay={200}>
+          <StatsHubCompactCard
             href="/stats/cost-of-motoring"
             icon="💰"
             title="Cost of Motoring"
             description="Full annual breakdown — fuel, insurance, depreciation, tax and servicing costs since 2010."
             keyStat="~£3,800/yr average"
             keyStatColour="amber"
-            sparkline={<CostOfMotoringSparkline />}
+            delay={250}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/road-tax-history"
             icon="📋"
             title="Road Tax (VED) History"
             description="How VED rates have changed since 2001 — from CO2 bands to the new EV charges in 2025."
             keyStat="£640 Band M now"
             keyStatColour="amber"
-            sparkline={<RoadTaxSparkline />}
+            delay={300}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/used-car-prices"
             icon="📈"
             title="Used Car Prices"
             description="Quarterly price index showing the COVID spike, the 2023 correction, and current market."
             keyStat="+38% peak (2022)"
             keyStatColour="red"
-            sparkline={<UsedCarPricesSparkline />}
+            delay={350}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/fuel-type-comparison"
             icon="⚖️"
             title="Fuel Type Comparison"
             description="Compare running costs for petrol, diesel, hybrid and electric at any annual mileage."
-            keyStat="EV breaks even at ~10k miles"
+            keyStat="EV breaks even ~10k mi"
             keyStatColour="emerald"
-            sparkline={<FuelTypeSparkline />}
+            delay={400}
           />
         </StatsHubCategoryGroup>
 
         {/* ── Group 2: Vehicle Data ── */}
-        <StatsHubCategoryGroup title="Vehicle Data">
-          <StatsHubCard
+        <StatsHubCategoryGroup title="Vehicle Data" headerDelay={450}>
+          <StatsHubCompactCard
             href="/stats/mot-pass-rates"
             icon="🔧"
             title="MOT Pass Rates"
             description="National first-time pass rates by make, plus the most common failure categories."
             keyStat="84.2% avg pass rate"
             keyStatColour="emerald"
-            sparkline={<MotPassRatesSparkline />}
+            delay={500}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/most-reliable-cars"
             icon="🏆"
             title="Most Reliable Cars"
             description="Rankings based on millions of real MOT test results — which models hold up best?"
             keyStat="Toyota tops the table"
             keyStatColour="emerald"
-            sparkline={<ReliableCarsSparkline />}
+            delay={550}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/uk-mileage"
             icon="🛣️"
             title="UK Mileage Trends"
             description="Average annual mileage over the decades, plus how mileage varies by vehicle age."
             keyStat="7,400 miles avg (2024)"
             keyStatColour="sky"
-            sparkline={<MileageSparkline />}
+            delay={600}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/popular-cars"
             icon="🚗"
             title="Most Popular Cars"
             description="The top makes and models on UK roads by fleet size, plus how best-sellers have changed."
             keyStat="Ford #1 for 40 years"
             keyStatColour="amber"
-            sparkline={<PopularCarsSparkline />}
+            delay={650}
           />
         </StatsHubCategoryGroup>
 
         {/* ── Group 3: Market & Safety ── */}
-        <StatsHubCategoryGroup title="Market &amp; Safety">
-          <StatsHubCard
+        <StatsHubCategoryGroup title="Market &amp; Safety" headerDelay={700}>
+          <StatsHubCompactCard
             href="/stats/ev-adoption"
             icon="⚡"
             title="EV Adoption"
             description="Electric vehicle fleet growth, new sales share, and regional EV density across the UK."
             keyStat="1.1M+ EVs on UK roads"
             keyStatColour="emerald"
-            sparkline={<EvAdoptionSparkline />}
+            delay={750}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/car-registrations"
             icon="📊"
             title="Car Registrations"
             description="Annual new car sales since 1990, with fuel type split showing the shift from diesel to electric."
             keyStat="2.69M peak (2016)"
             keyStatColour="sky"
-            sparkline={<CarRegistrationsSparkline />}
+            delay={800}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/car-theft"
             icon="🔒"
             title="Car Theft Statistics"
             description="The most stolen cars ranked by theft rate, plus national vehicle theft trends over time."
             keyStat="Rising since 2014"
             keyStatColour="red"
-            sparkline={<CarTheftSparkline />}
+            delay={850}
           />
-          <StatsHubCard
+          <StatsHubCompactCard
             href="/stats/road-safety"
             icon="🛡️"
             title="Road Safety"
             description="UK road fatalities since 1970, casualties by road user type, and key safety milestones."
             keyStat="-80% deaths since 1972"
             keyStatColour="emerald"
-            sparkline={<RoadSafetySparkline />}
+            delay={900}
           />
         </StatsHubCategoryGroup>
 
         {/* ── Bottom CTA ── */}
-        <section className="mt-14 rounded-xl bg-emerald-950/40 border border-emerald-500/30 p-8 text-center">
+        <section
+          className="stats-reveal mt-10 rounded-xl bg-emerald-950/40 border border-emerald-500/30 p-8 text-center"
+          style={{ animationDelay: "950ms" }}
+        >
           <h2 className="text-2xl font-bold text-white mb-2">
             Check Your Own Vehicle
           </h2>
