@@ -64,13 +64,13 @@ export default function DidYouKnow() {
         className="transition-opacity duration-400"
         style={{ opacity: visible ? 1 : 0 }}
       >
-        <span className="text-slate-500">Did you know? </span>
+        <span className="text-white">Did you know? </span>
         {fact.href ? (
           <Link
             href={fact.href}
-            className="text-slate-500 hover:text-slate-400 transition-colors"
+            className="text-slate-500 hover:text-slate-400 transition-colors no-underline"
           >
-            {fact.text}
+            <span className="text-slate-500">{fact.text}</span>
             <span className="ml-1 text-slate-600">→</span>
           </Link>
         ) : (
