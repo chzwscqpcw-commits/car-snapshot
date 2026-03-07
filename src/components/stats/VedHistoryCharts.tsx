@@ -2,14 +2,11 @@
 
 import { useState, useMemo } from "react";
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
   LineChart,
   Line,
 } from "recharts";
@@ -53,11 +50,20 @@ function findBand(co2: number): BandDefinition | null {
 
 /* ---------- chart data transforms ---------- */
 
-const barChartData = vedBandData.map((d) => ({
+const bandLineData = vedBandData.map((d) => ({
   year: d.year,
   "Band A (0 g/km)": d.bandA,
+  "Band D (~90 g/km)": d.bandD,
+  "Band G (~150 g/km)": d.bandG,
   "Band M (226+ g/km)": d.bandM,
 }));
+
+const BAND_LINE_COLORS: Record<string, string> = {
+  "Band A (0 g/km)": "#10b981",
+  "Band D (~90 g/km)": "#38bdf8",
+  "Band G (~150 g/km)": "#f59e0b",
+  "Band M (226+ g/km)": "#ef4444",
+};
 
 const lineChartData = vedFirstYearData.map((d) => ({
   year: d.year,
@@ -106,14 +112,14 @@ export default function VedHistoryCharts() {
 
   return (
     <div className="space-y-8">
-      {/* Chart 1: Band A vs Band M grouped bar */}
+      {/* Chart 1: All bands over time */}
       <ChartContainer
-        title="Band A vs Band M Annual Rates"
-        subtitle={`Zero-emission vs highest-emission VED rates 2001–2025 · Last updated ${lastUpdated}`}
+        title="VED Annual Rates by Band (2001–2025)"
+        subtitle={`How the gap between lowest and highest bands has widened · Last updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={barChartData}
+          <LineChart
+            data={bandLineData}
             margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
           >
             <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
@@ -136,22 +142,34 @@ export default function VedHistoryCharts() {
                 />
               }
             />
-            <Legend
-              wrapperStyle={{ fontSize: 12, color: "#9ca3af" }}
-            />
-            <Bar
-              dataKey="Band A (0 g/km)"
-              fill="#10b981"
-              radius={[2, 2, 0, 0]}
-            />
-            <Bar
-              dataKey="Band M (226+ g/km)"
-              fill="#ef4444"
-              radius={[2, 2, 0, 0]}
-            />
-          </BarChart>
+            {Object.entries(BAND_LINE_COLORS).map(([name, color]) => (
+              <Line
+                key={name}
+                type="monotone"
+                dataKey={name}
+                name={name}
+                stroke={color}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, fill: color }}
+              />
+            ))}
+          </LineChart>
         </ResponsiveContainer>
       </ChartContainer>
+
+      {/* Band legend */}
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+        {Object.entries(BAND_LINE_COLORS).map(([name, color]) => (
+          <span key={name} className="flex items-center gap-1.5">
+            <span
+              className="inline-block h-0.5 w-4 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            {name}
+          </span>
+        ))}
+      </div>
 
       {/* Chart 2: First-year rates line chart */}
       <ChartContainer
