@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
+import BlogMotReminder from "@/components/BlogMotReminder";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -298,6 +299,9 @@ export default async function BlogPostPage({ params }: PageProps) {
         })()}
       </div>
 
+      {/* Trigger F — Blog post footer email capture */}
+      <BlogMotReminder />
+
       {/* Related posts */}
       {relatedPosts.length > 0 && (
         <div className="max-w-3xl mx-auto px-4 mt-16">
@@ -335,6 +339,14 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>&bull;</span>
             <a href="/blog" className="hover:text-slate-300">
               Guides
+            </a>
+            <span>&bull;</span>
+            <a href="/stats" className="hover:text-slate-300">
+              UK Car Stats
+            </a>
+            <span>&bull;</span>
+            <a href="/mot-reminder" className="hover:text-slate-300">
+              MOT Reminders
             </a>
             <span>&bull;</span>
             <a href="/privacy" className="hover:text-slate-300">

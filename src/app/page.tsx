@@ -159,6 +159,7 @@ import { lookupTheftRisk, type TheftRiskResult } from "@/lib/theft-risk";
 import { lookupEvSpecs, type EvSpecsResult } from "@/lib/ev-specs";
 import { calculateNegotiation, type NegotiationResult } from "@/lib/negotiation";
 import { buildChecklist, buildAllChecklists, type ChecklistSignals } from "@/lib/checklist";
+import { getAdvisoryExplanation, severityLabel, severityColor } from "@/lib/advisory-explainer";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -648,6 +649,7 @@ export default function Home() {
   const [motReminderLoading, setMotReminderLoading] = useState(false);
   const [motReminderMsg, setMotReminderMsg] = useState("");
   const [motReminderSuccess, setMotReminderSuccess] = useState(false);
+  const [showPdfReminderPrompt, setShowPdfReminderPrompt] = useState(false);
 
   // Fetch live fuel prices once on mount
   useEffect(() => {
@@ -2578,6 +2580,11 @@ END:VEVENT
       }
 
       showToast("PDF report downloaded!");
+
+      // Trigger E — show MOT reminder prompt after PDF download
+      if (isOver3Years && data.motExpiryDate && !motReminderSuccess) {
+        setShowPdfReminderPrompt(true);
+      }
     } catch (error) {
       console.error("PDF generation failed:", error);
       showToast("PDF generation failed. Please try the text version.");
@@ -2818,6 +2825,8 @@ END:VEVENT
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
             <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
+            <span className="text-slate-700 hidden sm:inline">&middot;</span>
+            <a href="/stats" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">UK Car Stats</a>
             <span className="text-slate-700 hidden sm:inline">&middot;</span>
             <a href="/mot-reminder" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
               <Bell className="w-3.5 h-3.5" />
@@ -3296,6 +3305,13 @@ END:VEVENT
               <span>{error}</span>
             </div>
           )}
+
+          {/* Trigger D — Homepage secondary copy */}
+          {!data && !loading && (
+            <p className="mt-2 text-xs text-slate-500">
+              Free MOT history, tax status, ULEZ check &mdash; and free MOT reminders by email.
+            </p>
+          )}
         </div>
 
 
@@ -3483,6 +3499,37 @@ END:VEVENT
                     Book MOT
                     <ExternalLink className="w-3 h-3" />
                   </a>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* Trigger B — MOT expired email capture */}
+            {isOver3Years && showMotBanner === "expired" && !motReminderSuccess && (
+              <DataReveal delay={55}>
+                <div className="mb-6 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-950/30 to-rose-950/30 p-5">
+                  <p className="text-sm font-semibold text-red-200 mb-1">Already booked? Get a reminder for next year.</p>
+                  <p className="text-xs text-slate-400 mb-3">We&apos;ll email you a booking link to compare garage prices when it&apos;s time.</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={motReminderEmail}
+                      onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
+                      className="flex-1 min-w-0 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+                    />
+                    <button
+                      onClick={handleMotReminder}
+                      disabled={motReminderLoading}
+                      className="flex-shrink-0 rounded-lg bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white transition-colors"
+                    >
+                      {motReminderLoading ? "..." : "Set Reminder"}
+                    </button>
+                  </div>
+                  {motReminderMsg && (
+                    <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
+                  )}
+                  <p className="text-[10px] text-slate-600 mt-2">Free service. Unsubscribe anytime.</p>
                 </div>
               </DataReveal>
             )}
@@ -4585,11 +4632,21 @@ END:VEVENT
                                     <span className="font-semibold">Defect:</span> {defect.text}
                                   </p>
                                 ))}
-                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
-                                  <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
-                                    <span className="font-semibold">Advisory:</span> {advisory.text}
-                                  </p>
-                                ))}
+                                {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => {
+                                  const explainer = getAdvisoryExplanation(advisory.text);
+                                  return (
+                                    <div key={`advisory-${aidx}`} className="pl-3 border-l border-amber-500">
+                                      <p className="text-xs text-amber-300">
+                                        <span className="font-semibold">Advisory:</span> {advisory.text}
+                                      </p>
+                                      {explainer && (
+                                        <p className="text-[11px] text-slate-400 mt-0.5">
+                                          <span className={`font-semibold ${severityColor(explainer.severity)}`}>{severityLabel(explainer.severity)}:</span> {explainer.explanation}
+                                        </p>
+                                      )}
+                                    </div>
+                                  );
+                                })}
                                 {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
                                   <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
                                     <span className="font-semibold">Note:</span> {comment.text}
@@ -4715,6 +4772,79 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* Trigger A — MOT due within 60 days (contextual after MOT history) */}
+            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 0 && motDaysUntilExpiry <= 60 && !motReminderSuccess && (
+              <DataReveal delay={620}>
+                <div className="mb-6 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-950/30 to-orange-950/30 p-5">
+                  <div className="flex items-start gap-3 mb-3">
+                    <Bell className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-amber-200">
+                        Your MOT is due on {formatDate(data.motExpiryDate)}.
+                      </p>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Get a free reminder email &mdash; we&apos;ll send you a booking link to compare prices at local garages when it&apos;s time.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={motReminderEmail}
+                      onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
+                      className="flex-1 min-w-0 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
+                    />
+                    <button
+                      onClick={handleMotReminder}
+                      disabled={motReminderLoading}
+                      className="flex-shrink-0 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white transition-colors whitespace-nowrap"
+                    >
+                      {motReminderLoading ? "..." : "Remind Me"}
+                    </button>
+                  </div>
+                  {motReminderMsg && (
+                    <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
+                  )}
+                  <p className="text-[10px] text-slate-600 mt-2">Free service. Unsubscribe anytime.</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* Trigger C — MOT due > 60 days (smaller prompt after MOT history) */}
+            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 60 && !motReminderSuccess && (
+              <DataReveal delay={620}>
+                <div className="mb-6 p-4 bg-slate-800/40 border border-slate-700/40 rounded-lg">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <p className="text-xs text-slate-400 flex-1">
+                      MOT not due until {formatDate(data.motExpiryDate)} &mdash; set a free reminder and we&apos;ll email you when it&apos;s time.
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={motReminderEmail}
+                        onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
+                        className="min-w-0 w-44 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                      />
+                      <button
+                        onClick={handleMotReminder}
+                        disabled={motReminderLoading}
+                        className="flex-shrink-0 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors whitespace-nowrap"
+                      >
+                        {motReminderLoading ? "..." : "Set reminder"}
+                      </button>
+                    </div>
+                  </div>
+                  {motReminderMsg && (
+                    <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
+                  )}
+                </div>
+              </DataReveal>
+            )}
+
             </SectionGroup>
 
             {/* ═══ GROUP 6: NEXT STEPS ═══ */}
@@ -4747,6 +4877,45 @@ END:VEVENT
                 </button>
               </div>
             </DataReveal>
+
+            {/* Trigger E — Post-PDF download MOT reminder prompt */}
+            {showPdfReminderPrompt && !motReminderSuccess && (
+              <div className="mb-8 rounded-xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/30 to-blue-950/30 p-5">
+                <div className="flex items-start gap-3 mb-3">
+                  <Bell className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-white">Want a reminder when the MOT is due?</p>
+                    <p className="text-xs text-slate-300 mt-0.5">We&apos;ll send you a pre-filled booking link to get the best price at a local garage.</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={motReminderEmail}
+                    onChange={(e) => { setMotReminderEmail(e.target.value); setMotReminderMsg(""); }}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleMotReminder(); }}
+                    className="flex-1 min-w-0 rounded-lg bg-slate-800/80 border border-slate-700 px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                  />
+                  <button
+                    onClick={handleMotReminder}
+                    disabled={motReminderLoading}
+                    className="flex-shrink-0 rounded-lg bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white transition-colors whitespace-nowrap"
+                  >
+                    {motReminderLoading ? "..." : "Yes, remind me"}
+                  </button>
+                  <button
+                    onClick={() => setShowPdfReminderPrompt(false)}
+                    className="flex-shrink-0 rounded-lg bg-slate-700 hover:bg-slate-600 px-3 py-2 text-xs text-slate-300 transition-colors whitespace-nowrap"
+                  >
+                    No thanks
+                  </button>
+                </div>
+                {motReminderMsg && (
+                  <p className="text-xs text-red-400 mt-2">{motReminderMsg}</p>
+                )}
+              </div>
+            )}
 
             {/* BUYING CHECKLIST */}
             <DataReveal delay={780}>
@@ -5038,7 +5207,15 @@ END:VEVENT
         )}
 
         {/* FOOTER */}
-        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-2">
+        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-3">
+          <nav className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-slate-400">
+            <a href="/blog" className="hover:text-blue-400 transition-colors">Guides & Tips</a>
+            <a href="/stats" className="hover:text-blue-400 transition-colors">UK Car Stats</a>
+            <a href="/cars" className="hover:text-blue-400 transition-colors">Car Guides</a>
+            <a href="/mot-reminder" className="hover:text-blue-400 transition-colors">MOT Reminders</a>
+            <a href="/car-valuation" className="hover:text-blue-400 transition-colors">Valuation</a>
+            <a href="/ulez-check" className="hover:text-blue-400 transition-colors">ULEZ Check</a>
+          </nav>
           <p>
             Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
           </p>
