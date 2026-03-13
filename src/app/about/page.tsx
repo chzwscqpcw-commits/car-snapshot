@@ -188,6 +188,20 @@ export default function AboutPage() {
           </section>
 
           <section>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">Add Free Plate Check to Your Site</h2>
+            <p>
+              If you run a car forum, dealership website, or motoring blog, you can embed a free vehicle check
+              widget on your site. It&apos;s free to use, takes seconds to set up, and gives your visitors instant
+              access to MOT history, tax status, and more.
+            </p>
+            <p className="mt-2">
+              <a href="/embed" className="text-blue-400 hover:text-blue-300 underline">
+                Get the embed code &rarr;
+              </a>
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Contact</h2>
             <p>
               Questions or feedback? Email us at{" "}

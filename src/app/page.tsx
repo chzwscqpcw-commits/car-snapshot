@@ -5232,6 +5232,8 @@ END:VEVENT
             <a href="/mot-reminder" className="hover:text-blue-400 transition-colors">MOT Reminders</a>
             <a href="/car-valuation" className="hover:text-blue-400 transition-colors">Valuation</a>
             <a href="/ulez-check" className="hover:text-blue-400 transition-colors">ULEZ Check</a>
+            <a href="/embed" className="hover:text-blue-400 transition-colors">Embed Widget</a>
+            <a href="/about" className="hover:text-blue-400 transition-colors">About</a>
           </nav>
           <p>
             Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
