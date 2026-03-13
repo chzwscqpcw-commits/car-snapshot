@@ -15,5 +15,7 @@ export async function GET(request: NextRequest) {
 
   const results = findRecalls(recallsData as Recall[], make, model, year);
 
-  return NextResponse.json(results);
+  return NextResponse.json(results, {
+    headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+  });
 }

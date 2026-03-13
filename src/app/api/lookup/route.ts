@@ -444,7 +444,9 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           source: cached.source,
           cached: true,
           vrmHash,
-        } as CombinedResponse);
+        } as CombinedResponse, {
+          headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+        });
       }
     }
 
@@ -503,7 +505,9 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       motSource: motData ? "api" : dvlaResult ? "dvla" : "none",
       cached: false,
       vrmHash,
-    } as CombinedResponse);
+    } as CombinedResponse, {
+      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+    });
   } catch (err: any) {
     console.error("lookup_error:", err?.message || err);
     return NextResponse.json(

@@ -1,19 +1,33 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts, getAllTags } from "@/lib/blog";
+import { getAllPosts, getAllTags, getPostTags } from "@/lib/blog";
 import { MODEL_REGISTRY, getUniqueMakes } from "@/lib/model-guides";
 import { CAZ_ZONES } from "@/data/caz-zones";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const blogPosts = getAllPosts().map((post) => ({
+  const posts = getAllPosts();
+
+  const blogPosts = posts.map((post) => ({
     url: `https://www.freeplatecheck.co.uk/blog/${post.slug}`,
     lastModified: new Date(post.lastModified || post.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
+  // Build a map of tag -> latest post date (using lastModified or date)
+  const tagLatestDate = new Map<string, string>();
+  for (const post of posts) {
+    const postDate = post.lastModified || post.date;
+    for (const tag of getPostTags(post.keywords)) {
+      const current = tagLatestDate.get(tag);
+      if (!current || postDate > current) {
+        tagLatestDate.set(tag, postDate);
+      }
+    }
+  }
+
   const tagPages = getAllTags().map((t) => ({
     url: `https://www.freeplatecheck.co.uk/blog/tag/${t.tag}`,
-    lastModified: new Date("2026-02-14"),
+    lastModified: new Date(tagLatestDate.get(t.tag) || "2026-02-14"),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));

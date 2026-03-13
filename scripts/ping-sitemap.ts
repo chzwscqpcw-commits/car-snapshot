@@ -37,6 +37,9 @@ const URLS = [
   `https://${HOST}/stats/car-registrations`,
   `https://${HOST}/stats/car-theft`,
   `https://${HOST}/stats/road-safety`,
+  `https://${HOST}/compare`,
+  `https://${HOST}/running-costs`,
+  `https://${HOST}/clean-air-zones`,
   `https://${HOST}/sitemap.xml`,
 ];
 

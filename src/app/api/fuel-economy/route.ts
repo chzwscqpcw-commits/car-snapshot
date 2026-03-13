@@ -17,9 +17,11 @@ export async function GET(request: NextRequest) {
 
   const result = lookupFuelEconomy(fuelData as FuelEconomyEntry[], make, model, engine, fuel, bodyStyle);
 
+  const cacheHeaders = { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" };
+
   if (!result) {
-    return NextResponse.json(null);
+    return NextResponse.json(null, { headers: cacheHeaders });
   }
 
-  return NextResponse.json(result);
+  return NextResponse.json(result, { headers: cacheHeaders });
 }

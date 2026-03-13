@@ -2849,6 +2849,11 @@ END:VEVENT
               <Bell className="w-3.5 h-3.5" />
               Free MOT Reminders
             </a>
+            <span className="text-slate-700 hidden sm:inline">&middot;</span>
+            <a href="/compare" className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5">
+              <ArrowLeftRight className="w-3.5 h-3.5" />
+              Compare
+            </a>
           </div>
 
 {/* OUR PARTNERS */}
@@ -5156,6 +5161,27 @@ END:VEVENT
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>
               </div>
               <p className="text-sm text-slate-400">Free instant valuation based on age, mileage and market data. Plus a negotiation helper for buyers.</p>
+            </a>
+            <a href="/compare" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <ArrowLeftRight className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Compare Vehicles</h3>
+              </div>
+              <p className="text-sm text-slate-400">Compare two vehicles side by side — specs, costs, MOT history, valuation and more.</p>
+            </a>
+            <a href="/running-costs" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <PoundSterling className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Running Costs</h3>
+              </div>
+              <p className="text-sm text-slate-400">See what any car costs to run — fuel, tax, insurance and servicing estimates at a glance.</p>
+            </a>
+            <a href="/clean-air-zones" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Leaf className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Clean Air Zones</h3>
+              </div>
+              <p className="text-sm text-slate-400">Check Clean Air Zone charges by city — see which zones your vehicle can enter for free.</p>
             </a>
             <a href="/mot-reminder" className="p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
               <div className="flex items-center gap-3 mb-2">

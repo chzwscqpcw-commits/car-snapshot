@@ -503,6 +503,8 @@ export async function GET(
       cacheMedian: cacheResult?.median ?? null,
       cacheEntryCount: cacheResult?.entryCount ?? 0,
       sources,
+    }, {
+      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
   } catch (error: any) {
     console.error("[VALUATION] Route error:", error?.message || error);

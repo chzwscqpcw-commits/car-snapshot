@@ -115,6 +115,26 @@ export default function MotReminderPage() {
       "Set up a free MOT reminder for any UK vehicle. Get email alerts 28 days and 7 days before your MOT expires.",
   };
 
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Free MOT Reminder Service",
+    description:
+      "Free email reminder service that alerts you 28 days and 7 days before your MOT expires. No account required, no marketing emails — just timely reminders to keep your vehicle legal.",
+    provider: {
+      "@type": "Organization",
+      name: "Free Plate Check",
+      url: "https://www.freeplatecheck.co.uk",
+    },
+    serviceType: "MOT Reminder",
+    areaServed: "United Kingdom",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "GBP",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <script
@@ -128,6 +148,10 @@ export default function MotReminderPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
 
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
