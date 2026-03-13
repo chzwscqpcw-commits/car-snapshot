@@ -62,6 +62,44 @@ const faqItems = [
 export default function RoadSafetyPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "UK Road Safety Statistics 2025",
+              description:
+                "Interactive charts tracking UK road fatalities and casualties from 1970 to 2024. Explore key milestones including seatbelt legislation, speed cameras, and modern vehicle safety technology.",
+              url: "https://www.freeplatecheck.co.uk/stats/road-safety",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "1970/2024",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Annual road fatalities and casualties by road user type",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="UK Road Safety Statistics"
         subtitle="Explore how road fatalities and casualties have changed since 1970. Key milestones, road user breakdowns and the factors behind one of Europe's best safety records."

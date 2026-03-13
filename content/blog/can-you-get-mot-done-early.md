@@ -70,7 +70,7 @@ Getting your MOT done within the one-month window isn't just allowed — it's th
 
 ### You get a safety net if the car fails
 
-Around one in three vehicles fail their MOT each year. If you book your test a few weeks before expiry and the car fails, you've still got your current valid MOT to drive on while you arrange repairs. You can shop around for quotes, get the work done at your preferred garage, and book a retest — all without being off the road.
+Around [one in three vehicles fail their MOT](/blog/most-common-mot-failures) each year. If you book your test a few weeks before expiry and the car fails, you've still got your current valid MOT to drive on while you arrange repairs. You can shop around for quotes, get the work done at your preferred garage, and book a retest — all without being off the road.
 
 If you wait until the last day and it fails, you could be stuck. Depending on the failure category, you might not even be able to drive home.
 
@@ -84,7 +84,7 @@ Last-minute bookings mean you take whatever time is available. Booking two to th
 
 ### You avoid the legal grey zone
 
-Once your MOT expires, you can only drive to a **pre-booked** MOT appointment, and only by a direct route. You can't do the school run, pop to the shops, or drive to work. Booking early means you never have to deal with this restriction.
+Once your MOT expires, you can only drive to a **pre-booked** MOT appointment, and only by a direct route. Our guide on [what happens if you drive without an MOT](/blog/what-happens-driving-without-mot) covers the penalties in detail. You can't do the school run, pop to the shops, or drive to work. Booking early means you never have to deal with this restriction.
 
 ## Setting up a reminder
 
@@ -100,7 +100,7 @@ Getting the MOT done a couple of weeks before the tax renewal date gives you a c
 
 ## What about cars that have been off the road?
 
-If your car has been declared SORN (Statutory Off Road Notification), you'll need a valid MOT before you can tax it and drive it again. You can drive a SORN'd car to a pre-booked MOT appointment — but only by a direct route, and the vehicle must be insured.
+If your car has been declared [SORN](/blog/how-to-sorn-a-car) (Statutory Off Road Notification), you'll need a valid MOT before you can tax it and drive it again. You can drive a SORN'd car to a pre-booked MOT appointment — but only by a direct route, and the vehicle must be insured.
 
 In this situation, there's no existing MOT to preserve, so the "early" question doesn't apply. The new certificate will simply start from the date of the test.
 

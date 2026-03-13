@@ -58,13 +58,13 @@ The V5C (logbook) is the registration document. Check that:
 - It's the original document, not a replacement (marked "replacement" at the top — multiple replacements can be a red flag)
 - The VIN on the V5C matches the one on the car (usually visible through the windscreen at the base, and on a plate in the engine bay or door frame)
 
-If the seller says the V5C is "in the post" or they can't find it, walk away.
+Our guide to the [V5C logbook](/blog/what-is-a-v5c-logbook) explains everything this document shows. If the seller says the V5C is "in the post" or they can't find it, walk away.
 
 ## 4. Check for outstanding finance
 
 A surprisingly common problem. If the previous owner bought the car on finance and hasn't finished paying, the finance company technically owns it. If you buy it, they can legally repossess it from you — and you lose both the car and your money.
 
-A basic HPI or finance check will flag this. It's one of the few paid checks worth doing, especially on higher-value vehicles.
+A basic [HPI or finance check](/blog/what-is-hpi-check) will flag this. Our guide on [how to check if a car has finance](/blog/how-to-check-if-car-has-finance) covers the process in detail. It's one of the few paid checks worth doing, especially on higher-value vehicles.
 
 ## 5. Inspect the bodywork carefully
 
@@ -130,4 +130,4 @@ It typically costs £100–£200, but it could save you thousands. If the seller
 
 Most sellers are honest, but even honest sellers might not know about every issue with their car. These checks aren't about being suspicious — they're about making an informed decision.
 
-Take your time, do the homework, and don't let anyone rush you. A good car will still be a good car tomorrow.
+Take your time, do the homework, and don't let anyone rush you. For a detailed look at what to assess when you see the car in person, read our [test drive checklist](/blog/what-to-check-on-a-test-drive). A good car will still be a good car tomorrow.

@@ -22,7 +22,7 @@ The scheme operates 24 hours a day, seven days a week, every day of the year. It
 
 ## What are the emission standards?
 
-Whether your vehicle is compliant depends on its fuel type and the Euro emission standard it was manufactured to:
+Whether your vehicle is compliant depends on its fuel type and the [Euro emission standard](/blog/euro-emission-standards-explained) it was manufactured to:
 
 - **Petrol vehicles** must meet Euro 4 or later. In practice, this covers most petrol cars registered after January 2006, though some models met Euro 4 earlier.
 - **Diesel vehicles** must meet Euro 6 or later. This generally means diesel cars registered after September 2015, although again some manufacturers adopted Euro 6 ahead of the mandatory date.
@@ -86,7 +86,7 @@ If your vehicle doesn't meet the required standard, you have several options:
 
 3. **Apply for an exemption or discount.** If you think your vehicle qualifies for an exemption — for example, if it's a historic vehicle or registered in the disabled tax class — make sure it's correctly registered. Some exemptions are applied automatically; others require you to apply.
 
-4. **Change your vehicle.** If you regularly drive in a ULEZ or Clean Air Zone, switching to a compliant vehicle may be the most cost-effective option in the long run. Even a modest petrol car from 2006 onwards will typically meet Euro 4, and the daily charge soon adds up if you're driving in the zone frequently.
+4. **Change your vehicle.** If you regularly drive in a ULEZ or Clean Air Zone, switching to a compliant vehicle may be the most cost-effective option in the long run. Even a modest petrol car from 2006 onwards will typically meet Euro 4, and the daily charge soon adds up if you're driving in the zone frequently. You can check a vehicle's [CO2 emissions](/blog/how-to-check-car-co2-emissions) to understand its environmental profile.
 
 5. **Avoid the zone.** If you only occasionally drive into a Clean Air Zone, it may be simpler and cheaper to use public transport for those journeys and keep your current vehicle for everything else.
 
@@ -94,4 +94,4 @@ If your vehicle doesn't meet the required standard, you have several options:
 
 ULEZ and Clean Air Zones are here to stay, and they're likely to expand further as more cities adopt similar schemes. Knowing whether your car is compliant isn't just about avoiding charges — it helps you plan ahead when it comes to your next vehicle purchase.
 
-A quick check of your registration number is all it takes to find out where you stand. If your car meets the standard, you've got nothing to worry about. If it doesn't, the sooner you know, the more options you have.
+A quick check of your registration number is all it takes to find out where you stand. If your car meets the standard, you've got nothing to worry about. If it doesn't, the sooner you know, the more options you have. For those considering an EV as an alternative, our guide to the [real cost of owning an electric car](/blog/real-cost-owning-electric-car-uk) covers the financial picture.

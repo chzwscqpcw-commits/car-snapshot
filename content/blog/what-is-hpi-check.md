@@ -15,7 +15,7 @@ Here's a straightforward comparison of free car checks versus paid checks like H
 HPI Check is a paid vehicle history report that queries multiple databases. A standard HPI check includes:
 
 - **Outstanding finance** — Whether the car has money owed on it through a hire purchase, PCP, or lease agreement. If you buy a car with outstanding finance, the finance company can repossess it.
-- **Insurance write-off status** — Whether the vehicle has been written off (Cat A, B, S, or N) by an insurance company.
+- **Insurance write-off status** — Whether the vehicle has been [written off (Cat A, B, S, or N)](/blog/what-does-cat-n-s-mean) by an insurance company.
 - **Stolen vehicle check** — A query against the Police National Computer (PNC) to see if the vehicle has been reported stolen.
 - **Mileage discrepancies** — Comparison against the National Mileage Register and MOT records to flag potential clocking.
 - **Number of previous keepers** — How many registered owners the vehicle has had.
@@ -60,7 +60,7 @@ The PNC database is not publicly accessible. A free check cannot tell you whethe
 
 **Always pay for a check if:**
 
-- **You're spending more than £2,000–£3,000** — The £15–£20 cost is trivial relative to the purchase price. Outstanding finance alone could cost you the entire value of the car.
+- **You're spending more than £2,000–£3,000** — The £15–£20 cost is trivial relative to the purchase price. [Outstanding finance](/blog/how-to-check-if-car-has-finance) alone could cost you the entire value of the car.
 - **You're buying privately** — Dealers are required to do basic checks and carry more legal liability. Private sellers have no such obligation.
 - **Something feels off** — If the price seems too good, the seller is evasive about history, or the documentation is incomplete, a paid check is essential.
 - **The car is relatively new** — Newer cars are more likely to have outstanding finance (especially PCP deals that run for 3–4 years).
@@ -101,7 +101,7 @@ No vehicle history check — free or paid — can tell you about:
 - **How the car was driven** — Hard driving, track use, or neglectful ownership
 - **Future reliability** — Past history is a guide, not a guarantee
 
-For these, you need a physical inspection. Consider an independent vehicle inspection from the AA or RAC (around £100–£200) for any significant purchase.
+For these, you need a physical inspection. Consider an independent vehicle inspection from the AA or RAC (around £100–£200) for any significant purchase. Our [complete used car buying checklist](/blog/used-car-checks-before-buying) covers everything to verify before handing over money.
 
 ## The bottom line
 

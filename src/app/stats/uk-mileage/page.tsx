@@ -62,6 +62,44 @@ const faqItems = [
 export default function UkMileagePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "UK Average Car Mileage 2025",
+              description:
+                "Interactive charts showing UK average annual car mileage from 1990 to 2024, mileage by vehicle age group, and a calculator to see if your mileage is above or below average.",
+              url: "https://www.freeplatecheck.co.uk/stats/uk-mileage",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "1990/2024",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Average annual car mileage in miles per year",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="UK Average Car Mileage Trends"
         subtitle="Explore how average annual car mileage has changed since 1990, compare mileage by vehicle age, and check whether your car's mileage is above or below the national average."

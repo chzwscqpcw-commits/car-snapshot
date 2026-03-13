@@ -63,7 +63,7 @@ Beyond the data checks, look for these red flags when viewing a car:
 
 - **Seller wants cash only** — Insisting on cash and refusing a bank transfer removes the paper trail.
 - **Meeting in a car park** — A legitimate private seller should be happy to meet at their home address, which should match the V5C.
-- **Price too good to be true** — A car priced significantly below market value should raise questions about why.
+- **Price too good to be true** — A car priced significantly below [market value](/blog/car-valuation-guide) should raise questions about why.
 - **Rushing the sale** — Pressure to decide quickly, view in the dark, or skip normal checks.
 - **No test drive allowed** — A seller who won't let you drive the car may not want you spending too long with it.
 
@@ -93,7 +93,7 @@ This is different from the rules around outstanding finance, where an innocent b
 
 **Always view at the seller's home address.** The address should match the V5C. If the seller wants to meet elsewhere, ask why.
 
-**Check the VIN.** Compare the VIN on the dashboard, the door jamb, and the V5C. All three should match exactly.
+**Check the VIN.** Compare the VIN on the dashboard, the door jamb, and the [V5C logbook](/blog/what-is-a-v5c-logbook). All three should match exactly.
 
 **Pay by bank transfer.** This creates a record of the transaction linked to a real bank account.
 

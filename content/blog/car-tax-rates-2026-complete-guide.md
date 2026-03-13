@@ -74,7 +74,7 @@ Vehicles with a list price exceeding the threshold when new pay an additional an
 
 The threshold is based on the **published list price** of the vehicle when new — not the transaction price or the amount you paid second-hand. If a car listed at £42,000 new is now worth £18,000 on the used market, the supplement still applies until year 6.
 
-**New for April 2026:** The EV threshold increases from £40,000 to £50,000, backdated to vehicles registered from April 2025. This means EVs priced between £40,001 and £50,000 no longer pay the supplement.
+**New for April 2026:** The EV threshold increases from £40,000 to £50,000, backdated to vehicles registered from April 2025. This means EVs priced between £40,001 and £50,000 no longer pay the supplement. See our guide to [electric car road tax in 2026](/blog/electric-car-road-tax-2026) for the full breakdown of what EV owners pay.
 
 ## Pre-2017 cars: band rates (2026/27)
 
@@ -109,7 +109,7 @@ Vehicles registered before 1 March 2001 use an even older system based on engine
 
 ## Historic vehicles
 
-Cars manufactured before 1 January 1977 are **exempt from VED entirely**. They still need to be taxed (applying for free tax), but there is no charge.
+Cars manufactured before 1 January 1977 are **exempt from VED entirely**. They still need to be taxed (applying for free tax), but there is no charge. For more on how to find the [cheapest cars to tax](/blog/cheapest-cars-to-tax-uk) across all categories, see our dedicated guide.
 
 ## Payment options
 
@@ -148,6 +148,6 @@ From there, match the CO2 figure and registration date to the tables above to fi
 
 ## The bottom line
 
-Car tax in 2026/27 follows the same structure as previous years — a first-year rate based on emissions for new cars, a flat standard rate from year two, and a supplement for expensive vehicles. The changes are incremental: a £5 standard rate increase, modest inflation-linked rises across the bands, and the notable EV supplement threshold increase to £50,000.
+Car tax in 2026/27 follows the same structure as previous years — a first-year rate based on emissions for new cars, a flat standard rate from year two, and a supplement for expensive vehicles. The changes are incremental: a £5 standard rate increase, modest inflation-linked rises across the bands, and the notable EV supplement threshold increase to £50,000. For a summary of all the [car tax changes coming in April 2026](/blog/car-tax-changes-april-2026), see our overview.
 
 The quickest way to know what you'll pay is to [check your vehicle's details](/tax-check) — it takes a few seconds and shows your exact tax status and renewal date.

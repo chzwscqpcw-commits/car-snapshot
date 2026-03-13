@@ -56,6 +56,44 @@ const faqItems = [
 export default function CarTheftPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Car Theft Statistics UK 2025",
+              description:
+                "See which cars are stolen most often in the UK, ranked by theft rate per 1,000 vehicles. Interactive charts, national trends and theft prevention advice.",
+              url: "https://www.freeplatecheck.co.uk/stats/car-theft",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2014/2024",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Vehicle theft count and theft rate per 1,000 registered vehicles by make and model",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Car Theft Statistics UK 2025"
         subtitle="Which cars are stolen most often, how theft rates have changed, and what you can do to protect your vehicle."

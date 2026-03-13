@@ -110,6 +110,44 @@ const faqItems = [
 export default function MotPassRatesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "MOT Pass Rates by Make & Model 2025",
+              description:
+                "Interactive UK MOT pass rate statistics by make and model. See national averages, top failure reasons, and find out how your car compares — based on millions of real MOT tests.",
+              url: "https://www.freeplatecheck.co.uk/stats/mot-pass-rates",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2024/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "MOT first-time pass rate percentage by vehicle make and model",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="MOT Pass Rates by Make & Model"
         subtitle="How likely is your car to pass its MOT? Explore national pass rates, failure reasons and make-by-make comparisons based on millions of real DVSA test results."

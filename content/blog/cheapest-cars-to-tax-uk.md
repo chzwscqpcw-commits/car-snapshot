@@ -7,7 +7,7 @@ keywords: ["cheapest cars to tax", "zero road tax cars", "low tax cars UK", "car
 author: "Free Plate Check"
 ---
 
-Road tax — officially called Vehicle Excise Duty (VED) — is one of those ongoing costs of car ownership that's easy to overlook when buying. But the difference between the cheapest and most expensive bands can be hundreds of pounds a year, and over the life of ownership, it adds up significantly.
+Road tax — officially called Vehicle Excise Duty (VED) — is one of those ongoing costs of car ownership that's easy to overlook when buying. It's one of several [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) worth considering before you commit. But the difference between the cheapest and most expensive bands can be hundreds of pounds a year, and over the life of ownership, it adds up significantly.
 
 Here's how car tax works in the UK and which vehicles pay the least.
 
@@ -59,7 +59,7 @@ Vehicles manufactured before 1 January 1977 are exempt from VED entirely. If you
 
 For cars registered after April 2017, the first year rate varies but the standard rate is flat. The cheapest option is a zero-emission vehicle (electric or hydrogen), which pays nothing in the first year.
 
-After that, all non-zero-emission cars pay the same £190 standard rate — whether you drive a 1.0-litre city car or a 5.0-litre V8. The only variable is the expensive car supplement for vehicles that listed over £40,000 new.
+After that, all non-zero-emission cars pay the same £190 standard rate — whether you drive a 1.0-litre city car or a 5.0-litre V8. The only variable is the expensive car supplement for vehicles that listed over £40,000 new. For the complete rate tables, see our [2026 car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
 
 This means if you're buying a post-2017 car and want the cheapest ongoing tax, your options are:
 
@@ -88,7 +88,7 @@ If you're on a tight budget, monthly payments can make higher tax bands more man
 1. **Check before you buy.** Use our [free car check](/car-check) to see the vehicle's emissions and registration date before committing. This tells you exactly which tax band it falls into.
 2. **Consider pre-2017 low-emission cars.** If you're buying a budget runaround, a pre-2017 Band A car costs nothing in road tax — ever.
 3. **Watch the £40,000 threshold.** If a post-2017 car listed above £40,000 new, you'll pay the expensive car supplement even if you buy it second-hand for much less. Check the original list price, not the used price.
-4. **Go electric if it works for you.** EVs currently pay zero VED and offer the lowest running costs overall. Even with the upcoming changes, they'll remain among the cheapest to tax.
+4. **Go electric if it works for you.** EVs currently pay zero VED and offer the lowest running costs overall. Even with the upcoming changes, they'll remain among the cheapest to tax. Our guide to [electric car road tax in 2026](/blog/electric-car-road-tax-2026) explains what EV owners will pay going forward.
 5. **Don't forget to check [mileage history](/mileage-check)** when buying used — a car with unusually low mileage might have been SORN'd for periods, which could indicate issues.
 
 ## The bottom line

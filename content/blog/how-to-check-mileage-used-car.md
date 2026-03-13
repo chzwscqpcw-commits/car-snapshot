@@ -80,7 +80,7 @@ Mileage is one of the biggest factors in a used car's value. As a rough guide:
 - **Average mileage** (8,000–10,000 miles per year) is neutral
 - **Above average mileage** (over 10,000 miles per year) reduces value
 
-However, a high-mileage car with full service history and clean [MOT results](/mot-check) can be worth more than a low-mileage car with patchy records. Condition and documentation matter as much as the number on the odometer.
+However, a high-mileage car with full [service history](/blog/how-to-check-car-service-history) and clean [MOT results](/mot-check) can be worth more than a low-mileage car with patchy records. Condition and documentation matter as much as the number on the odometer.
 
 If you're curious what a vehicle is worth given its actual mileage, our [free car valuation tool](/car-valuation) factors in mileage automatically.
 
@@ -88,4 +88,4 @@ If you're curious what a vehicle is worth given its actual mileage, our [free ca
 
 Checking mileage takes less than a minute and it's one of the most important things you can do before buying a used car. The [mileage history](/mileage-check) from MOT records gives you an independent, tamper-proof timeline of the vehicle's odometer readings over its entire life.
 
-If the numbers add up, you can buy with confidence. If they don't, you've just saved yourself from a potentially very expensive mistake.
+If the numbers add up, you can buy with confidence. If they don't, you've just saved yourself from a potentially very expensive mistake. For the complete buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).

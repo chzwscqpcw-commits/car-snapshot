@@ -73,7 +73,7 @@ If you need to move the vehicle, you must either tax and insure it first, or tra
 
 ### You cannot drive to an MOT
 
-Unlike an expired MOT (where you can drive directly to a pre-booked test), a SORN'd vehicle cannot be driven on public roads for any reason. If your vehicle needs an MOT before you can tax it, you'll need to arrange for a mobile tester to come to you, or transport the vehicle to the test centre.
+Unlike an expired MOT (where you can [drive directly to a pre-booked test](/blog/what-happens-driving-without-mot)), a SORN'd vehicle cannot be driven on public roads for any reason. If your vehicle needs an MOT before you can tax it, you'll need to arrange for a mobile tester to come to you, or transport the vehicle to the test centre.
 
 ### The vehicle must be on private land
 
@@ -85,7 +85,7 @@ If you buy a vehicle that is SORN'd, the SORN continues. You must tax it (and en
 
 ### Penalties for not declaring a SORN
 
-If your road tax expires and you haven't declared a SORN or renewed the tax, the DVLA will issue an automatic penalty of **£80** (reduced to £40 if paid within 33 days). They may also clamp or remove the vehicle if it's found on a public road.
+If your road tax expires and you haven't declared a SORN or renewed the tax, the DVLA will issue an automatic penalty of **£80**. Our guide on [what happens if your car tax expires](/blog/what-happens-car-tax-expires) explains how these penalties escalate (reduced to £40 if paid within 33 days). They may also clamp or remove the vehicle if it's found on a public road.
 
 ## When to end a SORN
 
@@ -110,4 +110,4 @@ Many insurers offer cheaper "laid-up" or "off-road" policies for SORN'd vehicles
 
 ## The bottom line
 
-Declaring a SORN is quick, free, and straightforward. If your vehicle is coming off the road for any reason, do it online in 5 minutes to avoid automatic penalties. When you're ready to put it back on the road, check the [MOT status](/mot-check) and [tax status](/tax-check) first, then tax it before turning a wheel on a public road.
+Declaring a SORN is quick, free, and straightforward. If your vehicle is coming off the road for any reason, do it online in 5 minutes to avoid automatic penalties. When you're ready to put it back on the road, check the [MOT status](/mot-check) and [tax status](/tax-check) first, then [tax the vehicle online](/blog/how-to-tax-a-car-online) before turning a wheel on a public road.

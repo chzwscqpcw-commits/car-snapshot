@@ -57,6 +57,44 @@ const faqItems = [
 export default function FuelTypeComparisonPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Petrol vs Diesel vs Electric Running Costs 2025",
+              description:
+                "Compare annual running costs for petrol, diesel, hybrid and electric cars at any mileage. Interactive charts, per-mile costs and EV break-even calculator.",
+              url: "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Per-mile and annual running costs in pence and GBP by fuel type",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Petrol vs Diesel vs Electric: Running Cost Comparison"
         subtitle="Interactive comparison of fuel costs by type and mileage. See which fuel type saves you the most money at your annual mileage."

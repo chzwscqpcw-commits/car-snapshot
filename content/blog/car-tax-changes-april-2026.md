@@ -68,7 +68,7 @@ For petrol, diesel, and hybrid vehicles, the expensive car supplement threshold 
 
 That means a post-2017 car that listed at £45,000 new will cost the owner £200 (standard rate) plus £440 (supplement) = **£640 per year** in road tax for years 2 through 6. The supplement applies based on the original list price — not what you paid for the car second-hand.
 
-If you're buying a used car and want to check whether it's caught by the supplement, our [car check tool](/car-check) shows the vehicle's age and details to help you work it out.
+If you're buying a used car and want to check whether it's caught by the supplement, our [car check tool](/car-check) shows the vehicle's age and details to help you work it out. You can also check [how to see if a car is currently taxed](/blog/how-to-check-if-a-car-is-taxed) before purchasing.
 
 ## Pre-2017 band rate changes
 
@@ -90,14 +90,14 @@ Cars registered before April 2017 use the older A-to-M band system. These rates 
 | L | 226–255 | £735 | £760 |
 | M | Over 255 | £760 | £790 |
 
-The lowest bands remain unchanged — pre-2017 Band A and B cars still pay just £20 per year.
+The lowest bands remain unchanged — pre-2017 Band A and B cars still pay just £20 per year. For a full list of the [cheapest cars to tax in the UK](/blog/cheapest-cars-to-tax-uk), see our dedicated guide.
 
 ## What you should do before April
 
 1. **Check your tax expiry date.** If it falls before 1 April, you can renew now at the current lower rate and lock in the 2025/26 prices for another 6 or 12 months. Use our [tax check](/tax-check) to find your expiry date.
 2. **Consider timing if buying new.** If you're ordering a high-emission new car, registering before 1 April means paying the current first-year rate rather than the higher 2026/27 rate. On a car over 255 g/km, that's a £200 saving on the first-year tax alone.
 3. **Check your vehicle's emissions.** Knowing your car's CO2 output helps you understand exactly which band or rate you'll pay. Our [free car check](/car-check) shows this alongside MOT, tax, and mileage history.
-4. **EV buyers in the £40k–£50k range:** If you've been putting off an EV purchase because of the supplement, the April 2026 threshold change removes that barrier. EVs under £50,000 list price will only pay £200/year from year two — no supplement.
+4. **EV buyers in the £40k–£50k range:** If you've been putting off an EV purchase because of the supplement, the April 2026 threshold change removes that barrier. EVs under £50,000 list price will only pay £200/year from year two — no supplement. Our guide to [electric car road tax in 2026](/blog/electric-car-road-tax-2026) covers EV-specific rates in detail.
 
 ## The bottom line
 

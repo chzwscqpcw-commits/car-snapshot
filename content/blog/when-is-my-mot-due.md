@@ -36,7 +36,7 @@ Some vehicles have different rules:
 
 - **Taxis and ambulances** — Need an MOT after one year, not three
 - **Historic vehicles** — Cars manufactured before 1 January 1977 are exempt from MOT testing entirely
-- **Electric vehicles** — Still need an MOT, but the emissions test is obviously not applicable
+- **Electric vehicles** — Still [need an MOT](/blog/do-electric-cars-need-mot), but the emissions test is obviously not applicable
 
 ## Can you get your MOT done early?
 
@@ -60,7 +60,7 @@ Once your MOT expires, you cannot drive the vehicle on any public road — with 
 
 ### You can't tax the vehicle
 
-The DVLA won't let you renew your [road tax](/tax-check) without a valid MOT. If your MOT and tax both expire, you'll need to get the MOT sorted first, then tax the vehicle before driving normally.
+The DVLA won't let you renew your [road tax](/tax-check) without a valid MOT. If your MOT and tax both expire, you'll need to get the MOT sorted first, then [tax the vehicle](/blog/how-to-tax-a-car-online) before driving normally.
 
 ### Insurance may be affected
 
@@ -102,7 +102,7 @@ The MOT tests your vehicle against a set of minimum safety and environmental sta
 - **Seatbelts** — All fitted belts must work correctly
 - **Mirrors** — Must be present and in usable condition
 
-The test takes around 45–60 minutes and the maximum fee is £54.85 for a car (though many garages charge less).
+The test takes around [45–60 minutes](/blog/how-long-does-mot-take) and the maximum fee is [£54.85 for a car](/blog/how-much-does-mot-cost) (though many garages charge less).
 
 You can see exactly what was checked, passed, and flagged at every previous test by looking at the [full MOT history](/mot-check) for any vehicle.
 

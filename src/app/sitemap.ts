@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, getAllTags } from "@/lib/blog";
 import { MODEL_REGISTRY, getUniqueMakes } from "@/lib/model-guides";
+import { CAZ_ZONES } from "@/data/caz-zones";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
@@ -87,10 +88,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/running-costs",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/mot-reminder",
       lastModified: new Date("2026-03-02"),
       changeFrequency: "monthly",
       priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/compare",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/embed",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/about",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly",
+      priority: 0.5,
     },
     {
       url: "https://www.freeplatecheck.co.uk/privacy",
@@ -194,6 +219,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: "https://www.freeplatecheck.co.uk/clean-air-zones",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    ...CAZ_ZONES.map((z) => ({
+      url: `https://www.freeplatecheck.co.uk/clean-air-zones/${z.slug}`,
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     ...carMakePages,
     ...carModelPages,
     ...blogPosts,

@@ -57,7 +57,7 @@ Legally, no. Your car has passed its MOT and is roadworthy at the time of the te
 
 That said, there are good reasons to take them seriously:
 
-1. **They often become next year's failures.** A "tyre worn close to the limit" advisory this year is almost certainly going to be a fail by your next MOT.
+1. **They often become next year's failures.** A "tyre worn close to the limit" advisory this year is almost certainly going to be one of the [most common MOT failures](/blog/most-common-mot-failures) by your next test.
 2. **Fixing things early is usually cheaper.** A corroded brake pipe caught early might cost £60 to replace. Left until it fails completely, you're looking at a breakdown, a recovery truck, and a much bigger bill.
 3. **Safety matters.** Advisories are flagged because they relate to safety-critical components. Worn brakes and tyres directly affect your ability to stop.
 4. **It protects resale value.** A clean MOT history with advisories addressed promptly shows a well-maintained car.
@@ -68,7 +68,7 @@ A sensible approach is to prioritise anything related to braking, steering, tyre
 
 Every MOT test result since 2005 is recorded and publicly available. You can check a vehicle's full MOT history — including all advisories, failures and passes — by entering the registration number on [Free Plate Check's MOT history tool](/mot-check).
 
-This is particularly useful when buying a used car. Recurring advisories that never get addressed can tell you a lot about how well (or badly) a previous owner maintained the vehicle. For example, if "brake discs worn" has appeared as an advisory for three consecutive years, it suggests the owner has been putting off necessary maintenance.
+This is particularly useful when buying a used car. Recurring advisories that never get addressed can tell you a lot about how well (or badly) a previous owner maintained the vehicle. Our guide on [how to read MOT history](/blog/how-to-read-mot-history) covers what patterns to look for. For example, if "brake discs worn" has appeared as an advisory for three consecutive years, it suggests the owner has been putting off necessary maintenance.
 
 Look for patterns:
 
@@ -88,4 +88,4 @@ Look for patterns:
 
 MOT advisories aren't something to panic about, but they're not something to ignore either. They're your early warning that a component is starting to wear, and addressing them proactively will save you money, keep you safe, and help your car hold its value.
 
-Think of them as your mechanic giving you a heads-up — and act on that advice when you can.
+Think of them as your mechanic giving you a heads-up — and act on that advice when you can. If you're preparing for your next test, our guide on [how to prepare your car for its MOT](/blog/how-to-prepare-car-for-mot) covers everything you can check yourself beforehand.

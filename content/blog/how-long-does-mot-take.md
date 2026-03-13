@@ -56,7 +56,7 @@ All tyres must have at least 1.6mm of tread depth and be free from significant d
 
 ### Exhaust and emissions
 
-The exhaust system is checked for leaks and security. The car is then emissions-tested to make sure it meets the relevant standard for its age and fuel type. Diesel vehicles tend to take slightly longer here because the emissions test is more involved.
+The exhaust system is checked for leaks and security. The car is then emissions-tested to make sure it meets the relevant standard for its age and fuel type. Diesel vehicles tend to take slightly longer here because the emissions test is more involved. If you're concerned about emissions, check your vehicle's [ULEZ compliance](/blog/is-my-car-ulez-compliant) to understand where you stand with clean air zones.
 
 ### Under the bonnet
 
@@ -90,7 +90,7 @@ If your car is due a service around the same time, it makes sense to book both t
 
 ## What happens if your car fails?
 
-If the tester finds items that don't meet the standard, your car will fail. You'll receive a clear breakdown of what failed and why. At that point, you have a few options:
+If the tester finds items that don't meet the standard, your car will fail. Our guide on [what to do if your car fails its MOT](/blog/what-to-do-if-car-fails-mot) covers your options in detail. You'll receive a clear breakdown of what failed and why. At that point, you have a few options:
 
 1. **Get it repaired at the same garage.** If the testing station also does repairs, they can often fix the issues and retest the car on the same day or within a few days. If they retest within **10 working days**, the partial retest is usually free or heavily discounted.
 2. **Take it elsewhere for repairs.** You can have the work done at another garage and then return for a full retest. In this case, you'll pay the full retest fee.
@@ -102,7 +102,7 @@ The retest itself is quicker than a full MOT — usually around 15 to 20 minutes
 
 The best way to avoid surprises is to know when your MOT is due and book with time to spare. You can check your MOT expiry date instantly using our [free MOT check tool](/mot-check), and you can set up a [free MOT reminder](/mot-reminder) so you get an email alert before it expires.
 
-Booking a few weeks early means that if your car does fail, you've got time to arrange repairs and a retest without any panic. Remember, you can book your MOT up to a month early without losing any days on the new certificate.
+Booking a few weeks early means that if your car does fail, you've got time to arrange repairs and a retest without any panic. Remember, you can [book your MOT up to a month early](/blog/can-you-get-mot-done-early) without losing any days on the new certificate.
 
 It's also worth shopping around on price. While the maximum MOT fee is capped at £54.85, plenty of garages charge less. [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to find competitive rates near you.
 

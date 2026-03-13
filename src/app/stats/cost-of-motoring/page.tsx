@@ -56,6 +56,44 @@ const faqItems = [
 export default function CostOfMotoringPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Cost of Motoring UK 2025",
+              description:
+                "Full annual breakdown of UK motoring costs including fuel, insurance, depreciation, road tax and servicing. Interactive calculator to estimate your own running costs.",
+              url: "https://www.freeplatecheck.co.uk/stats/cost-of-motoring",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Annual car running costs in GBP broken down by category",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Cost of Motoring UK 2025"
         subtitle="Full annual breakdown of what it really costs to own and run a car in the UK — from fuel and insurance to depreciation and road tax."

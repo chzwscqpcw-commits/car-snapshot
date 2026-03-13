@@ -60,7 +60,7 @@ Check your vehicle's compliance instantly with our [ULEZ check](/ulez-check).
 
 ### Road tax (VED)
 
-Vehicles registered after April 2017 pay a flat-rate VED of £190 per year (2024/25 rates) regardless of emissions, with a first-year rate based on CO2. But for cars registered between March 2001 and March 2017, [road tax](/tax-check) is banded by CO2 emissions — and cleaner Euro 5/6 engines generally produce lower CO2 than their Euro 3/4 predecessors.
+Vehicles registered after April 2017 pay a flat-rate VED of £190 per year (2024/25 rates) regardless of emissions, with a first-year rate based on CO2. But for cars registered between March 2001 and March 2017, [road tax](/tax-check) is banded by CO2 emissions — and cleaner Euro 5/6 engines generally produce lower CO2 than their Euro 3/4 predecessors. See our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide) for the full band-by-band breakdown.
 
 ### Resale value
 
@@ -94,7 +94,7 @@ Diesel cars have been most affected by tightening Euro standards. The key thresh
 - **Euro 6 diesel** — Currently compliant everywhere, but carries a stigma that affects residual values.
 - **Euro 4 diesel** — Still a practical car outside of clean air zones, but limited urban access.
 
-If you're considering buying a diesel car, check the [ULEZ compliance](/ulez-check) and consider whether you'll need to drive in or near any clean air zones. If you will, Euro 6 is the minimum standard you should consider.
+If you're considering buying a diesel car, check the [ULEZ compliance](/ulez-check) and read our guide on [whether your car is ULEZ compliant](/blog/is-my-car-ulez-compliant) to understand the full implications. Consider whether you'll need to drive in or near any clean air zones. If you will, Euro 6 is the minimum standard you should consider.
 
 ## Petrol cars have it easier
 

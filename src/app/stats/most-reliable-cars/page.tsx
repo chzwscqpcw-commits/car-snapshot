@@ -56,6 +56,44 @@ const faqs = [
 export default function MostReliableCarsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Most Reliable Cars in the UK 2025",
+              description:
+                "See which UK cars are the most reliable based on millions of real MOT test results. Top 20 rankings, reliability by age, and sortable league tables.",
+              url: "https://www.freeplatecheck.co.uk/stats/most-reliable-cars",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2024/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Vehicle reliability ranking based on MOT pass rate percentage",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Most Reliable Cars in the UK 2025"
         subtitle="MOT pass rate rankings based on millions of real test results. Find out which models are built to last."

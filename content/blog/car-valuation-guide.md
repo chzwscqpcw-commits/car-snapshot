@@ -49,7 +49,7 @@ A full service history — especially from main dealers — adds significant val
 
 ### MOT history
 
-A clean MOT history with consistent passes and few advisories is a genuine selling point. Conversely, frequent failures and long advisory lists suggest the car has had problems. You can [check any vehicle's MOT history](/mot-check) on Free Plate Check for free.
+A clean MOT history with consistent passes and few advisories is a genuine selling point. Conversely, frequent failures and long advisory lists suggest the car has had problems. Understanding [how to read MOT history](/blog/how-to-read-mot-history) helps you assess a vehicle's true condition. You can [check any vehicle's MOT history](/mot-check) on Free Plate Check for free.
 
 ### Number of previous owners
 
@@ -65,7 +65,7 @@ Higher-spec trim levels and desirable options (leather seats, sat-nav, parking s
 
 ### Damage history
 
-A vehicle that has been in an accident or recorded as an insurance write-off (categories S, N, B, or A) will be worth significantly less than an equivalent undamaged example. Even after professional repair, the history stays on the record and affects buyer confidence.
+A vehicle that has been in an accident or recorded as an [insurance write-off](/blog/what-does-cat-n-s-mean) (categories S, N, B, or A) will be worth significantly less than an equivalent undamaged example. Even after professional repair, the history stays on the record and affects buyer confidence.
 
 ## Types of valuation
 
@@ -83,7 +83,7 @@ Not all valuations serve the same purpose. Here are the main types:
 
 If you've decided to sell, a few straightforward steps can help you maximise the price:
 
-**Get an MOT before selling** — Even if the current MOT has months left, a fresh test gives the buyer confidence and removes one objection. If there are minor advisories, consider addressing them before the test.
+**Get an MOT before selling** — Even if the current MOT has months left, a fresh test gives the buyer confidence and removes one objection. Knowing [how much an MOT costs](/blog/how-much-does-mot-cost) helps you budget for this. If there are minor advisories, consider addressing them before the test.
 
 **Gather your paperwork** — Full service history, MOT certificates, receipts for work done, the V5C logbook, and any warranty documentation. The more paperwork you can show, the more confidence the buyer has.
 

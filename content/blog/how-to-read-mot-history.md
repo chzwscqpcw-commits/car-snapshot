@@ -41,7 +41,7 @@ A typical UK car does 7,000–10,000 miles per year. If you see roughly that amo
 
 ### Mileage discrepancies
 
-This is the big one. Look for:
+This is the big one. For a detailed guide on detecting odometer fraud, see our article on [how to spot a clocked car](/blog/how-to-spot-a-clocked-car). Look for:
 
 - **A drop in mileage** between tests — This should never happen. If the mileage goes down, the odometer has likely been tampered with (clocked). This is illegal but still disturbingly common.
 - **Unusually low annual mileage** — If a car suddenly goes from 10,000 miles a year to 2,000, it may have been sitting unused (which can cause its own problems — seized brakes, perished seals, flat-spotted tyres).
@@ -62,7 +62,7 @@ A clean MOT history doesn't just mean "no failures." Look for patterns that indi
 
 ### Recurring advisories that never get fixed
 
-If "brake discs worn" appears as an advisory for three consecutive years, the owner has been ignoring it. This is a car that's had the minimum spent on it.
+If "brake discs worn" appears as an [advisory](/blog/what-does-mot-advisory-mean) for three consecutive years, the owner has been ignoring it. This is a car that's had the minimum spent on it.
 
 ### Frequent failures
 
@@ -93,4 +93,4 @@ MOT history is valuable, but it has limits:
 
 When reviewing a vehicle's history, don't just glance at pass or fail. Read the detail. Look at the mileage progression across every test. Note which advisories come and go, and which ones persist. Compare the condition of the car you're looking at with what the records suggest.
 
-Combined with a visual inspection and a test drive, MOT history gives you a remarkably clear picture of how a car has been treated. It's free, it takes two minutes, and it could save you from an expensive mistake.
+Combined with a visual inspection and a [thorough test drive](/blog/what-to-check-on-a-test-drive), MOT history gives you a remarkably clear picture of how a car has been treated. It's free, it takes two minutes, and it could save you from an expensive mistake.

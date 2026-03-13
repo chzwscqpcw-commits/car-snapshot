@@ -69,7 +69,7 @@ Some cars are simply more desirable than others. A well-specced Range Rover Spor
 
 ### Running costs
 
-Cars that are cheap to run hold their value better because the total cost of ownership is lower. A vehicle with low [road tax](/tax-check), good fuel economy, and reasonable insurance costs is worth more to the next buyer than one that is expensive in every category. You can check a vehicle's [running costs](/car-check) on Free Plate Check to see the full picture.
+Cars that are cheap to run hold their value better because the total cost of ownership is lower. Understanding the [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) helps you see the full picture. A vehicle with low [road tax](/tax-check), good fuel economy, and reasonable insurance costs is worth more to the next buyer than one that is expensive in every category. You can check a vehicle's [running costs](/car-check) on Free Plate Check to see the full picture.
 
 ## Factors that affect individual resale value
 
@@ -89,7 +89,7 @@ Higher trim levels hold value better in both absolute and percentage terms. Desi
 
 ### Service history
 
-A full service history, ideally with main dealer stamps, adds genuine value. It proves the car has been maintained properly and gives the buyer confidence. Missing service records reduce value — sometimes significantly. Check a vehicle's [service and MOT history](/) before buying to understand what you are getting.
+A full [service history](/blog/how-to-check-car-service-history), ideally with main dealer stamps, adds genuine value. It proves the car has been maintained properly and gives the buyer confidence. Missing service records reduce value — sometimes significantly. Check a vehicle's [service and MOT history](/) before buying to understand what you are getting.
 
 ### Condition
 

@@ -62,6 +62,44 @@ const faqItems = [
 export default function FuelPricesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "UK Fuel Prices 1988-2025",
+              description:
+                "Interactive chart of UK petrol and diesel prices from 1988 to 2025. Includes fill-cost calculator, key event annotations and historical price data from DESNZ.",
+              url: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "1988/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Petrol and diesel pump prices in pence per litre",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="UK Fuel Prices 1988-2025"
         subtitle="Track how petrol and diesel prices have changed over nearly four decades. Use the fill-cost calculator to see what a full tank would have cost at any point in history."

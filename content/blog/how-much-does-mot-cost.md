@@ -81,7 +81,7 @@ These are standard industry practices, but they're not legally required. Always 
 
 ### Book ahead
 
-Don't wait until the last day. Garages often offer online booking discounts, and you'll have more choice of convenient times. You can book your MOT up to one month (minus a day) before the expiry date without losing any days on the new certificate.
+Don't wait until the last day. Garages often offer online booking discounts, and you'll have more choice of convenient times. You can [book your MOT up to one month early](/blog/can-you-get-mot-done-early) without losing any days on the new certificate.
 
 Not sure when your MOT is due? [Check your MOT status](/mot-check) instantly using your registration number to see the exact expiry date.
 
@@ -99,7 +99,7 @@ Many garages offer a combined MOT and service package at a reduced total price. 
 
 ### Fix the easy stuff yourself first
 
-Before the test, check your lights, wipers, and tyre tread. Replacing a blown bulb yourself costs a couple of pounds. Having the garage do it after a failure could cost £10 to £20 in labour on top of the part, plus the hassle of a retest.
+Before the test, check your lights, wipers, and tyre tread — these are among the [most common MOT failures](/blog/most-common-mot-failures) and the easiest to prevent. Replacing a blown bulb yourself costs a couple of pounds. Having the garage do it after a failure could cost £10 to £20 in labour on top of the part, plus the hassle of a retest.
 
 ## When to book your MOT
 
@@ -113,7 +113,7 @@ To make sure you never miss your MOT window, sign up for our [free MOT reminder]
 
 It's worth remembering that an MOT is a minimum safety and emissions check at one point in time. It doesn't cover the general mechanical condition of the car — the engine, gearbox, clutch, and many other components are outside the scope of the test.
 
-A fresh MOT pass doesn't mean a car is in good condition. If you're buying a used car, check the full [MOT history](/mot-check) to see past failures, advisories, and mileage trends. That tells you far more than a single pass certificate.
+A fresh MOT pass doesn't mean a car is in good condition. If you're buying a used car, check the full [MOT history](/mot-check) to see past failures, advisories, and mileage trends. Our guide on [how to read MOT history](/blog/how-to-read-mot-history) explains what to look for and which patterns are red flags. That tells you far more than a single pass certificate.
 
 ## The bottom line
 

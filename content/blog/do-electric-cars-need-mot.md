@@ -65,7 +65,7 @@ Electric cars might have fewer moving parts under the bonnet, but they bring the
 
 This is the big one. Electric cars are **heavy** — a Tesla Model 3 weighs around 1,750 kg, and larger EVs like the BMW iX can exceed 2,500 kg. That extra weight, combined with the instant torque that electric motors deliver, means tyres wear faster than on a comparable petrol car.
 
-Many EV owners are surprised to find their tyres worn close to the legal limit — or below it — well before the first MOT. If you're running the original tyres on a three-year-old EV, check them before your MOT appointment. Tyre failures are one of the most common reasons any car fails its MOT, and EVs are particularly prone.
+Many EV owners are surprised to find their tyres worn close to the legal limit — or below it — well before the first MOT. If you're running the original tyres on a three-year-old EV, check them before your MOT appointment. Tyre failures are one of the [most common reasons any car fails its MOT](/blog/most-common-mot-failures), and EVs are particularly prone.
 
 ### Brake component seizing
 
@@ -89,7 +89,7 @@ The maximum fee for a standard car MOT is **£54.85**, and this applies to elect
 
 In practice, many garages charge less than the maximum. Some offer MOTs from around £30 to £40, and you can often find deals if you combine the MOT with a service or tyre check.
 
-The test itself may be marginally quicker for an EV because there's no emissions test to run, but this doesn't typically translate to a lower price.
+The test itself may be marginally quicker for an EV because there's no emissions test to run, but this doesn't typically translate to a lower price. For tips on finding the best deal, see our guide on [how much an MOT costs](/blog/how-much-does-mot-cost).
 
 ## Can any garage MOT an electric car?
 
@@ -105,4 +105,4 @@ Set up a [free MOT reminder](/mot-reminder) and you'll get an email alert before
 
 ## The bottom line
 
-Electric cars absolutely need an MOT, and the test covers almost everything a standard car MOT does — minus the emissions check. The areas to watch are tyres (heavier cars wear them faster), brakes (regenerative braking can leave friction brakes underused and prone to seizing), and suspension (extra battery weight accelerates wear). None of these are reasons to worry, but they are reasons to prepare. Check your [MOT status](/mot-check) ahead of time, inspect your tyres, and give those friction brakes a workout now and then. A few minutes of preparation can save you from a failure and a second trip to the garage.
+Electric cars absolutely need an MOT, and the test covers almost everything a standard car MOT does — minus the emissions check. The areas to watch are tyres (heavier cars wear them faster), brakes (regenerative braking can leave friction brakes underused and prone to seizing), and suspension (extra battery weight accelerates wear). For a full breakdown of EV ownership costs including tax and insurance, see our guide to the [real cost of owning an electric car](/blog/real-cost-owning-electric-car-uk). None of these are reasons to worry, but they are reasons to prepare. Check your [MOT status](/mot-check) ahead of time, inspect your tyres, and give those friction brakes a workout now and then. A few minutes of preparation can save you from a failure and a second trip to the garage.

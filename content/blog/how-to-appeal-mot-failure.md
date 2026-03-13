@@ -114,7 +114,7 @@ If you go to a **different test centre** or more than 10 working days have passe
 
 Use our [MOT check](/mot-check) to review previous test results. Look for:
 
-- **Recurring advisories** that might have progressed to failures
+- **Recurring advisories** that might have progressed to failures — our guide on [what MOT advisories mean](/blog/what-does-mot-advisory-mean) explains which ones to take seriously
 - **Items that failed last time** that may not have been properly repaired
 - **Pattern of issues** that suggest ongoing problems with specific components
 
@@ -133,7 +133,7 @@ Avoid centres that offer suspiciously cheap MOTs or pressure you into having rep
 
 ### Consider a pre-MOT check
 
-Many garages offer a pre-MOT inspection for £20–£40. They'll check the common failure points and advise what needs attention before the actual test. This reduces the chance of an unexpected failure.
+Many garages offer a pre-MOT inspection for £20–£40. They'll check the [common failure points](/blog/most-common-mot-failures) and advise what needs attention before the actual test. This reduces the chance of an unexpected failure.
 
 ## How to check your current MOT status
 
@@ -150,6 +150,6 @@ This gives you a complete picture of the vehicle's testing history and helps you
 
 MOT appeals exist for genuine errors, and the process is free and straightforward. The key constraints are the 14-working-day deadline and the requirement not to repair the vehicle before inspection.
 
-For most people, the practical approach is to get the failure items repaired and return for a free retest within 10 working days at the same centre. Reserve appeals for cases where you genuinely believe the tester got it wrong.
+For most people, the practical approach is to get the failure items repaired and return for a free retest within 10 working days at the same centre. Our guide on [what to do if your car fails its MOT](/blog/what-to-do-if-car-fails-mot) covers all your options. Reserve appeals for cases where you genuinely believe the tester got it wrong.
 
 Check your vehicle's complete [MOT history](/mot-check) with our [free car check](/car-check) to understand the pattern of tests and prepare for what comes next.

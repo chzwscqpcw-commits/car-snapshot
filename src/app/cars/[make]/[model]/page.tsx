@@ -34,7 +34,53 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!data) return {};
 
   const title = `${data.displayName} — Reliability, Safety & Running Costs | Free Plate Check`;
-  const description = `Free ${data.displayName} buyer's guide. ${data.ncap ? `${data.ncap.overallStars}-star NCAP safety.` : ""} ${data.motPassRate ? `${data.motPassRate.passRate}% MOT pass rate.` : ""} ${data.runningCosts ? `£${data.runningCosts.monthlyCost}/month to run.` : ""} Check any ${data.displayName} by registration.`;
+
+  // Build a compelling, data-rich description (target 120-160 chars)
+  const highlights: string[] = [];
+  if (data.motPassRate) {
+    highlights.push(
+      `${data.motPassRate.passRate}% MOT pass rate${data.motPassRate.aboveAverage ? " (above average)" : ""}`
+    );
+  }
+  if (data.ncap) {
+    highlights.push(`${data.ncap.overallStars}-star NCAP safety`);
+  }
+  if (data.runningCosts) {
+    highlights.push(`£${data.runningCosts.monthlyCost}/mo running costs`);
+  }
+  if (data.fuelEconomy && !data.isEv) {
+    highlights.push(`${data.fuelEconomy.combinedMpg} mpg`);
+  }
+  if (data.isEv && data.evSpecs.length > 0) {
+    highlights.push(`${data.evSpecs[0].rangeWltp}-mile range`);
+  }
+
+  const suffix = "Free MOT history, recalls & valuation check.";
+  const prefix = `${data.displayName} buyer's guide`;
+
+  // Join highlights with commas, trim to fit ~155 chars total
+  let description: string;
+  if (highlights.length > 0) {
+    const joined = highlights.join(", ");
+    const full = `${prefix} — ${joined}. ${suffix}`;
+    if (full.length <= 160) {
+      description = full;
+    } else {
+      // Drop highlights from the end until it fits
+      let trimmed = highlights.slice(0);
+      while (trimmed.length > 1) {
+        trimmed.pop();
+        const candidate = `${prefix} — ${trimmed.join(", ")}. ${suffix}`;
+        if (candidate.length <= 160) {
+          description = candidate;
+          break;
+        }
+      }
+      description ??= `${prefix} — ${trimmed[0]}. ${suffix}`;
+    }
+  } else {
+    description = `${prefix}. Reliability, safety & running costs. ${suffix}`;
+  }
 
   return {
     title,

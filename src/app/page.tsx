@@ -643,6 +643,7 @@ export default function Home() {
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const [showRecallDetails, setShowRecallDetails] = useState(false);
   const [fuelPrices, setFuelPrices] = useState<{ petrol: number; diesel: number; date: string | null } | null>(null);
+  const [vehiclesChecked, setVehiclesChecked] = useState<number | null>(null);
 
   // MOT reminder state
   const [motReminderEmail, setMotReminderEmail] = useState("");
@@ -656,6 +657,14 @@ export default function Home() {
     fetch("/api/fuel-prices")
       .then((res) => res.json())
       .then((data) => setFuelPrices(data))
+      .catch(() => {});
+  }, []);
+
+  // Fetch social proof counter
+  useEffect(() => {
+    fetch("/api/social-proof")
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => { if (data?.total) setVehiclesChecked(data.total); })
       .catch(() => {});
   }, []);
 
@@ -2823,6 +2832,14 @@ END:VEVENT
           <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
             Your data is private. We don't store registration numbers or track who you are.
           </p>
+          {vehiclesChecked !== null && vehiclesChecked > 0 && (
+            <p className="mt-2 text-sm text-slate-500 transition-opacity duration-500">
+              {Math.floor(vehiclesChecked / 100) * 100 >= 1000
+                ? `${(Math.floor(vehiclesChecked / 100) * 100).toLocaleString("en-GB")}+`
+                : `${Math.floor(vehiclesChecked / 100) * 100}+`}{" "}
+              vehicles checked
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
             <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
             <span className="text-slate-700 hidden sm:inline">&middot;</span>

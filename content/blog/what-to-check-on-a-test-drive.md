@@ -92,7 +92,7 @@ While stationary with the engine running:
 
 - **Bump absorption** — The car should handle bumps and potholes without excessive bouncing, crashing, or bottoming out.
 - **Body roll** — Some roll in corners is normal, but excessive lean suggests worn anti-roll bar links or shock absorbers.
-- **Noises** — Clunking or knocking over bumps points to worn bushings, drop links, or ball joints. These are MOT failure items.
+- **Noises** — Clunking or knocking over bumps points to worn bushings, drop links, or ball joints. These are [common MOT failure items](/blog/most-common-mot-failures).
 - **Uneven feel** — If the car feels different over the left and right wheels, one side may have worn components.
 
 ### At speed (dual carriageway)
@@ -116,7 +116,7 @@ With the engine warm, open the bonnet and check:
 
 Crouch down and look underneath for:
 
-- **Rust** — Surface rust is normal on older cars, but structural rust on the chassis, sills, or subframe is a potential MOT failure and expensive to repair.
+- **Rust** — Surface rust is normal on older cars, but structural rust on the chassis, sills, or subframe is a potential MOT failure and expensive to repair. A [car valuation](/blog/car-valuation-guide) can help you decide whether repair costs are worth it relative to the vehicle's value.
 - **Exhaust condition** — Check for holes, excessive rust, or hanging sections.
 - **Fluid leaks** — Fresh spots under the engine, gearbox, or differential areas.
 

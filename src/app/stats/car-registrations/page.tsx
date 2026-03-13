@@ -62,6 +62,44 @@ const faqItems = [
 export default function CarRegistrationsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "UK New Car Registrations 2025",
+              description:
+                "Interactive charts showing UK new car registrations from 1990 to 2025, including annual sales trends and fuel type market share. Data sourced from the SMMT.",
+              url: "https://www.freeplatecheck.co.uk/stats/car-registrations",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "1990/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Annual new car registrations by fuel type",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="UK New Car Registrations 1990–2025"
         subtitle="Explore how many new cars the UK buys each year and how the fuel type mix has shifted from petrol and diesel dominance toward electrified powertrains."

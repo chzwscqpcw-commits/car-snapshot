@@ -21,7 +21,7 @@ This means:
 - **The car can be repossessed** — The finance company can recover the vehicle at any time, leaving you with nothing.
 - **Selling a financed car without settling the debt is illegal** — It's fraud under the Fraud Act 2006, but that doesn't help you get your money back.
 
-Around a third of used cars in the UK are bought on some form of finance, so this is not a rare problem. It's one of the most common issues uncovered by vehicle history checks.
+Around a third of used cars in the UK are bought on some form of finance, so this is not a rare problem. It's one of the most common issues uncovered by [vehicle history checks](/blog/what-is-hpi-check).
 
 ## How to check for outstanding finance
 
@@ -84,10 +84,10 @@ If you discover you've bought a car with outstanding finance:
 
 **Pay by bank transfer, not cash.** This creates a paper trail. Never pay large sums in cash for a vehicle purchase.
 
-**Check the V5C carefully.** Make sure the seller's name and address match the V5C. Be cautious if the V5C is very new (recently re-issued), as this can indicate a recent change of ownership connected to a finance dispute.
+**Check the [V5C logbook](/blog/what-is-a-v5c-logbook) carefully.** Make sure the seller's name and address match the V5C. Be cautious if the V5C is very new (recently re-issued), as this can indicate a recent change of ownership connected to a finance dispute.
 
 ## The bottom line
 
-Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, spend £10–£20 on a paid HPI or AA check. It's the cheapest insurance you'll ever buy.
+Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, spend £10–£20 on a paid HPI or AA check. It's the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
 
 Start with a [free car check](/car-check) to cover everything else — vehicle details, MOT history, tax status, mileage, ULEZ compliance, and recalls. Then add a paid finance check for complete peace of mind.

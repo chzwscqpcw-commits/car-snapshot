@@ -26,7 +26,7 @@ You need to make a SORN declaration if:
 - **You've bought a car** that you're not going to use straight away
 - **The vehicle isn't roadworthy** and needs work before it can pass an MOT
 
-The key rule is simple: if a vehicle is registered in your name and it isn't taxed, it must be SORN'd. There's no middle ground. An untaxed vehicle without a SORN is illegal, even if it's parked on your own driveway that happens to be accessible from a public road.
+The key rule is simple: if a vehicle is registered in your name and it isn't taxed, it must be SORN'd. There's no middle ground. An untaxed vehicle without a SORN is illegal, even if it's parked on your own driveway that happens to be accessible from a public road. Our guide on [what happens if your car tax expires](/blog/what-happens-car-tax-expires) explains the penalties.
 
 ## How to make a SORN declaration
 
@@ -59,9 +59,9 @@ On top of that, untaxed vehicles on public roads can be clamped or impounded. Yo
 
 No. A SORN'd vehicle cannot be driven on any public road for any reason. Not to the shops, not to a friend's house, not "just round the corner."
 
-There is one narrow exception: you can drive to a pre-booked MOT appointment, but only if the vehicle is insured. The route must be direct — you can't make stops along the way. And if the vehicle fails its MOT, you can drive it directly home or to a garage for repairs (again, insured and by the most direct route).
+There is one narrow exception: you can drive to a pre-booked MOT appointment, but only if the vehicle is insured. Our guide on [driving without an MOT](/blog/what-happens-driving-without-mot) explains the rules for this exception. The route must be direct — you can't make stops along the way. And if the vehicle fails its MOT, you can drive it directly home or to a garage for repairs (again, insured and by the most direct route).
 
-For any other journey, the vehicle must be taxed and insured before its wheels touch a public road. This means taxing it online before you set off, not "when you get home."
+For any other journey, the vehicle must be taxed and insured before its wheels touch a public road. Our guide on [how to tax a car online](/blog/how-to-tax-a-car-online) walks through the process step by step.
 
 ## SORN and buying or selling a car
 

@@ -44,7 +44,7 @@ These rates apply to new vehicles first registered on or after 1 April 2026:
 | 226–255 | £2,340 | £4,680 | **£4,850** |
 | Over 255 | £2,745 | £5,490 | **£5,690** |
 
-The three-column view tells the story clearly. From 2024/25 to 2025/26, every band from 76 g/km upwards roughly doubled. The 2026/27 rates add another 3–4% on top.
+The three-column view tells the story clearly. From 2024/25 to 2025/26, every band from 76 g/km upwards roughly doubled. The 2026/27 rates add another 3–4% on top. For the full picture of all VED rates including standard and pre-2017 bands, see our [complete 2026 car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
 
 ## Which cars are in the most expensive bands?
 
@@ -111,7 +111,7 @@ The stated aim was to strengthen the emissions-based signal in first-year VED, m
 
 No — directly. First-year VED is paid once by the original registering owner (usually the dealer or first buyer). If you buy a used car, the first-year rate has already been paid. From year two, you pay the standard rate of £200 plus the expensive car supplement if applicable.
 
-However, the first-year rates do affect used car values indirectly. Higher showroom taxes make new high-emission cars less attractive, which can depress residual values for those models and potentially make them cheaper to buy second-hand. Something to watch if you're bargain-hunting for a used performance car.
+However, the first-year rates do affect used car values indirectly. Higher showroom taxes make new high-emission cars less attractive, which can depress residual values for those models and potentially make them cheaper to buy second-hand. Our guide to [cars that hold their value best](/blog/cars-that-hold-value-best-uk) explores which models are most affected. Something to watch if you're bargain-hunting for a used performance car.
 
 Check any vehicle's full history — including tax status, MOT results, and mileage — with our [car check tool](/car-check).
 
@@ -124,6 +124,6 @@ Check any vehicle's full history — including tax status, MOT results, and mile
 
 ## The bottom line
 
-First-year car tax for new vehicles has roughly doubled in two years and continues to climb. For buyers in the market for anything above 150 g/km CO2, the showroom tax is now a four-figure expense. Electric vehicles and efficient hybrids face minimal first-year charges, and the gap between them and high emitters has never been wider.
+First-year car tax for new vehicles has roughly doubled in two years and continues to climb. For buyers in the market for anything above 150 g/km CO2, the showroom tax is now a four-figure expense. Electric vehicles and efficient hybrids face minimal first-year charges, and the gap between them and high emitters has never been wider. Our guide to [electric car road tax in 2026](/blog/electric-car-road-tax-2026) has the full breakdown for EV buyers.
 
 If you're buying new, the CO2 emissions figure on the spec sheet isn't just an environmental metric — it's a direct line to your tax bill. Know the number before you sign.

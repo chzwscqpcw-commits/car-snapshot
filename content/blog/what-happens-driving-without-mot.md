@@ -64,7 +64,7 @@ If the vehicle fails its MOT, you can drive it directly home or to a garage for 
 
 ## What about tax?
 
-Here's another catch that many people miss: you cannot tax a vehicle without a valid MOT. The DVLA's systems are linked, so if your MOT has expired, you can't renew your [car tax](/tax-check) online.
+Here's another catch that many people miss: you cannot [tax a vehicle](/blog/how-to-tax-a-car-online) without a valid MOT. The DVLA's systems are linked, so if your MOT has expired, you can't renew your [car tax](/tax-check) online.
 
 This creates a chain reaction. Your MOT expires, so your tax can't be renewed, so now you're potentially driving without both a valid MOT and valid tax. That's two separate offences, and the penalties stack up.
 
@@ -81,7 +81,7 @@ The practical sequence when your MOT has lapsed is:
 
 The simplest approach is to set a reminder. Your MOT expiry date is recorded against your vehicle and you can check it any time using our [MOT check tool](/mot-check). Set a calendar reminder for a month before the due date — this gives you plenty of time to book a test.
 
-You can get your MOT done up to one month (minus a day) before the expiry date without losing any time. If your MOT expires on 15 March, you can have the new test done from 16 February onwards, and the new certificate will still run until 15 March the following year.
+You can [get your MOT done up to one month early](/blog/can-you-get-mot-done-early) without losing any time. If your MOT expires on 15 March, you can have the new test done from 16 February onwards, and the new certificate will still run until 15 March the following year.
 
 This is the smartest approach: book early, avoid the rush, and never find yourself in the position of driving without a valid certificate.
 

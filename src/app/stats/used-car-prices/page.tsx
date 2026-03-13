@@ -60,6 +60,44 @@ const faqItems = [
 export default function UsedCarPricesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Used Car Prices UK 2025",
+              description:
+                "Track UK used car prices with our quarterly market index, interactive depreciation calculator and expert analysis of COVID-era price spikes and the ongoing market correction.",
+              url: "https://www.freeplatecheck.co.uk/stats/used-car-prices",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2019/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Quarterly used car price index relative to Q1 2019 baseline",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Used Car Prices UK 2025"
         subtitle="Quarterly market index tracking used car values since 2019, with an interactive depreciation calculator and expert analysis of pricing trends."

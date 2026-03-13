@@ -106,7 +106,7 @@ Emission failures are particularly common on older diesel vehicles, though petro
 ### How to check before the test
 If your engine management light is on, get it diagnosed — it often indicates an emissions-related fault. Excessive smoke from the exhaust (black for diesels, blue for oil burning) is a warning sign. Take the car for a good 20-minute motorway run before the test to clear the DPF and get the catalytic converter up to operating temperature.
 
-You can check whether your vehicle is likely to meet [ULEZ emission standards](/ulez-check) for an indication of its general emissions health.
+You can check whether your vehicle is likely to meet [ULEZ emission standards](/ulez-check) for an indication of its general emissions health. Our guide on [Euro emission standards](/blog/euro-emission-standards-explained) explains which standard your car needs to meet.
 
 ## 7. Steering
 
@@ -179,7 +179,7 @@ This won't guarantee a pass, but it will eliminate the most common — and most 
 
 ## Know your car's history
 
-Before the test, it's worth checking your vehicle's [MOT history](/mot-check) to see what came up at previous tests. Advisories from last year often become failures this year if they haven't been addressed. Recurring issues — like a suspension advisory that's appeared three years running — are a strong sign that the component is close to failing.
+Before the test, it's worth checking your vehicle's [MOT history](/mot-check) to see what came up at previous tests. [Advisories](/blog/what-does-mot-advisory-mean) from last year often become failures this year if they haven't been addressed. Recurring issues — like a suspension advisory that's appeared three years running — are a strong sign that the component is close to failing.
 
 To make sure you always test within the optimal window, set up a [free MOT reminder](/mot-reminder) and you'll get an email alert 28 days and 7 days before your MOT expires.
 
@@ -187,4 +187,4 @@ And if your car does need work before the test, [Compare MOT prices on BookMyGar
 
 ## The bottom line
 
-Most MOT failures are preventable. The top ten failure categories — lights, tyres, brakes, suspension, windscreen, emissions, steering, bodywork, seatbelts, and registration plates — account for the vast majority of fails, and many of them can be spotted with a simple walk-around before the test. Spend ten minutes checking the basics, review your previous [MOT history](/mot-check) for recurring advisories, and book your test with time to spare. A little preparation goes a long way toward a first-time pass.
+Most MOT failures are preventable. The top ten failure categories — lights, tyres, brakes, suspension, windscreen, emissions, steering, bodywork, seatbelts, and registration plates — account for the vast majority of fails, and many of them can be spotted with a simple walk-around before the test. Spend ten minutes checking the basics, review your previous [MOT history](/mot-check) for recurring advisories, and [book your test with time to spare](/blog/can-you-get-mot-done-early). A little preparation goes a long way toward a first-time pass.

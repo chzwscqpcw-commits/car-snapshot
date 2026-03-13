@@ -36,13 +36,13 @@ When you check, you'll typically see one of these:
 
 ### If you own the car
 
-Driving without valid tax is an offence. You can be fined up to £1,000, and the DVLA can clamp or impound your vehicle. They also use automatic number plate recognition (ANPR) cameras across the country, so it's not something you can get away with quietly.
+Driving without valid tax is an offence. You can be fined up to £1,000, and the DVLA can clamp or impound your vehicle. Our guide on [what happens if your car tax expires](/blog/what-happens-car-tax-expires) covers the full range of penalties. They also use automatic number plate recognition (ANPR) cameras across the country, so it's not something you can get away with quietly.
 
 Set a reminder a few weeks before your tax is due. Unlike MOT, you can't renew car tax early — you need to wait until the final month.
 
 ### If you're buying a car
 
-Car tax doesn't transfer with a vehicle sale. When you buy a car, you must tax it in your own name before driving it away. The seller's remaining tax gets cancelled and refunded to them automatically.
+Car tax doesn't transfer with a vehicle sale. When you buy a car, you must [tax it in your own name](/blog/how-to-tax-a-car-online) before driving it away. The seller's remaining tax gets cancelled and refunded to them automatically.
 
 This catches a lot of buyers off guard. Even if the seller says "it's got six months of tax left," that tax will be cancelled the moment the DVLA processes the change of ownership. Don't assume you can drive it home untaxed — if you're stopped, it's your problem.
 
@@ -59,7 +59,7 @@ VED rates depend on several factors:
 - **List price** — Cars with a list price over £40,000 pay an additional supplement for five years.
 - **Fuel type** — Diesel vehicles that don't meet RDE2 standards pay a supplement in the first year.
 
-For most cars registered after April 2017, the first year rate varies by emissions, then it drops to a flat standard rate (currently £190/year for petrol and diesel cars).
+For most cars registered after April 2017, the first year rate varies by emissions, then it drops to a flat standard rate (currently £190/year for petrol and diesel cars). For the full rate tables, see our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
 
 You can check exact rates on the GOV.UK website.
 

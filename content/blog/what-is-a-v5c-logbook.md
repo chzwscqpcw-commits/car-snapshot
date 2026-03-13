@@ -30,7 +30,7 @@ The V5C records:
 - **VIN (Vehicle Identification Number)** — The unique 17-character code stamped into the vehicle's chassis
 - **Date of first registration** — When the vehicle was first registered in the UK
 - **Year of manufacture** — When the vehicle was built (can differ from registration date)
-- **CO2 emissions** — Recorded emissions figure, used for VED (road tax) calculations
+- **CO2 emissions** — Recorded emissions figure, used for VED ([road tax](/blog/car-tax-rates-2026-complete-guide)) calculations
 - **Registered keeper's name and address** — The current keeper
 - **Previous keeper details** — Limited information about the previous keeper
 - **Document reference number** — An 11-digit number needed for online services like taxing the vehicle
@@ -67,8 +67,8 @@ The green slip lets you tax the vehicle immediately while waiting for your new V
 If a private seller cannot produce the V5C, treat this as a significant red flag. Possible explanations include:
 
 - **The seller isn't the registered keeper** — They may not have the right to sell the vehicle.
-- **The vehicle may be stolen** — Stolen vehicles are sometimes sold without documentation.
-- **There may be outstanding finance** — The finance company may hold the V5C.
+- **The vehicle may be [stolen](/blog/how-to-check-if-car-is-stolen)** — Stolen vehicles are sometimes sold without documentation.
+- **There may be [outstanding finance](/blog/how-to-check-if-car-has-finance)** — The finance company may hold the V5C.
 - **It's been recently acquired** — The seller may have bought it recently and the V5C hasn't arrived yet. Ask for the green slip as evidence.
 
 A dealer may legitimately not have the V5C if the vehicle was recently traded in, but they should be able to explain the situation and provide it before you collect the car.

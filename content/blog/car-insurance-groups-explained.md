@@ -75,7 +75,7 @@ If you're looking for the most affordable insurance — especially for new or yo
 - **Seat Ibiza 1.0** — Group 5–8
 - **Dacia Sandero** — Group 3–7
 
-These tend to be small cars with modest engines, cheap parts, and good safety features. Many also have low [road tax costs](/tax-check) and good fuel economy, making them affordable all round.
+These tend to be small cars with modest engines, cheap parts, and good safety features. Many also have low [road tax costs](/tax-check) and good fuel economy, making them affordable all round. If you're a new driver looking for an affordable first car, our [first car checklist](/blog/first-car-checklist-new-drivers) covers everything you need to consider.
 
 ## How modifications affect insurance groups
 
@@ -96,7 +96,7 @@ Factory-fitted options don't change the insurance group. But aftermarket modific
 
 You are legally required to declare all modifications to your insurer. Failing to do so can void your policy entirely, leaving you uninsured.
 
-When buying a used car, check for modifications that the seller may not mention. Look for aftermarket exhausts, non-standard wheels, tinted windows, or any performance parts. These will affect your insurance even if the previous owner didn't declare them.
+When buying a used car, check for modifications that the seller may not mention. Our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying) covers this and other important inspection points. Look for aftermarket exhausts, non-standard wheels, tinted windows, or any performance parts. These will affect your insurance even if the previous owner didn't declare them.
 
 ## Tips for reducing insurance costs
 

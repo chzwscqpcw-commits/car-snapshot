@@ -26,7 +26,7 @@ Our free check is the fastest method — it takes seconds, shows you the officia
 
 ### Road tax (VED)
 
-CO2 emissions are the main factor in calculating Vehicle Excise Duty for most cars. The system works differently depending on when your car was first registered:
+CO2 emissions are the main factor in calculating Vehicle Excise Duty for most cars. For the [complete 2026 car tax rates](/blog/car-tax-rates-2026-complete-guide) broken down by band, see our dedicated guide. The system works differently depending on when your car was first registered:
 
 **Registered from 1 April 2017 onwards:**
 - First year tax is based on CO2 emissions — ranging from £0 for zero-emission vehicles to over £2,000 for the highest emitters
@@ -42,7 +42,7 @@ You can see your vehicle's current tax status and what you're paying using our [
 
 ### ULEZ and Clean Air Zones
 
-While ULEZ charges are based on the **Euro emission standard** (Euro 4 for petrol, Euro 6 for diesel) rather than CO2 directly, the two are related. Lower-CO2 vehicles tend to be newer and more likely to meet the required Euro standard.
+While ULEZ charges are based on the **[Euro emission standard](/blog/euro-emission-standards-explained)** (Euro 4 for petrol, Euro 6 for diesel) rather than CO2 directly, the two are related. Lower-CO2 vehicles tend to be newer and more likely to meet the required Euro standard.
 
 Check your vehicle's [ULEZ compliance](/ulez-check) alongside its CO2 figure to get the full emissions picture.
 

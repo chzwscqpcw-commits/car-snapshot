@@ -62,6 +62,44 @@ const faqItems = [
 export default function EvAdoptionPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "UK Electric Vehicle Adoption 2025",
+              description:
+                "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density. Data from DfT and SMMT covering 2010-2025.",
+              url: "https://www.freeplatecheck.co.uk/stats/ev-adoption",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2010/2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Battery electric vehicle fleet size and new registration market share",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="UK Electric Vehicle Adoption 2025"
         subtitle="Track the growth of battery electric, plug-in hybrid and conventional hybrid vehicles on UK roads. Explore fleet size, new sales share and regional EV density."

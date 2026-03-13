@@ -38,6 +38,8 @@ The cost depends on when your car was first registered and its CO2 emissions:
 
 ### Cars registered after 1 April 2017
 
+For the full rate tables including the latest changes, see our [complete 2026 car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
+
 | First-year rate | Based on CO2 emissions (0g/km = £0, up to £2,745 for 255+ g/km) |
 |---|---|
 | Standard rate (year 2+) | £190/year for all non-zero emission vehicles |
@@ -79,7 +81,7 @@ Driving an untaxed vehicle is illegal and can result in:
 - **Vehicle clamped or impounded** — DVLA enforcement agents can clamp untaxed vehicles on public roads. Release costs £100 plus backdated tax. If not released within 24 days, the vehicle is crushed.
 - **ANPR detection** — Police and DVLA use Automatic Number Plate Recognition cameras across the UK. Untaxed vehicles are flagged automatically.
 
-The DVLA's enforcement is automated and effective. Don't assume you won't get caught — ANPR cameras are everywhere.
+The DVLA's enforcement is automated and effective. Our guide on [what happens if your car tax expires](/blog/what-happens-car-tax-expires) explains how quickly penalties escalate. Don't assume you won't get caught — ANPR cameras are everywhere.
 
 Check your current tax status at any time with our [tax check](/tax-check).
 
@@ -121,7 +123,7 @@ Direct debit payments auto-renew, so you won't accidentally let your tax lapse. 
 
 If you're not using your car on public roads, you can declare a Statutory Off Road Notification (SORN) instead of taxing it. A SORN is free and lasts until you tax the vehicle again.
 
-While SORN'd, the vehicle must be kept on private land — a driveway, garage, or private car park. It cannot be parked on a public road, even briefly.
+While SORN'd, the vehicle must be kept on private land — a driveway, garage, or private car park. It cannot be parked on a public road, even briefly. See our complete guide on [how to SORN a car](/blog/how-to-sorn-a-car) for the full process.
 
 SORN is useful if you're storing a car, doing a long-term restoration, or waiting for parts to arrive. You'll save the annual tax cost while the car is off the road.
 

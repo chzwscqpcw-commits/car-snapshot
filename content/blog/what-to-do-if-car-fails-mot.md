@@ -57,7 +57,7 @@ You're not obligated to use the testing garage for repairs. If you think the pri
 
 If you believe the failure was incorrect — for example, you think a component was within limits — you can appeal through the DVSA. You must do this within 14 working days of the test. The DVSA will arrange for an independent examination.
 
-In practice, appeals are rare and most test results stand. But if you genuinely believe the tester made an error, it's your right to challenge it.
+In practice, appeals are rare and most test results stand. Our guide on [how to appeal an MOT failure](/blog/how-to-appeal-mot-failure) covers the full process and time limits. But if you genuinely believe the tester made an error, it's your right to challenge it.
 
 ### Option 4: Sell or scrap the vehicle
 
@@ -110,10 +110,10 @@ Knowing the most common failures can help you prepare:
 6. **Exhaust and emissions** — Failed emissions test, exhaust leaks, catalytic converter faults.
 7. **Steering** — Excessive play, worn track rod ends, power steering leaks.
 
-Many of these can be spotted before the test. A quick walk-around checking lights, tyres, and wipers can avoid the most common failures.
+Many of these can be spotted before the test. Our guide on [how to prepare your car for its MOT](/blog/how-to-prepare-car-for-mot) covers a quick walk-around checking lights, tyres, and wipers that can avoid the most common failures.
 
 ## The bottom line
 
 Failing an MOT is common and usually fixable. Get the defect list in writing, understand your driving restrictions, shop around for repair quotes, and take advantage of free retest periods. If you booked early, you've got time on your side.
 
-Check your vehicle's full [MOT history](/mot-check) to see whether this year's failures are new issues or recurring problems that should have been addressed earlier. And next year, set a reminder to book a month before the expiry — it makes the whole process less stressful.
+Check your vehicle's full [MOT history](/mot-check) to see whether this year's failures are new issues or recurring problems that should have been addressed earlier. And next year, set a reminder to [book a month before the expiry](/blog/can-you-get-mot-done-early) — it makes the whole process less stressful.

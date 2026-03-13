@@ -65,7 +65,7 @@ There are several ways to find out whether your vehicle is subject to an outstan
 - **DVSA recall checker** — The DVSA maintains a public database of all vehicle recalls at gov.uk. You can search by make and model to see whether any recalls have been issued, along with details of the defect and remedy.
 - **Contact your manufacturer or dealer.** Your franchised dealer can check your specific vehicle identification number (VIN) against their recall database to tell you whether your individual car is affected and whether any outstanding recall work needs to be done. This is the most reliable method, as it checks your exact vehicle rather than just the model range.
 
-If you're buying a used car, checking for outstanding recalls should be part of your due diligence. A vehicle with an unresolved recall isn't necessarily a problem — the repair is free, after all — but it's something you want to know about before you buy so you can get it sorted promptly.
+If you're buying a used car, checking for outstanding recalls should be part of your [due diligence](/blog/used-car-checks-before-buying). A vehicle with an unresolved recall isn't necessarily a problem — the repair is free, after all — but it's something you want to know about before you buy so you can get it sorted promptly.
 
 ## What to do if your car has a recall
 
@@ -79,7 +79,7 @@ If you find out your vehicle is subject to a recall, here's what to do:
 
 4. **There is no time limit.** Unlike a warranty claim, recall repairs don't expire. Even if the recall was issued years ago and you've only just found out, you're still entitled to the free repair. Manufacturers are obligated to fix the defect regardless of the vehicle's age or mileage.
 
-5. **Keep a record.** Once the recall work is done, keep the paperwork. It forms part of the vehicle's service history and can be useful when selling the car, as it shows the issue was properly resolved.
+5. **Keep a record.** Once the recall work is done, keep the paperwork. It forms part of the vehicle's [service history](/blog/how-to-check-car-service-history) and can be useful when selling the car, as it shows the issue was properly resolved.
 
 ## Common misconceptions about recalls
 
@@ -93,7 +93,7 @@ There are a few myths about vehicle recalls that are worth clearing up:
 
 - **"The recall has expired."** Recalls do not expire. If a recall was issued for your vehicle, the manufacturer must fix it free of charge regardless of when the recall was announced.
 
-- **"My car passed its MOT, so it can't have a recall."** MOT testing and manufacturer recalls are separate processes. An MOT tests a vehicle's current roadworthiness against a defined set of criteria. A recall addresses a specific manufacturing defect. A car can pass its MOT and still have an outstanding recall.
+- **"My car passed its MOT, so it can't have a recall."** MOT testing and manufacturer recalls are separate processes. An [MOT tests a vehicle's current roadworthiness](/blog/how-to-read-mot-history) against a defined set of criteria. A recall addresses a specific manufacturing defect. A car can pass its MOT and still have an outstanding recall.
 
 ## The bottom line
 

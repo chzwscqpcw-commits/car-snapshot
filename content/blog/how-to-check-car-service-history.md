@@ -6,7 +6,7 @@ keywords: ["car service history", "how to check service history", "full service 
 author: "Free Plate Check"
 ---
 
-A car's service history is one of the most important things to check when buying used. It tells you whether the vehicle has been properly maintained, gives clues about how it's been treated, and directly affects its value. A car with a full service history is typically worth 10–20% more than an identical car without one.
+A car's service history is one of the most important things to check when buying used. It tells you whether the vehicle has been properly maintained, gives clues about how it's been treated, and directly affects its value. A car with a full service history is typically worth 10–20% more than an identical car without one. Understanding [how much your car is worth](/blog/car-valuation-guide) starts with knowing whether the service records are complete.
 
 Here's how to check it and what to look for.
 
@@ -59,7 +59,7 @@ A car serviced every year for five years and then nothing for two years raises q
 
 ### Suspiciously low mileage between services
 
-If the service book shows 3,000 miles in a year but the car is a daily driver, the mileage may have been tampered with. Cross-reference with the [MOT mileage history](/mileage-check) to check for discrepancies.
+If the service book shows 3,000 miles in a year but the car is a daily driver, the mileage may have been tampered with. Our guide on [how to spot a clocked car](/blog/how-to-spot-a-clocked-car) explains what else to look for. Cross-reference with the [MOT mileage history](/mileage-check) to check for discrepancies.
 
 ### Services done by the owner
 

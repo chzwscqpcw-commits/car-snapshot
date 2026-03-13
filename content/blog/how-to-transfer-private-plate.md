@@ -20,7 +20,7 @@ A private (or personalised) number plate is any registration number that has bee
 - **Dateless plates** — e.g. ABC 1 or 1 ABC (the most valuable, as they don't indicate an age)
 - **Cherished plates** — Plates with personal significance, like initials or words
 
-The key rule is that a registration number **must not make the vehicle appear newer than it actually is**. You can put an older plate on a newer car, but not a newer plate on an older car. For example, a "72" plate (2022) cannot go on a car first registered in 2018.
+For background on how UK plates work, see our guide to [what UK number plates mean](/blog/what-uk-number-plate-means). The key rule is that a registration number **must not make the vehicle appear newer than it actually is**. You can put an older plate on a newer car, but not a newer plate on an older car. For example, a "72" plate (2022) cannot go on a car first registered in 2018.
 
 ## How to transfer a plate between vehicles
 
@@ -101,7 +101,7 @@ Private plates range in price from under £200 for common combinations to millio
 
 **Using a non-registered plate supplier** — Number plates must be made by a RNPS (Registered Number Plate Supplier). They're legally required to verify your identity and entitlement before making plates.
 
-**Illegal plate formatting** — Plates must conform to the standard font, spacing, and size. Altering spacing to spell words, using non-standard fonts, or adding decorative elements is illegal and can result in a £1,000 fine and MOT failure.
+**Illegal plate formatting** — Plates must conform to the standard font, spacing, and size. Altering spacing to spell words, using non-standard fonts, or adding decorative elements is illegal and can result in a £1,000 fine and [MOT failure](/blog/most-common-mot-failures).
 
 ## What it costs — summary
 

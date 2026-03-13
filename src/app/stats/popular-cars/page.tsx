@@ -56,6 +56,44 @@ const faqs = [
 export default function PopularCarsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Dataset",
+              name: "Most Popular Cars in the UK 2025",
+              description:
+                "Discover the most popular cars on UK roads. Top 20 makes by fleet size, model registration trends, colour popularity and more.",
+              url: "https://www.freeplatecheck.co.uk/stats/popular-cars",
+              license:
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+              creator: {
+                "@type": "Organization",
+                name: "Free Plate Check",
+                url: "https://www.freeplatecheck.co.uk",
+              },
+              temporalCoverage: "2025",
+              spatialCoverage: "United Kingdom",
+              variableMeasured:
+                "Registered vehicle fleet size by make, model and colour",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: item.answer,
+                },
+              })),
+            },
+          ]),
+        }}
+      />
       <StatsHeroSection
         title="Most Popular Cars in the UK 2025"
         subtitle="Top makes, models and colours on UK roads. See which brands dominate and how the landscape is shifting."

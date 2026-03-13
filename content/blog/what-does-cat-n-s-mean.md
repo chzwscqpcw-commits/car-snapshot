@@ -78,7 +78,7 @@ Start with a [free car check](/car-check) to verify the vehicle details, [MOT hi
 
 ### 2. Get a paid history check
 
-A paid HPI or AA check will confirm the write-off category and date. Free checks cannot access insurance write-off data, so this is essential for any car where you suspect or know about a write-off history.
+A paid [HPI or AA check](/blog/what-is-hpi-check) will confirm the write-off category and date. Free checks cannot access insurance write-off data, so this is essential for any car where you suspect or know about a write-off history.
 
 ### 3. Get an independent inspection
 
@@ -110,6 +110,6 @@ The vehicle's agreed value for insurance purposes will also be lower than an equ
 
 ## The bottom line
 
-Cat N and Cat S cars can be genuine bargains, but they come with risks that require extra due diligence. The write-off marker is permanent and will always affect resale value.
+Cat N and Cat S cars can be genuine bargains, but they come with risks that require extra due diligence. The write-off marker is permanent and will always affect resale value. Our [car valuation guide](/blog/car-valuation-guide) explains what factors influence what buyers will pay.
 
 If you're considering a written-off car, start with a [free car check](/car-check) to review the full vehicle history and [MOT records](/mot-check). Then invest in a paid history check and an independent inspection. The extra £200–£300 spent on checks is a fraction of the potential cost of buying a poorly repaired vehicle.

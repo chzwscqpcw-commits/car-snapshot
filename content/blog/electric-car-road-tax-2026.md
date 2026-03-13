@@ -26,7 +26,7 @@ Since April 2025, electric vehicle VED works like this:
 - **Existing EV (registered April 2017 – March 2025):** £195/year standard rate — jumped straight from £0 to the full rate
 - **Pre-April 2017 EV:** £20/year (Band A equivalent)
 
-The first-year rate of £10 is the lowest available — lower even than the cheapest petrol hybrids. But the standard rate is the same flat amount that every post-2017 car pays, regardless of fuel type.
+The first-year rate of £10 is the lowest available — lower even than the cheapest petrol hybrids. But the standard rate is the same flat amount that every post-2017 car pays, regardless of fuel type. For the full rate tables across all vehicle types, see our [complete car tax rates guide for 2026](/blog/car-tax-rates-2026-complete-guide).
 
 You can check what any vehicle currently pays using our [free tax check](/tax-check).
 
@@ -103,7 +103,7 @@ If you own an older EV registered before April 2017 — early Nissan Leafs, Rena
 
 The April 2025 changes removed the zero-tax advantage that made EVs uniquely cheap to run on paper. But the April 2026 supplement threshold change restores some of that advantage in the £40k–£50k price bracket where many buyers are shopping.
 
-If you're comparing an EV against a similarly priced petrol or diesel alternative:
+If you're weighing up fuel types more broadly, our guide to [petrol vs diesel vs hybrid vs electric](/blog/petrol-vs-diesel-vs-hybrid-vs-electric) covers the full comparison. If you're comparing an EV against a similarly priced petrol or diesel alternative:
 
 1. **First year:** The EV costs £10 to tax versus potentially hundreds or thousands for the ICE equivalent
 2. **Years 2–6 (under £50k EV / over £40k ICE):** The EV saves £440/year in supplement costs

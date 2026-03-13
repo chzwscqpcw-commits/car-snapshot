@@ -88,7 +88,7 @@ The DVLA's systems link tax, MOT, and SORN together. Understanding how they inte
 - **You can't tax a car without valid insurance.** The DVLA checks the Motor Insurance Database when you apply for tax.
 - **If you don't tax and don't SORN, you get fined.** The DVLA expects every registered vehicle to be either taxed or declared SORN. There's no middle ground.
 
-A SORN tells the DVLA that the vehicle is being kept off the road and doesn't need to be taxed. It's free to declare and stays in place until you tax the vehicle again. If you're not using your car — perhaps it's being stored, repaired, or you're away for a while — declaring a SORN protects you from penalties.
+A [SORN](/blog/how-to-sorn-a-car) tells the DVLA that the vehicle is being kept off the road and doesn't need to be taxed. It's free to declare and stays in place until you tax the vehicle again. If you're not using your car — perhaps it's being stored, repaired, or you're away for a while — declaring a SORN protects you from penalties.
 
 ## How to retax your vehicle
 
@@ -96,7 +96,7 @@ If your tax has expired and you want to get back on the road, here's the process
 
 1. **Make sure you have a valid MOT.** If your MOT has also expired, you'll need to book and pass an MOT first. You can check your [MOT and tax status](/car-check) to see where you stand.
 2. **Make sure you have valid insurance.** The DVLA checks the Motor Insurance Database, so your insurance must be active before you can tax.
-3. **Tax the vehicle.** You can do this online at GOV.UK, by phone (0300 123 4321), or at a Post Office that handles vehicle tax. You'll need your V5C logbook (or the V5C/2 new keeper supplement if you've recently bought the car) and your V11 reminder letter if you have one.
+3. **[Tax the vehicle online](/blog/how-to-tax-a-car-online).** You can do this at GOV.UK, by phone (0300 123 4321), or at a Post Office that handles vehicle tax. You'll need your V5C logbook (or the V5C/2 new keeper supplement if you've recently bought the car) and your V11 reminder letter if you have one.
 4. **Pay the tax.** You can pay for 6 or 12 months, or set up a monthly direct debit. The direct debit option costs slightly more overall but spreads the payment.
 
 Once taxed, you're legal to drive again immediately. The DVLA database updates in real time, so ANPR cameras will recognise your vehicle as taxed straight away.
@@ -121,4 +121,4 @@ A SORN vehicle must be kept off the public road at all times — on a driveway, 
 
 ## The bottom line
 
-Letting your car tax expire is more than an administrative inconvenience. The DVLA's enforcement is automated, widespread, and escalates quickly — from an £80 penalty to clamping, impounding, and potentially crushing your vehicle. ANPR cameras mean there's very little chance of slipping through unnoticed. The fix is straightforward: [check your tax status](/tax-check), set a reminder, and renew on time. If you're not using the car, declare a SORN. Either way, don't leave your vehicle in the gap between taxed and SORN — that's where the fines start.
+Letting your car tax expire is more than an administrative inconvenience. The DVLA's enforcement is automated, widespread, and escalates quickly — from an £80 penalty to clamping, impounding, and potentially crushing your vehicle. ANPR cameras mean there's very little chance of slipping through unnoticed. The fix is straightforward: [check your tax status](/tax-check), set a reminder, and renew on time. If you're not using the car, declare a SORN. For the full breakdown of [current car tax rates](/blog/car-tax-rates-2026-complete-guide), see our complete guide. Either way, don't leave your vehicle in the gap between taxed and SORN — that's where the fines start.

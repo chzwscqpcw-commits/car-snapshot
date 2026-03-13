@@ -37,7 +37,7 @@ Generally, the cheapest cars to insure for new drivers are:
 - Not modified
 - Common makes with cheap parts (Vauxhall, Ford, Volkswagen, Toyota)
 
-Get quotes from comparison sites before you commit to any car.
+Our guide to [car insurance groups](/blog/car-insurance-groups-explained) explains how the grouping system works and which cars are cheapest to insure. Get quotes from comparison sites before you commit to any car.
 
 ### 3. Run a vehicle check
 
@@ -71,7 +71,7 @@ When you see the car in person:
 - Test drive on different roads — listen for knocks, check the brakes, feel the steering
 - Check all the electrics — lights, windows, wipers, heater
 
-If you're not confident assessing a car yourself, take someone who knows cars, or pay for an independent inspection (£100–£200 from the AA or RAC).
+If you're not confident assessing a car yourself, take someone who knows cars, or pay for an independent inspection (£100–£200 from the AA or RAC). Our [test drive checklist](/blog/what-to-check-on-a-test-drive) covers exactly what to look and listen for.
 
 ## After you buy
 
@@ -110,7 +110,7 @@ If the car is over three years old, it needs an annual MOT. Check the [expiry da
 
 **Skipping the checks** — Every car looks fine in photos. Always check the [MOT history](/mot-check), [mileage records](/mileage-check), and [tax status](/tax-check) before viewing.
 
-**Not budgeting for repairs** — Used cars need maintenance. Keep a contingency fund of at least £500 for unexpected repairs.
+**Not budgeting for repairs** — Used cars need maintenance. Keep a contingency fund of at least £500 for unexpected repairs. Our guide to the [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) covers everything you need to budget for.
 
 **Modifying too soon** — Modifications almost always increase insurance costs, sometimes dramatically. Hold off until you've built up some no-claims bonus.
 

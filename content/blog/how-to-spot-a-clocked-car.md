@@ -74,13 +74,13 @@ If you can safely look underneath, check for wear on suspension components, exha
 
 A paid vehicle history check from providers like HPI, AA, or RAC can flag mileage discrepancies from multiple sources — including finance company records, insurance records, and previous MOT data. These checks cross-reference data that isn't always visible in a basic MOT history lookup.
 
-They'll also tell you if the car has outstanding finance, has been written off, or has been reported stolen — all useful things to know before handing over money.
+They'll also tell you if the car has [outstanding finance](/blog/how-to-check-if-car-has-finance), has been [written off](/blog/what-does-cat-n-s-mean), or has been [reported stolen](/blog/how-to-check-if-car-is-stolen) — all useful things to know before handing over money.
 
 ## 8. Trust your instincts
 
 If a deal looks too good to be true, it probably is. A low-mileage car being sold cheaply, a seller who's evasive about the car's history, a private sale that feels rushed, or a refusal to let you have the car independently inspected — these are all warning signs.
 
-Legitimate sellers are usually happy for you to check the car thoroughly. They'll provide service history, encourage you to run an MOT check, and give you time to make a decision. If the seller is pressuring you to buy quickly or discouraging you from checking the history, walk away.
+Legitimate sellers are usually happy for you to check the car thoroughly. They'll provide [service history](/blog/how-to-check-car-service-history), encourage you to run an MOT check, and give you time to make a decision. If the seller is pressuring you to buy quickly or discouraging you from checking the history, walk away.
 
 ## What to do if you've bought a clocked car
 
