@@ -69,10 +69,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Invalid registration." }, { status: 400 });
     }
 
-    // Validate expiry date is in the future
-    const expiryDate = new Date(motExpiry);
-    if (isNaN(expiryDate.getTime()) || expiryDate <= new Date()) {
-      return NextResponse.json({ ok: false, error: "MOT expiry must be a future date." }, { status: 400 });
+    // Validate expiry date if provided (allow past dates — user may want a reminder for next year)
+    let validExpiry: string | null = null;
+    if (motExpiry) {
+      const expiryDate = new Date(motExpiry);
+      if (!isNaN(expiryDate.getTime())) {
+        validExpiry = motExpiry;
+      }
     }
 
     const sb = supabaseServer();
@@ -84,7 +87,7 @@ export async function POST(req: Request) {
         email,
         vrm,
         make_model: makeModel || null,
-        mot_expiry: motExpiry,
+        mot_expiry: validExpiry,
         reminder_28d_sent: false,
         reminder_7d_sent: false,
         active: true,
@@ -94,7 +97,7 @@ export async function POST(req: Request) {
 
     if (!insertError && inserted) {
       console.log("mot_reminder_created:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, motExpiry, inserted.unsubscribe_token);
+      await sendConfirmation(email, vrm, makeModel, validExpiry || "", inserted.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
@@ -108,7 +111,7 @@ export async function POST(req: Request) {
       const { data: updated, error: updateError } = await sb
         .from("mot_reminders")
         .update({
-          mot_expiry: motExpiry,
+          mot_expiry: validExpiry,
           make_model: makeModel || null,
           reminder_28d_sent: false,
           reminder_7d_sent: false,
@@ -135,7 +138,7 @@ export async function POST(req: Request) {
       }
 
       console.log("mot_reminder_updated:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, motExpiry, updated.unsubscribe_token);
+      await sendConfirmation(email, vrm, makeModel, validExpiry || "", updated.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
