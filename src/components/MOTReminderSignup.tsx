@@ -192,7 +192,8 @@ export default function MOTReminderSignup({
                 body: JSON.stringify({ vrm }),
               });
               if (lookupRes.ok) {
-                const lookupData = await lookupRes.json();
+                const lookupJson = await lookupRes.json();
+                const lookupData = lookupJson?.data;
                 expiry = lookupData?.motExpiryDate || "";
                 if (!vehicleMakeModel && lookupData?.make) {
                   vehicleMakeModel = `${lookupData.make} ${lookupData.model || ""}`.trim();
