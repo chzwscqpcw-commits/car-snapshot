@@ -176,26 +176,30 @@ export default function MOTReminderSignup({
       try {
         const trimmedEmail = email.trim().toLowerCase();
 
-        for (const reg of regs) {
-          const vrm = cleanReg(reg);
+        for (let i = 0; i < regs.length; i++) {
+          const vrm = cleanReg(regs[i]);
 
-          let expiry = motExpiryDate || "";
+          // Only use the prop expiry for the first vehicle (it belongs to that reg)
+          let expiry = i === 0 && regNumber && motExpiryDate ? motExpiryDate : "";
+          let vehicleMakeModel = i === 0 ? makeModel || "" : "";
 
-          // If no expiry provided, look it up
+          // Always look up the vehicle to get accurate expiry + make/model
           if (!expiry) {
             try {
-              const lookupRes = await fetch(
-                `/api/lookup?vrm=${encodeURIComponent(vrm)}`
-              );
+              const lookupRes = await fetch("/api/lookup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ vrm }),
+              });
               if (lookupRes.ok) {
                 const lookupData = await lookupRes.json();
-                expiry =
-                  lookupData?.mot?.motTestExpiryDate ||
-                  lookupData?.motTests?.[0]?.expiryDate ||
-                  "";
+                expiry = lookupData?.motExpiryDate || "";
+                if (!vehicleMakeModel && lookupData?.make) {
+                  vehicleMakeModel = `${lookupData.make} ${lookupData.model || ""}`.trim();
+                }
               }
             } catch {
-              // Continue without expiry — API will handle validation
+              // Continue without expiry — API will use default
             }
           }
 
@@ -205,7 +209,7 @@ export default function MOTReminderSignup({
             body: JSON.stringify({
               email: trimmedEmail,
               vrm,
-              makeModel: regs.length === 1 ? makeModel || "" : "",
+              makeModel: vehicleMakeModel,
               motExpiry: expiry,
             }),
           });
