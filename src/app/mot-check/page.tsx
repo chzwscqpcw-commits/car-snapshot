@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 export const metadata: Metadata = {
   title: "Free MOT History Check — Full MOT Results | Free Plate Check",
@@ -163,6 +164,15 @@ export default function MotCheckPage() {
           </a>
         </div>
 
+        <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-lg">
+          <p className="text-sm text-slate-300">
+            Want a reminder before your next MOT is due?
+            <a href="/mot-reminder" className="text-emerald-400 hover:text-emerald-300 ml-1">
+              Set a free MOT reminder &rarr;
+            </a>
+          </p>
+        </div>
+
         <div className="space-y-8 text-slate-300">
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is an MOT history check?</h2>
@@ -248,6 +258,10 @@ export default function MotCheckPage() {
             <p className="leading-relaxed">
               It takes less than 30 seconds, costs nothing, and there&apos;s no account to create. Just enter your registration number on our <a href="/" className="text-blue-400 hover:text-blue-300">homepage</a>, then add your email to activate the reminder.
             </p>
+          </section>
+
+          <section>
+            <MOTBookingCTA regNumber="" context="neutral" />
           </section>
 
           <section>

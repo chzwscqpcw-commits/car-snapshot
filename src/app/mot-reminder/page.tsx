@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import MOTReminderSignup from "@/components/MOTReminderSignup";
+import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 export const metadata: Metadata = {
   title: "Free MOT Reminder — Never Miss Your MOT | Free Plate Check",
@@ -39,7 +41,15 @@ export default function MotReminderPage() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "Is the MOT reminder service free?",
+        name: "How do I get an MOT reminder?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Enter your vehicle registration and email address in the form on this page. We'll automatically look up your MOT expiry date and send you a reminder 28 days and 7 days before it expires.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is this service free?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Yes, completely free. There are no charges, no hidden fees, and no premium tiers. You'll receive two reminder emails — one 28 days and one 7 days before your MOT expires — at no cost.",
@@ -47,26 +57,26 @@ export default function MotReminderPage() {
       },
       {
         "@type": "Question",
-        name: "How many reminder emails will I receive?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "You'll receive two emails per vehicle: the first 28 days before your MOT expiry date, and the second 7 days before. This gives you plenty of time to book your test.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I set up reminders for multiple vehicles?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes. You can set up a separate MOT reminder for each vehicle you own. Just look up each registration number on our homepage and enter your email address to activate the reminder.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How do I unsubscribe from MOT reminders?",
+        name: "How do I unsubscribe?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Every reminder email includes a one-click unsubscribe link. Click it and you'll be removed immediately — no account login or extra steps required.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What if I have more than one car?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "You can add up to 5 vehicles at once using the form on this page. Just click '+ Add another vehicle' to enter additional registration numbers. Each vehicle will receive its own set of reminders.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can you remind me about road tax too?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Not yet, but road tax reminders are coming soon. For now, you can check your vehicle's tax status any time on our homepage.",
         },
       },
       {
@@ -172,34 +182,21 @@ export default function MotReminderPage() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center mb-12">
-          <p className="text-lg font-semibold text-slate-100 mb-2">
-            Set up your free MOT reminder
-          </p>
-          <p className="text-sm text-slate-400 mb-4">
-            Look up your vehicle on our homepage, then enter your email to receive reminders 28 days and 7 days before your MOT expires.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Look up your vehicle
-          </a>
-        </div>
-
         <div className="space-y-8 text-slate-300">
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is the MOT reminder service?</h2>
             <p className="leading-relaxed mb-3">
               Our free MOT reminder service sends you an email alert before your MOT certificate expires. You&apos;ll receive two reminders for each vehicle: one <strong className="text-slate-100">28 days before</strong> your MOT is due, and another <strong className="text-slate-100">7 days before</strong>. That gives you plenty of time to find and book a test at a price and time that suits you.
             </p>
-            <p className="leading-relaxed mb-3">
+            <p className="leading-relaxed">
               The service is completely free, with no account to create and no marketing emails. We only use your email address to send MOT reminders for the vehicle you registered — nothing else.
             </p>
-            <p className="leading-relaxed">
-              Each reminder email includes your vehicle&apos;s MOT expiry date, how many days you have left, and a direct link to book an MOT test. It&apos;s the simplest way to make sure you never miss your MOT.
-            </p>
           </section>
+
+          {/* Primary signup form */}
+          <div className="my-10">
+            <MOTReminderSignup context="generic" />
+          </div>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How it works</h2>
@@ -207,22 +204,29 @@ export default function MotReminderPage() {
               <div className="flex gap-4 items-start">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">1</span>
                 <div>
-                  <p className="font-semibold text-slate-100">Check your vehicle</p>
-                  <p className="text-sm mt-1">Enter your registration number on our <a href="/" className="text-blue-400 hover:text-blue-300">homepage</a> to look up your vehicle&apos;s MOT status and expiry date.</p>
+                  <p className="font-semibold text-slate-100">Enter your registration and email</p>
+                  <p className="text-sm mt-1">Type your vehicle registration number and email address into the form above. You can add up to 5 vehicles at once.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">2</span>
                 <div>
-                  <p className="font-semibold text-slate-100">Enter your email</p>
-                  <p className="text-sm mt-1">After looking up your vehicle, you&apos;ll see the option to set up an MOT reminder. Enter your email address and confirm it with one click.</p>
+                  <p className="font-semibold text-slate-100">We look up your MOT expiry date automatically</p>
+                  <p className="text-sm mt-1">We check official DVLA records to find your vehicle&apos;s current MOT expiry date — no need to look it up yourself.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">3</span>
                 <div>
-                  <p className="font-semibold text-slate-100">Get your reminders</p>
-                  <p className="text-sm mt-1">We&apos;ll email you 28 days and 7 days before your MOT expires — giving you time to book your test without the last-minute rush.</p>
+                  <p className="font-semibold text-slate-100">You receive an email 28 days before — and again 7 days before</p>
+                  <p className="text-sm mt-1">Two well-timed reminders give you plenty of time to compare prices and book your test without the last-minute rush.</p>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">4</span>
+                <div>
+                  <p className="font-semibold text-slate-100">Each reminder includes local garage prices via BookMyGarage</p>
+                  <p className="text-sm mt-1">Every reminder email includes a direct link to compare MOT test prices at garages near you — so you can book at the best price in seconds.</p>
                 </div>
               </div>
             </div>
@@ -252,7 +256,7 @@ export default function MotReminderPage() {
             <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
               <li><strong className="text-slate-100">Your MOT expiry date</strong> — The exact date your current MOT certificate runs out.</li>
               <li><strong className="text-slate-100">Days remaining</strong> — A clear count of how many days you have left to book and complete your test.</li>
-              <li><strong className="text-slate-100">One-click MOT booking</strong> — A direct link to book your MOT test, so you can take action straight from the email.</li>
+              <li><strong className="text-slate-100">Local garage prices</strong> — A direct link to compare MOT test prices at garages near you via BookMyGarage.</li>
             </ul>
             <p className="leading-relaxed">
               No clutter, no ads, no upsells. Just the information you need to stay on top of your MOT. You can also check your vehicle&apos;s full <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> or <a href="/tax-check" className="text-blue-400 hover:text-blue-300">tax status</a> at any time.
@@ -261,39 +265,34 @@ export default function MotReminderPage() {
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Ready to book your MOT?</h2>
-            <p className="leading-relaxed mb-3">
+            <p className="leading-relaxed mb-4">
               If your MOT is coming up soon and you&apos;d rather book now, you can compare prices at local garages through our partner BookMyGarage. Enter your registration and postcode to see available slots and prices near you.
             </p>
-            <p className="leading-relaxed">
-              <a
-                href="https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F"
-                rel="noopener sponsored"
-                className="text-blue-400 hover:text-blue-300"
-              >Compare MOT prices on BookMyGarage &rarr;</a>
-            </p>
-            <p className="text-[10px] text-slate-600 mt-2">
-              Affiliate link. Free Plate Check may earn a commission at no cost to you.
-            </p>
+            <MOTBookingCTA regNumber="" context="neutral" />
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-slate-100">Is the MOT reminder service free?</h3>
+                <h3 className="font-semibold text-slate-100">How do I get an MOT reminder?</h3>
+                <p className="text-sm mt-1">Enter your vehicle registration and email address in the form at the top of this page. We&apos;ll automatically look up your MOT expiry date and send you a reminder 28 days and 7 days before it expires.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Is this service free?</h3>
                 <p className="text-sm mt-1">Yes, completely free. There are no charges, no hidden fees, and no premium tiers. You&apos;ll receive two reminder emails — one 28 days and one 7 days before your MOT expires — at no cost.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-slate-100">How many reminder emails will I receive?</h3>
-                <p className="text-sm mt-1">You&apos;ll receive two emails per vehicle: the first 28 days before your MOT expiry date, and the second 7 days before. This gives you plenty of time to book your test.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Can I set up reminders for multiple vehicles?</h3>
-                <p className="text-sm mt-1">Yes. You can set up a separate MOT reminder for each vehicle you own. Just look up each registration number on our homepage and enter your email address to activate the reminder.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How do I unsubscribe from MOT reminders?</h3>
+                <h3 className="font-semibold text-slate-100">How do I unsubscribe?</h3>
                 <p className="text-sm mt-1">Every reminder email includes a one-click unsubscribe link. Click it and you&apos;ll be removed immediately — no account login or extra steps required.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">What if I have more than one car?</h3>
+                <p className="text-sm mt-1">You can add up to 5 vehicles at once using the form on this page. Just click &quot;+ Add another vehicle&quot; to enter additional registration numbers. Each vehicle will receive its own set of reminders.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Can you remind me about road tax too?</h3>
+                <p className="text-sm mt-1">Not yet, but road tax reminders are coming soon. For now, you can <a href="/tax-check" className="text-blue-400 hover:text-blue-300">check your vehicle&apos;s tax status</a> any time on our site.</p>
               </div>
               <div>
                 <h3 className="font-semibold text-slate-100">What do you do with my email address?</h3>

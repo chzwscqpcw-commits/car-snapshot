@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
-import BlogMotReminder from "@/components/BlogMotReminder";
+import MOTReminderSignup from "@/components/MOTReminderSignup";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -232,6 +232,13 @@ export default async function BlogPostPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
+        {/* Inline MOT reminder for MOT-tagged posts */}
+        {tags.includes("mot") && (
+          <div className="max-w-[700px] mx-auto mt-10">
+            <MOTReminderSignup context="generic" />
+          </div>
+        )}
+
         {/* Share buttons (bottom) */}
         <div className="max-w-[700px] mx-auto mt-10 pt-6 border-t border-slate-800">
           <ShareButtons
@@ -299,8 +306,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         })()}
       </div>
 
-      {/* Trigger F — Blog post footer email capture */}
-      <BlogMotReminder />
+      {/* MOT reminder signup — blog footer */}
+      <div className="max-w-3xl mx-auto px-4 mt-12">
+        <MOTReminderSignup context="generic" />
+      </div>
 
       {/* Related posts */}
       {relatedPosts.length > 0 && (
