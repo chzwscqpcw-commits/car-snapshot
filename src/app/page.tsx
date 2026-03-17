@@ -5022,6 +5022,13 @@ END:VEVENT
               </div>
               <p className="text-sm text-slate-400">Check Clean Air Zone charges by city — see which zones your vehicle can enter for free.</p>
             </a>
+            <a href="/servicing" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <Wrench className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Servicing</h3>
+              </div>
+              <p className="text-sm text-slate-400">Compare car service prices from local garages — interim and full service quotes in seconds.</p>
+            </a>
             <a href="/mot-reminder" className="p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Bell className="w-5 h-5 text-cyan-400" />

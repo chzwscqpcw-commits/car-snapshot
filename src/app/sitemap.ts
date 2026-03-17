@@ -234,6 +234,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/servicing",
+      lastModified: new Date("2026-03-17"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/clean-air-zones",
       lastModified: new Date("2026-03-13"),
       changeFrequency: "monthly",

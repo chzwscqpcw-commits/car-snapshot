@@ -182,6 +182,7 @@ export default function AboutPage() {
               <li><strong>Safety Recalls</strong> — Known manufacturer safety recalls matched to the vehicle</li>
               <li><strong>Vehicle Valuation</strong> — Estimated market value based on depreciation and real listings</li>
               <li><strong>Running Costs</strong> — Estimated annual fuel, tax, and insurance costs</li>
+              <li><strong>Car Servicing</strong> — <a href="/servicing" className="text-blue-400 hover:text-blue-300">Compare service prices</a> from local garages</li>
               <li><strong>NCAP Safety Ratings</strong> — Euro NCAP crash test ratings where available</li>
               <li><strong>PDF Report</strong> — Download a full vehicle report to keep or share</li>
             </ul>

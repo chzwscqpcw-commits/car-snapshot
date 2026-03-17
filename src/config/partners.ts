@@ -19,6 +19,17 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
     },
   },
+  bookMyGarageService: {
+    url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F",
+    name: "BookMyGarage Servicing",
+    isAffiliate: true,
+    description: "Compare car service prices at local garages",
+    shortDescription: "Service quotes",
+    buildLink: (reg: string) => {
+      const destination = encodeURIComponent(`https://www.bookmygarage.com/car-servicing/?vrm=${reg}`);
+      return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+    },
+  },
   govTaxVehicle: {
     url: "https://www.gov.uk/tax-your-vehicle",
     name: "GOV.UK Tax Vehicle",
