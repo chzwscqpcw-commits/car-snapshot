@@ -3,7 +3,10 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
+import { PARTNER_LINKS } from "@/config/partners";
 import MOTReminderSet from "@/emails/mot-reminder-set";
+import MOTReminder28d from "@/emails/mot-reminder-28d";
+import MOTReminder7d from "@/emails/mot-reminder-7d";
 
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -19,6 +22,98 @@ function formatDateDDMMYYYY(iso: string): string {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
+}
+
+/**
+ * If the user signs up and their MOT is already inside the 28-day or 7-day
+ * window (or both), send the appropriate reminder(s) immediately so they
+ * don't miss out. Mark the flags so the cron won't double-send.
+ */
+async function sendCatchUpReminders(
+  email: string,
+  vrm: string,
+  makeModel: string,
+  motExpiry: string,
+  unsubscribeToken: string,
+  reminderId: string,
+) {
+  const now = new Date();
+  const expiryDate = new Date(motExpiry);
+  const daysRemaining = Math.ceil(
+    (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  // Only relevant for future expiry dates within 28 days
+  if (daysRemaining < 0 || daysRemaining > 28) return;
+
+  const parts = makeModel.split(" ");
+  const make = parts[0] || "Your";
+  const model = parts.slice(1).join(" ") || "vehicle";
+  const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${unsubscribeToken}`;
+  const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(vrm);
+  const formattedExpiry = formatDateDDMMYYYY(motExpiry);
+  const sb = supabaseServer();
+
+  // Send 28-day reminder if inside 28-day window
+  if (daysRemaining <= 28 && daysRemaining > 7) {
+    const result = await sendEmail({
+      to: email,
+      subject: `MOT due in ${daysRemaining} days — ${vrm} (${make} ${model})`,
+      react: MOTReminder28d({
+        make,
+        model,
+        regNumber: vrm,
+        expiryDate: formattedExpiry,
+        daysRemaining,
+        bmgAffiliateUrl: bmgUrl,
+        unsubscribeUrl,
+      }),
+      unsubscribeUrl,
+    });
+
+    if (result.ok) {
+      await sb
+        .from("mot_reminders")
+        .update({ reminder_28d_sent: true, updated_at: new Date().toISOString() })
+        .eq("id", reminderId);
+      console.log("catchup_28d_sent:", email, vrm, `${daysRemaining}d remaining`);
+    } else {
+      console.error("catchup_28d_error:", result.error);
+    }
+  }
+
+  // Send 7-day reminder if inside 7-day window (or already expired/today)
+  if (daysRemaining <= 7) {
+    // Also mark 28d as sent since they missed that window entirely
+    const result = await sendEmail({
+      to: email,
+      subject: `⚠️ MOT expires in ${daysRemaining} day${daysRemaining !== 1 ? "s" : ""} — ${vrm}`,
+      react: MOTReminder7d({
+        make,
+        model,
+        regNumber: vrm,
+        expiryDate: formattedExpiry,
+        daysRemaining,
+        bmgAffiliateUrl: bmgUrl,
+        unsubscribeUrl,
+      }),
+      unsubscribeUrl,
+    });
+
+    if (result.ok) {
+      await sb
+        .from("mot_reminders")
+        .update({
+          reminder_28d_sent: true,
+          reminder_7d_sent: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", reminderId);
+      console.log("catchup_7d_sent:", email, vrm, `${daysRemaining}d remaining`);
+    } else {
+      console.error("catchup_7d_error:", result.error);
+    }
+  }
 }
 
 async function sendConfirmation(
@@ -95,12 +190,13 @@ export async function POST(req: Request) {
         reminder_7d_sent: false,
         active: true,
       })
-      .select("unsubscribe_token")
+      .select("id, unsubscribe_token")
       .single();
 
     if (!insertError && inserted) {
       console.log("mot_reminder_created:", email, vrm);
       await sendConfirmation(email, vrm, makeModel, validExpiry, inserted.unsubscribe_token);
+      await sendCatchUpReminders(email, vrm, makeModel, validExpiry, inserted.unsubscribe_token, inserted.id);
 
       return NextResponse.json({
         ok: true,
@@ -123,7 +219,7 @@ export async function POST(req: Request) {
         })
         .eq("email", email)
         .eq("vrm", vrm)
-        .select("unsubscribe_token")
+        .select("id, unsubscribe_token")
         .single();
 
       if (updateError) {
@@ -142,6 +238,7 @@ export async function POST(req: Request) {
 
       console.log("mot_reminder_updated:", email, vrm);
       await sendConfirmation(email, vrm, makeModel, validExpiry, updated.unsubscribe_token);
+      await sendCatchUpReminders(email, vrm, makeModel, validExpiry, updated.unsubscribe_token, updated.id);
 
       return NextResponse.json({
         ok: true,
