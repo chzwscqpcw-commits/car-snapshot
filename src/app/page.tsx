@@ -3449,6 +3449,26 @@ END:VEVENT
 
             </DataReveal>
 
+            {/* PRIMARY MOT REMINDER SIGNUP — always visible immediately after header */}
+            {isOver3Years && (
+              <DataReveal delay={45}>
+                <div className="mb-6">
+                  <MOTReminderSignup
+                    context={
+                      showMotBanner === "expired"
+                        ? "expired"
+                        : motDaysUntilExpiry <= 60
+                          ? "due-soon"
+                          : "post-lookup"
+                    }
+                    regNumber={data?.registrationNumber}
+                    motExpiryDate={data?.motExpiryDate}
+                    makeModel={data ? `${data.make} ${data.model}` : undefined}
+                  />
+                </div>
+              </DataReveal>
+            )}
+
             {/* MOT EXPIRED / EXPIRING BANNER */}
             {showMotBanner && (
               <DataReveal delay={50}>
@@ -3488,34 +3508,6 @@ END:VEVENT
                     Book MOT
                     <ExternalLink className="w-3 h-3" />
                   </a>
-                </div>
-              </DataReveal>
-            )}
-
-            {/* Trigger B — MOT expired email capture */}
-            {isOver3Years && showMotBanner === "expired" && (
-              <DataReveal delay={55}>
-                <div className="mb-6">
-                  <MOTReminderSignup
-                    context="expired"
-                    regNumber={data?.registrationNumber}
-                    motExpiryDate={data?.motExpiryDate}
-                    makeModel={data ? `${data.make} ${data.model}` : undefined}
-                  />
-                </div>
-              </DataReveal>
-            )}
-
-            {/* MOT REMINDER SIGNUP — shown right after the expiring/expired banner (due soon) */}
-            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 0 && motDaysUntilExpiry <= 60 && (
-              <DataReveal delay={60}>
-                <div className="mb-6">
-                  <MOTReminderSignup
-                    context="due-soon"
-                    regNumber={data?.registrationNumber}
-                    motExpiryDate={data?.motExpiryDate}
-                    makeModel={data ? `${data.make} ${data.model}` : undefined}
-                  />
                 </div>
               </DataReveal>
             )}
