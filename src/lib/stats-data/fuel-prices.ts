@@ -46,6 +46,7 @@ export const fuelPriceData: FuelPriceYear[] = [
   { year: 2023, petrol: 148.2, diesel: 155.1 },
   { year: 2024, petrol: 143.5, diesel: 150.8 },
   { year: 2025, petrol: 139.8, diesel: 147.2 },
+  { year: 2026, petrol: 137.5, diesel: 144.8 },
 ];
 
 export const fuelPriceAnnotations = [
@@ -56,5 +57,5 @@ export const fuelPriceAnnotations = [
   { year: 2022, label: "Ukraine" },
 ];
 
-export const lastUpdated = "January 2025";
+export const lastUpdated = "March 2026";
 export const source = "https://www.gov.uk/government/statistics/weekly-road-fuel-prices";
