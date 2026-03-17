@@ -70,12 +70,15 @@ export async function POST(req: Request) {
     }
 
     // Validate expiry date if provided (allow past dates — user may want a reminder for next year)
-    let validExpiry: string | null = null;
+    // If no valid date, default to 1 year from now so the reminder still fires
+    let validExpiry: string;
     if (motExpiry) {
       const expiryDate = new Date(motExpiry);
-      if (!isNaN(expiryDate.getTime())) {
-        validExpiry = motExpiry;
-      }
+      validExpiry = isNaN(expiryDate.getTime())
+        ? new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10)
+        : motExpiry;
+    } else {
+      validExpiry = new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10);
     }
 
     const sb = supabaseServer();
@@ -97,7 +100,7 @@ export async function POST(req: Request) {
 
     if (!insertError && inserted) {
       console.log("mot_reminder_created:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, validExpiry || "", inserted.unsubscribe_token);
+      await sendConfirmation(email, vrm, makeModel, validExpiry, inserted.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
@@ -138,7 +141,7 @@ export async function POST(req: Request) {
       }
 
       console.log("mot_reminder_updated:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, validExpiry || "", updated.unsubscribe_token);
+      await sendConfirmation(email, vrm, makeModel, validExpiry, updated.unsubscribe_token);
 
       return NextResponse.json({
         ok: true,
