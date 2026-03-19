@@ -132,15 +132,27 @@ export default function FuelPriceChart() {
     return fuelPriceAnnotations.filter((a) => a.date >= minDate);
   }, [filteredData, granularity]);
 
-  // Map annotation to x-axis value
+  // Map annotation to the x-axis label of the nearest data point
   function annotationX(a: typeof fuelPriceAnnotations[0]): string | number {
     if (granularity === "annual") return a.year;
-    // Find nearest data point
+    // Use string comparison on sortKeys — both YYYY-MM-DD and YYYY-MM sort correctly
     const target = a.date;
-    const nearest = filteredData.reduce((best, d) =>
-      Math.abs(d.sortKey.localeCompare(target)) < Math.abs(best.sortKey.localeCompare(target)) ? d : best
-    , filteredData[0]);
-    return nearest?.label ?? "";
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < filteredData.length; i++) {
+      // Pad monthly sortKeys (YYYY-MM) to YYYY-MM-01 for consistent comparison
+      const sk = filteredData[i].sortKey.length === 7
+        ? filteredData[i].sortKey + "-01"
+        : filteredData[i].sortKey;
+      const dist = Math.abs(
+        new Date(sk).getTime() - new Date(target).getTime()
+      );
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    }
+    return filteredData[bestIdx]?.label ?? "";
   }
 
   const yLabel = tankLitres ? "Fill cost (£)" : "Pence per litre (PPL)";
