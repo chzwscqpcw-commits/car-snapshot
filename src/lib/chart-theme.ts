@@ -31,14 +31,15 @@ export const chartConfig = {
 } as const;
 
 // Shared annotation label config for ReferenceLine components.
-// Staggers labels vertically so adjacent annotations don't overlap.
+// Staggers labels across 4 vertical positions so adjacent annotations don't overlap.
 export function annotationLabel(text: string, index: number) {
+  const offsets = [8, 24, 40, 56];
   return {
     value: text,
     position: "insideTopLeft" as const,
     fill: "#9ca3af",
     fontSize: 10,
-    dy: index % 2 === 0 ? 12 : 28,
+    dy: offsets[index % offsets.length],
   };
 }
 
