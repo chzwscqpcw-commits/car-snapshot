@@ -1,5 +1,8 @@
-// Annual average UK fuel prices (pence per litre)
-// Source: DESNZ Weekly Road Fuel Prices
+// UK fuel prices — weekly data from DESNZ, annual averages derived
+// Source: https://www.gov.uk/government/statistics/weekly-road-fuel-prices
+// Weekly JSON fetched at build time by scripts/fetch-fuel-prices.ts
+
+import weeklyJson from "@/data/fuel-prices-weekly.json";
 
 export interface FuelPriceYear {
   year: number;
@@ -7,7 +10,14 @@ export interface FuelPriceYear {
   diesel: number;
 }
 
-export const fuelPriceData: FuelPriceYear[] = [
+export interface FuelPriceWeek {
+  date: string; // YYYY-MM-DD
+  petrol: number; // pence per litre
+  diesel: number;
+}
+
+// Pre-2003 annual data (DESNZ weekly data starts June 2003)
+const PRE_2003: FuelPriceYear[] = [
   { year: 1988, petrol: 36.2, diesel: 35.8 },
   { year: 1989, petrol: 38.5, diesel: 37.8 },
   { year: 1990, petrol: 40.2, diesel: 39.5 },
@@ -23,39 +33,97 @@ export const fuelPriceData: FuelPriceYear[] = [
   { year: 2000, petrol: 76.9, diesel: 77.5 },
   { year: 2001, petrol: 74.4, diesel: 74.8 },
   { year: 2002, petrol: 71.6, diesel: 72.5 },
-  { year: 2003, petrol: 76.2, diesel: 77.1 },
-  { year: 2004, petrol: 79.6, diesel: 80.8 },
-  { year: 2005, petrol: 84.3, diesel: 88.5 },
-  { year: 2006, petrol: 91.2, diesel: 95.3 },
-  { year: 2007, petrol: 95.4, diesel: 99.1 },
-  { year: 2008, petrol: 104.7, diesel: 113.8 },
-  { year: 2009, petrol: 89.3, diesel: 96.4 },
-  { year: 2010, petrol: 111.9, diesel: 116.5 },
-  { year: 2011, petrol: 133.3, diesel: 139.5 },
-  { year: 2012, petrol: 134.5, diesel: 141.2 },
-  { year: 2013, petrol: 133.1, diesel: 139.4 },
-  { year: 2014, petrol: 125.5, diesel: 131.2 },
-  { year: 2015, petrol: 109.3, diesel: 112.6 },
-  { year: 2016, petrol: 108.2, diesel: 112.5 },
-  { year: 2017, petrol: 117.2, diesel: 120.8 },
-  { year: 2018, petrol: 124.1, diesel: 129.6 },
-  { year: 2019, petrol: 124.7, diesel: 130.1 },
-  { year: 2020, petrol: 112.8, diesel: 117.5 },
-  { year: 2021, petrol: 131.5, diesel: 134.2 },
-  { year: 2022, petrol: 165.6, diesel: 180.3 },
-  { year: 2023, petrol: 148.2, diesel: 155.1 },
-  { year: 2024, petrol: 143.5, diesel: 150.8 },
-  { year: 2025, petrol: 139.8, diesel: 147.2 },
-  { year: 2026, petrol: 137.5, diesel: 144.8 },
 ];
 
+/** All weekly data points from DESNZ (2003–present) */
+export const weeklyData: FuelPriceWeek[] = weeklyJson.weekly;
+
+/** Derive annual averages from weekly data */
+function deriveAnnualAverages(): FuelPriceYear[] {
+  const byYear = new Map<number, { petrolSum: number; dieselSum: number; count: number }>();
+
+  for (const w of weeklyData) {
+    const year = parseInt(w.date.slice(0, 4), 10);
+    const entry = byYear.get(year) ?? { petrolSum: 0, dieselSum: 0, count: 0 };
+    entry.petrolSum += w.petrol;
+    entry.dieselSum += w.diesel;
+    entry.count++;
+    byYear.set(year, entry);
+  }
+
+  const derived: FuelPriceYear[] = [];
+  for (const [year, { petrolSum, dieselSum, count }] of byYear) {
+    derived.push({
+      year,
+      petrol: Math.round((petrolSum / count) * 10) / 10,
+      diesel: Math.round((dieselSum / count) * 10) / 10,
+    });
+  }
+
+  return derived.sort((a, b) => a.year - b.year);
+}
+
+/** Annual averages: pre-2003 static + 2003 onwards derived from weekly */
+export const fuelPriceData: FuelPriceYear[] = [
+  ...PRE_2003,
+  ...deriveAnnualAverages(),
+];
+
+/** Monthly averages derived from weekly data */
+export interface FuelPriceMonth {
+  month: string; // YYYY-MM
+  petrol: number;
+  diesel: number;
+}
+
+export function getMonthlyData(): FuelPriceMonth[] {
+  const byMonth = new Map<string, { petrolSum: number; dieselSum: number; count: number }>();
+
+  for (const w of weeklyData) {
+    const month = w.date.slice(0, 7); // YYYY-MM
+    const entry = byMonth.get(month) ?? { petrolSum: 0, dieselSum: 0, count: 0 };
+    entry.petrolSum += w.petrol;
+    entry.dieselSum += w.diesel;
+    entry.count++;
+    byMonth.set(month, entry);
+  }
+
+  const months: FuelPriceMonth[] = [];
+  for (const [month, { petrolSum, dieselSum, count }] of byMonth) {
+    months.push({
+      month,
+      petrol: Math.round((petrolSum / count) * 10) / 10,
+      diesel: Math.round((dieselSum / count) * 10) / 10,
+    });
+  }
+
+  return months.sort((a, b) => a.month.localeCompare(b.month));
+}
+
+/** Key event annotations (date-based for weekly/monthly views) */
 export const fuelPriceAnnotations = [
-  { year: 1990, label: "Gulf War" },
-  { year: 2000, label: "Fuel protests" },
-  { year: 2008, label: "Financial crisis" },
-  { year: 2020, label: "COVID-19" },
-  { year: 2022, label: "Ukraine" },
+  { year: 1990, date: "1990-08-01", label: "Gulf War" },
+  { year: 2000, date: "2000-09-01", label: "Fuel protests" },
+  { year: 2008, date: "2008-07-01", label: "Financial crisis" },
+  { year: 2020, date: "2020-03-01", label: "COVID-19" },
+  { year: 2022, date: "2022-03-01", label: "Ukraine" },
+  { year: 2026, date: "2026-02-01", label: "Middle East" },
 ];
 
-export const lastUpdated = "March 2026";
+/** Latest weekly data point */
+export const latestWeek: FuelPriceWeek = weeklyData[weeklyData.length - 1];
+
+/** Date the data was last fetched from DESNZ */
+export const lastFetched = weeklyJson.lastFetched;
+
+/** Formatted last-updated string */
+export const lastUpdated = (() => {
+  const d = new Date(latestWeek.date);
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+})();
+
 export const source = "https://www.gov.uk/government/statistics/weekly-road-fuel-prices";

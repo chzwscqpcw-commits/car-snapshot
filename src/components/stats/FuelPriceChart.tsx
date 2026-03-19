@@ -13,68 +13,148 @@ import {
 } from "recharts";
 import {
   fuelPriceData,
+  weeklyData,
+  getMonthlyData,
   fuelPriceAnnotations,
   lastUpdated,
+  latestWeek,
   source,
 } from "@/lib/stats-data/fuel-prices";
 import ChartContainer from "@/components/stats/ChartContainer";
 import { annotationLabel, annotatedChartProps } from "@/lib/chart-theme";
 
-type Range = "1Y" | "5Y" | "10Y" | "All";
+type Granularity = "weekly" | "monthly" | "annual";
+type Range = "3M" | "6M" | "1Y" | "5Y" | "10Y" | "All";
 const TANK_PRESETS = [30, 40, 50, 60, 70, 80] as const;
 
-interface ChartDataPoint {
-  year: number;
+interface ChartPoint {
+  label: string; // x-axis label
+  sortKey: string; // for filtering
   petrol: number;
   diesel: number;
 }
 
-function tooltipFormatter(
-  value: number,
-  name: string,
-  tankLitres: number | null
-) {
-  if (tankLitres) {
-    // chartData is already converted to £ when tankLitres is set
-    return `£${value.toFixed(2)}`;
-  }
+function tooltipFormatter(value: number, tankLitres: number | null) {
+  if (tankLitres) return `£${value.toFixed(2)}`;
   return `${value.toFixed(1)}p`;
 }
 
+function formatWeekLabel(date: string): string {
+  const d = new Date(date);
+  const day = d.getDate();
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${day} ${months[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`;
+}
+
+function formatMonthLabel(month: string): string {
+  const [y, m] = month.split("-");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[parseInt(m, 10) - 1]} ${y.slice(2)}`;
+}
+
 export default function FuelPriceChart() {
-  const [range, setRange] = useState<Range>("All");
+  const [granularity, setGranularity] = useState<Granularity>("weekly");
+  const [range, setRange] = useState<Range>("1Y");
   const [tankLitres, setTankLitres] = useState<number | null>(null);
   const [customTank, setCustomTank] = useState("");
 
-  const latestYear = fuelPriceData[fuelPriceData.length - 1].year;
+  const monthlyData = useMemo(() => getMonthlyData(), []);
 
-  const filteredData = useMemo<ChartDataPoint[]>(() => {
-    const cutoff =
-      range === "1Y"
-        ? latestYear - 1
-        : range === "5Y"
-          ? latestYear - 5
-          : range === "10Y"
-            ? latestYear - 10
-            : 0;
-    return fuelPriceData.filter((d) => d.year >= cutoff);
-  }, [range, latestYear]);
+  // Build full dataset for the selected granularity
+  const fullData = useMemo<ChartPoint[]>(() => {
+    if (granularity === "annual") {
+      return fuelPriceData.map((d) => ({
+        label: String(d.year),
+        sortKey: String(d.year),
+        petrol: d.petrol,
+        diesel: d.diesel,
+      }));
+    }
+    if (granularity === "monthly") {
+      return monthlyData.map((d) => ({
+        label: formatMonthLabel(d.month),
+        sortKey: d.month,
+        petrol: d.petrol,
+        diesel: d.diesel,
+      }));
+    }
+    // weekly
+    return weeklyData.map((d) => ({
+      label: formatWeekLabel(d.date),
+      sortKey: d.date,
+      petrol: d.petrol,
+      diesel: d.diesel,
+    }));
+  }, [granularity, monthlyData]);
 
+  // Apply range filter
+  const filteredData = useMemo(() => {
+    if (range === "All") return fullData;
+
+    const now = new Date();
+    let cutoff: Date;
+    switch (range) {
+      case "3M": cutoff = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()); break;
+      case "6M": cutoff = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate()); break;
+      case "1Y": cutoff = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()); break;
+      case "5Y": cutoff = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate()); break;
+      case "10Y": cutoff = new Date(now.getFullYear() - 10, now.getMonth(), now.getDate()); break;
+      default: return fullData;
+    }
+
+    const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+    if (granularity === "annual") {
+      const cutoffYear = String(cutoff.getFullYear());
+      return fullData.filter((d) => d.sortKey >= cutoffYear);
+    }
+
+    return fullData.filter((d) => d.sortKey >= cutoffStr);
+  }, [fullData, range, granularity]);
+
+  // Apply tank conversion
   const chartData = useMemo(() => {
     if (!tankLitres) return filteredData;
     return filteredData.map((d) => ({
-      year: d.year,
+      ...d,
       petrol: parseFloat(((d.petrol / 100) * tankLitres).toFixed(2)),
       diesel: parseFloat(((d.diesel / 100) * tankLitres).toFixed(2)),
     }));
   }, [filteredData, tankLitres]);
 
+  // Annotations visible in current range
   const visibleAnnotations = useMemo(() => {
-    const minYear = filteredData[0]?.year ?? 0;
-    return fuelPriceAnnotations.filter((a) => a.year >= minYear);
-  }, [filteredData]);
+    if (granularity === "annual") {
+      const minYear = parseInt(filteredData[0]?.sortKey ?? "0", 10);
+      return fuelPriceAnnotations.filter((a) => a.year >= minYear);
+    }
+    const minDate = filteredData[0]?.sortKey ?? "";
+    return fuelPriceAnnotations.filter((a) => a.date >= minDate);
+  }, [filteredData, granularity]);
 
-  const yLabel = tankLitres ? `Fill cost (£)` : "Pence per litre (PPL)";
+  // Map annotation to x-axis value
+  function annotationX(a: typeof fuelPriceAnnotations[0]): string | number {
+    if (granularity === "annual") return a.year;
+    // Find nearest data point
+    const target = a.date;
+    const nearest = filteredData.reduce((best, d) =>
+      Math.abs(d.sortKey.localeCompare(target)) < Math.abs(best.sortKey.localeCompare(target)) ? d : best
+    , filteredData[0]);
+    return nearest?.label ?? "";
+  }
+
+  const yLabel = tankLitres ? "Fill cost (£)" : "Pence per litre (PPL)";
+
+  const rangeOptions: Range[] = granularity === "annual"
+    ? ["5Y", "10Y", "All"]
+    : ["3M", "6M", "1Y", "5Y", "10Y", "All"];
+
+  // Auto-select sensible range when switching granularity
+  function handleGranularity(g: Granularity) {
+    setGranularity(g);
+    if (g === "weekly" && (range === "10Y" || range === "All" || range === "5Y")) setRange("1Y");
+    if (g === "annual" && (range === "3M" || range === "6M")) setRange("5Y");
+  }
 
   function handleTankPreset(litres: number) {
     setTankLitres(tankLitres === litres ? null : litres);
@@ -91,13 +171,42 @@ export default function FuelPriceChart() {
     }
   }
 
+  // Determine tick interval based on data points
+  const tickInterval = useMemo(() => {
+    const len = chartData.length;
+    if (len <= 15) return 0;
+    if (len <= 30) return 1;
+    if (len <= 60) return 3;
+    if (len <= 120) return 7;
+    return Math.floor(len / 15);
+  }, [chartData]);
+
   return (
     <div className="space-y-4">
-      {/* Controls above the chart card */}
+      {/* Controls */}
       <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-3 sm:px-6 sm:py-4 space-y-3">
+        {/* Granularity toggle */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-gray-500 mr-1">View:</span>
+          {(["weekly", "monthly", "annual"] as Granularity[]).map((g) => (
+            <button
+              key={g}
+              onClick={() => handleGranularity(g)}
+              className={`rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors ${
+                granularity === g
+                  ? "bg-blue-600 text-white"
+                  : "bg-[#232323] text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+
+        {/* Range selector */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-gray-500 mr-1">Range:</span>
-          {(["1Y", "5Y", "10Y", "All"] as Range[]).map((r) => (
+          {rangeOptions.map((r) => (
             <button
               key={r}
               onClick={() => setRange(r)}
@@ -112,6 +221,7 @@ export default function FuelPriceChart() {
           ))}
         </div>
 
+        {/* Tank size */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-gray-500 mr-1">Tank size:</span>
           {TANK_PRESETS.map((litres) => (
@@ -152,7 +262,7 @@ export default function FuelPriceChart() {
 
       <ChartContainer
         title="UK Fuel Prices Over Time"
-        subtitle={`Annual average prices · Last updated ${lastUpdated}`}
+        subtitle={`${granularity === "weekly" ? "Weekly" : granularity === "monthly" ? "Monthly average" : "Annual average"} prices · Updated ${lastUpdated}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
@@ -162,14 +272,14 @@ export default function FuelPriceChart() {
           >
             <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
             <XAxis
-              dataKey="year"
+              dataKey="label"
               stroke="#6b7280"
               tick={{ fill: "#6b7280", fontSize: 11 }}
               tickLine={false}
               angle={-45}
               textAnchor="end"
               height={50}
-              interval="preserveStartEnd"
+              interval={tickInterval}
             />
             <YAxis
               stroke="#6b7280"
@@ -208,7 +318,6 @@ export default function FuelPriceChart() {
                         <span className="font-medium">
                           {tooltipFormatter(
                             entry.value as number,
-                            entry.name as string,
                             tankLitres
                           )}
                         </span>
@@ -220,8 +329,8 @@ export default function FuelPriceChart() {
             />
             {visibleAnnotations.map((a, i) => (
               <ReferenceLine
-                key={a.year}
-                x={a.year}
+                key={`${a.label}-${i}`}
+                x={annotationX(a)}
                 stroke="#4b5563"
                 strokeDasharray="4 4"
                 label={annotationLabel(a.label, i)}
@@ -248,6 +357,13 @@ export default function FuelPriceChart() {
           </LineChart>
         </ResponsiveContainer>
       </ChartContainer>
+
+      {/* Latest price callout */}
+      <div className="rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-3 flex flex-wrap items-center gap-4 text-sm">
+        <span className="text-gray-500">Latest ({latestWeek.date}):</span>
+        <span className="text-emerald-400 font-medium">Petrol {latestWeek.petrol}p</span>
+        <span className="text-amber-400 font-medium">Diesel {latestWeek.diesel}p</span>
+      </div>
 
       <p className="text-xs text-gray-500 text-right">
         Source:{" "}

@@ -11,14 +11,20 @@
 - [ULEZ Compliance Check](https://www.freeplatecheck.co.uk/ulez-check): Check if any UK vehicle is ULEZ compliant. See emission standards, Euro status and whether the vehicle meets London's Ultra Low Emission Zone requirements.
 - [Safety Recall Check](https://www.freeplatecheck.co.uk/recall-check): Check if any UK vehicle has outstanding safety recalls from the DVSA. Free lookup by registration number.
 - [Free Car Valuation](https://www.freeplatecheck.co.uk/car-valuation): Get a free estimated valuation for any UK vehicle based on age, mileage and market data. No signup required.
-- [MOT Reminder](https://www.freeplatecheck.co.uk/mot-reminder): Set up a free MOT reminder for any UK vehicle. Get notified before your MOT expires so you never miss a test.
+- [Running Costs Calculator](https://www.freeplatecheck.co.uk/running-costs): Find out how much it costs to run any UK car. Free breakdown of fuel, tax, depreciation, MOT and servicing costs.
+- [Car Servicing Quotes](https://www.freeplatecheck.co.uk/servicing): Compare car service prices from local garages. Interim and full service quotes in seconds, no booking fees.
+- [MOT Reminder](https://www.freeplatecheck.co.uk/mot-reminder): Set up a free MOT reminder for any UK vehicle. Get notified 28 days and 7 days before your MOT expires.
+- [Vehicle Comparison](https://www.freeplatecheck.co.uk/compare): Compare two UK vehicles side by side — MOT history, tax status, mileage, specifications and valuations.
+- [Clean Air Zones](https://www.freeplatecheck.co.uk/clean-air-zones): Complete guide to UK Clean Air Zones. See which cities charge, daily rates, affected vehicles and compliance by registration.
+- [Car Guides](https://www.freeplatecheck.co.uk/cars): Free buyer's guides for the UK's most popular cars. MOT pass rates, NCAP safety ratings, running costs and reliability data.
+- [Embed Widget](https://www.freeplatecheck.co.uk/embed): Add a free UK vehicle check widget to your website. Easy embed code for forums, dealers and bloggers.
 
 ## UK Motoring Statistics
 
 - [Stats Hub](https://www.freeplatecheck.co.uk/stats): Interactive charts and data covering every aspect of UK motoring — fuel prices, MOT pass rates, car theft, EV adoption and more.
-- [Fuel Prices](https://www.freeplatecheck.co.uk/stats/fuel-prices): UK petrol and diesel price history from 1988 to present with interactive charts.
+- [Fuel Prices](https://www.freeplatecheck.co.uk/stats/fuel-prices): UK petrol and diesel price history from 1988 to present with interactive charts and fill-cost calculator.
 - [Cost of Motoring](https://www.freeplatecheck.co.uk/stats/cost-of-motoring): Full annual breakdown of UK driving costs — fuel, insurance, depreciation, tax and servicing since 2010.
-- [Road Tax (VED) History](https://www.freeplatecheck.co.uk/stats/road-tax-history): How VED rates have changed since 2001, from CO₂ bands to the 2025 EV charges.
+- [Road Tax (VED) History](https://www.freeplatecheck.co.uk/stats/road-tax-history): How VED rates have changed since 2001, from CO2 bands to the 2025 EV charges.
 - [Used Car Prices](https://www.freeplatecheck.co.uk/stats/used-car-prices): Quarterly used car price index showing market trends, the COVID spike and correction.
 - [Fuel Type Comparison](https://www.freeplatecheck.co.uk/stats/fuel-type-comparison): Compare running costs for petrol, diesel, hybrid and electric vehicles at any annual mileage.
 - [MOT Pass Rates](https://www.freeplatecheck.co.uk/stats/mot-pass-rates): National first-time MOT pass rates by make and the most common failure categories.
@@ -32,14 +38,40 @@
 
 ## Guides & Articles
 
-- [How to Read a Car's MOT History](https://www.freeplatecheck.co.uk/blog/how-to-read-mot-history): Practical guide explaining MOT test results, advisories, failures and what to look for when buying a used car.
-- [What Does MOT Advisory Mean?](https://www.freeplatecheck.co.uk/blog/what-does-mot-advisory-mean): Plain English explanation of MOT advisories, how they differ from failures, and when to worry about them.
-- [How to Spot a Clocked Car](https://www.freeplatecheck.co.uk/blog/how-to-spot-a-clocked-car): Guide to identifying mileage fraud when buying a used car, including warning signs and how to verify genuine mileage.
-- [Used Car Checks Before Buying](https://www.freeplatecheck.co.uk/blog/used-car-checks-before-buying): Complete checklist of checks to run before buying a used car in the UK, covering MOT, tax, finance and history.
-- [How to Check if a Car is Taxed](https://www.freeplatecheck.co.uk/blog/how-to-check-if-a-car-is-taxed): Step-by-step guide to checking a vehicle's tax status and what to do if tax has lapsed.
-- [What is SORN and When Do You Need One?](https://www.freeplatecheck.co.uk/blog/what-is-sorn-and-when-do-you-need-one): Explanation of Statutory Off Road Notification, when it's required, and how to apply.
-- [Is My Car ULEZ Compliant?](https://www.freeplatecheck.co.uk/blog/is-my-car-ulez-compliant): How to check ULEZ compliance for free and what to do if your vehicle doesn't meet emission standards.
-- [Car Safety Recalls Guide](https://www.freeplatecheck.co.uk/blog/car-safety-recalls-guide): How to check for outstanding vehicle safety recalls and what to do if your car is affected.
+- [Most Common MOT Failures and How to Avoid Them](https://www.freeplatecheck.co.uk/blog/most-common-mot-failures): The top 10 reasons cars fail the MOT in the UK, what testers are looking for in each category, and a practical pre-MOT checklist so you can spot problems before the test does.
+- [Can You Get Your MOT Done Early?](https://www.freeplatecheck.co.uk/blog/can-you-get-mot-done-early): Everything you need to know about getting your MOT done before the expiry date — the one-month rule, what happens if you go too early, first MOT timing, and how to use early testing to your advantage.
+- [How Much Does an MOT Cost in 2026?](https://www.freeplatecheck.co.uk/blog/how-much-does-mot-cost): What you'll actually pay for an MOT in 2026 — the maximum fee, typical garage prices, what affects cost, free retests, and practical ways to save money on your annual test.
+- [Electric Car Road Tax 2026: How Much Will EV Owners Pay?](https://www.freeplatecheck.co.uk/blog/electric-car-road-tax-2026): A complete guide to electric vehicle road tax in 2026 — what EVs pay, the £50,000 supplement threshold, and how rates compare to petrol and diesel.
+- [How to Appeal an MOT Failure — Your Rights Explained](https://www.freeplatecheck.co.uk/blog/how-to-appeal-mot-failure): What to do if you think your car has been unfairly failed on its MOT. How the appeal process works, time limits, and when it's worth challenging the result.
+- [What to Check on a Test Drive: A Complete Checklist](https://www.freeplatecheck.co.uk/blog/what-to-check-on-a-test-drive): Everything to check when test driving a used car — engine, brakes, steering, gearbox, electrics, and the warning signs that should make you walk away.
+- [How to Tax a Car Online — Step-by-Step Guide](https://www.freeplatecheck.co.uk/blog/how-to-tax-a-car-online): How to tax your car online with the DVLA, what you need, how much it costs, and what happens if you forget. A complete guide to UK vehicle tax.
+- [Euro Emission Standards Explained: Euro 1 to Euro 6 (and What It Means for Your Car)](https://www.freeplatecheck.co.uk/blog/euro-emission-standards-explained): A clear guide to Euro emission standards in the UK — what they are, which standard your car meets, and how it affects ULEZ, tax, and resale value.
+- [Car Tax Changes April 2026: What Every UK Driver Needs to Know](https://www.freeplatecheck.co.uk/blog/car-tax-changes-april-2026): All the VED changes coming on 1 April 2026 — higher standard rates, increased first-year tax, EV threshold relief, and what it means for your car.
+- [Car Insurance Groups Explained: Groups 1–50 and What They Mean](https://www.freeplatecheck.co.uk/blog/car-insurance-groups-explained): How car insurance groups work in the UK, what determines which group a car falls into, and how to find cheaper insurance by choosing the right vehicle.
+- [What Is an HPI Check? Free vs Paid Car Checks Explained](https://www.freeplatecheck.co.uk/blog/what-is-hpi-check): What an HPI check covers, how it compares to free car checks, and when you should pay for a full vehicle history report.
+- [How to Check a Car's Service History Before You Buy](https://www.freeplatecheck.co.uk/blog/how-to-check-car-service-history): How to verify a used car's service history, what a full service history means, and why gaps in the record should raise red flags.
+- [How to Check a Car's CO2 Emissions](https://www.freeplatecheck.co.uk/blog/how-to-check-car-co2-emissions): How to find out a car's CO2 emissions, why they matter for road tax, ULEZ, and running costs, and what the figures actually mean.
+- [What to Do if Your Car Fails Its MOT](https://www.freeplatecheck.co.uk/blog/what-to-do-if-car-fails-mot): Your car has failed its MOT — now what? A practical guide to your options, your rights, and how to get back on the road as quickly and cheaply as possible.
+- [How to Spot a Clocked Car — 8 Warning Signs to Watch For](https://www.freeplatecheck.co.uk/blog/how-to-spot-a-clocked-car): Mileage fraud affects 1 in 16 used cars in the UK. Learn how to spot a clocked car using MOT history, wear patterns, and free mileage checks before you buy.
+- [How to SORN a Car Online — Step-by-Step Guide](https://www.freeplatecheck.co.uk/blog/how-to-sorn-a-car): How to declare a SORN on your vehicle, when you need one, and what the rules are. A quick guide to the Statutory Off Road Notification process.
+- [What Is a SORN and When Do You Need One?](https://www.freeplatecheck.co.uk/blog/what-is-sorn-and-when-do-you-need-one): Everything you need to know about SORN declarations in the UK — when to make one, what the rules are, and what happens if you don't.
+- [What Is a V5C Logbook? Everything You Need to Know](https://www.freeplatecheck.co.uk/blog/what-is-a-v5c-logbook): What the V5C logbook is, what it shows, why it matters when buying or selling a car, and how to get a replacement if yours is lost or stolen.
+- [How to Read a Car's MOT History (And What to Look For)](https://www.freeplatecheck.co.uk/blog/how-to-read-mot-history): Your guide to understanding MOT test results — what pass, fail, advisory, major and dangerous mean, and how to spot red flags in a vehicle's history.
+- [How to Check if a Car Is Stolen Before You Buy](https://www.freeplatecheck.co.uk/blog/how-to-check-if-car-is-stolen): How to check whether a used car has been reported stolen, what the warning signs are, and how to protect yourself when buying privately.
+- [10 Essential Checks Before Buying a Used Car](https://www.freeplatecheck.co.uk/blog/used-car-checks-before-buying): A practical checklist of things to verify before handing over money for a used car — from MOT history to mileage red flags.
+- [How Much Is My Car Worth? A Guide to Car Valuations](https://www.freeplatecheck.co.uk/blog/car-valuation-guide): Understand how car valuations work, what affects your vehicle's value, and how to get the best price when selling. Free, practical advice for UK car owners.
+- [Cheapest Cars to Tax in the UK (2026 Guide)](https://www.freeplatecheck.co.uk/blog/cheapest-cars-to-tax-uk): A guide to the cheapest cars to tax in the UK — which vehicles pay zero or low road tax, how VED bands work, and how to check what you'll pay.
+- [First Car Checklist for New Drivers](https://www.freeplatecheck.co.uk/blog/first-car-checklist-new-drivers): Everything a new driver needs to know before buying their first car — insurance, tax, MOT, running costs, and the checks that could save you money.
+- [How to Check if a Car Has Outstanding Finance](https://www.freeplatecheck.co.uk/blog/how-to-check-if-car-has-finance): How to find out if a used car has outstanding finance before you buy, what happens if you buy a financed car, and how to protect yourself.
+- [How to Check Mileage on a Used Car](https://www.freeplatecheck.co.uk/blog/how-to-check-mileage-used-car): How to verify a used car's mileage history using MOT records — spot clocking, detect discrepancies, and protect yourself from mileage fraud.
+- [How to Transfer a Private Number Plate in the UK](https://www.freeplatecheck.co.uk/blog/how-to-transfer-private-plate): Step-by-step guide to transferring a private number plate between vehicles, putting a plate on retention, and what it costs. DVLA rules explained.
+- [What Does Cat N and Cat S Mean? Insurance Write-Off Categories Explained](https://www.freeplatecheck.co.uk/blog/what-does-cat-n-s-mean): A clear guide to insurance write-off categories in the UK — Cat A, B, S and N. What they mean, whether you can buy a written-off car, and what to check.
+- [What Happens if You Drive Without an MOT?](https://www.freeplatecheck.co.uk/blog/what-happens-driving-without-mot): The penalties for driving without a valid MOT in the UK — fines, insurance issues, and the exceptions you need to know about.
+- [When Is My MOT Due? How to Check and Never Miss It](https://www.freeplatecheck.co.uk/blog/when-is-my-mot-due): How to check when your MOT is due, what happens if you miss it, and how to make sure you never forget — a quick guide for UK drivers.
+- [How to Check if a Car Is Taxed](https://www.freeplatecheck.co.uk/blog/how-to-check-if-a-car-is-taxed): A quick guide to checking a vehicle's tax status in the UK — what to look for, what the statuses mean, and why it matters.
+- [What Does an MOT Advisory Mean?](https://www.freeplatecheck.co.uk/blog/what-does-mot-advisory-mean): A plain-English guide to MOT advisories — what they are, when to worry, and what to do next.
+- [Car Safety Recalls: Everything You Need to Know](https://www.freeplatecheck.co.uk/blog/car-safety-recalls-guide): A practical guide to vehicle safety recalls in the UK — how they work, how to check if your car is affected, and what to do about it.
+- [Is My Car ULEZ Compliant? A Complete Guide](https://www.freeplatecheck.co.uk/blog/is-my-car-ulez-compliant): Find out whether your car meets ULEZ emission standards, what happens if it doesn't, and what your options are — covering London's ULEZ and other UK Clean Air Zones.
 
 ## About
 

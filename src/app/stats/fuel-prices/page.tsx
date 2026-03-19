@@ -4,20 +4,21 @@ import StatCallout from "@/components/stats/StatCallout";
 import StatsCTA from "@/components/stats/StatsCTA";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
+import { latestWeek } from "@/lib/stats-data/fuel-prices";
 
 import FuelPriceChart from "@/components/stats/FuelPriceChart";
 
 export const metadata: Metadata = {
-  title: "UK Fuel Prices 1988-2025 | Petrol & Diesel Price History",
+  title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
   description:
-    "Interactive chart of UK petrol and diesel prices from 1988 to 2025. Includes fill-cost calculator, key event annotations and historical price data from DESNZ.",
+    "Live weekly UK petrol and diesel prices from DESNZ, updated automatically. Interactive chart from 2003 to today with fill-cost calculator, key event annotations and historical data.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
   },
   openGraph: {
-    title: "UK Fuel Prices 1988-2025 | Petrol & Diesel Price History",
+    title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
     description:
-      "Interactive chart of UK petrol and diesel prices from 1988 to 2025. Includes fill-cost calculator, key event annotations and historical price data.",
+      "Live weekly UK petrol and diesel prices. Interactive chart from 2003 to today with fill-cost calculator and event annotations.",
     url: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -25,22 +26,28 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UK Fuel Prices 1988-2025 | Petrol & Diesel Price History",
+    title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
     description:
-      "Interactive chart of UK petrol and diesel prices from 1988 to 2025.",
+      "Live weekly UK petrol and diesel prices. Interactive chart from 2003 to today.",
   },
 };
+
+// Compute dynamic callout values at build time
+const dieselPeak = 180.3; // 2022 annual average peak
+const dieselChangeFromPeak = (
+  ((latestWeek.diesel - dieselPeak) / dieselPeak) *
+  100
+).toFixed(1);
 
 const faqItems = [
   {
     question: "What is the average price of petrol in the UK right now?",
-    answer:
-      "As of early 2025, the average UK unleaded petrol price is around 139.8p per litre. This is down from the record highs seen in mid-2022 when prices peaked above 190p at some forecourts, but still significantly higher than pre-pandemic levels of around 125p.",
+    answer: `As of ${latestWeek.date}, the average UK unleaded petrol price is ${latestWeek.petrol}p per litre and diesel is ${latestWeek.diesel}p per litre. These figures are updated weekly from official DESNZ data. Prices remain above pre-pandemic levels of around 125p but have fluctuated sharply in 2026 due to Middle East tensions affecting global oil supply.`,
   },
   {
     question: "Why is diesel more expensive than petrol?",
     answer:
-      "Diesel has been consistently more expensive than petrol in the UK since around 2004. This is partly because diesel requires more refining, European demand for diesel is higher (pushing up wholesale costs), and duty rates have historically been the same despite higher production costs. The gap widened sharply during the 2022 energy crisis.",
+      "Diesel has been consistently more expensive than petrol in the UK since around 2004. This is partly because diesel requires more refining, European demand for diesel is higher (pushing up wholesale costs), and duty rates have historically been the same despite higher production costs. The gap widened sharply during the 2022 energy crisis and has widened again in early 2026.",
   },
   {
     question: "When were UK fuel prices at their highest?",
@@ -49,13 +56,17 @@ const faqItems = [
   },
   {
     question: "How much does it cost to fill a typical car?",
-    answer:
-      "At current prices of around 140p per litre, filling a typical 50-litre family car tank costs roughly £70. A larger SUV with a 70-litre tank costs about £98. You can use the tank size calculator on this page to see fill costs at any historical price point.",
+    answer: `At current prices of around ${Math.round(latestWeek.petrol)}p per litre, filling a typical 50-litre family car tank with petrol costs roughly £${((latestWeek.petrol / 100) * 50).toFixed(0)}. A larger SUV with a 70-litre tank costs about £${((latestWeek.petrol / 100) * 70).toFixed(0)}. Diesel is more expensive at ${latestWeek.diesel}p per litre. You can use the tank size calculator on this page to see fill costs at any historical price point.`,
   },
   {
     question: "What affects UK fuel prices the most?",
     answer:
       "UK pump prices are driven by three main factors: the global crude oil price (affected by OPEC decisions, geopolitics and demand), fuel duty (currently frozen at 52.95p per litre since 2011, with a 5p cut from March 2022), and VAT at 20% applied on top. The retailer margin is typically 5-10p per litre. Exchange rates also play a role since oil is traded in US dollars.",
+  },
+  {
+    question: "How often is this data updated?",
+    answer:
+      "The price data on this page is sourced from the DESNZ Weekly Road Fuel Prices publication and is refreshed automatically every time the site is deployed. The underlying government data is published weekly, typically on a Monday.",
   },
 ];
 
@@ -69,9 +80,9 @@ export default function FuelPricesPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "UK Fuel Prices 1988-2025",
+              name: "UK Fuel Prices 2003-2026",
               description:
-                "Interactive chart of UK petrol and diesel prices from 1988 to 2025. Includes fill-cost calculator, key event annotations and historical price data from DESNZ.",
+                "Weekly UK petrol and diesel pump prices from DESNZ, updated automatically. Covers 2003 to present with over 1,100 weekly data points.",
               url: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
               license:
                 "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
@@ -80,7 +91,7 @@ export default function FuelPricesPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "1988/2025",
+              temporalCoverage: "2003/2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Petrol and diesel pump prices in pence per litre",
@@ -101,8 +112,8 @@ export default function FuelPricesPage() {
         }}
       />
       <StatsHeroSection
-        title="UK Fuel Prices 1988-2025"
-        subtitle="Track how petrol and diesel prices have changed over nearly four decades. Use the fill-cost calculator to see what a full tank would have cost at any point in history."
+        title="UK Fuel Prices — Live Weekly Data"
+        subtitle="Track petrol and diesel prices week by week, with data updated automatically from official DESNZ figures. Switch between weekly, monthly and annual views."
         breadcrumb="Fuel Prices"
       />
 
@@ -110,12 +121,12 @@ export default function FuelPricesPage() {
         {/* Stat callouts */}
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCallout
-            value="139.8p"
+            value={`${latestWeek.petrol}p`}
             label="Latest petrol (PPL)"
             color="emerald"
           />
           <StatCallout
-            value="147.2p"
+            value={`${latestWeek.diesel}p`}
             label="Latest diesel (PPL)"
             color="amber"
           />
@@ -125,8 +136,8 @@ export default function FuelPricesPage() {
             color="red"
           />
           <StatCallout
-            value="-22.5%"
-            label="Diesel down from peak"
+            value={`${dieselChangeFromPeak}%`}
+            label="Diesel vs 2022 peak"
             color="sky"
           />
         </div>
@@ -140,26 +151,19 @@ export default function FuelPricesPage() {
             Understanding UK Fuel Price Trends
           </h2>
           <p>
-            UK fuel prices have followed a dramatic upward trajectory since
-            government records began in 1988, when a litre of unleaded petrol
-            cost just 36p. Over the following decades, a combination of rising
-            global oil demand, successive fuel duty escalators, and geopolitical
-            shocks pushed prices to levels that would have been unimaginable to
-            drivers in the late 1980s.
+            UK fuel prices have followed a dramatic trajectory since government
+            weekly records began in 2003, with earlier annual data stretching
+            back to 1988 when a litre of unleaded petrol cost just 36p. Over the
+            following decades, a combination of rising global oil demand,
+            successive fuel duty escalators, and geopolitical shocks pushed
+            prices to levels that would have been unimaginable to drivers in the
+            late 1980s.
           </p>
           <p>
-            The first major spike came during the 1990 Gulf War, when Iraq's
-            invasion of Kuwait disrupted global oil supply and sent crude prices
-            surging. A decade later, the 2000 fuel protests saw UK hauliers and
-            farmers blockade refineries in response to pump prices that had
-            climbed above 76p per litre — a figure that seems modest by today's
-            standards but represented a sharp jump at the time.
-          </p>
-          <p>
-            The 2008 financial crisis brought another wave of volatility. Oil
-            prices hit $147 a barrel in July before crashing below $40 by
-            December, dragging pump prices on a rollercoaster ride. The UK
-            government's fuel duty escalator continued to push prices higher
+            The 2008 financial crisis brought severe volatility. Oil prices hit
+            $147 a barrel in July before crashing below $40 by December,
+            dragging pump prices on a rollercoaster ride. The UK
+            government&apos;s fuel duty escalator continued to push prices higher
             through the early 2010s, with petrol breaching 134p in 2012.
           </p>
           <p>
@@ -169,7 +173,7 @@ export default function FuelPricesPage() {
             2020 — its lowest level since 2016.
           </p>
           <p>
-            The post-pandemic recovery, compounded by Russia's invasion of
+            The post-pandemic recovery, compounded by Russia&apos;s invasion of
             Ukraine in February 2022, triggered the most severe price shock in
             UK motoring history. Diesel surged past 180p on an annual average
             basis, with daily peaks above 199p at some forecourts. The
@@ -178,13 +182,12 @@ export default function FuelPricesPage() {
             European diesel supply tightened.
           </p>
           <p>
-            By 2025, prices have eased from those peaks but remain firmly above
-            pre-pandemic levels. With fuel duty frozen since 2011 and the
-            temporary 5p cut still in place, the primary driver of pump prices
-            remains the global oil market. For UK motorists, fuel continues to
-            represent one of the largest variable costs of car ownership —
-            making it worth understanding both the historical trends and the
-            factors that drive prices at the forecourt.
+            Prices eased through 2023-2025 but remained firmly above
+            pre-pandemic levels. In early 2026, escalating tensions in the
+            Middle East have driven a sharp upward move in crude oil prices,
+            with diesel particularly affected — rising from around 141p in
+            February to {latestWeek.diesel}p by mid-March. The weekly data on
+            this page captures these movements as they happen.
           </p>
         </div>
 
