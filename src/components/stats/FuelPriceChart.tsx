@@ -53,8 +53,8 @@ function formatMonthLabel(month: string): string {
 }
 
 export default function FuelPriceChart() {
-  const [granularity, setGranularity] = useState<Granularity>("weekly");
-  const [range, setRange] = useState<Range>("1Y");
+  const [granularity, setGranularity] = useState<Granularity>("monthly");
+  const [range, setRange] = useState<Range>("5Y");
   const [tankLitres, setTankLitres] = useState<number | null>(null);
   const [customTank, setCustomTank] = useState("");
 
@@ -339,15 +339,32 @@ export default function FuelPriceChart() {
                 );
               }}
             />
-            {visibleAnnotations.map((a, i) => (
-              <ReferenceLine
-                key={`${a.label}-${i}`}
-                x={annotationX(a)}
-                stroke="#4b5563"
-                strokeDasharray="4 4"
-                label={annotationLabel(a.label, i)}
-              />
-            ))}
+            {visibleAnnotations.map((a, i) => {
+              // Position label to the left if annotation is in the last 15% of visible data
+              const xVal = annotationX(a);
+              const dataIdx = chartData.findIndex((d) => d.label === xVal);
+              const nearRightEdge = dataIdx >= chartData.length * 0.85;
+              const labelConfig = nearRightEdge
+                ? {
+                    value: a.label,
+                    position: "insideTopRight" as const,
+                    fill: "#9ca3af",
+                    fontSize: 10,
+                    dy: [8, 24, 40, 56][i % 4],
+                    dx: -4,
+                  }
+                : annotationLabel(a.label, i);
+
+              return (
+                <ReferenceLine
+                  key={`${a.label}-${i}`}
+                  x={xVal}
+                  stroke="#4b5563"
+                  strokeDasharray="4 4"
+                  label={labelConfig}
+                />
+              );
+            })}
             <Line
               type="monotone"
               dataKey="petrol"
