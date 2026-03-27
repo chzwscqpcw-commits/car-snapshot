@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
+import MotReminderBanner from "@/components/MotReminderBanner";
 
 export const metadata: Metadata = {
   title: "Free MOT History Check — Full MOT Results | Free Plate Check",
@@ -145,24 +147,31 @@ export default function MotCheckPage() {
           <p className="text-sm text-slate-400 mt-2">
             Check any UK vehicle&apos;s full MOT history using just the registration number.
           </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href="#check-vehicle"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-blue-600 hover:text-blue-400"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+              Check a vehicle
+            </a>
+            <a
+              href="#mot-reminder"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-emerald-600 hover:text-emerald-400"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+              Set MOT reminder
+            </a>
+          </div>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center mb-12">
-          <p className="text-lg font-semibold text-slate-100 mb-2">
-            Check a vehicle&apos;s MOT history now
-          </p>
-          <p className="text-sm text-slate-400 mb-4">
-            Enter any UK registration number on our homepage to see the full MOT history instantly.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Look up a vehicle
-          </a>
-        </div>
+        <ConversionWidget
+          headline="Check a vehicle's MOT history"
+          subtext="Enter any UK reg plate to see every MOT result, advisory, and mileage reading since 2005 — free and instant."
+          reminderHeadline="Never miss your MOT again"
+        />
 
         <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-lg">
           <p className="text-sm text-slate-300">
@@ -329,6 +338,7 @@ export default function MotCheckPage() {
           </div>
         </div>
       </div>
+      <MotReminderBanner />
     </div>
   );
 }

@@ -514,6 +514,11 @@ export default function MOTReminderSignup({
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
         </p>
+        {(context === "expired" || context === "due-soon") && (
+          <p className="mt-1.5 text-xs text-amber-500/80">
+            Driving without a valid MOT can mean a fine of up to &pound;1,000.
+          </p>
+        )}
       </form>
     </div>
   );

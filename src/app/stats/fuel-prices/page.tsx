@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import { latestWeek } from "@/lib/stats-data/fuel-prices";
@@ -195,7 +195,7 @@ export default function FuelPricesPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="What does your car cost to run?" subtext="Enter any UK reg to see your vehicle's fuel economy, running costs, and real-world data from MOT records." />
 
         {/* Related stats */}
         <StatsRelated exclude="fuel-prices" />

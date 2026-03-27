@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 
 import FuelComparisonChart from "@/components/stats/FuelComparisonChart";
@@ -206,7 +206,7 @@ export default function FuelTypeComparisonPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="What fuel type is your car?" subtext="Enter a reg plate to see your vehicle's fuel economy, emissions, ULEZ compliance, and estimated running costs." />
 
         {/* Related stats */}
         <StatsRelated exclude="fuel-type-comparison" />

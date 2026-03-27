@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ConversionWidget from "@/components/stats/ConversionWidget";
+import MotReminderBanner from "@/components/MotReminderBanner";
 import {
   MODEL_REGISTRY,
   findModelEntry,
@@ -286,26 +288,32 @@ export default async function ModelGuidePage({ params }: PageProps) {
           <p className="text-sm text-slate-400 mt-2">
             Reliability, safety, running costs and what to check before you buy.
           </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href="#check-vehicle"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-blue-600 hover:text-blue-400"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+              Check a vehicle
+            </a>
+            <a
+              href="#mot-reminder"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-emerald-600 hover:text-emerald-400"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+              Set MOT reminder
+            </a>
+          </div>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* ── CTA ──────────────────────────────────────────────────────── */}
-        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center mb-12">
-          <p className="text-lg font-semibold text-slate-100 mb-2">
-            Check a specific {data.displayName}
-          </p>
-          <p className="text-sm text-slate-400 mb-4">
-            Enter a registration number to see MOT history, tax status,
-            mileage, recalls and more for any {data.displayName}.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Look up a {data.displayName}
-          </a>
-        </div>
+        <ConversionWidget
+          headline={`Check a specific ${data.displayName}`}
+          subtext={`Enter a registration number to see MOT history, tax status, mileage, recalls and more for any ${data.displayName}.`}
+          reminderHeadline={`Own a ${data.displayName}? Never miss your MOT`}
+        />
 
         <div className="space-y-10 text-slate-300">
           {/* ── Overview narrative ──────────────────────────────────────── */}
@@ -704,21 +712,11 @@ export default async function ModelGuidePage({ params }: PageProps) {
           )}
 
           {/* ── Second CTA ─────────────────────────────────────────────── */}
-          <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center">
-            <p className="text-lg font-semibold text-slate-100 mb-2">
-              Found a {data.displayName} you like?
-            </p>
-            <p className="text-sm text-slate-400 mb-4">
-              Enter the registration to check its full MOT history, tax status,
-              mileage, recalls and estimated value — all free.
-            </p>
-            <a
-              href="/"
-              className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-            >
-              Check a {data.displayModel} now
-            </a>
-          </div>
+          <ConversionWidget
+            headline={`Found a ${data.displayName} you like?`}
+            subtext={`Enter the registration to check its full MOT history, tax status, mileage, recalls and estimated value — all free.`}
+            reminderHeadline="Set a free MOT reminder"
+          />
 
           {/* ── Related models ─────────────────────────────────────────── */}
           {siblings.length > 0 && (
@@ -829,7 +827,7 @@ export default async function ModelGuidePage({ params }: PageProps) {
           </div>
         </div>
       </div>
+      <MotReminderBanner />
     </div>
   );
 }
-

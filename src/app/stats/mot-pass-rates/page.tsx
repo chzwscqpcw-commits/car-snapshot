@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import passRateData from "@/data/mot-pass-rates.json";
 
@@ -250,7 +250,7 @@ export default function MotPassRatesPage() {
         <FaqAccordion items={faqItems} />
 
         {/* Bottom CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="When is your MOT due?" subtext="Enter a reg plate to see your vehicle's full MOT history, pass rate, and advisories — plus set a free reminder." />
 
         {/* Related stats */}
         <StatsRelated exclude="mot-pass-rates" />

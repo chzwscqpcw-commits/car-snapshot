@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 
 import UsedCarPriceChart from "@/components/stats/UsedCarPriceChart";
@@ -216,7 +216,7 @@ export default function UsedCarPricesPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="Get a free instant car valuation" subtext="Enter any UK reg plate to see an estimated value based on age, mileage, condition, and real market data." />
 
         {/* Related Stats */}
         <StatsRelated exclude="used-car-prices" />

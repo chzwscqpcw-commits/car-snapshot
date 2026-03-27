@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
@@ -209,7 +209,7 @@ export default function EvAdoptionPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="Thinking about going electric?" subtext="Enter any UK reg plate to check EV specs, running costs, ULEZ compliance, and get a full vehicle report — free." />
 
         {/* Related stats */}
         <StatsRelated exclude="ev-adoption" />

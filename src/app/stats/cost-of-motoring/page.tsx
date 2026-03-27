@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 
 import CostOfMotoringChart from "@/components/stats/CostOfMotoringChart";
@@ -220,7 +220,7 @@ export default function CostOfMotoringPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="See your car's real running costs" subtext="Enter a reg plate to get a personalised breakdown — fuel, road tax, depreciation, and MOT costs for your vehicle." />
 
         {/* Related stats */}
         <StatsRelated exclude="cost-of-motoring" />

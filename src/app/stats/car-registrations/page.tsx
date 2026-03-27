@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
@@ -205,7 +205,7 @@ export default function CarRegistrationsPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="Check any registered vehicle" subtext="Enter a reg plate to see full specs, MOT history, tax status, mileage, valuation, and more — all free." />
 
         {/* Related stats */}
         <StatsRelated exclude="car-registrations" />

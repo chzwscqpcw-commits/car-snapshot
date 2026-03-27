@@ -983,7 +983,7 @@ export default function Home() {
   const showMotBanner = useMemo((): "expired" | "expiring" | null => {
     if (!data || !isOver3Years) return null;
     if (data.motStatus !== "Valid" || motDaysUntilExpiry < 0) return "expired";
-    if (motDaysUntilExpiry <= 30) return "expiring";
+    if (motDaysUntilExpiry <= 90) return "expiring";
     return null;
   }, [data, isOver3Years, motDaysUntilExpiry]);
 
@@ -3491,7 +3491,7 @@ END:VEVENT
                     <p className="text-xs text-slate-300 mt-0.5">
                       {showMotBanner === "expired"
                         ? `Expired ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — this vehicle cannot legally be driven on public roads without a valid MOT.`
-                        : `Expires ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — you can book an MOT up to 28 days before it expires without losing any days.`}
+                        : `Expires ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — book early and compare prices. You can get an MOT up to 28 days before expiry without losing any days.`}
                     </p>
                   </div>
                   <a

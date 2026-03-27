@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
@@ -206,7 +206,7 @@ export default function RoadSafetyPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="Check your car's safety rating" subtext="Enter a reg plate to see Euro NCAP scores, safety recalls, and a full vehicle health check — free and instant." />
 
         {/* Related stats */}
         <StatsRelated exclude="road-safety" />

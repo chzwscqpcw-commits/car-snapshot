@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
-import StatsCTA from "@/components/stats/StatsCTA";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
@@ -208,7 +208,7 @@ export default function UkMileagePage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <StatsCTA />
+        <ConversionWidget headline="Check any vehicle's mileage history" subtext="Worried about clocking? Enter a reg plate to see full MOT mileage records and spot any red flags instantly." />
 
         {/* Related stats */}
         <StatsRelated exclude="uk-mileage" />
