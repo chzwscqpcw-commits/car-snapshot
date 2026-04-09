@@ -4,21 +4,32 @@ import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
-import { latestWeek } from "@/lib/stats-data/fuel-prices";
+import { latestWeek, weeklyData } from "@/lib/stats-data/fuel-prices";
 
 import FuelPriceChart from "@/components/stats/FuelPriceChart";
 
+// Year-on-year diesel change
+const oneYearAgo = weeklyData.find((w) => {
+  const d = new Date(w.date);
+  const target = new Date(latestWeek.date);
+  target.setFullYear(target.getFullYear() - 1);
+  return Math.abs(d.getTime() - target.getTime()) < 8 * 24 * 60 * 60 * 1000;
+});
+const dieselYoY = oneYearAgo
+  ? ((latestWeek.diesel - oneYearAgo.diesel) / oneYearAgo.diesel * 100).toFixed(0)
+  : null;
+
 export const metadata: Metadata = {
-  title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
+  title: `UK Fuel Prices — Petrol ${latestWeek.petrol}p, Diesel ${latestWeek.diesel}p | Weekly Data`,
   description:
-    "Live weekly UK petrol and diesel prices from DESNZ, updated automatically. Interactive chart from 2003 to today with fill-cost calculator, key event annotations and historical data.",
+    `Live UK petrol (${latestWeek.petrol}p) and diesel (${latestWeek.diesel}p) prices updated weekly from DESNZ. Interactive chart from 2003 to today with fill-cost calculator and event annotations.`,
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
   },
   openGraph: {
-    title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
+    title: `UK Fuel Prices — Petrol ${latestWeek.petrol}p, Diesel ${latestWeek.diesel}p | Weekly Data`,
     description:
-      "Live weekly UK petrol and diesel prices. Interactive chart from 2003 to today with fill-cost calculator and event annotations.",
+      `Live UK petrol and diesel prices updated weekly. Diesel ${dieselYoY ? `up ${dieselYoY}% year-on-year` : "surging in 2026"}. Interactive chart with fill-cost calculator.`,
     url: "https://www.freeplatecheck.co.uk/stats/fuel-prices",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -26,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UK Fuel Prices 2003-2026 | Weekly Petrol & Diesel Price History",
+    title: `UK Fuel Prices — Petrol ${latestWeek.petrol}p, Diesel ${latestWeek.diesel}p`,
     description:
-      "Live weekly UK petrol and diesel prices. Interactive chart from 2003 to today.",
+      `Live weekly UK petrol and diesel prices. Diesel ${dieselYoY ? `up ${dieselYoY}% vs last year` : "surging"}.`,
   },
 };
 
@@ -38,6 +49,7 @@ const dieselChangeFromPeak = (
   ((latestWeek.diesel - dieselPeak) / dieselPeak) *
   100
 ).toFixed(1);
+const fillCost50L = ((latestWeek.petrol / 100) * 50).toFixed(0);
 
 const faqItems = [
   {
@@ -66,7 +78,7 @@ const faqItems = [
   {
     question: "How often is this data updated?",
     answer:
-      "The price data on this page is sourced from the DESNZ Weekly Road Fuel Prices publication and is refreshed automatically every time the site is deployed. The underlying government data is published weekly, typically on a Monday.",
+      `The price data on this page is sourced from the DESNZ Weekly Road Fuel Prices publication and is refreshed automatically every time the site is deployed. The latest data point is from ${latestWeek.date}. The underlying government data is published weekly, typically on a Monday.`,
   },
 ];
 
@@ -131,13 +143,13 @@ export default function FuelPricesPage() {
             color="amber"
           />
           <StatCallout
-            value="180.3p"
-            label="All-time high (diesel 2022)"
+            value={`£${fillCost50L}`}
+            label="50L petrol fill cost"
             color="red"
           />
           <StatCallout
-            value={`${dieselChangeFromPeak}%`}
-            label="Diesel vs 2022 peak"
+            value={dieselYoY ? `+${dieselYoY}%` : `${dieselChangeFromPeak}%`}
+            label={dieselYoY ? "Diesel vs last year" : "Diesel vs 2022 peak"}
             color="sky"
           />
         </div>
@@ -191,11 +203,35 @@ export default function FuelPricesPage() {
           </p>
         </div>
 
+        {/* Mid-content CTA — capitalise on fuel price concern */}
+        <div className="my-10 rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-900/20 to-orange-900/20 p-6">
+          <h3 className="text-lg font-bold text-gray-100">Worried about rising fuel costs?</h3>
+          <p className="mt-2 text-sm text-gray-400">
+            With petrol at {latestWeek.petrol}p and diesel at {latestWeek.diesel}p per litre,
+            running costs matter more than ever. Check your car&apos;s real fuel economy and see
+            how much it actually costs to run — or compare it against more efficient alternatives.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600"
+            >
+              Check your car&apos;s running costs
+            </a>
+            <a
+              href="/stats/fuel-type-comparison"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-5 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:border-slate-500 hover:text-white"
+            >
+              Compare fuel types
+            </a>
+          </div>
+        </div>
+
         {/* FAQ */}
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <ConversionWidget headline="What does your car cost to run?" subtext="Enter any UK reg to see your vehicle's fuel economy, running costs, and real-world data from MOT records." />
+        <ConversionWidget headline="What does your car cost to run?" subtext="Enter any UK reg to see your vehicle's fuel economy, running costs, and real-world data from MOT records — calculated using the latest fuel prices." />
 
         {/* Related stats */}
         <StatsRelated exclude="fuel-prices" />

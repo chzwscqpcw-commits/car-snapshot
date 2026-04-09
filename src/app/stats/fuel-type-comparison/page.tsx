@@ -4,21 +4,27 @@ import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import { perMileCosts, lastUpdated } from "@/lib/stats-data/fuel-comparison";
 
 import FuelComparisonChart from "@/components/stats/FuelComparisonChart";
 
+const petrol = perMileCosts.find((f) => f.fuelType === "Petrol")!;
+const diesel = perMileCosts.find((f) => f.fuelType === "Diesel")!;
+const hybrid = perMileCosts.find((f) => f.fuelType === "Hybrid")!;
+const ev = perMileCosts.find((f) => f.fuelType === "Electric")!;
+
 export const metadata: Metadata = {
-  title: "Petrol vs Diesel vs Electric Running Costs 2025 | UK Comparison",
+  title: "Petrol vs Diesel vs Electric Running Costs 2026 | UK Comparison",
   description:
-    "Compare annual running costs for petrol, diesel, hybrid and electric cars at any mileage. Interactive charts, per-mile costs and EV break-even calculator.",
+    `Compare annual running costs for petrol (${petrol.pencePerMile}p/mi), diesel (${diesel.pencePerMile}p/mi), hybrid and electric cars at any mileage. Updated ${lastUpdated} from official UK fuel prices.`,
   alternates: {
     canonical:
       "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
   },
   openGraph: {
-    title: "Petrol vs Diesel vs Electric Running Costs 2025",
+    title: "Petrol vs Diesel vs Electric Running Costs 2026",
     description:
-      "Compare running costs by fuel type at any annual mileage.",
+      "Compare running costs by fuel type at any annual mileage. Updated with latest UK fuel prices.",
     url: "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -30,27 +36,27 @@ const faqItems = [
   {
     question: "Is an electric car really cheaper to run than petrol?",
     answer:
-      "Yes, on a per-mile basis electric cars are significantly cheaper to run. At typical home electricity rates, an EV costs around 5p per mile compared to 16p for petrol. Even with higher purchase prices, most EV owners recoup the difference within 5-7 years depending on annual mileage. Higher-mileage drivers break even faster because the savings compound with every mile driven.",
+      `Yes, on a per-mile basis electric cars are significantly cheaper to run. At current electricity rates, an EV costs around ${ev.pencePerMile}p per mile compared to ${petrol.pencePerMile}p for petrol. Even with higher purchase prices, most EV owners recoup the difference within 5-7 years depending on annual mileage. Higher-mileage drivers break even faster because the savings compound with every mile driven.`,
   },
   {
     question: "Why is diesel more expensive per litre but cheaper per mile than petrol?",
     answer:
-      "Diesel engines are more thermally efficient than petrol engines, meaning they extract more energy from each litre of fuel. A typical diesel car achieves 50-60 mpg compared to 35-45 mpg for an equivalent petrol model. This efficiency advantage more than offsets the higher pump price, resulting in a lower cost per mile of around 14p versus 16p for petrol.",
+      `Diesel engines are more thermally efficient than petrol engines, meaning they extract more energy from each litre of fuel. A typical diesel car achieves 50-60 mpg compared to 35-45 mpg for an equivalent petrol model. This efficiency advantage can offset the higher pump price, though with diesel prices surging in 2026 the per-mile gap has narrowed significantly — diesel now costs around ${diesel.pencePerMile}p per mile versus ${petrol.pencePerMile}p for petrol.`,
   },
   {
     question: "How do hybrid running costs compare to pure electric?",
     answer:
-      "Hybrids sit between conventional and electric vehicles for running costs. A typical hybrid costs around 10.4p per mile, roughly double the 5p per mile of a pure EV. However, hybrids have a lower purchase price than EVs and don't require charging infrastructure, making them a practical middle ground for drivers who aren't ready to go fully electric or who regularly drive long distances.",
+      `Hybrids sit between conventional and electric vehicles for running costs. A typical hybrid costs around ${hybrid.pencePerMile}p per mile, compared to ${ev.pencePerMile}p for a pure EV. However, hybrids have a lower purchase price than EVs and don't require charging infrastructure, making them a practical middle ground for drivers who aren't ready to go fully electric or who regularly drive long distances.`,
   },
   {
     question: "What is the total cost of ownership for an EV vs petrol car?",
     answer:
-      "Total cost of ownership includes purchase price, fuel, insurance, maintenance, tax and depreciation. While EVs have higher upfront costs (typically £8,000-£12,000 more), they benefit from zero road tax, lower servicing costs (no oil changes, fewer brake replacements), and substantially cheaper fuel. Over a typical 5-year ownership period at average mileage, an EV can save £3,000-£6,000 compared to an equivalent petrol car.",
+      "Total cost of ownership includes purchase price, fuel, insurance, maintenance, tax and depreciation. While EVs have higher upfront costs (typically \u00a38,000-\u00a312,000 more), they benefit from zero road tax, lower servicing costs (no oil changes, fewer brake replacements), and substantially cheaper fuel. Over a typical 5-year ownership period at average mileage, an EV can save \u00a33,000-\u00a36,000 compared to an equivalent petrol car.",
   },
   {
-    question: "Should I buy a diesel car in 2025?",
+    question: "Should I buy a diesel car in 2026?",
     answer:
-      "Diesel still makes financial sense for high-mileage drivers (over 15,000 miles per year) who need long range without stops, particularly those towing or driving larger vehicles. However, diesel faces growing restrictions: many cities have Clean Air Zones charging older diesels, resale values are declining, and new diesel car sales have dropped below 5% market share. For most buyers, a hybrid or EV is now the better long-term choice.",
+      "Diesel still makes financial sense for high-mileage drivers (over 15,000 miles per year) who need long range without stops, particularly those towing or driving larger vehicles. However, diesel faces growing restrictions: many cities have Clean Air Zones charging older diesels, resale values are declining, and new diesel car sales have dropped below 5% market share. With diesel prices surging past 180p per litre in 2026, the per-mile advantage over petrol has almost disappeared. For most buyers, a hybrid or EV is now the better long-term choice.",
   },
 ];
 
@@ -64,9 +70,9 @@ export default function FuelTypeComparisonPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Petrol vs Diesel vs Electric Running Costs 2025",
+              name: "Petrol vs Diesel vs Electric Running Costs 2026",
               description:
-                "Compare annual running costs for petrol, diesel, hybrid and electric cars at any mileage. Interactive charts, per-mile costs and EV break-even calculator.",
+                `Compare annual running costs for petrol, diesel, hybrid and electric cars at any mileage. Updated ${lastUpdated} from official UK fuel prices.`,
               url: "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
               license:
                 "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
@@ -75,7 +81,7 @@ export default function FuelTypeComparisonPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2025",
+              temporalCoverage: "2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Per-mile and annual running costs in pence and GBP by fuel type",
@@ -97,17 +103,17 @@ export default function FuelTypeComparisonPage() {
       />
       <StatsHeroSection
         title="Petrol vs Diesel vs Electric: Running Cost Comparison"
-        subtitle="Interactive comparison of fuel costs by type and mileage. See which fuel type saves you the most money at your annual mileage."
+        subtitle={`Interactive comparison of fuel costs by type and mileage, using official UK fuel prices updated ${lastUpdated}. See which fuel type saves you the most money.`}
         breadcrumb="Fuel Type Comparison"
       />
 
       <div className="mx-auto max-w-3xl px-4 py-10">
-        {/* Stat callouts */}
+        {/* Stat callouts — derived from latest fuel prices */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 mb-10">
-          <StatCallout value="16p" label="Petrol per mile" color="amber" />
-          <StatCallout value="14p" label="Diesel per mile" color="red" />
-          <StatCallout value="10.4p" label="Hybrid per mile" color="sky" />
-          <StatCallout value="5p" label="Electric per mile" color="emerald" />
+          <StatCallout value={`${petrol.pencePerMile}p`} label="Petrol per mile" color="amber" />
+          <StatCallout value={`${diesel.pencePerMile}p`} label="Diesel per mile" color="red" />
+          <StatCallout value={`${hybrid.pencePerMile}p`} label="Hybrid per mile" color="sky" />
+          <StatCallout value={`${ev.pencePerMile}p`} label="Electric per mile" color="emerald" />
         </div>
 
         {/* Chart */}
@@ -116,33 +122,36 @@ export default function FuelTypeComparisonPage() {
         {/* Insight copy */}
         <div className="my-10 space-y-5 text-sm leading-relaxed text-gray-300">
           <h2 className="text-xl font-bold text-gray-100">
-            Understanding UK Fuel Type Running Costs
+            Understanding UK Fuel Type Running Costs in 2026
           </h2>
 
           <p>
             The cost of running a car varies enormously depending on its fuel
-            type. At 2025 rates, a petrol car costs roughly 16p per mile in fuel
-            alone, while a fully electric vehicle costs just 5p per mile when
-            charged at home on a standard tariff. That difference may sound
-            small, but over 10,000 miles a year it adds up to more than
-            {"£"}1,100 in annual savings -- enough to cover a year of car
-            insurance for many drivers.
+            type — and the gap has shifted dramatically in 2026 as fuel prices
+            surge. At current rates, a petrol car costs roughly {petrol.pencePerMile}p per mile
+            in fuel alone, while a fully electric vehicle costs just {ev.pencePerMile}p per mile
+            when charged at home on a standard tariff. Over 10,000 miles a year,
+            that adds up to more than {"£"}{Math.round(((petrol.pencePerMile - ev.pencePerMile) / 100) * 10000).toLocaleString()} in
+            annual savings — enough to cover a year of car insurance for many
+            drivers.
           </p>
 
           <p>
             Diesel has traditionally been the choice for high-mileage drivers,
-            and the numbers still support that logic. Despite costing more per
-            litre at the pump, diesel engines squeeze more miles from each litre,
-            bringing the per-mile cost down to around 14p. For drivers covering
-            20,000 miles or more annually, diesel saves roughly {"£"}400
-            over petrol each year. However, diesel&apos;s advantage is
-            narrowing as pump prices converge and clean air zones penalise older
-            diesel vehicles with daily charges of {"£"}12.50 or more.
+            and the efficiency advantage remains. Despite costing significantly
+            more per litre at the pump, diesel engines squeeze more miles from
+            each litre, bringing the per-mile cost to around {diesel.pencePerMile}p. However,
+            with diesel prices surging past 180p per litre in early 2026, the
+            per-mile gap between petrol and diesel has narrowed sharply. For
+            drivers covering 20,000 miles or more annually, diesel may still save
+            a few hundred pounds over petrol, but the margin is much thinner than
+            it was. Meanwhile, clean air zones continue to penalise older diesel
+            vehicles with daily charges of {"£"}12.50 or more.
           </p>
 
           <p>
             Hybrid vehicles occupy a useful middle ground. With a per-mile cost
-            of around 10.4p, they offer meaningful savings over both petrol and
+            of around {hybrid.pencePerMile}p, they offer meaningful savings over both petrol and
             diesel without the range anxiety or charging infrastructure
             requirements of pure electric cars. Plug-in hybrids can push this
             figure even lower for drivers who regularly charge at home and make
@@ -161,9 +170,11 @@ export default function FuelTypeComparisonPage() {
             regenerative braking. Against this, EVs carry a purchase price
             premium of around {"£"}8,000 to {"£"}12,000 over an
             equivalent petrol car. Using a conservative {"£"}8,000 premium
-            and fuel savings of 11p per mile, a driver covering 10,000 miles
-            annually would break even in roughly 7.3 years. At 20,000 miles a
-            year, that drops to under 4 years.
+            and fuel savings of {(petrol.pencePerMile - ev.pencePerMile).toFixed(1)}p per mile,
+            a driver covering 10,000 miles annually would break even in roughly{" "}
+            {(8000 / (((petrol.pencePerMile - ev.pencePerMile) / 100) * 10000)).toFixed(1)} years.
+            At 20,000 miles a year, that drops to under{" "}
+            {(8000 / (((petrol.pencePerMile - ev.pencePerMile) / 100) * 20000)).toFixed(0)} years.
           </p>
 
           <p>
@@ -186,9 +197,11 @@ export default function FuelTypeComparisonPage() {
             standards, and the expansion of Clean Air Zones across UK cities have
             all contributed to a rapid shift away from diesel. Resale values for
             diesel cars have softened accordingly, adding depreciation as a
-            hidden cost for current owners. While diesel remains a rational
-            choice for a shrinking pool of use cases -- long-distance motorway
-            driving, towing, and commercial vehicles -- the writing is on the
+            hidden cost for current owners. The 2026 price surge — with diesel
+            climbing past 180p per litre — has further eroded diesel&apos;s
+            traditional per-mile cost advantage. While diesel remains a rational
+            choice for a shrinking pool of use cases — long-distance motorway
+            driving, towing, and commercial vehicles — the writing is on the
             wall for diesel as a mainstream passenger car fuel.
           </p>
 
@@ -206,7 +219,7 @@ export default function FuelTypeComparisonPage() {
         <FaqAccordion items={faqItems} />
 
         {/* CTA */}
-        <ConversionWidget headline="What fuel type is your car?" subtext="Enter a reg plate to see your vehicle's fuel economy, emissions, ULEZ compliance, and estimated running costs." />
+        <ConversionWidget headline="What fuel type is your car?" subtext="Enter a reg plate to see your vehicle's fuel economy, emissions, ULEZ compliance, and estimated running costs — calculated with today's fuel prices." />
 
         {/* Related stats */}
         <StatsRelated exclude="fuel-type-comparison" />

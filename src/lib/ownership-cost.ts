@@ -153,10 +153,23 @@ const SEGMENT_LABELS: Record<VehicleSegment, string> = {
   van: "Van / Commercial",
 };
 
-// Representative annual fuel costs per segment (8,000 mi/yr, UK 2025 fuel prices)
+// Derive segment fuel estimates from latest DESNZ weekly prices
+import weeklyJson from "@/data/fuel-prices-weekly.json";
+const _latestFuel = weeklyJson.weekly[weeklyJson.weekly.length - 1];
+const _LITRES_PER_GALLON = 4.546;
+const _annualCost = (ppl: number, mpg: number) =>
+  Math.round(((ppl * _LITRES_PER_GALLON) / mpg) * ASSUMED_ANNUAL_MILES);
+const _EV_COST = Math.round((24.5 / 3.5) * ASSUMED_ANNUAL_MILES); // Ofgem cap / efficiency
+
 const SEGMENT_FUEL_ESTIMATE: Record<VehicleSegment, number> = {
-  city: 900, small: 1000, family: 1150, premium: 1300,
-  luxury: 1500, suv: 1350, ev: 600, van: 1400,
+  city: _annualCost(_latestFuel.petrol, 48),
+  small: _annualCost(_latestFuel.petrol, 42),
+  family: _annualCost(_latestFuel.petrol, 38),
+  premium: _annualCost(_latestFuel.petrol, 32),
+  luxury: _annualCost(_latestFuel.petrol, 28),
+  suv: _annualCost(_latestFuel.diesel, 38),
+  ev: _EV_COST,
+  van: _annualCost(_latestFuel.diesel, 32),
 };
 
 const VED_STANDARD = 195; // Post-2017 standard rate

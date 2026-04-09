@@ -29,11 +29,13 @@ export type FuelEconomyResult = {
   transmission?: string;
 };
 
-// Average fuel prices (pence per litre) — update periodically
+// Derive fuel prices from latest DESNZ weekly data (updated at build time)
+import weeklyJson from "@/data/fuel-prices-weekly.json";
+const _latest = weeklyJson.weekly[weeklyJson.weekly.length - 1];
 const FUEL_PRICES: Record<string, number> = {
-  petrol: 143,
-  diesel: 150,
-  default: 145,
+  petrol: Math.round(_latest.petrol),
+  diesel: Math.round(_latest.diesel),
+  default: Math.round((_latest.petrol + _latest.diesel) / 2),
 };
 
 export const ASSUMED_ANNUAL_MILES = 8000;

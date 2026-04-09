@@ -1,5 +1,39 @@
 // Per-mile running cost comparison by fuel type
-// Sources: BEIS, Ofgem, SMMT (composite)
+// Derived from latest DESNZ weekly fuel prices at build time
+// EV costs based on Ofgem price cap rates
+
+import { latestWeek } from "./fuel-prices";
+
+const LITRES_PER_GALLON = 4.546;
+
+// Average fuel economy assumptions (MPG combined) for typical UK vehicles
+const AVG_MPG = {
+  petrol: 40,
+  diesel: 50,
+  hybrid: 55,
+};
+
+// EV: average efficiency ~3.5 mi/kWh, Ofgem cap rate ~24.5p/kWh (Q2 2026)
+const EV_MILES_PER_KWH = 3.5;
+const ELECTRICITY_PENCE_PER_KWH = 24.5;
+
+function calcPencePerMile(fuelPricePence: number, mpg: number): number {
+  return Math.round(((fuelPricePence * LITRES_PER_GALLON) / mpg) * 10) / 10;
+}
+
+// Derive per-mile costs from latest weekly fuel prices
+const petrolPPM = calcPencePerMile(latestWeek.petrol, AVG_MPG.petrol);
+const dieselPPM = calcPencePerMile(latestWeek.diesel, AVG_MPG.diesel);
+const hybridPPM = calcPencePerMile(latestWeek.petrol, AVG_MPG.hybrid);
+const evPPM = Math.round((ELECTRICITY_PENCE_PER_KWH / EV_MILES_PER_KWH) * 10) / 10;
+
+// CO2 emissions per mile (grams) — relatively stable regardless of fuel price
+const CO2_PER_MILE = {
+  petrol: 164,
+  diesel: 148,
+  hybrid: 92,
+  ev: 0,
+};
 
 export interface FuelCostAtMileage {
   annualMiles: number;
@@ -9,18 +43,15 @@ export interface FuelCostAtMileage {
   ev: number;
 }
 
-export const fuelComparisonData: FuelCostAtMileage[] = [
-  { annualMiles: 3000, petrol: 480, diesel: 420, hybrid: 310, ev: 150 },
-  { annualMiles: 5000, petrol: 800, diesel: 700, hybrid: 520, ev: 250 },
-  { annualMiles: 7000, petrol: 1120, diesel: 980, hybrid: 728, ev: 350 },
-  { annualMiles: 8000, petrol: 1280, diesel: 1120, hybrid: 832, ev: 400 },
-  { annualMiles: 10000, petrol: 1600, diesel: 1400, hybrid: 1040, ev: 500 },
-  { annualMiles: 12000, petrol: 1920, diesel: 1680, hybrid: 1248, ev: 600 },
-  { annualMiles: 15000, petrol: 2400, diesel: 2100, hybrid: 1560, ev: 750 },
-  { annualMiles: 20000, petrol: 3200, diesel: 2800, hybrid: 2080, ev: 1000 },
-  { annualMiles: 25000, petrol: 4000, diesel: 3500, hybrid: 2600, ev: 1250 },
-  { annualMiles: 30000, petrol: 4800, diesel: 4200, hybrid: 3120, ev: 1500 },
-];
+const MILEAGE_STEPS = [3000, 5000, 7000, 8000, 10000, 12000, 15000, 20000, 25000, 30000];
+
+export const fuelComparisonData: FuelCostAtMileage[] = MILEAGE_STEPS.map((miles) => ({
+  annualMiles: miles,
+  petrol: Math.round((petrolPPM / 100) * miles),
+  diesel: Math.round((dieselPPM / 100) * miles),
+  hybrid: Math.round((hybridPPM / 100) * miles),
+  ev: Math.round((evPPM / 100) * miles),
+}));
 
 export interface PerMileCost {
   fuelType: string;
@@ -30,11 +61,23 @@ export interface PerMileCost {
 }
 
 export const perMileCosts: PerMileCost[] = [
-  { fuelType: "Petrol", pencePerMile: 16.0, co2PerMile: 164, color: "#f59e0b" },
-  { fuelType: "Diesel", pencePerMile: 14.0, co2PerMile: 148, color: "#ef4444" },
-  { fuelType: "Hybrid", pencePerMile: 10.4, co2PerMile: 92, color: "#38bdf8" },
-  { fuelType: "Electric", pencePerMile: 5.0, co2PerMile: 0, color: "#10b981" },
+  { fuelType: "Petrol", pencePerMile: petrolPPM, co2PerMile: CO2_PER_MILE.petrol, color: "#f59e0b" },
+  { fuelType: "Diesel", pencePerMile: dieselPPM, co2PerMile: CO2_PER_MILE.diesel, color: "#ef4444" },
+  { fuelType: "Hybrid", pencePerMile: hybridPPM, co2PerMile: CO2_PER_MILE.hybrid, color: "#38bdf8" },
+  { fuelType: "Electric", pencePerMile: evPPM, co2PerMile: CO2_PER_MILE.ev, color: "#10b981" },
 ];
 
-export const lastUpdated = "January 2025";
+/** Date of the fuel price data used for these calculations */
+export const priceDate = latestWeek.date;
+
+/** Formatted date for display */
+export const lastUpdated = (() => {
+  const d = new Date(latestWeek.date);
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
+})();
+
 export const source = "https://www.gov.uk/government/statistics/energy-trends";

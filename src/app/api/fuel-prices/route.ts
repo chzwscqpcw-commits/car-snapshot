@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
+import weeklyJson from "@/data/fuel-prices-weekly.json";
 
-const CSV_URL =
-  "https://assets.publishing.service.gov.uk/media/6993252f7da91680ad7f44a1/CSV__2018_-____3_.csv";
+const CONTENT_API =
+  "https://www.gov.uk/api/content/government/statistics/weekly-road-fuel-prices";
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-
-// Fallback prices (pence/litre) — updated Feb 2026
-const FALLBACK_PETROL = 131;
-const FALLBACK_DIESEL = 141;
 
 type FuelPriceCache = {
   petrol: number;
@@ -23,26 +20,51 @@ function parseCSVRow(row: string): string[] {
 }
 
 function parseDate(ukDate: string): string {
-  // Convert DD/MM/YYYY to YYYY-MM-DD
   const parts = ukDate.split("/");
   if (parts.length !== 3) return ukDate;
   return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
-async function fetchLatestPrices(): Promise<FuelPriceCache> {
-  const res = await fetch(CSV_URL, { next: { revalidate: 86400 } });
-  if (!res.ok) {
-    throw new Error(`CSV fetch failed: ${res.status}`);
+/** Discover the latest CSV URL from GOV.UK Content API (same as build script) */
+async function discoverCsvUrl(): Promise<string> {
+  const res = await fetch(CONTENT_API);
+  if (!res.ok) throw new Error(`Content API returned ${res.status}`);
+  const json = await res.json();
+
+  const attachments: { content_type: string; title: string; url: string }[] = [];
+  function findAttachments(obj: unknown): void {
+    if (!obj || typeof obj !== "object") return;
+    if (Array.isArray(obj)) { obj.forEach(findAttachments); return; }
+    const o = obj as Record<string, unknown>;
+    if (o.content_type && o.url && typeof o.title === "string") {
+      attachments.push(o as { content_type: string; title: string; url: string });
+    }
+    Object.values(o).forEach(findAttachments);
   }
+  findAttachments(json);
+
+  const csvs = attachments.filter(
+    (a) => a.content_type === "text/csv" || a.url?.endsWith(".csv")
+  );
+  const modern = csvs.find(
+    (a) => a.title?.includes("2018") || (a.title?.includes("201") && a.title?.includes("202"))
+  );
+  const url = modern?.url ?? csvs.find((a) => !a.title?.includes("2003"))?.url;
+  if (!url) throw new Error("Could not find CSV attachment in Content API response");
+  return url;
+}
+
+async function fetchLatestPrices(): Promise<FuelPriceCache> {
+  const csvUrl = await discoverCsvUrl();
+  const res = await fetch(csvUrl, { next: { revalidate: 86400 } });
+  if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
 
   const text = await res.text();
   const lines = text.trim().split("\n").filter((l) => l.trim().length > 0);
 
-  // Last non-empty line is the latest data
   const lastLine = lines[lines.length - 1];
   const cols = parseCSVRow(lastLine);
 
-  // cols[0] = Date, cols[1] = ULSP pump price, cols[2] = ULSD pump price
   const petrol = parseFloat(cols[1]);
   const diesel = parseFloat(cols[2]);
   const date = parseDate(cols[0]);
@@ -57,6 +79,12 @@ async function fetchLatestPrices(): Promise<FuelPriceCache> {
     date,
     fetchedAt: Date.now(),
   };
+}
+
+/** Fallback: latest data from the build-time weekly JSON */
+function getFallbackFromWeeklyData(): { petrol: number; diesel: number; date: string } {
+  const latest = weeklyJson.weekly[weeklyJson.weekly.length - 1];
+  return { petrol: latest.petrol, diesel: latest.diesel, date: latest.date };
 }
 
 export async function GET() {
@@ -78,10 +106,12 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Failed to fetch fuel prices:", error);
+    // Fall back to build-time data instead of stale hardcoded values
+    const fallback = getFallbackFromWeeklyData();
     return NextResponse.json({
-      petrol: FALLBACK_PETROL,
-      diesel: FALLBACK_DIESEL,
-      date: null,
+      petrol: fallback.petrol,
+      diesel: fallback.diesel,
+      date: fallback.date,
     });
   }
 }
