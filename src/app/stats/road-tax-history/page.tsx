@@ -35,7 +35,7 @@ const faqItems = [
   {
     question: "What is VED and how is it calculated?",
     answer:
-      "Vehicle Excise Duty (VED), commonly known as road tax, is an annual tax you must pay to drive or keep a vehicle on public roads in the UK. For cars registered from April 2017 onwards, the first-year rate is based on CO2 emissions, after which a flat standard rate applies (currently £190 per year for petrol and diesel cars). Cars registered before April 2017 continue to pay rates based on their CO2 emission band, ranging from Band A (zero emissions) to Band M (over 255 g/km). Electric vehicles paid no VED until April 2025, when a £10 annual rate was introduced.",
+      "Vehicle Excise Duty (VED), commonly known as road tax, is an annual tax you must pay to drive or keep a vehicle on public roads in the UK. For cars registered from April 2017 onwards, the first-year rate is based on CO2 emissions, after which a flat standard rate applies (currently £195 per year for petrol and diesel cars). Cars registered before April 2017 continue to pay rates based on their CO2 emission band, ranging from Band A (zero emissions) to Band M (over 255 g/km). Electric vehicles paid no VED until April 2025, when a £10 annual rate was introduced.",
   },
   {
     question: "How do I check if my car's road tax is up to date?",
@@ -55,7 +55,7 @@ const faqItems = [
   {
     question: "Do electric vehicles pay road tax?",
     answer:
-      "Until March 2025, fully electric vehicles (zero-emission cars) were completely exempt from VED. From 1 April 2025, the government introduced a £10 annual rate for zero-emission cars in Band A, bringing them into the VED system for the first time. EVs registered from April 2025 also pay the lowest first-year rate of £10. The £,40,000 list price premium supplement (an additional £410/year for five years) also applies to electric vehicles if their original list price exceeded that threshold.",
+      "Until March 2025, fully electric vehicles (zero-emission cars) were completely exempt from VED. From 1 April 2025, the government introduced a £10 annual rate for zero-emission cars in Band A, bringing them into the VED system for the first time. EVs registered from April 2025 also pay the lowest first-year rate of £10. The £40,000 list price premium supplement (an additional £425/year for five years) also applies to electric vehicles if their original list price exceeded that threshold.",
   },
 ];
 
@@ -174,7 +174,7 @@ export default function RoadTaxHistoryPage() {
             large SUV registered after April 2017 pay exactly the same annual
             VED once the first-year rate has been settled. Vehicles with a list
             price exceeding {"£"}40,000 also face a premium supplement of{" "}
-            {"£"}410 per year for five years on top of the standard rate.
+            {"£"}425 per year for five years on top of the standard rate.
           </p>
           <p>
             Cars registered before April 2017 remain on the old banding system

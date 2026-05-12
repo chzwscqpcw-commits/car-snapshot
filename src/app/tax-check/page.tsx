@@ -95,7 +95,7 @@ export default function TaxCheckPage() {
         name: "How much is road tax for my car?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The cost depends on when the vehicle was first registered. Cars registered from April 2017 onwards pay a flat standard rate of £190 per year after the first year. Cars registered before April 2017 are taxed based on CO2 emissions in bands. Enter your registration number on Free Plate Check to see your vehicle's details.",
+          text: "The cost depends on when the vehicle was first registered. Cars registered from April 2017 onwards pay a flat standard rate of £195 per year after the first year. Cars registered before April 2017 are taxed based on CO2 emissions in bands. Enter your registration number on Free Plate Check to see your vehicle's details.",
         },
       },
     ],
@@ -192,7 +192,7 @@ export default function TaxCheckPage() {
               The amount you pay for road tax depends on when your vehicle was first registered and its CO2 emissions:
             </p>
             <p className="leading-relaxed mb-3">
-              <strong className="text-slate-100">Vehicles registered from 1 April 2017 onwards:</strong> The first year&apos;s tax rate is based on CO2 emissions, with rates ranging from &pound;0 for zero-emission vehicles to over &pound;2,000 for the highest emitters. After the first year, most petrol and diesel cars pay a flat standard rate of &pound;190 per year. Vehicles with a list price over &pound;40,000 when new pay an additional supplement of &pound;410 per year for five years at the standard rate, bringing the total to &pound;600 per year during that period.
+              <strong className="text-slate-100">Vehicles registered from 1 April 2017 onwards:</strong> The first year&apos;s tax rate is based on CO2 emissions, with rates ranging from &pound;0 for zero-emission vehicles to over &pound;2,000 for the highest emitters. After the first year, most petrol and diesel cars pay a flat standard rate of &pound;195 per year. Vehicles with a list price over &pound;40,000 when new pay an additional supplement of &pound;425 per year for five years at the standard rate, bringing the total to &pound;620 per year during that period.
             </p>
             <p className="leading-relaxed mb-3">
               <strong className="text-slate-100">Vehicles registered before 1 April 2017:</strong> Road tax is based entirely on CO2 emissions, divided into bands from A (lowest emissions) to M (highest). Rates vary from &pound;0 for Band A to over &pound;600 for the highest band. Lower-emission vehicles pay significantly less.
@@ -252,7 +252,7 @@ export default function TaxCheckPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-slate-100">How much is road tax for my car?</h3>
-                <p className="text-sm mt-1">The cost depends on when the vehicle was first registered. Cars registered from April 2017 onwards pay a flat standard rate of &pound;190 per year after the first year. Cars registered before April 2017 are taxed based on CO2 emissions in bands. Enter your registration number on Free Plate Check to see your vehicle&apos;s details.</p>
+                <p className="text-sm mt-1">The cost depends on when the vehicle was first registered. Cars registered from April 2017 onwards pay a flat standard rate of &pound;195 per year after the first year. Cars registered before April 2017 are taxed based on CO2 emissions in bands. Enter your registration number on Free Plate Check to see your vehicle&apos;s details.</p>
               </div>
             </div>
           </section>

@@ -5,7 +5,7 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 export const metadata: Metadata = {
   title: "Free Car Valuation — How Much Is My Car Worth? | Free Plate Check",
   description:
-    "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and market data.",
+    "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
   keywords: [
     "free car valuation",
     "how much is my car worth",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Car Valuation — How Much Is My Car Worth?",
     description:
-      "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and market data.",
+      "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
     url: "https://www.freeplatecheck.co.uk/car-valuation",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Car Valuation — How Much Is My Car Worth?",
     description:
-      "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and market data.",
+      "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
   },
 };
 
@@ -123,6 +123,14 @@ export default function CarValuationPage() {
             text: "Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.",
           },
         },
+        {
+          "@type": "Question",
+          name: "Does an MOT advisory or failure affect my car's value?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. A clean MOT history is a strong selling point. Recent failures, repeated advisories on the same item, or a long advisory list can knock hundreds of pounds off the price a buyer is willing to pay. Letting your MOT lapse can be worse — a vehicle with an expired MOT is harder to sell, can't be test driven legally, and signals neglect to buyers.",
+          },
+        },
       ],
   };
 
@@ -141,47 +149,148 @@ export default function CarValuationPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
-        <div className="max-w-3xl mx-auto px-4 py-6">
+      {/* --- HERO --- */}
+      <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.12),_transparent_60%)]" />
+        <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-10">
           <a
             href="/"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
+            className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block"
           >
             &larr; Back to Free Plate Check
           </a>
-          <h1 className="text-3xl font-bold text-slate-100">
-            Free Car Valuation
-          </h1>
-          <p className="text-sm text-slate-400 mt-2">
-            Find out how much any UK car is worth — instantly, for free.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <a
-              href="#check-vehicle"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-blue-600 hover:text-blue-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-              Check a vehicle
-            </a>
-            <a
-              href="#mot-reminder"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-emerald-600 hover:text-emerald-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-              Set MOT reminder
-            </a>
+
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Free · No signup · Live UK market data
+              </span>
+              <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-slate-100 leading-tight">
+                What&apos;s your car worth?
+              </h1>
+              <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl">
+                A free, instant valuation range for any UK vehicle — built from
+                live market listings, real mileage records, and depreciation
+                modelling. No email, no phone number, no marketing calls.
+              </p>
+
+              <ul className="mt-5 space-y-2 text-sm text-slate-400">
+                <li className="flex items-start gap-2">
+                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                  Pulls real DVLA mileage so the estimate reflects your actual car
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                  Cross-checked against live listings for the same make &amp; model
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                  Condition questionnaire narrows the range to your spec
+                </li>
+              </ul>
+            </div>
+
+            {/* Preview card — example of what the valuation looks like */}
+            <div className="hidden lg:block">
+              <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-blue-500/5">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
+                    Example
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                    <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                    Live market data
+                  </span>
+                </div>
+                <p className="text-sm text-slate-400">2019 Ford Fiesta 1.0 Titanium</p>
+                <p className="text-xs text-slate-500">68,200 miles · full history</p>
+
+                <div className="mt-4 rounded-lg border border-blue-700/30 bg-gradient-to-br from-blue-900/30 to-cyan-900/20 p-4">
+                  <p className="text-xs text-slate-400">Estimated value</p>
+                  <p className="mt-1 text-3xl font-bold text-slate-100">
+                    £6,800 <span className="text-slate-500 text-xl font-normal">–</span> £8,400
+                  </p>
+                  <div className="mt-3 h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full w-3/5 bg-gradient-to-r from-blue-500 to-cyan-400" />
+                  </div>
+                  <p className="mt-2 text-[11px] text-slate-500">
+                    Mid-estimate · high confidence
+                  </p>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-md bg-slate-800/60 p-2">
+                    <p className="text-[10px] text-slate-500">vs. avg mileage</p>
+                    <p className="text-xs font-semibold text-emerald-400">+£320</p>
+                  </div>
+                  <div className="rounded-md bg-slate-800/60 p-2">
+                    <p className="text-[10px] text-slate-500">brand retention</p>
+                    <p className="text-xs font-semibold text-slate-300">Average</p>
+                  </div>
+                  <div className="rounded-md bg-slate-800/60 p-2">
+                    <p className="text-[10px] text-slate-500">market trend</p>
+                    <p className="text-xs font-semibold text-amber-400">Softening</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      {/* --- MAIN: Reg lookup + reminder bridge --- */}
+      <div className="max-w-3xl mx-auto px-4 py-10">
         <ConversionWidget
-          headline="Get a free instant valuation"
-          subtext="Enter any UK registration number to see an estimated value based on age, mileage, condition, and real market data."
-          reminderHeadline="Own this car? Never miss your MOT"
+          headline="Get your free valuation now"
+          subtext="Enter any UK registration number to see an estimated value range, plus full vehicle history, MOT records and more — no signup."
+          reminderHeadline="Already own this car? Protect its value with a free MOT reminder"
         />
 
-        <div className="space-y-8 text-slate-300">
+        {/* Bridge: Why MOT reminders matter to anyone checking a valuation */}
+        <div className="mt-12 rounded-xl border border-emerald-800/40 bg-gradient-to-br from-emerald-950/30 to-slate-900/30 p-6 sm:p-8">
+          <h2 className="text-xl font-bold text-slate-100">
+            A lapsed MOT can knock hundreds off your car&apos;s value
+          </h2>
+          <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+            Buyers walk away from cars with an expired MOT or a long list of
+            advisories. A clean MOT history is one of the simplest things
+            you can do to protect your resale price — and reminders are
+            free.
+          </p>
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <div>
+              <p className="text-2xl font-bold text-emerald-400">£1,000</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Maximum fine for driving without a valid MOT.
+              </p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-emerald-400">28 + 7</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Days&apos; notice before expiry — plenty of time to book.
+              </p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-emerald-400">£0</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Cost of a reminder. Unsubscribe with one click any time.
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="#mot-reminder"
+            className="mt-5 inline-flex items-center gap-2 rounded-md bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+            Set my free MOT reminder
+          </a>
+        </div>
+
+        {/* --- Long-form copy --- */}
+        <div className="mt-12 space-y-8 text-slate-300">
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How much is my car worth?</h2>
             <p className="leading-relaxed mb-3">
@@ -206,7 +315,7 @@ export default function CarValuationPage() {
               <li><strong className="text-slate-100">Make and model</strong> — Some brands hold their value better than others. Porsche, Toyota, and Tesla tend to retain value well, while some volume brands depreciate faster.</li>
               <li><strong className="text-slate-100">Service history</strong> — A full service history (especially from main dealers) adds significant value. Missing records raise questions for buyers.</li>
               <li><strong className="text-slate-100">Condition</strong> — Bodywork, interior wear, tyre condition, and general upkeep all affect what a buyer will pay.</li>
-              <li><strong className="text-slate-100">MOT history</strong> — Frequent failures and long advisory lists can reduce value. A clean <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> is a selling point.</li>
+              <li><strong className="text-slate-100">MOT history</strong> — Frequent failures and long advisory lists can reduce value. A clean <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> is a selling point — and a lapsed MOT actively damages resale price.</li>
               <li><strong className="text-slate-100">Previous owners</strong> — Fewer owners generally means better value retention. One-owner cars command a premium.</li>
             </ul>
             <p className="leading-relaxed">
@@ -254,6 +363,10 @@ export default function CarValuationPage() {
                 <h3 className="font-semibold text-slate-100">Does mileage affect my car&apos;s value?</h3>
                 <p className="text-sm mt-1">Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.</p>
               </div>
+              <div>
+                <h3 className="font-semibold text-slate-100">Does an MOT advisory or failure affect my car&apos;s value?</h3>
+                <p className="text-sm mt-1">Yes. A clean MOT history is a strong selling point. Recent failures, repeated advisories on the same item, or a long advisory list can knock hundreds of pounds off the price a buyer is willing to pay. Letting your MOT lapse can be worse — a vehicle with an expired MOT is harder to sell, can&apos;t be test driven legally, and signals neglect to buyers. <a href="/mot-check" className="text-blue-400 hover:text-blue-300">Check your MOT history</a> or <a href="#mot-reminder" className="text-blue-400 hover:text-blue-300">set a free reminder</a>.</p>
+              </div>
             </div>
           </section>
         </div>
@@ -274,6 +387,10 @@ export default function CarValuationPage() {
           <a href="/blog/what-to-check-on-a-test-drive" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">What to Check on a Test Drive</p>
             <p className="text-xs text-slate-500 mt-2">Engine, brakes, steering, gearbox, and the warning signs to walk away from.</p>
+          </a>
+          <a href="/blog/cars-that-hold-value-best-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cars That Hold Their Value Best in the UK</p>
+            <p className="text-xs text-slate-500 mt-2">Which makes and models depreciate slowest, and why.</p>
           </a>
         </div>
       </div>

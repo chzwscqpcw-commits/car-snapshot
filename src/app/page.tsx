@@ -172,6 +172,7 @@ import {
 } from "@/lib/valuation";
 
 import newPricesData from "@/data/new-prices.json";
+import { latestWeek as latestFuelWeek } from "@/lib/stats-data/fuel-prices";
 import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
@@ -4909,9 +4910,9 @@ END:VEVENT
           <p className="text-sm text-slate-400 mb-6">Interactive data and charts on every aspect of owning a car in the UK.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <a href="/stats/fuel-prices" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-emerald-400">139.8p</div>
+              <div className="text-2xl font-bold text-emerald-400">{latestFuelWeek.petrol}p</div>
               <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">UK Fuel Prices</div>
-              <div className="text-xs text-slate-500 mt-0.5">Average petrol price per litre (2025)</div>
+              <div className="text-xs text-slate-500 mt-0.5">Latest UK average petrol price per litre</div>
             </a>
             <a href="/stats/most-reliable-cars" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
               <div className="text-2xl font-bold text-emerald-400">83.5%</div>
@@ -4921,7 +4922,7 @@ END:VEVENT
             <a href="/stats/cost-of-motoring" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
               <div className="text-2xl font-bold text-amber-400">&pound;6,980</div>
               <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Cost of Motoring</div>
-              <div className="text-xs text-slate-500 mt-0.5">Average annual running cost (2025)</div>
+              <div className="text-xs text-slate-500 mt-0.5">Average annual UK running cost</div>
             </a>
             <a href="/stats/car-theft" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
               <div className="text-2xl font-bold text-red-400">105k</div>

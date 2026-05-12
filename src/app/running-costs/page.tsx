@@ -94,7 +94,7 @@ export default function RunningCostsPage() {
         name: "Are electric cars cheaper to run?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Electric cars are generally cheaper to run day-to-day than petrol or diesel equivalents. Electricity costs roughly 3\u20135p per mile compared to 12\u201318p per mile for petrol. EVs also have zero road tax (until 2025), no ULEZ charges, and lower servicing costs due to fewer moving parts. However, higher purchase prices and faster depreciation can offset some of these savings.",
+          text: "Electric cars are generally cheaper to run day-to-day than petrol or diesel equivalents. Electricity costs roughly 3\u20135p per mile compared to 12\u201318p per mile for petrol. EVs registered before April 2025 paid no road tax (newer EVs now pay the standard £195 rate), no ULEZ charges, and lower servicing costs due to fewer moving parts. However, higher purchase prices and faster depreciation can offset some of these savings.",
         },
       },
       {
