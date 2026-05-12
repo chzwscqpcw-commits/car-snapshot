@@ -240,6 +240,48 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/repair-costs",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/aircon-regas",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/cambelt-replacement",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/dpf-cleaning",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/brake-pads-replacement",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/car-battery-replacement",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/repair-costs/clutch-replacement",
+      lastModified: new Date("2026-05-12"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/clean-air-zones",
       lastModified: new Date("2026-03-13"),
       changeFrequency: "monthly",

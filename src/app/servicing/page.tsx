@@ -376,6 +376,14 @@ export default function ServicingPage() {
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Valuation</p>
             <p className="text-xs text-slate-500 mt-2">Get an instant estimated value based on real market data.</p>
           </a>
+          <a href="/repair-costs" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Repair Cost Guides</p>
+            <p className="text-xs text-slate-500 mt-2">Free UK price guides for cambelt, DPF, aircon, brakes, battery and clutch.</p>
+          </a>
+          <a href="/blog/mot-vs-service" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT vs Service Guide</p>
+            <p className="text-xs text-slate-500 mt-2">Understand what's covered by each — and whether to combine them.</p>
+          </a>
         </div>
       </div>
 
