@@ -4710,21 +4710,6 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* Triggers C/D — MOT reminder after MOT history (>60 days, compact) */}
-            {isOver3Years && data.motExpiryDate && motDaysUntilExpiry > 0 && (
-              <DataReveal delay={620}>
-                <div className="mb-6">
-                  <MOTReminderSignup
-                    context="post-lookup"
-                    regNumber={data?.registrationNumber}
-                    motExpiryDate={data?.motExpiryDate}
-                    makeModel={data ? `${data.make} ${data.model}` : undefined}
-                    compact
-                  />
-                </div>
-              </DataReveal>
-            )}
-
             </SectionGroup>
 
             {/* ═══ GROUP 6: NEXT STEPS ═══ */}
@@ -4882,15 +4867,6 @@ END:VEVENT
             </DataReveal>
 
             </SectionGroup>
-
-            {/* Compact MOT reminder at bottom of results */}
-            <div className="mb-6">
-              <MOTReminderSignup
-                context="generic"
-                regNumber={data?.registrationNumber}
-                compact
-              />
-            </div>
 
             {/* RAC demo — second banner after all result sections */}
             <RacDemoSidebarBanner />
