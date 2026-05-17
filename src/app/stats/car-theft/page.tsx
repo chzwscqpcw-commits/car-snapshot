@@ -8,16 +8,16 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 import CarTheftCharts from "@/components/stats/CarTheftCharts";
 
 export const metadata: Metadata = {
-  title: "Car Theft Statistics UK 2025 | Most Stolen Cars",
+  title: "Most Stolen Cars in the UK 2026 — Full Theft Rate List",
   description:
-    "See which cars are stolen most often in the UK, ranked by theft rate per 1,000 vehicles. Interactive charts, national trends and theft prevention advice.",
+    "The most stolen cars in the UK ranked by theft rate per 1,000 vehicles — see if your car is on the list, plus the keyless-theft trick now hitting newer cars.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/car-theft",
   },
   openGraph: {
-    title: "Car Theft Statistics UK 2025 | Most Stolen Cars",
+    title: "Most Stolen Cars in the UK 2026 — Full Theft Rate List",
     description:
-      "The most stolen cars in the UK ranked by theft rate, with national theft trends and prevention tips.",
+      "The most stolen cars in the UK ranked by theft rate per 1,000 vehicles — see if your car is on the list, plus the keyless-theft trick now hitting newer cars.",
     url: "https://www.freeplatecheck.co.uk/stats/car-theft",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -63,7 +63,7 @@ export default function CarTheftPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Car Theft Statistics UK 2025",
+              name: "Most Stolen Cars in the UK 2026",
               description:
                 "See which cars are stolen most often in the UK, ranked by theft rate per 1,000 vehicles. Interactive charts, national trends and theft prevention advice.",
               url: "https://www.freeplatecheck.co.uk/stats/car-theft",
@@ -95,7 +95,7 @@ export default function CarTheftPage() {
         }}
       />
       <StatsHeroSection
-        title="Car Theft Statistics UK 2025"
+        title="Most Stolen Cars in the UK 2026"
         subtitle="Which cars are stolen most often, how theft rates have changed, and what you can do to protect your vehicle."
         breadcrumb="Car Theft"
       />

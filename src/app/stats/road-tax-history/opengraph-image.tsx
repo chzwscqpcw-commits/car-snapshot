@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "Road Tax (VED) History 2001–2025",
+    "Road Tax (VED) Rates 2001–2026",
     "How UK vehicle excise duty rates have changed by emission band."
   );
 }

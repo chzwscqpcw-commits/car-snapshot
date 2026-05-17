@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "UK Electric Vehicle Adoption 2025",
+    "UK Electric Vehicle Adoption 2026",
     "EV fleet growth, new sales share and regional density data."
   );
 }

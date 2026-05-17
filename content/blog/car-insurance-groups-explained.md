@@ -1,6 +1,6 @@
 ---
-title: "Car Insurance Groups Explained: Groups 1–50 and What They Mean"
-description: "How car insurance groups work in the UK, what determines which group a car falls into, and how to find cheaper insurance by choosing the right vehicle."
+title: "Car Insurance Groups 1–50: How to Find Cheaper Cover (2026)"
+description: "A group 1 car can cost £500/year less to insure than a group 20. Here's how UK insurance groups are decided, and the trick to picking a cheaper car to insure."
 date: "2026-03-04"
 keywords: ["car insurance groups", "insurance group 1", "cheapest cars to insure", "car insurance group check", "how insurance groups work", "used car insurance cost", "buying a car insurance"]
 author: "Free Plate Check"

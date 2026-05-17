@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "Cost of Motoring UK 2025",
+    "Cost of Motoring UK 2026",
     "Full annual breakdown of fuel, insurance, depreciation, tax and servicing costs."
   );
 }

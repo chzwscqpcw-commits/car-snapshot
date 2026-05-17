@@ -8,14 +8,14 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import UsedCarPriceChart from "@/components/stats/UsedCarPriceChart";
 
 export const metadata: Metadata = {
-  title: "Used Car Prices UK 2025 | Market Index & Depreciation Trends",
+  title: "Used Car Prices UK 2026: Market Index & Depreciation",
   description:
     "Track UK used car prices with our quarterly market index, interactive depreciation calculator and expert analysis of COVID-era price spikes and the ongoing market correction.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/used-car-prices",
   },
   openGraph: {
-    title: "Used Car Prices UK 2025 | Market Index & Depreciation Trends",
+    title: "Used Car Prices UK 2026: Market Index & Depreciation",
     description:
       "Quarterly price index, depreciation calculator and market trend analysis for UK used cars.",
     url: "https://www.freeplatecheck.co.uk/stats/used-car-prices",
@@ -36,9 +36,9 @@ const faqItems = [
       "Historically, late autumn and early winter (October to December) tend to offer the best used car prices. Demand drops as buyers prioritise Christmas spending, and dealers are keen to clear stock before year-end. March and September also see increased part-exchange supply as new registration plates launch, pushing more stock into the used market.",
   },
   {
-    question: "Will used car prices drop further in 2025?",
+    question: "Are used car prices still falling in 2026?",
     answer:
-      "Industry forecasts suggest prices will continue to soften gradually through 2025 as new car supply normalises and the post-COVID demand surge fully unwinds. However, a sharp crash is unlikely. Strong demand for affordable transport, combined with fewer new cars entering the market during 2020-2022, means used stock remains relatively tight for certain age groups.",
+      "Prices softened gradually through 2025 as new car supply normalised and the post-COVID demand surge unwound, and forecasts suggest the same trend continuing through 2026. A sharp crash remains unlikely though — strong demand for affordable transport, combined with fewer new cars entering the market during 2020–2022, means used stock is still relatively tight for certain age groups.",
   },
   {
     question: "Why did used car prices spike so dramatically in 2021-2022?",
@@ -67,7 +67,7 @@ export default function UsedCarPricesPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Used Car Prices UK 2025",
+              name: "Used Car Prices UK 2026",
               description:
                 "Track UK used car prices with our quarterly market index, interactive depreciation calculator and expert analysis of COVID-era price spikes and the ongoing market correction.",
               url: "https://www.freeplatecheck.co.uk/stats/used-car-prices",
@@ -78,7 +78,7 @@ export default function UsedCarPricesPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2019/2025",
+              temporalCoverage: "2019/2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Quarterly used car price index relative to Q1 2019 baseline",
@@ -99,7 +99,7 @@ export default function UsedCarPricesPage() {
         }}
       />
       <StatsHeroSection
-        title="Used Car Prices UK 2025"
+        title="Used Car Prices UK 2026"
         subtitle="Quarterly market index tracking used car values since 2019, with an interactive depreciation calculator and expert analysis of pricing trends."
         breadcrumb="Used Car Prices"
       />

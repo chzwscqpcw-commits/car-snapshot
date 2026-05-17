@@ -8,14 +8,14 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 import EvAdoptionCharts from "@/components/stats/EvAdoptionCharts";
 
 export const metadata: Metadata = {
-  title: "UK Electric Vehicle Adoption 2025 | EV Growth Statistics",
+  title: "UK Electric Vehicle Adoption 2026: BEV Sales & Growth",
   description:
-    "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density. Data from DfT and SMMT covering 2010-2025.",
+    "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density. Data from DfT and SMMT covering 2010-2026.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/ev-adoption",
   },
   openGraph: {
-    title: "UK Electric Vehicle Adoption 2025 | EV Growth Statistics",
+    title: "UK Electric Vehicle Adoption 2026: BEV Sales & Growth",
     description:
       "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density.",
     url: "https://www.freeplatecheck.co.uk/stats/ev-adoption",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UK Electric Vehicle Adoption 2025 | EV Growth Statistics",
+    title: "UK Electric Vehicle Adoption 2026: BEV Sales & Growth",
     description:
       "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density.",
   },
@@ -38,9 +38,9 @@ const faqItems = [
       "As of Q4 2025, there are approximately 1.58 million battery electric vehicles (BEVs) registered in the UK, alongside around 500,000 plug-in hybrids and 1.31 million conventional hybrids. The total electrified fleet (all three categories combined) stands at roughly 3.39 million vehicles, representing about 9% of all cars on UK roads.",
   },
   {
-    question: "What is the average range of an electric car in 2025?",
+    question: "What is the average range of an electric car in 2026?",
     answer:
-      "The average real-world range of a new BEV sold in the UK in 2025 is around 250-280 miles on a full charge. Premium models like the Mercedes EQS and BMW iX can exceed 350 miles, while more affordable options like the MG4 and BYD Atto 3 typically deliver 250-300 miles. Real-world range can drop by 15-25% in cold winter conditions due to battery chemistry and cabin heating demands.",
+      "The average real-world range of a new BEV sold in the UK in 2026 is around 250–280 miles on a full charge. Premium models like the Mercedes EQS and BMW iX can exceed 350 miles, while more affordable options like the MG4 and BYD Atto 3 typically deliver 250–300 miles. Real-world range can drop by 15–25% in cold winter conditions due to battery chemistry and cabin heating demands.",
   },
   {
     question: "How long does it take to charge an electric car?",
@@ -69,9 +69,9 @@ export default function EvAdoptionPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "UK Electric Vehicle Adoption 2025",
+              name: "UK Electric Vehicle Adoption 2026",
               description:
-                "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density. Data from DfT and SMMT covering 2010-2025.",
+                "Interactive charts tracking UK EV fleet growth, BEV sales share and regional adoption density. Data from DfT and SMMT covering 2010-2026.",
               url: "https://www.freeplatecheck.co.uk/stats/ev-adoption",
               license:
                 "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
@@ -80,7 +80,7 @@ export default function EvAdoptionPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2010/2025",
+              temporalCoverage: "2010/2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Battery electric vehicle fleet size and new registration market share",
@@ -101,7 +101,7 @@ export default function EvAdoptionPage() {
         }}
       />
       <StatsHeroSection
-        title="UK Electric Vehicle Adoption 2025"
+        title="UK Electric Vehicle Adoption 2026"
         subtitle="Track the growth of battery electric, plug-in hybrid and conventional hybrid vehicles on UK roads. Explore fleet size, new sales share and regional EV density."
         breadcrumb="EV Adoption"
       />

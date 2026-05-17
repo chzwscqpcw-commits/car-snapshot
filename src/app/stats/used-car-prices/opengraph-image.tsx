@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "Used Car Prices UK 2025",
+    "Used Car Prices UK 2026",
     "Quarterly price index, depreciation calculator and market trend analysis."
   );
 }

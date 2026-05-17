@@ -8,14 +8,14 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import CostOfMotoringChart from "@/components/stats/CostOfMotoringChart";
 
 export const metadata: Metadata = {
-  title: "Cost of Motoring UK 2025 | Annual Running Cost Breakdown",
+  title: "Cost of Motoring UK 2026: £6,980 Avg Cost Per Year",
   description:
     "Full annual breakdown of UK motoring costs including fuel, insurance, depreciation, road tax and servicing. Interactive calculator to estimate your own running costs.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/cost-of-motoring",
   },
   openGraph: {
-    title: "Cost of Motoring UK 2025 | Annual Running Cost Breakdown",
+    title: "Cost of Motoring UK 2026: £6,980 Avg Cost Per Year",
     description:
       "Full annual breakdown of fuel, insurance, depreciation, tax and servicing costs for UK motorists.",
     url: "https://www.freeplatecheck.co.uk/stats/cost-of-motoring",
@@ -63,7 +63,7 @@ export default function CostOfMotoringPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Cost of Motoring UK 2025",
+              name: "Cost of Motoring UK 2026",
               description:
                 "Full annual breakdown of UK motoring costs including fuel, insurance, depreciation, road tax and servicing. Interactive calculator to estimate your own running costs.",
               url: "https://www.freeplatecheck.co.uk/stats/cost-of-motoring",
@@ -95,7 +95,7 @@ export default function CostOfMotoringPage() {
         }}
       />
       <StatsHeroSection
-        title="Cost of Motoring UK 2025"
+        title="Cost of Motoring UK 2026"
         subtitle="Full annual breakdown of what it really costs to own and run a car in the UK — from fuel and insurance to depreciation and road tax."
         breadcrumb="Cost of Motoring"
       />
@@ -193,7 +193,7 @@ export default function CostOfMotoringPage() {
             Vehicle Excise Duty (VED) and servicing make up a smaller but still
             meaningful share of the total. Standard-rate VED for most petrol and
             diesel cars is &pound;190 per year, with first-year rates varying by
-            CO2 emissions. From April 2025, zero-emission vehicles will begin
+            CO2 emissions. From April 2025, zero-emission vehicles began
             paying VED for the first time, albeit at a reduced rate. Servicing
             and repair costs have nudged upward in line with wage inflation in
             the motor trade, averaging around &pound;860 per year.

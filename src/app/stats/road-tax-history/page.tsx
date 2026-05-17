@@ -8,14 +8,14 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 import VedHistoryCharts from "@/components/stats/VedHistoryCharts";
 
 export const metadata: Metadata = {
-  title: "Road Tax (VED) History UK 2001-2025 | Band Rates Over Time",
+  title: "Road Tax (VED) Rates UK 2001–2026: Full Band History",
   description:
-    "Interactive charts showing how UK vehicle excise duty (road tax) rates have changed from 2001 to 2025. Includes VED band calculator, first-year rates and emission-based pricing history.",
+    "Interactive charts showing how UK vehicle excise duty (road tax) rates have changed from 2001 to 2026. Includes VED band calculator, first-year rates and emission-based pricing history.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/road-tax-history",
   },
   openGraph: {
-    title: "Road Tax (VED) History UK 2001-2025 | Band Rates Over Time",
+    title: "Road Tax (VED) Rates UK 2001–2026: Full Band History",
     description:
       "Interactive charts showing how UK vehicle excise duty rates have changed by emission band since 2001. Includes VED calculator and first-year rate trends.",
     url: "https://www.freeplatecheck.co.uk/stats/road-tax-history",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Road Tax (VED) History UK 2001-2025 | Band Rates Over Time",
+    title: "Road Tax (VED) Rates UK 2001–2026: Full Band History",
     description:
       "Interactive charts showing how UK vehicle excise duty rates have changed by emission band since 2001.",
   },
@@ -69,9 +69,9 @@ export default function RoadTaxHistoryPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Road Tax (VED) History UK 2001-2025",
+              name: "Road Tax (VED) Rates UK 2001–2026",
               description:
-                "Interactive charts showing how UK vehicle excise duty (road tax) rates have changed from 2001 to 2025. Includes VED band calculator, first-year rates and emission-based pricing history.",
+                "Interactive charts showing how UK vehicle excise duty (road tax) rates have changed from 2001 to 2026. Includes VED band calculator, first-year rates and emission-based pricing history.",
               url: "https://www.freeplatecheck.co.uk/stats/road-tax-history",
               license:
                 "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
@@ -80,7 +80,7 @@ export default function RoadTaxHistoryPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2001/2025",
+              temporalCoverage: "2001/2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Vehicle excise duty rates in GBP by emission band",
@@ -101,7 +101,7 @@ export default function RoadTaxHistoryPage() {
         }}
       />
       <StatsHeroSection
-        title="Road Tax (VED) History UK 2001-2025"
+        title="Road Tax (VED) Rates UK 2001–2026"
         subtitle="Explore how UK vehicle excise duty rates have evolved over two decades. Compare emission bands, view first-year rates and use the calculator to find the VED cost for any registration year."
         breadcrumb="Road Tax History"
       />

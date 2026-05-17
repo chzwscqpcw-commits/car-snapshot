@@ -6,7 +6,7 @@ export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "UK New Car Registrations 2025",
+    "UK New Car Registrations 2026",
     "Annual sales trends and fuel type split since 1990."
   );
 }

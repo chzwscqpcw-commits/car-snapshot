@@ -1,12 +1,12 @@
 import { generateOGImage, ogSize, ogContentType } from "@/lib/og-image";
 
-export const alt = "Car Theft Statistics UK";
+export const alt = "Most Stolen Cars in the UK 2026";
 export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function OGImage() {
   return generateOGImage(
-    "Car Theft Statistics UK 2025",
-    "Most stolen cars ranked by theft rate — is your car at risk?"
+    "Most Stolen Cars in the UK 2026",
+    "Ranked by theft rate per 1,000 vehicles — is your car at risk?"
   );
 }

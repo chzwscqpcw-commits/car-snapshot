@@ -8,16 +8,16 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 import CarRegistrationCharts from "@/components/stats/CarRegistrationCharts";
 
 export const metadata: Metadata = {
-  title: "UK New Car Registrations 2025 | Sales Statistics & Fuel Split",
+  title: "UK New Car Registrations 2026: Sales Stats & EV Share",
   description:
-    "Interactive charts showing UK new car registrations from 1990 to 2025, including annual sales trends and fuel type market share. Data sourced from the SMMT.",
+    "Interactive charts showing UK new car registrations from 1990 to 2026, including annual sales trends and fuel type market share. Data sourced from the SMMT.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/car-registrations",
   },
   openGraph: {
-    title: "UK New Car Registrations 2025 | Sales Statistics & Fuel Split",
+    title: "UK New Car Registrations 2026: Sales Stats & EV Share",
     description:
-      "Interactive charts showing UK new car registrations from 1990 to 2025, including annual sales trends and fuel type market share.",
+      "Interactive charts showing UK new car registrations from 1990 to 2026, including annual sales trends and fuel type market share.",
     url: "https://www.freeplatecheck.co.uk/stats/car-registrations",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UK New Car Registrations 2025 | Sales Statistics & Fuel Split",
+    title: "UK New Car Registrations 2026: Sales Stats & EV Share",
     description:
-      "Interactive charts showing UK new car registrations from 1990 to 2025, with fuel type breakdown.",
+      "Interactive charts showing UK new car registrations from 1990 to 2026, with fuel type breakdown.",
   },
 };
 
@@ -69,9 +69,9 @@ export default function CarRegistrationsPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "UK New Car Registrations 2025",
+              name: "UK New Car Registrations 2026",
               description:
-                "Interactive charts showing UK new car registrations from 1990 to 2025, including annual sales trends and fuel type market share. Data sourced from the SMMT.",
+                "Interactive charts showing UK new car registrations from 1990 to 2026, including annual sales trends and fuel type market share. Data sourced from the SMMT.",
               url: "https://www.freeplatecheck.co.uk/stats/car-registrations",
               license:
                 "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
@@ -80,7 +80,7 @@ export default function CarRegistrationsPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "1990/2025",
+              temporalCoverage: "1990/2026",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Annual new car registrations by fuel type",
@@ -101,7 +101,7 @@ export default function CarRegistrationsPage() {
         }}
       />
       <StatsHeroSection
-        title="UK New Car Registrations 1990–2025"
+        title="UK New Car Registrations 1990–2026"
         subtitle="Explore how many new cars the UK buys each year and how the fuel type mix has shifted from petrol and diesel dominance toward electrified powertrains."
         breadcrumb="Car Registrations"
       />

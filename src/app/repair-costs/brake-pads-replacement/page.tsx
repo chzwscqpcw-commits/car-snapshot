@@ -4,9 +4,9 @@ import { Disc, AlertTriangle, CheckCircle2 } from "lucide-react";
 import PersonalisedCostLookup from "@/components/PersonalisedCostLookup";
 import RepairCostCTA from "@/components/RepairCostCTA";
 
-const TITLE = "Brake Pads Replacement Cost UK 2026 — Free Price Guide | Free Plate Check";
+const TITLE = "Brake Pads Replacement Cost UK 2026: £90–£350 Per Axle";
 const DESCRIPTION =
-  "Brake pad replacement in the UK typically costs £90–£200 per axle, or £150–£350 if discs need replacing too. Find out the signs of wear, what should be included, and compare local quotes.";
+  "Brake pads cost £90–£200 per axle in the UK, or £150–£350 with new discs. See exactly what should be included, signs your pads are worn, and how to avoid overpaying.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brake Pads Replacement Cost UK — Free Price Guide",
+    title: "Brake Pads Replacement Cost UK 2026: £90–£350 Per Axle",
     description: DESCRIPTION,
   },
 };

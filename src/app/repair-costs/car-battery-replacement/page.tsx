@@ -4,9 +4,9 @@ import { BatteryCharging, AlertTriangle, CheckCircle2 } from "lucide-react";
 import PersonalisedCostLookup from "@/components/PersonalisedCostLookup";
 import RepairCostCTA from "@/components/RepairCostCTA";
 
-const TITLE = "Car Battery Replacement Cost UK 2026 — Free Price Guide | Free Plate Check";
+const TITLE = "Car Battery Replacement Cost UK 2026: £80–£250 Fitted";
 const DESCRIPTION =
-  "Car battery replacement in the UK typically costs £80–£250 including fitting. Find out which battery type your car needs, signs of failure, and compare quotes from local garages.";
+  "A new car battery costs £80–£250 fitted in the UK. Find out if your car needs AGM, EFB or standard, how long batteries last, and why the wrong type fails fast.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Car Battery Replacement Cost UK — Free Price Guide",
+    title: "Car Battery Replacement Cost UK 2026: £80–£250 Fitted",
     description: DESCRIPTION,
   },
 };
