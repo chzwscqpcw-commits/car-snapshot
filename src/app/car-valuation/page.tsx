@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
+import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
 
 export const metadata: Metadata = {
@@ -248,6 +249,9 @@ export default function CarValuationPage() {
               </div>
             </div>
           </div>
+
+          {/* Mobile-only A/B/C test affordance pointing to the search input below */}
+          <MobileSearchCue />
         </div>
       </div>
 
