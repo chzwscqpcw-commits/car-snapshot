@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Bell, X } from "lucide-react";
 
 /**
- * Slim, dismissible bottom banner that slides up after 50% scroll.
+ * Slim, dismissible bottom banner that slides up after 25% scroll.
  * Scrolls to #mot-reminder when tapped. Dismissal stored in sessionStorage.
  */
 export default function MotReminderBanner() {
@@ -21,7 +21,7 @@ export default function MotReminderBanner() {
     function onScroll() {
       const scrollPercent =
         window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-      if (scrollPercent > 0.5) {
+      if (scrollPercent > 0.25) {
         setVisible(true);
       }
     }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
+import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 
 export const metadata: Metadata = {
@@ -132,38 +133,75 @@ export default function MileageCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
-        <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
-            href="/"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
-          >
-            &larr; Back to Free Plate Check
-          </a>
-          <h1 className="text-3xl font-bold text-slate-100">
-            Free Mileage Check
-          </h1>
-          <p className="text-sm text-slate-400 mt-2">
-            See recorded mileage from every MOT test to verify a vehicle&apos;s true history.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <a
-              href="#check-vehicle"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-blue-600 hover:text-blue-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-              Check a vehicle
-            </a>
-            <a
-              href="#mot-reminder"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-emerald-600 hover:text-emerald-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-              Set MOT reminder
-            </a>
+      <LandingHero
+        h1="Free Mileage Check"
+        subtitle="Every odometer reading from every MOT test since 2005 — verify mileage and spot clocking instantly. Free, no signup."
+        badgeText="Free · No signup · MOT mileage records"
+        bullets={[
+          "Mileage timeline from every MOT test since 2005",
+          "Automatic anomaly flag for potential odometer tampering",
+          "Annual mileage trend vs. the UK average",
+        ]}
+        exampleCard={
+          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                DVSA-verified
+              </span>
+            </div>
+            <p className="text-sm text-slate-400">
+              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
+              <span className="mx-1.5 text-slate-600">&middot;</span>
+              2018 VW Golf 1.4 TSI
+            </p>
+            <p className="text-xs text-slate-500">8 MOT records since 2018</p>
+
+            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-slate-400">Latest reading</p>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                  CONSISTENT
+                </span>
+              </div>
+              <p className="mt-1 text-2xl font-bold text-slate-100">
+                56,400 mi
+              </p>
+              <p className="mt-1 text-[11px] text-slate-500">
+                14 Jan 2026 &middot; no anomalies detected
+              </p>
+            </div>
+
+            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Annual progression</p>
+            <div className="mt-2 flex items-end gap-1 h-12 border-b border-slate-800">
+              <div className="flex-1 bg-blue-500/40" style={{ height: "20%" }} />
+              <div className="flex-1 bg-blue-500/50" style={{ height: "30%" }} />
+              <div className="flex-1 bg-blue-500/60" style={{ height: "45%" }} />
+              <div className="flex-1 bg-blue-500/65" style={{ height: "52%" }} />
+              <div className="flex-1 bg-blue-500/75" style={{ height: "65%" }} />
+              <div className="flex-1 bg-blue-500/85" style={{ height: "78%" }} />
+              <div className="flex-1 bg-blue-500/95" style={{ height: "90%" }} />
+              <div className="flex-1 bg-blue-500" style={{ height: "100%" }} />
+            </div>
+            <div className="mt-1 flex justify-between text-[9px] text-slate-500">
+              <span>2018</span>
+              <span>2026</span>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-2 text-center">
+              <div className="rounded-md bg-slate-800/60 p-2">
+                <p className="text-[10px] text-slate-500">avg per year</p>
+                <p className="text-xs font-semibold text-slate-300">~7,500 mi</p>
+              </div>
+              <div className="rounded-md bg-slate-800/60 p-2">
+                <p className="text-[10px] text-slate-500">vs UK avg</p>
+                <p className="text-xs font-semibold text-emerald-400">Below</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         <ConversionWidget

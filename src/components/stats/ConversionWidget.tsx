@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
+import { trackConversion } from "@/lib/tracking";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -57,6 +58,7 @@ export default function ConversionWidget({
       return;
     }
     setRegError("");
+    trackConversion("reg_search", { vrm: cleaned });
     router.push(`/?vrm=${cleaned}`);
   }
 
@@ -132,6 +134,7 @@ export default function ConversionWidget({
         return;
       }
 
+      trackConversion("mot_reminder", { vrm: cleanedReg });
       setReminderSuccess(true);
     } catch {
       setReminderError("Something went wrong \u2014 please try again");

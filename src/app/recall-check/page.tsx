@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
+import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 
 export const metadata: Metadata = {
@@ -132,38 +133,76 @@ export default function RecallCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
-        <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
-            href="/"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
-          >
-            &larr; Back to Free Plate Check
-          </a>
-          <h1 className="text-3xl font-bold text-slate-100">
-            Free Car Recall Check
-          </h1>
-          <p className="text-sm text-slate-400 mt-2">
-            Check if any UK vehicle has outstanding safety recalls using just the registration number.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <a
-              href="#check-vehicle"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-blue-600 hover:text-blue-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-              Check a vehicle
-            </a>
-            <a
-              href="#mot-reminder"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-emerald-600 hover:text-emerald-400"
-            >
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-              Set MOT reminder
-            </a>
+      <LandingHero
+        h1="Free Car Recall Check"
+        subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
+        badgeText="Free · No signup · DVSA recall database"
+        bullets={[
+          "Cross-checked against the full DVSA recall database",
+          "Recall repairs are always free — regardless of vehicle age",
+          "Free MOT reminders so you never miss a related safety check",
+        ]}
+        exampleCard={
+          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                DVSA-verified
+              </span>
+            </div>
+            <p className="text-sm text-slate-400">
+              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
+              <span className="mx-1.5 text-slate-600">&middot;</span>
+              2018 VW Golf 1.4 TSI
+            </p>
+            <p className="text-xs text-slate-500">Make-model match &middot; cross-referenced</p>
+
+            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-slate-400">Outstanding recalls</p>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                  NONE
+                </span>
+              </div>
+              <p className="mt-1 text-2xl font-bold text-slate-100">
+                All clear
+              </p>
+              <p className="mt-1 text-[11px] text-slate-500">
+                Checked 14 Jan 2026 &middot; DVSA database
+              </p>
+            </div>
+
+            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Past recalls (completed)</p>
+            <div className="mt-2 space-y-1.5">
+              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
+                <div>
+                  <span className="text-slate-300">2020 &middot; Airbag inflator</span>
+                  <p className="text-[10px] text-slate-500">VW notice R/2020/123</p>
+                </div>
+                <span className="inline-flex items-center gap-1 text-emerald-300">
+                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
+                  Done
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
+                <div>
+                  <span className="text-slate-300">2022 &middot; Fuel pump seal</span>
+                  <p className="text-[10px] text-slate-500">VW notice R/2022/045</p>
+                </div>
+                <span className="inline-flex items-center gap-1 text-emerald-300">
+                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
+                  Done
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-3 text-[10px] text-slate-500 text-center">
+              Recall repairs are always <span className="font-bold text-emerald-400">free</span>, no time limit
+            </p>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         <ConversionWidget
