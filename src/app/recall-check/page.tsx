@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import WarrantyCTA from "@/components/WarrantyCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Recall Check — Safety Recalls UK | Free Plate Check",
@@ -278,6 +279,11 @@ export default function RecallCheckPage() {
             </p>
           </section>
         </div>
+      </div>
+
+      {/* Warrantywise affiliate CTA — renders null until partners.ts pending flag flipped */}
+      <div className="max-w-3xl mx-auto px-4 mt-12">
+        <WarrantyCTA context="recall-check" />
       </div>
 
       {/* Related guides */}

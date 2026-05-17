@@ -2,9 +2,22 @@ export interface PartnerLink {
   url: string;
   name: string;
   isAffiliate: boolean;
+  /**
+   * If true, the partner's Awin merchant ID is not yet provisioned (application
+   * still pending approval). Components that render this partner should check
+   * `isPartnerConfigured(partner)` and render nothing while pending — this lets
+   * us deploy placement code immediately and activate it the moment the Awin
+   * merchant ID arrives by flipping this flag and replacing PENDING_AWINMID in
+   * the URL with the real numeric ID.
+   */
+  pending?: boolean;
   description?: string;
   shortDescription?: string;
   buildLink?: (reg: string) => string;
+}
+
+export function isPartnerConfigured(partner: PartnerLink): boolean {
+  return !partner.pending && !partner.url.includes("PENDING_AWINMID");
 }
 
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
@@ -39,6 +52,32 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     buildLink: (reg: string) => {
       const destination = encodeURIComponent(`https://www.bookmygarage.com/car-repairs/?vrm=${reg}`);
       return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+    },
+  },
+  // Extended car warranty (Awin) — applied 2026-05-17, pending approval
+  warrantywise: {
+    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.warrantywise.co.uk%2F",
+    name: "Warrantywise",
+    isAffiliate: true,
+    pending: true,
+    description: "Extended car warranty covering major component failures",
+    shortDescription: "Warranty quotes",
+    buildLink: (reg: string) => {
+      const destination = encodeURIComponent(`https://www.warrantywise.co.uk/?vrm=${reg}`);
+      return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
+    },
+  },
+  // Pay-as-you-go temporary insurance (Awin) — applied 2026-05-17, pending approval
+  cuvva: {
+    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.cuvva.com%2F",
+    name: "Cuvva",
+    isAffiliate: true,
+    pending: true,
+    description: "Hourly, daily and weekly car insurance — bought in 90 seconds",
+    shortDescription: "Temporary insurance",
+    buildLink: (reg: string) => {
+      const destination = encodeURIComponent(`https://www.cuvva.com/?vrm=${reg}`);
+      return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
     },
   },
   govTaxVehicle: {

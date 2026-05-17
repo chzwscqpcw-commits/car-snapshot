@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Valuation — How Much Is My Car Worth? | Free Plate Check",
@@ -386,6 +387,15 @@ export default function CarValuationPage() {
             </div>
           </section>
         </div>
+      </div>
+
+      {/* Cuvva affiliate CTA — renders null until partners.ts pending flag flipped */}
+      <div className="max-w-3xl mx-auto px-4 mt-12">
+        <TempInsuranceCTA
+          context="car-valuation"
+          headline="Buying or selling this car? Sort the test-drive insurance."
+          body="Cuvva offers hourly, daily and weekly cover bought in 90 seconds from your phone — ideal for the test-drive moment, or for driving a just-bought car home before your annual policy starts."
+        />
       </div>
 
       {/* Related guides */}

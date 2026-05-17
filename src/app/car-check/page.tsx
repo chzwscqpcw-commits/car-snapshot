@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Check — UK Vehicle Lookup | Free Plate Check",
@@ -309,6 +310,15 @@ export default function CarCheckPage() {
             </div>
           </section>
         </div>
+      </div>
+
+      {/* Cuvva affiliate CTA — renders null until partners.ts pending flag flipped */}
+      <div className="max-w-3xl mx-auto px-4 mt-12">
+        <TempInsuranceCTA
+          context="car-check"
+          headline="Test-driving this car? Get cover in 90 seconds."
+          body="If you're about to test-drive or take delivery of this vehicle, Cuvva offers hourly, daily and weekly insurance you can buy from your phone — no need to wait for an annual policy to start."
+        />
       </div>
 
       {/* Related guides */}
