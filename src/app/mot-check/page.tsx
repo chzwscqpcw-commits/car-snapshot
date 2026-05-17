@@ -187,9 +187,16 @@ export default function MotCheckPage() {
 
             </div>
 
-            {/* Preview card — single card, scales down on smaller viewports via CSS zoom */}
-            <div className="mx-auto lg:mx-0 origin-top [zoom:0.45] sm:[zoom:0.65] md:[zoom:0.8] lg:[zoom:1]">
-              <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
+            {/* Preview card — scales down on mobile via inline style + CSS variables (defined in globals.css), full size on desktop */}
+            <div className="mx-auto lg:mx-0 overflow-hidden lg:overflow-visible">
+              <div
+                style={{
+                  transform: "scale(var(--card-scale, 1))",
+                  transformOrigin: "top left",
+                  width: "var(--card-scale-width, auto)",
+                }}
+              >
+                <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
                     Example
@@ -254,6 +261,7 @@ export default function MotCheckPage() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
 
           {/* Mobile-only A/B/C test affordance pointing to the search input */}

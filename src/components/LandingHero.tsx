@@ -84,9 +84,17 @@ export default function LandingHero({
             </ul>
           </div>
 
-          {/* Example card — scales down on mobile via CSS zoom, full size on desktop */}
-          <div className="mx-auto lg:mx-0 origin-top [zoom:0.45] sm:[zoom:0.65] md:[zoom:0.8] lg:[zoom:1]">
-            {exampleCard}
+          {/* Example card — scales down on mobile via inline style + CSS variables (defined in globals.css), full size on desktop */}
+          <div className="mx-auto lg:mx-0 overflow-hidden lg:overflow-visible">
+            <div
+              style={{
+                transform: "scale(var(--card-scale, 1))",
+                transformOrigin: "top left",
+                width: "var(--card-scale-width, auto)",
+              }}
+            >
+              {exampleCard}
+            </div>
           </div>
         </div>
 
