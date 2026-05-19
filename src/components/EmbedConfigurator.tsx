@@ -1,16 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Check,
-  Copy,
-  Monitor,
-  Smartphone,
-  Sun,
-  Moon,
-  Sparkles,
-  Code2,
-} from "lucide-react";
+import { Check, Copy, Monitor, Sun, Moon, Sparkles, Code2 } from "lucide-react";
 
 type Theme = "dark" | "light";
 type Size = "full" | "compact";
@@ -31,7 +22,6 @@ export default function EmbedConfigurator() {
   const [size, setSize] = useState<Size>("full");
   const [accent, setAccent] = useState<Accent>("cyan");
   const [style, setStyle] = useState<Style>("modern");
-  const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [copied, setCopied] = useState(false);
 
   const dataAttrs = useMemo(() => {
@@ -149,41 +139,12 @@ export default function EmbedConfigurator() {
                   Live preview
                 </span>
               </div>
-              <div className="inline-flex items-center rounded-lg border border-slate-800 bg-slate-950/60 p-0.5">
-                <button
-                  type="button"
-                  onClick={() => setViewport("desktop")}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors ${
-                    viewport === "desktop"
-                      ? "bg-slate-800 text-cyan-300"
-                      : "text-slate-500 hover:text-slate-300"
-                  }`}
-                  aria-pressed={viewport === "desktop"}
-                >
-                  <Monitor className="h-3 w-3" /> Desktop
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewport("mobile")}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors ${
-                    viewport === "mobile"
-                      ? "bg-slate-800 text-cyan-300"
-                      : "text-slate-500 hover:text-slate-300"
-                  }`}
-                  aria-pressed={viewport === "mobile"}
-                >
-                  <Smartphone className="h-3 w-3" /> Mobile
-                </button>
-              </div>
+              <span className="text-[10px] text-slate-500 font-[family-name:var(--font-geist-mono)]">
+                {size === "full" ? "≤420 px" : "≤340 px"}
+              </span>
             </div>
 
-            <PreviewFrame
-              theme={theme}
-              size={size}
-              accent={accent}
-              style={style}
-              viewport={viewport}
-            />
+            <PreviewFrame theme={theme} size={size} accent={accent} style={style} />
           </div>
 
           {/* Code snippet */}
@@ -285,13 +246,11 @@ function PreviewFrame({
   size,
   accent,
   style,
-  viewport,
 }: {
   theme: Theme;
   size: Size;
   accent: Accent;
   style: Style;
-  viewport: "desktop" | "mobile";
 }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [origin, setOrigin] = useState<string>("");
@@ -323,9 +282,7 @@ function PreviewFrame({
 
   return (
     <div
-      className={`relative transition-all ${
-        viewport === "mobile" ? "px-8 sm:px-16" : "px-4 sm:px-6"
-      }`}
+      className="relative px-4 sm:px-6"
       style={{
         background:
           theme === "dark"
@@ -334,31 +291,25 @@ function PreviewFrame({
         minHeight: 280,
       }}
     >
-      <div
-        className={`mx-auto transition-all ${
-          viewport === "mobile" ? "max-w-[360px]" : "max-w-[480px]"
-        }`}
-      >
-        {origin ? (
-          <iframe
-            ref={iframeRef}
-            srcDoc={srcDoc}
-            title="Free Plate Check widget preview"
-            sandbox="allow-scripts"
-            style={{
-              width: "100%",
-              minHeight: size === "compact" ? 120 : 240,
-              border: "none",
-              background: "transparent",
-              display: "block",
-            }}
-          />
-        ) : (
-          <div className="h-[240px] flex items-center justify-center text-xs text-slate-600">
-            Loading preview…
-          </div>
-        )}
-      </div>
+      {origin ? (
+        <iframe
+          ref={iframeRef}
+          srcDoc={srcDoc}
+          title="Free Plate Check widget preview"
+          sandbox="allow-scripts"
+          style={{
+            width: "100%",
+            minHeight: size === "compact" ? 120 : 240,
+            border: "none",
+            background: "transparent",
+            display: "block",
+          }}
+        />
+      ) : (
+        <div className="h-[240px] flex items-center justify-center text-xs text-slate-600">
+          Loading preview…
+        </div>
+      )}
     </div>
   );
 }
