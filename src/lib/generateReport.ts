@@ -336,6 +336,18 @@ const SECTION_ICONS: Record<string, string> = {
   "Recurring Advisories": "wrench",
 };
 
+/**
+ * Draw a section header (divider + cyan dot + icon + title) at the current
+ * position, page-breaking first if needed.
+ *
+ * IMPORTANT: `minHeight` is the height of the FIRST content block the caller
+ * will draw immediately after the header. Pass the actual height of that
+ * block (e.g. `cardH + 3`) so the page-break check covers it. After
+ * startSection returns, the caller MUST NOT call checkPageBreak before
+ * drawing the first block — that would re-trigger a break and orphan the
+ * header on the previous page. Subsequent content blocks may use
+ * checkPageBreak normally and are allowed to flow to following pages.
+ */
 function startSection(doc: jsPDF, currentY: number, title: string, minHeight: number = 30): number {
   const headerHeight = 16;
   const needed = headerHeight + minHeight;
@@ -722,7 +734,8 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
 
   if (mileageEntries.length < 2) return y;
 
-  y = startSection(doc, y, "Mileage Progression", 20);
+  // 30mm reserves a table header + a couple of rows with the section title
+  y = startSection(doc, y, "Mileage Progression", 30);
 
   const colDate = 28;
   const colMileage = 28;
@@ -830,7 +843,8 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
   const { data } = input;
   const tests = data.motTests;
 
-  y = startSection(doc, y, "MOT History", 15);
+  // 28mm reserves the first MOT test card with the section title
+  y = startSection(doc, y, "MOT History", 28);
 
   if (!tests || tests.length === 0) {
     doc.setFontSize(FONT.body);
@@ -986,7 +1000,8 @@ function renderMileageWarnings(doc: jsPDF, input: ReportInput, y: number): numbe
   const warnings = input.motInsights?.mileageWarnings;
   if (!warnings || warnings.length === 0) return y;
 
-  y = startSection(doc, y, "Mileage Warnings", 15);
+  // 22mm reserves the first warning card with the section title
+  y = startSection(doc, y, "Mileage Warnings", 22);
 
   for (const warning of warnings) {
     const cleaned = stripEmoji(warning);
@@ -1002,7 +1017,8 @@ function renderRecurringAdvisories(doc: jsPDF, input: ReportInput, y: number): n
   const recurring = input.motInsights?.recurringAdvisories;
   if (!recurring || recurring.length === 0) return y;
 
-  y = startSection(doc, y, "Recurring Advisories", 15);
+  // 28mm reserves the intro line + first advisory card with the section title
+  y = startSection(doc, y, "Recurring Advisories", 28);
 
   doc.setFontSize(FONT.small);
   setTextColor(doc, C.secondaryText);
@@ -1053,8 +1069,6 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   const hs = input.healthScore;
   if (!hs) return y;
 
-  y = startSection(doc, y, "Vehicle Health Score", 44);
-
   // Card sizing: tall enough for the circular gauge + breakdown grid.
   const topH = 38;
   const itemsPerRow = 4;
@@ -1062,7 +1076,10 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   const breakdownRows = Math.ceil(hs.breakdown.length / itemsPerRow);
   const cardH = topH + breakdownRows * rowH + 4;
 
-  y = checkPageBreak(doc, y, cardH + 3);
+  // Pre-compute card height and reserve it with the header so the title
+  // can never widow at the bottom of a page.
+  y = startSection(doc, y, "Vehicle Health Score", cardH + 3);
+
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
 
   // ── Circular gauge (mirrors the web Vehicle Health Score) ──
@@ -1134,15 +1151,16 @@ function renderMotReadiness(doc: jsPDF, input: ReportInput, y: number): number {
   const mr = input.motReadiness;
   if (!mr || mr.advisoryCount <= 0) return y;
 
-  y = startSection(doc, y, "MOT Readiness", 20);
-
   // Score badge
   const scoreColor: RGB = mr.score === "red" ? C.red : mr.score === "amber" ? C.amber : C.emerald;
   const scoreLabel = mr.score.toUpperCase();
+  const headerH = 14;
+
+  // Reserve the header card height with startSection so the section title
+  // never widows at the bottom of a page.
+  y = startSection(doc, y, "MOT Readiness", headerH + 4);
 
   // Header card with score + advisory count + days until MOT
-  const headerH = 14;
-  y = checkPageBreak(doc, y, headerH + 4);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, headerH, 3, C.cardBg, C.cardBorder);
   setFill(doc, scoreColor);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headerH - 3, "F");
@@ -1264,15 +1282,16 @@ function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number 
   const hasRecalls = recalls !== undefined;
   if (!hasRecalls) return y;
 
-  y = startSection(doc, y, "Safety Recalls", 20);
+  // 16mm banner + 3mm padding reserved with the header
+  y = startSection(doc, y, "Safety Recalls", 19);
 
   const recallCount = recalls!.length;
   const isClean = recallCount === 0;
   const statusColor: RGB = isClean ? C.emerald : C.red;
-
-  // Status banner \u2014 prominent at-a-glance count + label
   const bannerH = 16;
-  y = checkPageBreak(doc, y, bannerH + 3);
+
+  // Status banner \u2014 prominent at-a-glance count + label (already reserved by
+  // startSection's minHeight, so no second page-break check needed)
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, bannerH, 3, C.cardBg, C.cardBorder);
   setFill(doc, statusColor);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, bannerH - 3, "F");
@@ -1326,16 +1345,16 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   if (!hasUlez) return y;
 
-  y = startSection(doc, y, "ULEZ Compliance", 20);
+  // 16mm banner + 3mm padding reserved with the header
+  y = startSection(doc, y, "ULEZ Compliance", 19);
 
   const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
   const isExempt = ulezResult!.status === "exempt";
   const statusColor: RGB = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.secondaryText;
   const statusLabel = isExempt ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
 
-  // Status banner — prominent ULEZ status at a glance
+  // Status banner (already reserved by startSection's minHeight)
   const bannerH = 16;
-  y = checkPageBreak(doc, y, bannerH + 3);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, bannerH, 3, C.cardBg, C.cardBorder);
   setFill(doc, statusColor);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, bannerH - 3, "F");
@@ -1396,11 +1415,12 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
   const hasValuation = valuation && valuation.rangeLow > 0;
   if (!hasValuation) return y;
 
-  y = startSection(doc, y, "Estimated Value", 20);
+  // Pre-compute first-block height and reserve it with the header so the
+  // title can never widow at the bottom of a page.
+  const headlineH = 20;
+  y = startSection(doc, y, "Estimated Value", headlineH + 4);
 
   // Headline price card with mono \u00A3 range
-  const headlineH = 20;
-  y = checkPageBreak(doc, y, headlineH + 4);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, headlineH, 3, C.cardBg, C.cardBorder);
   setFill(doc, C.cyan);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headlineH - 3, "F");
@@ -1480,8 +1500,6 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
   if (!hasOwnershipCost) return y;
 
-  y = startSection(doc, y, "Annual Running Costs", 50);
-
   const oc = ownershipCost!;
   const monthly = Math.round(oc.totalAnnual / 12);
   const daily = Math.round((oc.totalAnnual / 365) * 100) / 100;
@@ -1499,7 +1517,10 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   const legendRows = hasSegments ? Math.ceil(segments.length / 3) : 0;
   const cardH = 22 + (hasSegments ? 14 + legendRows * 5 : 0);
 
-  y = checkPageBreak(doc, y, cardH + 3);
+  // Pre-compute first-block height and reserve it with the header so the
+  // title can never widow at the bottom of a page.
+  y = startSection(doc, y, "Annual Running Costs", cardH + 3);
+
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
   setFill(doc, C.cyan);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, cardH - 3, "F");
@@ -1610,13 +1631,14 @@ function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): num
   const { negotiation } = input;
   if (!negotiation) return y;
 
-  y = startSection(doc, y, "Negotiation Helper", 36);
-
   const neg = negotiation;
   const reasonsH = neg.reasons.length * CARD_LINE_H + 6;
   const cardH = 22 + (neg.reasons.length > 0 ? reasonsH : 0);
 
-  y = checkPageBreak(doc, y, cardH + 3);
+  // Pre-compute first-block height and reserve it with the header so the
+  // title can never widow at the bottom of a page.
+  y = startSection(doc, y, "Negotiation Helper", cardH + 3);
+
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
   setFill(doc, C.emerald);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, cardH - 3, "F");
@@ -1679,7 +1701,8 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
 
   if (!hasVed && !hasFuel && !hasNcap && !hasRarity && !hasColour && !hasFuelPrices && !hasTheftRisk && !hasEvSpecs && !input.ecoScore && !input.motPassRate) return y;
 
-  y = startSection(doc, y, "Key Insights", 15);
+  // 32mm reserves the first row of 2-column insight cards with the section title
+  y = startSection(doc, y, "Key Insights", 32);
 
   // Build all cards as data for 2-column layout
   type CardData = { accentColor: RGB; title: string; lines: string[]; tone?: Tone };
@@ -1986,7 +2009,8 @@ function renderVehicleDetails(doc: jsPDF, input: ReportInput, y: number): number
 }
 
 function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
-  y = startSection(doc, y, "Vehicle Checklists", 15);
+  // 32mm reserves the first checklist sub-heading + a couple of items
+  y = startSection(doc, y, "Vehicle Checklists", 32);
 
   const sections: Array<{ title: string; items: string[] }> = [
     { title: "Owner Checklist", items: input.checklist.owner },
@@ -2049,7 +2073,8 @@ function renderChecklist(doc: jsPDF, input: ReportInput, y: number): number {
 }
 
 function renderFinalPage(doc: jsPDF, y: number): number {
-  y = startSection(doc, y, "Disclaimer & Data Sources", 20);
+  // 35mm reserves the first sub-heading + paragraph with the section title
+  y = startSection(doc, y, "Disclaimer & Data Sources", 35);
 
   // Condensed: 4 paragraphs → 2
   const paragraphs = [
@@ -2113,24 +2138,39 @@ function renderFinalPage(doc: jsPDF, y: number): number {
 
 function addFooterPass(doc: jsPDF) {
   const totalPages = doc.getNumberOfPages();
+  const FOOTER_BAND_H = 9;
+  const ACCENT_H = 0.6;
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
 
+    // Thin cyan accent stripe above the footer band — mirrors the cover banner.
+    setFill(doc, C.cyan);
+    doc.rect(0, PAGE_H - FOOTER_BAND_H, 210, ACCENT_H, "F");
+
+    // Dark slate footer band.
     setFill(doc, C.slate800);
-    doc.rect(0, PAGE_H - 7, 210, 7, "F");
-    setDraw(doc, C.slate700);
-    doc.setLineWidth(0.2);
-    doc.line(0, PAGE_H - 7, 210, PAGE_H - 7);
+    doc.rect(0, PAGE_H - FOOTER_BAND_H + ACCENT_H, 210, FOOTER_BAND_H - ACCENT_H, "F");
 
+    // BoltMark on the left, sized to fit within the footer band height.
+    drawBoltMark(doc, MARGIN, PAGE_H - FOOTER_BAND_H + 1.8, 5.5);
+
+    // URL next to the bolt.
     doc.setFontSize(FONT.small);
-    setTextColor(doc, C.slate400);
     doc.setFont("helvetica", "normal");
-    doc.text(`Page ${i} of ${totalPages}`, 105, PAGE_H - 2.5, { align: "center" });
+    setTextColor(doc, C.slate300);
+    doc.text("freeplatecheck.co.uk", MARGIN + 7, PAGE_H - 3);
 
+    // Page indicator in mono, centred.
+    doc.setFont("courier", "bold");
     setTextColor(doc, C.slate400);
-    doc.text("freeplatecheck.co.uk", MARGIN, PAGE_H - 2.5);
+    doc.text(`${i} / ${totalPages}`, 105, PAGE_H - 3, { align: "center" });
 
-    doc.text("Free Plate Check", MARGIN + CONTENT_W, PAGE_H - 2.5, { align: "right" });
+    // Wordmark right-aligned.
+    doc.setFont("helvetica", "bold");
+    setTextColor(doc, C.white);
+    doc.text("Free Plate Check", MARGIN + CONTENT_W, PAGE_H - 3, { align: "right" });
+
+    doc.setFont("helvetica", "normal");
   }
 }
 
