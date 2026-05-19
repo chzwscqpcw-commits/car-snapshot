@@ -3,6 +3,7 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
+import ServicingCTA from "@/components/ServicingCTA";
 
 export const metadata: Metadata = {
   title: "Free Mileage Check — Spot Clocking | Free Plate Check",
@@ -273,6 +274,10 @@ export default function MileageCheckPage() {
             <p className="leading-relaxed">
               Use a mileage check alongside our <a href="/car-valuation" className="text-blue-400 hover:text-blue-300">free car valuation</a> to understand how the mileage affects the vehicle&apos;s market value.
             </p>
+          </section>
+
+          <section>
+            <ServicingCTA context="generic" />
           </section>
 
           <section>

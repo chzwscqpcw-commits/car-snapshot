@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import ServicingCTA from "@/components/ServicingCTA";
 
 export const metadata: Metadata = {
   title: "Free ULEZ Check — Is My Car ULEZ Compliant? | Free Plate Check",
@@ -265,6 +266,10 @@ export default function UlezCheckPage() {
             <p className="leading-relaxed">
               If your vehicle is listed as Euro 4 or later (petrol) or Euro 6 or later (diesel), it meets the ULEZ standard. Electric and hydrogen vehicles are automatically compliant. No signup or payment is required — our check is completely free. You can also see the full vehicle specification including Euro emission standard on our <a href="/car-check" className="text-blue-400 hover:text-blue-300">free car check</a> page.
             </p>
+          </section>
+
+          <section>
+            <ServicingCTA context="generic" />
           </section>
 
           <section>

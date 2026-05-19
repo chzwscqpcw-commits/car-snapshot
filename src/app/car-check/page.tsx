@@ -3,6 +3,7 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
+import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Check — UK Vehicle Lookup | Free Plate Check",
@@ -278,6 +279,10 @@ export default function CarCheckPage() {
             <p className="leading-relaxed">
               For a full step-by-step guide to what to check when buying a used car, read our <a href="/blog/used-car-checks-before-buying" className="text-blue-400 hover:text-blue-300">complete buying checklist</a>.
             </p>
+          </section>
+
+          <section>
+            <MOTBookingCTA regNumber="" context="neutral" />
           </section>
 
           <section>

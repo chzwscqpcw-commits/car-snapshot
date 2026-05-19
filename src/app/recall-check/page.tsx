@@ -3,6 +3,7 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
+import ServicingCTA from "@/components/ServicingCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Recall Check — Safety Recalls UK | Free Plate Check",
@@ -248,6 +249,10 @@ export default function RecallCheckPage() {
             <p className="leading-relaxed">
               For the most complete and vehicle-specific recall information, we always recommend checking directly with the manufacturer or an authorised dealer. They can run a VIN check against their internal records and confirm whether any outstanding work is needed on your particular vehicle. Your <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> may also show recall-related advisories that are worth reviewing.
             </p>
+          </section>
+
+          <section>
+            <ServicingCTA context="generic" />
           </section>
 
           <section>

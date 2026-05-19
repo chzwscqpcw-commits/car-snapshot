@@ -3,6 +3,7 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
+import ServicingCTA from "@/components/ServicingCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Valuation — How Much Is My Car Worth? | Free Plate Check",
@@ -351,6 +352,10 @@ export default function CarValuationPage() {
             <p className="leading-relaxed">
               This is not a formal valuation. For insurance, finance, or legal purposes, always obtain a professional valuation. Our figure is a useful starting point for understanding roughly what your car is worth on the open market.
             </p>
+          </section>
+
+          <section>
+            <ServicingCTA context="generic" />
           </section>
 
           <section>

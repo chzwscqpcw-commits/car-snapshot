@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 export const metadata: Metadata = {
   title: "Car Running Costs Calculator | Free Plate Check",
@@ -233,6 +234,10 @@ export default function RunningCostsPage() {
           </section>
 
           {/* FAQ */}
+          <section>
+            <MOTBookingCTA regNumber="" context="neutral" />
+          </section>
+
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
             <div className="space-y-4">

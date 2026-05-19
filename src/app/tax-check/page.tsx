@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 export const metadata: Metadata = {
   title: "Free Car Tax Check — Is My Car Taxed? | Free Plate Check",
@@ -260,6 +261,10 @@ export default function TaxCheckPage() {
             <p className="leading-relaxed">
               If you don&apos;t need to use the vehicle on the road, make sure to declare a SORN to avoid penalties. You can do this online at GOV.UK or by calling the DVLA on 0300 123 4321.
             </p>
+          </section>
+
+          <section>
+            <MOTBookingCTA regNumber="" context="neutral" />
           </section>
 
           <section>
