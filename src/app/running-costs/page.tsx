@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import RunningCostsResult from "@/components/tools/RunningCostsResult";
+import ConversionWidget from "@/components/stats/ConversionWidget";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Car Running Costs Calculator | Free Plate Check",
@@ -34,7 +40,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RunningCostsPage() {
+export default async function RunningCostsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -132,6 +146,10 @@ export default function RunningCostsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <RunningCostsResult vrm={cleanedVrm!} />
+      ) : (
+        <>
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <a
@@ -150,21 +168,12 @@ export default function RunningCostsPage() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
-        {/* Hero CTA */}
-        <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-800/40 rounded-lg text-center mb-12">
-          <p className="text-lg font-semibold text-slate-100 mb-2">
-            See your car&apos;s running costs
-          </p>
-          <p className="text-sm text-slate-400 mb-4">
-            Enter any UK registration number on our homepage to get a personalised running costs breakdown instantly.
-          </p>
-          <a
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Look up a vehicle
-          </a>
-        </div>
+        <ConversionWidget
+          headline="See your car's running costs"
+          subtext="Enter any UK reg plate for a personalised breakdown of fuel, road tax, depreciation, MOT, servicing and insurance."
+          reminderHeadline="While you're here — set a free MOT reminder"
+          targetPath="/running-costs"
+        />
 
         <div className="space-y-8 text-slate-300">
           {/* What we calculate */}
@@ -295,6 +304,8 @@ export default function RunningCostsPage() {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

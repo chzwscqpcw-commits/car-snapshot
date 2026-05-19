@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Wrench, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Search,
+  Wrench,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import BoltMark from "@/components/BoltMark";
+import ScanBeamReveal from "@/components/ScanBeamReveal";
 import {
   calculateRepairCost,
   type RepairCostSlug,
@@ -118,31 +128,37 @@ export default function PersonalisedCostLookup({
     const isNotApplicable = estimate.range === "n/a";
 
     return (
-      <div className="my-8 rounded-xl border border-blue-700/40 bg-gradient-to-br from-blue-950/40 via-slate-900/70 to-slate-900/70 p-6 sm:p-7">
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-700/40 bg-blue-900/30 px-3 py-1 text-xs font-medium text-blue-300">
-            <CheckCircle2 className="h-3 w-3" />
-            Personalised estimate for {vehicle.registrationNumber}
-          </span>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Try another reg
-          </button>
-        </div>
+      <div className="my-8 relative overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-6 sm:p-7">
+        <div className="absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl opacity-30 pointer-events-none bg-cyan-500/40" />
+        <div className="relative">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              <BoltMark className="h-3 w-3" />
+              Personalised estimate for {vehicle.registrationNumber}
+            </span>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            >
+              Try another reg
+            </button>
+          </div>
 
-        <h3 className="text-lg sm:text-xl font-bold text-white">
-          {estimate.headline}
-        </h3>
+          <h3 className="text-lg sm:text-xl font-bold text-white">
+            {estimate.headline}
+          </h3>
 
         {!isNotApplicable && (
-          <div className="mt-4 rounded-lg border border-emerald-700/40 bg-slate-950/60 p-4">
-            <p className="text-xs uppercase tracking-wider text-slate-500">
-              Estimated cost for your car
+          <div className="mt-4 relative overflow-hidden rounded-xl border border-cyan-500/25 bg-gradient-to-br from-slate-950 via-[#04080f] to-slate-950 p-5">
+            <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-[family-name:var(--font-geist-mono)]">
+              Estimated cost
             </p>
-            <p className="mt-1 text-3xl font-bold text-emerald-400">
+            <p
+              className="mt-1 font-[family-name:var(--font-geist-mono)] text-3xl sm:text-4xl font-bold text-cyan-100 tabular-nums tracking-tight"
+              style={{ textShadow: "0 0 16px rgba(34,211,238,0.4), 0 0 3px rgba(165,243,252,0.6)" }}
+            >
               {estimate.range}
             </p>
           </div>
@@ -192,18 +208,30 @@ export default function PersonalisedCostLookup({
                     `personalised-cost-${slug}`
                   )
                 }
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+                className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
               >
                 Compare quotes for {vehicle.registrationNumber}
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+                <ArrowRight className="h-3.5 w-3.5" />
               </a>
               <p className="mt-2 text-[11px] text-slate-500">
                 Free Plate Check earns a small commission from BookMyGarage at no cost to you.
               </p>
             </div>
 
+            <div className="mt-5 pt-5 border-t border-slate-800 flex flex-col items-center gap-2">
+              <p className="text-xs text-slate-500">
+                Want everything we know about this car?
+              </p>
+              <ScanBeamReveal
+                vrm={vehicle.registrationNumber}
+                destination="/"
+                label={`Pull full report for ${vehicle.registrationNumber}`}
+                subLabel="MOT, tax, valuation, recalls, more"
+              />
+            </div>
+
             <p className="mt-5 text-xs text-slate-500">
-              Want the full picture for this car?{" "}
+              Or jump to{" "}
               <a
                 href={`/?vrm=${vehicle.registrationNumber}`}
                 className="text-blue-400 hover:text-blue-300 transition-colors"
@@ -213,15 +241,19 @@ export default function PersonalisedCostLookup({
             </p>
           </>
         )}
+        </div>
       </div>
     );
   }
 
   // ─── Empty form state ───
   return (
-    <div className="my-8 rounded-xl border border-blue-800/40 bg-gradient-to-br from-blue-950/40 via-slate-900/60 to-slate-900/60 p-6 sm:p-7">
-      <div className="flex items-start gap-3">
-        <Search className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+    <div className="my-8 relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-900/15 via-slate-900/70 to-slate-950 p-6 sm:p-7">
+      <div className="absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl opacity-25 pointer-events-none bg-cyan-500/40" />
+      <div className="relative flex items-start gap-3">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md shadow-cyan-500/20">
+          <Sparkles className="h-4 w-4 text-white" />
+        </div>
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-white">
             Get a personalised {jobName} estimate
@@ -246,13 +278,13 @@ export default function PersonalisedCostLookup({
               placeholder="e.g. AB12 CDE"
               maxLength={10}
               disabled={submitting}
-              className="h-11 flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
+              className="h-11 flex-1 rounded-lg border border-slate-700 bg-slate-950/60 px-3 font-[family-name:var(--font-geist-mono)] text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 disabled:opacity-60"
             />
             <button
               type="button"
               onClick={handleLookup}
               disabled={submitting}
-              className="h-11 whitespace-nowrap rounded-lg bg-blue-500 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-600 disabled:opacity-60 flex items-center justify-center gap-2"
+              className="h-11 whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 text-sm font-semibold text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-md shadow-cyan-500/20"
             >
               {submitting ? (
                 <>
@@ -261,7 +293,7 @@ export default function PersonalisedCostLookup({
                 </>
               ) : (
                 <>
-                  <Wrench className="h-4 w-4" />
+                  <BoltMark className="h-4 w-4" />
                   Get my estimate
                 </>
               )}
