@@ -2899,7 +2899,7 @@ END:VEVENT
             </h1>
           </div>
           <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
-            The free UK vehicle check. MOT, tax, valuation, ULEZ &amp; more — in seconds.
+            Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
           </p>
           <p className="mt-3 text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1">
             {vehiclesChecked !== null && vehiclesChecked > 0 && (
