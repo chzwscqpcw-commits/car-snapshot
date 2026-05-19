@@ -87,7 +87,7 @@ export default async function MakeIndexPage({ params }: PageProps) {
       />
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
+      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <div className="flex items-center gap-2 text-sm text-slate-400 mb-3">
             <a href="/cars" className="text-blue-400 hover:text-blue-300">

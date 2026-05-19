@@ -4,6 +4,8 @@ import Script from "next/script";
 import { Geist_Mono } from "next/font/google";
 import { RacDemoProvider } from "@/components/RacDemoContext";
 import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
+import { CommandPaletteProvider } from "@/components/CommandPalette";
+import SiteNav from "@/components/SiteNav";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -138,9 +140,12 @@ export default function RootLayout({
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`}
         </Script>
         <RacDemoProvider>
-          {children}
-          <RacDemoFloatingBadge />
-          <RacDemoBottomBar />
+          <CommandPaletteProvider>
+            <SiteNav />
+            {children}
+            <RacDemoFloatingBadge />
+            <RacDemoBottomBar />
+          </CommandPaletteProvider>
         </RacDemoProvider>
       </body>
     </html>

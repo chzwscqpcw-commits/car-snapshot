@@ -1,0 +1,270 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X, Search } from "lucide-react";
+import BoltMark from "@/components/BoltMark";
+import { useCommandPalette } from "@/components/CommandPalette";
+import { PRIMARY_NAV, SITE_ITEMS } from "@/lib/site-index";
+
+/**
+ * Persistent, glass-blurred top nav. Visible on every route.
+ *
+ * Desktop: BoltMark + wordmark on the left, primary links centred-left,
+ * ⌘K search chip on the right.
+ *
+ * Mobile: BoltMark + wordmark on the left, search icon + hamburger on the
+ * right. The hamburger opens a right-slide drawer with every destination,
+ * grouped by category.
+ */
+export default function SiteNav() {
+  const pathname = usePathname() || "/";
+  const { open } = useCommandPalette();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Close drawer on route change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll while drawer open
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [drawerOpen]);
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
+  return (
+    <>
+      <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-slate-950/60">
+        <div className="mx-auto flex h-12 max-w-7xl items-center gap-3 px-3 sm:h-14 sm:px-4">
+          {/* Brand */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 flex-shrink-0 group"
+            aria-label="Free Plate Check — home"
+          >
+            <BoltMark className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-y-px" />
+            <span className="font-[family-name:var(--font-geist-mono)] text-[13px] sm:text-sm font-semibold tracking-tight text-slate-100">
+              Free<span className="text-cyan-400">Plate</span>Check
+            </span>
+          </Link>
+
+          {/* Desktop nav links */}
+          <nav className="hidden md:flex items-center gap-1 ml-4">
+            {PRIMARY_NAV.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? "text-cyan-300"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex-1" />
+
+          {/* ⌘K — desktop chip */}
+          <button
+            type="button"
+            onClick={open}
+            className="hidden md:inline-flex items-center gap-2 rounded-lg border border-slate-700/70 bg-slate-900/60 px-3 py-1.5 text-sm text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-colors min-w-[200px]"
+            aria-label="Open search (⌘K)"
+          >
+            <Search className="h-3.5 w-3.5" />
+            <span className="flex-1 text-left text-xs">Search anything…</span>
+            <kbd className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-slate-800 border border-slate-700 rounded">
+              ⌘K
+            </kbd>
+          </button>
+
+          {/* Mobile: search icon */}
+          <button
+            type="button"
+            onClick={open}
+            className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            aria-label="Open search"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+
+          {/* Mobile: hamburger */}
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            aria-label="Open menu"
+            aria-expanded={drawerOpen}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile drawer */}
+      {drawerOpen && (
+        <MobileDrawer
+          onClose={() => setDrawerOpen(false)}
+          onOpenPalette={() => {
+            setDrawerOpen(false);
+            open();
+          }}
+          pathname={pathname}
+        />
+      )}
+    </>
+  );
+}
+
+function MobileDrawer({
+  onClose,
+  onOpenPalette,
+  pathname,
+}: {
+  onClose: () => void;
+  onOpenPalette: () => void;
+  pathname: string;
+}) {
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
+  const checks = SITE_ITEMS.filter((i) => i.category === "check");
+  const tools = SITE_ITEMS.filter(
+    (i) => i.category === "tool" || i.category === "action"
+  );
+  const stats = SITE_ITEMS.filter((i) => i.category === "stats");
+  const guides = SITE_ITEMS.filter((i) => i.category === "guide");
+  const site = SITE_ITEMS.filter((i) => i.category === "site");
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] md:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site menu"
+    >
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm animate-drawer-fade"
+      />
+      <aside className="absolute right-0 top-0 bottom-0 w-[88%] max-w-sm bg-slate-950 border-l border-slate-800 shadow-2xl flex flex-col animate-drawer-slide">
+        <div className="flex items-center justify-between px-4 h-14 border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <BoltMark className="h-5 w-5" />
+            <span className="font-[family-name:var(--font-geist-mono)] text-sm font-semibold text-slate-100">
+              Free<span className="text-cyan-400">Plate</span>Check
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pb-8">
+          {/* Search trigger */}
+          <div className="p-3">
+            <button
+              type="button"
+              onClick={onOpenPalette}
+              className="w-full inline-flex items-center gap-2 rounded-lg border border-slate-700/70 bg-slate-900 px-3 py-3 text-sm text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-colors"
+            >
+              <Search className="h-4 w-4" />
+              <span className="flex-1 text-left">Search anything…</span>
+            </button>
+          </div>
+
+          <DrawerSection label="Checks" items={checks} isActive={isActive} />
+          <DrawerSection label="Tools" items={tools} isActive={isActive} />
+          <DrawerSection label="Stats" items={stats} isActive={isActive} />
+          <DrawerSection label="Guides" items={guides} isActive={isActive} />
+          <DrawerSection label="Site" items={site} isActive={isActive} />
+        </div>
+      </aside>
+
+      <style jsx>{`
+        @keyframes drawerFade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes drawerSlide {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+        :global(.animate-drawer-fade) {
+          animation: drawerFade 0.15s ease-out;
+        }
+        :global(.animate-drawer-slide) {
+          animation: drawerSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function DrawerSection({
+  label,
+  items,
+  isActive,
+}: {
+  label: string;
+  items: { title: string; href: string; subtitle?: string }[];
+  isActive: (href: string) => boolean;
+}) {
+  if (items.length === 0) return null;
+  return (
+    <div className="px-2 py-2">
+      <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+        {label}
+      </div>
+      <div className="flex flex-col">
+        {items.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex flex-col gap-0.5 px-3 py-2.5 rounded-lg transition-colors ${
+              isActive(item.href)
+                ? "bg-slate-800 text-cyan-300"
+                : "text-slate-200 hover:bg-slate-800/60"
+            }`}
+          >
+            <span className="text-sm font-medium">{item.title}</span>
+            {item.subtitle && (
+              <span className="text-xs text-slate-500">{item.subtitle}</span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

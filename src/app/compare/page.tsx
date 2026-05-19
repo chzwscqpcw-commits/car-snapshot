@@ -245,7 +245,7 @@ export default function ComparePage() {
       <BreadcrumbJsonLd />
 
       {/* Header */}
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
+      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-5xl mx-auto px-4 py-6">
           <Link
             href="/"

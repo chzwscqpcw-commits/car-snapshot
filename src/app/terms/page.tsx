@@ -36,7 +36,7 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       {/* Header */}
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800 sticky top-0 z-40">
+      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <a href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">
             ← Back to Free Plate Check
