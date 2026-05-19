@@ -403,9 +403,40 @@ function LoadingSkeleton() {
 
 // Animated data reveal component
 function DataReveal({ delay = 0, children, className }: { delay?: number; children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Reduced-motion users: skip the observer and snap to visible immediately
+    // so content below the fold isn't trapped invisible until they scroll.
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
-      className={`animate-fadeInUp opacity-0${className ? ` ${className}` : ""}`}
+      ref={ref}
+      className={`opacity-0${visible ? " animate-fadeInUp" : ""}${className ? ` ${className}` : ""}`}
       style={{
         animationDelay: `${delay}ms`,
         animationFillMode: "forwards",
