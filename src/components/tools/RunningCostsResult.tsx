@@ -30,6 +30,15 @@ import { lookupNewPrice } from "@/lib/valuation";
 import { lookupBodyType } from "@/lib/body-type";
 import newPricesData from "@/data/new-prices.json";
 import type { FuelEconomyResult } from "@/lib/fuel-economy";
+import {
+  estimateInsurance,
+  type InsuranceInputs,
+  type InsuranceEstimate,
+  type AgeBand,
+  type LocationBand,
+  type NcdBand,
+  type OccupationBand,
+} from "@/lib/insurance-estimate";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -56,6 +65,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const [fuel, setFuel] = useState<FuelEconomyResult | null>(null);
   const [fuelState, setFuelState] = useState<"loading" | "done">("loading");
   const [milesPerYear, setMilesPerYear] = useState<number>(UK_AVG_MILES_PER_YEAR);
+  const [insuranceInputs, setInsuranceInputs] = useState<InsuranceInputs>({});
 
   // Fetch fuel economy
   useEffect(() => {
@@ -139,6 +149,24 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     });
   }, [vehicle, ved, scaledFuelCost, segment]);
 
+  // Insurance (excluded by ownership-cost lib; we layer it on here)
+  const insurance = useMemo<InsuranceEstimate>(
+    () => estimateInsurance(segment, insuranceInputs, milesPerYear),
+    [segment, insuranceInputs, milesPerYear]
+  );
+
+  // Augmented totals that include insurance and use the user's actual mileage
+  const totals = useMemo(() => {
+    if (!ownership) return null;
+    const total = ownership.totalAnnual + insurance.estimatedAnnual;
+    return {
+      annual: total,
+      monthly: Math.round(total / 12),
+      daily: Math.round((total / 365) * 100) / 100,
+      perMile: milesPerYear > 0 ? total / milesPerYear : 0,
+    };
+  }, [ownership, insurance.estimatedAnnual, milesPerYear]);
+
   return (
     <ToolResultLayout
       vrm={vrm}
@@ -147,18 +175,38 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       revealPitch="Running costs are just one slice — the full report adds MOT history, recalls, ULEZ, valuation and a buying checklist."
     >
       <Hero
-        ownership={ownership}
+        totals={totals}
         loading={fuelState === "loading"}
         fuel={fuel}
         milesPerYear={milesPerYear}
+        insuranceIsCustomised={insurance.isCustomised}
       />
       <MileageSlider
         miles={milesPerYear}
         onChange={setMilesPerYear}
         hasFuelData={fuel?.estimatedAnnualCost != null}
       />
-      {ownership && <BreakdownGrid ownership={ownership} fuel={fuel} segment={segment} />}
-      {ownership && <StackedBar ownership={ownership} />}
+      {ownership && (
+        <BreakdownGrid
+          ownership={ownership}
+          fuel={fuel}
+          segment={segment}
+          insurance={insurance}
+          totalAnnual={totals?.annual ?? ownership.totalAnnual}
+        />
+      )}
+      {ownership && (
+        <StackedBar
+          ownership={ownership}
+          insurance={insurance}
+          totalAnnual={totals?.annual ?? ownership.totalAnnual}
+        />
+      )}
+      <InsurancePanel
+        inputs={insuranceInputs}
+        setInputs={setInsuranceInputs}
+        insurance={insurance}
+      />
       <Disclaimer />
     </ToolResultLayout>
   );
@@ -167,15 +215,17 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
 /* ─── Hero ─────────────────────────────────────────────────────────────── */
 
 function Hero({
-  ownership,
+  totals,
   loading,
   fuel,
   milesPerYear,
+  insuranceIsCustomised,
 }: {
-  ownership: OwnershipCostResult | null;
+  totals: { annual: number; monthly: number; daily: number; perMile: number } | null;
   loading: boolean;
   fuel: FuelEconomyResult | null;
   milesPerYear: number;
+  insuranceIsCustomised: boolean;
 }) {
   return (
     <section className="relative mt-4 overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-6 sm:p-8">
@@ -192,35 +242,43 @@ function Hero({
           )}
         </div>
 
-        {ownership ? (
+        {totals ? (
           <>
             <p className="mt-2 flex items-baseline gap-3 flex-wrap">
               <span className="text-5xl sm:text-6xl font-bold text-white tracking-tight tabular-nums">
-                £{ownership.totalAnnual.toLocaleString("en-GB")}
+                £{totals.annual.toLocaleString("en-GB")}
               </span>
               <span className="text-base text-slate-400">/year</span>
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-3">
-              <Stat label="Monthly" value={`£${ownership.monthlyCost.toLocaleString("en-GB")}`} />
-              <Stat label="Daily" value={`£${ownership.dailyCost.toFixed(2)}`} />
+              <Stat label="Monthly" value={`£${totals.monthly.toLocaleString("en-GB")}`} />
+              <Stat label="Daily" value={`£${totals.daily.toFixed(2)}`} />
               <Stat
                 label="Per mile"
                 value={
-                  ownership.costPerMile > 0
-                    ? `${(ownership.costPerMile * 100).toFixed(1)}p`
-                    : "—"
+                  totals.perMile > 0 ? `${(totals.perMile * 100).toFixed(1)}p` : "—"
                 }
                 accent
               />
             </div>
-            {fuel?.combinedMpg && (
+            {(fuel?.combinedMpg || !insuranceIsCustomised) && (
               <p className="mt-4 text-xs text-slate-500">
-                Based on {fuel.combinedMpg} mpg combined, current UK fuel prices and{" "}
-                <strong className="text-slate-300 tabular-nums">
-                  {milesPerYear.toLocaleString("en-GB")}
-                </strong>{" "}
-                miles per year (adjust below).
+                {fuel?.combinedMpg && (
+                  <>
+                    Based on {fuel.combinedMpg} mpg combined and{" "}
+                    <strong className="text-slate-300 tabular-nums">
+                      {milesPerYear.toLocaleString("en-GB")}
+                    </strong>{" "}
+                    miles per year.
+                  </>
+                )}
+                {!insuranceIsCustomised && (
+                  <>
+                    {" "}Insurance uses a segment-median baseline — refine below for a
+                    sharper estimate.
+                  </>
+                )}
               </p>
             )}
           </>
@@ -439,22 +497,16 @@ function BreakdownGrid({
   ownership,
   fuel,
   segment,
+  insurance,
+  totalAnnual,
 }: {
   ownership: OwnershipCostResult;
   fuel: FuelEconomyResult | null;
   segment: VehicleSegment;
+  insurance: InsuranceEstimate;
+  totalAnnual: number;
 }) {
-  const { breakdown, totalAnnual } = ownership;
-
-  // Insurance is the residual portion that ownership-cost includes via segment
-  // medians. Surface it separately so the user sees all five categories.
-  const knownCategories =
-    (breakdown.fuel ?? 0) +
-    (breakdown.ved ?? 0) +
-    (breakdown.depreciation ?? 0) +
-    (breakdown.mot ?? 0) +
-    (breakdown.maintenance ?? 0);
-  const insuranceEstimate = Math.max(0, totalAnnual - knownCategories);
+  const { breakdown } = ownership;
 
   const items: CategoryItem[] = [
     {
@@ -498,9 +550,11 @@ function BreakdownGrid({
       key: "insurance",
       label: "Insurance",
       icon: Umbrella,
-      value: insuranceEstimate > 0 ? insuranceEstimate : null,
+      value: insurance.estimatedAnnual,
       tone: "violet",
-      sub: `Estimate · ${segment} segment`,
+      sub: insurance.isCustomised
+        ? "Custom · refined from your inputs"
+        : `Ballpark · ${segment} segment baseline`,
     },
   ];
 
@@ -578,20 +632,21 @@ function CategoryCard({
 
 /* ─── Stacked bar (proportional) ──────────────────────────────────────── */
 
-function StackedBar({ ownership }: { ownership: OwnershipCostResult }) {
-  const { breakdown, totalAnnual } = ownership;
-  const knownCategories =
-    (breakdown.fuel ?? 0) +
-    (breakdown.ved ?? 0) +
-    (breakdown.depreciation ?? 0) +
-    (breakdown.mot ?? 0) +
-    (breakdown.maintenance ?? 0);
-  const insurance = Math.max(0, totalAnnual - knownCategories);
+function StackedBar({
+  ownership,
+  insurance,
+  totalAnnual,
+}: {
+  ownership: OwnershipCostResult;
+  insurance: InsuranceEstimate;
+  totalAnnual: number;
+}) {
+  const { breakdown } = ownership;
 
   const segments = [
     { label: "Depreciation", value: breakdown.depreciation ?? 0, colour: "bg-rose-500/70" },
     { label: "Fuel", value: breakdown.fuel ?? 0, colour: "bg-amber-500/70" },
-    { label: "Insurance", value: insurance, colour: "bg-violet-500/70" },
+    { label: "Insurance", value: insurance.estimatedAnnual, colour: "bg-violet-500/70" },
     {
       label: "MOT &amp; servicing",
       value: (breakdown.mot ?? 0) + (breakdown.maintenance ?? 0),
@@ -636,10 +691,192 @@ function Disclaimer() {
     <div className="mt-3 flex items-start gap-2 text-[11px] text-slate-500 leading-relaxed">
       <Info className="h-3 w-3 flex-shrink-0 mt-0.5" />
       <p>
-        Estimates only. Fuel calculation assumes 7,400 miles per year (DfT 2025 UK
-        average) and current pump prices. Insurance is segment-based — your actual
-        premium varies with age, location and driving history.
+        Estimates only. Fuel scales linearly with the mileage you set. Insurance is a
+        rule-based ballpark — for a real price, always get a live quote from a
+        comparison site.
       </p>
+    </div>
+  );
+}
+
+/* ─── Insurance Q&A panel ─────────────────────────────────────────────── */
+
+const INSURANCE_FIELDS: Array<{
+  key: keyof InsuranceInputs;
+  label: string;
+  helper: string;
+  options: { value: string; label: string }[];
+}> = [
+  {
+    key: "ageBand",
+    label: "Driver age",
+    helper: "Younger drivers pay significantly more.",
+    options: (
+      ["17-21", "22-24", "25-29", "30-49", "50-65", "65+"] satisfies AgeBand[]
+    ).map((v) => ({ value: v, label: v })),
+  },
+  {
+    key: "locationBand",
+    label: "Where you live",
+    helper: "Postcode is the second-biggest premium driver.",
+    options: (
+      [
+        ["inner-london", "Inner London"],
+        ["outer-london", "Outer London / big city"],
+        ["suburban", "Suburban"],
+        ["rural", "Small town / rural"],
+      ] as Array<[LocationBand, string]>
+    ).map(([v, l]) => ({ value: v, label: l })),
+  },
+  {
+    key: "ncdBand",
+    label: "No-claims years",
+    helper: "Consecutive years without a claim — usually on your renewal letter.",
+    options: (
+      ["0", "1-2", "3-5", "6-9", "10+"] satisfies NcdBand[]
+    ).map((v) => ({ value: v, label: v })),
+  },
+  {
+    key: "occupationBand",
+    label: "Occupation risk",
+    helper:
+      "Lower-risk = office, teacher, civil servant. Higher-risk = delivery, taxi, trades.",
+    options: (
+      [
+        ["lower", "Lower"],
+        ["standard", "Standard"],
+        ["higher", "Higher"],
+      ] as Array<[OccupationBand, string]>
+    ).map(([v, l]) => ({ value: v, label: l })),
+  },
+];
+
+const COMPARE_THE_MARKET_URL = "https://www.comparethemarket.com/car-insurance/";
+
+function InsurancePanel({
+  inputs,
+  setInputs,
+  insurance,
+}: {
+  inputs: InsuranceInputs;
+  setInputs: (i: InsuranceInputs) => void;
+  insurance: InsuranceEstimate;
+}) {
+  return (
+    <section className="mt-4 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/15 via-slate-900/70 to-slate-950 p-5 sm:p-6">
+      <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+        <div className="flex items-start gap-3 min-w-0">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-violet-500/30 bg-violet-500/15 text-violet-300">
+            <Umbrella className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold text-slate-100">
+              Refine your insurance estimate — 30s Q&amp;A
+            </h3>
+            <p className="text-[11px] text-slate-500">
+              Tap a pill in each row to recompute. Every answer optional.
+            </p>
+          </div>
+        </div>
+        {insurance.isCustomised && (
+          <button
+            type="button"
+            onClick={() => setInputs({})}
+            className="text-[11px] text-slate-400 hover:text-slate-200 self-start"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <div className="space-y-4">
+        {INSURANCE_FIELDS.map((field) => (
+          <InsuranceField
+            key={field.key}
+            field={field}
+            value={inputs[field.key]}
+            onChange={(v) =>
+              setInputs({
+                ...inputs,
+                [field.key]: v as InsuranceInputs[typeof field.key],
+              })
+            }
+          />
+        ))}
+      </div>
+
+      <div className="mt-5 rounded-xl border border-violet-500/20 bg-slate-950/50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <p className="text-[10px] uppercase tracking-wider text-slate-500 font-[family-name:var(--font-geist-mono)]">
+            Current estimate
+          </p>
+          <p className="mt-0.5 flex items-baseline gap-2">
+            <span
+              className="text-2xl sm:text-3xl font-bold text-violet-200 tabular-nums"
+              style={{ textShadow: "0 0 14px rgba(167,139,250,0.35)" }}
+            >
+              £{insurance.estimatedAnnual.toLocaleString("en-GB")}
+            </span>
+            <span className="text-xs text-slate-400">/ year</span>
+          </p>
+          {insurance.isCustomised && (
+            <p className="mt-1 text-[11px] text-slate-500">
+              {(insurance.multiplier * 100 - 100 > 0 ? "+" : "") +
+                ((insurance.multiplier - 1) * 100).toFixed(0)}
+              % vs baseline (£{insurance.baseline.toLocaleString("en-GB")})
+            </p>
+          )}
+        </div>
+        <a
+          href={COMPARE_THE_MARKET_URL}
+          target="_blank"
+          rel="noopener nofollow noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-400 hover:to-fuchsia-400 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-violet-500/20 transition-all"
+        >
+          Get real quotes →
+        </a>
+      </div>
+
+      <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
+        Ballpark only — real premiums depend on dozens of personal factors. Use this to
+        budget; use a comparison site to actually buy.
+      </p>
+    </section>
+  );
+}
+
+function InsuranceField({
+  field,
+  value,
+  onChange,
+}: {
+  field: (typeof INSURANCE_FIELDS)[number];
+  value: string | undefined;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <p className="text-xs font-semibold text-slate-200 mb-2">{field.label}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {field.options.map((opt) => {
+          const selected = opt.value === value;
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => onChange(opt.value)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                selected
+                  ? "bg-violet-500/15 border-violet-500/40 text-violet-200"
+                  : "bg-slate-950/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800/60"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-1 text-[10px] text-slate-500">{field.helper}</p>
     </div>
   );
 }
