@@ -10,6 +10,7 @@ import {
   Umbrella,
   Loader2,
   Info,
+  Gauge,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -40,6 +41,8 @@ const NEW_PRICES = newPricesData as Array<{
   newPrice: number;
 }>;
 
+const UK_AVG_MILES_PER_YEAR = 7400; // DfT 2025
+
 export default function RunningCostsResult({ vrm }: RunningCostsResultProps) {
   const state = useVehicleLookup(vrm);
   if (state.kind === "loading")
@@ -52,6 +55,7 @@ export default function RunningCostsResult({ vrm }: RunningCostsResultProps) {
 function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const [fuel, setFuel] = useState<FuelEconomyResult | null>(null);
   const [fuelState, setFuelState] = useState<"loading" | "done">("loading");
+  const [milesPerYear, setMilesPerYear] = useState<number>(UK_AVG_MILES_PER_YEAR);
 
   // Fetch fuel economy
   useEffect(() => {
@@ -108,6 +112,16 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     });
   }, [vehicle.fuelType, vehicle.engineCapacity, vehicle.make, vehicle.model]);
 
+  // Fuel cost scales linearly with annual mileage. The /api/fuel-economy
+  // endpoint returns a baseline at 7,400 mi/yr (DfT average); we scale it
+  // to whatever the user has set on the slider.
+  const scaledFuelCost = useMemo<number | null>(() => {
+    if (fuel?.estimatedAnnualCost == null) return null;
+    return Math.round(
+      fuel.estimatedAnnualCost * (milesPerYear / UK_AVG_MILES_PER_YEAR)
+    );
+  }, [fuel, milesPerYear]);
+
   const ownership = useMemo<OwnershipCostResult | null>(() => {
     if (!vehicle.yearOfManufacture) return null;
     const vehicleAge = new Date().getFullYear() - vehicle.yearOfManufacture;
@@ -115,7 +129,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
     return calculateOwnershipCost({
       vedAnnualRate: ved.estimatedAnnualRate,
-      fuelAnnualCost: fuel?.estimatedAnnualCost ?? null,
+      fuelAnnualCost: scaledFuelCost,
       newPrice,
       vehicleAge,
       make: vehicle.make,
@@ -123,7 +137,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       isOver3Years,
       segment,
     });
-  }, [vehicle, ved, fuel, segment]);
+  }, [vehicle, ved, scaledFuelCost, segment]);
 
   return (
     <ToolResultLayout
@@ -132,7 +146,17 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       excludePill="valuation"
       revealPitch="Running costs are just one slice — the full report adds MOT history, recalls, ULEZ, valuation and a buying checklist."
     >
-      <Hero ownership={ownership} loading={fuelState === "loading"} fuel={fuel} />
+      <Hero
+        ownership={ownership}
+        loading={fuelState === "loading"}
+        fuel={fuel}
+        milesPerYear={milesPerYear}
+      />
+      <MileageSlider
+        miles={milesPerYear}
+        onChange={setMilesPerYear}
+        hasFuelData={fuel?.estimatedAnnualCost != null}
+      />
       {ownership && <BreakdownGrid ownership={ownership} fuel={fuel} segment={segment} />}
       {ownership && <StackedBar ownership={ownership} />}
       <Disclaimer />
@@ -146,10 +170,12 @@ function Hero({
   ownership,
   loading,
   fuel,
+  milesPerYear,
 }: {
   ownership: OwnershipCostResult | null;
   loading: boolean;
   fuel: FuelEconomyResult | null;
+  milesPerYear: number;
 }) {
   return (
     <section className="relative mt-4 overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-6 sm:p-8">
@@ -190,8 +216,11 @@ function Hero({
             </div>
             {fuel?.combinedMpg && (
               <p className="mt-4 text-xs text-slate-500">
-                Based on a typical {fuel.combinedMpg} mpg combined and current UK fuel
-                prices.
+                Based on {fuel.combinedMpg} mpg combined, current UK fuel prices and{" "}
+                <strong className="text-slate-300 tabular-nums">
+                  {milesPerYear.toLocaleString("en-GB")}
+                </strong>{" "}
+                miles per year (adjust below).
               </p>
             )}
           </>
@@ -231,6 +260,176 @@ function Stat({
         {value}
       </p>
     </div>
+  );
+}
+
+/* ─── Mileage slider ──────────────────────────────────────────────────── */
+
+const MILEAGE_MIN = 2000;
+const MILEAGE_MAX = 30000;
+const MILEAGE_STEP = 500;
+const PRESETS = [3000, 7400, 12000, 20000];
+
+function MileageSlider({
+  miles,
+  onChange,
+  hasFuelData,
+}: {
+  miles: number;
+  onChange: (m: number) => void;
+  hasFuelData: boolean;
+}) {
+  const pct = ((miles - MILEAGE_MIN) / (MILEAGE_MAX - MILEAGE_MIN)) * 100;
+  const deltaFromAvg = miles - UK_AVG_MILES_PER_YEAR;
+  const deltaPct =
+    UK_AVG_MILES_PER_YEAR > 0
+      ? Math.round((deltaFromAvg / UK_AVG_MILES_PER_YEAR) * 100)
+      : 0;
+
+  let context: { label: string; tone: "emerald" | "slate" | "amber" } = {
+    label: "UK average",
+    tone: "slate",
+  };
+  if (miles < UK_AVG_MILES_PER_YEAR - 1000) {
+    context = { label: `${Math.abs(deltaPct)}% below UK average`, tone: "emerald" };
+  } else if (miles > UK_AVG_MILES_PER_YEAR + 1000) {
+    context = { label: `${deltaPct}% above UK average`, tone: "amber" };
+  }
+
+  const toneClasses = {
+    emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    slate: "bg-slate-700/40 text-slate-300 border-slate-600/40",
+    amber: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  } as const;
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/15 text-cyan-300 border border-cyan-500/25">
+            <Gauge className="h-4 w-4" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-100">Your annual mileage</h3>
+            <p className="text-[11px] text-slate-500">
+              {hasFuelData
+                ? "Slide to recalculate fuel — the rest of the breakdown updates too."
+                : "Slider is informational — we don't have fuel data for this vehicle."}
+            </p>
+          </div>
+        </div>
+        <span
+          className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider border rounded-full ${toneClasses[context.tone]}`}
+        >
+          {context.label}
+        </span>
+      </div>
+
+      <div className="flex items-baseline gap-2 mb-3">
+        <span
+          className="font-[family-name:var(--font-geist-mono)] text-3xl sm:text-4xl font-bold text-cyan-100 tabular-nums tracking-tight"
+          style={{ textShadow: "0 0 14px rgba(34,211,238,0.35)" }}
+        >
+          {miles.toLocaleString("en-GB")}
+        </span>
+        <span className="text-[11px] font-semibold tracking-[0.18em] text-cyan-400/70 font-[family-name:var(--font-geist-mono)] uppercase">
+          mi / yr
+        </span>
+      </div>
+
+      <div className="relative">
+        <input
+          type="range"
+          min={MILEAGE_MIN}
+          max={MILEAGE_MAX}
+          step={MILEAGE_STEP}
+          value={miles}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="mileage-range w-full"
+          aria-label="Annual mileage"
+          style={
+            {
+              ["--range-pct" as string]: `${pct}%`,
+            } as React.CSSProperties
+          }
+        />
+        <div className="mt-2 flex justify-between text-[10px] text-slate-500 tabular-nums">
+          <span>{MILEAGE_MIN.toLocaleString("en-GB")}</span>
+          <span className="text-slate-600">UK avg {UK_AVG_MILES_PER_YEAR.toLocaleString("en-GB")}</span>
+          <span>{MILEAGE_MAX.toLocaleString("en-GB")}+</span>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {PRESETS.map((p) => {
+          const active = Math.abs(miles - p) < MILEAGE_STEP / 2;
+          return (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onChange(p)}
+              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
+                active
+                  ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-200"
+                  : "bg-slate-950/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800/60"
+              }`}
+            >
+              {p === UK_AVG_MILES_PER_YEAR
+                ? `UK avg (${p.toLocaleString("en-GB")})`
+                : p.toLocaleString("en-GB")}
+            </button>
+          );
+        })}
+      </div>
+
+      <style jsx>{`
+        .mileage-range {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 6px;
+          border-radius: 9999px;
+          background: linear-gradient(
+            to right,
+            rgb(34, 211, 238) 0%,
+            rgb(59, 130, 246) var(--range-pct, 50%),
+            rgb(30, 41, 59) var(--range-pct, 50%),
+            rgb(30, 41, 59) 100%
+          );
+          outline: none;
+          cursor: pointer;
+        }
+        .mileage-range::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: rgb(165, 243, 252);
+          border: 2px solid rgb(8, 145, 178);
+          box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15),
+            0 0 16px rgba(34, 211, 238, 0.5);
+          cursor: pointer;
+          transition: transform 0.1s;
+        }
+        .mileage-range::-webkit-slider-thumb:active {
+          transform: scale(1.15);
+        }
+        .mileage-range::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: rgb(165, 243, 252);
+          border: 2px solid rgb(8, 145, 178);
+          box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15),
+            0 0 16px rgba(34, 211, 238, 0.5);
+          cursor: pointer;
+        }
+        .mileage-range:focus-visible::-webkit-slider-thumb {
+          box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.35),
+            0 0 16px rgba(34, 211, 238, 0.6);
+        }
+      `}</style>
+    </section>
   );
 }
 
