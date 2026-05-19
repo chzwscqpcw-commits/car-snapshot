@@ -65,7 +65,7 @@ const affiliateHeading: React.CSSProperties = {
 };
 
 const affiliateLink: React.CSSProperties = {
-  color: "#10b981",
+  color: "#06b6d4",
   fontSize: "15px",
   fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
   fontWeight: 600,

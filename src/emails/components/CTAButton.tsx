@@ -6,7 +6,7 @@ const wrapper: React.CSSProperties = {
 };
 
 const button: React.CSSProperties = {
-  backgroundColor: "#10b981",
+  backgroundColor: "#06b6d4",
   color: "#ffffff",
   fontSize: "15px",
   fontWeight: 600,

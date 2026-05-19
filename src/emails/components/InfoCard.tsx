@@ -33,7 +33,7 @@ export const valueStyle: React.CSSProperties = {
   color: "#f5f5f5",
   fontSize: "18px",
   fontWeight: 700,
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
+  fontFamily: "'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace",
   lineHeight: "1.3",
   margin: "0 0 16px",
 };
