@@ -3411,15 +3411,6 @@ END:VEVENT
                 </a>
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
-                <span className="text-slate-700" aria-hidden="true">·</span>
-                <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/50 hover:border-slate-600/50 transition-all" title={PARTNER_LINKS.bookMyGarage.description}>
-                  <img src="/bmg-logo.png" alt="BookMyGarage" className="h-7" width={49} height={28} loading="lazy" />
-                  <span className="text-xs text-slate-400 font-medium">BookMyGarage</span>
-                </a>
-              </div>
-
               <DidYouKnow />
             </div>
           )}
