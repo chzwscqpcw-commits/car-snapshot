@@ -153,13 +153,17 @@ const SEGMENT_LABELS: Record<VehicleSegment, string> = {
   van: "Van / Commercial",
 };
 
-// Derive segment fuel estimates from latest DESNZ weekly prices
+// Derive segment fuel estimates from latest DESNZ weekly prices.
+// DESNZ price `ppl` is pence-per-litre, so divide by 100 to get pounds.
+// EV unit-rate `24.5p/kWh` likewise divided by 100. Without this the
+// segment medians come out roughly 100× too high and produce nonsense
+// comparisons like "£178,503 typical Premium Car".
 import weeklyJson from "@/data/fuel-prices-weekly.json";
 const _latestFuel = weeklyJson.weekly[weeklyJson.weekly.length - 1];
 const _LITRES_PER_GALLON = 4.546;
 const _annualCost = (ppl: number, mpg: number) =>
-  Math.round(((ppl * _LITRES_PER_GALLON) / mpg) * ASSUMED_ANNUAL_MILES);
-const _EV_COST = Math.round((24.5 / 3.5) * ASSUMED_ANNUAL_MILES); // Ofgem cap / efficiency
+  Math.round((((ppl * _LITRES_PER_GALLON) / mpg) * ASSUMED_ANNUAL_MILES) / 100);
+const _EV_COST = Math.round(((24.5 / 3.5) * ASSUMED_ANNUAL_MILES) / 100); // Ofgem cap (p/kWh) / efficiency (mi/kWh)
 
 const SEGMENT_FUEL_ESTIMATE: Record<VehicleSegment, number> = {
   city: _annualCost(_latestFuel.petrol, 48),
