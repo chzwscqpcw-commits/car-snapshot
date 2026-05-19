@@ -15,6 +15,12 @@ interface ConversionWidgetProps {
   showReminder?: boolean;
   /** Reminder headline override */
   reminderHeadline?: string;
+  /**
+   * Where the reg-lookup submits to. Defaults to "/" (the full report). On
+   * a focused tool page like /tax-check, pass the tool's own path so the
+   * submission stays inside that tool's result view.
+   */
+  targetPath?: string;
 }
 
 function cleanReg(raw: string): string {
@@ -35,6 +41,7 @@ export default function ConversionWidget({
   subtext = "Enter any UK reg plate for a free instant check — MOT history, tax status, mileage, valuations and more.",
   showReminder = true,
   reminderHeadline = "Never miss your MOT",
+  targetPath = "/",
 }: ConversionWidgetProps) {
   const router = useRouter();
   const [reg, setReg] = useState("");
@@ -59,7 +66,8 @@ export default function ConversionWidget({
     }
     setRegError("");
     trackConversion("reg_search", { vrm: cleaned });
-    router.push(`/?vrm=${cleaned}`);
+    const join = targetPath.includes("?") ? "&" : "?";
+    router.push(`${targetPath}${join}vrm=${cleaned}`);
   }
 
   async function handleReminder(e: React.FormEvent) {

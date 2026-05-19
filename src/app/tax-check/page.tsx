@@ -3,6 +3,11 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import TaxResult from "@/components/tools/TaxResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free Car Tax Check — Is My Car Taxed? | Free Plate Check",
@@ -36,7 +41,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TaxCheckPage() {
+export default async function TaxCheckPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -134,6 +147,21 @@ export default function TaxCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <TaxResult vrm={cleanedVrm!} />
+          {/* Slim trust footer below the result */}
+          <div className="border-t border-slate-800/60 bg-slate-900/40">
+            <div className="mx-auto max-w-3xl px-4 py-6 text-center text-xs text-slate-500">
+              Tax status comes from the DVLA's live VED database. VED rate is
+              estimated from current GOV.UK bands — your renewal letter is the
+              authoritative figure.
+            </div>
+          </div>
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       <LandingHero
         h1="Free Car Tax Check"
         subtitle="Real-time DVLA tax status for any UK vehicle — see if it's taxed, SORN, or due. Plus VED band and annual cost. Free, instant, no signup."
@@ -202,6 +230,7 @@ export default function TaxCheckPage() {
           headline="Check your vehicle's tax status"
           subtext="Enter any UK reg plate to see current tax status, VED band, and MOT expiry — free and instant."
           reminderHeadline="Never miss your MOT or tax renewal"
+          targetPath="/tax-check"
         />
 
         <div className="space-y-8 text-slate-300">
@@ -329,6 +358,8 @@ export default function TaxCheckPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }

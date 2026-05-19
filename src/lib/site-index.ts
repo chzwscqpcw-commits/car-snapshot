@@ -100,6 +100,14 @@ export const SITE_ITEMS: SiteItem[] = [
     icon: "bell",
   },
   {
+    title: "All tools",
+    subtitle: "Every free check & calculator in one place",
+    href: "/tools",
+    category: "tool",
+    keywords: ["tools", "hub", "everything"],
+    icon: "wrench",
+  },
+  {
     title: "Embed widget",
     subtitle: "Add a free check widget to your site",
     href: "/embed",
@@ -184,9 +192,9 @@ export const SITE_ITEMS: SiteItem[] = [
 
 /** Top-level links shown in the persistent nav (kept very short). */
 export const PRIMARY_NAV: { label: string; href: string }[] = [
+  { label: "Tools", href: "/tools" },
   { label: "Stats", href: "/stats" },
   { label: "Guides", href: "/blog" },
-  { label: "Tools", href: "/running-costs" },
 ];
 
 /** Detect a plausible UK vehicle reg (2-8 alphanumeric after stripping). */
