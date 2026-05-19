@@ -1,5 +1,5 @@
 import type { jsPDF } from "jspdf";
-import { drawIcon, drawToneIcon, toneFromAccent, drawBoltMark, type Tone } from "./pdf-icons";
+import { drawIcon, drawToneIcon, toneFromAccent, drawBoltMark, drawArc, type Tone } from "./pdf-icons";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -349,12 +349,16 @@ function startSection(doc: jsPDF, currentY: number, title: string, minHeight: nu
   doc.line(MARGIN, y, MARGIN + CONTENT_W, y);
   y += 5;
 
+  // Cyan brand accent square — mirrors the web SectionGroup dot.
+  setFill(doc, C.cyan);
+  doc.rect(MARGIN, y + 1.5, 1.8, 1.8, "F");
+
   const iconName = SECTION_ICONS[title];
-  let textX = MARGIN;
+  let textX = MARGIN + 4;
   if (iconName) {
     const iconSize = 5;
-    drawIcon(doc, iconName, MARGIN, y - 0.5, iconSize, C.secondaryText);
-    textX = MARGIN + iconSize + 2;
+    drawIcon(doc, iconName, MARGIN + 4, y - 0.5, iconSize, C.secondaryText);
+    textX = MARGIN + 4 + iconSize + 2;
   }
 
   doc.setFontSize(FONT.h2);
@@ -646,8 +650,9 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
 
     doc.setFontSize(FONT.h3);
     setTextColor(doc, C.headingText);
-    doc.setFont("helvetica", "bold");
+    doc.setFont("courier", "bold");
     doc.text(stats[i].value, cx + 3, y + 12);
+    doc.setFont("helvetica", "normal");
   }
   y += statH + 6;
 
@@ -1048,38 +1053,60 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
   const hs = input.healthScore;
   if (!hs) return y;
 
-  y = startSection(doc, y, "Vehicle Health Score", 30);
+  y = startSection(doc, y, "Vehicle Health Score", 44);
 
-  // Dynamic card height: top section (grade + score) + breakdown rows
-  const topH = 24;
+  // Card sizing: tall enough for the circular gauge + breakdown grid.
+  const topH = 38;
   const itemsPerRow = 4;
   const rowH = 10;
   const breakdownRows = Math.ceil(hs.breakdown.length / itemsPerRow);
-  const cardH = topH + breakdownRows * rowH + 3;
+  const cardH = topH + breakdownRows * rowH + 4;
 
   y = checkPageBreak(doc, y, cardH + 3);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
 
-  // Grade badge
-  const gradeColor: RGB = hs.grade === "A" ? C.emerald : hs.grade === "B" ? C.blue : hs.grade === "C" ? C.amber : C.red;
-  const badgeSize = 18;
-  const badgeX = MARGIN + 6;
-  const badgeY = y + 4;
-  drawRoundedRect(doc, badgeX, badgeY, badgeSize, badgeSize, 3, gradeColor);
-  doc.setFontSize(15);
-  setTextColor(doc, C.white);
+  // ── Circular gauge (mirrors the web Vehicle Health Score) ──
+  const gradeColor: RGB =
+    hs.grade === "A" ? C.emerald
+    : hs.grade === "B" ? C.blue
+    : hs.grade === "C" ? C.amber
+    : C.red;
+  const gaugeR = 13;
+  const gaugeCX = MARGIN + 6 + gaugeR;
+  const gaugeCY = y + 6 + gaugeR;
+  const ringW = 2.4;
+
+  // Background ring (full circle, divider colour)
+  drawArc(doc, gaugeCX, gaugeCY, gaugeR, 0, 360, C.divider, ringW);
+  // Progress arc — starts at 12 o'clock, sweeps clockwise by score %
+  drawArc(doc, gaugeCX, gaugeCY, gaugeR, -90, (hs.score / 100) * 360, gradeColor, ringW);
+
+  // Grade letter centred in the ring
+  doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
-  doc.text(hs.grade, badgeX + badgeSize / 2, badgeY + 12.5, { align: "center" });
-
-  // Score text
-  doc.setFontSize(FONT.h2);
-  setTextColor(doc, C.headingText);
-  doc.text(`${hs.score}/100`, badgeX + badgeSize + 6, badgeY + 7);
-  doc.setFontSize(FONT.body);
   setTextColor(doc, gradeColor);
-  doc.text(hs.label, badgeX + badgeSize + 6, badgeY + 14);
+  doc.text(hs.grade, gaugeCX, gaugeCY + 1, { align: "center" });
 
-  // Breakdown rows (4 items per row, dynamic rows)
+  // Score "X/100" in mono, just below the grade letter
+  doc.setFontSize(FONT.small);
+  doc.setFont("courier", "normal");
+  setTextColor(doc, C.secondaryText);
+  doc.text(`${hs.score}/100`, gaugeCX, gaugeCY + 7, { align: "center" });
+  doc.setFont("helvetica", "normal");
+
+  // ── Right of gauge: title + descriptive label ──
+  const textX = MARGIN + 6 + gaugeR * 2 + 10;
+  doc.setFontSize(FONT.h3);
+  doc.setFont("helvetica", "bold");
+  setTextColor(doc, C.headingText);
+  doc.text("Overall Condition", textX, y + 13);
+
+  doc.setFontSize(FONT.h2);
+  doc.setFont("helvetica", "bold");
+  setTextColor(doc, gradeColor);
+  doc.text(hs.label, textX, y + 22);
+
+  // ── Breakdown grid below ──
   const colW = (CONTENT_W - 12) / itemsPerRow;
   for (let i = 0; i < hs.breakdown.length; i++) {
     const item = hs.breakdown[i];
@@ -1094,8 +1121,9 @@ function renderHealthScore(doc: jsPDF, input: ReportInput, y: number): number {
     doc.text(item.category, cx, cy);
     const itemColor: RGB = item.score >= item.maxScore * 0.8 ? C.emerald : item.score >= item.maxScore * 0.5 ? C.amber : C.red;
     setTextColor(doc, itemColor);
-    doc.setFont("helvetica", "bold");
+    doc.setFont("courier", "bold");
     doc.text(`${item.score}/${item.maxScore}`, cx, cy + 4);
+    doc.setFont("helvetica", "normal");
   }
 
   y += cardH + 3;

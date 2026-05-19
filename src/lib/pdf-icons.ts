@@ -457,6 +457,57 @@ export function drawBoltMark(
   doc.restoreGraphicsState();
 }
 
+// ── Circular Arc Helper ──────────────────────────────────────────────────────
+
+/**
+ * Draw a circular arc by approximating it with short line segments.
+ *
+ * jsPDF does not expose native arc rendering, so this polyline approach
+ * keeps the implementation simple and looks smooth at print resolution.
+ * Angle convention follows screen coordinates (Y down):
+ *   0°   = 3 o'clock (right)
+ *   90°  = 6 o'clock (down)
+ *   180° = 9 o'clock (left)
+ *   -90° = 12 o'clock (up)
+ *
+ * @param cx        circle centre X (mm)
+ * @param cy        circle centre Y (mm)
+ * @param radius    radius (mm)
+ * @param startDeg  starting angle (degrees)
+ * @param sweepDeg  sweep angle (degrees, positive = clockwise on screen)
+ * @param color     stroke RGB
+ * @param width     stroke width (mm)
+ */
+export function drawArc(
+  doc: jsPDF,
+  cx: number,
+  cy: number,
+  radius: number,
+  startDeg: number,
+  sweepDeg: number,
+  color: RGB,
+  width: number,
+): void {
+  const steps = Math.max(2, Math.ceil(Math.abs(sweepDeg) / 5));
+  doc.saveGraphicsState();
+  doc.setDrawColor(color[0], color[1], color[2]);
+  doc.setLineWidth(width);
+  doc.setLineCap(1); // round
+  doc.setLineJoin(1); // round
+
+  for (let i = 0; i < steps; i++) {
+    const a1 = ((startDeg + (sweepDeg * i) / steps) * Math.PI) / 180;
+    const a2 = ((startDeg + (sweepDeg * (i + 1)) / steps) * Math.PI) / 180;
+    const x1 = cx + radius * Math.cos(a1);
+    const y1 = cy + radius * Math.sin(a1);
+    const x2 = cx + radius * Math.cos(a2);
+    const y2 = cy + radius * Math.sin(a2);
+    doc.line(x1, y1, x2, y2);
+  }
+
+  doc.restoreGraphicsState();
+}
+
 // ── Tone Icon Helper ─────────────────────────────────────────────────────────
 
 type Tone = "good" | "warn" | "risk" | "info";
