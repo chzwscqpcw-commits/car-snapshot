@@ -1,18 +1,32 @@
 "use client";
 
-import { useMemo } from "react";
-import { PoundSterling, TrendingDown, Sparkles, ArrowRight, Info } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  PoundSterling,
+  Sparkles,
+  ArrowRight,
+  Info,
+  CircleCheck,
+  Loader2,
+  TrendingDown,
+} from "lucide-react";
 import {
   useVehicleLookup,
   LookupSkeleton,
   LookupError,
   ToolResultLayout,
   type LookupVehicle,
+  type MotTest,
 } from "@/components/tools/shared";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
-  roundTo50,
+  combineValuationLayers,
+  getConditionAdjustment,
+  getColourAdjustment,
+  getMileageAdjustment,
+  type ConditionInputs,
+  type ValuationResult as ValuationResultType,
 } from "@/lib/valuation";
 import newPricesData from "@/data/new-prices.json";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
@@ -22,16 +36,27 @@ interface ValuationResultProps {
   vrm: string;
 }
 
-interface FocusedValuation {
-  newPrice: number | null;
-  centre: number | null;
-  low: number | null;
-  high: number | null;
-  age: number | null;
-  depreciationPct: number | null;
-  mileage: number | null;
-  confidence: "estimate-only";
+interface ServerValuation {
+  ebayMedian: number | null;
+  ebayQ1Price: number | null;
+  ebayQ3Price: number | null;
+  ebayListingCount: number;
+  ebayMinPrice: number | null;
+  ebayMaxPrice: number | null;
+  ebayTotalListings: number | null;
+  ebayDominantTransmission: string | null;
+  ebayDominantBodyType: string | null;
+  ebayYearWidened: boolean;
+  cacheMedian: number | null;
+  cacheEntryCount: number;
+  sources: string[];
 }
+
+const NEW_PRICES = newPricesData as Array<{
+  make: string;
+  model: string;
+  newPrice: number;
+}>;
 
 export default function ValuationResult({ vrm }: ValuationResultProps) {
   const state = useVehicleLookup(vrm);
@@ -43,78 +68,278 @@ export default function ValuationResult({ vrm }: ValuationResultProps) {
 }
 
 function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
-  const valuation = useMemo(() => compute(vehicle), [vehicle]);
+  const [serverData, setServerData] = useState<ServerValuation | null>(null);
+  const [serverState, setServerState] = useState<"loading" | "ok" | "skipped">(
+    "loading"
+  );
+  const [condition, setCondition] = useState<ConditionInputs | null>(null);
+
+  // ── Derived inputs ─────────────────────────────────────────────────────
+  const newPrice = useMemo(
+    () => lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model),
+    [vehicle.make, vehicle.model]
+  );
+  const age = useMemo(
+    () =>
+      vehicle.yearOfManufacture
+        ? Math.max(0, new Date().getFullYear() - vehicle.yearOfManufacture)
+        : null,
+    [vehicle.yearOfManufacture]
+  );
+  const mileage = useMemo(() => latestMileage(vehicle.motTests), [vehicle.motTests]);
+  const advisoryCount = useMemo(
+    () =>
+      vehicle.motTests?.[0]?.rfrAndComments?.filter((r) => r.type === "ADVISORY")
+        .length ?? 0,
+    [vehicle.motTests]
+  );
+  const recentFailure = vehicle.motTests?.[0]?.testResult === "FAILED";
+
+  const depEstimate = useMemo(() => {
+    if (newPrice === null || age === null) return null;
+    return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model, mileage);
+  }, [newPrice, age, vehicle.make, vehicle.model, mileage]);
+
+  // ── Server call for live listings + cache ──────────────────────────────
+  useEffect(() => {
+    if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
+      setServerState("skipped");
+      return;
+    }
+    let cancelled = false;
+    setServerState("loading");
+    const params = new URLSearchParams({
+      make: vehicle.make,
+      model: vehicle.model,
+      year: String(vehicle.yearOfManufacture),
+      depreciationEstimate: String(depEstimate),
+    });
+    if (newPrice) params.set("newPrice", String(newPrice));
+    if (vehicle.fuelType) params.set("fuelType", vehicle.fuelType);
+    if (vehicle.engineCapacity) params.set("engineCapacity", String(vehicle.engineCapacity));
+    if (mileage) params.set("mileage", String(mileage));
+    if (vehicle.colour) params.set("colour", String(getColourAdjustment(vehicle.colour)));
+
+    fetch(`/api/valuation?${params}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: ServerValuation | null) => {
+        if (!cancelled) {
+          setServerData(data);
+          setServerState("ok");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setServerData(null);
+          setServerState("ok");
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    vehicle.make,
+    vehicle.model,
+    vehicle.yearOfManufacture,
+    vehicle.fuelType,
+    vehicle.engineCapacity,
+    vehicle.colour,
+    mileage,
+    newPrice,
+    depEstimate,
+  ]);
+
+  // ── Combined valuation ─────────────────────────────────────────────────
+  const valuation = useMemo<ValuationResultType | null>(() => {
+    if (depEstimate === null) return null;
+    const { total: condAdj, motAuto } = getConditionAdjustment(
+      condition,
+      advisoryCount,
+      recentFailure
+    );
+    const colourAdj = getColourAdjustment(vehicle.colour);
+    const result = combineValuationLayers(
+      depEstimate,
+      serverData?.ebayMedian ?? null,
+      serverData?.ebayListingCount ?? 0,
+      serverData?.cacheMedian ?? null,
+      serverData?.cacheEntryCount ?? 0,
+      condAdj,
+      colourAdj,
+      serverData?.ebayTotalListings ?? null,
+      serverData?.ebayMinPrice ?? null,
+      serverData?.ebayMaxPrice ?? null,
+      serverData?.ebayDominantTransmission ?? null,
+      serverData?.ebayDominantBodyType ?? null,
+      serverData?.ebayYearWidened ?? false,
+      serverData?.ebayQ1Price ?? null,
+      serverData?.ebayQ3Price ?? null
+    );
+    if (result) {
+      result.mileageAdjustmentPercent = getMileageAdjustment(mileage, age ?? 0);
+      result.motAutoAdjustmentPercent = motAuto;
+    }
+    return result;
+  }, [
+    depEstimate,
+    serverData,
+    condition,
+    advisoryCount,
+    recentFailure,
+    vehicle.colour,
+    mileage,
+    age,
+  ]);
+
   return (
     <ToolResultLayout
       vrm={vrm}
       vehicle={vehicle}
       excludePill="valuation"
-      revealPitch="The full report adds live eBay listings + community comparables for a tighter range, plus condition adjustment, owner negotiation helpers and the full DVLA report."
+      revealPitch="Valuation is just one piece — the full report adds MOT history, recalls, ULEZ, running costs and negotiation helpers, all on one page."
     >
-      <Hero valuation={valuation} vehicle={vehicle} />
-      {valuation.centre !== null && <DepreciationCard valuation={valuation} />}
+      <Hero
+        valuation={valuation}
+        depEstimate={depEstimate}
+        newPrice={newPrice}
+        age={age}
+        vehicle={vehicle}
+        serverState={serverState}
+      />
+      {valuation && (
+        <SourceBreakdown
+          valuation={valuation}
+          serverData={serverData}
+          condition={condition}
+        />
+      )}
+      <ConditionPanel condition={condition} setCondition={setCondition} />
       <BmgHook vrm={vrm} />
       <Disclaimer />
     </ToolResultLayout>
   );
 }
 
+/* ─── Hero ─────────────────────────────────────────────────────────────── */
+
 function Hero({
   valuation,
+  depEstimate,
+  newPrice,
+  age,
   vehicle,
+  serverState,
 }: {
-  valuation: FocusedValuation;
+  valuation: ValuationResultType | null;
+  depEstimate: number | null;
+  newPrice: number | null;
+  age: number | null;
   vehicle: LookupVehicle;
+  serverState: "loading" | "ok" | "skipped";
 }) {
-  const hasValue = valuation.centre !== null;
+  const value = valuation?.estimatedValue ?? depEstimate;
+  const low = valuation?.rangeLow ?? null;
+  const high = valuation?.rangeHigh ?? null;
+  const hasValue = value !== null;
+  const stillLoading = serverState === "loading" && !valuation;
+
   return (
     <section className="relative mt-4 overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-6 sm:p-8">
       <div className="absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl opacity-30 pointer-events-none bg-cyan-500/40" />
-
       <div className="relative">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
           <Sparkles className="h-3 w-3 text-cyan-400" />
           Estimated market value
+          {stillLoading && (
+            <span className="inline-flex items-center gap-1 text-cyan-300 normal-case font-normal tracking-normal">
+              <Loader2 className="h-3 w-3 animate-spin" /> calibrating from live listings…
+            </span>
+          )}
         </div>
 
         {hasValue ? (
           <>
             <p className="mt-2 flex items-baseline gap-2">
               <span className="text-5xl sm:text-6xl font-bold text-white tracking-tight tabular-nums">
-                £{valuation.centre!.toLocaleString("en-GB")}
+                £{value!.toLocaleString("en-GB")}
               </span>
+              {valuation && (
+                <ConfidenceChip
+                  confidence={valuation.confidence}
+                  rangePct={getRangePct(valuation)}
+                />
+              )}
             </p>
-            <p className="mt-1 text-sm text-slate-400">
-              Typical range:{" "}
-              <span className="text-slate-200 font-semibold tabular-nums">
-                £{valuation.low!.toLocaleString("en-GB")}
-              </span>
-              {" – "}
-              <span className="text-slate-200 font-semibold tabular-nums">
-                £{valuation.high!.toLocaleString("en-GB")}
-              </span>
-            </p>
-
-            {/* Range bar */}
-            <div className="mt-4">
-              <RangeBar low={valuation.low!} centre={valuation.centre!} high={valuation.high!} />
-            </div>
+            {low !== null && high !== null && (
+              <>
+                <p className="mt-1 text-sm text-slate-400">
+                  Typical range:{" "}
+                  <span className="text-slate-200 font-semibold tabular-nums">
+                    £{low.toLocaleString("en-GB")}
+                  </span>
+                  {" – "}
+                  <span className="text-slate-200 font-semibold tabular-nums">
+                    £{high.toLocaleString("en-GB")}
+                  </span>
+                </p>
+                <div className="mt-4">
+                  <RangeBar low={low} centre={value!} high={high} />
+                </div>
+              </>
+            )}
           </>
         ) : (
           <p className="mt-2 text-xl text-slate-300">
-            We couldn't price this vehicle from depreciation alone — the full report pulls
-            live eBay comparables for a real number.
+            Couldn't price this vehicle — we don't have a new-price record for {vehicle.make} {vehicle.model}.
           </p>
         )}
 
-        <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+        <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-400">
           <Chip>{vehicle.make ?? "—"} {vehicle.model ?? ""}</Chip>
-          {vehicle.yearOfManufacture && <Chip>{vehicle.yearOfManufacture}</Chip>}
+          {age !== null && <Chip>{age} yr{age === 1 ? "" : "s"} old</Chip>}
           {vehicle.fuelType && <Chip>{vehicle.fuelType}</Chip>}
+          {newPrice && <Chip>New ~£{newPrice.toLocaleString("en-GB")}</Chip>}
         </div>
       </div>
     </section>
   );
+}
+
+function ConfidenceChip({
+  confidence,
+  rangePct,
+}: {
+  confidence: ValuationResultType["confidence"];
+  rangePct: number | null;
+}) {
+  const labelMap = {
+    high: { label: "High confidence", colour: "emerald" },
+    medium: { label: "Medium confidence", colour: "cyan" },
+    low: { label: "Lower confidence", colour: "amber" },
+    "estimate-only": { label: "Rough estimate", colour: "amber" },
+  } as const;
+  const meta = labelMap[confidence];
+  const colourClasses =
+    meta.colour === "emerald"
+      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+      : meta.colour === "cyan"
+      ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
+      : "border-amber-500/30 bg-amber-500/10 text-amber-300";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold rounded-full border ${colourClasses}`}
+    >
+      <CircleCheck className="h-3 w-3" />
+      {meta.label}
+      {rangePct !== null && <span className="font-normal opacity-80">±{rangePct}%</span>}
+    </span>
+  );
+}
+
+function getRangePct(v: ValuationResultType): number | null {
+  if (!v.estimatedValue) return null;
+  const halfRange = (v.rangeHigh - v.rangeLow) / 2;
+  return Math.round((halfRange / v.estimatedValue) * 100);
 }
 
 function Chip({ children }: { children: React.ReactNode }) {
@@ -125,17 +350,9 @@ function Chip({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RangeBar({
-  low,
-  centre,
-  high,
-}: {
-  low: number;
-  centre: number;
-  high: number;
-}) {
+function RangeBar({ low, centre, high }: { low: number; centre: number; high: number }) {
   const range = high - low || 1;
-  const pos = ((centre - low) / range) * 100;
+  const pos = Math.max(0, Math.min(100, ((centre - low) / range) * 100));
   return (
     <div className="relative">
       <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
@@ -155,41 +372,80 @@ function RangeBar({
   );
 }
 
-function DepreciationCard({ valuation }: { valuation: FocusedValuation }) {
-  const dep = valuation.depreciationPct !== null ? Math.round(valuation.depreciationPct) : null;
+/* ─── Source breakdown (transparency) ─────────────────────────────────── */
+
+function SourceBreakdown({
+  valuation,
+  serverData,
+  condition,
+}: {
+  valuation: ValuationResultType;
+  serverData: ServerValuation | null;
+  condition: ConditionInputs | null;
+}) {
+  const liveCount = serverData?.ebayListingCount ?? 0;
+  const cacheCount = serverData?.cacheEntryCount ?? 0;
+  const hasLive = liveCount > 0;
+  const hasCache = cacheCount > 0;
+  const hasCondition = !!condition;
+  const conditionPct = valuation.conditionAdjustmentPercent;
+
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="text-sm font-semibold text-slate-100">How the number breaks down</h3>
+        <h3 className="text-sm font-semibold text-slate-100">How we got to this number</h3>
         <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
-          Depreciation model
+          {valuation.sources.length} source
+          {valuation.sources.length === 1 ? "" : "s"}
         </span>
       </div>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-        <Stat
-          label="New price"
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SourceTile
+          enabled
+          icon={TrendingDown}
+          label="Depreciation model"
+          value="Age + make + mileage"
+          tone="slate"
+        />
+        <SourceTile
+          enabled={hasLive}
+          icon={Sparkles}
+          label="Live online listings"
           value={
-            valuation.newPrice !== null
-              ? `£${valuation.newPrice.toLocaleString("en-GB")}`
-              : "—"
+            hasLive
+              ? `${liveCount} comparable${liveCount === 1 ? "" : "s"} analysed`
+              : "Not enough live data"
           }
-        />
-        <Stat
-          label="Age"
-          value={valuation.age !== null ? `${valuation.age} yr${valuation.age === 1 ? "" : "s"}` : "—"}
-        />
-        <Stat
-          label="Depreciated"
-          value={dep !== null ? `${dep}%` : "—"}
           tone="cyan"
         />
+        <SourceTile
+          enabled={hasCache}
+          icon={CircleCheck}
+          label="Recent community valuations"
+          value={
+            hasCache
+              ? `${cacheCount} cached estimate${cacheCount === 1 ? "" : "s"}`
+              : "No cached data yet"
+          }
+          tone="emerald"
+        />
       </div>
-      {valuation.depreciationPct !== null && valuation.depreciationPct > 20 && (
-        <div className="mt-3 flex items-start gap-2 text-xs text-slate-400">
-          <TrendingDown className="h-3.5 w-3.5 text-slate-500 flex-shrink-0 mt-0.5" />
+
+      {hasCondition && (
+        <div className="mt-3 rounded-lg border border-slate-700/60 bg-slate-950/40 px-3 py-2.5 text-xs text-slate-300 flex items-start gap-2">
+          <Info className="h-3.5 w-3.5 mt-0.5 text-cyan-400 flex-shrink-0" />
           <p>
-            Most depreciation has already happened — buying or holding now usually means
-            slower future loss-of-value.
+            Your condition inputs adjusted the figure by{" "}
+            <strong
+              className={
+                conditionPct >= 0 ? "text-emerald-300" : "text-rose-300"
+              }
+            >
+              {conditionPct > 0 ? "+" : ""}
+              {conditionPct.toFixed(1)}%
+            </strong>{" "}
+            from the market median.
           </p>
         </div>
       )}
@@ -197,34 +453,207 @@ function DepreciationCard({ valuation }: { valuation: FocusedValuation }) {
   );
 }
 
-function Stat({
+function SourceTile({
+  enabled,
+  icon: Icon,
   label,
   value,
   tone,
 }: {
+  enabled: boolean;
+  icon: typeof Sparkles;
   label: string;
   value: string;
-  tone?: "cyan";
+  tone: "slate" | "cyan" | "emerald";
 }) {
+  const colour = !enabled
+    ? "border-slate-800 bg-slate-950/40 text-slate-500"
+    : tone === "cyan"
+    ? "border-cyan-500/25 bg-cyan-500/5"
+    : tone === "emerald"
+    ? "border-emerald-500/25 bg-emerald-500/5"
+    : "border-slate-700 bg-slate-950/60";
+
   return (
-    <div
-      className={`rounded-lg border p-3 ${
-        tone === "cyan"
-          ? "border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/5"
-          : "border-slate-800 bg-slate-950/60"
-      }`}
-    >
-      <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
-      <p
-        className={`mt-1 text-base sm:text-lg font-semibold ${
-          tone === "cyan" ? "text-cyan-300" : "text-slate-200"
-        }`}
-      >
+    <div className={`rounded-lg border p-3 ${colour}`}>
+      <div className="flex items-center gap-2">
+        <Icon
+          className={`h-3.5 w-3.5 ${
+            !enabled
+              ? "text-slate-600"
+              : tone === "cyan"
+              ? "text-cyan-300"
+              : tone === "emerald"
+              ? "text-emerald-300"
+              : "text-slate-300"
+          }`}
+        />
+        <p className={`text-[10px] uppercase tracking-wider ${!enabled ? "text-slate-600" : "text-slate-400"}`}>
+          {label}
+        </p>
+      </div>
+      <p className={`mt-1 text-xs font-medium ${!enabled ? "text-slate-600" : "text-slate-200"}`}>
         {value}
       </p>
     </div>
   );
 }
+
+/* ─── Condition fine-tuning ───────────────────────────────────────────── */
+
+const CONDITION_FIELDS: Array<{
+  key: keyof ConditionInputs;
+  label: string;
+  helper: string;
+  options: { value: string; label: string }[];
+}> = [
+  {
+    key: "serviceHistory",
+    label: "Service history",
+    helper: "Full = stamped logbook or printouts for every service interval.",
+    options: [
+      { value: "full", label: "Full" },
+      { value: "partial", label: "Partial" },
+      { value: "none", label: "None" },
+    ],
+  },
+  {
+    key: "bodywork",
+    label: "Bodywork",
+    helper: "Honest assessment — small dents and scuffs add up.",
+    options: [
+      { value: "excellent", label: "Excellent" },
+      { value: "good", label: "Good" },
+      { value: "fair", label: "Fair" },
+      { value: "poor", label: "Poor" },
+    ],
+  },
+  {
+    key: "interior",
+    label: "Interior",
+    helper: "Worn = scuffed leather, faded plastics, stained fabric.",
+    options: [
+      { value: "excellent", label: "Excellent" },
+      { value: "good", label: "Good" },
+      { value: "worn", label: "Worn" },
+    ],
+  },
+  {
+    key: "owners",
+    label: "Previous owners",
+    helper: "Fewer owners = stronger resale; details on the V5C.",
+    options: [
+      { value: "1", label: "1" },
+      { value: "2-3", label: "2–3" },
+      { value: "4+", label: "4+" },
+    ],
+  },
+  {
+    key: "accidents",
+    label: "Accident history",
+    helper: "Significant = chassis repair, airbag deployment, recorded write-off.",
+    options: [
+      { value: "none", label: "None" },
+      { value: "minor", label: "Minor" },
+      { value: "significant", label: "Significant" },
+    ],
+  },
+];
+
+const DEFAULT_CONDITION: ConditionInputs = {
+  serviceHistory: "partial",
+  bodywork: "good",
+  interior: "good",
+  owners: "2-3",
+  accidents: "none",
+};
+
+function ConditionPanel({
+  condition,
+  setCondition,
+}: {
+  condition: ConditionInputs | null;
+  setCondition: (c: ConditionInputs | null) => void;
+}) {
+  const active = condition !== null;
+  const current = condition ?? DEFAULT_CONDITION;
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="text-sm font-semibold text-slate-100">
+          Refine the figure for your car's condition
+        </h3>
+        {active && (
+          <button
+            type="button"
+            onClick={() => setCondition(null)}
+            className="text-[11px] text-slate-400 hover:text-slate-200"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <p className="text-xs text-slate-400 mb-4">
+        Optional — the more accurate you are, the tighter the range gets.
+      </p>
+
+      <div className="space-y-4">
+        {CONDITION_FIELDS.map((field) => (
+          <ConditionField
+            key={field.key}
+            field={field}
+            value={current[field.key]}
+            onChange={(value) =>
+              setCondition({ ...current, [field.key]: value as ConditionInputs[typeof field.key] })
+            }
+            highlight={active}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ConditionField({
+  field,
+  value,
+  onChange,
+  highlight,
+}: {
+  field: (typeof CONDITION_FIELDS)[number];
+  value: string;
+  onChange: (v: string) => void;
+  highlight: boolean;
+}) {
+  return (
+    <div>
+      <p className="text-xs font-semibold text-slate-200 mb-2">{field.label}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {field.options.map((opt) => {
+          const selected = highlight && opt.value === value;
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => onChange(opt.value)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                selected
+                  ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-200"
+                  : "bg-slate-950/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800/60"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-1 text-[10px] text-slate-500">{field.helper}</p>
+    </div>
+  );
+}
+
+/* ─── BMG + disclaimer ────────────────────────────────────────────────── */
 
 function BmgHook({ vrm }: { vrm: string }) {
   const href =
@@ -247,7 +676,9 @@ function BmgHook({ vrm }: { vrm: string }) {
             href={href}
             target="_blank"
             rel={rel}
-            onClick={() => trackPartnerClick("bookMyGarageService", "valuation-result-bmg-hook")}
+            onClick={() =>
+              trackPartnerClick("bookMyGarageService", "valuation-result-bmg-hook")
+            }
             className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 text-xs font-semibold text-cyan-100 transition-colors"
           >
             Compare service prices for {vrm}
@@ -264,71 +695,25 @@ function Disclaimer() {
     <div className="mt-3 flex items-start gap-2 text-[11px] text-slate-500 leading-relaxed">
       <Info className="h-3 w-3 flex-shrink-0 mt-0.5" />
       <p>
-        Depreciation-only estimate. The full report adds live eBay comparables + cached
-        community valuations, condition adjustment, and a confidence rating that
-        tightens this range significantly.
+        Estimated guide value. Live online comparables reflect asking prices, adjusted
+        toward typical transaction values. Actual sale price depends on the exact spec,
+        condition, service history and local market — get an in-person quote before
+        committing.
       </p>
     </div>
   );
 }
 
-const NEW_PRICES = newPricesData as Array<{ make: string; model: string; newPrice: number }>;
-const RANGE_FRACTION = 0.25; // ±25% for depreciation-only confidence
+/* ─── Helpers ─────────────────────────────────────────────────────────── */
 
-function compute(vehicle: LookupVehicle): FocusedValuation {
-  const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
-  const age =
-    vehicle.yearOfManufacture !== undefined
-      ? Math.max(0, new Date().getFullYear() - vehicle.yearOfManufacture)
-      : null;
-
-  // Latest mileage from MOT tests if available
-  let mileage: number | null = null;
-  if (vehicle.motTests && vehicle.motTests.length > 0) {
-    const sorted = [...vehicle.motTests].sort(
-      (a, b) =>
-        new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime()
-    );
-    const latest = sorted.find((t) => t.odometer);
-    if (latest?.odometer) {
-      let miles = latest.odometer.value;
-      if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
-      mileage = miles;
-    }
-  }
-
-  if (newPrice === null || age === null) {
-    return {
-      newPrice,
-      centre: null,
-      low: null,
-      high: null,
-      age,
-      depreciationPct: null,
-      mileage,
-      confidence: "estimate-only",
-    };
-  }
-
-  const centre = calculateDepreciationBaseline(
-    newPrice,
-    age,
-    vehicle.make,
-    vehicle.model,
-    mileage
+function latestMileage(tests?: MotTest[]): number | null {
+  if (!tests || tests.length === 0) return null;
+  const sorted = [...tests].sort(
+    (a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime()
   );
-  const low = roundTo50(centre * (1 - RANGE_FRACTION));
-  const high = roundTo50(centre * (1 + RANGE_FRACTION));
-  const depreciationPct = ((newPrice - centre) / newPrice) * 100;
-
-  return {
-    newPrice,
-    centre,
-    low,
-    high,
-    age,
-    depreciationPct,
-    mileage,
-    confidence: "estimate-only",
-  };
+  const latest = sorted.find((t) => t.odometer);
+  if (!latest?.odometer) return null;
+  let miles = latest.odometer.value;
+  if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
+  return miles;
 }
