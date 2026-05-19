@@ -2768,15 +2768,22 @@ END:VEVENT
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(8px);
+            transform: translateY(14px) scale(0.985);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
           }
         }
         .animate-fadeInUp {
-          animation: fadeInUp 0.5s ease-out forwards;
+          animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fadeInUp {
+            animation: none;
+            opacity: 1 !important;
+            transform: none !important;
+          }
         }
         @keyframes pulse-soft {
           0%, 100% {
