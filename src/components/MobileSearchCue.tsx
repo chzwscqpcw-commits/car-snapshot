@@ -70,7 +70,7 @@ export default function MobileSearchCue() {
       <a
         href="#check-vehicle"
         onClick={onClick}
-        className="lg:hidden mt-4 mx-auto flex w-fit items-center gap-2 rounded-full border border-emerald-700/50 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition-colors hover:bg-emerald-500/20"
+        className="lg:hidden mt-4 mx-auto flex w-fit items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition-colors hover:bg-cyan-500/20"
       >
         Check your vehicle now
         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

@@ -67,7 +67,7 @@ export default function MOTBookingCTA({
           target="_blank"
           rel={rel}
           onClick={() => trackPartnerClick('bookMyGarage', `mot-booking-cta-${context}`)}
-          className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20"
         >
           Compare prices near {formattedReg} — BookMyGarage ↗
         </a>
