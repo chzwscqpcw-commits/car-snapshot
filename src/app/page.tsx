@@ -2768,7 +2768,7 @@ END:VEVENT
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(14px) scale(0.985);
+            transform: translateY(24px) scale(0.95);
           }
           to {
             opacity: 1;
@@ -2776,7 +2776,7 @@ END:VEVENT
           }
         }
         .animate-fadeInUp {
-          animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: fadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @media (prefers-reduced-motion: reduce) {
           .animate-fadeInUp {
