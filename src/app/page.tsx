@@ -480,12 +480,16 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
     { id: "section-next", label: "Next" },
   ];
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+    <div
+      className="fixed left-1/2 -translate-x-1/2 z-50"
+      style={{ bottom: "max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem))" }}
+    >
       <nav className="flex items-center gap-1 bg-slate-900/95 border border-slate-700/80 backdrop-blur-sm rounded-full px-2 py-1.5 shadow-lg shadow-black/30 overflow-x-auto max-w-[calc(100vw-2rem)]">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="shrink-0 p-1.5 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
+          className="shrink-0 p-2 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
           title="Back to top"
+          aria-label="Back to top"
         >
           <ChevronUp className="w-4 h-4" />
         </button>
@@ -494,7 +498,7 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
           <button
             key={s.id}
             onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-            className="shrink-0 px-2.5 py-1 rounded-full text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors whitespace-nowrap"
+            className="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors whitespace-nowrap"
           >
             {s.label}
           </button>
@@ -502,8 +506,9 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
         <div className="w-px h-5 bg-slate-700/60 shrink-0 mx-0.5" />
         <button
           onClick={onDownloadPDF}
-          className="shrink-0 p-1.5 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
+          className="shrink-0 p-2 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
           title="Download PDF report"
+          aria-label="Download PDF report"
         >
           <FileText className="w-4 h-4" />
         </button>
@@ -2886,7 +2891,7 @@ END:VEVENT
         }
       `}</style>
 
-      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset relative z-10">
+      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 pt-8 sm:pt-12 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10">
         {/* HEADER WITH BRAND */}
         <header className="mb-6">
           <div className="flex items-center gap-3 mb-4 group">
@@ -3625,7 +3630,7 @@ END:VEVENT
                     target="_blank"
                     rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
                     onClick={() => trackPartnerClick("bookMyGarage", "mot-banner")}
-                    className={`shrink-0 px-3 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                    className={`shrink-0 px-4 py-2.5 sm:py-2 rounded-lg text-sm sm:text-xs font-semibold transition-colors flex items-center gap-1.5 ${
                       showMotBanner === "expired"
                         ? "bg-red-600/30 hover:bg-red-600/50 border border-red-600/50 text-red-100"
                         : "bg-amber-600/30 hover:bg-amber-600/50 border border-amber-600/50 text-amber-100"
