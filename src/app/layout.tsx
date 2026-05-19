@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.freeplatecheck.co.uk"),
   title: "Free Plate Check — Free UK Vehicle Check | MOT, Tax, Valuation & More",
   description:
-    "Check any UK vehicle free. MOT history, tax status, mileage, ULEZ compliance, safety recalls, car valuation, running costs, NCAP ratings and a full PDF report. No signup — just enter a reg.",
+    "Everything DVLA knows about any UK car — free, in seconds. MOT history, tax status, mileage, ULEZ compliance, safety recalls, valuation, running costs, NCAP ratings and a full PDF report. No signup, no tracking.",
   keywords: [
     "free car check",
     "number plate check",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
     "vehicle running costs",
   ],
   openGraph: {
-    title: "Free Plate Check — Free UK Vehicle Check",
+    title: "Free Plate Check — Everything DVLA knows about any UK car",
     description:
-      "Enter a reg plate to instantly check MOT history, tax status, valuation, ULEZ, safety recalls and more. Free, private, no signup.",
+      "Everything DVLA knows about any UK car — instant, free, no signup. MOT history, tax, valuation, ULEZ, safety recalls, running costs and a full PDF report.",
     url: "https://www.freeplatecheck.co.uk",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Plate Check — Free UK Vehicle Check",
+    title: "Free Plate Check — Everything DVLA knows about any UK car",
     description:
-      "Check any UK vehicle free. MOT history, tax status, valuation, ULEZ, safety recalls, running costs and more.",
+      "Everything DVLA knows about any UK car — free, in seconds. MOT history, tax, valuation, ULEZ, recalls, running costs.",
     images: ["https://www.freeplatecheck.co.uk/og-image.png"],
   },
   alternates: {
