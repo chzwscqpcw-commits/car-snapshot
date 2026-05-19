@@ -1264,26 +1264,55 @@ function renderSafetyRecalls(doc: jsPDF, input: ReportInput, y: number): number 
   const hasRecalls = recalls !== undefined;
   if (!hasRecalls) return y;
 
-  y = startSection(doc, y, "Safety Recalls", 15);
+  y = startSection(doc, y, "Safety Recalls", 20);
 
-  if (recalls!.length === 0) {
-    y = drawInsightCard(doc, y, C.emerald, "No Recalls Found", [
-      "No known safety recalls found for this vehicle.",
-    ], { tone: "good" }).endY;
-  } else {
-    // Show ALL recalls with full detail
-    doc.setFontSize(FONT.body);
-    setTextColor(doc, C.headingText);
-    doc.setFont("helvetica", "bold");
-    doc.text(`${recalls!.length} recall${recalls!.length !== 1 ? "s" : ""} found`, MARGIN, y + 3);
-    y += 7;
+  const recallCount = recalls!.length;
+  const isClean = recallCount === 0;
+  const statusColor: RGB = isClean ? C.emerald : C.red;
 
+  // Status banner \u2014 prominent at-a-glance count + label
+  const bannerH = 16;
+  y = checkPageBreak(doc, y, bannerH + 3);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, bannerH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, statusColor);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, bannerH - 3, "F");
+
+  // Big mono count in the status colour
+  doc.setFontSize(20);
+  doc.setFont("courier", "bold");
+  setTextColor(doc, statusColor);
+  doc.text(String(recallCount), MARGIN + 10, y + 12);
+
+  // Label and subtext
+  const labelX = MARGIN + 10 + doc.getTextWidth(String(recallCount)) + 6;
+  doc.setFontSize(FONT.body);
+  doc.setFont("helvetica", "bold");
+  setTextColor(doc, C.headingText);
+  doc.text(
+    isClean ? "No safety recalls" : `recall${recallCount !== 1 ? "s" : ""} found`,
+    labelX,
+    y + 8,
+  );
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.secondaryText);
+  doc.text(
+    isClean
+      ? "This vehicle has no outstanding recalls on record."
+      : "Free repair available at any franchised dealer \u2014 details below.",
+    labelX,
+    y + 13,
+  );
+
+  y += bannerH + 3;
+  doc.setFont("helvetica", "normal");
+
+  // Detail cards (existing pattern, kept for non-zero case)
+  if (!isClean) {
     for (const r of recalls!) {
-      // Build lines for this recall
       const lines: string[] = [];
       if (r.defect) lines.push(`Defect: ${r.defect}`);
       if (r.remedy) lines.push(`Remedy: ${r.remedy}`);
-
       const title = `${r.recallDate} \u2014 Recall ${r.recallNumber}`;
       y = drawInsightCard(doc, y, C.red, title, lines, { tone: "risk" }).endY;
     }
@@ -1297,33 +1326,67 @@ function renderUlezCompliance(doc: jsPDF, input: ReportInput, y: number): number
   const hasUlez = ulezResult && ulezResult.status !== "unknown";
   if (!hasUlez) return y;
 
-  y = startSection(doc, y, "ULEZ Compliance", 15);
+  y = startSection(doc, y, "ULEZ Compliance", 20);
 
   const isCompliant = ulezResult!.status === "compliant" || ulezResult!.status === "exempt";
-  const accent = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.secondaryText;
-  const statusLabel = ulezResult!.status === "exempt" ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
-  const lines = [
-    ulezResult!.reason,
-    `Confidence: ${ulezResult!.confidence}`,
-  ];
+  const isExempt = ulezResult!.status === "exempt";
+  const statusColor: RGB = isCompliant ? C.emerald : ulezResult!.status === "non-compliant" ? C.red : C.secondaryText;
+  const statusLabel = isExempt ? "Exempt" : isCompliant ? "Compliant" : "Non-compliant";
+
+  // Status banner — prominent ULEZ status at a glance
+  const bannerH = 16;
+  y = checkPageBreak(doc, y, bannerH + 3);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, bannerH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, statusColor);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, bannerH - 3, "F");
+
+  doc.setFontSize(15);
+  doc.setFont("helvetica", "bold");
+  setTextColor(doc, statusColor);
+  doc.text(statusLabel, MARGIN + 8, y + 9);
+
+  // Reason in muted secondary text below the headline
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.secondaryText);
+  const reasonText = doc.splitTextToSize(ulezResult!.reason, CONTENT_W - 16)[0];
+  doc.text(reasonText, MARGIN + 8, y + 13.5);
+
+  // Confidence chip on the right
+  const confLabel = ulezResult!.confidence.charAt(0).toUpperCase() + ulezResult!.confidence.slice(1);
+  const confText = `${confLabel} confidence`;
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("helvetica", "bold");
+  const confW = doc.getTextWidth(confText) + 4;
+  drawRoundedRect(doc, MARGIN + CONTENT_W - 4 - confW, y + 5.5, confW, 5, 1.5, C.tableBgAlt, C.cardBorder);
+  setTextColor(doc, C.secondaryText);
+  doc.text(confText, MARGIN + CONTENT_W - 4 - confW / 2, y + 8.8, { align: "center" });
+
+  y += bannerH + 3;
+  doc.setFont("helvetica", "normal");
+
+  // Detail card for non-compliant — list the relevant zones
   if (!isCompliant && ulezResult!.cleanAirZones && ulezResult!.cleanAirZones.length > 0) {
-    const carZones = ulezResult!.cleanAirZones.filter(z => z.carsCharged !== false);
-    const commercialOnly = ulezResult!.cleanAirZones.filter(z => z.carsCharged === false);
+    const carZones = ulezResult!.cleanAirZones.filter((z) => z.carsCharged !== false);
+    const commercialOnly = ulezResult!.cleanAirZones.filter((z) => z.carsCharged === false);
+    const zoneLines: string[] = [];
     if (carZones.length > 0) {
-      lines.push("", "Zones charging cars:");
-      for (const zone of carZones) {
-        lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+      zoneLines.push("Zones charging cars:");
+      for (const z of carZones) {
+        zoneLines.push(`  ${z.name}: ${z.dailyCharge}`);
       }
     }
     if (commercialOnly.length > 0) {
-      lines.push("", "Commercial vehicles only (cars exempt):");
-      for (const zone of commercialOnly) {
-        lines.push(`  ${zone.name}: ${zone.dailyCharge}`);
+      if (zoneLines.length > 0) zoneLines.push("");
+      zoneLines.push("Commercial vehicles only (cars exempt):");
+      for (const z of commercialOnly) {
+        zoneLines.push(`  ${z.name}: ${z.dailyCharge}`);
       }
     }
+    if (zoneLines.length > 0) {
+      y = drawInsightCard(doc, y, C.red, "Clean Air Zones", zoneLines, { tone: "risk" }).endY;
+    }
   }
-  const ulezTone: Tone = isCompliant ? "good" : ulezResult!.status === "non-compliant" ? "risk" : "info";
-  y = drawInsightCard(doc, y, accent, `ULEZ: ${statusLabel}`, lines, { tone: ulezTone }).endY;
 
   return y;
 }
@@ -1335,28 +1398,29 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
 
   y = startSection(doc, y, "Estimated Value", 20);
 
-  // Headline price card
-  const headlineH = 16;
+  // Headline price card with mono \u00A3 range
+  const headlineH = 20;
   y = checkPageBreak(doc, y, headlineH + 4);
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, headlineH, 3, C.cardBg, C.cardBorder);
-  setFill(doc, C.blue);
+  setFill(doc, C.cyan);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headlineH - 3, "F");
 
-  doc.setFontSize(FONT.h2);
+  doc.setFontSize(18);
   setTextColor(doc, C.headingText);
-  doc.setFont("helvetica", "bold");
-  doc.text(`\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`, MARGIN + 8, y + 10);
+  doc.setFont("courier", "bold");
+  doc.text(`\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`, MARGIN + 8, y + 13);
+  doc.setFont("helvetica", "normal");
 
-  // Confidence badge
+  // Confidence badge — vertically aligned to taller headline card
   const confLabel = valuation!.confidence === "high" ? "High" : valuation!.confidence === "medium" ? "Medium" : "Low";
   const confColor = valuation!.confidence === "high" ? C.emerald : valuation!.confidence === "medium" ? C.amber : C.red;
   doc.setFontSize(FONT.small);
   doc.setFont("helvetica", "bold");
   const confText = `${confLabel} confidence`;
   const confW = doc.getTextWidth(confText) + 4;
-  drawRoundedRect(doc, MARGIN + CONTENT_W - 5 - confW, y + 5, confW, 5, 1.5, confColor);
+  drawRoundedRect(doc, MARGIN + CONTENT_W - 5 - confW, y + 7.5, confW, 5, 1.5, confColor);
   setTextColor(doc, C.white);
-  doc.text(confText, MARGIN + CONTENT_W - 5 - confW / 2, y + 8.5, { align: "center" });
+  doc.text(confText, MARGIN + CONTENT_W - 5 - confW / 2, y + 11, { align: "center" });
 
   y += headlineH + 3;
 
@@ -1416,35 +1480,128 @@ function renderRunningCosts(doc: jsPDF, input: ReportInput, y: number): number {
   const hasOwnershipCost = ownershipCost && ownershipCost.totalAnnual > 0;
   if (!hasOwnershipCost) return y;
 
-  y = startSection(doc, y, "Annual Running Costs", 15);
+  y = startSection(doc, y, "Annual Running Costs", 50);
 
   const oc = ownershipCost!;
   const monthly = Math.round(oc.totalAnnual / 12);
   const daily = Math.round((oc.totalAnnual / 365) * 100) / 100;
-  const lines: string[] = [
-    `\u00A3${oc.totalAnnual.toLocaleString()}/year (\u00A3${monthly.toLocaleString()}/month \u00B7 \u00A3${daily.toFixed(2)}/day)`,
-  ];
-  const parts: string[] = [];
-  if (oc.breakdown.fuel != null) parts.push(`Fuel \u00A3${oc.breakdown.fuel.toLocaleString()}`);
-  if (oc.breakdown.ved != null) parts.push(`VED \u00A3${oc.breakdown.ved}`);
-  if (oc.breakdown.depreciation != null) parts.push(`Depreciation \u00A3${oc.breakdown.depreciation.toLocaleString()}`);
-  if (oc.breakdown.maintenance != null) parts.push(`Maintenance \u00A3${oc.breakdown.maintenance.toLocaleString()}`);
-  if (oc.breakdown.mot != null) parts.push(`MOT \u00A3${oc.breakdown.mot}`);
-  if (parts.length > 0) lines.push(parts.join(" \u00B7 "));
 
-  // UK average benchmark
-  if (input.ukAverageCost && input.ukAverageLabel) {
-    const diff = oc.totalAnnual - input.ukAverageCost;
-    const comparison = diff > 0
-      ? `\u00A3${Math.abs(diff).toLocaleString()} above`
-      : diff < 0
-        ? `\u00A3${Math.abs(diff).toLocaleString()} below`
-        : "equal to";
-    lines.push(`vs Typical ${input.ukAverageLabel}: \u00A3${input.ukAverageCost.toLocaleString()}/yr \u2014 ${comparison}`);
+  // Build breakdown segments
+  type Segment = { label: string; value: number; color: RGB };
+  const segments: Segment[] = [];
+  if (oc.breakdown.fuel != null) segments.push({ label: "Fuel", value: oc.breakdown.fuel, color: [59, 130, 246] });
+  if (oc.breakdown.ved != null) segments.push({ label: "VED", value: oc.breakdown.ved, color: [16, 185, 129] });
+  if (oc.breakdown.depreciation != null) segments.push({ label: "Depreciation", value: oc.breakdown.depreciation, color: [245, 158, 11] });
+  if (oc.breakdown.maintenance != null) segments.push({ label: "Maintenance", value: oc.breakdown.maintenance, color: [168, 85, 247] });
+  if (oc.breakdown.mot != null) segments.push({ label: "MOT", value: oc.breakdown.mot, color: [236, 72, 153] });
+
+  const hasSegments = segments.length > 0;
+  const legendRows = hasSegments ? Math.ceil(segments.length / 3) : 0;
+  const cardH = 22 + (hasSegments ? 14 + legendRows * 5 : 0);
+
+  y = checkPageBreak(doc, y, cardH + 3);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, C.cyan);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, cardH - 3, "F");
+
+  // Headline \u00A3/year in mono, with "per year" subline
+  doc.setFontSize(20);
+  doc.setFont("courier", "bold");
+  setTextColor(doc, C.headingText);
+  const totalText = `\u00A3${oc.totalAnnual.toLocaleString()}`;
+  doc.text(totalText, MARGIN + 8, y + 12);
+
+  doc.setFontSize(FONT.body);
+  doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.secondaryText);
+  doc.text("per year", MARGIN + 8 + doc.getStringUnitWidth(totalText) * 20 * 0.5 + 3, y + 12);
+
+  // Monthly / daily breakdown \u2014 mono, right-aligned
+  doc.setFontSize(FONT.small);
+  doc.setFont("courier", "normal");
+  setTextColor(doc, C.secondaryText);
+  const breakdownText = `\u00A3${monthly.toLocaleString()}/mo  \u00B7  \u00A3${daily.toFixed(2)}/day`;
+  doc.text(breakdownText, MARGIN + CONTENT_W - 8, y + 12, { align: "right" });
+
+  // Stacked horizontal bar chart
+  if (hasSegments) {
+    const barX = MARGIN + 8;
+    const barY = y + 18;
+    const barW = CONTENT_W - 16;
+    const barH = 5;
+
+    // Background track
+    setFill(doc, C.divider);
+    doc.roundedRect(barX, barY, barW, barH, 1, 1, "F");
+
+    // Segments
+    let segX = barX;
+    for (const seg of segments) {
+      const segW = (seg.value / oc.totalAnnual) * barW;
+      setFill(doc, seg.color);
+      doc.rect(segX, barY, segW, barH, "F");
+      segX += segW;
+    }
+
+    // Legend below the bar \u2014 3 columns
+    const legendStartY = barY + barH + 5;
+    const legendColW = (CONTENT_W - 16) / 3;
+    for (let i = 0; i < segments.length; i++) {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      const lx = barX + col * legendColW;
+      const ly = legendStartY + row * 5;
+
+      // Color swatch
+      setFill(doc, segments[i].color);
+      doc.rect(lx, ly - 1.8, 2.2, 2.2, "F");
+
+      // Label + \u00A3 in mono
+      doc.setFontSize(FONT.tiny);
+      doc.setFont("helvetica", "normal");
+      setTextColor(doc, C.secondaryText);
+      doc.text(segments[i].label, lx + 3.8, ly);
+      doc.setFont("courier", "bold");
+      setTextColor(doc, C.bodyText);
+      const valText = `\u00A3${segments[i].value.toLocaleString()}`;
+      doc.text(valText, lx + legendColW - 2, ly, { align: "right" });
+    }
   }
 
-  lines.push(oc.excludedNote);
-  y = drawInsightCard(doc, y, C.blue, "Annual Running Costs", lines, { tone: "info" }).endY;
+  doc.setFont("helvetica", "normal");
+  y += cardH + 3;
+
+  // UK average benchmark line beneath the card
+  if (input.ukAverageCost && input.ukAverageLabel) {
+    const diff = oc.totalAnnual - input.ukAverageCost;
+    const isAbove = diff > 0;
+    const isBelow = diff < 0;
+    const comparison = isAbove
+      ? `\u00A3${Math.abs(diff).toLocaleString()} above`
+      : isBelow
+        ? `\u00A3${Math.abs(diff).toLocaleString()} below`
+        : "equal to";
+    const comparisonColor = isAbove ? C.amber : isBelow ? C.emerald : C.secondaryText;
+
+    doc.setFontSize(FONT.small);
+    doc.setFont("helvetica", "normal");
+    setTextColor(doc, C.secondaryText);
+    doc.text(`vs Typical ${input.ukAverageLabel}: `, MARGIN, y + 2);
+    const prefixW = doc.getTextWidth(`vs Typical ${input.ukAverageLabel}: `);
+    doc.setFont("courier", "bold");
+    setTextColor(doc, comparisonColor);
+    doc.text(`\u00A3${input.ukAverageCost.toLocaleString()}/yr \u2014 ${comparison}`, MARGIN + prefixW, y + 2);
+    doc.setFont("helvetica", "normal");
+    y += 6;
+  }
+
+  // Excluded note (smaller, muted)
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("helvetica", "italic");
+  setTextColor(doc, C.labelText);
+  doc.text(oc.excludedNote, MARGIN, y + 2);
+  doc.setFont("helvetica", "normal");
+  y += 5;
 
   return y;
 }
@@ -1453,20 +1610,59 @@ function renderNegotiationHelper(doc: jsPDF, input: ReportInput, y: number): num
   const { negotiation } = input;
   if (!negotiation) return y;
 
-  y = startSection(doc, y, "Negotiation Helper", 15);
+  y = startSection(doc, y, "Negotiation Helper", 36);
 
   const neg = negotiation;
-  const lines: string[] = [
-    `Suggested discount: ${neg.suggestedDiscountPercent.low}\u2013${neg.suggestedDiscountPercent.high}% below asking`,
-    `Estimated saving: \u00A3${neg.estimatedSaving.low.toLocaleString()}\u2013\u00A3${neg.estimatedSaving.high.toLocaleString()}`,
-    `Confidence: ${neg.confidence}`,
-  ];
-  for (const reason of neg.reasons) {
-    lines.push(`\u2022 ${reason}`);
-  }
-  y = drawInsightCard(doc, y, C.emerald, "Negotiation Helper", lines, { tone: "good" }).endY;
+  const reasonsH = neg.reasons.length * CARD_LINE_H + 6;
+  const cardH = 22 + (neg.reasons.length > 0 ? reasonsH : 0);
 
-  return y;
+  y = checkPageBreak(doc, y, cardH + 3);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, cardH, 3, C.cardBg, C.cardBorder);
+  setFill(doc, C.emerald);
+  doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, cardH - 3, "F");
+
+  // Headline: discount % in big emerald mono
+  doc.setFontSize(20);
+  doc.setFont("courier", "bold");
+  setTextColor(doc, C.emerald);
+  const discountText = `${neg.suggestedDiscountPercent.low}\u2013${neg.suggestedDiscountPercent.high}%`;
+  doc.text(discountText, MARGIN + 8, y + 12);
+
+  doc.setFontSize(FONT.small);
+  doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.secondaryText);
+  doc.text("below asking price", MARGIN + 8, y + 17);
+
+  // \u00A3 savings range \u2014 right-aligned in mono
+  doc.setFontSize(FONT.body);
+  doc.setFont("courier", "bold");
+  setTextColor(doc, C.headingText);
+  const savingsText = `\u00A3${neg.estimatedSaving.low.toLocaleString()}\u2013\u00A3${neg.estimatedSaving.high.toLocaleString()}`;
+  doc.text(savingsText, MARGIN + CONTENT_W - 8, y + 12, { align: "right" });
+
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.secondaryText);
+  doc.text("estimated saving", MARGIN + CONTENT_W - 8, y + 17, { align: "right" });
+
+  // Divider between hero and reasons
+  if (neg.reasons.length > 0) {
+    setDraw(doc, C.divider);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN + 6, y + 21, MARGIN + CONTENT_W - 6, y + 21);
+
+    // Reasons as bullets
+    doc.setFontSize(FONT.small);
+    doc.setFont("helvetica", "normal");
+    setTextColor(doc, C.bodyText);
+    let reasonY = y + 26;
+    for (const reason of neg.reasons) {
+      doc.text(`\u2022 ${reason}`, MARGIN + 8, reasonY);
+      reasonY += CARD_LINE_H;
+    }
+  }
+
+  return y + cardH + 3;
 }
 
 function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): number {
