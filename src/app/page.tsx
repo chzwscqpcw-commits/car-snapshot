@@ -476,7 +476,7 @@ function IconBadge({ icon: Icon, label, value }: { icon: React.ReactNode; label:
     <div className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-slate-600/50 transition-colors">
       <div className="text-slate-400">{Icon}</div>
       <div className="text-xs font-medium text-slate-400 uppercase tracking-wide">{label}</div>
-      <div className="text-sm font-semibold text-slate-100 text-center">{value}</div>
+      <div className="text-sm font-mono font-semibold text-slate-100 text-center tracking-wide">{value}</div>
     </div>
   );
 }
@@ -3386,7 +3386,7 @@ END:VEVENT
                 </div>
 
                 {/* Row 2: Timestamp */}
-                <p className="text-xs text-slate-500 mb-3">DVLA data · {new Date().toLocaleDateString()}</p>
+                <p className="text-xs text-slate-500 mb-3">DVLA data · <span className="font-mono">{new Date().toLocaleDateString()}</span></p>
 
                 {/* Row 3: Icon action buttons + primary PDF */}
                 <div className="flex items-center gap-1">
@@ -3552,7 +3552,7 @@ END:VEVENT
                     return (
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${colorStyles[motColor] || colorStyles.slate}`}>
                         <Shield className="w-3.5 h-3.5" />
-                        MOT: {motLabel}
+                        MOT: <span className="font-mono tracking-wide">{motLabel}</span>
                       </span>
                     );
                   })()}
@@ -3575,7 +3575,7 @@ END:VEVENT
                     return (
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${colorStyles[taxColor] || colorStyles.slate}`}>
                         <PoundSterling className="w-3.5 h-3.5" />
-                        Tax: {taxLabel}
+                        Tax: <span className="font-mono tracking-wide">{taxLabel}</span>
                       </span>
                     );
                   })()}
@@ -3607,7 +3607,7 @@ END:VEVENT
                     <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-xs">
                       <span className="text-slate-400">{spec.icon}</span>
                       <span className="text-slate-400">{spec.label}:</span>
-                      <span className="text-slate-100 font-semibold">{spec.value}</span>
+                      <span className="text-slate-100 font-mono font-semibold tracking-wide">{spec.value}</span>
                     </span>
                   ))}
                 </div>
@@ -3711,7 +3711,7 @@ END:VEVENT
                           healthScore.grade === "D" ? "text-orange-400" :
                           "text-red-400"
                         }`}>{healthScore.grade}</span>
-                        <span className="text-xs text-slate-400">{healthScore.score}/100</span>
+                        <span className="text-xs text-slate-400 font-mono tracking-wide">{healthScore.score}/100</span>
                       </div>
                     </div>
                     {/* Title and label */}
@@ -3799,7 +3799,7 @@ END:VEVENT
                             )}
                           </div>
                           <p className="text-slate-400 mt-0.5 break-words">{item.text}</p>
-                          <p className="text-slate-500 mt-0.5">Est. £{item.estimatedCost.low}–£{item.estimatedCost.high}</p>
+                          <p className="text-slate-500 mt-0.5">Est. <span className="font-mono">£{item.estimatedCost.low}–£{item.estimatedCost.high}</span></p>
                         </div>
                       </div>
                     ))}
@@ -3812,7 +3812,7 @@ END:VEVENT
                       "border-emerald-800/30"
                     }`}>
                       <p className="text-sm font-semibold text-slate-200">
-                        Total estimated repair cost: £{motReadiness.totalEstimatedCost.low}–£{motReadiness.totalEstimatedCost.high}
+                        Total estimated repair cost: <span className="font-mono tracking-wide">£{motReadiness.totalEstimatedCost.low}–£{motReadiness.totalEstimatedCost.high}</span>
                       </p>
                     </div>
                   )}
@@ -4041,7 +4041,7 @@ END:VEVENT
                     </span>
                   </div>
 
-                  <p className="text-3xl font-bold text-slate-100 mb-1">
+                  <p className="text-3xl font-mono font-bold text-slate-100 mb-1 tracking-tight">
                     £{valuationResult.rangeLow.toLocaleString()} – £{valuationResult.rangeHigh.toLocaleString()}
                   </p>
 
@@ -4056,7 +4056,7 @@ END:VEVENT
                       <div className="space-y-1">
                         {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && (
                           <p className="text-xs text-slate-400">
-                            Asking prices: £{valuationResult.ebayMinPrice.toLocaleString()} – £{valuationResult.ebayMaxPrice.toLocaleString()}
+                            Asking prices: <span className="font-mono">£{valuationResult.ebayMinPrice.toLocaleString()} – £{valuationResult.ebayMaxPrice.toLocaleString()}</span>
                           </p>
                         )}
                         {(valuationResult.ebayDominantTransmission || valuationResult.ebayDominantBodyType) && (
@@ -4221,11 +4221,11 @@ END:VEVENT
                     <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
                   </div>
 
-                  <p className="text-2xl font-bold text-slate-100 mb-0.5">
-                    £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-normal text-slate-400">/year</span>
+                  <p className="text-2xl font-mono font-bold text-slate-100 mb-0.5 tracking-tight">
+                    £{ownershipCost.totalAnnual.toLocaleString()}<span className="text-sm font-sans font-normal text-slate-400">/year</span>
                   </p>
                   <p className="text-sm text-slate-400 mb-1">
-                    £{ownershipCost.monthlyCost.toLocaleString()}/month · £{ownershipCost.dailyCost.toFixed(2)}/day
+                    <span className="font-mono">£{ownershipCost.monthlyCost.toLocaleString()}</span>/month · <span className="font-mono">£{ownershipCost.dailyCost.toFixed(2)}</span>/day
                   </p>
 
                   {/* Stacked horizontal bar */}
@@ -4254,7 +4254,7 @@ END:VEVENT
                             <div key={i} className="flex items-center gap-2 text-xs">
                               <span className={`w-2.5 h-2.5 rounded-sm shrink-0 ${seg.color}`} />
                               <span className="text-slate-400">{seg.label}</span>
-                              <span className="text-slate-200 font-medium ml-auto">£{seg.value.toLocaleString()}</span>
+                              <span className="text-slate-200 font-mono font-medium ml-auto tracking-wide">£{seg.value.toLocaleString()}</span>
                             </div>
                           ))}
                         </div>
@@ -4283,7 +4283,7 @@ END:VEVENT
                                 style={{ width: `${Math.max((thisCost / maxBar) * 100, 4)}%` }}
                               />
                             </div>
-                            <span className="w-16 text-right text-slate-200 font-medium">£{thisCost.toLocaleString()}</span>
+                            <span className="w-16 text-right text-slate-200 font-mono font-medium tracking-wide">£{thisCost.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-2 text-xs">
                             <span className="w-14 text-slate-400 shrink-0">Typical</span>
@@ -4293,7 +4293,7 @@ END:VEVENT
                                 style={{ width: `${Math.max((median.cost / maxBar) * 100, 4)}%` }}
                               />
                             </div>
-                            <span className="w-16 text-right text-slate-400 font-medium">£{median.cost.toLocaleString()}</span>
+                            <span className="w-16 text-right text-slate-400 font-mono font-medium tracking-wide">£{median.cost.toLocaleString()}</span>
                           </div>
                         </div>
                         <p className={`text-xs mt-2 ${isBelow ? "text-emerald-400" : diff === 0 ? "text-slate-400" : "text-amber-400"}`}>
@@ -4329,12 +4329,12 @@ END:VEVENT
                     </span>
                   </div>
 
-                  <p className="text-2xl font-bold text-emerald-400 mb-1">
+                  <p className="text-2xl font-mono font-bold text-emerald-400 mb-1 tracking-tight">
                     {negotiation.suggestedDiscountPercent.low}–{negotiation.suggestedDiscountPercent.high}%
-                    <span className="text-sm font-normal text-slate-400 ml-2">below asking price</span>
+                    <span className="text-sm font-sans font-normal text-slate-400 ml-2">below asking price</span>
                   </p>
                   <p className="text-sm text-slate-300 mb-3">
-                    Estimated saving: <span className="font-semibold text-emerald-300">£{negotiation.estimatedSaving.low.toLocaleString()}–£{negotiation.estimatedSaving.high.toLocaleString()}</span>
+                    Estimated saving: <span className="font-mono font-semibold text-emerald-300 tracking-wide">£{negotiation.estimatedSaving.low.toLocaleString()}–£{negotiation.estimatedSaving.high.toLocaleString()}</span>
                   </p>
 
                   <div className="space-y-1.5">
@@ -4443,8 +4443,8 @@ END:VEVENT
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="p-4 rounded-lg border border-emerald-500/50 bg-emerald-950/20">
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Pass Rate</p>
-                            <p className="text-2xl font-bold text-emerald-400">{motInsights.passRate}%</p>
-                            <p className="text-xs text-slate-300 mt-1">{motInsights.passedTests} of {motInsights.totalTests} tests passed</p>
+                            <p className="text-2xl font-mono font-bold text-emerald-400 tracking-tight">{motInsights.passRate}%</p>
+                            <p className="text-xs text-slate-300 mt-1"><span className="font-mono">{motInsights.passedTests}</span> of <span className="font-mono">{motInsights.totalTests}</span> tests passed</p>
                           </div>
 
                           <div className={`p-4 rounded-lg border ${
@@ -4457,13 +4457,13 @@ END:VEVENT
                                motInsights.mileageTrend === "high" ? "High Annual Mileage" :
                                "Normal Annual Mileage"}
                             </p>
-                            <p className="text-2xl font-bold text-slate-100">{motInsights.avgMilesPerYear.toLocaleString()}</p>
-                            <p className="text-xs text-slate-300 mt-1">miles per year (UK avg: 8,000-12,000)</p>
+                            <p className="text-2xl font-mono font-bold text-slate-100 tracking-tight">{motInsights.avgMilesPerYear.toLocaleString()}</p>
+                            <p className="text-xs text-slate-300 mt-1">miles per year (UK avg: <span className="font-mono">8,000-12,000</span>)</p>
                           </div>
 
                           <div className="p-4 rounded-lg border border-cyan-500/50 bg-cyan-950/20">
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Next MOT Due</p>
-                            <p className={`text-2xl font-bold ${motInsights.daysUntilExpiry < 60 ? "text-amber-400" : "text-cyan-400"}`}>
+                            <p className={`text-2xl font-mono font-bold tracking-tight ${motInsights.daysUntilExpiry < 60 ? "text-amber-400" : "text-cyan-400"}`}>
                               {motInsights.daysUntilExpiry} days
                             </p>
                             <p className="text-xs text-slate-300 mt-1">
@@ -4525,16 +4525,16 @@ END:VEVENT
                         <div className="grid grid-cols-3 gap-4 mb-4">
                           <div>
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
-                            <p className="text-sm font-semibold text-slate-100">{formatDate(test.completedDate)}</p>
+                            <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{formatDate(test.completedDate)}</p>
                           </div>
                           <div>
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
-                            <p className="text-sm font-semibold text-slate-100">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"} miles</p>
+                            <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"}<span className="font-sans ml-1 text-slate-400 font-normal">miles</span></p>
                           </div>
                           {test.expiryDate && (
                             <div>
                               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Valid Until</p>
-                              <p className="text-sm font-semibold text-slate-100">{formatDate(test.expiryDate)}</p>
+                              <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{formatDate(test.expiryDate)}</p>
                             </div>
                           )}
                         </div>
