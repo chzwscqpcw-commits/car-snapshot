@@ -2109,21 +2109,39 @@ function renderFinalPage(doc: jsPDF, y: number): number {
     y += 4;
   }
 
-  // Timestamp & branding (compact)
-  y = checkPageBreak(doc, y, 24);
+  // Sign-off card — a mini echo of the cover banner: cyan accent stripe,
+  // centred BoltMark + wordmark, URL and timestamp beneath.
+  const signOffH = 26;
+  y = checkPageBreak(doc, y, signOffH + 4);
   y += 3;
-  drawRoundedRect(doc, MARGIN, y, CONTENT_W, 20, 3, C.slate800, C.slate700);
+  drawRoundedRect(doc, MARGIN, y, CONTENT_W, signOffH, 3, C.slate800, C.slate700);
 
-  doc.setFontSize(FONT.body);
-  setTextColor(doc, C.cyan);
+  // Cyan accent stripe at the top of the card (inset from the corners so
+  // it respects the 3mm border radius).
+  setFill(doc, C.cyan);
+  doc.rect(MARGIN + 3, y + 1.2, CONTENT_W - 6, 0.6, "F");
+
+  // BoltMark + wordmark, centred horizontally
+  const boltH = 7;
+  const boltW = boltH * (24 / 32);
+  doc.setFontSize(FONT.h3);
   doc.setFont("helvetica", "bold");
-  doc.text("Free Plate Check", MARGIN + 5, y + 7);
+  const wordmarkW = doc.getTextWidth("Free Plate Check");
+  const gap = 3;
+  const totalW = boltW + gap + wordmarkW;
+  const startX = MARGIN + (CONTENT_W - totalW) / 2;
+  const brandTopY = y + 6;
+  drawBoltMark(doc, startX, brandTopY, boltH);
+  setTextColor(doc, C.white);
+  doc.text("Free Plate Check", startX + boltW + gap, brandTopY + 5);
 
+  // URL — centred, slightly muted
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.slate300);
   doc.setFont("helvetica", "normal");
-  doc.text("freeplatecheck.co.uk", MARGIN + 5, y + 13);
+  setTextColor(doc, C.slate300);
+  doc.text("freeplatecheck.co.uk", MARGIN + CONTENT_W / 2, y + 18, { align: "center" });
 
+  // Timestamp — centred, smallest, in mono
   const ts = new Date().toLocaleString("en-GB", {
     day: "numeric",
     month: "long",
@@ -2131,9 +2149,13 @@ function renderFinalPage(doc: jsPDF, y: number): number {
     hour: "2-digit",
     minute: "2-digit",
   });
-  doc.text(`Report generated: ${ts}`, MARGIN + 5, y + 18);
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("courier", "normal");
+  setTextColor(doc, C.slate400);
+  doc.text(`Generated ${ts}`, MARGIN + CONTENT_W / 2, y + 22.5, { align: "center" });
 
-  return y + 22;
+  doc.setFont("helvetica", "normal");
+  return y + signOffH + 2;
 }
 
 function addFooterPass(doc: jsPDF) {
