@@ -42,9 +42,9 @@ For the full rate tables including the latest changes, see our [complete 2026 ca
 
 | First-year rate | Based on CO2 emissions (0g/km = £0, up to £2,745 for 255+ g/km) |
 |---|---|
-| Standard rate (year 2+) | £190/year for all non-zero emission vehicles |
-| Premium supplement | Extra £410/year for cars with a list price over £40,000 (for years 2–6) |
-| Zero emission | £0 first year, then £190/year from April 2025 |
+| Standard rate (year 2+) | £200/year for all post-2017 vehicles (2026/27 rate) |
+| Premium supplement | Extra £440/year for cars with a list price over £40,000 (for years 2–6). EV threshold raised to £50,000 from April 2026 |
+| Zero emission | £10 first year, then £200/year standard rate from April 2026 |
 
 ### Cars registered between March 2001 and March 2017
 
@@ -109,9 +109,9 @@ Check your MOT status and expiry date with our [MOT check](/mot-check).
 
 Since 2014, you can pay monthly or every six months by direct debit instead of paying the full annual amount upfront. This is convenient but costs 5% more overall.
 
-| Payment Method | Cost for £190 Standard Rate |
+| Payment Method | Cost for £200 Standard Rate |
 |---|---|
-| Annual (one payment) | £190.00 |
+| Annual (one payment) | £200.00 |
 | Six-monthly (two payments) | £99.75 × 2 = £199.50 |
 | Monthly (twelve payments) | £16.63 × 12 = £199.50 |
 

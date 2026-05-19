@@ -59,12 +59,12 @@ Vehicles manufactured before 1 January 1977 are exempt from VED entirely. If you
 
 For cars registered after April 2017, the first year rate varies but the standard rate is flat. The cheapest option is a zero-emission vehicle (electric or hydrogen), which pays nothing in the first year.
 
-After that, all non-zero-emission cars pay the same £190 standard rate — whether you drive a 1.0-litre city car or a 5.0-litre V8. The only variable is the expensive car supplement for vehicles that listed over £40,000 new. For the complete rate tables, see our [2026 car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
+After that, all non-zero-emission cars pay the same £200 standard rate from April 2026 — whether you drive a 1.0-litre city car or a 5.0-litre V8. The only variable is the expensive car supplement for vehicles that listed over £40,000 new (£50,000 for zero-emission vehicles). For the complete rate tables, see our [2026 car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
 
 This means if you're buying a post-2017 car and want the cheapest ongoing tax, your options are:
 
 1. **Electric vehicle** — Zero VED (at least until April 2025 rules phase in)
-2. **Any car with a list price under £40,000** — £190/year standard rate, no supplement
+2. **Any car with a list price under £40,000** — £200/year standard rate, no supplement
 3. **Avoid high-emission cars in their first year** — The first year rate can be over £2,000 for the highest emitters
 
 ## How to check what you'll pay
@@ -93,6 +93,6 @@ If you're on a tight budget, monthly payments can make higher tax bands more man
 
 ## The bottom line
 
-For the absolute cheapest car tax, electric vehicles and pre-2017 Band A cars can't be beaten — both pay nothing. For post-2017 petrol and diesel cars, the standard rate is flat at £190/year, so the main thing to watch for is the expensive car supplement on vehicles that listed over £40,000.
+For the cheapest car tax, pre-2017 Band A cars can't be beaten — they pay nothing (electric vehicles now pay £10 in the first year and the standard rate of £200/year from year two). For post-2017 petrol and diesel cars, the standard rate is flat at £200/year from April 2026, so the main thing to watch for is the expensive car supplement on vehicles that listed over £40,000.
 
 A quick [tax check](/tax-check) before you buy tells you exactly what you'll pay. It takes 30 seconds and could save you from an unwelcome surprise when you come to tax the vehicle.

@@ -59,7 +59,7 @@ VED rates depend on several factors:
 - **List price** — Cars with a list price over £40,000 pay an additional supplement for five years.
 - **Fuel type** — Diesel vehicles that don't meet RDE2 standards pay a supplement in the first year.
 
-For most cars registered after April 2017, the first year rate varies by emissions, then it drops to a flat standard rate (currently £190/year for petrol and diesel cars). For the full rate tables, see our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
+For most cars registered after April 2017, the first year rate varies by emissions, then it drops to a flat standard rate (currently £200/year for petrol and diesel cars from April 2026). For the full rate tables, see our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide).
 
 You can check exact rates on the GOV.UK website.
 

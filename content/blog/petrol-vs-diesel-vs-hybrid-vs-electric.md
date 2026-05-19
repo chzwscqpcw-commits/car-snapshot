@@ -53,9 +53,9 @@ You can check any car's fuel economy data for free using [Free Plate Check](/) �
 
 Road tax rates changed significantly for electric vehicles from April 2025. Here's where things stand in 2026:
 
-- **Petrol and diesel** — standard rate of £190/year for most cars registered after April 2017. First-year rates vary by CO2 emissions and can be significantly higher for polluting models.
+- **Petrol and diesel** — standard rate of £200/year for most cars registered after April 2017 (2026/27 rate). First-year rates vary by CO2 emissions and can be significantly higher for polluting models.
 - **Hybrid** — same standard rate as petrol and diesel. Some older hybrids registered before April 2017 benefit from lower rates based on emissions.
-- **Electric** — now £190/year at the standard rate (previously exempt). Still exempt from the expensive car supplement that adds £410/year for cars listing over £40,000 new.
+- **Electric** — now £200/year at the standard rate from April 2026 (previously exempt; £10 in the first year for new EVs). The expensive car supplement (£440/year for cars over £40,000) has a higher £50,000 threshold for zero-emission vehicles since April 2026.
 
 Road tax is largely a level playing field now for newer cars. Our guide to [car tax rates in 2026](/blog/car-tax-rates-2026-complete-guide) has the full breakdown, or you can [check any car's tax status](/tax-check) for free.
 
@@ -101,7 +101,7 @@ For a driver covering 10,000 miles a year:
 | Cost | Petrol (1.0 EcoBoost) | Mild Hybrid (1.0 MHEV) |
 |---|---|---|
 | Fuel (per year) | ~£1,550 | ~£1,350 |
-| Road tax | £190 | £190 |
+| Road tax | £200 | £200 |
 | Insurance (typical) | ~£450 | ~£470 |
 | Annual service | ~£200 | ~£210 |
 | **Annual running cost** | **~£2,390** | **~£2,220** |

@@ -6,9 +6,9 @@ keywords: ["hidden costs buying used car UK", "real cost of used car", "used car
 author: "Free Plate Check"
 faqItems:
   - question: "What hidden costs should I budget for when buying a used car?"
-    answer: "Beyond the purchase price, budget for road tax (£190+/year for most post-2017 cars), insurance, fuel, imminent MOT work from existing advisories, first service costs, potential tyre replacements, and ULEZ charges if applicable. These can easily add £1,000-£3,000 to your first-year costs."
+    answer: "Beyond the purchase price, budget for road tax (£200+/year for most post-2017 cars from April 2026), insurance, fuel, imminent MOT work from existing advisories, first service costs, potential tyre replacements, and ULEZ charges if applicable. These can easily add £1,000-£3,000 to your first-year costs."
   - question: "How much does road tax cost on a used car?"
-    answer: "For cars registered after April 2017, the standard annual rate is £190. Cars registered before this date pay a rate based on CO2 emissions, which can range from £0 to over £600/year. Some cars also carry an expensive car supplement of £410/year if they listed over £40,000 new."
+    answer: "For cars registered after April 2017, the standard annual rate is £200 from April 2026. Cars registered before this date pay a rate based on CO2 emissions, which can range from £0 to over £600/year. Some cars also carry an expensive car supplement of around £440/year if they listed over £40,000 new (£50,000 threshold for EVs)."
   - question: "Can a used car have outstanding finance?"
     answer: "Yes. If the previous owner bought the car on finance and hasn't fully paid it off, the finance company retains legal ownership. If you buy the car without checking, the finance company can repossess it from you — and you lose both the car and your money."
   - question: "How much does ULEZ cost per day?"
@@ -27,10 +27,10 @@ Some of these costs are predictable and manageable. Others can be nasty surprise
 
 Every car on the road needs vehicle excise duty (VED), and the amount varies considerably depending on when the car was first registered and its CO2 emissions.
 
-For cars registered after 1 April 2017, the standard annual rate is £190. That's straightforward enough. But there are two catches:
+For cars registered after 1 April 2017, the standard annual rate is £200 from April 2026 (up from £195 in 2025/26). That's straightforward enough. But there are two catches:
 
 - **First-year rate** — if you're buying a nearly new car that hasn't yet paid its first-year VED rate, this can be significantly higher. A petrol car emitting 150g/km CO2 faces a first-year rate of £680. For cars over 255g/km, it's over £2,700.
-- **Expensive car supplement** — any car with a list price over £40,000 when new pays an additional £410 per year on top of the standard rate, for the first five years at the standard rate. This catches a lot of well-specced family cars and nearly all premium models.
+- **Expensive car supplement** — any car with a list price over £40,000 when new (£50,000 for zero-emission vehicles since April 2026) pays an additional ~£440 per year on top of the standard rate, for the first five years at the standard rate. This catches a lot of well-specced family cars and nearly all premium models.
 
 For cars registered before April 2017, VED is based entirely on CO2 emissions and can range from £0 (low-emission vehicles) to over £600 per year.
 
@@ -129,7 +129,7 @@ Here's what a realistic first-year cost might look like for a used car bought at
 | Cost | Amount |
 |---|---|
 | Purchase price | £8,000 |
-| Road tax | £190 |
+| Road tax | £200 |
 | Insurance | £500 |
 | Fuel (10,000 miles) | £1,400 |
 | MOT advisory work | £400 |

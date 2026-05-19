@@ -30,8 +30,8 @@ CO2 emissions are the main factor in calculating Vehicle Excise Duty for most ca
 
 **Registered from 1 April 2017 onwards:**
 - First year tax is based on CO2 emissions — ranging from £0 for zero-emission vehicles to over £2,000 for the highest emitters
-- After the first year, most cars pay a flat standard rate (currently £190/year)
-- Cars with a list price over £40,000 pay an additional £410/year supplement for 5 years
+- After the first year, most cars pay a flat standard rate (currently £200/year from April 2026)
+- Cars with a list price over £40,000 (£50,000 for EVs) pay an additional ~£440/year supplement for 5 years
 
 **Registered before 1 April 2017:**
 - Tax is based entirely on CO2 emissions bands (A to M)
