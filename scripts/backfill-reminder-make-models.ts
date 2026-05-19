@@ -65,7 +65,8 @@ loadEnvLocal();
 
 // ── Config ─────────────────────────────────────────────────────────────────
 const DRY_RUN = process.argv.includes("--dry-run");
-const RATE_LIMIT_MS = 400;
+const RATE_LIMIT_MS = 1500;
+const MAX_ATTEMPTS = 3;
 const BASE_URL =
   process.env.FPC_API_BASE_URL || "https://www.freeplatecheck.co.uk";
 
@@ -95,7 +96,22 @@ interface LookupVehicle {
   model?: string;
 }
 
-async function fetchCombinedLookup(vrm: string): Promise<LookupVehicle | null> {
+type LookupFailure =
+  | "not-found" // permanent — don't retry
+  | "rate-limited"
+  | "server-error"
+  | "timeout"
+  | "network";
+
+type LookupResult =
+  | { ok: true; data: LookupVehicle }
+  | { ok: false; reason: LookupFailure; status?: number };
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function singleLookupAttempt(vrm: string): Promise<LookupResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
@@ -106,19 +122,44 @@ async function fetchCombinedLookup(vrm: string): Promise<LookupVehicle | null> {
       signal: controller.signal,
     });
     clearTimeout(timeout);
-    if (!resp.ok) return null;
-    const json = await resp.json();
-    const data = json?.data;
-    if (!data || typeof data !== "object") return null;
-    return { make: data.make, model: data.model };
-  } catch {
+
+    if (resp.ok) {
+      const json = await resp.json();
+      const data = json?.data;
+      if (data && typeof data === "object" && data.make) {
+        return { ok: true, data: { make: data.make, model: data.model } };
+      }
+      return { ok: false, reason: "not-found", status: resp.status };
+    }
+
+    if (resp.status === 404) return { ok: false, reason: "not-found", status: 404 };
+    if (resp.status === 429) return { ok: false, reason: "rate-limited", status: 429 };
+    if (resp.status >= 500) return { ok: false, reason: "server-error", status: resp.status };
+    return { ok: false, reason: "server-error", status: resp.status };
+  } catch (err) {
     clearTimeout(timeout);
-    return null;
+    const name = (err as { name?: string })?.name;
+    return { ok: false, reason: name === "AbortError" ? "timeout" : "network" };
   }
 }
 
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
+/**
+ * Look up a vrm with exponential backoff (1s, 2s, 4s) on transient errors.
+ * Permanent failures (404) return immediately so we don't waste time
+ * retrying regs that genuinely aren't in DVLA.
+ */
+async function fetchCombinedLookup(vrm: string): Promise<LookupResult> {
+  let last: LookupResult = { ok: false, reason: "network" };
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const result = await singleLookupAttempt(vrm);
+    if (result.ok) return result;
+    if (result.reason === "not-found") return result; // permanent — no retry
+    last = result;
+    if (attempt < MAX_ATTEMPTS) {
+      await sleep(1000 * Math.pow(2, attempt - 1));
+    }
+  }
+  return last;
 }
 
 // ── Update decision logic ──────────────────────────────────────────────────
@@ -203,7 +244,8 @@ async function main() {
     wrongMake: 0,
     undefinedSuffix: 0,
     lessDetail: 0,
-    lookupFail: 0,
+    notFound: 0,
+    transientFail: 0,
     updated: 0,
     updateError: 0,
   };
@@ -213,14 +255,21 @@ async function main() {
     const progress = `[${String(i + 1).padStart(String(rows.length).length, " ")}/${rows.length}]`;
     const live = await fetchCombinedLookup(row.vrm);
 
-    if (!live || !live.make) {
-      console.log(`${progress} ✗ ${row.vrm} — lookup failed (skipped)`);
-      stats.lookupFail++;
+    if (!live.ok) {
+      const detail = live.status
+        ? `${live.reason} (HTTP ${live.status})`
+        : live.reason;
+      console.log(`${progress} ✗ ${row.vrm} — ${detail} (skipped)`);
+      if (live.reason === "not-found") {
+        stats.notFound++;
+      } else {
+        stats.transientFail++;
+      }
       await sleep(RATE_LIMIT_MS);
       continue;
     }
 
-    const decision = decideUpdate(row.make_model || "", live.make, live.model);
+    const decision = decideUpdate(row.make_model || "", live.data.make, live.data.model);
 
     if (!decision.shouldUpdate) {
       if (decision.reason === "less-detail") {
@@ -281,7 +330,8 @@ async function main() {
   console.log(`Missing make/model:            ${stats.missing}`);
   console.log(`Wrong make (real drift):       ${stats.wrongMake}`);
   console.log(`Had 'undefined' suffix:        ${stats.undefinedSuffix}`);
-  console.log(`Lookup failures:               ${stats.lookupFail}`);
+  console.log(`Not found in DVLA (permanent): ${stats.notFound}`);
+  console.log(`Transient lookup failures:     ${stats.transientFail}`);
   if (DRY_RUN) {
     console.log(
       `\n[DRY RUN] No rows were updated. Re-run without --dry-run to apply (${totalChangeable} rows would change).`,
