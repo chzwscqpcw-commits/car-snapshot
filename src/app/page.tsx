@@ -3097,10 +3097,11 @@ END:VEVENT
 
         {/* COMPARISON MODE */}
         {comparisonMode && (
-          <div className="mb-10 p-6 bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-700/50 rounded-lg">
+          <div className="mb-10 p-6 bg-slate-900/40 border border-slate-700/50 border-l-4 border-l-cyan-500 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
-                🔄 Compare Vehicles
+                <ArrowLeftRight className="w-5 h-5 text-cyan-400" />
+                Compare Vehicles
               </h2>
               <button
                 onClick={() => {
@@ -3122,7 +3123,7 @@ END:VEVENT
                 <select
                   value={compareReg1}
                   onChange={(e) => setCompareReg1(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
                   <option value="">Select a vehicle...</option>
                   {recentLookups.map((reg) => (
@@ -3138,7 +3139,7 @@ END:VEVENT
                 <select
                   value={compareReg2}
                   onChange={(e) => setCompareReg2(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
                   <option value="">Select a vehicle...</option>
                   {recentLookups.map((reg) => (
@@ -3153,7 +3154,7 @@ END:VEVENT
             <button
               onClick={loadComparisonData}
               disabled={!compareReg1 || !compareReg2 || compareLoading}
-              className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all shadow-md shadow-cyan-500/20 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {compareLoading ? (
                 <>
@@ -3176,15 +3177,15 @@ END:VEVENT
           const CompareRow = ({ label, val1, val2 }: { label: string; val1: string; val2: string }) => (
             <tr className="border-b border-slate-700/30">
               <td className="py-2 pr-2 text-xs sm:text-sm text-slate-400 font-medium whitespace-nowrap">{label}</td>
-              <td className="py-2 px-2 text-xs sm:text-sm text-slate-100 font-semibold text-center">{val1}</td>
-              <td className="py-2 pl-2 text-xs sm:text-sm text-slate-100 font-semibold text-center">{val2}</td>
+              <td className="py-2 px-2 text-xs sm:text-sm text-slate-100 font-mono font-semibold tracking-wide text-center">{val1}</td>
+              <td className="py-2 pl-2 text-xs sm:text-sm text-slate-100 font-mono font-semibold tracking-wide text-center">{val2}</td>
             </tr>
           );
 
           const GroupHeader = ({ title }: { title: string }) => (
             <tr>
               <td colSpan={3} className="pt-4 pb-2">
-                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-widest">{title}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-cyan-400 uppercase tracking-widest">{title}</span>
               </td>
             </tr>
           );
@@ -3363,9 +3364,10 @@ END:VEVENT
                     setCompareVehicle1(null);
                     setCompareVehicle2(null);
                   }}
-                  className="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                  className="px-6 py-3.5 bg-slate-800/60 hover:bg-slate-700/60 border border-cyan-500/40 hover:border-cyan-500/60 text-cyan-400 hover:text-cyan-300 font-semibold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
                 >
-                  🔄 Compare
+                  <ArrowLeftRight className="w-4 h-4" />
+                  Compare
                 </button>
               )}
             </div>
