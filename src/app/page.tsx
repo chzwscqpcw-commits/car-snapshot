@@ -135,6 +135,7 @@ import {
   Weight,
 } from "lucide-react";
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
+import BoltMark from "@/components/BoltMark";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
@@ -2781,9 +2782,12 @@ END:VEVENT
       <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 py-8 sm:py-12 safe-area-inset relative z-10">
         {/* HEADER WITH BRAND */}
         <header className="mb-6">
-          <div className="flex items-baseline gap-2 mb-4">
-            <Zap className="w-6 h-6 text-blue-400" />
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+          <div className="flex items-center gap-3 mb-4 group">
+            <BoltMark
+              glow
+              className="w-9 h-12 sm:w-11 sm:h-14 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+            />
+            <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
               Free Plate Check
             </h1>
           </div>
