@@ -3,6 +3,11 @@ import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import MotResult from "@/components/tools/MotResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free MOT History Check — Full MOT Results | Free Plate Check",
@@ -36,7 +41,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MotCheckPage() {
+export default async function MotCheckPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -134,6 +147,13 @@ export default function MotCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <MotResult vrm={cleanedVrm!} />
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       {/* --- HERO --- */}
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_60%)]" />
@@ -266,6 +286,7 @@ export default function MotCheckPage() {
           headline="Check a vehicle's MOT history"
           subtext="Enter any UK reg plate to see every MOT result, advisory, and mileage reading since 2005 — free and instant."
           reminderHeadline="Never miss your MOT again"
+          targetPath="/mot-check"
         />
 
         <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-lg">
@@ -434,6 +455,8 @@ export default function MotCheckPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }

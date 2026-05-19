@@ -4,6 +4,11 @@ import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import ServicingCTA from "@/components/ServicingCTA";
+import ValuationResult from "@/components/tools/ValuationResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free Car Valuation — How Much Is My Car Worth? | Free Plate Check",
@@ -38,7 +43,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CarValuationPage() {
+export default async function CarValuationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -152,6 +165,13 @@ export default function CarValuationPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <ValuationResult vrm={cleanedVrm!} />
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       {/* --- HERO --- */}
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.12),_transparent_60%)]" />
@@ -263,6 +283,7 @@ export default function CarValuationPage() {
           headline="Get your free valuation now"
           subtext="Enter any UK registration number to see an estimated value range, plus full vehicle history, MOT records and more — no signup."
           reminderHeadline="Already own this car? Protect its value with a free MOT reminder"
+          targetPath="/car-valuation"
         />
 
         {/* Bridge: Why MOT reminders matter to anyone checking a valuation */}
@@ -441,6 +462,8 @@ export default function CarValuationPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }

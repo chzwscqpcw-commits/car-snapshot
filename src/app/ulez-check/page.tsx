@@ -3,6 +3,11 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
+import UlezResult from "@/components/tools/UlezResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free ULEZ Check — Is My Car ULEZ Compliant? | Free Plate Check",
@@ -37,7 +42,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function UlezCheckPage() {
+export default async function UlezCheckPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -143,6 +156,13 @@ export default function UlezCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <UlezResult vrm={cleanedVrm!} />
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       <LandingHero
         h1="Free ULEZ Compliance Check"
         subtitle="Instantly check if your car meets London ULEZ and other UK Clean Air Zone standards — see if you'll pay the £12.50/day charge. Free, no signup."
@@ -220,6 +240,7 @@ export default function UlezCheckPage() {
           headline="Check your vehicle's ULEZ compliance"
           subtext="Enter a reg plate to see if your vehicle meets ULEZ standards — plus full MOT history, tax status, and more."
           reminderHeadline="Stay on top of your MOT"
+          targetPath="/ulez-check"
         />
 
         <div className="space-y-8 text-slate-300">
@@ -337,6 +358,8 @@ export default function UlezCheckPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }

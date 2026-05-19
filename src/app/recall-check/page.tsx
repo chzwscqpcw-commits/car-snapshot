@@ -4,6 +4,11 @@ import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
+import RecallResult from "@/components/tools/RecallResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free Car Recall Check — Safety Recalls UK | Free Plate Check",
@@ -37,7 +42,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RecallCheckPage() {
+export default async function RecallCheckPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -135,6 +148,13 @@ export default function RecallCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <RecallResult vrm={cleanedVrm!} />
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       <LandingHero
         h1="Free Car Recall Check"
         subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
@@ -211,6 +231,7 @@ export default function RecallCheckPage() {
           headline="Check your vehicle for safety recalls"
           subtext="Enter a reg plate to see known recalls for your make and model, plus full MOT history and vehicle health data."
           reminderHeadline="Never miss your MOT"
+          targetPath="/recall-check"
         />
 
         <div className="space-y-8 text-slate-300">
@@ -321,6 +342,8 @@ export default function RecallCheckPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }

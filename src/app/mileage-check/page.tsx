@@ -4,6 +4,11 @@ import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
+import MileageResult from "@/components/tools/MileageResult";
+
+function cleanReg(raw: string): string {
+  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+}
 
 export const metadata: Metadata = {
   title: "Free Mileage Check — Spot Clocking | Free Plate Check",
@@ -37,7 +42,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MileageCheckPage() {
+export default async function MileageCheckPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  const params = await searchParams;
+  const rawVrm = params?.vrm;
+  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
+  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -135,6 +148,13 @@ export default function MileageCheckPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
+      {hasResult ? (
+        <>
+          <MileageResult vrm={cleanedVrm!} />
+          <MotReminderBanner />
+        </>
+      ) : (
+        <>
       <LandingHero
         h1="Free Mileage Check"
         subtitle="Every odometer reading from every MOT test since 2005 — verify mileage and spot clocking instantly. Free, no signup."
@@ -210,6 +230,7 @@ export default function MileageCheckPage() {
           headline="Check any vehicle's mileage history"
           subtext="Enter a reg plate to see full MOT mileage records since 2005 — spot clocking and verify the odometer reading."
           reminderHeadline="Stay on top of your MOT"
+          targetPath="/mileage-check"
         />
 
         <div className="space-y-8 text-slate-300">
@@ -347,6 +368,8 @@ export default function MileageCheckPage() {
         </div>
       </div>
       <MotReminderBanner />
+        </>
+      )}
     </div>
   );
 }
