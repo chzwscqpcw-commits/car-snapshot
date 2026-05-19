@@ -179,9 +179,15 @@ export default function MOTReminderSignup({
         for (let i = 0; i < regs.length; i++) {
           const vrm = cleanReg(regs[i]);
 
-          // Only use the prop expiry for the first vehicle (it belongs to that reg)
-          let expiry = i === 0 && regNumber && motExpiryDate ? motExpiryDate : "";
-          let vehicleMakeModel = i === 0 ? makeModel || "" : "";
+          // Only trust the props if the first reg still matches the looked-up
+          // vehicle. If the user has edited the reg field, the props are stale
+          // and would otherwise tag the new vrm with the previous vehicle's
+          // make/model and expiry — leading to confirmation emails like
+          // "FIAT 500X (P7SJG)" when P7SJG isn't actually a Fiat.
+          const propRegMatches =
+            i === 0 && !!regNumber && cleanReg(regNumber) === vrm;
+          let expiry = propRegMatches && motExpiryDate ? motExpiryDate : "";
+          let vehicleMakeModel = propRegMatches ? makeModel || "" : "";
 
           // Always look up the vehicle to get accurate expiry + make/model
           if (!expiry) {

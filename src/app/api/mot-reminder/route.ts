@@ -176,6 +176,44 @@ export async function POST(req: Request) {
       validExpiry = new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10);
     }
 
+    // Defense in depth: re-verify make/model and expiry against DVLA before
+    // storing. Protects against any stale client state that would tag the
+    // vrm with the wrong vehicle data. If the DVLA lookup fails (network,
+    // rate limit, etc.) we fall back to the client-supplied values.
+    let verifiedMakeModel = makeModel;
+    let verifiedExpiry = validExpiry;
+    try {
+      const baseUrl = new URL(req.url).origin;
+      const lookupRes = await fetch(`${baseUrl}/api/lookup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vrm }),
+      });
+      if (lookupRes.ok) {
+        const lookupJson = await lookupRes.json();
+        const dvla = lookupJson?.data;
+        if (dvla?.make) {
+          const fresh = `${dvla.make}${dvla.model ? " " + dvla.model : ""}`.trim();
+          if (fresh && fresh !== makeModel) {
+            console.warn(
+              `mot_reminder_makemodel_drift: client="${makeModel}" → dvla="${fresh}" for vrm=${vrm}`,
+            );
+          }
+          verifiedMakeModel = fresh;
+        }
+        if (dvla?.motExpiryDate) {
+          if (dvla.motExpiryDate !== validExpiry) {
+            console.warn(
+              `mot_reminder_expiry_drift: client="${validExpiry}" → dvla="${dvla.motExpiryDate}" for vrm=${vrm}`,
+            );
+          }
+          verifiedExpiry = dvla.motExpiryDate;
+        }
+      }
+    } catch (err) {
+      console.warn("mot_reminder_dvla_verify_failed:", err);
+    }
+
     const sb = supabaseServer();
 
     // Try insert first — return the unsubscribe_token in one atomic operation
@@ -184,8 +222,8 @@ export async function POST(req: Request) {
       .insert({
         email,
         vrm,
-        make_model: makeModel || null,
-        mot_expiry: validExpiry,
+        make_model: verifiedMakeModel || null,
+        mot_expiry: verifiedExpiry,
         reminder_28d_sent: false,
         reminder_7d_sent: false,
         active: true,
@@ -195,8 +233,8 @@ export async function POST(req: Request) {
 
     if (!insertError && inserted) {
       console.log("mot_reminder_created:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, validExpiry, inserted.unsubscribe_token);
-      await sendCatchUpReminders(email, vrm, makeModel, validExpiry, inserted.unsubscribe_token, inserted.id);
+      await sendConfirmation(email, vrm, verifiedMakeModel, verifiedExpiry, inserted.unsubscribe_token);
+      await sendCatchUpReminders(email, vrm, verifiedMakeModel, verifiedExpiry, inserted.unsubscribe_token, inserted.id);
 
       return NextResponse.json({
         ok: true,
@@ -210,8 +248,8 @@ export async function POST(req: Request) {
       const { data: updated, error: updateError } = await sb
         .from("mot_reminders")
         .update({
-          mot_expiry: validExpiry,
-          make_model: makeModel || null,
+          mot_expiry: verifiedExpiry,
+          make_model: verifiedMakeModel || null,
           reminder_28d_sent: false,
           reminder_7d_sent: false,
           active: true,
@@ -237,8 +275,8 @@ export async function POST(req: Request) {
       }
 
       console.log("mot_reminder_updated:", email, vrm);
-      await sendConfirmation(email, vrm, makeModel, validExpiry, updated.unsubscribe_token);
-      await sendCatchUpReminders(email, vrm, makeModel, validExpiry, updated.unsubscribe_token, updated.id);
+      await sendConfirmation(email, vrm, verifiedMakeModel, verifiedExpiry, updated.unsubscribe_token);
+      await sendCatchUpReminders(email, vrm, verifiedMakeModel, verifiedExpiry, updated.unsubscribe_token, updated.id);
 
       return NextResponse.json({
         ok: true,
