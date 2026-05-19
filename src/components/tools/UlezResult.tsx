@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Wind, Leaf, CircleCheck, CircleAlert, MapPin } from "lucide-react";
 import {
   useVehicleLookup,
@@ -39,6 +39,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
 
   return (
     <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="ulez">
+      <StatusMist status={ulez.status} />
       <UlezHero ulez={ulez} />
       {ulez.cleanAirZones && ulez.cleanAirZones.length > 0 && (
         <ZonesGrid zones={ulez.cleanAirZones} status={ulez.status} />
@@ -47,6 +48,89 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     </ToolResultLayout>
   );
 }
+
+function StatusMist({ status }: { status: UlezData["status"] }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // Defer one frame so the animation fires after layout, not during SSR hydration
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  if (status === "unknown") return null;
+  const palette = MIST_PALETTE[status];
+
+  return (
+    <div
+      aria-hidden
+      className={`pointer-events-none fixed inset-0 z-[70] overflow-hidden ${
+        mounted ? "" : "opacity-0"
+      }`}
+    >
+      {/* Colour wash */}
+      <div
+        className="absolute inset-0 mix-blend-screen animate-mist-wash"
+        style={{ background: palette.wash }}
+      />
+      {/* Sweeping mist blob */}
+      <div
+        className="absolute top-1/2 -translate-y-1/2 -left-[40vw] h-[140vh] w-[80vw] rounded-[50%] blur-3xl animate-mist-sweep"
+        style={{ background: palette.blob }}
+      />
+      {/* Vignette edge so the centre stays readable */}
+      <div className="absolute inset-0 animate-mist-wash" style={{ background: palette.edge }} />
+
+      <style jsx>{`
+        @keyframes mistWash {
+          0%   { opacity: 0; }
+          25%  { opacity: 1; }
+          75%  { opacity: 0.6; }
+          100% { opacity: 0; }
+        }
+        @keyframes mistSweep {
+          0%   { transform: translate(0, -50%) scale(0.9); opacity: 0; }
+          30%  { opacity: 0.8; }
+          70%  { opacity: 0.8; }
+          100% { transform: translate(180vw, -50%) scale(1.1); opacity: 0; }
+        }
+        :global(.animate-mist-wash) {
+          animation: mistWash 1.6s ease-out forwards;
+        }
+        :global(.animate-mist-sweep) {
+          animation: mistSweep 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          :global(.animate-mist-wash),
+          :global(.animate-mist-sweep) {
+            animation-duration: 0.1s !important;
+            opacity: 0 !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const MIST_PALETTE: Record<
+  "compliant" | "exempt" | "non-compliant",
+  { wash: string; blob: string; edge: string }
+> = {
+  compliant: {
+    wash: "radial-gradient(circle at 50% 50%, rgba(16,185,129,0.18), transparent 65%)",
+    blob: "radial-gradient(circle, rgba(16,185,129,0.55), rgba(34,211,238,0.25) 40%, transparent 65%)",
+    edge: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(2,6,23,0.4) 100%)",
+  },
+  exempt: {
+    wash: "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.22), transparent 65%)",
+    blob: "radial-gradient(circle, rgba(34,211,238,0.6), rgba(16,185,129,0.3) 40%, transparent 65%)",
+    edge: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(2,6,23,0.4) 100%)",
+  },
+  "non-compliant": {
+    wash: "radial-gradient(circle at 50% 50%, rgba(244,63,94,0.22), transparent 65%)",
+    blob: "radial-gradient(circle, rgba(244,63,94,0.6), rgba(249,115,22,0.3) 40%, transparent 65%)",
+    edge: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(2,6,23,0.4) 100%)",
+  },
+};
 
 function UlezHero({ ulez }: { ulez: UlezData }) {
   const skin = SKINS[ulez.status];

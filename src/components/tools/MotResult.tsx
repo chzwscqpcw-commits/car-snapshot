@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { ShieldCheck, ShieldAlert, Calendar, ArrowRight } from "lucide-react";
+import {
+  ShieldCheck,
+  ShieldAlert,
+  Calendar,
+  ArrowRight,
+  ChevronDown,
+  History,
+} from "lucide-react";
 import {
   useVehicleLookup,
   LookupSkeleton,
@@ -42,6 +49,16 @@ export default function MotResult({ vrm }: MotResultProps) {
 
 function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const stats = useMemo(() => analyse(vehicle), [vehicle]);
+  const tests = useMemo(
+    () =>
+      [...(vehicle.motTests ?? [])]
+        .filter((t) => t.testResult === "PASSED" || t.testResult === "FAILED")
+        .sort(
+          (a, b) =>
+            new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime()
+        ),
+    [vehicle]
+  );
   return (
     <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="mot">
       <Hero stats={stats} vrm={vrm} />
@@ -51,8 +68,124 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {stats.defectPreview.length > 0 && (
         <AdvisoryPreview items={stats.defectPreview} kind="defect" />
       )}
+      {tests.length > 0 && <FullHistory tests={tests} />}
       <BmgHook vrm={vrm} stats={stats} />
     </ToolResultLayout>
+  );
+}
+
+function FullHistory({ tests }: { tests: MotTest[] }) {
+  return (
+    <section className="mt-4 group rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+      <details className="[&[open]>summary>svg.chev]:rotate-180">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 sm:px-6 py-4 hover:bg-slate-900/80 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-cyan-300">
+              <History className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-100">
+                Full MOT history ({tests.length} tests)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Every test, every advisory, every defect — chronological.
+              </p>
+            </div>
+          </div>
+          <ChevronDown className="chev h-4 w-4 text-slate-500 transition-transform" />
+        </summary>
+        <div className="border-t border-slate-800 px-2 sm:px-4 py-3 space-y-3">
+          {tests.map((t, i) => (
+            <TestCard key={t.motTestNumber ?? `${t.completedDate}-${i}`} test={t} />
+          ))}
+        </div>
+      </details>
+    </section>
+  );
+}
+
+function TestCard({ test }: { test: MotTest }) {
+  const passed = test.testResult === "PASSED";
+  const advisories = test.rfrAndComments?.filter((r) => r.type === "ADVISORY") ?? [];
+  const defects = test.rfrAndComments?.filter((r) => r.type === "DEFECT") ?? [];
+  const date = new Date(test.completedDate);
+  const dateLabel = !Number.isNaN(date.getTime())
+    ? date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : test.completedDate;
+  return (
+    <article
+      className={`rounded-xl border p-4 ${
+        passed
+          ? "border-emerald-500/15 bg-emerald-950/10"
+          : "border-rose-500/25 bg-rose-950/20"
+      }`}
+    >
+      <header className="flex items-start justify-between gap-3 mb-2">
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="text-sm font-semibold text-slate-100">{dateLabel}</span>
+          <span
+            className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full border ${
+              passed
+                ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                : "bg-rose-500/15 text-rose-300 border-rose-500/30"
+            }`}
+          >
+            {test.testResult}
+          </span>
+          {test.odometer && (
+            <span className="text-xs text-slate-400 tabular-nums">
+              {test.odometer.value.toLocaleString("en-GB")}{" "}
+              {test.odometer.unit?.toUpperCase() === "KM" ? "km" : "mi"}
+            </span>
+          )}
+        </div>
+        {test.motTestNumber && (
+          <span className="text-[10px] font-mono text-slate-500 flex-shrink-0">
+            #{test.motTestNumber}
+          </span>
+        )}
+      </header>
+
+      {defects.length > 0 && (
+        <div className="mt-2">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-rose-300 mb-1">
+            Defects ({defects.length})
+          </p>
+          <ul className="space-y-1">
+            {defects.map((d, i) => (
+              <li key={i} className="text-xs text-rose-100/90 flex gap-1.5">
+                <span className="text-rose-400 mt-0.5">•</span>
+                <span className="leading-relaxed">{d.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {advisories.length > 0 && (
+        <div className="mt-2.5">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-300 mb-1">
+            Advisories ({advisories.length})
+          </p>
+          <ul className="space-y-1">
+            {advisories.map((a, i) => (
+              <li key={i} className="text-xs text-slate-300 flex gap-1.5">
+                <span className="text-amber-400 mt-0.5">•</span>
+                <span className="leading-relaxed">{a.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {advisories.length === 0 && defects.length === 0 && (
+        <p className="mt-2 text-xs text-slate-500">No advisories or defects recorded.</p>
+      )}
+    </article>
   );
 }
 

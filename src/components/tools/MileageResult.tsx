@@ -93,10 +93,7 @@ function MileageHero({ analysis }: { analysis: MileageAnalysis }) {
           </div>
           {hasReadings ? (
             <>
-              <p className="mt-2 text-4xl sm:text-5xl font-bold text-white tracking-tight tabular-nums">
-                {analysis.current!.toLocaleString("en-GB")}
-                <span className="ml-2 text-base font-medium text-slate-400">mi</span>
-              </p>
+              <OdometerDisplay value={analysis.current!} />
               <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
                 {analysis.avgPerYear !== null && (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-slate-700 bg-slate-800/60 text-slate-300">
@@ -131,6 +128,50 @@ function MileageHero({ analysis }: { analysis: MileageAnalysis }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function OdometerDisplay({ value }: { value: number }) {
+  // Pad to a minimum of 6 digits for a real-dashboard feel without overflowing
+  // 7-digit cars. Geist Mono + cyan-glow text-shadow renders the digits like
+  // a modern EV instrument cluster.
+  const formatted = value.toLocaleString("en-GB");
+  return (
+    <div className="relative mt-2 inline-block">
+      <div className="rounded-xl bg-gradient-to-b from-slate-700/70 via-slate-800/70 to-slate-900 p-[1px] shadow-[0_8px_20px_-8px_rgba(0,0,0,0.6)]">
+        <div className="relative overflow-hidden rounded-[11px] bg-gradient-to-b from-slate-950 via-[#04080f] to-slate-950 px-4 sm:px-5 pt-3 pb-2.5">
+          {/* Top edge gleam */}
+          <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+          {/* Faint scan-lines for the LCD feel */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(34,211,238,0.035) 2px, rgba(34,211,238,0.035) 3px)",
+            }}
+          />
+          {/* ODO label, like the corner of a real dashboard */}
+          <div className="absolute top-1 left-3 text-[8px] font-semibold tracking-[0.25em] text-amber-400/70 font-[family-name:var(--font-geist-mono)]">
+            ODO
+          </div>
+          <div className="relative flex items-baseline gap-2">
+            <span
+              className="font-[family-name:var(--font-geist-mono)] text-4xl sm:text-5xl font-bold text-cyan-50 tabular-nums leading-none"
+              style={{
+                textShadow:
+                  "0 0 18px rgba(34,211,238,0.45), 0 0 3px rgba(165,243,252,0.7)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              {formatted}
+            </span>
+            <span className="text-[11px] font-semibold tracking-[0.2em] text-cyan-400/70 font-[family-name:var(--font-geist-mono)] uppercase pb-1">
+              mi
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
