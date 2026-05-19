@@ -418,10 +418,18 @@ function DataReveal({ delay = 0, children, className }: { delay?: number; childr
 // Section group divider with uppercase label
 function SectionGroup({ icon: Icon, label, children, id }: { icon: React.ReactNode; label: string; children: React.ReactNode; id?: string }) {
   return (
-    <div className="mt-10 first:mt-0" id={id}>
-      <div className="flex items-center gap-2 mb-5 pb-2 border-b border-slate-700/50">
-        <div className="text-slate-400">{Icon}</div>
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</span>
+    <div className="mt-14 first:mt-0" id={id}>
+      <div className="flex items-center gap-3 mb-7">
+        <span
+          className="block w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)] shrink-0"
+          aria-hidden="true"
+        />
+        <div className="text-slate-400 shrink-0">{Icon}</div>
+        <span className="text-xs font-semibold text-slate-300 uppercase tracking-[0.18em] shrink-0">{label}</span>
+        <div
+          className="flex-1 h-px bg-gradient-to-r from-slate-700/70 via-slate-700/30 to-transparent"
+          aria-hidden="true"
+        />
       </div>
       {children}
     </div>
