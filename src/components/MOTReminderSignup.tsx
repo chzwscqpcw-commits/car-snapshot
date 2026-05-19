@@ -41,19 +41,19 @@ const CONTEXT_COPY: Record<
 function getBorderColor(context: MOTReminderSignupProps["context"]) {
   if (context === "due-soon") return "border-l-amber-500";
   if (context === "expired") return "border-l-red-500";
-  return "border-l-emerald-500";
+  return "border-l-cyan-500";
 }
 
 function getBgTint(context: MOTReminderSignupProps["context"]) {
   if (context === "due-soon") return "bg-amber-500/5";
   if (context === "expired") return "bg-red-500/5";
-  return "bg-emerald-500/5";
+  return "bg-cyan-500/5";
 }
 
 function getBellColor(context: MOTReminderSignupProps["context"]) {
   if (context === "due-soon") return "text-amber-500";
   if (context === "expired") return "text-red-500";
-  return "text-emerald-500";
+  return "text-cyan-400";
 }
 
 function formatExpiryDisplay(iso: string): string {
@@ -271,7 +271,7 @@ export default function MOTReminderSignup({
           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
           <div className="min-w-0 flex-1">
             <p className="text-lg font-semibold text-white">
-              Reminder set for {successReg}
+              Reminder set for <span className="font-mono tracking-wider">{successReg}</span>
             </p>
             <p className="mt-1 text-sm text-slate-400">
               We&apos;ll email you at {successEmail}
@@ -329,7 +329,7 @@ export default function MOTReminderSignup({
             onChange={(e) => updateReg(0, e.target.value)}
             placeholder="e.g. AB12 CDE"
             maxLength={8}
-            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
           <input
             type="email"
@@ -344,12 +344,12 @@ export default function MOTReminderSignup({
               });
             }}
             placeholder="Your email address"
-            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
           <button
             type="submit"
             disabled={submitting}
-            className="h-10 whitespace-nowrap rounded-md bg-emerald-500 px-5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-emerald-600 disabled:opacity-60"
+            className="h-10 whitespace-nowrap rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 px-5 text-sm font-semibold text-white transition-all duration-150 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-60 shadow-md shadow-cyan-500/20"
           >
             {submitting ? (
               <span className="flex items-center gap-2">
@@ -417,7 +417,7 @@ export default function MOTReminderSignup({
                   onChange={(e) => updateReg(i, e.target.value)}
                   placeholder="e.g. AB12 CDE"
                   maxLength={8}
-                  className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
                 {errors[`reg-${i}`] && (
                   <p className="mt-1 text-xs text-red-400">
@@ -441,7 +441,7 @@ export default function MOTReminderSignup({
                       });
                     }}
                     placeholder="Your email address"
-                    className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                   {errors.email && (
                     <p className="mt-1 text-xs text-red-400">{errors.email}</p>
@@ -475,7 +475,7 @@ export default function MOTReminderSignup({
                 });
               }}
               placeholder="Your email address"
-              className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
             {errors.email && (
               <p className="mt-1 text-xs text-red-400">{errors.email}</p>
@@ -490,7 +490,7 @@ export default function MOTReminderSignup({
               <button
                 type="button"
                 onClick={addVehicle}
-                className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
               >
                 + Add another vehicle
               </button>
@@ -512,7 +512,7 @@ export default function MOTReminderSignup({
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-emerald-600 disabled:opacity-60 sm:w-auto sm:ml-auto sm:block"
+          className="w-full rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-60 shadow-md shadow-cyan-500/20 sm:w-auto sm:ml-auto sm:block"
         >
           {submitting ? (
             <span className="flex items-center justify-center gap-2">
