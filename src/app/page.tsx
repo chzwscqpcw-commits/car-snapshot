@@ -3813,15 +3813,15 @@ END:VEVENT
                           }
                         />
                       </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className={`text-2xl font-bold ${
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                        <span className={`text-xl font-bold leading-none ${
                           healthScore.grade === "A" ? "text-emerald-400" :
                           healthScore.grade === "B" ? "text-blue-400" :
                           healthScore.grade === "C" ? "text-amber-400" :
                           healthScore.grade === "D" ? "text-orange-400" :
                           "text-red-400"
                         }`}>{healthScore.grade}</span>
-                        <span className="text-xs text-slate-400 font-mono tracking-wide">{healthScore.score}/100</span>
+                        <span className="text-[10px] text-slate-400 font-mono tracking-wide leading-none">{healthScore.score}/100</span>
                       </div>
                     </div>
                     {/* Title and label */}
