@@ -136,6 +136,7 @@ import {
 } from "lucide-react";
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import BoltMark from "@/components/BoltMark";
+import CountUp from "@/components/CountUp";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
@@ -2864,9 +2865,7 @@ END:VEVENT
             {vehiclesChecked !== null && vehiclesChecked > 0 && (
               <>
                 <span className="font-mono text-slate-300 tracking-wide">
-                  {Math.floor(vehiclesChecked / 100) * 100 >= 1000
-                    ? `${(Math.floor(vehiclesChecked / 100) * 100).toLocaleString("en-GB")}+`
-                    : `${Math.floor(vehiclesChecked / 100) * 100}+`}
+                  <CountUp target={Math.floor(vehiclesChecked / 100) * 100} />+
                 </span>
                 <span>vehicles checked</span>
                 <span className="text-slate-700" aria-hidden="true">·</span>
