@@ -329,7 +329,10 @@ const ICON_DATA: Record<string, IconDef> = {
     { type: "path", d: "M3 9h11" },
   ],
   zap: [
-    { type: "path", d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" },
+    // Free Plate Check BoltMark — custom geometric bolt (24x24 variant of the
+    // 24x32 web mark). Forward-leaning, sharp internal angles. Use with
+    // drawIcon(... filled: true) on the PDF cover banner.
+    { type: "path", d: "M 15 1 L 4 13 L 11 13 L 9 23 L 20 11 L 13 11 Z" },
   ],
 };
 
@@ -342,15 +345,22 @@ export function drawIcon(
   y: number,
   size: number,
   color: RGB,
+  options?: { filled?: boolean },
 ): void {
   const elements = ICON_DATA[iconName];
   if (!elements) return;
 
   const s = size / 24;
   const lw = 2 * s; // strokeWidth scaled
+  const filled = options?.filled === true;
+  const style = filled ? "F" : "S";
 
   doc.saveGraphicsState();
-  doc.setDrawColor(color[0], color[1], color[2]);
+  if (filled) {
+    doc.setFillColor(color[0], color[1], color[2]);
+  } else {
+    doc.setDrawColor(color[0], color[1], color[2]);
+  }
   doc.setLineWidth(lw);
   doc.setLineCap(1); // round
   doc.setLineJoin(1); // round
@@ -364,12 +374,16 @@ export function drawIcon(
         op: op.op,
         c: op.c.map((v, i) => (i % 2 === 0 ? v * s + x : v * s + y)),
       }));
-      doc.path(scaled).stroke();
+      if (filled) {
+        doc.path(scaled).fill();
+      } else {
+        doc.path(scaled).stroke();
+      }
     } else if (el.type === "circle") {
       const cx = el.cx * s + x;
       const cy = el.cy * s + y;
       const r = el.r * s;
-      doc.circle(cx, cy, r, "S");
+      doc.circle(cx, cy, r, style);
     } else if (el.type === "line") {
       const lx1 = el.x1 * s + x;
       const ly1 = el.y1 * s + y;
@@ -383,9 +397,9 @@ export function drawIcon(
       const rh = el.height * s;
       if (el.rx) {
         const rr = el.rx * s;
-        doc.roundedRect(rx, ry, rw, rh, rr, rr, "S");
+        doc.roundedRect(rx, ry, rw, rh, rr, rr, style);
       } else {
-        doc.rect(rx, ry, rw, rh, "S");
+        doc.rect(rx, ry, rw, rh, style);
       }
     }
   }

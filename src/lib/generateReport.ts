@@ -532,17 +532,17 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
 
   // ── Header banner ──
   drawRoundedRect(doc, 0, 0, 210, 18, 0, C.slate800);
-  setFill(doc, C.blue400);
+  setFill(doc, C.cyan);
   doc.rect(0, 0, 210, 1.2, "F");
 
   doc.setFontSize(FONT.h1);
   doc.setFont("helvetica", "bold");
-  setTextColor(doc, C.blue400);
+  setTextColor(doc, C.white);
   const brandTextW = doc.getTextWidth("Free Plate Check");
   const brandIconSize = 7;
   const brandTotalW = brandIconSize + 2 + brandTextW;
   const brandStartX = (210 - brandTotalW) / 2;
-  drawIcon(doc, "zap", brandStartX, 4.5, brandIconSize, C.blue400 as RGB);
+  drawIcon(doc, "zap", brandStartX, 4.5, brandIconSize, C.cyan as RGB, { filled: true });
   doc.text("Free Plate Check", brandStartX + brandIconSize + 2, 12);
 
   // Date below banner
