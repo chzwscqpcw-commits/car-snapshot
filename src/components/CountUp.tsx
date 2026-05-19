@@ -5,9 +5,15 @@ import { useEffect, useState } from "react";
 interface CountUpProps {
   /** Final value to count up to. */
   target: number;
+  /** Text to render before the number (e.g. "£", "+", "~£"). */
+  prefix?: string;
+  /** Text to render after the number (e.g. "%", "/yr", " miles"). */
+  suffix?: string;
+  /** Decimal places to preserve. Default 0 (integer). */
+  decimals?: number;
   /** Animation duration in ms. */
   durationMs?: number;
-  /** Locale for number formatting. */
+  /** Locale for number formatting (thousands separators). */
   locale?: string;
 }
 
@@ -23,13 +29,16 @@ interface CountUpProps {
  */
 export default function CountUp({
   target,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
   durationMs = 1600,
   locale = "en-GB",
 }: CountUpProps) {
   const [displayed, setDisplayed] = useState(0);
 
   useEffect(() => {
-    if (target <= 0) {
+    if (target === 0) {
       setDisplayed(0);
       return;
     }
@@ -52,7 +61,7 @@ export default function CountUp({
       const progress = Math.min(1, elapsed / durationMs);
       // ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayed(Math.round(target * eased));
+      setDisplayed(target * eased);
       if (progress < 1) {
         requestAnimationFrame(tick);
       }
@@ -65,5 +74,17 @@ export default function CountUp({
     };
   }, [target, durationMs]);
 
-  return <>{displayed.toLocaleString(locale)}</>;
+  const formatted = displayed.toLocaleString(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+
+  return (
+    <>
+      {prefix}
+      {formatted}
+      {suffix}
+    </>
+  );
 }
+
