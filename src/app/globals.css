@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Make Tailwind's `font-mono` class resolve to Geist Mono, loaded via
+   next/font in src/app/layout.tsx. The variable is defined on <html>. */
+@theme inline {
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 /* Landing-page example-card scaling. CSS `zoom` shrinks both the visual size
    AND the bounding box (unlike `transform: scale`), so the card collapses
    correctly on mobile without leaving empty vertical space below it. Uses CSS

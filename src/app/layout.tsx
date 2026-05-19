@@ -1,8 +1,15 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Geist_Mono } from "next/font/google";
 import { RacDemoProvider } from "@/components/RacDemoContext";
 import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.freeplatecheck.co.uk"),
@@ -92,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={geistMono.variable}>
       <head>
         <script
           type="application/ld+json"

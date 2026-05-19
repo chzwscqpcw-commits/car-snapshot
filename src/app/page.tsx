@@ -2791,47 +2791,23 @@ END:VEVENT
               Free Plate Check
             </h1>
           </div>
-          <p className="text-slate-300 text-lg font-medium">The free UK vehicle check. MOT history, tax, valuation, ULEZ, safety recalls, running costs and more — no signup required.</p>
-          <p className="mt-3 text-sm text-slate-400 leading-relaxed max-w-xl">
-            Your data is private. We don't store registration numbers or track who you are.
+          <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
+            The free UK vehicle check. MOT, tax, valuation, ULEZ &amp; more — in seconds.
           </p>
-          {vehiclesChecked !== null && vehiclesChecked > 0 && (
-            <p className="mt-2 text-sm text-slate-500 transition-opacity duration-500">
-              {Math.floor(vehiclesChecked / 100) * 100 >= 1000
-                ? `${(Math.floor(vehiclesChecked / 100) * 100).toLocaleString("en-GB")}+`
-                : `${Math.floor(vehiclesChecked / 100) * 100}+`}{" "}
-              vehicles checked
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
-            <span className="text-slate-700 hidden sm:inline">&middot;</span>
-            <a href="/stats" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">UK Car Stats</a>
-            <span className="text-slate-700 hidden sm:inline">&middot;</span>
-            <a href="/mot-reminder" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
-              <Bell className="w-3.5 h-3.5" />
-              Free MOT Reminders
-            </a>
-            <span className="text-slate-700 hidden sm:inline">&middot;</span>
-            <a href="/compare" className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5">
-              <ArrowLeftRight className="w-3.5 h-3.5" />
-              Compare
-            </a>
-          </div>
-
-{/* OUR PARTNERS */}
-          <div className="mt-4 flex items-center gap-3">
-            <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
-            <span className="text-slate-700">·</span>
-            <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/50 hover:border-slate-600/50 transition-all" title={PARTNER_LINKS.bookMyGarage.description}>
-              <img src="/bmg-logo.png" alt="BookMyGarage" className="h-7" width={49} height={28} loading="lazy" />
-              <span className="text-xs text-slate-400 font-medium">BookMyGarage</span>
-            </a>
-          </div>
-
-          <div className="mt-4">
-            <DidYouKnow />
-          </div>
+          <p className="mt-3 text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1">
+            {vehiclesChecked !== null && vehiclesChecked > 0 && (
+              <>
+                <span className="font-mono text-slate-300 tracking-wide">
+                  {Math.floor(vehiclesChecked / 100) * 100 >= 1000
+                    ? `${(Math.floor(vehiclesChecked / 100) * 100).toLocaleString("en-GB")}+`
+                    : `${Math.floor(vehiclesChecked / 100) * 100}+`}
+                </span>
+                <span>vehicles checked</span>
+                <span className="text-slate-700" aria-hidden="true">·</span>
+              </>
+            )}
+            <span>No signup, no tracking</span>
+          </p>
 
           {/* TABBED SECTION: Recent / Saved / My Cars */}
           {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
@@ -2876,7 +2852,7 @@ END:VEVENT
                           <button
                             key={idx}
                             onClick={() => performLookup(reg)}
-                            className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 rounded-full text-slate-200 text-sm font-medium transition-all flex items-center gap-2 group"
+                            className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 rounded-full text-slate-200 text-sm font-mono tracking-wider transition-all flex items-center gap-2 group"
                           >
                             <RotateCcw className="w-3 h-3 opacity-50 group-hover:opacity-100" />
                             {reg}
@@ -2908,7 +2884,7 @@ END:VEVENT
                           <div key={idx} className="relative group">
                             <button
                               onClick={() => performLookup(fav.registrationNumber)}
-                              className="px-3 py-1.5 bg-red-900/30 hover:bg-red-800/40 border border-red-700/50 hover:border-red-600 rounded-full text-red-200 text-sm font-medium transition-all flex items-center gap-2"
+                              className="px-3 py-1.5 bg-red-900/30 hover:bg-red-800/40 border border-red-700/50 hover:border-red-600 rounded-full text-red-200 text-sm font-mono tracking-wider transition-all flex items-center gap-2"
                             >
                               {fav.registrationNumber}
                             </button>
@@ -2958,7 +2934,7 @@ END:VEVENT
                                   onClick={() => performLookup(vehicle.registrationNumber)}
                                   className="text-sm font-semibold text-emerald-100 hover:text-emerald-50 transition-colors text-left"
                                 >
-                                  {vehicle.make} {[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} — {vehicle.registrationNumber}
+                                  {vehicle.make} {[vehicle.model, vehicle.variant].filter(Boolean).join(" ")} — <span className="font-mono tracking-wider">{vehicle.registrationNumber}</span>
                                 </button>
                                 <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-200/70">
                                   {vehicle.motExpiryDate && (
@@ -3235,53 +3211,56 @@ END:VEVENT
 
         {/* SEARCH SECTION */}
         <div className="mb-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
-              <input
-                type="text"
-                placeholder="E.g. AB12 CDE"
-                value={vrm}
-                onChange={(e) => {
-                  setVrm(e.target.value.toUpperCase());
-                  if (error) setError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleLookup();
-                }}
-                className="w-full pl-12 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-            </div>
-            <button
-              onClick={handleLookup}
-              disabled={loading}
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Looking up...
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4" />
-                  Look up
-                </>
-              )}
-            </button>
-
-            {recentLookups.length >= 2 && (
+          <div className="relative">
+            <div className="pointer-events-none absolute -inset-2 bg-gradient-to-r from-cyan-500/15 via-blue-500/15 to-purple-500/10 blur-2xl rounded-3xl opacity-70" aria-hidden="true" />
+            <div className="relative flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500/70 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="AB12 CDE"
+                  value={vrm}
+                  onChange={(e) => {
+                    setVrm(e.target.value.toUpperCase());
+                    if (error) setError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleLookup();
+                  }}
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-900/80 backdrop-blur-sm border border-slate-700/70 rounded-xl text-slate-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.2em]"
+                />
+              </div>
               <button
-                onClick={() => {
-                  setComparisonMode(!comparisonMode);
-                  setCompareVehicle1(null);
-                  setCompareVehicle2(null);
-                }}
-                className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                onClick={handleLookup}
+                disabled={loading}
+                className="px-6 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-xl transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-cyan-500/20"
               >
-                🔄 Compare
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Looking up...
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-4 h-4" />
+                    Look up
+                  </>
+                )}
               </button>
-            )}
+
+              {recentLookups.length >= 2 && (
+                <button
+                  onClick={() => {
+                    setComparisonMode(!comparisonMode);
+                    setCompareVehicle1(null);
+                    setCompareVehicle2(null);
+                  }}
+                  className="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                >
+                  🔄 Compare
+                </button>
+              )}
+            </div>
           </div>
 
           {error && (
@@ -3296,6 +3275,38 @@ END:VEVENT
             <p className="mt-2 text-xs text-slate-500">
               Free MOT history, tax status, ULEZ check &mdash; and free MOT reminders by email.
             </p>
+          )}
+
+          {/* SECONDARY NAVIGATION (moved out of header for hero compression) */}
+          {!data && !loading && (
+            <div className="mt-8 pt-6 border-t border-slate-800/60 space-y-5">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
+                <span className="text-slate-700 hidden sm:inline" aria-hidden="true">&middot;</span>
+                <a href="/stats" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">UK Car Stats</a>
+                <span className="text-slate-700 hidden sm:inline" aria-hidden="true">&middot;</span>
+                <a href="/mot-reminder" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <Bell className="w-3.5 h-3.5" />
+                  Free MOT Reminders
+                </a>
+                <span className="text-slate-700 hidden sm:inline" aria-hidden="true">&middot;</span>
+                <a href="/compare" className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5">
+                  <ArrowLeftRight className="w-3.5 h-3.5" />
+                  Compare
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Our Partners</span>
+                <span className="text-slate-700" aria-hidden="true">·</span>
+                <a href={PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "header")} className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/50 hover:border-slate-600/50 transition-all" title={PARTNER_LINKS.bookMyGarage.description}>
+                  <img src="/bmg-logo.png" alt="BookMyGarage" className="h-7" width={49} height={28} loading="lazy" />
+                  <span className="text-xs text-slate-400 font-medium">BookMyGarage</span>
+                </a>
+              </div>
+
+              <DidYouKnow />
+            </div>
           )}
 
           {/* Generic MOT reminder signup — shown on homepage when no lookup active */}
