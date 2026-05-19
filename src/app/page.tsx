@@ -2730,32 +2730,24 @@ END:VEVENT
         }) }}
       />
 
-      {/* Subtle background pattern */}
-      <div className="fixed inset-0 pointer-events-none opacity-5">
-        <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-          {/* Road lines */}
+      {/* Dot-grid background — replaces the previous emoji-car pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.07]">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
-            <pattern id="roadLines" x="0" y="0" width="200" height="600" patternUnits="userSpaceOnUse">
-              <line x1="100" y1="0" x2="100" y2="600" stroke="#fff" strokeWidth="2" strokeDasharray="40,20" />
+            <pattern id="dotGrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="16" cy="16" r="0.9" fill="#22d3ee" />
             </pattern>
           </defs>
-          <rect width="1200" height="800" fill="url(#roadLines)" />
-          
-          {/* Car silhouettes - scattered */}
-          <g opacity="0.15">
-            <text x="100" y="150" fontSize="120" fill="#fff">🚗</text>
-            <text x="900" y="300" fontSize="140" fill="#fff">🚙</text>
-            <text x="400" y="650" fontSize="110" fill="#fff">🚕</text>
-            <text x="1000" y="600" fontSize="100" fill="#fff">🚗</text>
-          </g>
+          <rect width="100%" height="100%" fill="url(#dotGrid)" />
         </svg>
       </div>
 
-      {/* Gradient overlays for depth */}
+      {/* Ambient gradient orbs — three offset, slow-drifting light sources */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
-        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-cyan-500/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/[0.06] to-transparent rounded-full blur-3xl animate-orb-1" />
+        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-cyan-500/[0.06] to-transparent rounded-full blur-3xl animate-orb-2" />
+        <div className="absolute top-1/3 right-1/4 w-1/3 h-1/3 bg-gradient-to-br from-purple-500/[0.05] to-transparent rounded-full blur-3xl animate-orb-3" />
       </div>
 
       {/* Full-screen logo reveal overlay */}
@@ -2841,6 +2833,15 @@ END:VEVENT
         }
         .animate-logoReveal {
           animation: logoReveal 3.5s ease-out forwards;
+        }
+        @keyframes orbDrift1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, 30px); } }
+        @keyframes orbDrift2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, -20px); } }
+        @keyframes orbDrift3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -40px); } }
+        .animate-orb-1 { animation: orbDrift1 32s ease-in-out infinite; }
+        .animate-orb-2 { animation: orbDrift2 38s ease-in-out infinite; }
+        .animate-orb-3 { animation: orbDrift3 44s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-orb-1, .animate-orb-2, .animate-orb-3 { animation: none; }
         }
       `}</style>
 
