@@ -635,6 +635,8 @@ export default function Home() {
   const shareToastTimer = useRef<NodeJS.Timeout | null>(null);
   const shareSentinelMidRef = useRef<HTMLDivElement | null>(null);
   const shareSentinelBottomRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showLogoReveal, setShowLogoReveal] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [compareReg1, setCompareReg1] = useState<string>("");
@@ -684,6 +686,61 @@ export default function Home() {
       body: JSON.stringify({ type: "page_view", path: window.location.pathname }),
     }).catch(() => {});
   }, []);
+
+  // Animated reg-plate placeholder — types and clears example regs in the
+  // search input. Pauses when the user has typed anything, has focus, or
+  // has prefers-reduced-motion enabled. Imperative DOM update avoids
+  // re-rendering Home() every frame.
+  useEffect(() => {
+    if (vrm.length > 0 || isSearchFocused) return;
+    const input = searchInputRef.current;
+    if (!input) return;
+
+    const reduceMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      input.placeholder = "AB12 CDE";
+      return;
+    }
+
+    const plates = ["AB12 CDE", "MA66 JVK", "LP15 XYZ", "VN23 BCD"];
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const wait = (ms: number) => new Promise<void>((resolve) => { timer = setTimeout(() => resolve(), ms); });
+
+    const animate = async () => {
+      // Show initial placeholder for a beat before starting the cycle
+      input.placeholder = plates[0];
+      await wait(2500);
+      if (cancelled) return;
+
+      let idx = 0;
+      while (!cancelled) {
+        const current = plates[idx];
+        for (let i = current.length - 1; i >= 0; i--) {
+          if (cancelled) return;
+          input.placeholder = current.slice(0, i);
+          await wait(45);
+        }
+        await wait(300);
+        if (cancelled) return;
+        idx = (idx + 1) % plates.length;
+        const next = plates[idx];
+        for (let i = 1; i <= next.length; i++) {
+          if (cancelled) return;
+          input.placeholder = next.slice(0, i);
+          await wait(75);
+        }
+        await wait(2200);
+      }
+    };
+
+    animate();
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+      if (input) input.placeholder = "AB12 CDE";
+    };
+  }, [vrm.length, isSearchFocused]);
 
   // Load recent guides
   useEffect(() => {
@@ -3225,6 +3282,7 @@ END:VEVENT
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500/70 pointer-events-none" />
                 <input
+                  ref={searchInputRef}
                   type="text"
                   placeholder="AB12 CDE"
                   value={vrm}
@@ -3235,6 +3293,8 @@ END:VEVENT
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleLookup();
                   }}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
                   className="w-full pl-12 pr-4 py-3.5 bg-slate-900/80 backdrop-blur-sm border border-slate-700/70 rounded-xl text-slate-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.2em]"
                 />
               </div>
