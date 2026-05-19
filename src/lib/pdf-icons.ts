@@ -407,6 +407,56 @@ export function drawIcon(
   doc.restoreGraphicsState();
 }
 
+// ── Free Plate Check Brand Mark ──────────────────────────────────────────────
+
+/**
+ * Draw the Free Plate Check BoltMark on a PDF page.
+ *
+ * Uses the 24×32 web BoltMark proportions (forward-leaning polygon, sharper
+ * than Lucide's Zap). Renders as two layered fills with a small offset to
+ * suggest the cyan→blue gradient and glow used on the website, since jsPDF
+ * does not support true linear gradients on paths.
+ *
+ * Width auto-scales to (24/32) × height to preserve the web proportions.
+ *
+ * @param x       top-left X in mm
+ * @param y       top-left Y in mm
+ * @param height  total height in mm
+ */
+export function drawBoltMark(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  height: number,
+): void {
+  const scale = height / 32;
+  // Subtle blue underlay offset gives a halo/depth feel without true gradient
+  const offset = Math.max(height * 0.04, 0.4);
+
+  const buildOps = (offX: number, offY: number): PathOp[] => [
+    { op: "m", c: [15 * scale + x + offX, 0 * scale + y + offY] },
+    { op: "l", c: [5 * scale + x + offX, 17 * scale + y + offY] },
+    { op: "l", c: [12 * scale + x + offX, 17 * scale + y + offY] },
+    { op: "l", c: [10 * scale + x + offX, 32 * scale + y + offY] },
+    { op: "l", c: [19 * scale + x + offX, 15 * scale + y + offY] },
+    { op: "l", c: [12 * scale + x + offX, 15 * scale + y + offY] },
+    { op: "h", c: [] },
+  ];
+
+  doc.saveGraphicsState();
+
+  // Lower layer: blue-500 with a small down-right offset for depth.
+  doc.setFillColor(59, 130, 246);
+  doc.path(buildOps(offset, offset)).fill();
+
+  // Top layer: cyan-400 precisely positioned. The visible halo of blue
+  // peeking out below-right reads as a soft gradient suggestion.
+  doc.setFillColor(34, 211, 238);
+  doc.path(buildOps(0, 0)).fill();
+
+  doc.restoreGraphicsState();
+}
+
 // ── Tone Icon Helper ─────────────────────────────────────────────────────────
 
 type Tone = "good" | "warn" | "risk" | "info";

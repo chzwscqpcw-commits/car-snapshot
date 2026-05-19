@@ -1,5 +1,5 @@
 import type { jsPDF } from "jspdf";
-import { drawIcon, drawToneIcon, toneFromAccent, type Tone } from "./pdf-icons";
+import { drawIcon, drawToneIcon, toneFromAccent, drawBoltMark, type Tone } from "./pdf-icons";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -531,19 +531,26 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   paintBackground(doc);
 
   // ── Header banner ──
-  drawRoundedRect(doc, 0, 0, 210, 18, 0, C.slate800);
+  // Banner is taller (24mm) to give the brand mark proper presence.
+  const BANNER_H = 24;
+  drawRoundedRect(doc, 0, 0, 210, BANNER_H, 0, C.slate800);
   setFill(doc, C.cyan);
-  doc.rect(0, 0, 210, 1.2, "F");
+  doc.rect(0, 0, 210, 1.5, "F");
 
-  doc.setFontSize(FONT.h1);
+  // BoltMark (14mm tall, 10.5mm wide given 24×32 proportions), centered
+  // vertically within the banner. Wordmark sized up to 22pt white.
+  const boltH = 14;
+  const boltW = boltH * (24 / 32);
+  doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
   setTextColor(doc, C.white);
   const brandTextW = doc.getTextWidth("Free Plate Check");
-  const brandIconSize = 7;
-  const brandTotalW = brandIconSize + 2 + brandTextW;
+  const brandGap = 4;
+  const brandTotalW = boltW + brandGap + brandTextW;
   const brandStartX = (210 - brandTotalW) / 2;
-  drawIcon(doc, "zap", brandStartX, 4.5, brandIconSize, C.cyan as RGB, { filled: true });
-  doc.text("Free Plate Check", brandStartX + brandIconSize + 2, 12);
+  const boltY = (BANNER_H - boltH) / 2 + 0.5;
+  drawBoltMark(doc, brandStartX, boltY, boltH);
+  doc.text("Free Plate Check", brandStartX + boltW + brandGap, BANNER_H / 2 + 4);
 
   // Date below banner
   doc.setFontSize(FONT.small);
@@ -554,9 +561,9 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     month: "long",
     year: "numeric",
   });
-  doc.text(`Vehicle Report \u00B7 ${genDate}`, 105, 24, { align: "center" });
+  doc.text(`Vehicle Report \u00B7 ${genDate}`, 105, BANNER_H + 6, { align: "center" });
 
-  let y = 30;
+  let y = BANNER_H + 12;
 
   // ── Number plate ──
   drawNumberPlate(doc, 105, y, data.registrationNumber);
