@@ -351,32 +351,34 @@ function extractEuroNumber(euroStatus?: string) {
 // Loading animation component
 function LoadingAnimation() {
   return (
-    <div className="flex flex-col items-center justify-center py-12 space-y-6">
-      {/* Animated search/car icon */}
+    <div className="flex flex-col items-center justify-center py-10 space-y-5">
+      {/* Spinning ring with the brand BoltMark pulsing in the centre */}
       <div className="relative w-16 h-16">
-        <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="45" stroke="url(#gradient)" strokeWidth="2" strokeDasharray="140" strokeLinecap="round" />
+        <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" stroke="url(#loaderGradient)" strokeWidth="2" strokeDasharray="120 80" strokeLinecap="round" />
           <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#06b6d4" />
+            <linearGradient id="loaderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#22d3ee" />
+              <stop offset="100%" stopColor="#3b82f6" />
             </linearGradient>
           </defs>
         </svg>
-        <Search className="absolute inset-0 w-8 h-8 m-auto text-blue-400 animate-pulse" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <BoltMark className="w-6 h-8 animate-pulse" />
+        </div>
       </div>
-      
-      {/* Loading text */}
+
+      {/* Status line in mono — reads like a diagnostic terminal */}
       <div className="text-center">
-        <p className="text-slate-300 font-medium">Fetching from DVLA</p>
-        <p className="text-xs text-slate-500 mt-1">Retrieving vehicle details...</p>
+        <p className="text-slate-300 font-mono text-xs uppercase tracking-[0.2em]">Fetching from DVLA</p>
+        <p className="text-xs text-slate-500 mt-1.5">Retrieving vehicle details</p>
       </div>
-      
+
       {/* Progress dots */}
       <div className="flex gap-2">
-        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }} />
-        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }} />
+        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }} />
+        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }} />
       </div>
     </div>
   );
