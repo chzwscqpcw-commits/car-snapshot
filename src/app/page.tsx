@@ -4907,7 +4907,7 @@ END:VEVENT
                         }}
                         className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                           checklistRole === role.value
-                            ? "bg-emerald-600 text-white"
+                            ? "bg-cyan-500 text-white shadow-sm shadow-cyan-500/30"
                             : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                         }`}
                       >
@@ -5265,7 +5265,7 @@ END:VEVENT
                 type="date"
                 value={insuranceModalDate}
                 onChange={(e) => setInsuranceModalDate(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 mb-4"
               />
               
               <div className="flex gap-3">
@@ -5281,7 +5281,7 @@ END:VEVENT
                 <button
                   onClick={handleInsuranceModalSave}
                   disabled={!insuranceModalDate}
-                  className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 text-white font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20 disabled:shadow-none disabled:cursor-not-allowed"
                 >
                   Save
                 </button>
