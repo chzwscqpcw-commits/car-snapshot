@@ -57,7 +57,7 @@ export default function StatsHubPreviewCard({
             key={stat.label}
             className={`rounded-lg border px-2.5 py-1.5 ${badgeColourMap[stat.colour]}`}
           >
-            <div className="text-xs font-bold leading-tight">{stat.value}</div>
+            <div className="text-xs font-mono font-bold tracking-wide leading-tight">{stat.value}</div>
             <div className="text-[10px] opacity-60 leading-tight">
               {stat.label}
             </div>
