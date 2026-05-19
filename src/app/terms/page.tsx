@@ -194,12 +194,12 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Contact</h2>
             <p>
-              For questions about these Terms of Service, contact us at:
+              For questions about these Terms of Service,{" "}
+              <a href="/contact" className="text-blue-400 hover:text-blue-300 underline">
+                use our contact form
+              </a>{" "}
+              at www.freeplatecheck.co.uk/contact.
             </p>
-            <ul className="ml-2">
-              <li>hello@freeplatecheck.co.uk</li>
-              <li>www.freeplatecheck.co.uk</li>
-            </ul>
           </section>
 
           <section>

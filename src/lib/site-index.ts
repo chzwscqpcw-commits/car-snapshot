@@ -186,6 +186,7 @@ export const SITE_ITEMS: SiteItem[] = [
 
   // ─── Site ───
   { title: "About", href: "/about", category: "site", keywords: ["about", "who", "team"] },
+  { title: "Contact", subtitle: "Get in touch — ideas, bugs, business", href: "/contact", category: "site", keywords: ["contact", "email", "support", "feedback", "message"] },
   { title: "Privacy", href: "/privacy", category: "site", keywords: ["privacy", "gdpr", "data"] },
   { title: "Terms", href: "/terms", category: "site", keywords: ["terms", "conditions"] },
 ];

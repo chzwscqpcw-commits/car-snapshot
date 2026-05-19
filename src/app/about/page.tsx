@@ -205,10 +205,11 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Contact</h2>
             <p>
-              Questions or feedback? Email us at{" "}
-              <a href="mailto:hello@freeplatecheck.co.uk" className="text-blue-400 hover:text-blue-300 underline">
-                hello@freeplatecheck.co.uk
-              </a>
+              Questions, ideas or feedback?{" "}
+              <a href="/contact" className="text-blue-400 hover:text-blue-300 underline">
+                Drop us a message
+              </a>{" "}
+              — we read every one.
             </p>
           </section>
 

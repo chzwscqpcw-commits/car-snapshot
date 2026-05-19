@@ -203,12 +203,11 @@ export default function EmbedPage() {
               Questions or feedback?
             </p>
             <p className="text-slate-400 text-sm">
-              Get in touch at{" "}
               <a
-                href="mailto:hello@freeplatecheck.co.uk"
+                href="/contact"
                 className="text-cyan-400 hover:text-cyan-300"
               >
-                hello@freeplatecheck.co.uk
+                Drop us a message →
               </a>
             </p>
           </section>

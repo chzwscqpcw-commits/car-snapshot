@@ -245,7 +245,11 @@ export default function PrivacyPage() {
             </p>
 
             <p className="mt-4">
-              <strong>To exercise these rights, contact us at:</strong> hello@freeplatecheck.co.uk
+              <strong>To exercise these rights, contact us:</strong>{" "}
+              <a href="/contact" className="text-blue-400 hover:text-blue-300 underline">
+                via our contact form
+              </a>
+              .
             </p>
             <p className="mt-2">
               We will respond to all valid requests within 30 days as required by GDPR.
@@ -308,11 +312,13 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">15. Contact Information</h2>
-            <p>For questions about this Privacy Policy, contact:</p>
-            <ul className="ml-2">
-              <li><strong>Email:</strong> hello@freeplatecheck.co.uk</li>
-              <li><strong>Website:</strong> www.freeplatecheck.co.uk</li>
-            </ul>
+            <p>
+              For questions about this Privacy Policy,{" "}
+              <a href="/contact" className="text-blue-400 hover:text-blue-300 underline">
+                use our contact form
+              </a>{" "}
+              at www.freeplatecheck.co.uk/contact.
+            </p>
           </section>
 
           <section>
