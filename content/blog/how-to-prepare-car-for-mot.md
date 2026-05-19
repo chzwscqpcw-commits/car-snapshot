@@ -139,7 +139,7 @@ Testers check for:
 
 You can test your car up to one month before the current MOT expires without losing any days on the new certificate. This gives you a buffer — if the car fails, you have time to arrange repairs and a retest without driving around without a valid MOT.
 
-You can compare garage prices online to find competitive MOT rates near you. The maximum fee is £54.85, but many garages charge £30–£40, and some offer free or discounted MOTs when combined with a service.
+[Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to find competitive rates near you. The maximum fee is £54.85, but many garages charge £30–£40, and some offer free or discounted MOTs when combined with a service.
 
 ## After the test
 

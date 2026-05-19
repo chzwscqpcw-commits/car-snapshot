@@ -24,8 +24,8 @@ These use a banding system based purely on CO2 emissions. There are 13 bands (A 
 These use a different structure:
 
 - **First year rate** — Based on CO2 emissions at registration. Zero-emission vehicles pay nothing; the highest emitters pay over £2,000 in the first year alone.
-- **Standard rate** — From the second year onwards, most vehicles pay a flat standard rate regardless of emissions. For 2025/26, this is £190 per year for petrol and diesel cars.
-- **Expensive car supplement** — Vehicles with a list price over £40,000 when new pay an additional supplement of £410 per year for five years (years 2 through 6), on top of the standard rate.
+- **Standard rate** — From the second year onwards, most vehicles pay a flat standard rate regardless of emissions. For 2026/27, this is £200 per year for petrol and diesel cars.
+- **Expensive car supplement** — Vehicles with a list price over £40,000 when new pay an additional supplement of around £440 per year for five years (years 2 through 6), on top of the standard rate. The threshold rises to £50,000 for zero-emission vehicles from April 2026.
 
 You can check what any vehicle currently pays by looking up its registration on our [free tax checker](/tax-check).
 

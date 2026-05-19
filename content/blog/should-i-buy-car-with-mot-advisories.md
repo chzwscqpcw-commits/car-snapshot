@@ -61,7 +61,7 @@ Some advisories signal genuinely expensive repairs ahead. If you see these, you 
 - **Drive shaft boot split or deteriorating** — once the boot splits, the CV joint gets contaminated and wears rapidly. A boot replacement is cheap (£80-£150), but if the joint has already worn, you're looking at £200-£400.
 - **Subframe or mounting corrosion** — corrosion on structural mounting points can be extremely expensive to address and may render the car uneconomical to repair.
 
-If you do decide to proceed with a car carrying these advisories, get a quote from a garage before agreeing a price. The seller can't reasonably argue with a written estimate.
+If you do decide to proceed with a car carrying these advisories, get a quote from a garage before agreeing a price. The seller can't reasonably argue with a written estimate. [Compare repair quotes from local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-repairs%2F) — you can enter the car's registration to get prices for the exact advisory items flagged.
 
 ## Advisories that should make you walk away
 

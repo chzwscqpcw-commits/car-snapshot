@@ -15,7 +15,7 @@ faqItems:
   - question: "How can I reduce my fuel costs?"
     answer: "The most effective ways to cut fuel costs are: checking your car's real-world fuel economy (which can differ significantly from official figures), maintaining correct tyre pressures, removing unnecessary weight, avoiding harsh acceleration, and shopping around for cheaper forecourts. Longer term, switching to a hybrid or electric vehicle offers the biggest savings."
   - question: "Will fuel prices come down in 2026?"
-    answer: "Forecasts vary, but most analysts expect prices to remain elevated through 2026 while Middle East tensions persist. The UK government's 5p fuel duty cut (in place since March 2022) is due for review, and any reinstatement would add further cost. Drivers should plan for sustained higher prices in the near term."
+    answer: "Forecasts vary, but most analysts expect prices to remain elevated through 2026 while Middle East tensions persist. The UK government has now confirmed the 5p fuel duty cut will be unwound in three stages: +1p on 1 September 2026, +2p on 1 December 2026, and a further +2p on 1 March 2027. By next spring, pump prices will be roughly 6p/litre higher (including VAT) just from duty changes."
 ---
 
 If you've been wincing at the forecourt lately, you're not alone. UK fuel prices have surged dramatically in early 2026, with diesel prices approaching levels not seen since the 2022 energy crisis. Here's what's happening, why, and what it means for your wallet.
@@ -106,6 +106,6 @@ It takes seconds and it's completely free — no signup required.
 
 The honest answer is that nobody knows for certain. Much depends on how Middle East tensions develop and whether OPEC chooses to increase production. Most analyst forecasts suggest prices will remain elevated through at least mid-2026.
 
-The UK government's 5p fuel duty cut, in place since March 2022, is also under review. If it's reversed, that would add a further 6p per litre at the pump (including VAT). For now, drivers should plan for sustained higher costs and take whatever steps they can to reduce consumption.
+The UK government has now confirmed the end of the 5p fuel duty cut introduced in March 2022. The reversal will be staged: **+1p per litre from 1 September 2026**, a further **+2p from 1 December 2026**, and a final **+2p from 1 March 2027**. That's roughly an extra 6p per litre at the pump (including VAT) by next spring — the first fuel duty rise in 16 years. Drivers should plan for sustained higher costs and take whatever steps they can to reduce consumption.
 
 We'll continue to update our [fuel price tracker](/stats/fuel-prices) weekly with the latest government data, so you can monitor the trend as it develops.

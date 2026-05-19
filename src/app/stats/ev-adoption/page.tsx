@@ -50,7 +50,7 @@ const faqItems = [
   {
     question: "Are there still government grants for electric cars?",
     answer:
-      "The UK Plug-in Car Grant ended in June 2022, but several incentives remain. EVs are exempt from Vehicle Excise Duty (VED) until April 2025, after which they pay a reduced first-year rate. Company car drivers benefit from a Benefit-in-Kind (BiK) rate of just 2% for BEVs (rising to 3% in 2025/26 and 4% in 2026/27). The OZEV Workplace Charging Scheme and EV Chargepoint Grant for renters and flat owners are still available.",
+      "The original Plug-in Car Grant ended in June 2022, but the government launched a new Electric Car Grant in July 2025 offering up to £3,750 off eligible new EVs under £37,000 (Band 1) or £1,500 (Band 2) — over 40 models now qualify. EVs began paying VED from April 2025 (£10 first year, then the standard rate of £200/year from 2026/27). Company car drivers still benefit from a low Benefit-in-Kind (BiK) rate (4% for BEVs in 2026/27). The OZEV Workplace Charging Scheme and EV Chargepoint Grant for renters and flat owners are also still available.",
   },
   {
     question: "Which UK regions have the most electric cars?",

@@ -18,19 +18,19 @@ faqItems:
 
 For years, zero road tax was one of the clearest financial perks of going electric. That changed on 1 April 2025, when electric vehicles started paying VED for the first time. With another round of rate changes coming in April 2026, here's exactly what EV owners and prospective buyers need to know.
 
-## What electric cars pay now (2025/26)
+## What electric cars pay now (2026/27)
 
-Since April 2025, electric vehicle VED works like this:
+From 1 April 2026, electric vehicle VED works like this:
 
-- **New EV (first registered from April 2025):** £10 first-year rate, then £195/year standard rate
-- **Existing EV (registered April 2017 – March 2025):** £195/year standard rate — jumped straight from £0 to the full rate
+- **New EV (first registered from April 2026):** £10 first-year rate, then £200/year standard rate
+- **Existing EV (registered April 2017 – March 2026):** £200/year standard rate — the previous £0 exemption ended in April 2025
 - **Pre-April 2017 EV:** £20/year (Band A equivalent)
 
 The first-year rate of £10 is the lowest available — lower even than the cheapest petrol hybrids. But the standard rate is the same flat amount that every post-2017 car pays, regardless of fuel type. For the full rate tables across all vehicle types, see our [complete car tax rates guide for 2026](/blog/car-tax-rates-2026-complete-guide).
 
 You can check what any vehicle currently pays using our [free tax check](/tax-check).
 
-## What changes in April 2026
+## What changed in April 2026
 
 ### Standard rate: £195 to £200
 

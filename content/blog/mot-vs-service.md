@@ -97,6 +97,10 @@ If you're going for the combined package — which we&apos;d recommend for most 
 3. **What's the policy if the MOT fails on something the service should have caught?** Reputable garages absorb the cost; some don&apos;t.
 4. **Is there a free or discounted retest if the MOT fails?** Most garages offer a free partial retest within 10 working days.
 
+## Compare combined MOT-and-service prices
+
+For most drivers, the cheapest and most convenient option is a combined MOT-and-service package booked at one garage. Prices vary widely — anywhere from £140 for an interim-and-MOT bundle up to £300+ for a full service plus MOT. [Compare combined service and MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices and availability for local garages, with the service tier clearly shown for each.
+
 ## Set a free MOT reminder so you never get caught out
 
 The most common cause of an unexpected MOT panic is missing the renewal date and having to rush a last-minute test (often more expensive, and you have less time to fix problems). [Set a free MOT reminder](/mot-reminder) — we'll email you 28 and 7 days before your MOT is due, no signup required.

@@ -112,6 +112,12 @@ Knowing the most common failures can help you prepare:
 
 Many of these can be spotted before the test. Our guide on [how to prepare your car for its MOT](/blog/how-to-prepare-car-for-mot) covers a quick walk-around checking lights, tyres, and wipers that can avoid the most common failures.
 
+## Get repair quotes from local garages
+
+Before agreeing to any repair, get two or three quotes. Prices for the same job can vary by 50% or more between garages. [Compare local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-repairs%2F) — you can enter your registration to see quotes for the exact work your car needs, with reviews and availability for each garage.
+
+If the failed garage offers a free retest, factor that in: a slightly cheaper repair elsewhere may end up costing more once you add a retest fee at the original garage. But for major work like cambelts, suspension rebuilds, or brake overhauls, the saving from shopping around almost always outweighs the retest fee.
+
 ## The bottom line
 
 Failing an MOT is common and usually fixable. Get the defect list in writing, understand your driving restrictions, shop around for repair quotes, and take advantage of free retest periods. If you booked early, you've got time on your side.

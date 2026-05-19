@@ -60,7 +60,7 @@ Check your vehicle's compliance instantly with our [ULEZ check](/ulez-check).
 
 ### Road tax (VED)
 
-Vehicles registered after April 2017 pay a flat-rate VED of £190 per year (2024/25 rates) regardless of emissions, with a first-year rate based on CO2. But for cars registered between March 2001 and March 2017, [road tax](/tax-check) is banded by CO2 emissions — and cleaner Euro 5/6 engines generally produce lower CO2 than their Euro 3/4 predecessors. See our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide) for the full band-by-band breakdown.
+Vehicles registered after April 2017 pay a flat-rate VED of £200 per year (2026/27 rates) regardless of emissions, with a first-year rate based on CO2. But for cars registered between March 2001 and March 2017, [road tax](/tax-check) is banded by CO2 emissions — and cleaner Euro 5/6 engines generally produce lower CO2 than their Euro 3/4 predecessors. See our [complete car tax rates guide](/blog/car-tax-rates-2026-complete-guide) for the full band-by-band breakdown.
 
 ### Resale value
 
