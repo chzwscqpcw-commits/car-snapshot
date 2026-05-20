@@ -58,19 +58,30 @@ jobs:
       - name: Refresh Euro NCAP ratings
         run: npx tsx scripts/fetch-ncap-ratings.ts
 
+      - name: Refresh new-car list prices (Parkers)
+        run: npx tsx scripts/fetch-new-prices.ts
+
+      - name: Refresh EV specs (ev-database.org)
+        # ev-database.org rate-limits aggressively. If we get HTTP 429
+        # repeatedly the script may fail outright — that's not fatal to the
+        # weekly refresh; we ship whatever the other scrapers produced.
+        continue-on-error: true
+        run: npx tsx scripts/fetch-ev-specs.ts
+
       - name: Validate all data
         run: npx tsx scripts/validate-data.ts
 
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json; then
+          DATA_FILES="src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-prices.json src/data/ev-specs.json"
+          if git diff --quiet $DATA_FILES; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No data changes — nothing to commit."
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Changes detected:"
-            git diff --stat src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json
+            git diff --stat $DATA_FILES
           fi
 
       - name: Rebuild freshness manifest
@@ -86,8 +97,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/_freshness.json
-          git commit -m "data: weekly auto-refresh (recalls + VCA + NCAP)"
+          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json
+          git commit -m "data: weekly auto-refresh"
           git push origin main
 
       - name: Summary
@@ -105,9 +116,10 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           node -e "
             const fs=require('fs');
-            for (const f of ['recalls.json','fuel-economy.json','ncap-ratings.json']) {
+            for (const f of ['recalls.json','fuel-economy.json','ncap-ratings.json','new-prices.json','ev-specs.json']) {
               const d=JSON.parse(fs.readFileSync('src/data/'+f,'utf-8'));
-              console.log(f.padEnd(22)+' '+d.length.toLocaleString()+' entries');
+              const count = Array.isArray(d) ? d.length : Object.keys(d).length;
+              console.log(f.padEnd(22)+' '+count.toLocaleString()+' entries');
             }
           " >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

@@ -89,9 +89,10 @@ const FILE_META: Record<string, FileMeta> = {
   },
   "new-prices.json": {
     threshold: 180,
-    source: "curated",
-    refreshHint: "Research current list prices from manufacturer websites for popular UK models",
-    sourceUrl: null,
+    source: "semi-auto",
+    refreshHint:
+      "Scrapes Parkers review sitemap (lastmod within 180d) via puppeteer. Run: npx tsx scripts/fetch-new-prices.ts",
+    sourceUrl: "https://www.parkers.co.uk/sitemap.xml",
   },
   "ev-specs.json": {
     threshold: 180,
