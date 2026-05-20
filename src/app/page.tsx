@@ -2869,26 +2869,22 @@ END:VEVENT
       <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 pt-8 sm:pt-12 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10">
         {/* HEADER WITH BRAND */}
         {/*
-          Two states: pre-lookup shows the full marketing hero (large
-          wordmark, tagline, vehicles-checked counter). Once `data` is
-          populated, the visitor came for the result — collapse to a
-          slim brand strip so the answer is closer to the top of the
-          page on mobile. Tagline + stats hide; logo + wordmark shrink.
+          Only shown in entry state. Once `data` is populated, SiteNav
+          (the sticky top bar) already has the bolt + wordmark — no need
+          to repeat the brand a second time directly below it.
         */}
         <header className="mb-6">
-          <div className={`flex items-center gap-3 group ${data ? "mb-2" : "mb-4"}`}>
-            <BoltMark
-              glow
-              className={`transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)] ${data ? "w-7 h-9 sm:w-8 sm:h-10" : "w-9 h-12 sm:w-11 sm:h-14"}`}
-            />
-            <h1
-              className={`font-bold text-white tracking-tight ${data ? "text-2xl sm:text-3xl" : "text-4xl sm:text-5xl"}`}
-            >
-              Free Plate Check
-            </h1>
-          </div>
           {!data && (
             <>
+              <div className="flex items-center gap-3 mb-4 group">
+                <BoltMark
+                  glow
+                  className="w-9 h-12 sm:w-11 sm:h-14 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+                />
+                <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
+                  Free Plate Check
+                </h1>
+              </div>
               <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
                 Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
               </p>
