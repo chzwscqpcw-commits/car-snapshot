@@ -351,10 +351,11 @@ function buildComparables(
 
   if (aboveFloor.length === 0) return null;
 
-  // Step 3: progressively widen the year tolerance, preferring year-confirmed
-  // listings. We only fall back to year=null items if we don't have enough
-  // year-known matches — sellers who don't put the year in the title are
-  // disproportionately listing older / parts cars that would skew the median.
+  // Step 3: ONLY accept listings where we can confirm the year. eBay sellers
+  // who omit the year in the title disproportionately list old/salvage cars
+  // (BMW E36, E91, F30 chassis codes etc.), so accepting "year unknown" as a
+  // match pollutes the median with cars from the wrong decade. We widen the
+  // tolerance progressively but always require a parsed year.
   const mappedFuel = fuelType ? FUEL_TYPE_MAP[fuelType.toUpperCase()] || null : null;
   const fuelOk = (i: RawItem) =>
     !mappedFuel || !i.titleFuel || i.titleFuel === mappedFuel;
@@ -362,32 +363,18 @@ function buildComparables(
   let selected: RawItem[] = [];
   for (const tol of [0, 1, 2, 3, 5]) {
     yearTolerance = tol;
-    // First try only year-confirmed listings at this tolerance.
-    const yearConfirmed = aboveFloor.filter(
+    selected = aboveFloor.filter(
       (i) => i.titleYear !== null && Math.abs(i.titleYear - year) <= tol && fuelOk(i),
     );
-    if (yearConfirmed.length >= 5) {
-      selected = yearConfirmed;
-      break;
-    }
-    // Not enough year-confirmed — fold in year=null items at this tolerance.
-    const withNullYears = aboveFloor.filter((i) => {
-      if (i.titleYear !== null && Math.abs(i.titleYear - year) > tol) return false;
-      return fuelOk(i);
-    });
-    if (withNullYears.length >= 5) {
-      selected = withNullYears;
-      break;
-    }
-    selected = withNullYears; // best we have at this tolerance
+    if (selected.length >= 5) break;
   }
 
-  // Final fallback: if we still don't have ≥3 items after widening, drop fuel.
+  // Final fallback: if still <3 year-confirmed items even at ±5, drop the
+  // fuel-type requirement to widen the pool a bit.
   if (selected.length < 3) {
-    selected = aboveFloor.filter((i) => {
-      if (i.titleYear !== null && Math.abs(i.titleYear - year) > yearTolerance) return false;
-      return true;
-    });
+    selected = aboveFloor.filter(
+      (i) => i.titleYear !== null && Math.abs(i.titleYear - year) <= yearTolerance,
+    );
   }
 
   if (selected.length < 2) return null;
