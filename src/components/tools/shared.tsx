@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -10,6 +11,7 @@ import {
   Gauge,
   Wind,
   PoundSterling,
+  ArrowRight,
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
@@ -162,24 +164,110 @@ export function LookupError({
   message: string;
   backHref?: string;
 }) {
+  const router = useRouter();
+  const pathname = usePathname() || backHref;
+  const [retryReg, setRetryReg] = useState("");
+  const [retrySubmitting, setRetrySubmitting] = useState(false);
+  const [retryError, setRetryError] = useState("");
+
+  async function handleRetry(e?: React.FormEvent) {
+    e?.preventDefault();
+    const cleaned = retryReg.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+    if (cleaned.length < 2 || cleaned.length > 8) {
+      setRetryError("That doesn’t look like a valid UK reg.");
+      return;
+    }
+    setRetryError("");
+    setRetrySubmitting(true);
+    try {
+      const res = await fetch("/api/lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vrm: cleaned }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setRetryError(
+          (body && (body.error || body.message)) ||
+            "Still couldn’t find that — double-check the reg."
+        );
+        return;
+      }
+      router.push(`${pathname}?vrm=${cleaned}`);
+    } catch {
+      setRetryError("Couldn’t reach the lookup — check your connection.");
+    } finally {
+      setRetrySubmitting(false);
+    }
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 pt-8 pb-12">
       <VehiclePill reg={vrm} />
-      <div className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-950/30 p-6">
-        <div className="flex items-start gap-3">
+      <div className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-950/30 p-5 sm:p-6">
+        <div className="flex items-start gap-3 mb-4">
           <AlertTriangle className="h-5 w-5 text-rose-400 flex-shrink-0 mt-0.5" />
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className="text-base font-semibold text-rose-200">
               Couldn't pull this check
             </h2>
             <p className="mt-1 text-sm text-rose-200/80">{message}</p>
-            <a
-              href={backHref}
-              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-rose-300 hover:text-rose-200"
-            >
-              ← Try a different registration
-            </a>
           </div>
+        </div>
+
+        <form onSubmit={handleRetry} className="mt-2" noValidate>
+          <label
+            htmlFor="retry-reg"
+            className="block text-[11px] font-semibold uppercase tracking-wider text-rose-300/80 mb-1.5"
+          >
+            Try a different registration
+          </label>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+            <input
+              id="retry-reg"
+              type="text"
+              value={retryReg}
+              onChange={(e) => {
+                setRetryReg(e.target.value.toUpperCase());
+                setRetryError("");
+              }}
+              placeholder="e.g. AB12 CDE"
+              maxLength={10}
+              disabled={retrySubmitting}
+              autoCapitalize="characters"
+              spellCheck={false}
+              className="h-11 flex-1 rounded-lg border border-rose-500/30 bg-slate-950/60 px-3 font-[family-name:var(--font-geist-mono)] text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/30 disabled:opacity-60"
+            />
+            <button
+              type="submit"
+              disabled={retrySubmitting}
+              className="h-11 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 text-sm font-semibold text-white shadow-md shadow-cyan-500/20 transition-all disabled:opacity-70 disabled:cursor-progress"
+            >
+              {retrySubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Checking…
+                </>
+              ) : (
+                <>
+                  Check
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </div>
+          {retryError && (
+            <p className="mt-2 text-xs text-rose-300">{retryError}</p>
+          )}
+        </form>
+
+        <div className="mt-4 pt-3 border-t border-rose-500/20 text-xs text-rose-300/80">
+          <a
+            href={backHref}
+            className="inline-flex items-center gap-1 hover:text-rose-200 transition-colors"
+          >
+            ← Or browse all tools
+          </a>
         </div>
       </div>
     </div>
