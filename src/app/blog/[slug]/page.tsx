@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
 import BlogTagPill from "@/components/BlogTagPill";
-import { Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
@@ -186,19 +186,24 @@ export default async function BlogPostPage({ params }: PageProps) {
               url={`https://www.freeplatecheck.co.uk/blog/${slug}`}
               title={post.title}
             />
-            {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 ml-2">
-                {tags.map((tag) => (
-                  <a
-                    key={tag}
-                    href={`/blog/tag/${tag}`}
-                    className="transition-opacity hover:opacity-80"
-                  >
-                    <BlogTagPill tag={tag} label={getTagLabel(tag)} size="xs" />
-                  </a>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-wrap gap-1.5 ml-2">
+              <a
+                href="/blog"
+                className="inline-flex items-center gap-1 rounded-full border border-slate-600/60 bg-slate-800/80 px-2 py-0.5 text-[10px] font-medium text-slate-200 transition-opacity hover:opacity-80"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                All guides
+              </a>
+              {tags.map((tag) => (
+                <a
+                  key={tag}
+                  href={`/blog/tag/${tag}`}
+                  className="transition-opacity hover:opacity-80"
+                >
+                  <BlogTagPill tag={tag} label={getTagLabel(tag)} size="xs" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
