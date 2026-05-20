@@ -1,6 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback, Fragment } from "react";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Activity,
+  Bell,
+  Calculator,
+  ChevronDown,
+  Database,
+  Fuel,
+  Lock,
+  Mail,
+  RefreshCw,
+  Search,
+  TrendingDown,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -17,13 +32,29 @@ type HealthData = {
   services: ServiceStatus[];
 };
 
+type TopMake = { make: string; count: number };
+
 type StatsData = {
-  lookups: { last1h: number; last24h: number; last7d: number };
-  pageViews: { last24h: number; last7d: number };
+  lookups: {
+    last1h: number;
+    last24h: number;
+    last7d: number;
+    today: number;
+    yesterday: number;
+  };
+  pageViews: {
+    last24h: number;
+    last7d: number;
+    today: number;
+    yesterday: number;
+  };
   uniqueVisitors: { last24h: number; last7d: number };
   emailSignups: number;
   valuations: number;
   motReminders: number;
+  contactMessages: { today: number; last7d: number; allTime: number };
+  motRemindersLast7d: number;
+  topMakesToday: TopMake[];
 };
 
 type DataFileEntry = {
@@ -31,6 +62,9 @@ type DataFileEntry = {
   entries: number;
   lastModified: string;
   daysAgo: number;
+  productionDaysAgo: number | null;
+  productionUpdatedAt: string | null;
+  effectiveDaysAgo: number;
   threshold: number;
   stale: boolean;
   source: "auto" | "semi-auto" | "curated";
@@ -52,7 +86,7 @@ type FuelPriceData = {
   date: string | null;
 };
 
-// ── PIN Gate ───────────────────────────────────────────────────────────────────
+// ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
 const PIN = "4533";
 const SESSION_KEY = "fpc_admin_pin";
@@ -77,10 +111,7 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm">
         <div className="flex flex-col items-center mb-6">
           <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4">
-            <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+            <Lock className="w-5 h-5 text-slate-400" />
           </div>
           <h1 className="text-lg font-bold text-white">Admin Dashboard</h1>
           <p className="text-slate-400 text-sm mt-1">Enter PIN to continue</p>
@@ -114,7 +145,7 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
   );
 }
 
-// ── Status Dot ────────────────────────────────────────────────────────────────
+// ── Small reusable bits ───────────────────────────────────────────────────────
 
 function StatusDot({ status }: { status: "ok" | "warning" | "error" }) {
   const colors = {
@@ -125,10 +156,8 @@ function StatusDot({ status }: { status: "ok" | "warning" | "error" }) {
   return <div className={`w-2.5 h-2.5 rounded-full ${colors[status]} shrink-0`} />;
 }
 
-// ── Freshness Status helpers ─────────────────────────────────────────────────
-
 function getFreshnessStatus(daysAgo: number, threshold: number): "ok" | "warning" | "error" {
-  if (daysAgo === -1) return "warning"; // unknown age
+  if (daysAgo === -1) return "warning";
   if (daysAgo >= threshold) return "error";
   if (daysAgo >= threshold * 0.75) return "warning";
   return "ok";
@@ -150,21 +179,115 @@ function getSourcePill(source: "auto" | "semi-auto" | "curated") {
     case "auto":
       return { label: "Auto", classes: "bg-sky-950/50 text-sky-300 border-sky-800/50" };
     case "semi-auto":
-      return { label: "Semi", classes: "bg-violet-950/50 text-violet-300 border-violet-800/50" };
+      return {
+        label: "Semi-auto",
+        classes: "bg-violet-950/50 text-violet-300 border-violet-800/50",
+      };
     case "curated":
       return { label: "Manual", classes: "bg-slate-800/50 text-slate-300 border-slate-700/50" };
   }
 }
 
-// ── Stat Card ─────────────────────────────────────────────────────────────────
-
-function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+function Delta({ current, prior, label }: { current: number; prior: number; label?: string }) {
+  if (prior === 0 && current === 0) {
+    return <span className="text-slate-600">{label ?? "no data"}</span>;
+  }
+  if (prior === 0) {
+    return (
+      <span className="inline-flex items-center gap-0.5 text-emerald-400">
+        <TrendingUp className="h-3 w-3" />
+        new
+      </span>
+    );
+  }
+  const diff = current - prior;
+  if (diff === 0) {
+    return <span className="text-slate-500">flat</span>;
+  }
+  const pct = Math.round((diff / prior) * 100);
+  const positive = diff > 0;
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-      <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-white tabular-nums">{typeof value === "number" ? value.toLocaleString() : value}</p>
-      {sub && <p className="text-slate-400 text-xs mt-0.5">{sub}</p>}
+    <span
+      className={`inline-flex items-center gap-0.5 ${
+        positive ? "text-emerald-400" : "text-amber-400"
+      }`}
+    >
+      {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+      {Math.abs(pct)}%
+    </span>
+  );
+}
+
+// ── Hero KPI card ─────────────────────────────────────────────────────────────
+
+function KpiCard({
+  icon: Icon,
+  label,
+  value,
+  delta,
+  sub,
+  tone = "slate",
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string | number;
+  delta?: React.ReactNode;
+  sub?: string;
+  tone?: "slate" | "cyan" | "emerald" | "amber" | "violet";
+}) {
+  const toneClasses = {
+    slate: "border-slate-800 bg-slate-900",
+    cyan: "border-cyan-500/30 bg-gradient-to-br from-cyan-950/40 via-slate-900 to-slate-900",
+    emerald:
+      "border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900",
+    amber:
+      "border-amber-500/30 bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-900",
+    violet:
+      "border-violet-500/30 bg-gradient-to-br from-violet-950/40 via-slate-900 to-slate-900",
+  } as const;
+  const iconColour = {
+    slate: "text-slate-400",
+    cyan: "text-cyan-300",
+    emerald: "text-emerald-300",
+    amber: "text-amber-300",
+    violet: "text-violet-300",
+  } as const;
+  return (
+    <div className={`rounded-xl border p-4 ${toneClasses[tone]}`}>
+      <div className="flex items-center justify-between mb-2">
+        <Icon className={`h-4 w-4 ${iconColour[tone]}`} />
+        {delta && <div className="text-[11px] font-medium">{delta}</div>}
+      </div>
+      <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">{label}</p>
+      <p className="mt-0.5 text-2xl sm:text-3xl font-bold text-white tabular-nums">
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </p>
+      {sub && <p className="mt-0.5 text-[11px] text-slate-400 leading-tight">{sub}</p>}
     </div>
+  );
+}
+
+// ── Section wrapper ───────────────────────────────────────────────────────────
+
+function Section({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mt-7">
+      <div className="flex items-baseline justify-between mb-3 gap-3">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          {title}
+        </h2>
+        {hint && <p className="text-[11px] text-slate-600">{hint}</p>}
+      </div>
+      {children}
+    </section>
   );
 }
 
@@ -178,12 +301,10 @@ export default function DataHealthPage() {
   const [fuelPrices, setFuelPrices] = useState<FuelPriceData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedFile, setExpandedFile] = useState<string | null>(null);
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
 
-  // Check session on mount
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      setAuthed(true);
-    }
+    if (sessionStorage.getItem(SESSION_KEY) === "1") setAuthed(true);
   }, []);
 
   const fetchDashboardData = useCallback(async () => {
@@ -198,12 +319,12 @@ export default function DataHealthPage() {
       if (statsRes) setStats(statsRes);
       if (dataRes) setDataHealth(dataRes);
       if (fuelRes) setFuelPrices(fuelRes);
+      setLastRefreshed(new Date());
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Fetch on auth + auto-refresh every 60s
   useEffect(() => {
     if (!authed) return;
     fetchDashboardData();
@@ -211,36 +332,28 @@ export default function DataHealthPage() {
     return () => clearInterval(interval);
   }, [authed, fetchDashboardData]);
 
-  if (!authed) {
-    return <PinGate onAuth={() => setAuthed(true)} />;
-  }
+  if (!authed) return <PinGate onAuth={() => setAuthed(true)} />;
 
-  const buildDate = dataHealth?.buildTime
-    ? new Date(dataHealth.buildTime)
-    : null;
+  // ── Build helpers ─────────────────────────────────────────────────────────
+  const buildDate = dataHealth?.buildTime ? new Date(dataHealth.buildTime) : null;
   const formattedDate = buildDate
-    ? buildDate.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    ? buildDate.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
     : "—";
   const formattedTime = buildDate
     ? buildDate.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
     : "";
   const shortCommit =
-    dataHealth?.commit === "local"
-      ? "local"
-      : dataHealth?.commit?.slice(0, 7) ?? "—";
+    dataHealth?.commit === "local" ? "local" : dataHealth?.commit?.slice(0, 7) ?? "—";
 
-  const unhealthyServices =
-    health?.services.filter((s) => s.status === "error") ?? [];
+  const unhealthyServices = health?.services.filter((s) => s.status === "error") ?? [];
 
-  // Sort files: stale first, then by daysAgo descending
   const sortedFiles = dataHealth?.files
     ? [...dataHealth.files].sort((a, b) => {
         if (a.stale !== b.stale) return a.stale ? -1 : 1;
-        return b.daysAgo - a.daysAgo;
+        return b.effectiveDaysAgo - a.effectiveDaysAgo;
       })
     : [];
 
-  // Fuel price freshness
   const fuelDaysOld = fuelPrices?.date
     ? Math.floor((Date.now() - new Date(fuelPrices.date).getTime()) / (1000 * 60 * 60 * 24))
     : null;
@@ -248,267 +361,474 @@ export default function DataHealthPage() {
     !fuelPrices?.date || (fuelDaysOld != null && fuelDaysOld > 14) ? "warning" : "ok";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-slate-950 text-slate-200">
+      <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-10">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-1">Admin Dashboard</h1>
-            <p className="text-slate-400 text-sm">
+        <header className="mb-6 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+              Admin Dashboard
+            </h1>
+            <p className="text-slate-400 text-xs sm:text-sm mt-0.5">
               Live system health, usage analytics &amp; data freshness
             </p>
           </div>
-          {health && (
-            <span
-              className={`text-xs font-medium px-3 py-1 rounded-full border ${
-                health.status === "healthy"
-                  ? "bg-emerald-950/50 border-emerald-800/50 text-emerald-300"
-                  : health.status === "degraded"
-                    ? "bg-amber-950/50 border-amber-800/50 text-amber-300"
-                    : "bg-red-950/50 border-red-800/50 text-red-300"
-              }`}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {health && (
+              <span
+                className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full border ${
+                  health.status === "healthy"
+                    ? "bg-emerald-950/50 border-emerald-800/50 text-emerald-300"
+                    : health.status === "degraded"
+                      ? "bg-amber-950/50 border-amber-800/50 text-amber-300"
+                      : "bg-red-950/50 border-red-800/50 text-red-300"
+                }`}
+              >
+                {health.status.charAt(0).toUpperCase() + health.status.slice(1)}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={fetchDashboardData}
+              className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+              aria-label="Refresh"
+              title="Refresh now"
             >
-              {health.status.charAt(0).toUpperCase() + health.status.slice(1)}
-            </span>
-          )}
-        </div>
+              <RefreshCw className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </header>
 
-        {/* Loading skeleton */}
         {loading && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl h-24 animate-pulse" />
+              <div
+                key={i}
+                className="bg-slate-900 border border-slate-800 rounded-xl h-20 animate-pulse"
+              />
             ))}
           </div>
         )}
 
         {!loading && (
           <>
-            {/* Service Alert Banner */}
+            {/* Service alert */}
             {unhealthyServices.length > 0 && (
-              <div className="bg-red-950/40 border border-red-800/50 rounded-xl p-4 mb-6 flex items-start gap-3">
+              <div className="bg-red-950/40 border border-red-800/50 rounded-xl p-4 mb-5 flex items-start gap-3">
                 <div className="w-3 h-3 rounded-full bg-red-400 animate-pulse shrink-0 mt-0.5" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-red-300 font-semibold text-sm">
-                    {unhealthyServices.length} service{unhealthyServices.length > 1 ? "s" : ""} unhealthy
+                    {unhealthyServices.length} service
+                    {unhealthyServices.length > 1 ? "s" : ""} unhealthy
                   </p>
-                  <p className="text-red-400/70 text-xs mt-0.5">
+                  <p className="text-red-400/70 text-xs mt-0.5 leading-relaxed">
                     {unhealthyServices.map((s) => s.name).join(", ")} — check configuration
                   </p>
                 </div>
               </div>
             )}
 
-            {/* System Status */}
+            {/* ── HERO KPI GRID ── */}
+            {stats && (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                <KpiCard
+                  icon={Search}
+                  label="Lookups today"
+                  value={stats.lookups.today}
+                  delta={
+                    <Delta current={stats.lookups.today} prior={stats.lookups.yesterday} />
+                  }
+                  sub={`${stats.lookups.last7d.toLocaleString()} last 7d`}
+                  tone="cyan"
+                />
+                <KpiCard
+                  icon={Users}
+                  label="Visitors today"
+                  value={stats.uniqueVisitors.last24h}
+                  delta={
+                    <Delta
+                      current={stats.pageViews.today}
+                      prior={stats.pageViews.yesterday}
+                    />
+                  }
+                  sub={`${stats.uniqueVisitors.last7d.toLocaleString()} last 7d`}
+                  tone="emerald"
+                />
+                <KpiCard
+                  icon={Bell}
+                  label="MOT reminders"
+                  value={stats.motReminders}
+                  delta={
+                    stats.motRemindersLast7d > 0 ? (
+                      <span className="inline-flex items-center gap-0.5 text-emerald-400">
+                        <TrendingUp className="h-3 w-3" />
+                        {stats.motRemindersLast7d} this week
+                      </span>
+                    ) : (
+                      <span className="text-slate-500">—</span>
+                    )
+                  }
+                  sub="active subscribers"
+                  tone="violet"
+                />
+                <KpiCard
+                  icon={Mail}
+                  label="Contact msgs"
+                  value={stats.contactMessages.today}
+                  delta={
+                    stats.contactMessages.last7d > 0 ? (
+                      <span className="text-amber-400">
+                        {stats.contactMessages.last7d} this week
+                      </span>
+                    ) : (
+                      <span className="text-slate-500">—</span>
+                    )
+                  }
+                  sub={`${stats.contactMessages.allTime} all time`}
+                  tone="amber"
+                />
+              </div>
+            )}
+
+            {/* ── SYSTEM STATUS ── */}
             {health && (
-              <div className="mb-8">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">System Status</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              <Section
+                title="System status"
+                hint={`Checked ${new Date(health.checkedAt).toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                   {health.services.map((service) => (
                     <div
                       key={service.name}
-                      className="bg-slate-900 border border-slate-800 rounded-xl p-4"
+                      className="bg-slate-900 border border-slate-800 rounded-xl p-3.5"
                     >
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-1.5">
                         <StatusDot status={service.status} />
-                        <span className="text-sm font-semibold text-white">{service.name}</span>
+                        <span className="text-sm font-semibold text-white">
+                          {service.name}
+                        </span>
+                        {service.latencyMs != null && (
+                          <span className="text-[10px] text-slate-500 ml-auto tabular-nums">
+                            {service.latencyMs}ms
+                          </span>
+                        )}
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed">{service.message}</p>
-                      {service.latencyMs != null && (
-                        <p className="text-[11px] text-slate-600 mt-1 tabular-nums">{service.latencyMs}ms</p>
-                      )}
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        {service.message}
+                      </p>
                     </div>
                   ))}
                 </div>
-                <p className="text-[11px] text-slate-600 mt-2">
-                  Last checked {new Date(health.checkedAt).toLocaleTimeString("en-GB")} · Auto-refreshes every 60s
-                </p>
-              </div>
+              </Section>
             )}
 
-            {/* Usage Stats */}
+            {/* ── USAGE DETAIL ── */}
             {stats && (
-              <div className="mb-8">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Usage</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <StatCard label="Lookups (1h)" value={stats.lookups.last1h} />
-                  <StatCard label="Lookups (24h)" value={stats.lookups.last24h} />
-                  <StatCard label="Lookups (7d)" value={stats.lookups.last7d} />
-                  <StatCard label="Page Views (24h)" value={stats.pageViews.last24h} sub={`${stats.pageViews.last7d.toLocaleString()} last 7d`} />
-                  <StatCard label="Unique Visitors (24h)" value={stats.uniqueVisitors.last24h} sub={`${stats.uniqueVisitors.last7d.toLocaleString()} last 7d`} />
-                  <StatCard label="Email Signups" value={stats.emailSignups} sub="all time" />
-                  <StatCard label="Valuations" value={stats.valuations} sub="all time" />
-                  <StatCard label="MOT Reminders" value={stats.motReminders} sub="active" />
-                  {/* Fuel Prices Card */}
-                  {fuelPrices && (
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-1">Fuel Prices</p>
-                      <div className="flex items-center gap-2">
-                        <StatusDot status={fuelStatus} />
-                        <p className="text-lg font-bold text-white tabular-nums">
-                          {Math.round(fuelPrices.petrol)}p / {Math.round(fuelPrices.diesel)}p
+              <Section title="Usage detail">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+                  <MiniStat label="Lookups (1h)" value={stats.lookups.last1h} />
+                  <MiniStat label="Lookups (24h)" value={stats.lookups.last24h} />
+                  <MiniStat label="Page views (24h)" value={stats.pageViews.last24h} />
+                  <MiniStat label="Page views (7d)" value={stats.pageViews.last7d} />
+                  <MiniStat label="Visitors (24h)" value={stats.uniqueVisitors.last24h} />
+                  <MiniStat label="Visitors (7d)" value={stats.uniqueVisitors.last7d} />
+                  <MiniStat
+                    label="Valuations"
+                    value={stats.valuations}
+                    sub="all time"
+                    icon={Calculator}
+                  />
+                  <MiniStat
+                    label="Email signups"
+                    value={stats.emailSignups}
+                    sub="all time"
+                    icon={Mail}
+                  />
+                </div>
+                {fuelPrices && (
+                  <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900 p-3.5 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Fuel className="h-4 w-4 text-amber-300 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+                          Fuel prices
+                        </p>
+                        <p className="text-sm font-semibold text-white tabular-nums">
+                          {Math.round(fuelPrices.petrol)}p /{" "}
+                          {Math.round(fuelPrices.diesel)}p
                         </p>
                       </div>
-                      <p className="text-slate-400 text-xs mt-0.5">
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <StatusDot status={fuelStatus} />
+                      <p className="text-[10px] text-slate-500 mt-1">
                         {fuelPrices.date
-                          ? `${new Date(fuelPrices.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}${fuelDaysOld != null ? ` (${fuelDaysOld}d ago)` : ""}`
-                          : "Using fallback prices"}
+                          ? `${new Date(fuelPrices.date).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "short",
+                            })} (${fuelDaysOld}d ago)`
+                          : "fallback"}
                       </p>
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
+                )}
+              </Section>
             )}
 
-            {/* Data Freshness */}
-            {dataHealth && (
-              <div className="mb-8">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Data Freshness</h2>
+            {/* ── TOP MAKES TODAY ── */}
+            {stats && stats.topMakesToday.length > 0 && (
+              <Section title="Top makes searched today">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                  {stats.topMakesToday.map((m, i) => {
+                    const max = stats.topMakesToday[0].count;
+                    const pct = (m.count / max) * 100;
+                    return (
+                      <div
+                        key={m.make}
+                        className={`relative px-4 py-2.5 flex items-center justify-between gap-3 ${
+                          i < stats.topMakesToday.length - 1
+                            ? "border-b border-slate-800/60"
+                            : ""
+                        }`}
+                      >
+                        <div
+                          className="absolute inset-y-0 left-0 bg-cyan-500/5 pointer-events-none"
+                          style={{ width: `${pct}%` }}
+                        />
+                        <div className="relative flex items-center gap-2.5 min-w-0">
+                          <span className="text-[10px] font-mono text-slate-600 tabular-nums w-4 text-right">
+                            {i + 1}
+                          </span>
+                          <span className="text-sm font-medium text-slate-200">
+                            {m.make}
+                          </span>
+                        </div>
+                        <span className="relative text-sm text-slate-400 tabular-nums">
+                          {m.count}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Section>
+            )}
 
-                {/* Stale Alert Banner */}
+            {/* ── DATA FRESHNESS ── */}
+            {dataHealth && (
+              <Section
+                title="Data freshness"
+                hint={`${dataHealth.files.length} files · ${dataHealth.totalEntries.toLocaleString()} entries`}
+              >
                 {dataHealth.staleCount > 0 && (
-                  <div className="bg-amber-950/40 border border-amber-800/50 rounded-xl p-4 mb-4 flex items-start gap-3">
-                    <div className="w-3 h-3 rounded-full bg-amber-400 animate-pulse shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-amber-300 font-semibold text-sm">
-                        {dataHealth.staleCount} data file{dataHealth.staleCount > 1 ? "s" : ""} past refresh threshold
+                  <div className="bg-amber-950/40 border border-amber-800/50 rounded-xl p-3.5 mb-3 flex items-start gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0 mt-1" />
+                    <div className="min-w-0">
+                      <p className="text-amber-300 font-semibold text-sm leading-tight">
+                        {dataHealth.staleCount} data file
+                        {dataHealth.staleCount > 1 ? "s" : ""} past refresh threshold
                       </p>
-                      <p className="text-amber-400/70 text-xs mt-0.5">
-                        Expand rows for update instructions
+                      <p className="text-amber-400/70 text-xs mt-0.5 leading-relaxed">
+                        Tap a card for refresh instructions and source link.
                       </p>
                     </div>
                   </div>
                 )}
 
-                <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-[11px] uppercase tracking-wider text-slate-500 border-b border-slate-800/50">
-                        <th className="w-8 px-3 py-2.5" />
-                        <th className="text-left px-3 py-2.5 font-medium">File</th>
-                        <th className="text-right px-3 py-2.5 font-medium">Entries</th>
-                        <th className="text-center px-3 py-2.5 font-medium">Age</th>
-                        <th className="text-center px-3 py-2.5 font-medium">Source</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedFiles.map((f, i) => {
-                        const status = getFreshnessStatus(f.daysAgo, f.threshold);
-                        const ageBadge = getAgeBadgeClasses(status);
-                        const sourcePill = getSourcePill(f.source);
-                        const isExpanded = expandedFile === f.file;
+                <div className="space-y-2">
+                  {sortedFiles.map((f) => {
+                    const status = getFreshnessStatus(f.effectiveDaysAgo, f.threshold);
+                    const ageBadge = getAgeBadgeClasses(status);
+                    const sourcePill = getSourcePill(f.source);
+                    const isExpanded = expandedFile === f.file;
+                    const hasProd = f.productionDaysAgo !== null;
 
-                        return (
-                          <Fragment key={f.file}>
-                            <tr
-                              className={`border-b border-slate-800/30 cursor-pointer ${
-                                i % 2 === 0 ? "bg-slate-900" : "bg-slate-900/50"
-                              } hover:bg-slate-800/50 transition-colors`}
-                              onClick={() => setExpandedFile(isExpanded ? null : f.file)}
-                            >
-                              <td className="px-3 py-2.5 text-center">
-                                <StatusDot status={status} />
-                              </td>
-                              <td className="px-3 py-2.5">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-slate-200 font-mono text-xs">{f.file}</span>
-                                  <svg
-                                    className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                  >
-                                    <path d="M19 9l-7 7-7-7" />
-                                  </svg>
-                                </div>
-                              </td>
-                              <td className="px-3 py-2.5 text-right">
-                                <span className="text-white font-semibold tabular-nums">
-                                  {f.entries.toLocaleString()}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2.5 text-center">
-                                <span className={`inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full border tabular-nums ${ageBadge}`}>
-                                  {f.daysAgo === -1 ? "?" : `${f.daysAgo}d`}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2.5 text-center">
-                                <span className={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full border ${sourcePill.classes}`}>
-                                  {sourcePill.label}
-                                </span>
-                              </td>
-                            </tr>
-                            {isExpanded && (
-                              <tr className="bg-slate-800/30">
-                                <td colSpan={5} className="px-5 py-3">
-                                  <div className="text-xs space-y-1.5">
-                                    <p className="text-slate-300">
-                                      <span className="text-slate-500 font-medium">Last modified:</span>{" "}
-                                      {f.lastModified === "unknown" ? "Unknown" : f.lastModified}
-                                      <span className="text-slate-500 ml-2">·</span>
-                                      <span className="text-slate-500 ml-2">Threshold:</span>{" "}
-                                      {f.threshold}d
+                    return (
+                      <div
+                        key={f.file}
+                        className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setExpandedFile(isExpanded ? null : f.file)}
+                          className="w-full px-3.5 py-3 text-left hover:bg-slate-800/40 transition-colors"
+                          aria-expanded={isExpanded}
+                        >
+                          <div className="flex items-center gap-3">
+                            <StatusDot status={status} />
+                            <div className="min-w-0 flex-1">
+                              <p className="font-mono text-xs text-slate-200 truncate">
+                                {f.file}
+                              </p>
+                              <p className="text-[10px] text-slate-500 mt-0.5">
+                                {f.entries.toLocaleString()} entries · threshold{" "}
+                                {f.threshold}d
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                              <span
+                                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border tabular-nums ${ageBadge}`}
+                              >
+                                {f.effectiveDaysAgo === -1
+                                  ? "?"
+                                  : `${f.effectiveDaysAgo}d`}
+                              </span>
+                              <span
+                                className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${sourcePill.classes}`}
+                              >
+                                {sourcePill.label}
+                              </span>
+                            </div>
+                            <ChevronDown
+                              className={`h-3.5 w-3.5 text-slate-500 transition-transform flex-shrink-0 ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
+                            />
+                          </div>
+                        </button>
+
+                        {isExpanded && (
+                          <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-800/60 space-y-2">
+                            <div className="grid grid-cols-2 gap-2 text-[11px]">
+                              <div>
+                                <p className="text-slate-500 uppercase tracking-wider text-[9px] font-semibold">
+                                  File mtime
+                                </p>
+                                <p className="text-slate-300 tabular-nums">
+                                  {f.daysAgo === -1 ? "unknown" : `${f.daysAgo} days ago`}
+                                </p>
+                                <p className="text-slate-600 text-[10px]">
+                                  {f.lastModified}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-slate-500 uppercase tracking-wider text-[9px] font-semibold">
+                                  Production
+                                </p>
+                                {hasProd ? (
+                                  <>
+                                    <p className="text-slate-300 tabular-nums">
+                                      {f.productionDaysAgo} days ago
                                     </p>
-                                    <p className="text-slate-300">
-                                      <span className="text-slate-500 font-medium">How to refresh:</span>{" "}
-                                      {f.refreshHint}
+                                    <p className="text-slate-600 text-[10px]">
+                                      {f.productionUpdatedAt
+                                        ? new Date(f.productionUpdatedAt).toLocaleDateString(
+                                            "en-GB",
+                                          )
+                                        : ""}
                                     </p>
-                                    {f.sourceUrl && (
-                                      <p>
-                                        <a
-                                          href={f.sourceUrl}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-sky-400 hover:text-sky-300 underline underline-offset-2"
-                                        >
-                                          Open data source &rarr;
-                                        </a>
-                                      </p>
-                                    )}
-                                  </div>
-                                </td>
-                              </tr>
+                                  </>
+                                ) : (
+                                  <>
+                                    <p className="text-slate-500">same as file</p>
+                                    <p className="text-slate-600 text-[10px]">
+                                      no cron cache
+                                    </p>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-slate-500 uppercase tracking-wider text-[9px] font-semibold mb-0.5">
+                                How to refresh
+                              </p>
+                              <p className="text-xs text-slate-300 leading-relaxed">
+                                {f.refreshHint}
+                              </p>
+                            </div>
+                            {f.sourceUrl && (
+                              <a
+                                href={f.sourceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block text-xs text-sky-400 hover:text-sky-300 underline underline-offset-2"
+                              >
+                                Open data source →
+                              </a>
                             )}
-                          </Fragment>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Build Info */}
+            {/* ── BUILD INFO ── */}
             {dataHealth && (
-              <div className="mb-8">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Build Info</h2>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-1">Built</p>
-                    <p className="text-white font-semibold text-sm">{formattedDate}</p>
-                    {formattedTime && <p className="text-slate-400 text-xs">{formattedTime} UTC</p>}
-                  </div>
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-1">Commit</p>
-                    <p className="text-white font-mono font-semibold text-sm">{shortCommit}</p>
-                  </div>
-                  <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500 mb-1">Total Entries</p>
-                    <p className="text-white font-semibold text-sm">{dataHealth.totalEntries.toLocaleString()}</p>
-                    <p className="text-slate-400 text-xs">across {dataHealth.files.length} files</p>
-                  </div>
+              <Section title="Build">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
+                  <MiniStat
+                    label="Built"
+                    value={formattedDate}
+                    sub={formattedTime ? `${formattedTime} UTC` : undefined}
+                  />
+                  <MiniStat
+                    label="Commit"
+                    value={shortCommit}
+                    sub="git"
+                    mono
+                  />
+                  <MiniStat
+                    label="Total entries"
+                    value={dataHealth.totalEntries.toLocaleString()}
+                    sub={`across ${dataHealth.files.length} files`}
+                    icon={Database}
+                  />
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Footer */}
-            <p className="text-center text-slate-600 text-xs mt-8">
-              This page is not indexed. Auto-refreshes every 60 seconds.
+            <p className="text-center text-slate-600 text-[11px] mt-8 flex items-center justify-center gap-1.5">
+              <Activity className="h-3 w-3" />
+              Not indexed · Auto-refreshes every 60s
+              {lastRefreshed && (
+                <span className="text-slate-700">
+                  · last {lastRefreshed.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                </span>
+              )}
             </p>
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+// ── Compact stat tile ─────────────────────────────────────────────────────────
+
+function MiniStat({
+  label,
+  value,
+  sub,
+  icon: Icon,
+  mono,
+}: {
+  label: string;
+  value: string | number;
+  sub?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  mono?: boolean;
+}) {
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
+      <div className="flex items-center gap-1.5 mb-0.5">
+        {Icon && <Icon className="h-3 w-3 text-slate-500" />}
+        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          {label}
+        </p>
+      </div>
+      <p
+        className={`text-base sm:text-lg font-bold text-white tabular-nums ${
+          mono ? "font-mono" : ""
+        }`}
+      >
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </p>
+      {sub && <p className="text-[10px] text-slate-500 mt-0.5">{sub}</p>}
     </div>
   );
 }

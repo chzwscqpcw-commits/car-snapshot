@@ -16,8 +16,12 @@ import theftRisk from "@/data/theft-risk.json";
 import colourPopularity from "@/data/colour-popularity.json";
 import tyreSizes from "@/data/tyre-sizes.json";
 import vehicleDimensions from "@/data/vehicle-dimensions.json";
+import { supabaseServer } from "@/lib/supabaseServer";
 
-export const dynamic = "force-static";
+// Dynamic so we can query the Supabase data_cache table on each request and
+// report the actual freshness of what production users see — not just the
+// build-time JSON mtime, which lags reality for cron-refreshed datasets.
+export const dynamic = "force-dynamic";
 
 const BUILD_TIME = new Date().toISOString();
 const COMMIT = process.env.VERCEL_GIT_COMMIT_SHA ?? "local";
@@ -153,9 +157,25 @@ function daysBetween(a: Date, b: Date): number {
   return Math.floor(Math.abs(b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-// ── Compute freshness at build time ──────────────────────────────────────────
+// Reads the Supabase data_cache row for a given key and returns the
+// updated_at ISO timestamp (or null if no row). Used to surface the real
+// freshness of data refreshed via cron rather than the (older) JSON fallback.
+async function fetchProductionAge(key: string): Promise<string | null> {
+  try {
+    const sb = supabaseServer();
+    const { data, error } = await sb
+      .from("data_cache")
+      .select("updated_at")
+      .eq("key", key)
+      .single();
+    if (error || !data) return null;
+    return data.updated_at as string;
+  } catch {
+    return null;
+  }
+}
 
-const BUILD_DATE = new Date();
+// ── Compute freshness at request time ─────────────────────────────────────
 
 const DATA_FILES: Record<string, unknown> = {
   "recalls.json": recalls,
@@ -173,30 +193,61 @@ const DATA_FILES: Record<string, unknown> = {
   "vehicle-dimensions.json": vehicleDimensions,
 };
 
-const files = Object.entries(DATA_FILES).map(([file, data]) => {
-  const meta = FILE_META[file];
-  const modDate = getLastModified(file);
-  const lastModified = modDate ? modDate.split("T")[0] : "unknown";
-  const daysAgo = modDate ? daysBetween(new Date(modDate), BUILD_DATE) : -1;
-  const stale = daysAgo === -1 ? false : daysAgo >= meta.threshold;
-
-  return {
-    file,
-    entries: count(data),
-    lastModified,
-    daysAgo,
-    threshold: meta.threshold,
-    stale,
-    source: meta.source,
-    refreshHint: meta.refreshHint,
-    sourceUrl: meta.sourceUrl,
-  };
-});
-
-const staleCount = files.filter((f) => f.stale).length;
-const totalEntries = files.reduce((sum, f) => sum + f.entries, 0);
+// Datasets that have a Supabase data_cache row refreshed by a cron, so the
+// real freshness can be reported alongside (or instead of) the JSON mtime.
+// Map file name → cache key.
+const PROD_CACHE_KEYS: Record<string, string> = {
+  "recalls.json": "recalls",
+};
 
 export async function GET() {
+  const now = new Date();
+
+  const files = await Promise.all(
+    Object.entries(DATA_FILES).map(async ([file, data]) => {
+      const meta = FILE_META[file];
+      const modDate = getLastModified(file);
+      const lastModified = modDate ? modDate.split("T")[0] : "unknown";
+      const fileDaysAgo = modDate ? daysBetween(new Date(modDate), now) : -1;
+
+      // Production age: only set for datasets backed by Supabase cache.
+      // Reflects what users *actually* see in production.
+      let productionDaysAgo: number | null = null;
+      let productionUpdatedAt: string | null = null;
+      const cacheKey = PROD_CACHE_KEYS[file];
+      if (cacheKey) {
+        productionUpdatedAt = await fetchProductionAge(cacheKey);
+        if (productionUpdatedAt) {
+          productionDaysAgo = daysBetween(new Date(productionUpdatedAt), now);
+        }
+      }
+
+      // Effective age: production cache if available, else file mtime.
+      const effectiveDaysAgo =
+        productionDaysAgo !== null ? productionDaysAgo : fileDaysAgo;
+      const stale =
+        effectiveDaysAgo === -1 ? false : effectiveDaysAgo >= meta.threshold;
+
+      return {
+        file,
+        entries: count(data),
+        lastModified,
+        daysAgo: fileDaysAgo,
+        productionDaysAgo,
+        productionUpdatedAt,
+        effectiveDaysAgo,
+        threshold: meta.threshold,
+        stale,
+        source: meta.source,
+        refreshHint: meta.refreshHint,
+        sourceUrl: meta.sourceUrl,
+      };
+    }),
+  );
+
+  const staleCount = files.filter((f) => f.stale).length;
+  const totalEntries = files.reduce((sum, f) => sum + f.entries, 0);
+
   return NextResponse.json({
     status: "ok",
     buildTime: BUILD_TIME,
