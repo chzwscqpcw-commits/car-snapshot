@@ -88,7 +88,32 @@ npx tsx scripts/fetch-vca-archive.ts aug2017 sept2018     # specific year tags
 
 ---
 
-### 3. `mot-pass-rates.json` — DVSA Anonymised MOT Bulk Data
+### 3. `ncap-ratings.json` — Euro NCAP crash ratings
+
+**Why semi-auto?** Euro NCAP's listing page is paginated through Next.js client-side rendering with no working URL params; their sitemap.xml exposes the full list of ~470 individual assessment URLs which `scripts/fetch-ncap-ratings.ts` then scrapes via puppeteer (with stealth patches against their anti-bot).
+
+**Step by step:**
+
+1. From the project root, run:
+   ```
+   npx tsx scripts/fetch-ncap-ratings.ts
+   ```
+   Pulls the sitemap, scrapes ~465 crash-rating pages concurrently (4 at a time), dedupes by make+model keeping highest-year/highest-stars, and writes `src/data/ncap-ratings.json`. Takes ~2–3 minutes.
+
+2. Validate and deploy:
+   ```
+   npx tsx scripts/validate-data.ts
+   git add src/data/ncap-ratings.json
+   git commit -m "data: refresh Euro NCAP ratings"
+   npm run deploy
+   ```
+
+**Source URL:** <https://www.euroncap.com/sitemap.xml>
+**Refresh cadence:** Euro NCAP publishes new ratings roughly monthly. Quarterly refresh is plenty.
+**Requires:** Chrome/Brave/Chromium installed locally.
+**Note:** Vauxhall lookups resolve to Opel via `src/lib/ncap.ts` make alias — Euro NCAP publishes only under Opel.
+
+### 4. `mot-pass-rates.json` — DVSA Anonymised MOT Bulk Data
 
 **Why manual?** The CSV is multi-gigabyte and lives on data.gov.uk behind a per-year archive link.
 
@@ -127,7 +152,7 @@ These have no live source we can scrape. They're hand-maintained JSON files; ref
 
 | File | What it holds | Where to look for updates |
 |---|---|---|
-| `ncap-ratings.json` | Euro NCAP star ratings, 268 vehicles | <https://www.euroncap.com/en/ratings/> (anti-bot blocks scraping) |
+| `ncap-ratings.json` | Euro NCAP star ratings | Auto via `scripts/fetch-ncap-ratings.ts` (see semi-auto section below) |
 | `new-prices.json` | New car list prices, ~130 models | Manufacturer websites — annual refresh |
 | `ev-specs.json` | EV battery / range specs | Manufacturer websites — when new EVs launch |
 | `theft-risk.json` | Theft-rate by make/model | Annual police / insurance reports |

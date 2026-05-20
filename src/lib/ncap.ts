@@ -43,6 +43,8 @@ export function lookupNcap(make?: string, model?: string): NcapRating | null {
     "MERCEDES BENZ": "MERCEDES-BENZ",
     VW: "VOLKSWAGEN",
     LANDROVER: "LAND ROVER",
+    // Euro NCAP publishes all UK Vauxhall cars under the European Opel brand.
+    VAUXHALL: "OPEL",
   };
 
   const aliasedMake = makeAliases[normMake];
