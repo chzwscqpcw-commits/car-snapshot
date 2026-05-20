@@ -59,14 +59,14 @@ export default function LandingHero({
                 Set free MOT reminder &rarr;
               </a>
             </div>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-slate-100 leading-tight">
+            <h1 className="mt-4 text-3xl sm:text-5xl font-bold text-slate-100 leading-tight">
               {h1}
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl">
               {subtitle}
             </p>
 
-            <ul className="mt-5 space-y-2 text-sm text-slate-400">
+            <ul className="mt-4 sm:mt-5 space-y-1.5 sm:space-y-2 text-sm text-slate-400">
               {bullets.map((bullet, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <svg
@@ -84,8 +84,11 @@ export default function LandingHero({
             </ul>
           </div>
 
-          {/* Example card — scales down on mobile via CSS zoom (collapses bounding box too), full size on desktop. See globals.css .card-zoom-wrapper. */}
-          <div className="card-zoom-wrapper mx-auto lg:mx-0">
+          {/* Example card — only rendered ≥lg. On mobile/tablet it took up
+              ~150px of scroll even zoomed to 0.45, and risked being mistaken
+              for a real result. Bullets above carry the value prop on mobile;
+              real screenshot thumbnails are a planned follow-up. */}
+          <div className="hidden lg:block card-zoom-wrapper mx-auto lg:mx-0">
             {exampleCard}
           </div>
         </div>

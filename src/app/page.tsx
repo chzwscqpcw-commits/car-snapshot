@@ -4599,13 +4599,13 @@ END:VEVENT
                     {data.motTests.slice(0, 3).map((test, idx) => (
                       <div
                         key={idx}
-                        className="p-6 rounded-lg border transition-all"
+                        className="p-4 sm:p-6 rounded-lg border transition-all"
                         style={{
                           backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotTestResultColor(test.testResult)],
                           borderColor: { emerald: "rgba(5, 150, 105, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
                         }}
                       >
-                        <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
                           <div>
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
                             <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{formatDate(test.completedDate)}</p>
@@ -4717,13 +4717,13 @@ END:VEVENT
                       {data.motTests.slice(3).map((test, idx) => (
                         <div
                           key={idx + 3}
-                          className="p-6 rounded-lg border transition-all"
+                          className="p-4 sm:p-6 rounded-lg border transition-all"
                           style={{
                             backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotTestResultColor(test.testResult)],
                             borderColor: { emerald: "rgba(5, 150, 105, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
                           }}
                         >
-                          <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
                             <div>
                               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
                               <p className="text-sm font-semibold text-slate-100">{formatDate(test.completedDate)}</p>
