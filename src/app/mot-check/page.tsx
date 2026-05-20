@@ -166,24 +166,57 @@ export default async function MotCheckPage({
             &larr; Back to all tools
           </a>
 
-          {/* Mobile preview thumbnail tucked into the top-right corner */}
-          <div className="lg:hidden absolute right-4 top-14 z-0 pointer-events-none">
-            <div className="relative">
-              <Image
-                src="/previews/mot-check.png"
-                alt=""
-                width={132}
-                height={176}
-                className="rounded-xl border border-slate-700/60 shadow-2xl shadow-cyan-500/15 -rotate-3 object-cover object-top opacity-95"
-                style={{ width: 132, height: 176 }}
-              />
-              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                Sample
-              </span>
+          {/* MOBILE LAYOUT (<lg) */}
+          <div className="lg:hidden">
+            <div className="grid gap-3 grid-cols-[1fr_125px] sm:grid-cols-[1fr_150px] items-start">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    Free · No signup · Real DVSA data
+                  </span>
+                </div>
+                <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
+                  Free MOT History Check
+                </h1>
+              </div>
+              <div className="flex justify-end">
+                <div className="relative">
+                  <Image
+                    src="/previews/mot-check.png"
+                    alt=""
+                    width={125}
+                    height={165}
+                    className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
+                    style={{ width: 125, height: 165 }}
+                  />
+                  <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                    Sample
+                  </span>
+                </div>
+              </div>
             </div>
+            <p className="mt-4 text-base text-slate-300 leading-relaxed">
+              Every MOT result, advisory and failure for any UK vehicle since 2005 &mdash; pulled directly from the DVSA.
+            </p>
+            <ul className="mt-4 space-y-1.5 text-sm text-slate-400">
+              <li className="flex items-start gap-2">
+                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                Every test result since 2005 with full advisory notes
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                Spot recurring problems and mileage tampering
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
+                Free email reminders 28 + 7 days before next MOT
+              </li>
+            </ul>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center relative z-10">
+          {/* DESKTOP LAYOUT (≥lg) */}
+          <div className="hidden lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
@@ -201,13 +234,12 @@ export default async function MotCheckPage({
                   Set free MOT reminder &rarr;
                 </a>
               </div>
-              <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-slate-100 leading-tight">
+              <h1 className="mt-4 text-5xl font-bold text-slate-100 leading-tight">
                 Free MOT History Check
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl">
+              <p className="mt-4 text-lg text-slate-300 leading-relaxed max-w-xl">
                 Every MOT result, advisory and failure for any UK vehicle since 2005 &mdash; pulled directly from the DVSA. Spot recurring issues, verify mileage, and never miss your next MOT.
               </p>
-
               <ul className="mt-5 space-y-2 text-sm text-slate-400">
                 <li className="flex items-start gap-2">
                   <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
@@ -222,92 +254,19 @@ export default async function MotCheckPage({
                   Free email reminders 28 + 7 days before your next MOT is due
                 </li>
               </ul>
-
             </div>
-
-            {/* Desktop preview — real screenshot of the result UI. */}
-            <div className="hidden lg:block mx-auto lg:mx-0">
-              <div className="relative">
-                <Image
-                  src="/previews/mot-check.png"
-                  alt="Sample MOT history result"
-                  width={320}
-                  height={420}
-                  className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
-                  style={{ width: 320, height: 420 }}
-                />
-                <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                  Sample
-                </span>
-              </div>
-            </div>
-
-            {/* Hand-coded example card kept for reference but no longer rendered */}
-            <div className="hidden card-zoom-wrapper mx-auto lg:mx-0">
-              <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                    Example
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                    <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                    DVSA-verified
-                  </span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-                  <span className="mx-1.5 text-slate-600">&middot;</span>
-                  2018 VW Golf 1.4 TSI
-                </p>
-                <p className="text-xs text-slate-500">56,400 miles &middot; petrol</p>
-
-                <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-slate-400">MOT status</p>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                      VALID
-                    </span>
-                  </div>
-                  <p className="mt-1 text-2xl font-bold text-slate-100">
-                    Valid until 14 Jan 2027
-                  </p>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    Last tested 14 Jan 2026 &middot; 2 advisories
-                  </p>
-                </div>
-
-                <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">
-                  Recent tests
-                </p>
-                <div className="mt-2 space-y-1.5">
-                  <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                    <span className="text-slate-300">14 Jan 2026</span>
-                    <span className="text-slate-500">56,400 mi</span>
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-300">PASS</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                    <span className="text-slate-300">09 Jan 2025</span>
-                    <span className="text-slate-500">49,200 mi</span>
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-300">PASS</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                    <span className="text-slate-300">11 Jan 2024</span>
-                    <span className="text-slate-500">41,800 mi</span>
-                    <span className="inline-flex items-center rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-300">RETEST</span>
-                  </div>
-                </div>
-
-                <div className="mt-3 grid grid-cols-2 gap-2 text-center">
-                  <div className="rounded-md bg-slate-800/60 p-2">
-                    <p className="text-[10px] text-slate-500">first-time pass rate</p>
-                    <p className="text-xs font-semibold text-emerald-400">86%</p>
-                  </div>
-                  <div className="rounded-md bg-slate-800/60 p-2">
-                    <p className="text-[10px] text-slate-500">mileage trend</p>
-                    <p className="text-xs font-semibold text-slate-300">~7,500 mi/yr</p>
-                  </div>
-                </div>
-              </div>
+            <div className="relative mx-auto lg:mx-0">
+              <Image
+                src="/previews/mot-check.png"
+                alt="Sample MOT history result"
+                width={320}
+                height={420}
+                className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
+                style={{ width: 320, height: 420 }}
+              />
+              <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                Sample
+              </span>
             </div>
           </div>
 

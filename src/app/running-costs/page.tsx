@@ -152,38 +152,50 @@ export default async function RunningCostsPage({
       ) : (
         <>
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
-        <div className="relative max-w-3xl mx-auto px-4 py-6">
+        <div className="max-w-3xl mx-auto px-4 py-6">
           <a
             href="/tools"
             className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
           >
             &larr; Back to all tools
           </a>
-
-          {/* Mobile preview thumbnail tucked into the top-right corner */}
-          <div className="lg:hidden absolute right-4 top-12 z-0 pointer-events-none">
-            <div className="relative">
-              <Image
-                src="/previews/running-costs.png"
-                alt=""
-                width={132}
-                height={176}
-                className="rounded-xl border border-slate-700/60 shadow-2xl shadow-cyan-500/15 -rotate-3 object-cover object-top opacity-95"
-                style={{ width: 132, height: 176 }}
-              />
-              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                Sample
-              </span>
+          <div className="grid gap-3 grid-cols-[1fr_125px] sm:grid-cols-[1fr_150px] lg:grid-cols-[1fr_320px] lg:gap-8 items-start lg:items-center">
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
+                What Does It Cost to Run Your Car?
+              </h1>
+              <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+                Get a free breakdown of fuel, tax, depreciation, MOT and servicing costs for any UK vehicle.
+              </p>
             </div>
-          </div>
-
-          <div className="relative z-10 max-w-[60%] lg:max-w-none">
-            <h1 className="text-3xl font-bold text-slate-100">
-              What Does It Cost to Run Your Car?
-            </h1>
-            <p className="text-sm text-slate-400 mt-2">
-              Get a free breakdown of fuel, tax, depreciation, MOT and servicing costs for any UK vehicle.
-            </p>
+            <div className="flex justify-end lg:justify-start">
+              <div className="lg:hidden relative">
+                <Image
+                  src="/previews/running-costs.png"
+                  alt=""
+                  width={125}
+                  height={165}
+                  className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
+                  style={{ width: 125, height: 165 }}
+                />
+                <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                  Sample
+                </span>
+              </div>
+              <div className="hidden lg:block relative">
+                <Image
+                  src="/previews/running-costs.png"
+                  alt="Sample running-cost breakdown"
+                  width={320}
+                  height={420}
+                  className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
+                  style={{ width: 320, height: 420 }}
+                />
+                <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                  Sample
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
