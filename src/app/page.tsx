@@ -2866,14 +2866,14 @@ END:VEVENT
         }
       `}</style>
 
-      <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 pt-8 sm:pt-12 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10">
+      <div className={`mx-auto w-full max-w-3xl px-5 sm:px-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10 ${data ? "pt-3 sm:pt-6" : "pt-8 sm:pt-12"}`}>
         {/* HEADER WITH BRAND */}
         {/*
           Only shown in entry state. Once `data` is populated, SiteNav
           (the sticky top bar) already has the bolt + wordmark — no need
           to repeat the brand a second time directly below it.
         */}
-        <header className="mb-6">
+        <header className={data ? "mb-3" : "mb-6"}>
           {!data && (
             <>
               <div className="flex items-center gap-3 mb-4 group">
@@ -2905,9 +2905,9 @@ END:VEVENT
 
           {/* TABBED SECTION: Recent / Saved / My Cars */}
           {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
-            <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <div className={data ? "" : "mt-4 pt-4 border-t border-slate-700/50"}>
               {/* Tab bar */}
-              <div className="flex gap-1 mb-4 border-b border-slate-700/50">
+              <div className={`flex gap-1 border-b border-slate-700/50 ${data ? "mb-2" : "mb-4"}`}>
                 <button
                   onClick={() => { setActiveVehicleTab("recent"); localStorage.setItem("fpc-active-tab", "recent"); }}
                   className={`pb-1.5 px-2.5 py-1.5 text-xs font-medium transition-colors ${activeVehicleTab === "recent" ? "text-blue-400 border-b-2 border-blue-400" : "text-slate-500 hover:text-slate-400"}`}
