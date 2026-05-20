@@ -303,6 +303,7 @@ function buildComparables(
   model: string,
   year: number,
   fuelType: string | null,
+  depEstimate?: number,
 ): EbayResult | null {
   if (bundle.items.length === 0) return null;
 
@@ -326,8 +327,15 @@ function buildComparables(
     return true;
   });
 
-  // Step 2: enforce a year-aware price floor (kills £1 auction openers).
-  const floor = priceFloorForYear(year);
+  // Step 2: enforce a price floor (kills £1 auction openers + write-offs).
+  // We layer two signals: a conservative year-based floor AND, if we have
+  // a depreciation estimate, 35% of that. The max of the two is the floor.
+  // For a 2019 BMW 3 Series with £14k dep estimate, this gives a £4.9k floor
+  // instead of the static £2k, correctly rejecting older/salvage BMWs that
+  // have "BMW 3 SERIES" in the title but no year.
+  const yearFloor = priceFloorForYear(year);
+  const depFloor = depEstimate ? Math.round(depEstimate * 0.35) : 0;
+  const floor = Math.max(yearFloor, depFloor);
   let rejectedByPriceFloor = 0;
   const aboveFloor = titleMatched.filter((i) => {
     if (i.price < floor) {
@@ -339,23 +347,35 @@ function buildComparables(
 
   if (aboveFloor.length === 0) return null;
 
-  // Step 3: progressively widen the year tolerance until we have ≥5 items.
-  // If even ±5 doesn't get there, take whatever the broadest pool gives us.
+  // Step 3: progressively widen the year tolerance, preferring year-confirmed
+  // listings. We only fall back to year=null items if we don't have enough
+  // year-known matches — sellers who don't put the year in the title are
+  // disproportionately listing older / parts cars that would skew the median.
   const mappedFuel = fuelType ? FUEL_TYPE_MAP[fuelType.toUpperCase()] || null : null;
+  const fuelOk = (i: RawItem) =>
+    !mappedFuel || !i.titleFuel || i.titleFuel === mappedFuel;
   let yearTolerance = 0;
   let selected: RawItem[] = [];
   for (const tol of [0, 1, 2, 3, 5]) {
     yearTolerance = tol;
-    selected = aboveFloor.filter((i) => {
-      // Year: items with no detected year are ALWAYS allowed (don't punish
-      // sellers who just didn't list the year in the title).
+    // First try only year-confirmed listings at this tolerance.
+    const yearConfirmed = aboveFloor.filter(
+      (i) => i.titleYear !== null && Math.abs(i.titleYear - year) <= tol && fuelOk(i),
+    );
+    if (yearConfirmed.length >= 5) {
+      selected = yearConfirmed;
+      break;
+    }
+    // Not enough year-confirmed — fold in year=null items at this tolerance.
+    const withNullYears = aboveFloor.filter((i) => {
       if (i.titleYear !== null && Math.abs(i.titleYear - year) > tol) return false;
-      // Fuel: if we know the fuel and the listing's detected fuel differs,
-      // reject — but listings with no detected fuel are allowed through.
-      if (mappedFuel && i.titleFuel && i.titleFuel !== mappedFuel) return false;
-      return true;
+      return fuelOk(i);
     });
-    if (selected.length >= 5) break;
+    if (withNullYears.length >= 5) {
+      selected = withNullYears;
+      break;
+    }
+    selected = withNullYears; // best we have at this tolerance
   }
 
   // Final fallback: if we still don't have ≥3 items after widening, drop fuel.
@@ -409,6 +429,7 @@ async function fetchEbayComparables(
   model: string,
   year: number,
   fuelType: string | null,
+  depEstimate: number | undefined,
   debug: boolean,
 ): Promise<{ result: EbayResult | null; debug?: any }> {
   const token = await getEbayToken();
@@ -418,7 +439,7 @@ async function fetchEbayComparables(
     const bundle = await fetchEbayItems(token, make, model);
     if (!bundle) return { result: null };
 
-    const result = buildComparables(bundle, make, model, year, fuelType);
+    const result = buildComparables(bundle, make, model, year, fuelType, depEstimate);
 
     if (debug) {
       return {
@@ -603,7 +624,7 @@ export async function GET(
     // it had ≥3 entries, which let data go stale.
     const [cacheResult, { result: ebayResult, debug: ebayDebug }] = await Promise.all([
       checkCache(make, model, year),
-      fetchEbayComparables(make, model, year, fuelType, debug),
+      fetchEbayComparables(make, model, year, fuelType, depEstimate, debug),
     ]);
 
     const sources: string[] = [];
