@@ -96,6 +96,7 @@ function main() {
   // clones (Vercel) where `git log -- <file>` returns nothing.
   const existing = loadExistingManifest();
   const manifest: Record<string, string> = { ...existing };
+  const decisions: Record<string, { branch: string; value: string }> = {};
   let gitOk = 0;
   let fetchedNow = 0;
   let dirty = 0;
@@ -105,6 +106,7 @@ function main() {
     if (FETCHED_THIS_BUILD.has(f)) {
       // Prebuild fetch scripts just (re)wrote this — stamp it "now".
       manifest[f] = now;
+      decisions[f] = { branch: "fetched-now", value: now };
       fetchedNow++;
       continue;
     }
@@ -112,6 +114,7 @@ function main() {
       // File modified in this working tree but not yet committed
       // (e.g., refresh workflow ran but hasn't pushed). Treat as fresh now.
       manifest[f] = now;
+      decisions[f] = { branch: "dirty-now", value: now };
       dirty++;
       continue;
     }
@@ -120,6 +123,7 @@ function main() {
       // git log saw it — accurate even on shallow clones if HEAD touched
       // this file in this commit.
       manifest[f] = git;
+      decisions[f] = { branch: "git-log", value: git };
       gitOk++;
       continue;
     }
@@ -128,12 +132,26 @@ function main() {
     // last refresh produced. Don't fall back to mtime (always "now" in CI).
     if (existing[f]) {
       manifest[f] = existing[f];
+      decisions[f] = { branch: "preserved", value: existing[f] };
       preserved++;
     } else {
       // No git history, no existing entry — best we can do is now.
       manifest[f] = now;
+      decisions[f] = { branch: "fallback-now", value: now };
     }
   }
+
+  // Embed decision metadata so we can debug freshness regressions
+  // without needing direct access to build logs. Strip the `_*` keys
+  // before counting in data-health.
+  manifest["_debug_decisions"] = JSON.stringify(decisions);
+  manifest["_debug_env"] = JSON.stringify({
+    cwd: process.cwd(),
+    projectRoot: PROJECT_ROOT,
+    hasDotGit: fs.existsSync(path.join(PROJECT_ROOT, ".git")),
+    gitLogProbe: gitLogIso("body-types.json"),
+    existingHadValues: Object.keys(existing).length,
+  });
 
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 

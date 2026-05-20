@@ -3,14 +3,16 @@
   "colour-popularity.json": "2026-02-18T21:13:37Z",
   "ev-specs.json": "2026-02-18T22:30:43Z",
   "fuel-economy.json": "2026-05-20T13:27:30Z",
-  "fuel-prices-weekly.json": "2026-05-20T13:50:11.169Z",
-  "how-many-left.json": "2026-05-20T13:50:11.169Z",
+  "fuel-prices-weekly.json": "2026-05-20T15:34:11.369Z",
+  "how-many-left.json": "2026-05-20T15:34:11.369Z",
   "mot-failure-reasons.json": "2026-02-21T13:50:28Z",
   "mot-pass-rates.json": "2026-02-18T21:13:37Z",
   "ncap-ratings.json": "2026-05-20T13:27:30Z",
-  "new-prices.json": "2026-03-07T12:35:48Z",
+  "new-prices.json": "2026-05-20T16:25:55+01:00",
   "recalls.json": "2026-05-20T12:28:58+01:00",
   "theft-risk.json": "2026-02-18T22:30:43Z",
   "tyre-sizes.json": "2026-02-21T13:50:28Z",
-  "vehicle-dimensions.json": "2026-02-21T13:50:28Z"
+  "vehicle-dimensions.json": "2026-02-21T13:50:28Z",
+  "_debug_decisions": "{\"body-types.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-11T18:00:56Z\"},\"colour-popularity.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-18T21:13:37Z\"},\"ev-specs.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-18T22:30:43Z\"},\"fuel-economy.json\":{\"branch\":\"git-log\",\"value\":\"2026-05-20T13:27:30Z\"},\"fuel-prices-weekly.json\":{\"branch\":\"fetched-now\",\"value\":\"2026-05-20T15:34:11.369Z\"},\"how-many-left.json\":{\"branch\":\"fetched-now\",\"value\":\"2026-05-20T15:34:11.369Z\"},\"mot-failure-reasons.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-21T13:50:28Z\"},\"mot-pass-rates.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-18T21:13:37Z\"},\"ncap-ratings.json\":{\"branch\":\"git-log\",\"value\":\"2026-05-20T13:27:30Z\"},\"new-prices.json\":{\"branch\":\"git-log\",\"value\":\"2026-05-20T16:25:55+01:00\"},\"recalls.json\":{\"branch\":\"git-log\",\"value\":\"2026-05-20T12:28:58+01:00\"},\"theft-risk.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-18T22:30:43Z\"},\"tyre-sizes.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-21T13:50:28Z\"},\"vehicle-dimensions.json\":{\"branch\":\"git-log\",\"value\":\"2026-02-21T13:50:28Z\"}}",
+  "_debug_env": "{\"cwd\":\"/Users/stephengaisford/car-snapshot\",\"projectRoot\":\"/Users/stephengaisford/car-snapshot\",\"hasDotGit\":true,\"gitLogProbe\":\"2026-02-11T18:00:56Z\",\"existingHadValues\":14}"
 }
