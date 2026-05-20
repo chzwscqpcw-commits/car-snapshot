@@ -159,7 +159,7 @@ export default async function RunningCostsPage({
           >
             &larr; Back to all tools
           </a>
-          <div className="grid gap-3 grid-cols-[1fr_125px] sm:grid-cols-[1fr_150px] lg:grid-cols-[1fr_320px] lg:gap-8 items-start lg:items-center">
+          <div className="grid gap-3 grid-cols-[1fr_110px] sm:grid-cols-[1fr_135px] lg:grid-cols-[1fr_280px] lg:gap-8 items-start lg:items-center">
             <div className="min-w-0">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
                 What Does It Cost to Run Your Car?
@@ -173,10 +173,10 @@ export default async function RunningCostsPage({
                 <Image
                   src="/previews/running-costs.png"
                   alt=""
-                  width={125}
-                  height={165}
+                  width={110}
+                  height={145}
                   className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
-                  style={{ width: 125, height: 165 }}
+                  style={{ width: 110, height: 145 }}
                 />
                 <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
                   Sample
@@ -186,10 +186,10 @@ export default async function RunningCostsPage({
                 <Image
                   src="/previews/running-costs.png"
                   alt="Sample running-cost breakdown"
-                  width={320}
-                  height={420}
+                  width={280}
+                  height={365}
                   className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
-                  style={{ width: 320, height: 420 }}
+                  style={{ width: 280, height: 365 }}
                 />
                 <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
                   Sample

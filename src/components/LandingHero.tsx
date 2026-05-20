@@ -50,22 +50,25 @@ export default function LandingHero({
         <div className="lg:hidden">
           <div
             className={`grid gap-3 items-start ${
-              previewImage ? "grid-cols-[1fr_125px] sm:grid-cols-[1fr_150px]" : ""
+              previewImage ? "grid-cols-[1fr_110px] sm:grid-cols-[1fr_135px]" : ""
             }`}
           >
-            <h1 className="min-w-0 text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
-              {h1}
-            </h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
+                {h1}
+              </h1>
+              <MotReminderPill className="mt-3" />
+            </div>
             {previewImage && (
               <div className="flex justify-end">
                 <div className="relative">
                   <Image
                     src={`/previews/${previewImage}`}
                     alt=""
-                    width={125}
-                    height={165}
+                    width={110}
+                    height={145}
                     className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
-                    style={{ width: 125, height: 165 }}
+                    style={{ width: 110, height: 145 }}
                   />
                   <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
                     Sample
@@ -74,7 +77,6 @@ export default function LandingHero({
               </div>
             )}
           </div>
-          <MotReminderPill className="mt-4" />
           <p className="mt-4 text-base text-slate-300 leading-relaxed">
             {subtitle}
           </p>
@@ -99,10 +101,10 @@ export default function LandingHero({
               <Image
                 src={`/previews/${previewImage}`}
                 alt="Sample result"
-                width={320}
-                height={420}
+                width={280}
+                height={365}
                 className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
-                style={{ width: 320, height: 420 }}
+                style={{ width: 280, height: 365 }}
               />
               <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
                 Sample
