@@ -1,5 +1,40 @@
 import type { Metadata } from "next";
 import ServicingCTA from "@/components/ServicingCTA";
+import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
+
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "How often should I service my car?",
+    answer:
+      "Every 12 months or 12,000 miles — whichever comes first. Some modern cars use variable intervals based on conditions; check the manual.",
+  },
+  {
+    question: "What's the difference between an interim and full service?",
+    answer:
+      "Interim covers the essentials — oil, fluids, basic safety check. Full adds air filter, fuel filter (diesel) or spark plugs (petrol), plus a thorough brake/suspension/exhaust/steering inspection.",
+  },
+  {
+    question: "How much does a car service cost?",
+    answer:
+      "Interim £80–£150. Full £150–£300+. Luxury and performance cars cost more (specialist parts and labour). Compare quotes locally for the best price.",
+  },
+  {
+    question: "Will using a non-dealer garage void my warranty?",
+    answer:
+      "No — under the Block Exemption Regulation, any VAT-registered garage can service your car without affecting warranty, as long as they use equivalent parts and follow the schedule.",
+  },
+  {
+    question: "Is a service the same as an MOT?",
+    answer:
+      "No. MOT is a legal safety inspection required for cars 3+ years old. Service is preventative maintenance — oil, filters, fluids. You need both.",
+  },
+  {
+    question: "What happens if I skip a service?",
+    answer:
+      "Accelerated engine wear, lower fuel efficiency, bigger bills later. Can void warranty and hurts resale — buyers check service history first.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "Car Service Prices UK — Compare Quotes Near You | Free Plate Check",
@@ -39,56 +74,11 @@ export default function ServicingPage() {
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "How often should I service my car?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Most manufacturers recommend a service every 12 months or 12,000 miles, whichever comes first. Some modern cars have variable service intervals based on driving conditions — check your owner's manual or service book for your specific schedule.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is the difference between an interim and full service?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "An interim service covers the essentials — oil and oil filter change, fluid top-ups, and a basic safety check. It's typically done at 6 months or 6,000 miles. A full service includes everything in an interim service plus air filter, fuel filter (diesel), spark plugs (petrol), a more thorough inspection of brakes, suspension, exhaust, and steering, and usually takes 2–3 hours.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How much does a car service cost in the UK?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "An interim service typically costs between £80 and £150. A full service ranges from £150 to £300+, depending on the make, model, and location. Luxury and performance cars cost more due to specialist parts and labour. Comparing quotes from local garages is the easiest way to find a competitive price.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Will servicing at a non-dealer garage void my warranty?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. Under the Block Exemption Regulation (BER), you can have your car serviced at any VAT-registered garage without voiding your manufacturer warranty, as long as the work is carried out to the manufacturer's specifications using parts of matching quality. The dealer cannot refuse a warranty claim simply because the car was serviced elsewhere.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is a car service the same as an MOT?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. An MOT is a legal inspection that checks your car meets minimum road safety and emissions standards — it's required by law for cars over 3 years old. A service is preventative maintenance: changing oil, filters, and fluids, and checking wear items to keep the car running well. You need both, but they serve different purposes.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What happens if I skip a car service?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Skipping services can lead to accelerated wear on engine components, reduced fuel efficiency, and higher repair costs down the line. It can also void your manufacturer warranty and reduce the car's resale value. A full service history is one of the first things buyers check.",
-        },
-      },
-    ],
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   const breadcrumbJsonLd = {
@@ -161,19 +151,27 @@ export default function ServicingPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary CTA */}
-        <div className="mb-12">
+        <div className="mb-8">
           <ServicingCTA context="landing" />
         </div>
+
+        <StatCallouts
+          stats={[
+            { value: "12 mo", label: "Typical interval" },
+            { value: "£80-£300", label: "Interim → full service" },
+            { value: "40-60%", label: "Independent vs dealer", tone: "good" },
+          ]}
+        />
 
         <div className="space-y-8 text-slate-300">
           {/* Service intervals */}
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">When does your car need a service?</h2>
             <p className="leading-relaxed mb-3">
-              Most manufacturers recommend servicing every <strong className="text-slate-100">12 months or 12,000 miles</strong>, whichever comes first. Some modern vehicles use variable service intervals that adapt based on driving style and conditions — your dashboard service light or owner&apos;s manual will tell you when it&apos;s due.
+              Most manufacturers recommend <strong className="text-slate-100">12 months or 12,000 miles</strong>, whichever first. Some modern cars use variable intervals — the dashboard light or owner&apos;s manual tells you when.
             </p>
             <p className="leading-relaxed">
-              If you do a lot of short trips, stop-start city driving, or tow heavy loads, more frequent servicing helps protect the engine and drivetrain from accelerated wear.
+              Lots of short trips, stop-start city driving, or heavy towing? Service more often to protect the engine and drivetrain.
             </p>
           </section>
 
@@ -244,7 +242,7 @@ export default function ServicingPage() {
             </div>
 
             <p className="leading-relaxed text-sm">
-              Prices vary by make, model, and location. Luxury and performance vehicles tend to cost more due to specialist parts and longer labour times. Comparing quotes is the easiest way to avoid overpaying.
+              Prices vary by make, model, and location. Compare local quotes to avoid overpaying.
             </p>
           </section>
 
@@ -252,11 +250,11 @@ export default function ServicingPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Why regular servicing matters</h2>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong className="text-slate-100">Prevents expensive repairs</strong> — Catching worn components early (brake pads, belts, hoses) avoids bigger failures down the line.</li>
-              <li><strong className="text-slate-100">Maintains fuel efficiency</strong> — Fresh oil, clean filters, and correct tyre pressures keep running costs down.</li>
-              <li><strong className="text-slate-100">Protects your warranty</strong> — Staying on schedule maintains manufacturer warranty coverage. Under the Block Exemption Regulation, you don&apos;t have to use the dealer — any VAT-registered garage using equivalent parts is fine.</li>
-              <li><strong className="text-slate-100">Improves resale value</strong> — A full service history is one of the first things buyers check. Gaps in the record lower the car&apos;s value.</li>
-              <li><strong className="text-slate-100">Helps pass the MOT</strong> — Many MOT failures are for items that a regular service would catch: worn brakes, blown bulbs, low fluid levels, perished wipers.</li>
+              <li><strong className="text-slate-100">Prevents expensive repairs</strong> — catching worn brake pads, belts, hoses early.</li>
+              <li><strong className="text-slate-100">Keeps fuel efficiency up</strong> — fresh oil, clean filters, correct tyre pressures.</li>
+              <li><strong className="text-slate-100">Protects warranty</strong> — Block Exemption rules mean any VAT-registered garage works.</li>
+              <li><strong className="text-slate-100">Improves resale</strong> — full service history is the first thing buyers check.</li>
+              <li><strong className="text-slate-100">Helps pass MOT</strong> — many MOT fails are routine service items left to fester.</li>
             </ul>
           </section>
 
@@ -302,19 +300,19 @@ export default function ServicingPage() {
               </table>
             </div>
             <p className="text-sm mt-4 leading-relaxed">
-              Many garages offer combined service and MOT packages at a discount. If both are due around the same time, booking them together can save money and means you only need one trip to the garage. Check your vehicle&apos;s <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> to see when the next test is due.
+              Many garages offer a combined service + MOT discount. Worth bundling if both are due. Check the next MOT date via our <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a>.
             </p>
           </section>
 
           {/* Tips for saving */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">How to save money on car servicing</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">How to save money on servicing</h2>
             <ol className="list-decimal list-inside space-y-2 ml-2">
-              <li><strong className="text-slate-100">Compare quotes</strong> — Prices vary significantly between garages, even in the same area. Always get at least 2–3 quotes.</li>
-              <li><strong className="text-slate-100">Book online</strong> — Many garages offer lower prices for online bookings compared to walk-ins.</li>
-              <li><strong className="text-slate-100">Use independent garages</strong> — Main dealer servicing typically costs 40–60% more than an equivalent independent garage, with no difference in warranty protection.</li>
-              <li><strong className="text-slate-100">Combine with MOT</strong> — Booking your service and MOT together often qualifies for a package discount.</li>
-              <li><strong className="text-slate-100">Don&apos;t skip the interim</strong> — A £100 interim service every 6 months is cheaper than the engine damage caused by neglected oil changes.</li>
+              <li><strong className="text-slate-100">Compare quotes</strong> — prices vary widely between garages, even in the same area. Get 2–3.</li>
+              <li><strong className="text-slate-100">Book online</strong> — usually cheaper than walk-ins.</li>
+              <li><strong className="text-slate-100">Use independents</strong> — main dealer servicing is 40–60% more, with no warranty advantage.</li>
+              <li><strong className="text-slate-100">Combine with MOT</strong> — often a package discount.</li>
+              <li><strong className="text-slate-100">Don&apos;t skip the interim</strong> — £100 every 6 months beats the engine damage from neglected oil.</li>
             </ol>
           </section>
 
@@ -326,32 +324,7 @@ export default function ServicingPage() {
           {/* FAQ section */}
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">How often should I service my car?</h3>
-                <p className="text-sm mt-1">Most manufacturers recommend every 12 months or 12,000 miles, whichever comes first. Some modern cars use variable intervals based on driving conditions — check your owner&apos;s manual.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What&apos;s the difference between an interim and full service?</h3>
-                <p className="text-sm mt-1">An interim service covers the essentials — oil change, fluid top-ups, and a basic safety check. A full service adds air filter, fuel filter (diesel), spark plugs (petrol), and a more thorough inspection of brakes, suspension, exhaust, and steering.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How much does a car service cost?</h3>
-                <p className="text-sm mt-1">An interim service typically costs £80–£150. A full service ranges from £150–£300+, depending on the vehicle and location. Comparing quotes is the best way to find a competitive price.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Will using a non-dealer garage void my warranty?</h3>
-                <p className="text-sm mt-1">No. Under the Block Exemption Regulation, any VAT-registered garage can service your car without affecting the manufacturer warranty, as long as they use parts of matching quality and follow the service schedule.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Is a service the same as an MOT?</h3>
-                <p className="text-sm mt-1">No. An MOT is a legal safety inspection required for cars over 3 years old. A service is preventative maintenance — oil, filters, and fluid changes to keep the car running well. You need both.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What happens if I skip a service?</h3>
-                <p className="text-sm mt-1">Skipping services leads to accelerated engine wear, reduced fuel efficiency, and higher repair bills. It can also void your warranty and reduce the car&apos;s resale value.</p>
-              </div>
-            </div>
+            <FaqAccordion items={FAQ_ITEMS} />
           </section>
         </div>
       </div>
