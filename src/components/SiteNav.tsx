@@ -9,58 +9,46 @@ import { useCommandPalette } from "@/components/CommandPalette";
 import { PRIMARY_NAV, SITE_ITEMS } from "@/lib/site-index";
 
 /**
- * Tracks the user's most recent scroll direction so the nav can hide while
- * scrolling down (giving content the full viewport) and reveal while
- * scrolling up. Returns true when the nav should be hidden.
+ * Hides the nav while scrolling down past a small threshold; reveals it
+ * the moment any upward movement is detected. Always visible near the
+ * page top. Returns true when the nav should be hidden.
+ *
+ * Simpler than a delta-accumulator approach: per-frame direction-of-
+ * change is enough, and matches what every iOS user instinctively
+ * expects ("I'm scrolling up at all → bring it back").
  */
-function useHideOnScrollDown({
-  hideAfter = 80,
-  delta = 6,
-}: {
-  hideAfter?: number;
-  delta?: number;
-} = {}) {
+function useHideOnScrollDown({ hideAfter = 60 }: { hideAfter?: number } = {}) {
   const [hidden, setHidden] = useState(false);
-  const anchorY = useRef(0);
-  const ticking = useRef(false);
+  const lastY = useRef(0);
+  const rafId = useRef(0);
 
   useEffect(() => {
-    anchorY.current = window.scrollY;
+    lastY.current = window.scrollY;
 
     const update = () => {
       const y = window.scrollY;
-      const diff = y - anchorY.current;
-
-      // Always show near the top — never hide the nav when the user is
-      // at the page header.
       if (y < hideAfter) {
         setHidden(false);
-        anchorY.current = y;
-      } else if (diff > delta) {
-        // Net downward movement past the threshold → hide.
+      } else if (y > lastY.current) {
         setHidden(true);
-        anchorY.current = y;
-      } else if (diff < -delta) {
-        // Net upward movement past the threshold → show.
+      } else if (y < lastY.current) {
         setHidden(false);
-        anchorY.current = y;
       }
-      // Otherwise: small wobble — leave the anchor alone so slow
-      // scrolling accumulates instead of being lost a pixel at a time.
-
-      ticking.current = false;
+      lastY.current = y;
+      rafId.current = 0;
     };
 
     const onScroll = () => {
-      if (!ticking.current) {
-        window.requestAnimationFrame(update);
-        ticking.current = true;
-      }
+      if (rafId.current) return;
+      rafId.current = window.requestAnimationFrame(update);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [hideAfter, delta]);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId.current) window.cancelAnimationFrame(rafId.current);
+    };
+  }, [hideAfter]);
 
   return hidden;
 }
@@ -107,8 +95,11 @@ export default function SiteNav() {
 
   return (
     <>
+      {/* Flow spacer — keeps page content from sliding under the fixed
+          header. Matches the header's height at each breakpoint. */}
+      <div className="h-12 sm:h-14" aria-hidden="true" />
       <header
-        className={`sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-slate-950/60 transition-transform duration-200 ease-out will-change-transform ${
+        className={`fixed inset-x-0 top-0 z-50 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-slate-950/60 transition-transform duration-200 ease-out will-change-transform ${
           hidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
