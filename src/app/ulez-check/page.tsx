@@ -236,7 +236,7 @@ export default async function UlezCheckPage({
         }
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget
           headline="Check your vehicle's ULEZ compliance"
           subtext="Enter a reg plate to see if your vehicle meets ULEZ standards — plus full MOT history, tax status, and more."

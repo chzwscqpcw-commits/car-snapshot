@@ -226,7 +226,7 @@ export default async function MileageCheckPage({
         }
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget
           headline="Check any vehicle's mileage history"
           subtext="Enter a reg plate to see full MOT mileage records since 2005 — spot clocking and verify the odometer reading."

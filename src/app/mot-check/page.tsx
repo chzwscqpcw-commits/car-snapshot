@@ -158,7 +158,7 @@ export default async function MotCheckPage({
       {/* --- HERO --- */}
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-10">
+        <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-6 lg:pb-10">
           <a
             href="/tools"
             className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block"
@@ -166,7 +166,24 @@ export default async function MotCheckPage({
             &larr; Back to all tools
           </a>
 
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          {/* Mobile preview thumbnail tucked into the top-right corner */}
+          <div className="lg:hidden absolute right-4 top-14 z-0 pointer-events-none">
+            <div className="relative">
+              <Image
+                src="/previews/mot-check.png"
+                alt=""
+                width={132}
+                height={176}
+                className="rounded-xl border border-slate-700/60 shadow-2xl shadow-cyan-500/15 -rotate-3 object-cover object-top opacity-95"
+                style={{ width: 132, height: 176 }}
+              />
+              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                Sample
+              </span>
+            </div>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center relative z-10">
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
@@ -208,9 +225,25 @@ export default async function MotCheckPage({
 
             </div>
 
-            {/* Preview card — only rendered ≥lg. Mobile uses the real
-                screenshot thumbnail below the grid. */}
-            <div className="hidden lg:block card-zoom-wrapper mx-auto lg:mx-0">
+            {/* Desktop preview — real screenshot of the result UI. */}
+            <div className="hidden lg:block mx-auto lg:mx-0">
+              <div className="relative">
+                <Image
+                  src="/previews/mot-check.png"
+                  alt="Sample MOT history result"
+                  width={320}
+                  height={420}
+                  className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
+                  style={{ width: 320, height: 420 }}
+                />
+                <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                  Sample
+                </span>
+              </div>
+            </div>
+
+            {/* Hand-coded example card kept for reference but no longer rendered */}
+            <div className="hidden card-zoom-wrapper mx-auto lg:mx-0">
               <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
@@ -278,29 +311,12 @@ export default async function MotCheckPage({
             </div>
           </div>
 
-          {/* Mobile-only screenshot thumbnail of the actual result UI */}
-          <div className="lg:hidden mt-6 flex justify-center">
-            <div className="relative">
-              <Image
-                src="/previews/mot-check.png"
-                alt="Sample MOT history result"
-                width={172}
-                height={228}
-                className="rounded-xl border border-slate-700/60 shadow-xl shadow-cyan-500/10 -rotate-2 object-cover object-top"
-                style={{ height: 228 }}
-              />
-              <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                Sample
-              </span>
-            </div>
-          </div>
-
           {/* Mobile-only A/B/C test affordance pointing to the search input */}
           <MobileSearchCue />
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget
           headline="Check a vehicle's MOT history"
           subtext="Enter any UK reg plate to see every MOT result, advisory, and mileage reading since 2005 — free and instant."

@@ -227,7 +227,7 @@ export default async function RecallCheckPage({
         }
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget
           headline="Check your vehicle for safety recalls"
           subtext="Enter a reg plate to see known recalls for your make and model, plus full MOT history and vehicle health data."
