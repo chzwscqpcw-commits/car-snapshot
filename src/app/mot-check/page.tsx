@@ -7,6 +7,7 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import MotResult from "@/components/tools/MotResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import SeverityCards from "@/components/SeverityCards";
 
 // Single source of truth for FAQ content — used both for the visible
 // accordion and the FAQPage JSON-LD below.
@@ -290,8 +291,18 @@ export default async function MotCheckPage({
             <p className="leading-relaxed mb-3">
               Every UK MOT since 2005 sits in the DVSA&apos;s database. An MOT history check gives you the full record for any vehicle: every test result, mileage reading, advisory, and failure reason.
             </p>
-            <p className="leading-relaxed">
-              Since May 2018, defects are graded <strong className="text-slate-100">dangerous</strong> (don&apos;t drive), <strong className="text-slate-100">major</strong> (must be repaired to pass), or <strong className="text-slate-100">minor</strong> (worth fixing). Before then it was just pass, fail, or advisory.
+            <p className="leading-relaxed mb-2">
+              Since May 2018, defects fall into one of three categories:
+            </p>
+            <SeverityCards
+              cards={[
+                { tone: "danger", title: "Dangerous", description: "Immediate safety risk — don't drive." },
+                { tone: "warn", title: "Major", description: "Must be repaired before the MOT can pass." },
+                { tone: "info", title: "Minor", description: "Worth fixing but doesn't cause a failure." },
+              ]}
+            />
+            <p className="leading-relaxed text-sm text-slate-400 mt-2">
+              Before then it was just pass, fail, or advisory.
             </p>
           </section>
 

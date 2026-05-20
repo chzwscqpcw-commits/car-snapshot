@@ -6,6 +6,7 @@ import ServicingCTA from "@/components/ServicingCTA";
 import UlezResult from "@/components/tools/UlezResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import SeverityCards from "@/components/SeverityCards";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -258,17 +259,18 @@ export default async function UlezCheckPage({
             <p className="leading-relaxed mb-3">
               London ULEZ is <strong className="text-slate-100">£12.50/day</strong> for non-compliant cars, motorcycles, and vans. Miss the payment and it&apos;s £180 (£90 if paid within 14 days). Birmingham CAZ is up to £8/day; Bath and Bristol similar.
             </p>
-            <p className="leading-relaxed mb-4">
-              To be compliant:
+            <p className="leading-relaxed mb-2">
+              To be ULEZ-compliant:
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-2 mb-4">
-              <li><strong className="text-slate-100">Petrol</strong> — Euro 4 or later (~2006+).</li>
-              <li><strong className="text-slate-100">Diesel</strong> — Euro 6 or later (~Sept 2015+).</li>
-              <li><strong className="text-slate-100">Electric &amp; hydrogen</strong> — exempt.</li>
-              <li><strong className="text-slate-100">Historic</strong> — pre-1 Jan 1973 and registered as historic.</li>
-            </ul>
-            <p className="leading-relaxed">
-              Discounts and grace periods exist (disabled tax class, some military). We show the Euro standard on file so you can determine compliance at a glance.
+            <SeverityCards
+              cards={[
+                { tone: "info", title: "Petrol", description: "Euro 4 or later (~2006 onwards)." },
+                { tone: "warn", title: "Diesel", description: "Euro 6 or later (~September 2015 onwards)." },
+                { tone: "good", title: "EV / Hydrogen", description: "Exempt from charges entirely." },
+              ]}
+            />
+            <p className="leading-relaxed text-sm text-slate-400 mt-2">
+              Pre-1973 historic vehicles are also exempt if registered as historic. Discounts and grace periods exist (disabled tax class, some military). We show the Euro standard on file so you can determine compliance at a glance.
             </p>
           </section>
 

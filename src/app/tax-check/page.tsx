@@ -6,6 +6,7 @@ import MOTBookingCTA from "@/components/MOTBookingCTA";
 import TaxResult from "@/components/tools/TaxResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import SeverityCards from "@/components/SeverityCards";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -248,14 +249,18 @@ export default async function TaxCheckPage({
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How is road tax calculated?</h2>
-            <p className="leading-relaxed mb-3">
-              <strong className="text-slate-100">Registered from April 2017:</strong> First-year rate based on CO₂ (£0 for zero-emission, £2,000+ for the worst). After year one, flat <strong className="text-slate-100">£195/year</strong> standard rate. Cars over £40k list price pay a £425 supplement for years 2–6 (£620/yr total).
+            <p className="leading-relaxed mb-2">
+              Three regimes depending on when the car was first registered:
             </p>
-            <p className="leading-relaxed mb-3">
-              <strong className="text-slate-100">Registered before April 2017:</strong> CO₂-banded A–M. £0 for Band A through £600+ for the highest.
-            </p>
-            <p className="leading-relaxed">
-              <strong className="text-slate-100">Electric vehicles:</strong> Exempt if registered pre-April-2025. From April 2025, new EVs pay the standard rate. Rates change each Budget. See your reg&apos;s <a href="/car-check" className="text-blue-400 hover:text-blue-300">CO₂ + fuel type</a> to confirm the band.
+            <SeverityCards
+              cards={[
+                { tone: "info", title: "Pre-Apr 2017", description: "CO₂-banded A–M. £0 for Band A, up to £600+ for the highest." },
+                { tone: "default", title: "Apr 2017+", description: "First year CO₂-based. Then £195/yr flat. £40k+ cars pay £620/yr in years 2–6." },
+                { tone: "good", title: "Electric", description: "£0 if registered pre-April 2025. New EVs from Apr 2025 pay the standard rate." },
+              ]}
+            />
+            <p className="leading-relaxed text-sm text-slate-400 mt-2">
+              Rates change each Budget. See your reg&apos;s <a href="/car-check" className="text-blue-400 hover:text-blue-300">CO₂ + fuel type</a> to confirm the band.
             </p>
           </section>
 
