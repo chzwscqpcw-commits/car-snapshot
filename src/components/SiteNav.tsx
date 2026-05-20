@@ -368,13 +368,21 @@ function DrawerSection({
  * Wordmark visibility: hidden on the homepage entry state (where the
  * page-level hero shows the brand), shown everywhere else — including
  * the homepage *after* a result has loaded (when the page hero hides).
+ *
+ * Animates in with a left-to-right sweep reveal whenever it appears as
+ * a result of state change (e.g. lookup completes on /). On non-/
+ * routes where it's always visible from first render, the animation
+ * still fires once on mount — feels intentional for first-time visits.
  */
 function ShowWordmark({ pathname }: { pathname: string }) {
   const { hasResult } = useHomeResult();
   const visible = pathname !== "/" || hasResult;
   if (!visible) return null;
   return (
-    <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
+    <span
+      key={pathname === "/" ? "home-result" : "always"}
+      className="wordmark-sweep text-[14px] sm:text-[15px] font-bold tracking-tight text-white"
+    >
       Free Plate Check
     </span>
   );

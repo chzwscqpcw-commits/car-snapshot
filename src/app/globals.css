@@ -233,3 +233,35 @@ a {
 .blog-content tbody tr:hover {
   background: rgba(51, 65, 85, 0.2);
 }
+
+/* SiteNav wordmark reveal — sweeps in left-to-right with a cyan shimmer pass.
+   Used when the homepage transitions from entry state (no wordmark) to result
+   state (wordmark visible). Reduce-motion users get an instant fade. */
+@keyframes wordmarkSweep {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgba(34, 211, 238, 0));
+  }
+  60% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55));
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    filter: drop-shadow(0 0 0 rgba(34, 211, 238, 0));
+  }
+}
+
+.wordmark-sweep {
+  animation: wordmarkSweep 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-sweep {
+    animation: none;
+    opacity: 1;
+  }
+}
