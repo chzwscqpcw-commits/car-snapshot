@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # full git history so build-freshness-manifest.ts can `git log`
 
       - name: Setup Node 20
         uses: actions/setup-node@v5
@@ -71,12 +73,20 @@ jobs:
             git diff --stat src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json
           fi
 
+      - name: Rebuild freshness manifest
+        # Captures fresh timestamps for the just-modified files via git log
+        # (full history is available because we cloned with fetch-depth: 0).
+        # We commit the manifest alongside the data so Vercel's shallow-clone
+        # rebuild has accurate freshness data without re-running git log.
+        if: steps.changes.outputs.changed == 'true'
+        run: npx tsx scripts/build-freshness-manifest.ts
+
       - name: Commit and push to main
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json
+          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/_freshness.json
           git commit -m "data: weekly auto-refresh (recalls + VCA + NCAP)"
           git push origin main
 

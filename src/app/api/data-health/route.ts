@@ -82,9 +82,10 @@ const FILE_META: Record<string, FileMeta> = {
   },
   "ncap-ratings.json": {
     threshold: 180,
-    source: "curated",
-    refreshHint: "Manually update from euroncap.com results pages (anti-bot blocks scraping)",
-    sourceUrl: "https://www.euroncap.com/en/ratings/",
+    source: "semi-auto",
+    refreshHint:
+      "Pulls euroncap.com/sitemap.xml then scrapes ~465 detail pages via puppeteer-core with stealth patches. Run: npx tsx scripts/fetch-ncap-ratings.ts",
+    sourceUrl: "https://www.euroncap.com/sitemap.xml",
   },
   "new-prices.json": {
     threshold: 180,

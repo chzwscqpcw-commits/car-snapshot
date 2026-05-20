@@ -49,12 +49,39 @@ function gitLogIso(file: string): string | null {
   }
 }
 
+function isDirty(file: string): boolean {
+  // True if the file has uncommitted changes (modified or staged but not
+  // yet committed). The refresh workflow runs this between writing data
+  // and committing, so we need to recognize that state as "fresh now".
+  try {
+    const out = execSync(`git status --porcelain "src/data/${file}"`, {
+      cwd: PROJECT_ROOT,
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "pipe"],
+    }).trim();
+    return out.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 function statMtimeIso(file: string): string | null {
   try {
     const stat = fs.statSync(path.join(DATA_DIR, file));
     return stat.mtime.toISOString();
   } catch {
     return null;
+  }
+}
+
+function loadExistingManifest(): Record<string, string> {
+  // The manifest is committed to git and serves as the source of truth.
+  // We read it first so values can be preserved across builds where git log
+  // can't see deep history (e.g., Vercel's shallow clone).
+  try {
+    return JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf-8"));
+  } catch {
+    return {};
   }
 }
 
@@ -65,38 +92,53 @@ function main() {
     .filter((f) => f.endsWith(".json") && f !== "_freshness.json")
     .sort();
 
-  const manifest: Record<string, string> = {};
+  // Start from the committed manifest so unmodified entries survive shallow
+  // clones (Vercel) where `git log -- <file>` returns nothing.
+  const existing = loadExistingManifest();
+  const manifest: Record<string, string> = { ...existing };
   let gitOk = 0;
   let fetchedNow = 0;
-  let mtimeFallback = 0;
+  let dirty = 0;
+  let preserved = 0;
 
   for (const f of files) {
     if (FETCHED_THIS_BUILD.has(f)) {
+      // Prebuild fetch scripts just (re)wrote this — stamp it "now".
       manifest[f] = now;
       fetchedNow++;
       continue;
     }
+    if (isDirty(f)) {
+      // File modified in this working tree but not yet committed
+      // (e.g., refresh workflow ran but hasn't pushed). Treat as fresh now.
+      manifest[f] = now;
+      dirty++;
+      continue;
+    }
     const git = gitLogIso(f);
     if (git) {
+      // git log saw it — accurate even on shallow clones if HEAD touched
+      // this file in this commit.
       manifest[f] = git;
       gitOk++;
       continue;
     }
-    // Last-ditch fallback: filesystem mtime. Won't be accurate in Vercel
-    // runtime, but at prebuild time on a developer machine it's usable.
-    const mtime = statMtimeIso(f);
-    if (mtime) {
-      manifest[f] = mtime;
-      mtimeFallback++;
+    // git log returned nothing (likely shallow clone, file not in HEAD).
+    // Keep whatever the committed manifest already says — that's what the
+    // last refresh produced. Don't fall back to mtime (always "now" in CI).
+    if (existing[f]) {
+      manifest[f] = existing[f];
+      preserved++;
     } else {
-      manifest[f] = now; // file existed but unstattable — degrade gracefully
+      // No git history, no existing entry — best we can do is now.
+      manifest[f] = now;
     }
   }
 
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 
   console.log(
-    `Wrote freshness manifest: ${files.length} files (${fetchedNow} fetched-now · ${gitOk} from git · ${mtimeFallback} from mtime)`,
+    `Wrote freshness manifest: ${files.length} files (${fetchedNow} fetched-now · ${dirty} dirty-now · ${gitOk} from git · ${preserved} preserved)`,
   );
 }
 
