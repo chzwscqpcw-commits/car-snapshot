@@ -3,8 +3,8 @@
  * CSV from each, and write them to ./vca-csvs/ ready for process-fuel-data.ts.
  *
  * Usage:
- *   npx tsx scripts/fetch-vca-archive.ts             # default years (2018+)
- *   npx tsx scripts/fetch-vca-archive.ts --all       # everything 2000+
+ *   npx tsx scripts/fetch-vca-archive.ts             # all years (2000+, default)
+ *   npx tsx scripts/fetch-vca-archive.ts --recent    # 2018+ only
  *   npx tsx scripts/fetch-vca-archive.ts 2024 2025   # specific year tags
  *
  * Why this exists:
@@ -49,16 +49,17 @@ const ALL_YEAR_TAGS = [
   "latest", // currently maps to 2026 partial year
 ];
 
-// Default: 2018+ (skipping the very old years that have a different/legacy schema)
-const DEFAULT_YEAR_TAGS = ["sept2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "latest"];
+// Recent-only set (handy for quick refreshes when older data hasn't changed)
+const RECENT_YEAR_TAGS = ["sept2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "latest"];
 
 function parseArgs(): string[] {
   const args = process.argv.slice(2);
-  if (args.length === 0) return DEFAULT_YEAR_TAGS;
+  if (args.length === 0) return ALL_YEAR_TAGS;
+  if (args.includes("--recent")) return RECENT_YEAR_TAGS;
   if (args.includes("--all")) return ALL_YEAR_TAGS;
   // Filter out flags, treat the rest as year tags
   const tags = args.filter((a) => !a.startsWith("--"));
-  return tags.length > 0 ? tags : DEFAULT_YEAR_TAGS;
+  return tags.length > 0 ? tags : ALL_YEAR_TAGS;
 }
 
 async function warmSession(page: Page): Promise<string> {

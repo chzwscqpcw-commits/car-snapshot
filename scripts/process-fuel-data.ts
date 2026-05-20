@@ -290,7 +290,10 @@ async function processFile(
     return stats;
   }
 
-  const fileStream = fs.createReadStream(filePath, { encoding: "utf-8" });
+  // VCA CSVs are Windows-1252 / Latin-1 (even modern ones — they use £ as
+  // 0xA3 single-byte rather than UTF-8 two-byte). Reading as UTF-8 produces
+  // mojibake on COUPÉ, accented model names, currency symbols, etc.
+  const fileStream = fs.createReadStream(filePath, { encoding: "latin1" });
   const rl = readline.createInterface({
     input: fileStream,
     crlfDelay: Infinity,

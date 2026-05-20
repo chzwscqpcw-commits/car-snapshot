@@ -68,13 +68,13 @@ Three files have processing scripts but their sources can't be safely auto-fetch
    ```
    npx tsx scripts/fetch-vca-archive.ts
    ```
-   This downloads ZIPs for sept2018 through 2025 (9 years), extracts each `data for guide YYYY.csv` to `./vca-csvs/`, and reports a per-year summary.
+   Downloads all ZIPs from July 2000 onwards (28 years), extracts each `data for guide ….csv` to `./vca-csvs/`, and reports a per-year summary. Two years (aug2011 ships as `.xls` only, `latest` is a placeholder) get skipped automatically.
 
 2. Process the extracted CSVs into `src/data/fuel-economy.json`:
    ```
    npx tsx scripts/process-fuel-data.ts vca-csvs/*.csv
    ```
-   Dedupe key is `make|model|engine|fuel`. Expect ~3,800 entries / ~1,600 unique models.
+   Dedupe key is `make|model|engine|fuel`. CSVs are read as Latin-1 (Windows-1252) which is what VCA actually publishes — UTF-8 reads produce mojibake on accented model names. Expect ~10,600 entries / ~3,600 unique models / ~70 makes.
 
 3. Validate and deploy:
    ```
@@ -84,9 +84,9 @@ Three files have processing scripts but their sources can't be safely auto-fetch
    npm run deploy
    ```
 
-**Optional — wider historical coverage:**
+**Faster refresh (skip pre-2018):**
 ```
-npx tsx scripts/fetch-vca-archive.ts --all                # everything back to 2000
+npx tsx scripts/fetch-vca-archive.ts --recent             # sept2018 onwards only (~3,800 entries)
 npx tsx scripts/fetch-vca-archive.ts aug2017 sept2018     # specific year tags
 ```
 
