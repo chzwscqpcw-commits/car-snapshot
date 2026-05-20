@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
@@ -207,8 +208,9 @@ export default async function MotCheckPage({
 
             </div>
 
-            {/* Preview card — scales down on mobile via CSS zoom (collapses bounding box too), full size on desktop. See globals.css .card-zoom-wrapper. */}
-            <div className="card-zoom-wrapper mx-auto lg:mx-0">
+            {/* Preview card — only rendered ≥lg. Mobile uses the real
+                screenshot thumbnail below the grid. */}
+            <div className="hidden lg:block card-zoom-wrapper mx-auto lg:mx-0">
               <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
@@ -273,6 +275,23 @@ export default async function MotCheckPage({
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Mobile-only screenshot thumbnail of the actual result UI */}
+          <div className="lg:hidden mt-6 flex justify-center">
+            <div className="relative">
+              <Image
+                src="/previews/mot-check.png"
+                alt="Sample MOT history result"
+                width={172}
+                height={228}
+                className="rounded-xl border border-slate-700/60 shadow-xl shadow-cyan-500/10 -rotate-2 object-cover object-top"
+                style={{ height: 228 }}
+              />
+              <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                Sample
+              </span>
             </div>
           </div>
 

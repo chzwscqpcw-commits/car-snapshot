@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import RunningCostsResult from "@/components/tools/RunningCostsResult";
 import ConversionWidget from "@/components/stats/ConversionWidget";
@@ -164,6 +165,22 @@ export default async function RunningCostsPage({
           <p className="text-sm text-slate-400 mt-2">
             Get a free breakdown of fuel, tax, depreciation, MOT and servicing costs for any UK vehicle.
           </p>
+          {/* Mobile-only screenshot thumbnail of the running-cost result */}
+          <div className="lg:hidden mt-5 flex justify-center">
+            <div className="relative">
+              <Image
+                src="/previews/running-costs.png"
+                alt="Sample running-cost breakdown"
+                width={172}
+                height={228}
+                className="rounded-xl border border-slate-700/60 shadow-xl shadow-cyan-500/10 -rotate-2 object-cover object-top"
+                style={{ height: 228 }}
+              />
+              <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
+                Sample
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
