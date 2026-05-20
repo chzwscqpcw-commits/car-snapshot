@@ -8,6 +8,7 @@ import { CommandPaletteProvider } from "@/components/CommandPalette";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import SiteBackdrop from "@/components/SiteBackdrop";
+import { HomeResultProvider } from "@/components/HomeResultContext";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -145,12 +146,14 @@ export default function RootLayout({
         </Script>
         <RacDemoProvider>
           <CommandPaletteProvider>
-            <SiteBackdrop />
-            <SiteNav />
-            {children}
-            <SiteFooter />
-            <RacDemoFloatingBadge />
-            <RacDemoBottomBar />
+            <HomeResultProvider>
+              <SiteBackdrop />
+              <SiteNav />
+              {children}
+              <SiteFooter />
+              <RacDemoFloatingBadge />
+              <RacDemoBottomBar />
+            </HomeResultProvider>
           </CommandPaletteProvider>
         </RacDemoProvider>
       </body>

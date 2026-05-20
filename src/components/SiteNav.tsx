@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import { useCommandPalette } from "@/components/CommandPalette";
+import { useHomeResult } from "@/components/HomeResultContext";
 import { PRIMARY_NAV, SITE_ITEMS } from "@/lib/site-index";
 
 /**
@@ -113,16 +114,13 @@ export default function SiteNav() {
             <BoltMark className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-y-px" />
             {/*
               On the homepage the page-level hero already shows the
-              "Free Plate Check" wordmark prominently. Repeating it in the
-              nav above creates a stacked-logo look. Drop the wordmark on /
-              and show just the bolt; every other route keeps the wordmark
-              for full brand presence.
+              "Free Plate Check" wordmark. Repeating it here creates a
+              stacked-logo look. Drop the wordmark on / in entry state
+              (bolt only). Once a result has loaded, the page hero is
+              hidden — bring the wordmark back so the nav becomes the
+              sole brand surface.
             */}
-            {pathname !== "/" && (
-              <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
-                Free Plate Check
-              </span>
-            )}
+            <ShowWordmark pathname={pathname} />
           </Link>
 
           {/* Desktop nav links */}
@@ -363,5 +361,21 @@ function DrawerSection({
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * Wordmark visibility: hidden on the homepage entry state (where the
+ * page-level hero shows the brand), shown everywhere else — including
+ * the homepage *after* a result has loaded (when the page hero hides).
+ */
+function ShowWordmark({ pathname }: { pathname: string }) {
+  const { hasResult } = useHomeResult();
+  const visible = pathname !== "/" || hasResult;
+  if (!visible) return null;
+  return (
+    <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
+      Free Plate Check
+    </span>
   );
 }

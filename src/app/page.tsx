@@ -137,6 +137,7 @@ import {
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import BoltMark from "@/components/BoltMark";
 import CountUp from "@/components/CountUp";
+import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
@@ -651,6 +652,13 @@ function ActionPrompt({
 export default function Home() {
   const [vrm, setVrm] = useState("");
   const [data, setData] = useState<VehicleData | null>(null);
+  const { setHasResult } = useHomeResult();
+  useEffect(() => {
+    setHasResult(!!data);
+    // Clear on unmount so SiteNav reverts to bolt-only the next time the
+    // visitor lands on /.
+    return () => setHasResult(false);
+  }, [data, setHasResult]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
