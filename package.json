@@ -12,7 +12,8 @@
     "check-freshness": "npx tsx scripts/check-freshness.ts",
     "refresh-data": "npx tsx scripts/refresh-data.ts",
     "ping-sitemap": "npx tsx scripts/ping-sitemap.ts",
-    "generate-previews": "npx tsx scripts/generate-previews.ts"
+    "generate-previews": "npx tsx scripts/generate-previews.ts",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod"
   },
   "dependencies": {
     "@react-email/components": "^1.0.8",
