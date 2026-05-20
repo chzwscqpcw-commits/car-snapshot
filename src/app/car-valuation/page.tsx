@@ -187,17 +187,9 @@ export default async function CarValuationPage({
           {/* MOBILE LAYOUT (<lg) */}
           <div className="lg:hidden">
             <div className="grid gap-3 grid-cols-[1fr_125px] sm:grid-cols-[1fr_150px] items-start">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                    Free · Live UK market data
-                  </span>
-                </div>
-                <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
-                  What&apos;s your car worth?
-                </h1>
-              </div>
+              <h1 className="min-w-0 text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
+                What&apos;s your car worth?
+              </h1>
               <div className="flex justify-end">
                 <div className="relative">
                   <Image
@@ -214,6 +206,16 @@ export default async function CarValuationPage({
                 </div>
               </div>
             </div>
+            <a
+              href="#mot-reminder"
+              className="inline-flex items-center gap-1.5 mt-4 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1.5 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
+            >
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              Set free MOT reminder &rarr;
+            </a>
             <p className="mt-4 text-base text-slate-300 leading-relaxed">
               A free, instant valuation range for any UK vehicle — built from
               live market listings, real mileage records, and depreciation
@@ -238,25 +240,19 @@ export default async function CarValuationPage({
           {/* DESKTOP LAYOUT (≥lg) */}
           <div className="hidden lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:items-center">
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  Free · No signup · Live UK market data
-                </span>
-                <a
-                  href="#mot-reminder"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
-                >
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
-                  Set free MOT reminder &rarr;
-                </a>
-              </div>
-              <h1 className="mt-4 text-5xl font-bold text-slate-100 leading-tight">
+              <h1 className="text-5xl font-bold text-slate-100 leading-tight">
                 What&apos;s your car worth?
               </h1>
+              <a
+                href="#mot-reminder"
+                className="inline-flex items-center gap-1.5 mt-4 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1.5 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
+              >
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                Set free MOT reminder &rarr;
+              </a>
               <p className="mt-4 text-lg text-slate-300 leading-relaxed max-w-xl">
                 A free, instant valuation range for any UK vehicle — built from
                 live market listings, real mileage records, and depreciation
