@@ -275,13 +275,13 @@ export default async function CarValuationPage({
                 </li>
               </ul>
             </div>
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative w-fit mx-auto lg:mx-0">
               <Image
                 src="/previews/car-valuation.png"
                 alt="Sample valuation result"
                 width={280}
                 height={365}
-                className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top"
+                className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top -rotate-2"
                 style={{ width: 280, height: 365 }}
               />
               <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
