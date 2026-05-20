@@ -47,14 +47,14 @@ async function getEbayToken(): Promise<string | null> {
   }
 }
 
-// ── Make aliases — eBay listings often abbreviate; we need to match what
-// people actually type in titles, not just the DVLA canonical name.
+// ── Make aliases — eBay sellers abbreviate; match what they actually type.
+
 const MAKE_ALIASES: Record<string, string[]> = {
   VOLKSWAGEN: ["VOLKSWAGEN", "VW"],
   VW: ["VW", "VOLKSWAGEN"],
   "MERCEDES-BENZ": ["MERCEDES-BENZ", "MERCEDES", "MERC", "BENZ"],
   MERCEDES: ["MERCEDES", "MERCEDES-BENZ", "MERC", "BENZ"],
-  "LAND ROVER": ["LAND ROVER", "LANDROVER", "LAND-ROVER", "LR"],
+  "LAND ROVER": ["LAND ROVER", "LANDROVER", "LAND-ROVER", "LR", "RANGE ROVER"],
   LANDROVER: ["LANDROVER", "LAND ROVER", "LAND-ROVER"],
   "ALFA ROMEO": ["ALFA ROMEO", "ALFA-ROMEO", "ALFA"],
   ALFA: ["ALFA", "ALFA ROMEO"],
@@ -66,7 +66,6 @@ const MAKE_ALIASES: Record<string, string[]> = {
 
 function expandMakeTokens(makeUpper: string): string[] {
   if (MAKE_ALIASES[makeUpper]) return MAKE_ALIASES[makeUpper];
-  // Default: just the make itself, plus its first token if multi-word
   const tokens = [makeUpper];
   const firstWord = makeUpper.split(/[\s-]+/)[0];
   if (firstWord && firstWord !== makeUpper && firstWord.length >= 3) {
@@ -75,7 +74,8 @@ function expandMakeTokens(makeUpper: string): string[] {
   return tokens;
 }
 
-// ── Fuel type mapping (DVLA → eBay aspect values) ──────────────────────────
+// ── Fuel type matching ─────────────────────────────────────────────────────
+// Used both for aspect filter (legacy) and title-based detection.
 
 const FUEL_TYPE_MAP: Record<string, string> = {
   PETROL: "Petrol",
@@ -88,9 +88,29 @@ const FUEL_TYPE_MAP: Record<string, string> = {
   "GAS BI-FUEL": "Petrol",
 };
 
+// Title-keyword sets per fuel family. We use these to detect a listing's
+// fuel from its title when the seller doesn't fill in the eBay aspect.
+const FUEL_TITLE_TOKENS: Record<string, RegExp> = {
+  Petrol: /\b(PETROL|GASOLINE|TSI|MPI|GTI|FSI|TFSI|VTEC)\b/i,
+  Diesel: /\b(DIESEL|TDI|HDI|CDTI|CDI|DCI|D4D|MULTIJET|BLUEMOTION|BLUETEC|TDCI|D-?4D)\b/i,
+  Hybrid: /\b(HYBRID|HEV|PHEV|PLUG[- ]?IN|SELF[- ]?CHARGING|E-?TRON|E-?POWER)\b/i,
+  Electric: /\b(ELECTRIC|EV|BEV|FULL[- ]?ELECTRIC|ALL[- ]?ELECTRIC)\b/i,
+};
+
+// ── Year-based price floor — keeps £1 starter-bid auctions out of the median.
+// Auction listings include very low opening bids that would skew the data.
+// Floors are conservative: a 2020+ car can't realistically be worth <£3000.
+
+function priceFloorForYear(year: number): number {
+  if (year >= 2020) return 3000;
+  if (year >= 2015) return 2000;
+  if (year >= 2010) return 1000;
+  return 500;
+}
+
 // ── Asking price discount ──────────────────────────────────────────────────
 
-const ASKING_PRICE_DISCOUNT = 0.92; // 8% discount: eBay asking → realistic
+const ASKING_PRICE_DISCOUNT = 0.92; // eBay asking → realistic sold price
 
 // ── Quartile computation (QUARTILE.INC / linear interpolation) ─────────────
 
@@ -98,7 +118,6 @@ function computeQuartiles(sorted: number[]): { q1: number; q3: number } | null {
   if (sorted.length < 5) return null;
 
   const n = sorted.length;
-  // QUARTILE.INC: position = 1 + p*(n-1), 0-indexed
   const q1Pos = 0.25 * (n - 1);
   const q3Pos = 0.75 * (n - 1);
 
@@ -113,7 +132,10 @@ function computeQuartiles(sorted: number[]): { q1: number; q3: number } | null {
   return { q1, q3 };
 }
 
-// ── eBay comparables ────────────────────────────────────────────────────────
+// ── eBay listing fetch ──────────────────────────────────────────────────────
+// One broad query, max page size (200). We do year + fuel filtering in code
+// because eBay's aspect filters depend on sellers having set the aspect,
+// which they often haven't.
 
 type AspectDistribution = {
   localizedAspectName: string;
@@ -123,69 +145,61 @@ type AspectDistribution = {
   }>;
 };
 
-type EbayResult = {
-  median: number;
-  q1Price: number | null;
-  q3Price: number | null;
-  listingCount: number;
-  minPrice: number;
-  maxPrice: number;
-  totalListings: number;
-  dominantTransmission: string | null;
-  dominantBodyType: string | null;
-  yearWidened: boolean;
+type RawItem = {
+  title: string;
+  price: number;
+  titleYear: number | null;
+  titleFuel: string | null;
 };
 
-async function searchEbay(
+type EbayBundle = {
+  items: RawItem[];
+  totalReported: number;
+  dominantTransmission: string | null;
+  dominantBodyType: string | null;
+  query: string;
+  rawCount: number;
+};
+
+async function fetchEbayItems(
   token: string,
   make: string,
   model: string,
-  yearFilter: string | null,
-  fuelType: string | null,
-  depreciationEstimate?: number,
-): Promise<EbayResult | null> {
-  // Build aspect_filter parts
-  const aspects: string[] = [];
-  if (yearFilter) aspects.push(`Model Year:${yearFilter}`);
-  if (fuelType) {
-    const mapped = FUEL_TYPE_MAP[fuelType.toUpperCase()];
-    if (mapped) aspects.push(`Fuel Type:{${mapped}}`);
-  }
-
+): Promise<EbayBundle | null> {
+  // No aspect filters, no buying-option restriction. We rely on title
+  // matching + client-side filtering, which is far more reliable than
+  // depending on sellers to fill in eBay's structured aspects.
   const params = new URLSearchParams({
     q: `${make} ${model}`,
     category_ids: "9801",
     fieldgroups: "MATCHING_ITEMS,ASPECT_REFINEMENTS,EXTENDED",
     filter: [
-      "buyingOptions:{FIXED_PRICE}",
-      "conditionIds:{3000}",
-      "price:[750..],priceCurrency:GBP",
+      "conditionIds:{3000}", // used cars only
+      "price:[500..],priceCurrency:GBP",
       "itemLocationCountry:GB",
     ].join(","),
-    sort: "price",
-    limit: "50",
+    limit: "200",
   });
 
-  if (aspects.length > 0) {
-    params.set("aspect_filter", `categoryId:9801,${aspects.join(",")}`);
-  }
-
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 15000);
 
-  const response = await fetch(
-    `https://api.ebay.com/buy/browse/v1/item_summary/search?${params}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-EBAY-C-MARKETPLACE-ID": "EBAY_GB",
-        "X-EBAY-C-ENDUSERCTX": "contextualLocation=country=GB",
+  let response: Response;
+  try {
+    response = await fetch(
+      `https://api.ebay.com/buy/browse/v1/item_summary/search?${params}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-EBAY-C-MARKETPLACE-ID": "EBAY_GB",
+          "X-EBAY-C-ENDUSERCTX": "contextualLocation=country=GB",
+        },
+        signal: controller.signal,
       },
-      signal: controller.signal,
-    },
-  );
-
-  clearTimeout(timeout);
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     console.error(`[VALUATION] eBay search failed: ${response.status}`);
@@ -205,59 +219,38 @@ async function searchEbay(
 
   const rawCount = data.itemSummaries?.length ?? 0;
   if (!data.itemSummaries || rawCount === 0) {
-    console.log(`[VALUATION] eBay ${make} ${model} year=${yearFilter}: 0 raw items`);
-    return null;
+    return { items: [], totalReported: data.total ?? 0, dominantTransmission: null, dominantBodyType: null, query: params.toString(), rawCount: 0 };
   }
 
-  // Build accept-set of make tokens to handle aliases ("VW" ↔ "VOLKSWAGEN",
-  // multi-word makes like "ALFA ROMEO" / "LAND ROVER" / "MERCEDES-BENZ") and
-  // model tokens — require the primary model token rather than the full string.
-  const makeUpper = make.toUpperCase().trim();
-  const makeTokens = expandMakeTokens(makeUpper);
-  const modelTokens = model
-    .toUpperCase()
-    .split(/[\s/-]+/)
-    .filter((t) => t.length >= 2);
-  const primaryModelToken = modelTokens[0] ?? "";
-
-  // Filter: title must contain at least one make-token AND the primary
-  // model-token, and have a valid price.
-  const validItems = data.itemSummaries.filter((item) => {
-    const title = (item.title || "").toUpperCase();
-    const makeOk = makeTokens.some((t) => title.includes(t));
-    const modelOk = primaryModelToken && title.includes(primaryModelToken);
-    if (!makeOk || !modelOk) return false;
+  const items: RawItem[] = [];
+  for (const item of data.itemSummaries) {
     const price = parseFloat(item.price?.value || "0");
-    return price > 0;
-  });
-
-  console.log(
-    `[VALUATION] eBay ${make} ${model} year=${yearFilter}: raw=${rawCount} kept=${validItems.length}`
-  );
-
-  const prices = validItems.map((item) => parseFloat(item.price!.value));
-
-  if (prices.length < 2) return null;
-
-  // Discard outliers relative to depreciation estimate (35%-250%)
-  let filtered = prices;
-  if (depreciationEstimate && depreciationEstimate > 0) {
-    const low = depreciationEstimate * 0.35;
-    const high = depreciationEstimate * 2.5;
-    filtered = prices.filter((p) => p >= low && p <= high);
+    if (price <= 0) continue;
+    const title = (item.title || "").toUpperCase();
+    // Extract a 4-digit year from the title — match years 1990 through next year.
+    const nextYear = new Date().getFullYear() + 1;
+    const yearMatches = title.match(/\b(19[89]\d|20\d\d)\b/g);
+    let titleYear: number | null = null;
+    if (yearMatches) {
+      // If multiple years appear, prefer the largest plausible one
+      // (often the model year, with the older year being an irrelevant
+      // mileage-MOT history reference like "MOT 2025").
+      const candidates = yearMatches
+        .map((y) => parseInt(y, 10))
+        .filter((y) => y >= 1990 && y <= nextYear);
+      if (candidates.length > 0) titleYear = Math.max(...candidates);
+    }
+    let titleFuel: string | null = null;
+    for (const [family, re] of Object.entries(FUEL_TITLE_TOKENS)) {
+      if (re.test(title)) {
+        titleFuel = family;
+        break;
+      }
+    }
+    items.push({ title, price, titleYear, titleFuel });
   }
 
-  if (filtered.length < 2) return null;
-
-  // Median
-  filtered.sort((a, b) => a - b);
-  const mid = Math.floor(filtered.length / 2);
-  const median =
-    filtered.length % 2 === 0
-      ? (filtered[mid - 1] + filtered[mid]) / 2
-      : filtered[mid];
-
-  // Extract dominant aspects from refinement data
+  // Dominant aspects from refinement section (across all 200 results)
   let dominantTransmission: string | null = null;
   let dominantBodyType: string | null = null;
   if (data.refinement?.aspectDistributions) {
@@ -273,20 +266,141 @@ async function searchEbay(
     }
   }
 
-  // Compute IQR (quartiles) from the sorted, filtered prices
-  const quartiles = computeQuartiles(filtered);
+  return {
+    items,
+    totalReported: data.total ?? rawCount,
+    dominantTransmission,
+    dominantBodyType,
+    query: params.toString(),
+    rawCount,
+  };
+}
+
+// ── Comparables computation ─────────────────────────────────────────────────
+// Given the raw eBay items, find the tightest year band with enough matches
+// and compute median + IQR.
+
+type EbayResult = {
+  median: number;
+  q1Price: number | null;
+  q3Price: number | null;
+  listingCount: number;
+  minPrice: number;
+  maxPrice: number;
+  totalListings: number;
+  dominantTransmission: string | null;
+  dominantBodyType: string | null;
+  yearWidened: boolean;
+  yearTolerance: number;
+  rejectedByTitle: number;
+  rejectedByPriceFloor: number;
+  rejectedByIqr: number;
+};
+
+function buildComparables(
+  bundle: EbayBundle,
+  make: string,
+  model: string,
+  year: number,
+  fuelType: string | null,
+): EbayResult | null {
+  if (bundle.items.length === 0) return null;
+
+  const makeTokens = expandMakeTokens(make.toUpperCase().trim());
+  // Model tokens: split on whitespace + slash + hyphen, require ≥2 chars.
+  const modelTokens = model
+    .toUpperCase()
+    .split(/[\s/-]+/)
+    .filter((t) => t.length >= 2);
+  const primaryModelToken = modelTokens[0] ?? "";
+
+  // Step 1: title must contain a make-token AND the primary model-token.
+  let rejectedByTitle = 0;
+  const titleMatched = bundle.items.filter((i) => {
+    const makeOk = makeTokens.some((t) => i.title.includes(t));
+    const modelOk = primaryModelToken && i.title.includes(primaryModelToken);
+    if (!makeOk || !modelOk) {
+      rejectedByTitle++;
+      return false;
+    }
+    return true;
+  });
+
+  // Step 2: enforce a year-aware price floor (kills £1 auction openers).
+  const floor = priceFloorForYear(year);
+  let rejectedByPriceFloor = 0;
+  const aboveFloor = titleMatched.filter((i) => {
+    if (i.price < floor) {
+      rejectedByPriceFloor++;
+      return false;
+    }
+    return true;
+  });
+
+  if (aboveFloor.length === 0) return null;
+
+  // Step 3: progressively widen the year tolerance until we have ≥5 items.
+  // If even ±5 doesn't get there, take whatever the broadest pool gives us.
+  const mappedFuel = fuelType ? FUEL_TYPE_MAP[fuelType.toUpperCase()] || null : null;
+  let yearTolerance = 0;
+  let selected: RawItem[] = [];
+  for (const tol of [0, 1, 2, 3, 5]) {
+    yearTolerance = tol;
+    selected = aboveFloor.filter((i) => {
+      // Year: items with no detected year are ALWAYS allowed (don't punish
+      // sellers who just didn't list the year in the title).
+      if (i.titleYear !== null && Math.abs(i.titleYear - year) > tol) return false;
+      // Fuel: if we know the fuel and the listing's detected fuel differs,
+      // reject — but listings with no detected fuel are allowed through.
+      if (mappedFuel && i.titleFuel && i.titleFuel !== mappedFuel) return false;
+      return true;
+    });
+    if (selected.length >= 5) break;
+  }
+
+  // Final fallback: if we still don't have ≥3 items after widening, drop fuel.
+  if (selected.length < 3) {
+    selected = aboveFloor.filter((i) => {
+      if (i.titleYear !== null && Math.abs(i.titleYear - year) > yearTolerance) return false;
+      return true;
+    });
+  }
+
+  if (selected.length < 2) return null;
+
+  // Step 4: IQR-based outlier trim (1.5× IQR rule).
+  let prices = selected.map((i) => i.price).sort((a, b) => a - b);
+  let rejectedByIqr = 0;
+  if (prices.length >= 5) {
+    const q = computeQuartiles(prices)!;
+    const iqr = q.q3 - q.q1;
+    const lo = q.q1 - 1.5 * iqr;
+    const hi = q.q3 + 1.5 * iqr;
+    const trimmed = prices.filter((p) => p >= lo && p <= hi);
+    rejectedByIqr = prices.length - trimmed.length;
+    if (trimmed.length >= 3) prices = trimmed;
+  }
+
+  const n = prices.length;
+  const mid = Math.floor(n / 2);
+  const median = n % 2 === 0 ? (prices[mid - 1] + prices[mid]) / 2 : prices[mid];
+  const quartiles = computeQuartiles(prices);
 
   return {
     median: Math.round(median * ASKING_PRICE_DISCOUNT),
     q1Price: quartiles ? Math.round(quartiles.q1 * ASKING_PRICE_DISCOUNT) : null,
     q3Price: quartiles ? Math.round(quartiles.q3 * ASKING_PRICE_DISCOUNT) : null,
-    listingCount: filtered.length,
-    minPrice: Math.round(filtered[0]),
-    maxPrice: Math.round(filtered[filtered.length - 1]),
-    totalListings: data.total || filtered.length,
-    dominantTransmission,
-    dominantBodyType,
-    yearWidened: false,
+    listingCount: n,
+    minPrice: Math.round(prices[0]),
+    maxPrice: Math.round(prices[n - 1]),
+    totalListings: bundle.totalReported,
+    dominantTransmission: bundle.dominantTransmission,
+    dominantBodyType: bundle.dominantBodyType,
+    yearWidened: yearTolerance > 0,
+    yearTolerance,
+    rejectedByTitle,
+    rejectedByPriceFloor,
+    rejectedByIqr,
   };
 }
 
@@ -295,54 +409,42 @@ async function fetchEbayComparables(
   model: string,
   year: number,
   fuelType: string | null,
-  depreciationEstimate?: number,
-): Promise<EbayResult | null> {
+  debug: boolean,
+): Promise<{ result: EbayResult | null; debug?: any }> {
   const token = await getEbayToken();
-  if (!token) return null;
+  if (!token) return { result: null };
 
   try {
-    // Attempt 1: Exact year aspect + fuel type. Bumped threshold from 3→5 so
-    // we widen sooner — users want a meaningful sample size, not just the
-    // bare minimum.
-    const r1 = await searchEbay(token, make, model, `{${year}}`, fuelType, depreciationEstimate);
-    if (r1 && r1.listingCount >= 5) return r1;
+    const bundle = await fetchEbayItems(token, make, model);
+    if (!bundle) return { result: null };
 
-    // Attempt 2: Adjacent years ±1 aspect + fuel type
-    const r2 = await searchEbay(
-      token, make, model,
-      `{${year - 1}|${year}|${year + 1}}`,
-      fuelType, depreciationEstimate,
-    );
-    if (r2 && r2.listingCount >= 5) return { ...r2, yearWidened: true };
+    const result = buildComparables(bundle, make, model, year, fuelType);
 
-    // Attempt 3: ±2 years aspect + fuel type
-    const years = [year - 2, year - 1, year, year + 1, year + 2].join("|");
-    const r3 = await searchEbay(
-      token, make, model, `{${years}}`, fuelType, depreciationEstimate,
-    );
-    if (r3 && r3.listingCount >= 5) return { ...r3, yearWidened: true };
-
-    // Attempt 4: Drop year aspect, keep fuel type
-    const r4 = await searchEbay(token, make, model, null, fuelType, depreciationEstimate);
-    if (r4 && r4.listingCount >= 5) return { ...r4, yearWidened: true };
-
-    // Attempt 5: Drop year and fuel type
-    const r5 = await searchEbay(token, make, model, null, null, depreciationEstimate);
-    if (r5) return { ...r5, yearWidened: true };
-
-    // Return whatever we got from earlier attempts if any had results
-    if (r3) return { ...r3, yearWidened: true };
-    if (r2) return { ...r2, yearWidened: true };
-    if (r1) return r1;
-
-    return null;
+    if (debug) {
+      return {
+        result,
+        debug: {
+          query: bundle.query,
+          rawCount: bundle.rawCount,
+          totalReported: bundle.totalReported,
+          itemsAfterTitleFilter: bundle.items.length - (result?.rejectedByTitle ?? 0),
+          sampleTitles: bundle.items.slice(0, 5).map((i) => ({
+            title: i.title,
+            price: i.price,
+            year: i.titleYear,
+            fuel: i.titleFuel,
+          })),
+        },
+      };
+    }
+    return { result };
   } catch (error: any) {
     if (error?.name === "AbortError") {
       console.error("[VALUATION] eBay request timeout");
     } else {
       console.error("[VALUATION] eBay search error:", error?.message || error);
     }
-    return null;
+    return { result: null };
   }
 }
 
@@ -456,9 +558,11 @@ type ValuationResponse = {
   ebayDominantTransmission: string | null;
   ebayDominantBodyType: string | null;
   ebayYearWidened: boolean;
+  ebayYearTolerance: number | null;
   cacheMedian: number | null;
   cacheEntryCount: number;
   sources: string[];
+  debug?: any;
 };
 
 export async function GET(
@@ -475,6 +579,7 @@ export async function GET(
     const engineStr = searchParams.get("engineCapacity");
     const mileageStr = searchParams.get("mileage");
     const colourStr = searchParams.get("colour");
+    const debug = searchParams.get("debug") === "true";
 
     if (!make || !model || !yearStr) {
       return NextResponse.json(
@@ -493,31 +598,28 @@ export async function GET(
     const engineCapacity = engineStr ? parseInt(engineStr, 10) : undefined;
     const mileage = mileageStr ? parseInt(mileageStr, 10) : undefined;
 
-    // Check cache first — if warm, we can skip eBay
-    const cacheResult = await checkCache(make, model, year);
-
-    let ebayResult: EbayResult | null = null;
-
-    // Only call eBay if cache is cold (<3 entries)
-    if (!cacheResult) {
-      ebayResult = await fetchEbayComparables(make, model, year, fuelType, depEstimate);
-    }
+    // Always hit both eBay AND cache. eBay is the freshest signal; cache is
+    // a confirmation/fallback. Previously we short-circuited to cache when
+    // it had ≥3 entries, which let data go stale.
+    const [cacheResult, { result: ebayResult, debug: ebayDebug }] = await Promise.all([
+      checkCache(make, model, year),
+      fetchEbayComparables(make, model, year, fuelType, debug),
+    ]);
 
     const sources: string[] = [];
     if (ebayResult) sources.push("ebay");
     if (cacheResult) sources.push("cache");
 
-    // Parse colour adjustment for cache write
     const colourAdj = colourStr ? parseFloat(colourStr) : undefined;
 
-    // Track valuation event
+    // Track valuation event (fire-and-forget)
     const sb = supabaseServer();
     sb.from("site_events").insert({
       event_type: "valuation",
       metadata: { make, model, year },
     }).then(() => {}, () => {});
 
-    // Write to cache asynchronously (don't block response)
+    // Write to cache asynchronously
     if (ebayResult) {
       writeCache({
         make,
@@ -539,7 +641,7 @@ export async function GET(
       }).catch(() => {});
     }
 
-    return NextResponse.json({
+    const response: ValuationResponse = {
       ebayMedian: ebayResult?.median ?? null,
       ebayQ1Price: ebayResult?.q1Price ?? null,
       ebayQ3Price: ebayResult?.q3Price ?? null,
@@ -550,10 +652,22 @@ export async function GET(
       ebayDominantTransmission: ebayResult?.dominantTransmission ?? null,
       ebayDominantBodyType: ebayResult?.dominantBodyType ?? null,
       ebayYearWidened: ebayResult?.yearWidened ?? false,
+      ebayYearTolerance: ebayResult?.yearTolerance ?? null,
       cacheMedian: cacheResult?.median ?? null,
       cacheEntryCount: cacheResult?.entryCount ?? 0,
       sources,
-    }, {
+    };
+
+    if (debug) {
+      response.debug = {
+        ...(ebayDebug || {}),
+        rejectedByTitle: ebayResult?.rejectedByTitle,
+        rejectedByPriceFloor: ebayResult?.rejectedByPriceFloor,
+        rejectedByIqr: ebayResult?.rejectedByIqr,
+      };
+    }
+
+    return NextResponse.json(response, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
   } catch (error: any) {
