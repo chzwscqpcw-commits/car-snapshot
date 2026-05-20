@@ -30,6 +30,20 @@
   zoom: var(--card-zoom);
 }
 
+/* iOS Safari auto-zooms the page on focus when an input/textarea/select is
+   rendered at <16px, and doesn't reliably restore the zoom on blur — the
+   user ends up stuck at an awkward zoom level. Forcing a 16px minimum on
+   form fields below 640px eliminates the auto-zoom completely. !important
+   is needed to win over Tailwind utility classes (text-sm = 14px). Desktop
+   designs are unaffected — this only applies to small viewports. */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 
 
 :root {
