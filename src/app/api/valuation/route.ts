@@ -295,6 +295,7 @@ type EbayResult = {
   rejectedByTitle: number;
   rejectedByPriceFloor: number;
   rejectedByIqr: number;
+  selectedSample: Array<{ title: string; price: number; year: number | null }>;
 };
 
 function buildComparables(
@@ -308,18 +309,21 @@ function buildComparables(
   if (bundle.items.length === 0) return null;
 
   const makeTokens = expandMakeTokens(make.toUpperCase().trim());
-  // Model tokens: split on whitespace + slash + hyphen, require ≥2 chars.
+  // Model tokens: split on whitespace + slash + hyphen, drop empties only.
+  // Critically we keep single-character tokens — for "3 SERIES" or "C-MAX"
+  // the leading digit/letter is part of the identity. Previously we
+  // filtered `length >= 2` which dropped the "3" and caused BMW 1/5/7
+  // SERIES listings to be lumped in with 3 SERIES queries.
   const modelTokens = model
     .toUpperCase()
     .split(/[\s/-]+/)
-    .filter((t) => t.length >= 2);
-  const primaryModelToken = modelTokens[0] ?? "";
+    .filter(Boolean);
 
-  // Step 1: title must contain a make-token AND the primary model-token.
+  // Step 1: title must contain a make-token AND every model-token.
   let rejectedByTitle = 0;
   const titleMatched = bundle.items.filter((i) => {
     const makeOk = makeTokens.some((t) => i.title.includes(t));
-    const modelOk = primaryModelToken && i.title.includes(primaryModelToken);
+    const modelOk = modelTokens.length > 0 && modelTokens.every((t) => i.title.includes(t));
     if (!makeOk || !modelOk) {
       rejectedByTitle++;
       return false;
@@ -421,6 +425,11 @@ function buildComparables(
     rejectedByTitle,
     rejectedByPriceFloor,
     rejectedByIqr,
+    selectedSample: selected.slice(0, 15).map((i) => ({
+      title: i.title.slice(0, 80),
+      price: i.price,
+      year: i.titleYear,
+    })),
   };
 }
 
@@ -685,6 +694,7 @@ export async function GET(
         rejectedByTitle: ebayResult?.rejectedByTitle,
         rejectedByPriceFloor: ebayResult?.rejectedByPriceFloor,
         rejectedByIqr: ebayResult?.rejectedByIqr,
+        selectedSample: ebayResult?.selectedSample ?? [],
       };
     }
 
