@@ -7,6 +7,7 @@ import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import ServicingCTA from "@/components/ServicingCTA";
 import ValuationResult from "@/components/tools/ValuationResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -290,47 +291,13 @@ export default async function CarValuationPage({
           targetPath="/car-valuation"
         />
 
-        {/* Bridge: Why MOT reminders matter to anyone checking a valuation */}
-        <div className="mt-12 rounded-xl border border-emerald-800/40 bg-gradient-to-br from-emerald-950/30 to-slate-900/30 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-100">
-            A lapsed MOT can knock hundreds off your car&apos;s value
-          </h2>
-          <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-            Buyers walk away from cars with an expired MOT or a long list of
-            advisories. A clean MOT history is one of the simplest things
-            you can do to protect your resale price — and reminders are
-            free.
-          </p>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            <div>
-              <p className="text-2xl font-bold text-emerald-400">£1,000</p>
-              <p className="mt-1 text-xs text-slate-400">
-                Maximum fine for driving without a valid MOT.
-              </p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-emerald-400">28 + 7</p>
-              <p className="mt-1 text-xs text-slate-400">
-                Days&apos; notice before expiry — plenty of time to book.
-              </p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-emerald-400">£0</p>
-              <p className="mt-1 text-xs text-slate-400">
-                Cost of a reminder. Unsubscribe with one click any time.
-              </p>
-            </div>
-          </div>
-
-          <a
-            href="#mot-reminder"
-            className="mt-5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-            Set my free MOT reminder
-          </a>
-        </div>
+        <StatCallouts
+          stats={[
+            { value: "15-35%", label: "Year 1 depreciation", tone: "warn" },
+            { value: "8,000 mi", label: "UK avg mileage/year" },
+            { value: "£0", label: "Free, no signup", tone: "good" },
+          ]}
+        />
 
         {/* --- Long-form copy --- */}
         <div className="mt-12 space-y-8 text-slate-300">

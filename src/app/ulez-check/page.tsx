@@ -5,6 +5,7 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import UlezResult from "@/components/tools/UlezResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -231,6 +232,14 @@ export default async function UlezCheckPage({
           subtext="Enter a reg plate to see if your vehicle meets ULEZ standards — plus full MOT history, tax status, and more."
           reminderHeadline="Stay on top of your MOT"
           targetPath="/ulez-check"
+        />
+
+        <StatCallouts
+          stats={[
+            { value: "£12.50/day", label: "London ULEZ charge", tone: "warn" },
+            { value: "£4,562", label: "Annual cost if driven daily", tone: "danger" },
+            { value: "£0", label: "EVs & hydrogen", tone: "good" },
+          ]}
         />
 
         <div className="space-y-8 text-slate-300">

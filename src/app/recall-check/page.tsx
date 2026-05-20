@@ -6,6 +6,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
 import RecallResult from "@/components/tools/RecallResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -225,6 +226,14 @@ export default async function RecallCheckPage({
           subtext="Enter a reg plate to see known recalls for your make and model, plus full MOT history and vehicle health data."
           reminderHeadline="Never miss your MOT"
           targetPath="/recall-check"
+        />
+
+        <StatCallouts
+          stats={[
+            { value: "£0", label: "Repairs always free", tone: "good" },
+            { value: "12,700+", label: "DVSA recalls on record" },
+            { value: "No limit", label: "Time to claim a fix", tone: "good" },
+          ]}
         />
 
         <div className="space-y-8 text-slate-300">

@@ -6,6 +6,7 @@ import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MotResult from "@/components/tools/MotResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 // Single source of truth for FAQ content — used both for the visible
 // accordion and the FAQPage JSON-LD below.
@@ -275,14 +276,13 @@ export default async function MotCheckPage({
           targetPath="/mot-check"
         />
 
-        <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-lg">
-          <p className="text-sm text-slate-300">
-            Want a reminder before your next MOT is due?
-            <a href="/mot-reminder" className="text-emerald-400 hover:text-emerald-300 ml-1">
-              Set a free MOT reminder &rarr;
-            </a>
-          </p>
-        </div>
+        <StatCallouts
+          stats={[
+            { value: "£54.85", label: "Max MOT fee" },
+            { value: "3 yrs", label: "First MOT due" },
+            { value: "12 mo", label: "Then yearly" },
+          ]}
+        />
 
         <div className="space-y-8 text-slate-300">
           <section>
@@ -352,13 +352,6 @@ export default async function MotCheckPage({
             </p>
             <p className="leading-relaxed">
               One exception: driving directly to a pre-booked test at a registered centre, with no detours. Also worth checking <a href="/tax-check" className="text-blue-400 hover:text-blue-300">tax status</a> while you&apos;re at it.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">Never miss your MOT</h2>
-            <p className="leading-relaxed">
-              Set a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a> and we&apos;ll email you 28 and 7 days before expiry — plenty of time to shop around. 30 seconds, no account: enter your reg, add your email.
             </p>
           </section>
 

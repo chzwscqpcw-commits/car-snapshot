@@ -6,6 +6,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
 import MileageResult from "@/components/tools/MileageResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -224,6 +225,14 @@ export default async function MileageCheckPage({
           subtext="Enter a reg plate to see full MOT mileage records since 2005 — spot clocking and verify the odometer reading."
           reminderHeadline="Stay on top of your MOT"
           targetPath="/mileage-check"
+        />
+
+        <StatCallouts
+          stats={[
+            { value: "1 in 16", label: "cars are clocked", tone: "warn" },
+            { value: "7-10k", label: "UK avg miles/year" },
+            { value: "Since 2005", label: "MOT mileage on record" },
+          ]}
         />
 
         <div className="space-y-8 text-slate-300">

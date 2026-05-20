@@ -5,6 +5,7 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -199,6 +200,14 @@ export default function CarCheckPage() {
           headline="Check a vehicle now"
           subtext="Enter any UK registration number to see full vehicle details, MOT history, tax status, mileage, and more — instantly."
           reminderHeadline="Keep on top of your MOT"
+        />
+
+        <StatCallouts
+          stats={[
+            { value: "1 in 3", label: "used cars hide history", tone: "warn" },
+            { value: "2005", label: "MOT records start" },
+            { value: "£0", label: "no signup needed", tone: "good" },
+          ]}
         />
 
         <div className="space-y-8 text-slate-300">

@@ -5,6 +5,7 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import TaxResult from "@/components/tools/TaxResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import StatCallouts from "@/components/StatCallouts";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -224,6 +225,14 @@ export default async function TaxCheckPage({
           subtext="Enter any UK reg plate to see current tax status, VED band, and MOT expiry — free and instant."
           reminderHeadline="Never miss your MOT or tax renewal"
           targetPath="/tax-check"
+        />
+
+        <StatCallouts
+          stats={[
+            { value: "£195/yr", label: "Standard VED rate" },
+            { value: "£80", label: "Untaxed penalty", tone: "warn" },
+            { value: "£1,000", label: "Max court fine", tone: "danger" },
+          ]}
         />
 
         <div className="space-y-8 text-slate-300">
