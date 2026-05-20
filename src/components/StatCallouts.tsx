@@ -20,16 +20,25 @@ const TONE_CLASSES: Record<StatTone, { value: string; border: string }> = {
  */
 export default function StatCallouts({ stats }: { stats: Stat[] }) {
   return (
-    <div className="my-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    // 3 columns at every breakpoint — values are short enough to fit on
+    // phones, and stacking 1-column was eating 300px of vertical scroll
+    // when it should be a scannable strip.
+    <div className="my-6 grid grid-cols-3 gap-2 sm:my-8 sm:gap-3">
       {stats.map((s, i) => {
         const tone = TONE_CLASSES[s.tone ?? "default"];
         return (
           <div
             key={i}
-            className={`rounded-lg border bg-slate-900/40 p-4 text-center ${tone.border}`}
+            className={`rounded-lg border bg-slate-900/40 px-2 py-3 text-center sm:p-4 ${tone.border}`}
           >
-            <p className={`text-2xl font-bold tracking-tight ${tone.value}`}>{s.value}</p>
-            <p className="mt-1 text-xs uppercase tracking-wider text-slate-500">{s.label}</p>
+            <p
+              className={`text-base font-bold tracking-tight sm:text-2xl ${tone.value}`}
+            >
+              {s.value}
+            </p>
+            <p className="mt-1 text-[10px] leading-snug text-slate-500 sm:text-xs sm:uppercase sm:tracking-wider">
+              {s.label}
+            </p>
           </div>
         );
       })}
