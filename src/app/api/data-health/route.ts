@@ -244,12 +244,6 @@ export async function GET() {
   const staleCount = files.filter((f) => f.stale).length;
   const totalEntries = files.reduce((sum, f) => sum + f.entries, 0);
 
-  // Strip debug keys from freshness manifest before reporting count etc.
-  const debug = {
-    decisions: (freshness as Record<string, string>)["_debug_decisions"] ?? null,
-    env: (freshness as Record<string, string>)["_debug_env"] ?? null,
-  };
-
   return NextResponse.json({
     status: "ok",
     buildTime: BUILD_TIME,
@@ -257,6 +251,5 @@ export async function GET() {
     totalEntries,
     staleCount,
     files,
-    debug,
   });
 }

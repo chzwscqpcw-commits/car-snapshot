@@ -65,6 +65,31 @@ function isDirty(file: string): boolean {
   }
 }
 
+function filesChangedInHead(): Set<string> {
+  // Set of src/data/*.json files that the most recent commit actually
+  // changed. We use this to gate the git-log path — Vercel's shallow
+  // clone returns misleading per-path git log dates, so we only trust
+  // git log when we can confirm the file was *actually* modified in HEAD.
+  try {
+    const out = execSync(`git diff --name-only HEAD~1 HEAD`, {
+      cwd: PROJECT_ROOT,
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    const set = new Set<string>();
+    for (const line of out.split("\n")) {
+      const t = line.trim();
+      if (t.startsWith("src/data/") && t.endsWith(".json")) {
+        set.add(t.replace("src/data/", ""));
+      }
+    }
+    return set;
+  } catch {
+    // shallow clone with no HEAD~1, or no .git — can't confirm anything
+    return new Set();
+  }
+}
+
 function statMtimeIso(file: string): string | null {
   try {
     const stat = fs.statSync(path.join(DATA_DIR, file));
@@ -93,10 +118,11 @@ function main() {
     .sort();
 
   // Start from the committed manifest so unmodified entries survive shallow
-  // clones (Vercel) where `git log -- <file>` returns nothing.
+  // clones (Vercel) where `git log -- <file>` returns nothing — or worse,
+  // misleading dates from other recent commits on Vercel's modified clone.
   const existing = loadExistingManifest();
   const manifest: Record<string, string> = { ...existing };
-  const decisions: Record<string, { branch: string; value: string }> = {};
+  const changedInHead = filesChangedInHead();
   let gitOk = 0;
   let fetchedNow = 0;
   let dirty = 0;
@@ -106,7 +132,6 @@ function main() {
     if (FETCHED_THIS_BUILD.has(f)) {
       // Prebuild fetch scripts just (re)wrote this — stamp it "now".
       manifest[f] = now;
-      decisions[f] = { branch: "fetched-now", value: now };
       fetchedNow++;
       continue;
     }
@@ -114,49 +139,40 @@ function main() {
       // File modified in this working tree but not yet committed
       // (e.g., refresh workflow ran but hasn't pushed). Treat as fresh now.
       manifest[f] = now;
-      decisions[f] = { branch: "dirty-now", value: now };
       dirty++;
       continue;
     }
-    const git = gitLogIso(f);
-    if (git) {
-      // git log saw it — accurate even on shallow clones if HEAD touched
-      // this file in this commit.
-      manifest[f] = git;
-      decisions[f] = { branch: "git-log", value: git };
-      gitOk++;
-      continue;
+    if (changedInHead.has(f)) {
+      // File was actually changed in HEAD — trust git log for the date.
+      // (Without this gate, Vercel's clone sometimes returns a date from
+      // an unrelated recent commit, making every file look fresh.)
+      const git = gitLogIso(f);
+      if (git) {
+        manifest[f] = git;
+        gitOk++;
+        continue;
+      }
     }
-    // git log returned nothing (likely shallow clone, file not in HEAD).
-    // Keep whatever the committed manifest already says — that's what the
-    // last refresh produced. Don't fall back to mtime (always "now" in CI).
+    // Default: preserve the committed manifest value. This is the
+    // overwhelming case — most files aren't touched in any given commit,
+    // so their last-modified date should carry across builds intact.
     if (existing[f]) {
       manifest[f] = existing[f];
-      decisions[f] = { branch: "preserved", value: existing[f] };
       preserved++;
     } else {
-      // No git history, no existing entry — best we can do is now.
+      // First time seeing this file — best we can do is now.
       manifest[f] = now;
-      decisions[f] = { branch: "fallback-now", value: now };
     }
   }
 
-  // Embed decision metadata so we can debug freshness regressions
-  // without needing direct access to build logs. Strip the `_*` keys
-  // before counting in data-health.
-  manifest["_debug_decisions"] = JSON.stringify(decisions);
-  manifest["_debug_env"] = JSON.stringify({
-    cwd: process.cwd(),
-    projectRoot: PROJECT_ROOT,
-    hasDotGit: fs.existsSync(path.join(PROJECT_ROOT, ".git")),
-    gitLogProbe: gitLogIso("body-types.json"),
-    existingHadValues: Object.keys(existing).length,
-  });
+  // Strip debug entries from any prior build before writing.
+  delete manifest["_debug_decisions"];
+  delete manifest["_debug_env"];
 
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 
   console.log(
-    `Wrote freshness manifest: ${files.length} files (${fetchedNow} fetched-now · ${dirty} dirty-now · ${gitOk} from git · ${preserved} preserved)`,
+    `Wrote freshness manifest: ${files.length} files (${fetchedNow} fetched-now · ${dirty} dirty-now · ${gitOk} from git · ${preserved} preserved). filesChangedInHead=${[...changedInHead].join(",") || "(none)"}`,
   );
 }
 
