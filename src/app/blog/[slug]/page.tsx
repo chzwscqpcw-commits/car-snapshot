@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
+import BlogTagPill from "@/components/BlogTagPill";
+import { Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
@@ -196,9 +198,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <a
                     key={tag}
                     href={`/blog/tag/${tag}`}
-                    className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                    className="transition-opacity hover:opacity-80"
                   >
-                    {getTagLabel(tag)}
+                    <BlogTagPill tag={tag} label={getTagLabel(tag)} size="xs" />
                   </a>
                 ))}
               </div>
@@ -314,25 +316,38 @@ export default async function BlogPostPage({ params }: PageProps) {
       {/* Related posts */}
       {relatedPosts.length > 0 && (
         <div className="max-w-3xl mx-auto px-4 mt-16">
-          <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+            Related guides
+          </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {relatedPosts.map((rp) => (
-              <a
-                key={rp.slug}
-                href={`/blog/${rp.slug}`}
-                className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
-              >
-                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors line-clamp-2">
-                  {rp.title}
-                </p>
-                <p className="text-xs text-slate-500 mt-2 line-clamp-2">
-                  {rp.description}
-                </p>
-                <p className="text-xs text-slate-600 mt-2">
-                  {rp.readingTime} min read
-                </p>
-              </a>
-            ))}
+            {relatedPosts.map((rp) => {
+              const rpTags = getPostTags(rp.keywords);
+              return (
+                <a
+                  key={rp.slug}
+                  href={`/blog/${rp.slug}`}
+                  className="group flex flex-col rounded-lg border border-slate-800 bg-slate-900/40 p-5 transition-all hover:border-slate-600 hover:bg-slate-900/70"
+                >
+                  {rpTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {rpTags.slice(0, 2).map((tag) => (
+                        <BlogTagPill key={tag} tag={tag} label={getTagLabel(tag)} size="xs" />
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-base font-semibold text-slate-100 group-hover:text-blue-300 transition-colors leading-snug line-clamp-2">
+                    {rp.title}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-400 leading-relaxed line-clamp-3 flex-1">
+                    {rp.description}
+                  </p>
+                  <p className="mt-3 inline-flex items-center gap-1 text-xs text-slate-500">
+                    <Clock className="h-3 w-3" />
+                    {rp.readingTime} min read
+                  </p>
+                </a>
+              );
+            })}
           </div>
         </div>
       )}

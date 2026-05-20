@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Clock } from "lucide-react";
 import { getAllTags, getPostsByTag, getTagLabel, getPostTags } from "@/lib/blog";
+import BlogTagPill from "@/components/BlogTagPill";
 
 interface PageProps {
   params: Promise<{ tag: string }>;
@@ -86,66 +89,65 @@ export default async function TagPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Tag pills */}
+      {/* Topic browse */}
       <div className="max-w-3xl mx-auto px-4 pt-8">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+          Browse by topic
+        </p>
         <div className="flex flex-wrap gap-2">
           {allTags.map((t) => (
-            <a
+            <Link
               key={t.tag}
               href={`/blog/tag/${t.tag}`}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                t.tag === tag
-                  ? "border-blue-500 text-blue-400 bg-blue-950/30"
-                  : "border-slate-700 text-slate-400 hover:text-slate-200 hover:border-slate-500"
-              }`}
+              className={`group inline-flex items-center gap-1.5 transition-opacity ${t.tag === tag ? "" : "opacity-70 hover:opacity-100"}`}
             >
-              {t.label} <span className={t.tag === tag ? "text-blue-500" : "text-slate-600"}>({t.count})</span>
-            </a>
+              <BlogTagPill tag={t.tag} label={t.label} />
+              <span className={`text-xs ${t.tag === tag ? "text-cyan-400" : "text-slate-600 group-hover:text-slate-500"} transition-colors`}>
+                {t.count}
+              </span>
+            </Link>
           ))}
         </div>
       </div>
 
       {/* Post listing */}
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="space-y-8">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+          {label} guides
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
           {posts.map((post) => {
             const postTags = getPostTags(post.keywords);
             return (
-              <article
+              <Link
                 key={post.slug}
-                className="p-6 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
+                href={`/blog/${post.slug}`}
+                className="group flex flex-col rounded-lg border border-slate-800 bg-slate-900/40 p-5 transition-all hover:border-slate-600 hover:bg-slate-900/70"
               >
-                <a href={`/blog/${post.slug}`} className="block group">
-                  <h2 className="text-xl font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">
-                    {post.title}
-                  </h2>
-                  <p className="text-slate-400 text-sm mt-2">
-                    {post.description}
-                  </p>
-                  <div className="flex items-center gap-3 mt-4 text-xs text-slate-500">
-                    <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </time>
-                    <span>&middot;</span>
-                    <span>{post.readingTime} min read</span>
-                    {postTags.length > 0 && (
-                      <>
-                        <span>&middot;</span>
-                        {postTags.map((t) => (
-                          <span key={t} className="text-slate-600">{getTagLabel(t)}</span>
-                        ))}
-                      </>
-                    )}
+                {postTags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {postTags.slice(0, 2).map((t) => (
+                      <BlogTagPill key={t} tag={t} label={getTagLabel(t)} size="xs" />
+                    ))}
                   </div>
-                  <span className="inline-block mt-4 text-sm text-blue-400 group-hover:text-blue-300 transition-colors">
-                    Read more &rarr;
+                )}
+                <h2 className="text-base font-semibold text-slate-100 group-hover:text-blue-300 transition-colors leading-snug">
+                  {post.title}
+                </h2>
+                <p className="mt-2 text-sm text-slate-400 leading-relaxed line-clamp-3 flex-1">
+                  {post.description}
+                </p>
+                <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                  </time>
+                  <span aria-hidden="true">·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {post.readingTime} min
                   </span>
-                </a>
-              </article>
+                </div>
+              </Link>
             );
           })}
         </div>
