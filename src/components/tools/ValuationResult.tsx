@@ -34,6 +34,7 @@ import { trackPartnerClick } from "@/lib/tracking";
 
 interface ValuationResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 interface ServerValuation {
@@ -58,8 +59,9 @@ const NEW_PRICES = newPricesData as Array<{
   newPrice: number;
 }>;
 
-export default function ValuationResult({ vrm }: ValuationResultProps) {
-  const state = useVehicleLookup(vrm);
+export default function ValuationResult({ vrm, previewVehicle }: ValuationResultProps) {
+  const state = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Running the valuation model…" />;
   if (state.kind === "error")

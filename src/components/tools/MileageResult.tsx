@@ -14,6 +14,7 @@ import {
 
 interface MileageResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 interface Reading {
@@ -40,8 +41,9 @@ interface ClockingFlag {
 
 const UK_AVG_MILES_PER_YEAR = 7400; // 2025 DfT figure for cars
 
-export default function MileageResult({ vrm }: MileageResultProps) {
-  const state = useVehicleLookup(vrm);
+export default function MileageResult({ vrm, previewVehicle }: MileageResultProps) {
+  const state = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Reading every MOT mileage record…" />;
   if (state.kind === "error")

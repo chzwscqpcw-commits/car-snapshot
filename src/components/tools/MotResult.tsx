@@ -24,6 +24,7 @@ import { trackPartnerClick } from "@/lib/tracking";
 
 interface MotResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 interface MotStats {
@@ -38,8 +39,9 @@ interface MotStats {
   defectPreview: string[];
 }
 
-export default function MotResult({ vrm }: MotResultProps) {
-  const state = useVehicleLookup(vrm);
+export default function MotResult({ vrm, previewVehicle }: MotResultProps) {
+  const state = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Reading the MOT history…" />;
   if (state.kind === "error")

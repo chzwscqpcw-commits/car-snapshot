@@ -23,6 +23,7 @@ import type { Recall } from "@/lib/recalls";
 
 interface RecallResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 type RecallState =
@@ -31,8 +32,9 @@ type RecallState =
   | { kind: "ok"; recalls: Recall[] }
   | { kind: "error"; message: string };
 
-export default function RecallResult({ vrm }: RecallResultProps) {
-  const vehicleState = useVehicleLookup(vrm);
+export default function RecallResult({ vrm, previewVehicle }: RecallResultProps) {
+  const vehicleState = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (vehicleState.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Reading vehicle details…" />;
   if (vehicleState.kind === "error")

@@ -42,6 +42,7 @@ import {
 
 interface RunningCostsResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 const NEW_PRICES = newPricesData as Array<{
@@ -52,8 +53,9 @@ const NEW_PRICES = newPricesData as Array<{
 
 const UK_AVG_MILES_PER_YEAR = 7400; // DfT 2025
 
-export default function RunningCostsResult({ vrm }: RunningCostsResultProps) {
-  const state = useVehicleLookup(vrm);
+export default function RunningCostsResult({ vrm, previewVehicle }: RunningCostsResultProps) {
+  const state = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Calculating fuel, tax and depreciation…" />;
   if (state.kind === "error")

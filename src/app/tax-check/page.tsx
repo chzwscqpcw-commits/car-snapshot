@@ -166,6 +166,7 @@ export default async function TaxCheckPage({
         h1="Free Car Tax Check"
         subtitle="Real-time DVLA tax status for any UK vehicle — see if it's taxed, SORN, or due. Plus VED band and annual cost. Free, instant, no signup."
         badgeText="Free · No signup · Real-time DVLA tax data"
+        previewImage="tax-check.png"
         bullets={[
           "Real-time DVLA status — taxed, SORN or untaxed",
           "Annual VED rate based on CO₂ band and registration year",

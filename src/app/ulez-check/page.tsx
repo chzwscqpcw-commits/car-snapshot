@@ -167,6 +167,7 @@ export default async function UlezCheckPage({
         h1="Free ULEZ Compliance Check"
         subtitle="Instantly check if your car meets London ULEZ and other UK Clean Air Zone standards — see if you'll pay the £12.50/day charge. Free, no signup."
         badgeText="Free · No signup · Real DVLA emissions data"
+        previewImage="ulez-check.png"
         bullets={[
           "Euro emission standard pulled straight from DVLA",
           "Covers London ULEZ + Birmingham, Bath, Bristol, Sheffield CAZs",

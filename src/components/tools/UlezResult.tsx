@@ -13,10 +13,12 @@ import { calculateUlezCompliance, type UlezResult as UlezData } from "@/lib/ulez
 
 interface UlezResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
-export default function UlezResult({ vrm }: UlezResultProps) {
-  const state = useVehicleLookup(vrm);
+export default function UlezResult({ vrm, previewVehicle }: UlezResultProps) {
+  const state = useVehicleLookup(previewVehicle ? "" : vrm);
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Checking clean-air zone compliance…" />;
   if (state.kind === "error")

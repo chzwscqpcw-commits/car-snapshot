@@ -58,6 +58,11 @@ export function useVehicleLookup(vrm: string): LookupState {
   const [state, setState] = useState<LookupState>({ kind: "loading" });
 
   useEffect(() => {
+    // Skip the fetch when called with an empty vrm — used by the preview
+    // routes that inject a fixture vehicle directly and don't need to hit
+    // /api/lookup. State stays at "loading" but callers short-circuit
+    // before rendering it.
+    if (!vrm) return;
     let cancelled = false;
     setState({ kind: "loading" });
     fetch("/api/lookup", {

@@ -17,6 +17,7 @@ import { trackPartnerClick } from "@/lib/tracking";
 
 interface TaxResultProps {
   vrm: string;
+  previewVehicle?: LookupVehicle;
 }
 
 interface LookupVehicle {
@@ -147,10 +148,11 @@ const TONE_CLASSES: Record<
   },
 };
 
-export default function TaxResult({ vrm }: TaxResultProps) {
+export default function TaxResult({ vrm, previewVehicle }: TaxResultProps) {
   const [state, setState] = useState<FetchState>({ kind: "loading" });
 
   useEffect(() => {
+    if (previewVehicle) return; // preview mode skips the lookup
     let cancelled = false;
     setState({ kind: "loading" });
     fetch("/api/lookup", {
@@ -183,8 +185,9 @@ export default function TaxResult({ vrm }: TaxResultProps) {
     return () => {
       cancelled = true;
     };
-  }, [vrm]);
+  }, [vrm, previewVehicle]);
 
+  if (previewVehicle) return <Loaded vehicle={previewVehicle} vrm={vrm} />;
   if (state.kind === "loading") {
     return <Skeleton vrm={vrm} />;
   }

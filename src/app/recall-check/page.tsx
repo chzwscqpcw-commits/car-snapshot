@@ -159,6 +159,7 @@ export default async function RecallCheckPage({
         h1="Free Car Recall Check"
         subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
         badgeText="Free · No signup · DVSA recall database"
+        previewImage="recall-check.png"
         bullets={[
           "Cross-checked against the full DVSA recall database",
           "Recall repairs are always free — regardless of vehicle age",

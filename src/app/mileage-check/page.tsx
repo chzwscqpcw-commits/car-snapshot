@@ -159,6 +159,7 @@ export default async function MileageCheckPage({
         h1="Free Mileage Check"
         subtitle="Every odometer reading from every MOT test since 2005 — verify mileage and spot clocking instantly. Free, no signup."
         badgeText="Free · No signup · MOT mileage records"
+        previewImage="mileage-check.png"
         bullets={[
           "Mileage timeline from every MOT test since 2005",
           "Automatic anomaly flag for potential odometer tampering",
