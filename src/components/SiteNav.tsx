@@ -1,12 +1,61 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import { useCommandPalette } from "@/components/CommandPalette";
 import { PRIMARY_NAV, SITE_ITEMS } from "@/lib/site-index";
+
+/**
+ * Tracks the user's most recent scroll direction so the nav can hide while
+ * scrolling down (giving content the full viewport) and reveal while
+ * scrolling up. Returns true when the nav should be hidden.
+ */
+function useHideOnScrollDown({
+  hideAfter = 80,
+  delta = 6,
+}: {
+  hideAfter?: number;
+  delta?: number;
+} = {}) {
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    lastY.current = window.scrollY;
+
+    const update = () => {
+      const y = window.scrollY;
+      const diff = y - lastY.current;
+
+      // Always show near the top — never hide the nav when the user is
+      // at the page header.
+      if (y < hideAfter) {
+        setHidden(false);
+      } else if (Math.abs(diff) > delta) {
+        setHidden(diff > 0); // scrolling down → hide
+      }
+
+      lastY.current = y;
+      ticking.current = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking.current) {
+        window.requestAnimationFrame(update);
+        ticking.current = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [hideAfter, delta]);
+
+  return hidden;
+}
 
 /**
  * Persistent, glass-blurred top nav. Visible on every route.
@@ -20,8 +69,13 @@ import { PRIMARY_NAV, SITE_ITEMS } from "@/lib/site-index";
  */
 export default function SiteNav() {
   const pathname = usePathname() || "/";
-  const { open } = useCommandPalette();
+  const { open, isOpen: paletteOpen } = useCommandPalette();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const scrolledHidden = useHideOnScrollDown();
+
+  // Keep nav visible when the drawer or command palette is open — feels
+  // wrong for the bar to slide out from under a focused overlay.
+  const hidden = scrolledHidden && !drawerOpen && !paletteOpen;
 
   // Close drawer on route change
   useEffect(() => {
@@ -45,7 +99,11 @@ export default function SiteNav() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-slate-950/60">
+      <header
+        className={`sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-slate-950/60 transition-transform duration-200 ease-out will-change-transform ${
+          hidden ? "-translate-y-full" : "translate-y-0"
+        }`}
+      >
         <div className="mx-auto flex h-12 max-w-7xl items-center gap-3 px-3 sm:h-14 sm:px-4">
           {/* Brand */}
           <Link
