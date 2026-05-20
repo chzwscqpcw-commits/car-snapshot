@@ -284,21 +284,6 @@ export default function RepairCostsHub() {
           </p>
         </div>
       </div>
-
-      <div className="border-t border-slate-800 mt-8 bg-slate-900/50">
-        <div className="max-w-5xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
-          <p>Free Plate Check &copy; 2026. All rights reserved.</p>
-          <div className="mt-4 space-x-4">
-            <Link href="/" className="hover:text-slate-300">Home</Link>
-            <span>&bull;</span>
-            <Link href="/blog" className="hover:text-slate-300">Guides</Link>
-            <span>&bull;</span>
-            <Link href="/servicing" className="hover:text-slate-300">Servicing</Link>
-            <span>&bull;</span>
-            <Link href="/mot-check" className="hover:text-slate-300">MOT Check</Link>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

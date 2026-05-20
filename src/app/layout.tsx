@@ -6,6 +6,7 @@ import { RacDemoProvider } from "@/components/RacDemoContext";
 import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
 import SiteNav from "@/components/SiteNav";
+import SiteFooter from "@/components/SiteFooter";
 import SiteBackdrop from "@/components/SiteBackdrop";
 
 const geistMono = Geist_Mono({
@@ -147,6 +148,7 @@ export default function RootLayout({
             <SiteBackdrop />
             <SiteNav />
             {children}
+            <SiteFooter />
             <RacDemoFloatingBadge />
             <RacDemoBottomBar />
           </CommandPaletteProvider>

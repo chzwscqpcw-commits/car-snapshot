@@ -279,21 +279,6 @@ export default function MotReminderPage() {
           </a>
         </div>
       </div>
-
-      <div className="border-t border-slate-800 mt-16 bg-slate-900/50">
-        <div className="max-w-3xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
-          <p>Free Plate Check &copy; 2026. All rights reserved.</p>
-          <div className="mt-4 space-x-4">
-            <a href="/" className="hover:text-slate-300">Home</a>
-            <span>&bull;</span>
-            <a href="/blog" className="hover:text-slate-300">Guides</a>
-            <span>&bull;</span>
-            <a href="/privacy" className="hover:text-slate-300">Privacy Policy</a>
-            <span>&bull;</span>
-            <a href="/terms" className="hover:text-slate-300">Terms of Service</a>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
