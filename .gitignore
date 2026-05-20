@@ -36,6 +36,15 @@ yarn-error.log*
 # DVSA source data (large CSV, redownload as needed)
 RecallsFile.csv
 
+# VCA fuel economy source CSVs (downloaded by scripts/fetch-vca-archive.ts)
+vca-csvs/
+/2*.csv
+/sept2*.csv
+/aug2*.csv
+/may2*.csv
+/jan2*.csv
+/july2*.csv
+
 # vercel
 .vercel
 

@@ -60,34 +60,39 @@ Three files have processing scripts but their sources can't be safely auto-fetch
 
 ### 2. `fuel-economy.json` — VCA Car Fuel Data
 
-**Why manual?** VCA publishes yearly CSV files via a downloads page that doesn't have a stable API. URL discovery would need a scraper.
+**Why semi-auto?** VCA's downloads page is JS-driven and 302-redirects cold requests. `scripts/fetch-vca-archive.ts` uses headless Brave/Chrome (via `puppeteer-core`) to warm the ASP.NET session, scrape the per-year ZIP URLs, download them all, and extract the CSVs.
 
 **Step by step:**
 
-1. Open **<https://carfueldata.vehicle-certification-agency.gov.uk/downloads/default.aspx>** in a browser.
-2. Download the most recent "Car Fuel Data" CSVs (typically one per year — the last 2–3 years is plenty).
-3. Move them to the project root. The filenames usually look like `CarFuelData2024.csv`:
+1. From the project root, run:
    ```
-   mv ~/Downloads/CarFuelData*.csv ~/car-snapshot/
+   npx tsx scripts/fetch-vca-archive.ts
    ```
-4. From the project root, run:
+   This downloads ZIPs for sept2018 through 2025 (9 years), extracts each `data for guide YYYY.csv` to `./vca-csvs/`, and reports a per-year summary.
+
+2. Process the extracted CSVs into `src/data/fuel-economy.json`:
    ```
-   npx tsx scripts/process-fuel-data.ts CarFuelData*.csv
+   npx tsx scripts/process-fuel-data.ts vca-csvs/*.csv
    ```
-   The script deduplicates across years and writes `src/data/fuel-economy.json`.
-5. Delete the source CSVs:
+   Dedupe key is `make|model|engine|fuel`. Expect ~3,800 entries / ~1,600 unique models.
+
+3. Validate and deploy:
    ```
-   rm CarFuelData*.csv
-   ```
-6. Commit and deploy:
-   ```
+   npx tsx scripts/validate-data.ts
    git add src/data/fuel-economy.json
    git commit -m "data: refresh VCA fuel economy"
    npm run deploy
    ```
 
+**Optional — wider historical coverage:**
+```
+npx tsx scripts/fetch-vca-archive.ts --all                # everything back to 2000
+npx tsx scripts/fetch-vca-archive.ts aug2017 sept2018     # specific year tags
+```
+
 **Source URL:** <https://carfueldata.vehicle-certification-agency.gov.uk/downloads/default.aspx>
-**Refresh cadence:** Yearly is sufficient. New car-year data drops around April.
+**Refresh cadence:** Yearly is sufficient. New car-year data drops around September.
+**Requires:** Chrome/Brave/Chromium installed locally (puppeteer drives an existing browser binary; we don't ship a bundled Chromium).
 
 ---
 
