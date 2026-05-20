@@ -143,7 +143,12 @@ export function validateFuelEconomy(): ValidationResult {
     return result(file, 0, [(e as Error).message], []);
   }
 
-  const { arr, errors: structErrors } = checkArrayMinEntries(data, file, 4000);
+  // Threshold of 800 reflects the post-2024 VCA CSV shape: Model is now
+  // separate from Description, so the dedupe key (make|model|engine|fuel)
+  // collapses trim-level noise. Realistic counts across 4 years are ~1,300;
+  // 800 leaves headroom for partial-year sources without masking a parser
+  // breakdown (e.g. 50 entries).
+  const { arr, errors: structErrors } = checkArrayMinEntries(data, file, 800);
   errors.push(...structErrors);
   if (arr.length === 0 && structErrors.length > 0) return result(file, 0, errors, warnings);
 
