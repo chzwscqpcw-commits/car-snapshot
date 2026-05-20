@@ -111,9 +111,18 @@ export default function SiteNav() {
             aria-label="Free Plate Check — home"
           >
             <BoltMark className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-y-px" />
-            <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
-              Free Plate Check
-            </span>
+            {/*
+              On the homepage the page-level hero already shows the
+              "Free Plate Check" wordmark prominently. Repeating it in the
+              nav above creates a stacked-logo look. Drop the wordmark on /
+              and show just the bolt; every other route keeps the wordmark
+              for full brand presence.
+            */}
+            {pathname !== "/" && (
+              <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
+                Free Plate Check
+              </span>
+            )}
           </Link>
 
           {/* Desktop nav links */}
