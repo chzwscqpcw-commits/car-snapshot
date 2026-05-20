@@ -27,26 +27,17 @@ Three files have processing scripts but their sources can't be safely auto-fetch
 
 ### 1. `recalls.json` — DVSA Vehicle Recalls
 
-**Why manual?** DVSA's download endpoint is behind Imperva bot-protection. Browsers pass the JS challenge automatically; `curl` and Node `fetch` get a 302 to a challenge page.
+**Why semi-auto?** DVSA's download endpoint is behind Imperva bot-protection — plain Node `fetch` and `curl` get a 302 to a JS challenge. `scripts/fetch-recalls.ts` launches headless Brave/Chrome via `puppeteer-core` with stealth patches, warms the Imperva session by visiting the recalls homepage, then fetches the CSV inside the browser context so it inherits the warmed cookies AND the real-browser TLS fingerprint.
 
 **Step by step:**
 
-1. Open **<https://www.check-vehicle-recalls.service.gov.uk>** in a real browser.
-2. Click the "Download recalls data" / similar link to grab `RecallsFile.csv`.
-3. Move the file to the project root (same folder as `package.json`):
+1. From the project root, run:
    ```
-   mv ~/Downloads/RecallsFile.csv ~/car-snapshot/RecallsFile.csv
+   npx tsx scripts/fetch-recalls.ts
    ```
-4. From the project root, run:
-   ```
-   npx tsx scripts/process-recalls.ts
-   ```
-   This reads `RecallsFile.csv` and overwrites `src/data/recalls.json`.
-5. Delete the source CSV (it's large, ~10 MB):
-   ```
-   rm RecallsFile.csv
-   ```
-6. Commit and deploy:
+   This downloads `RecallsFile.csv` (~7 MB), pipes it through `process-recalls.ts`, writes `src/data/recalls.json`, and deletes the raw CSV.
+
+2. Commit and deploy:
    ```
    git add src/data/recalls.json
    git commit -m "data: refresh DVSA recalls"
@@ -55,6 +46,7 @@ Three files have processing scripts but their sources can't be safely auto-fetch
 
 **Source URL:** <https://www.check-vehicle-recalls.service.gov.uk>
 **Refresh cadence:** DVSA updates weekly. Once a month is plenty for our use case.
+**Requires:** Chrome/Brave/Chromium installed locally. Not in prebuild because Vercel's build environment has no Chromium binary.
 
 ---
 
