@@ -35,23 +35,35 @@ type FileMeta = {
 
 const FILE_META: Record<string, FileMeta> = {
   "recalls.json": {
-    threshold: 90,
-    source: "auto",
-    refreshHint: "Run: npx tsx scripts/refresh-data.ts --recalls",
-    sourceUrl: "https://www.gov.uk/government/publications/recalls-and-faults-data-files",
+    // Weekly Vercel cron at /api/cron/refresh-recalls writes to Supabase
+    // data_cache. The bundled JSON file is a build-time fallback. Direct
+    // HTTP fetches are blocked by Imperva bot protection, so we cannot
+    // refresh this at prebuild. Threshold extended to 180d — production
+    // freshness comes from the cron + cache, not the JSON file.
+    threshold: 180,
+    source: "semi-auto",
+    refreshHint:
+      "Weekly Vercel cron refreshes Supabase data_cache (production source of truth). For a bundled-JSON refresh: download RecallsFile.csv manually from the DVSA service and run scripts/process-recalls.ts.",
+    sourceUrl:
+      "https://www.check-vehicle-recalls.service.gov.uk",
   },
   "how-many-left.json": {
     threshold: 90,
     source: "auto",
     refreshHint:
-      "Run: npx tsx scripts/refresh-data.ts --how-many-left <URL> — get VEH0120 URL from gov.uk vehicle stats page",
-    sourceUrl: "https://www.gov.uk/government/statistical-data-sets/veh01-vehicles-registered-for-the-first-time",
+      "Auto-refreshed at every deploy by scripts/fetch-how-many-left.ts (latest DfT VEH0120 CSV from gov.uk Content API).",
+    sourceUrl:
+      "https://www.gov.uk/government/statistical-data-sets/veh01-vehicles-registered-for-the-first-time",
   },
   "body-types.json": {
-    threshold: 90,
-    source: "auto",
+    // Was auto via DfT VEH0220, but as of 2026-05 the source CSV no longer
+    // publishes body shapes (Hatchback/Saloon/SUV/…) — the BodyType column
+    // only carries the vehicle category ("Cars"). Reclassified as curated
+    // until/unless DfT restore the body-shape breakdown.
+    threshold: 365,
+    source: "curated",
     refreshHint:
-      "Run: npx tsx scripts/refresh-data.ts --body-types <URL> — get VEH0220 URL from gov.uk vehicle stats page",
+      "DfT VEH0220 no longer publishes body shapes. Manually update from manufacturer specs, or re-enable scripts/fetch-body-types.ts if the source returns.",
     sourceUrl: "https://www.gov.uk/government/statistical-data-sets/veh02-licensed-cars",
   },
   "fuel-economy.json": {
