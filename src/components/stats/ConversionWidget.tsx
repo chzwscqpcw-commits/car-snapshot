@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
@@ -54,7 +54,12 @@ export default function ConversionWidget({
   const [reminderSubmitting, setReminderSubmitting] = useState(false);
   const [reminderSuccess, setReminderSuccess] = useState(false);
 
-  function handleLookup() {
+  // Lookup-button state: pre-flight the DVLA call before navigating so a bad
+  // reg shows an inline error instead of landing on a messy result page.
+  const [lookupSubmitting, setLookupSubmitting] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+
+  async function handleLookup() {
     const cleaned = cleanReg(reg);
     if (!cleaned) {
       setRegError("Please enter a registration number");
@@ -65,9 +70,41 @@ export default function ConversionWidget({
       return;
     }
     setRegError("");
-    trackConversion("reg_search", { vrm: cleaned });
-    const join = targetPath.includes("?") ? "&" : "?";
-    router.push(`${targetPath}${join}vrm=${cleaned}`);
+    setLookupSubmitting(true);
+
+    // Cancel any in-flight pre-check (user spamming the button)
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    try {
+      const res = await fetch("/api/lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vrm: cleaned }),
+        signal: controller.signal,
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        const msg =
+          (body && (body.error || body.message)) ||
+          (res.status === 404
+            ? "We couldn\u2019t find that registration \u2014 double-check and try again."
+            : "Lookup failed \u2014 please try again in a moment.");
+        setRegError(msg);
+        return;
+      }
+      trackConversion("reg_search", { vrm: cleaned });
+      const join = targetPath.includes("?") ? "&" : "?";
+      router.push(`${targetPath}${join}vrm=${cleaned}`);
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      setRegError(
+        "Couldn\u2019t reach the lookup service \u2014 check your connection and try again."
+      );
+    } finally {
+      setLookupSubmitting(false);
+    }
   }
 
   async function handleReminder(e: React.FormEvent) {
@@ -180,10 +217,20 @@ export default function ConversionWidget({
           </div>
           <button
             onClick={handleLookup}
-            className="h-11 whitespace-nowrap rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600 active:scale-95 flex items-center justify-center gap-2"
+            disabled={lookupSubmitting}
+            className="h-11 whitespace-nowrap rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600 active:scale-95 disabled:opacity-70 disabled:cursor-progress flex items-center justify-center gap-2"
           >
-            <Search className="h-4 w-4" />
-            Check vehicle free
+            {lookupSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking…
+              </>
+            ) : (
+              <>
+                <Search className="h-4 w-4" />
+                Check vehicle free
+              </>
+            )}
           </button>
         </div>
 

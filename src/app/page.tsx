@@ -177,6 +177,7 @@ import newPricesData from "@/data/new-prices.json";
 import { latestWeek as latestFuelWeek } from "@/lib/stats-data/fuel-prices";
 import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
+import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 type VehicleData = {
@@ -2769,25 +2770,8 @@ END:VEVENT
         }) }}
       />
 
-      {/* Dot-grid background — replaces the previous emoji-car pattern */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.07]">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <pattern id="dotGrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-              <circle cx="16" cy="16" r="0.9" fill="#22d3ee" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#dotGrid)" />
-        </svg>
-      </div>
-
-      {/* Ambient gradient orbs — three offset, slow-drifting light sources */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
-        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/[0.06] to-transparent rounded-full blur-3xl animate-orb-1" />
-        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-cyan-500/[0.06] to-transparent rounded-full blur-3xl animate-orb-2" />
-        <div className="absolute top-1/3 right-1/4 w-1/3 h-1/3 bg-gradient-to-br from-purple-500/[0.05] to-transparent rounded-full blur-3xl animate-orb-3" />
-      </div>
+      {/* Ambient backdrop is now provided globally by SiteBackdrop in
+          src/app/layout.tsx — every page gets the dot-grid + drifting orbs. */}
 
       {/* Full-screen logo reveal overlay */}
       {showLogoReveal && data?.make && getMakeLogoPath(data.make) && (
@@ -2879,15 +2863,6 @@ END:VEVENT
         }
         .animate-logoReveal {
           animation: logoReveal 3.5s ease-out forwards;
-        }
-        @keyframes orbDrift1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, 30px); } }
-        @keyframes orbDrift2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, -20px); } }
-        @keyframes orbDrift3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -40px); } }
-        .animate-orb-1 { animation: orbDrift1 32s ease-in-out infinite; }
-        .animate-orb-2 { animation: orbDrift2 38s ease-in-out infinite; }
-        .animate-orb-3 { animation: orbDrift3 44s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-orb-1, .animate-orb-2, .animate-orb-3 { animation: none; }
         }
       `}</style>
 
@@ -3571,11 +3546,13 @@ END:VEVENT
 
             </DataReveal>
 
-            {/* PRIMARY MOT REMINDER SIGNUP — always visible immediately after header */}
+            {/* PRIMARY MOT REMINDER SIGNUP — collapsible chip so it doesn't
+                dominate the view above the rich data sections. One tap
+                expands the inline form. */}
             {isOver3Years && (
               <DataReveal delay={45}>
                 <div className="mb-6">
-                  <MOTReminderSignup
+                  <MOTReminderCollapsible
                     context={
                       showMotBanner === "expired"
                         ? "expired"
