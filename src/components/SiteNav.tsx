@@ -21,25 +21,33 @@ function useHideOnScrollDown({
   delta?: number;
 } = {}) {
   const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
+  const anchorY = useRef(0);
   const ticking = useRef(false);
 
   useEffect(() => {
-    lastY.current = window.scrollY;
+    anchorY.current = window.scrollY;
 
     const update = () => {
       const y = window.scrollY;
-      const diff = y - lastY.current;
+      const diff = y - anchorY.current;
 
       // Always show near the top — never hide the nav when the user is
       // at the page header.
       if (y < hideAfter) {
         setHidden(false);
-      } else if (Math.abs(diff) > delta) {
-        setHidden(diff > 0); // scrolling down → hide
+        anchorY.current = y;
+      } else if (diff > delta) {
+        // Net downward movement past the threshold → hide.
+        setHidden(true);
+        anchorY.current = y;
+      } else if (diff < -delta) {
+        // Net upward movement past the threshold → show.
+        setHidden(false);
+        anchorY.current = y;
       }
+      // Otherwise: small wobble — leave the anchor alone so slow
+      // scrolling accumulates instead of being lost a pixel at a time.
 
-      lastY.current = y;
       ticking.current = false;
     };
 
