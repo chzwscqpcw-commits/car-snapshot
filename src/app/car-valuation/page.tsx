@@ -6,6 +6,45 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import ServicingCTA from "@/components/ServicingCTA";
 import ValuationResult from "@/components/tools/ValuationResult";
+import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "How much is my car worth?",
+    answer:
+      "Enter your reg above for an instant estimate based on depreciation modelling, mileage, and live UK market data. No signup, no personal details.",
+  },
+  {
+    question: "Is this car valuation free?",
+    answer:
+      "Completely free. No signup, no email, no payment. Just enter the reg.",
+  },
+  {
+    question: "How accurate is a free car valuation?",
+    answer:
+      "We combine a depreciation model with live comparable listings. It's a guide — actual value depends on condition, spec, service history, and local demand. The condition questionnaire helps narrow it.",
+  },
+  {
+    question: "What affects my car's value?",
+    answer:
+      "Age, mileage, make and model (some brands hold value better), service history, bodywork and interior condition, previous owners, accident history, MOT record, current demand.",
+  },
+  {
+    question: "Why do you show a range instead of one number?",
+    answer:
+      "No two used cars are identical. The range covers differences in condition, spec, and local demand we can't see from reg data alone. Use the condition questionnaire to narrow it.",
+  },
+  {
+    question: "Does mileage affect my car's value?",
+    answer:
+      "Yes, significantly. Below the UK average (~8,000/year) adds value; above it reduces. But a high-mileage car with full service history beats a low-mileage one with gaps.",
+  },
+  {
+    question: "Does an MOT advisory or failure affect my car's value?",
+    answer:
+      "Yes. Recent failures and recurring advisories can knock hundreds off the price. A lapsed MOT is worse — harder to sell, no legal test drive, signals neglect. Run an MOT check or set a free reminder from our MOT tools.",
+  },
+];
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -91,64 +130,11 @@ export default async function CarValuationPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-        {
-          "@type": "Question",
-          name: "How much is my car worth?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter your registration number on Free Plate Check to get an instant estimated value. Our tool uses depreciation modelling, mileage analysis, and live market data to calculate a value range — no signup or personal details required.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is this car valuation free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no email address, no payment required. Enter any UK registration number and see an instant valuation alongside full vehicle details, MOT history, and more.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How accurate is a free car valuation?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Our valuations combine a depreciation model with live market data from similar vehicles for sale. The estimate is a guide — actual value depends on condition, specification, service history, and local demand. Use our condition questionnaire to refine the estimate further.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What affects my car's value?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Key factors include: age and mileage, make and model (some brands hold value better), service history, bodywork and interior condition, number of previous owners, accident history, MOT advisories and failures, and current market demand.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Why do you show a range instead of one number?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No two used cars are identical. A valuation range accounts for differences in condition, specification, service history, and local demand that we cannot determine from registration data alone. Use our condition questionnaire to narrow the range based on your vehicle's specific state.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does mileage affect my car's value?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does an MOT advisory or failure affect my car's value?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. A clean MOT history is a strong selling point. Recent failures, repeated advisories on the same item, or a long advisory list can knock hundreds of pounds off the price a buyer is willing to pay. Letting your MOT lapse can be worse — a vehicle with an expired MOT is harder to sell, can't be test driven legally, and signals neglect to buyers.",
-          },
-        },
-      ],
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   return (
@@ -351,45 +337,39 @@ export default async function CarValuationPage({
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How much is my car worth?</h2>
             <p className="leading-relaxed mb-3">
-              &ldquo;How much is my car worth?&rdquo; is one of the most common questions asked by UK car owners. Whether you are thinking about selling, part-exchanging, or just curious, knowing your vehicle&apos;s current market value gives you a stronger negotiating position and helps you make informed decisions.
-            </p>
-            <p className="leading-relaxed mb-3">
-              Most free valuation tools online require you to hand over personal details — email address, phone number, postcode — before they show you a figure. Free Plate Check is different. Enter a registration number and get an instant estimated value with no signup, no email, and no personal data collected.
+              Most free valuation tools online want your email, phone, and postcode before they show you a number. We don&apos;t. Enter a reg, get an estimate — no signup, no personal data.
             </p>
             <p className="leading-relaxed">
-              Our valuation combines a depreciation model calibrated for UK vehicles with live market data from similar cars currently for sale. As more users look up vehicles, our estimates improve through an accumulating dataset of comparable values.
+              The figure combines a UK-calibrated depreciation model with live market data from similar cars currently listed. Estimates improve as more users look up vehicles and the comparable dataset grows.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What affects a car&apos;s value?</h2>
-            <p className="leading-relaxed mb-4">
-              Several factors determine what a used car is worth on the UK market. Our valuation model accounts for the main ones automatically, and you can refine further using our condition questionnaire:
-            </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-4">
-              <li><strong className="text-slate-100">Age and depreciation</strong> — New cars lose roughly 15-35% of their value in the first year alone. Depreciation slows with age but never fully stops.</li>
-              <li><strong className="text-slate-100">Mileage</strong> — Lower-than-average mileage adds value; higher-than-average reduces it. The UK average is around 8,000 miles per year. Use our <a href="/mileage-check" className="text-blue-400 hover:text-blue-300">mileage check</a> to verify consistent mileage progression.</li>
-              <li><strong className="text-slate-100">Make and model</strong> — Some brands hold their value better than others. Porsche, Toyota, and Tesla tend to retain value well, while some volume brands depreciate faster.</li>
-              <li><strong className="text-slate-100">Service history</strong> — A full service history (especially from main dealers) adds significant value. Missing records raise questions for buyers.</li>
-              <li><strong className="text-slate-100">Condition</strong> — Bodywork, interior wear, tyre condition, and general upkeep all affect what a buyer will pay.</li>
-              <li><strong className="text-slate-100">MOT history</strong> — Frequent failures and long advisory lists can reduce value. A clean <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> is a selling point — and a lapsed MOT actively damages resale price.</li>
-              <li><strong className="text-slate-100">Previous owners</strong> — Fewer owners generally means better value retention. One-owner cars command a premium.</li>
+              <li><strong className="text-slate-100">Age and depreciation</strong> — 15–35% lost in year one. Slows after, but never stops.</li>
+              <li><strong className="text-slate-100">Mileage</strong> — UK average ~8,000/year. Below adds value; above reduces it. Verify with our <a href="/mileage-check" className="text-blue-400 hover:text-blue-300">mileage check</a>.</li>
+              <li><strong className="text-slate-100">Make and model</strong> — Porsche, Toyota, Tesla retain value. Some volume brands depreciate faster.</li>
+              <li><strong className="text-slate-100">Service history</strong> — full main-dealer history adds significant value. Gaps raise questions.</li>
+              <li><strong className="text-slate-100">Condition</strong> — bodywork, interior, tyres, general upkeep.</li>
+              <li><strong className="text-slate-100">MOT record</strong> — clean <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> is a selling point; a lapsed MOT damages resale.</li>
+              <li><strong className="text-slate-100">Previous owners</strong> — fewer is better. One-owner commands a premium.</li>
             </ul>
             <p className="leading-relaxed">
-              Our valuation tool pulls mileage and MOT data automatically from DVLA and MOT records, giving you an adjusted estimate without any manual input. Use the condition questionnaire to further refine the figure based on factors we cannot see from the data alone.
+              We pull mileage and MOT data automatically. The condition questionnaire lets you refine for what we can&apos;t see from records alone.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How our valuation works</h2>
             <p className="leading-relaxed mb-3">
-              Our valuation estimate is built from multiple data layers. The base layer is a depreciation model that factors in vehicle age, make, and recorded mileage. This is combined with live market data from similar vehicles currently listed for sale, plus an accumulating cache of recent valuations for the same make, model, and year.
+              Three data layers: a depreciation model based on age/make/mileage, live market data from similar listings, and an accumulating cache of recent valuations for the same make/model/year.
             </p>
             <p className="leading-relaxed mb-3">
-              When we have strong market data, the estimate narrows to a tighter range with higher confidence. When market data is limited, the estimate relies more on the depreciation model and shows a wider range. We always display the confidence level so you know how strong the estimate is.
+              Strong market data → tighter range, higher confidence. Limited data → wider range, more reliance on the depreciation model. We always show the confidence level so you know how strong the signal is.
             </p>
             <p className="leading-relaxed">
-              This is not a formal valuation. For insurance, finance, or legal purposes, always obtain a professional valuation. Our figure is a useful starting point for understanding roughly what your car is worth on the open market.
+              Not a formal valuation. For insurance, finance, or legal purposes get a professional one. This figure is the starting point for understanding roughly what your car&apos;s worth on the open market.
             </p>
           </section>
 
@@ -399,36 +379,7 @@ export default async function CarValuationPage({
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">How much is my car worth?</h3>
-                <p className="text-sm mt-1">Enter your registration number on Free Plate Check to get an instant estimated value. Our tool uses depreciation modelling, mileage analysis, and live market data to calculate a value range — no signup or personal details required.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Is this car valuation free?</h3>
-                <p className="text-sm mt-1">Yes, completely free. No signup, no email address, no payment required. Enter any UK registration number and see an instant valuation alongside full vehicle details, MOT history, and more.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How accurate is a free car valuation?</h3>
-                <p className="text-sm mt-1">Our valuations combine a depreciation model with live market data from similar vehicles for sale. The estimate is a guide — actual value depends on condition, specification, service history, and local demand. Use our condition questionnaire to refine the estimate further.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What affects my car&apos;s value?</h3>
-                <p className="text-sm mt-1">Key factors include: age and mileage, make and model (some brands hold value better), service history, bodywork and interior condition, number of previous owners, accident history, MOT advisories and failures, and current market demand.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Why do you show a range instead of one number?</h3>
-                <p className="text-sm mt-1">No two used cars are identical. A valuation range accounts for differences in condition, specification, service history, and local demand that we cannot determine from registration data alone. Use our condition questionnaire to narrow the range based on your vehicle&apos;s specific state.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Does mileage affect my car&apos;s value?</h3>
-                <p className="text-sm mt-1">Yes, significantly. Lower-than-average mileage adds value, while higher mileage reduces it. The UK average is around 8,000 miles per year. However, a high-mileage car with full service history can be worth more than a low-mileage car with gaps in its records.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Does an MOT advisory or failure affect my car&apos;s value?</h3>
-                <p className="text-sm mt-1">Yes. A clean MOT history is a strong selling point. Recent failures, repeated advisories on the same item, or a long advisory list can knock hundreds of pounds off the price a buyer is willing to pay. Letting your MOT lapse can be worse — a vehicle with an expired MOT is harder to sell, can&apos;t be test driven legally, and signals neglect to buyers. <a href="/mot-check" className="text-blue-400 hover:text-blue-300">Check your MOT history</a> or <a href="#mot-reminder" className="text-blue-400 hover:text-blue-300">set a free reminder</a>.</p>
-              </div>
-            </div>
+            <FaqAccordion items={FAQ_ITEMS} />
           </section>
         </div>
       </div>

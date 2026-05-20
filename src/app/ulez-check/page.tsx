@@ -4,6 +4,40 @@ import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import UlezResult from "@/components/tools/UlezResult";
+import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "Is the ULEZ check free?",
+    answer:
+      "Yes — no signup, no payment. Enter a UK reg, see the vehicle's Euro standard and ULEZ status instantly.",
+  },
+  {
+    question: "What Euro standard do I need to be ULEZ compliant?",
+    answer:
+      "Petrol: Euro 4 or later (~2006 onwards). Diesel: Euro 6 or later (~September 2015 onwards). EVs and hydrogen are exempt.",
+  },
+  {
+    question: "Does ULEZ apply outside London?",
+    answer:
+      "London has ULEZ; other UK cities (Birmingham, Bath, Bradford, Bristol, Sheffield) run their own Clean Air Zones with similar emission-based charging.",
+  },
+  {
+    question: "How much is the ULEZ charge?",
+    answer:
+      "£12.50/day for non-compliant cars, motorcycles, and vans. Miss it and the penalty is £180 (£90 if paid within 14 days).",
+  },
+  {
+    question: "Are hybrid cars ULEZ exempt?",
+    answer:
+      "Not automatically. Hybrids still need to meet the relevant Euro standard for their fuel type. Most modern hybrids do; older ones may not — check the reg.",
+  },
+  {
+    question: "Do other cities have clean air zones?",
+    answer:
+      "Yes — Birmingham, Bath, Bradford, Bristol, Portsmouth, Sheffield. Charges vary; the Euro emission standards used are largely the same as ULEZ.",
+  },
+];
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -89,56 +123,11 @@ export default async function UlezCheckPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-        {
-          "@type": "Question",
-          name: "Is the ULEZ check free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no payment, no hidden charges. Enter any UK registration number and we will show you the vehicle's Euro emission standard and ULEZ compliance status instantly.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What Euro standard do I need to be ULEZ compliant?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Petrol vehicles need to meet Euro 4 or later (generally from 2006 onwards). Diesel vehicles need to meet Euro 6 or later (generally from September 2015 onwards). Electric and hydrogen fuel cell vehicles are exempt from ULEZ charges.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does ULEZ apply outside London?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "London has the ULEZ, but other UK cities operate their own Clean Air Zones (CAZs) with similar emission-based charging. Cities including Birmingham, Bath, Bradford, Bristol, and Sheffield have active or planned Clean Air Zones with varying requirements.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How much is the ULEZ charge?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "The ULEZ daily charge is £12.50 for non-compliant cars, motorcycles, and vans. Failure to pay results in a penalty charge notice of £180, reduced to £90 if paid within 14 days. The charge applies every day the vehicle is driven within the zone.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Are hybrid cars ULEZ exempt?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Hybrid cars are not automatically exempt. They must still meet the relevant Euro emission standard — Euro 4 for petrol hybrids or Euro 6 for diesel hybrids. Most modern hybrids meet these standards, but older models may not. Check by entering your registration number.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Do other cities have clean air zones?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Birmingham, Bath, Bradford, Bristol, Portsmouth, and Sheffield have implemented or planned Clean Air Zones with similar emission-based charging. The specific standards and charges vary by city, but the Euro emission standards used are generally the same as ULEZ.",
-          },
-        },
-      ],
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   return (
@@ -248,45 +237,36 @@ export default async function UlezCheckPage({
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is ULEZ?</h2>
             <p className="leading-relaxed mb-3">
-              The Ultra Low Emission Zone (ULEZ) is a charging zone in London designed to reduce air pollution by discouraging the most polluting vehicles from driving in the area. Since 29 August 2023, ULEZ covers all London boroughs — meaning every road within the Greater London boundary is included.
-            </p>
-            <p className="leading-relaxed mb-3">
-              Vehicles that do not meet the required emission standards are charged a daily fee to drive within the zone. The scheme is enforced 24 hours a day, 365 days a year, using automatic number plate recognition (ANPR) cameras throughout London.
+              London&apos;s Ultra Low Emission Zone — since 29 August 2023 covering all 32 boroughs. Non-compliant vehicles pay a daily charge to drive within the zone. 24/7, ANPR-enforced.
             </p>
             <p className="leading-relaxed">
-              London is not the only city with emission-based charging. Other UK cities have introduced Clean Air Zones (CAZs) with similar rules. Birmingham, Bath, Bradford, Bristol, and Sheffield all operate or have planned Clean Air Zones, each with their own boundaries and vehicle requirements. Our free check helps you understand whether your vehicle meets the emission standards used across these schemes.
+              Other UK cities (Birmingham, Bath, Bradford, Bristol, Sheffield) run similar Clean Air Zones with their own boundaries. Our check shows whether your vehicle meets the shared Euro standards.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">ULEZ charges and exemptions</h2>
             <p className="leading-relaxed mb-3">
-              The London ULEZ daily charge is <strong className="text-slate-100">&pound;12.50</strong> for cars, motorcycles, and vans that do not meet the emission standards. This applies every day the vehicle is driven within the zone. Failure to pay results in a penalty charge notice of &pound;180 (reduced to &pound;90 if paid within 14 days).
-            </p>
-            <p className="leading-relaxed mb-3">
-              Other UK Clean Air Zones have their own charging structures. Birmingham charges up to &pound;8 per day for non-compliant cars, while Bath and Bristol have similar schemes targeting older, more polluting vehicles.
+              London ULEZ is <strong className="text-slate-100">£12.50/day</strong> for non-compliant cars, motorcycles, and vans. Miss the payment and it&apos;s £180 (£90 if paid within 14 days). Birmingham CAZ is up to £8/day; Bath and Bristol similar.
             </p>
             <p className="leading-relaxed mb-4">
-              To be ULEZ compliant, your vehicle generally needs to meet these standards:
+              To be compliant:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-4">
-              <li><strong className="text-slate-100">Petrol vehicles</strong> — Euro 4 or later (typically vehicles registered from around 2006 onwards).</li>
-              <li><strong className="text-slate-100">Diesel vehicles</strong> — Euro 6 or later (typically vehicles registered from September 2015 onwards).</li>
-              <li><strong className="text-slate-100">Electric &amp; hydrogen</strong> — Fully exempt. Zero-emission vehicles do not pay the ULEZ charge.</li>
-              <li><strong className="text-slate-100">Historic vehicles</strong> — Vehicles manufactured before 1 January 1973 and registered as historic are exempt from the charge.</li>
+              <li><strong className="text-slate-100">Petrol</strong> — Euro 4 or later (~2006+).</li>
+              <li><strong className="text-slate-100">Diesel</strong> — Euro 6 or later (~Sept 2015+).</li>
+              <li><strong className="text-slate-100">Electric &amp; hydrogen</strong> — exempt.</li>
+              <li><strong className="text-slate-100">Historic</strong> — pre-1 Jan 1973 and registered as historic.</li>
             </ul>
             <p className="leading-relaxed">
-              Some vehicles also qualify for discounts, exemptions, or grace periods — for example, disabled tax class vehicles and certain military vehicles. Our check shows you the Euro emission standard recorded against your vehicle so you can quickly determine compliance.
+              Discounts and grace periods exist (disabled tax class, some military). We show the Euro standard on file so you can determine compliance at a glance.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How to check your vehicle</h2>
-            <p className="leading-relaxed mb-3">
-              Checking your vehicle&apos;s ULEZ compliance with Free Plate Check takes seconds. Simply enter your registration number on our homepage and we will show you the vehicle&apos;s recorded Euro emission standard alongside its tax, MOT, and specification data.
-            </p>
             <p className="leading-relaxed">
-              If your vehicle is listed as Euro 4 or later (petrol) or Euro 6 or later (diesel), it meets the ULEZ standard. Electric and hydrogen vehicles are automatically compliant. No signup or payment is required — our check is completely free. You can also see the full vehicle specification including Euro emission standard on our <a href="/car-check" className="text-blue-400 hover:text-blue-300">free car check</a> page.
+              Enter your reg above. You&apos;ll see the recorded Euro emission standard alongside tax, MOT, and full spec. Euro 4+ (petrol) or Euro 6+ (diesel) means compliant. EVs and hydrogen are automatically clear. Full vehicle spec on our <a href="/car-check" className="text-blue-400 hover:text-blue-300">car check</a>.
             </p>
           </section>
 
@@ -296,34 +276,9 @@ export default async function UlezCheckPage({
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">Is the ULEZ check free?</h3>
-                <p className="text-sm mt-1">Yes, completely free. No signup, no payment, no hidden charges. Enter any UK registration number and we will show you the vehicle&apos;s Euro emission standard and ULEZ compliance status instantly.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What Euro standard do I need to be ULEZ compliant?</h3>
-                <p className="text-sm mt-1">Petrol vehicles need to meet Euro 4 or later (generally from 2006 onwards). Diesel vehicles need to meet Euro 6 or later (generally from September 2015 onwards). Electric and hydrogen fuel cell vehicles are exempt from ULEZ charges.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Does ULEZ apply outside London?</h3>
-                <p className="text-sm mt-1">London has the ULEZ, but other UK cities operate their own Clean Air Zones (CAZs) with similar emission-based charging. Cities including Birmingham, Bath, Bradford, Bristol, and Sheffield have active or planned Clean Air Zones with varying requirements.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How much is the ULEZ charge?</h3>
-                <p className="text-sm mt-1">The ULEZ daily charge is &pound;12.50 for non-compliant cars, motorcycles, and vans. Failure to pay results in a penalty charge notice of &pound;180, reduced to &pound;90 if paid within 14 days. The charge applies every day the vehicle is driven within the zone.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Are hybrid cars ULEZ exempt?</h3>
-                <p className="text-sm mt-1">Hybrid cars are not automatically exempt. They must still meet the relevant Euro emission standard — Euro 4 for petrol hybrids or Euro 6 for diesel hybrids. Most modern hybrids meet these standards, but older models may not. Check by entering your registration number.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Do other cities have clean air zones?</h3>
-                <p className="text-sm mt-1">Yes. Birmingham, Bath, Bradford, Bristol, Portsmouth, and Sheffield have implemented or planned Clean Air Zones with similar emission-based charging. The specific standards and charges vary by city, but the Euro emission standards used are generally the same as ULEZ.</p>
-              </div>
-            </div>
+            <FaqAccordion items={FAQ_ITEMS} />
             <p className="text-sm text-slate-400 mt-4">
-              For a comprehensive guide to ULEZ compliance, read our <a href="/blog/is-my-car-ulez-compliant" className="text-blue-400 hover:text-blue-300">complete ULEZ guide</a>.
+              For the full breakdown, read our <a href="/blog/is-my-car-ulez-compliant" className="text-blue-400 hover:text-blue-300">complete ULEZ guide</a>.
             </p>
           </section>
         </div>

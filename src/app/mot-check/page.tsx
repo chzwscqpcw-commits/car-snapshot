@@ -5,6 +5,37 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MotResult from "@/components/tools/MotResult";
+import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+
+// Single source of truth for FAQ content — used both for the visible
+// accordion and the FAQPage JSON-LD below.
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "What does an MOT advisory mean?",
+    answer:
+      "A note about a component that's not yet bad enough to fail, but needs monitoring. Brake pads wearing thin, tyres near the 1.6mm tread limit, or minor corrosion are typical examples.",
+  },
+  {
+    question: "How far back does MOT history go?",
+    answer:
+      "Results are available from 2005 onwards — the DVSA has digitally recorded every test since.",
+  },
+  {
+    question: "Can I drive to an MOT test without a valid MOT?",
+    answer:
+      "Yes — direct to a pre-booked MOT test at a registered centre. The car must still be insured and roadworthy, and you can't make detours.",
+  },
+  {
+    question: "How much does an MOT cost?",
+    answer:
+      "Maximum £54.85 (set by the DVSA). Many garages undercut this. The test itself takes 45–60 minutes.",
+  },
+  {
+    question: "What's the difference between dangerous, major, and minor defects?",
+    answer:
+      "Three categories since May 2018. Dangerous = immediate safety risk, don't drive. Major = a failure that must be repaired. Minor = worth fixing but doesn't fail the test.",
+  },
+];
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -54,48 +85,11 @@ export default async function MotCheckPage({
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What does an MOT advisory mean?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "An MOT advisory is a note about a component that isn't bad enough to cause a failure but needs monitoring. Common examples include brake pads wearing thin, tyres approaching the 1.6mm legal tread depth limit, or minor corrosion on structural components.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How far back does MOT history go?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "MOT test results are available from 2005 onwards. The DVSA has digitally recorded every MOT test since then, including pass/fail results, mileage readings, advisories, and failure reasons.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I drive to an MOT test without a valid MOT?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, you can drive directly to a pre-booked MOT test at a registered test centre without a valid MOT. However, the vehicle must be roadworthy and insured. You cannot make any detours — the journey must be directly to the test centre.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How much does an MOT cost?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The maximum fee for a car MOT is £54.85, set by the DVSA. Many garages charge less than this as a competitive rate. The test itself takes around 45 minutes to an hour.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What's the difference between a dangerous, major, and minor defect?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Since May 2018, MOT defects are classified into three categories. A dangerous defect is an immediate risk to road safety and means the vehicle must not be driven. A major defect is a failure that needs repair before the vehicle can pass. A minor defect is a less serious issue that should be repaired but does not cause a failure.",
-        },
-      },
-    ],
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   const breadcrumbJsonLd = {
@@ -294,86 +288,77 @@ export default async function MotCheckPage({
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is an MOT history check?</h2>
             <p className="leading-relaxed mb-3">
-              The DVSA (Driver and Vehicle Standards Agency) has digitally recorded every MOT test carried out in the UK since 2005. An MOT history check lets you access this full record for any vehicle, showing every test result — pass or fail — along with the date, recorded mileage, advisory notes, and failure reasons.
-            </p>
-            <p className="leading-relaxed mb-3">
-              Since May 2018, the MOT testing system classifies defects into three categories: <strong className="text-slate-100">dangerous</strong> (an immediate risk to road safety — the vehicle must not be driven), <strong className="text-slate-100">major</strong> (a failure item that must be repaired before the vehicle can pass), and <strong className="text-slate-100">minor</strong> (a less serious issue that should be repaired but does not cause a failure). Before this date, items were simply recorded as passes, failures, or advisories.
+              Every UK MOT since 2005 sits in the DVSA&apos;s database. An MOT history check gives you the full record for any vehicle: every test result, mileage reading, advisory, and failure reason.
             </p>
             <p className="leading-relaxed">
-              Our free MOT check gives you the complete test history in seconds. Enter a registration number and you&apos;ll see every test result, the mileage recorded at each test, and all advisories and defects — making it an essential tool for anyone buying a used car or monitoring their own vehicle&apos;s condition.
+              Since May 2018, defects are graded <strong className="text-slate-100">dangerous</strong> (don&apos;t drive), <strong className="text-slate-100">major</strong> (must be repaired to pass), or <strong className="text-slate-100">minor</strong> (worth fixing). Before then it was just pass, fail, or advisory.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What can you learn from MOT history?</h2>
             <p className="leading-relaxed mb-3">
-              An MOT history check reveals far more than just whether a vehicle passed or failed. By examining the full timeline of test results, you can build a detailed picture of how the vehicle has been maintained — and spot warning signs that might not be obvious from a physical inspection alone.
+              More than pass or fail — the timeline reveals how well a car has been looked after. Watch for:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
-              <li><strong className="text-slate-100">Mileage discrepancies</strong> — Every MOT records the odometer reading, creating a mileage timeline. If the recorded mileage drops between tests, the odometer may have been tampered with. Average UK annual mileage is around 7,000 to 10,000 miles, so large jumps or unexpected drops are worth investigating.</li>
-              <li><strong className="text-slate-100">Recurring problems</strong> — If the same component appears in advisories or failures year after year, it suggests the owner hasn&apos;t addressed the issue. Persistent brake, suspension, or corrosion problems can indicate neglect.</li>
-              <li><strong className="text-slate-100">Advisory patterns</strong> — Check whether advisories noted in one year were resolved by the next test. A responsible owner addresses advisories before they become failures.</li>
-              <li><strong className="text-slate-100">Failure history</strong> — A pattern of repeated failures, especially on safety-critical items like brakes, tyres, or lights, paints a very different picture to a vehicle with clean passes year after year.</li>
+              <li><strong className="text-slate-100">Mileage drops</strong> between tests — possible clocking. UK average is 7,000–10,000 miles per year, so big jumps stand out.</li>
+              <li><strong className="text-slate-100">Recurring faults</strong> — the same component flagged year after year points to neglect.</li>
+              <li><strong className="text-slate-100">Unresolved advisories</strong> that carry over between tests are a deferred-maintenance flag.</li>
+              <li><strong className="text-slate-100">Repeat failures</strong> on safety items (brakes, tyres, lights) vs clean passes — very different stories.</li>
             </ul>
             <p className="leading-relaxed">
-              You can also use the <a href="/mileage-check" className="text-blue-400 hover:text-blue-300">mileage check</a> to see odometer readings plotted across every MOT test, making it easier to spot clocking at a glance.
+              For a year-by-year mileage chart, see the <a href="/mileage-check" className="text-blue-400 hover:text-blue-300">mileage check</a>.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Understanding MOT advisories</h2>
             <p className="leading-relaxed mb-3">
-              An advisory is an item that the MOT tester has noted as not yet bad enough to fail the test, but that needs monitoring or attention. Advisories don&apos;t prevent a pass, but they give you valuable insight into what might need replacing or repairing in the near future.
-            </p>
-            <p className="leading-relaxed mb-3">
-              Common advisory items include:
+              An advisory is a heads-up: not bad enough to fail, but worth watching. Typical examples:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
-              <li>Brake pads or discs wearing thin but still above the minimum limit</li>
-              <li>Tyres approaching the legal tread depth limit of 1.6mm</li>
+              <li>Brake pads or discs wearing thin but above the minimum</li>
+              <li>Tyres approaching the 1.6mm legal tread limit</li>
               <li>Minor corrosion on structural or body panels</li>
-              <li>Slight oil leaks that haven&apos;t yet reached a level to cause a failure</li>
-              <li>Worn suspension bushes or components with minor play</li>
-              <li>Light scratches or damage to windscreen outside the driver&apos;s critical viewing area</li>
+              <li>Slight oil leaks not yet at failure level</li>
+              <li>Worn suspension bushes with minor play</li>
+              <li>Scratches outside the driver&apos;s critical viewing area</li>
             </ul>
             <p className="leading-relaxed">
-              If you see the same advisory appearing across multiple years of MOT tests, it likely means the owner has not addressed the issue. Recurring advisories are a red flag when buying a used car — they often point to deferred maintenance that could turn into costly repairs. For a deeper dive into what advisories mean, read our <a href="/blog/what-does-mot-advisory-mean" className="text-blue-400 hover:text-blue-300">guide to MOT advisories</a>.
+              Same advisory year after year? The owner&apos;s been ignoring it — often a sign of deferred maintenance. More in our <a href="/blog/what-does-mot-advisory-mean" className="text-blue-400 hover:text-blue-300">guide to MOT advisories</a>.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">When is an MOT due?</h2>
             <p className="leading-relaxed mb-3">
-              Vehicles in the UK need their first MOT by the third anniversary of their date of registration. After that, an MOT is required every 12 months. You can check your vehicle&apos;s current MOT status and expiry date by entering the registration number on our homepage.
+              First MOT is due on the third anniversary of registration. After that, every 12 months.
             </p>
             <p className="leading-relaxed mb-3">
-              You can have your MOT carried out up to one month (minus a day) before the current certificate expires without losing any time — the new certificate will run from the existing expiry date, not the date of the test. This gives you flexibility to book ahead without penalty.
+              You can test up to a month minus a day early without losing time — the next certificate still runs from your original expiry date.
             </p>
             <p className="leading-relaxed">
-              Vehicles over 40 years old that have not been substantially changed from their original specification may be exempt from the MOT requirement. This historic vehicle exemption has applied since May 2018. However, the vehicle must still be roadworthy if used on public roads.
+              Vehicles over 40 years old that haven&apos;t been substantially modified are exempt (since 2018), but still need to be roadworthy on public roads.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What happens if you drive without an MOT?</h2>
             <p className="leading-relaxed mb-3">
-              Driving without a valid MOT certificate is illegal and can result in a fine of up to &pound;1,000. Police can issue a fixed penalty notice on the spot, and ANPR (Automatic Number Plate Recognition) cameras across the UK actively flag vehicles without a valid MOT.
+              Up to &pound;1,000 fine. ANPR cameras flag uninsured vehicles automatically — fixed penalty on the spot.
             </p>
             <p className="leading-relaxed mb-3">
-              Beyond the fine, most car insurance policies require the vehicle to have a valid MOT. If you&apos;re involved in an accident while driving without an MOT, your insurer may refuse to pay out — leaving you personally liable for any damage or injury caused.
+              Your insurance likely voids too. Crash without a valid MOT and you may be personally liable for any damage or injury.
             </p>
             <p className="leading-relaxed">
-              The only exception is driving directly to a pre-booked MOT test at a registered test centre. You can drive to the test without a valid MOT, but the vehicle must be insured and roadworthy, and you cannot make any other stops or detours along the way. You can also check your vehicle&apos;s <a href="/tax-check" className="text-blue-400 hover:text-blue-300">tax status</a> to make sure everything else is in order.
+              One exception: driving directly to a pre-booked test at a registered centre, with no detours. Also worth checking <a href="/tax-check" className="text-blue-400 hover:text-blue-300">tax status</a> while you&apos;re at it.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Never miss your MOT</h2>
-            <p className="leading-relaxed mb-3">
-              Once you&apos;ve checked a vehicle&apos;s MOT history, you can set up a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a> so you never miss the expiry date. We&apos;ll email you 28 days and 7 days before your MOT is due — giving you time to compare prices and book at a time that suits you.
-            </p>
             <p className="leading-relaxed">
-              It takes less than 30 seconds, costs nothing, and there&apos;s no account to create. Just enter your registration number on our <a href="/" className="text-blue-400 hover:text-blue-300">homepage</a>, then add your email to activate the reminder.
+              Set a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a> and we&apos;ll email you 28 and 7 days before expiry — plenty of time to shop around. 30 seconds, no account: enter your reg, add your email.
             </p>
           </section>
 
@@ -383,28 +368,7 @@ export default async function MotCheckPage({
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">What does an MOT advisory mean?</h3>
-                <p className="text-sm mt-1">An MOT advisory is a note about a component that isn&apos;t bad enough to cause a failure but needs monitoring. Common examples include brake pads wearing thin, tyres approaching the 1.6mm legal tread depth limit, or minor corrosion on structural components.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How far back does MOT history go?</h3>
-                <p className="text-sm mt-1">MOT test results are available from 2005 onwards. The DVSA has digitally recorded every MOT test since then, including pass/fail results, mileage readings, advisories, and failure reasons.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Can I drive to an MOT test without a valid MOT?</h3>
-                <p className="text-sm mt-1">Yes, you can drive directly to a pre-booked MOT test at a registered test centre without a valid MOT. However, the vehicle must be roadworthy and insured. You cannot make any detours — the journey must be directly to the test centre.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How much does an MOT cost?</h3>
-                <p className="text-sm mt-1">The maximum fee for a car MOT is &pound;54.85, set by the DVSA. Many garages charge less than this as a competitive rate. The test itself takes around 45 minutes to an hour.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What&apos;s the difference between a dangerous, major, and minor defect?</h3>
-                <p className="text-sm mt-1">Since May 2018, MOT defects are classified into three categories. A dangerous defect is an immediate risk to road safety and means the vehicle must not be driven. A major defect is a failure that needs repair before the vehicle can pass. A minor defect is a less serious issue that should be repaired but does not cause a failure.</p>
-              </div>
-            </div>
+            <FaqAccordion items={FAQ_ITEMS} />
           </section>
         </div>
       </div>

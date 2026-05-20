@@ -5,6 +5,35 @@ import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
 import RecallResult from "@/components/tools/RecallResult";
+import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "Is the recall check free?",
+    answer:
+      "Yes — no signup, no payment. Enter a reg, we check against the DVSA recall database.",
+  },
+  {
+    question: "Are recall repairs free?",
+    answer:
+      "Always. Manufacturers are legally required to fix safety recalls at no cost, regardless of vehicle age or warranty status.",
+  },
+  {
+    question: "What should I do if my car has a recall?",
+    answer:
+      "Contact the manufacturer or an authorised dealer to book the free repair. No time limit.",
+  },
+  {
+    question: "How accurate is the recall check?",
+    answer:
+      "We match make, model, and year against the DVSA database — model-level, not VIN-specific. For your individual vehicle's exact status, verify with the manufacturer.",
+  },
+  {
+    question: "Does a recall affect my car's value?",
+    answer:
+      "An outstanding recall can hurt resale. Once completed (free at a franchised dealer), it shouldn't affect value — and documentation of completed recall work is a plus.",
+  },
+];
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -89,48 +118,11 @@ export default async function RecallCheckPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-        {
-          "@type": "Question",
-          name: "Is the recall check free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no payment, no hidden charges. Enter any UK registration number and we will check for known safety recalls.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Are recall repairs free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, always. Manufacturers are legally required to repair safety recall defects at no cost to the vehicle owner, regardless of the age of the vehicle or whether it is still under warranty.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What should I do if my car has a recall?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Contact your vehicle manufacturer or an authorised dealer to arrange the free repair. You can usually book directly through the dealer. There is no time limit on recall repairs.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How accurate is the recall check?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "We match your vehicle's make, model and year against the DVSA recall database. This is model-level matching rather than VIN-specific, so we recommend verifying with the manufacturer for complete records specific to your individual vehicle.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does a recall affect my car's value?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "An outstanding recall can affect resale value and buyer confidence. However, once the recall repair has been completed (for free at a franchised dealer), it should not negatively affect the vehicle's value. Having documentation of completed recall work is a positive when selling.",
-          },
-        },
-      ],
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   return (
@@ -239,37 +231,31 @@ export default async function RecallCheckPage({
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is a vehicle safety recall?</h2>
             <p className="leading-relaxed mb-3">
-              A vehicle safety recall is issued when a manufacturer discovers a defect that could pose a risk to the driver, passengers, or other road users. These defects can range from faulty airbags and braking systems to electrical faults and structural weaknesses. Recalls are not uncommon — even brand-new models from major manufacturers can be subject to them.
-            </p>
-            <p className="leading-relaxed mb-3">
-              In the UK, the Driver and Vehicle Standards Agency (DVSA) manages the vehicle recall process. When a manufacturer identifies a safety-critical defect, they notify the DVSA, which records the recall and helps coordinate the response. The DVSA maintains a public database of all vehicle recalls, which our check draws from.
+              When a manufacturer discovers a defect that risks driver, passenger, or road-user safety, they issue a recall. Faulty airbags, brakes, electricals, structural issues — even brand-new models from major makers get them.
             </p>
             <p className="leading-relaxed">
-              Crucially, recall repairs are always free of charge to the vehicle owner. The manufacturer bears the full cost, regardless of the vehicle&apos;s age or warranty status. There is no time limit — you can have a recall repair carried out years after the notice was first issued.
+              The DVSA manages UK recalls and maintains a public database (which we draw from). Recall repairs are <strong className="text-slate-100">always free</strong>, regardless of vehicle age or warranty — no time limit.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How do recalls work?</h2>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong className="text-slate-100">Manufacturer identifies the defect</strong> — The issue is typically discovered through quality monitoring, customer reports, or regulatory testing.</li>
-              <li><strong className="text-slate-100">DVSA is notified</strong> — The manufacturer formally reports the defect to the DVSA, including the affected models, production dates, and the nature of the safety risk.</li>
-              <li><strong className="text-slate-100">Owners are contacted</strong> — The manufacturer writes to registered keepers by letter, informing them of the recall and what action to take.</li>
-              <li><strong className="text-slate-100">Free repair at an authorised dealer</strong> — Owners book their vehicle into an authorised dealer, where the defect is repaired or the faulty part is replaced entirely free of charge.</li>
-              <li><strong className="text-slate-100">No time limit</strong> — There is no deadline for getting a recall repair done. Even if the notice was issued years ago, the manufacturer must still carry out the work at no cost.</li>
+              <li><strong className="text-slate-100">Defect identified</strong> via quality monitoring, customer reports, or testing.</li>
+              <li><strong className="text-slate-100">DVSA notified</strong> — affected models, dates, and safety risk recorded.</li>
+              <li><strong className="text-slate-100">Owners contacted</strong> by letter at the registered keeper address.</li>
+              <li><strong className="text-slate-100">Free repair</strong> at an authorised dealer — defect fixed or part replaced.</li>
+              <li><strong className="text-slate-100">No deadline</strong> — manufacturer must do the work years later if needed.</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What our check shows</h2>
             <p className="leading-relaxed mb-3">
-              When you enter a registration number, we identify the vehicle&apos;s make, model, and year of manufacture, then match these details against the DVSA recall database. If any recalls have been issued for that model, you&apos;ll see the recall details including the defect description, the safety risk involved, and the recommended remedy.
-            </p>
-            <p className="leading-relaxed mb-3">
-              It&apos;s important to understand that our check uses model-level matching rather than VIN-specific matching. This means we can tell you whether recalls have been issued for your type of vehicle, but we cannot confirm whether the specific repair has already been carried out on your individual car.
+              We match your reg&apos;s make, model, and year against the DVSA database. Any matching recalls appear with the defect description, safety risk, and recommended remedy.
             </p>
             <p className="leading-relaxed">
-              For the most complete and vehicle-specific recall information, we always recommend checking directly with the manufacturer or an authorised dealer. They can run a VIN check against their internal records and confirm whether any outstanding work is needed on your particular vehicle. Your <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> may also show recall-related advisories that are worth reviewing.
+              Important caveat: model-level matching, not VIN-specific. We can tell you a recall was issued for your model; we can&apos;t confirm whether the repair has already been done on your particular car. For that, ask the manufacturer or an authorised dealer for a VIN check. Worth also reviewing your <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> for recall-related advisories.
             </p>
           </section>
 
@@ -279,30 +265,9 @@ export default async function RecallCheckPage({
 
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-slate-100">Is the recall check free?</h3>
-                <p className="text-sm mt-1">Yes, completely free. No signup, no payment, no hidden charges. Enter any UK registration number and we&apos;ll check for known safety recalls.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Are recall repairs free?</h3>
-                <p className="text-sm mt-1">Yes, always. Manufacturers are legally required to repair safety recall defects at no cost to the vehicle owner, regardless of the age of the vehicle or whether it is still under warranty.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">What should I do if my car has a recall?</h3>
-                <p className="text-sm mt-1">Contact your vehicle manufacturer or an authorised dealer to arrange the free repair. You can usually book directly through the dealer. There is no time limit on recall repairs.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">How accurate is the recall check?</h3>
-                <p className="text-sm mt-1">We match your vehicle&apos;s make, model and year against the DVSA recall database. This is model-level matching rather than VIN-specific, so we recommend verifying with the manufacturer for complete records specific to your individual vehicle.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-100">Does a recall affect my car&apos;s value?</h3>
-                <p className="text-sm mt-1">An outstanding recall can affect resale value and buyer confidence. However, once the recall repair has been completed (for free at a franchised dealer), it should not negatively affect the vehicle&apos;s value. Having documentation of completed recall work is a positive when selling.</p>
-              </div>
-            </div>
+            <FaqAccordion items={FAQ_ITEMS} />
             <p className="text-sm text-slate-400 mt-4">
-              For more details on how recalls work, read our <a href="/blog/car-safety-recalls-guide" className="text-blue-400 hover:text-blue-300">complete guide to vehicle safety recalls</a>.
+              More in our <a href="/blog/car-safety-recalls-guide" className="text-blue-400 hover:text-blue-300">complete guide to vehicle safety recalls</a>.
             </p>
           </section>
         </div>
