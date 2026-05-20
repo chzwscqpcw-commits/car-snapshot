@@ -110,7 +110,11 @@ function priceFloorForYear(year: number): number {
 
 // ── Asking price discount ──────────────────────────────────────────────────
 
-const ASKING_PRICE_DISCOUNT = 0.92; // eBay asking → realistic sold price
+// eBay UK is a mixed private/trade marketplace, not a dealer forecourt.
+// Asking → sold delta is smaller than the dealer-haggle assumption (was 0.92).
+// Auctions in the dataset already drag the bottom down naturally; further
+// discounting double-counts.
+const ASKING_PRICE_DISCOUNT = 0.96;
 
 // ── Quartile computation (QUARTILE.INC / linear interpolation) ─────────────
 
@@ -232,13 +236,14 @@ async function fetchEbayItems(
     const yearMatches = title.match(/\b(19[89]\d|20\d\d)\b/g);
     let titleYear: number | null = null;
     if (yearMatches) {
-      // If multiple years appear, prefer the largest plausible one
-      // (often the model year, with the older year being an irrelevant
-      // mileage-MOT history reference like "MOT 2025").
+      // If multiple years appear, prefer the SMALLEST plausible one.
+      // Model years are almost always older than other dates in titles —
+      // e.g. "2018 Ford Focus MOT 2025" has both years but the car is
+      // a 2018. Taking the max would mistake the MOT date for the model.
       const candidates = yearMatches
         .map((y) => parseInt(y, 10))
         .filter((y) => y >= 1990 && y <= nextYear);
-      if (candidates.length > 0) titleYear = Math.max(...candidates);
+      if (candidates.length > 0) titleYear = Math.min(...candidates);
     }
     let titleFuel: string | null = null;
     for (const [family, re] of Object.entries(FUEL_TITLE_TOKENS)) {
