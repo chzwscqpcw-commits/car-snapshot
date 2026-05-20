@@ -169,12 +169,6 @@ export default async function BlogPostPage({ params }: PageProps) {
       {/* Header */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
-            href="/blog"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
-          >
-            &larr; Back to all guides
-          </a>
           <h1 className="text-3xl font-bold text-slate-100">{post.title}</h1>
           <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
             <time dateTime={post.date}>

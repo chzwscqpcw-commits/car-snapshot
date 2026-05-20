@@ -107,12 +107,6 @@ export default function BlogPage() {
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(34,211,238,0.10),_transparent_60%)]" />
         <div className="relative max-w-3xl mx-auto px-4 pt-8 pb-6 sm:pt-10 sm:pb-8">
-          <Link
-            href="/"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
-          >
-            &larr; Back to Free Plate Check
-          </Link>
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300 mb-3">
             <BookOpen className="h-3 w-3 text-cyan-400" />
             Guides
