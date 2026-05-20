@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock } from "lucide-react";
-import { getAllTags, getPostsByTag, getTagLabel, getPostTags } from "@/lib/blog";
+import { ArrowLeft, Clock } from "lucide-react";
+import { getAllTags, getAllPosts, getPostsByTag, getTagLabel, getPostTags } from "@/lib/blog";
 import BlogTagPill from "@/components/BlogTagPill";
 
 interface PageProps {
@@ -38,6 +38,7 @@ export default async function TagPage({ params }: PageProps) {
   const label = getTagLabel(tag);
   const posts = getPostsByTag(tag);
   const allTags = getAllTags();
+  const totalGuides = getAllPosts().length;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -89,6 +90,18 @@ export default async function TagPage({ params }: PageProps) {
           Browse by topic
         </p>
         <div className="flex flex-wrap gap-2">
+          <Link
+            href="/blog"
+            className="group inline-flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity"
+          >
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-600/60 bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-slate-200">
+              <ArrowLeft className="h-3 w-3" />
+              All guides
+            </span>
+            <span className="text-xs text-slate-600 group-hover:text-slate-500 transition-colors">
+              {totalGuides}
+            </span>
+          </Link>
           {allTags.map((t) => (
             <Link
               key={t.tag}
