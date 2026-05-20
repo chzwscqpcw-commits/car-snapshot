@@ -1,0 +1,103 @@
+name: Weekly Data Refresh
+
+# Weekly puppeteer-based refresh of the three agency data sources that
+# need a real browser to scrape past Imperva / Next.js / JS rendering:
+#   - DVSA recalls
+#   - VCA fuel economy (full 2000-2026 archive)
+#   - Euro NCAP crash ratings
+#
+# Direct-commits to main on changes (Vercel auto-deploys on push). For
+# data sanity, validates the full dataset before pushing — if validation
+# fails the workflow exits non-zero and no commit happens.
+
+on:
+  schedule:
+    - cron: '0 4 * * 0' # Sundays at 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # ubuntu-latest ships with Chrome pre-installed at this path; our
+  # puppeteer scripts pick it up via CHROME_PATH.
+  CHROME_PATH: /usr/bin/google-chrome-stable
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Chrome present
+        run: |
+          ${{ env.CHROME_PATH }} --version
+          echo "OK"
+
+      - name: Refresh DVSA recalls
+        run: npx tsx scripts/fetch-recalls.ts
+
+      - name: Refresh VCA fuel economy archive
+        run: |
+          npx tsx scripts/fetch-vca-archive.ts
+          npx tsx scripts/process-fuel-data.ts vca-csvs/*.csv
+
+      - name: Refresh Euro NCAP ratings
+        run: npx tsx scripts/fetch-ncap-ratings.ts
+
+      - name: Validate all data
+        run: npx tsx scripts/validate-data.ts
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No data changes — nothing to commit."
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected:"
+            git diff --stat src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json
+          fi
+
+      - name: Commit and push to main
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json
+          git commit -m "data: weekly auto-refresh (recalls + VCA + NCAP)"
+          git push origin main
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Weekly Data Refresh — Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.changed }}" = "true" ]; then
+            echo "✅ Data changed. Commit pushed; Vercel will deploy." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No data changes this week." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Current entry counts" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          node -e "
+            const fs=require('fs');
+            for (const f of ['recalls.json','fuel-economy.json','ncap-ratings.json']) {
+              const d=JSON.parse(fs.readFileSync('src/data/'+f,'utf-8'));
+              console.log(f.padEnd(22)+' '+d.length.toLocaleString()+' entries');
+            }
+          " >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
