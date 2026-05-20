@@ -2868,31 +2868,44 @@ END:VEVENT
 
       <div className="mx-auto w-full max-w-3xl px-5 sm:px-7 pt-8 sm:pt-12 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10">
         {/* HEADER WITH BRAND */}
+        {/*
+          Two states: pre-lookup shows the full marketing hero (large
+          wordmark, tagline, vehicles-checked counter). Once `data` is
+          populated, the visitor came for the result — collapse to a
+          slim brand strip so the answer is closer to the top of the
+          page on mobile. Tagline + stats hide; logo + wordmark shrink.
+        */}
         <header className="mb-6">
-          <div className="flex items-center gap-3 mb-4 group">
+          <div className={`flex items-center gap-3 group ${data ? "mb-2" : "mb-4"}`}>
             <BoltMark
               glow
-              className="w-9 h-12 sm:w-11 sm:h-14 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+              className={`transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_18px_rgba(34,211,238,0.35)] ${data ? "w-7 h-9 sm:w-8 sm:h-10" : "w-9 h-12 sm:w-11 sm:h-14"}`}
             />
-            <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
+            <h1
+              className={`font-bold text-white tracking-tight ${data ? "text-2xl sm:text-3xl" : "text-4xl sm:text-5xl"}`}
+            >
               Free Plate Check
             </h1>
           </div>
-          <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
-            Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
-          </p>
-          <p className="mt-3 text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1">
-            {vehiclesChecked !== null && vehiclesChecked > 0 && (
-              <>
-                <span className="font-mono text-slate-300 tracking-wide">
-                  <CountUp target={Math.floor(vehiclesChecked / 100) * 100} />+
-                </span>
-                <span>vehicles checked</span>
-                <span className="text-slate-700" aria-hidden="true">·</span>
-              </>
-            )}
-            <span>No signup, no tracking</span>
-          </p>
+          {!data && (
+            <>
+              <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
+                Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
+              </p>
+              <p className="mt-3 text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1">
+                {vehiclesChecked !== null && vehiclesChecked > 0 && (
+                  <>
+                    <span className="font-mono text-slate-300 tracking-wide">
+                      <CountUp target={Math.floor(vehiclesChecked / 100) * 100} />+
+                    </span>
+                    <span>vehicles checked</span>
+                    <span className="text-slate-700" aria-hidden="true">·</span>
+                  </>
+                )}
+                <span>No signup, no tracking</span>
+              </p>
+            </>
+          )}
 
           {/* TABBED SECTION: Recent / Saved / My Cars */}
           {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
