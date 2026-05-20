@@ -5199,52 +5199,7 @@ END:VEVENT
           </div>
         )}
 
-        {/* FOOTER */}
-        <footer className="mt-12 pt-8 border-t border-slate-700/50 text-center text-xs text-slate-500 space-y-3">
-          <nav className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-slate-400">
-            <a href="/blog" className="hover:text-blue-400 transition-colors">Guides & Tips</a>
-            <a href="/stats" className="hover:text-blue-400 transition-colors">UK Car Stats</a>
-            <a href="/cars" className="hover:text-blue-400 transition-colors">Car Guides</a>
-            <a href="/mot-reminder" className="hover:text-blue-400 transition-colors">MOT Reminders</a>
-            <a href="/car-valuation" className="hover:text-blue-400 transition-colors">Valuation</a>
-            <a href="/ulez-check" className="hover:text-blue-400 transition-colors">ULEZ Check</a>
-            <a href="/embed" className="hover:text-blue-400 transition-colors">Embed Widget</a>
-            <a href="/about" className="hover:text-blue-400 transition-colors">About</a>
-          </nav>
-          <p>
-            Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
-          </p>
-          <p className="text-slate-600">
-            Free Plate Check may earn a commission from partner links. This doesn't affect our recommendations or the data we show.
-          </p>
-          <div className="flex justify-center py-1">
-            <a
-              href="https://www.saashub.com/free-plate-check?utm_source=badge&utm_campaign=badge&utm_content=free-plate-check&badge_variant=color&badge_kind=approved"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
-                alt="Free Plate Check - Approved on SaaSHub"
-                width={120}
-                height={40}
-                className="max-w-[120px] opacity-70 hover:opacity-100 transition-opacity"
-              />
-            </a>
-          </div>
-          <p>
-            <button
-              onClick={handleFooterShare}
-              className="text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              Share this tool
-            </button>
-            <span className="mx-1.5">·</span>
-            <a href="/terms" className="hover:text-slate-400 transition-colors">Terms</a>
-            <span className="mx-1.5">·</span>
-            <a href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</a>
-          </p>
-        </footer>
+        {/* Footer is rendered globally by app/layout.tsx — see SiteFooter. */}
 
         {/* INSURANCE DATE MODAL */}
         {insuranceModalOpen && (

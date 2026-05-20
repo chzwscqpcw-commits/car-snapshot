@@ -56,13 +56,37 @@ export default function SiteFooter() {
           <FooterColumn title="Site" links={SITE_LINKS} />
         </div>
 
-        {/* Fine print */}
-        <div className="mt-10 flex flex-col gap-2 border-t border-slate-800/60 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-          <p>&copy; 2026 Free Plate Check. All rights reserved.</p>
-          <p className="text-slate-600">
-            Data: DVLA · DVSA · VCA · Euro NCAP · DfT · DESNZ
+        {/* Disclaimers + trust signals */}
+        <div className="mt-10 border-t border-slate-800/60 pt-6 space-y-3 text-xs text-slate-500">
+          <p>
+            Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
           </p>
-          <p className="text-slate-600">Made in 🇬🇧</p>
+          <p className="text-slate-600">
+            Free Plate Check may earn a commission from partner links. This doesn&apos;t affect our recommendations or the data we show.
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-3">
+            <p>&copy; 2026 Free Plate Check. All rights reserved.</p>
+            <p className="text-slate-600">
+              Data: DVLA · DVSA · VCA · Euro NCAP · DfT · DESNZ
+            </p>
+            <a
+              href="https://www.saashub.com/free-plate-check?utm_source=badge&utm_campaign=badge&utm_content=free-plate-check&badge_variant=color&badge_kind=approved"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+              aria-label="Approved on SaaSHub"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://cdn-b.saashub.com/img/badges/approved-color.png?v=1"
+                alt="Free Plate Check — Approved on SaaSHub"
+                width={120}
+                height={40}
+                className="max-w-[120px] opacity-70 hover:opacity-100 transition-opacity"
+              />
+            </a>
+          </div>
+          <p className="text-slate-600 pt-1">Made in 🇬🇧</p>
         </div>
       </div>
     </footer>
