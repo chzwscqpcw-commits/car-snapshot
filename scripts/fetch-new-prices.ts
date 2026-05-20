@@ -22,7 +22,11 @@ import puppeteer, { type Browser } from "puppeteer-core";
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const OUT_PATH = path.join(PROJECT_ROOT, "src", "data", "new-prices.json");
 const SITEMAP_URL = "https://www.parkers.co.uk/sitemap/zip-files/review.xml.gz";
-const MAX_LASTMOD_DAYS = 180; // only currently-selling cars
+// Filter to reviews updated within ~12 months. Some popular models (Tesla
+// Model Y, Land Rover Discovery) don't get re-touched on Parkers more
+// frequently than that even though they're still on sale. 180d was too
+// aggressive and missed real coverage.
+const MAX_LASTMOD_DAYS = 365;
 const CONCURRENCY = 2;
 const PER_REQUEST_DELAY_MS = 400;
 // Smaller batches → browser restarts more often → bounded memory pressure.
