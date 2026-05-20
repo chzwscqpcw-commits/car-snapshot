@@ -234,13 +234,6 @@ export default async function BlogPostPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
-        {/* Inline MOT reminder for MOT-tagged posts */}
-        {tags.includes("mot") && (
-          <div className="max-w-[700px] mx-auto mt-10">
-            <MOTReminderSignup context="generic" />
-          </div>
-        )}
-
         {/* Share buttons (bottom) */}
         <div className="max-w-[700px] mx-auto mt-10 pt-6 border-t border-slate-800">
           <ShareButtons
