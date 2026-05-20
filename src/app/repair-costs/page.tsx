@@ -174,8 +174,8 @@ export default function RepairCostsHub() {
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.10),_transparent_60%)]" />
         <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-10">
-          <Link href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
-            &larr; Back to Free Plate Check
+          <Link href="/tools" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
+            &larr; Back to all tools
           </Link>
 
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">

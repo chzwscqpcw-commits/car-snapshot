@@ -54,8 +54,8 @@ export default function SiteNav() {
             aria-label="Free Plate Check — home"
           >
             <BoltMark className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-y-px" />
-            <span className="font-[family-name:var(--font-geist-mono)] text-[13px] sm:text-sm font-semibold tracking-tight text-slate-100">
-              Free<span className="text-cyan-400">Plate</span>Check
+            <span className="text-[14px] sm:text-[15px] font-bold tracking-tight text-white">
+              Free Plate Check
             </span>
           </Link>
 
@@ -169,8 +169,8 @@ function MobileDrawer({
         <div className="flex items-center justify-between px-4 h-14 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <BoltMark className="h-5 w-5" />
-            <span className="font-[family-name:var(--font-geist-mono)] text-sm font-semibold text-slate-100">
-              Free<span className="text-cyan-400">Plate</span>Check
+            <span className="text-sm font-bold tracking-tight text-white">
+              Free Plate Check
             </span>
           </div>
           <button
@@ -194,6 +194,13 @@ function MobileDrawer({
               <Search className="h-4 w-4" />
               <span className="flex-1 text-left">Search anything…</span>
             </button>
+          </div>
+
+          {/* Big-ticket top-level links surface first */}
+          <div className="px-3 pb-2 grid grid-cols-3 gap-2">
+            <PrimaryTile href="/tools" label="Tools" isActive={isActive} />
+            <PrimaryTile href="/stats" label="Stats" isActive={isActive} />
+            <PrimaryTile href="/blog" label="Guides" isActive={isActive} />
           </div>
 
           <DrawerSection label="Checks" items={checks} isActive={isActive} />
@@ -229,6 +236,30 @@ function MobileDrawer({
         }
       `}</style>
     </div>
+  );
+}
+
+function PrimaryTile({
+  href,
+  label,
+  isActive,
+}: {
+  href: string;
+  label: string;
+  isActive: (href: string) => boolean;
+}) {
+  const active = isActive(href);
+  return (
+    <Link
+      href={href}
+      className={`flex flex-col items-center justify-center rounded-xl border px-2 py-3 text-center transition-colors ${
+        active
+          ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-200"
+          : "border-slate-800 bg-slate-900/60 text-slate-200 hover:border-slate-700 hover:bg-slate-800/60"
+      }`}
+    >
+      <span className="text-sm font-semibold">{label}</span>
+    </Link>
   );
 }
 

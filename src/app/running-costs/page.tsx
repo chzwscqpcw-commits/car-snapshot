@@ -153,10 +153,10 @@ export default async function RunningCostsPage({
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <a
-            href="/"
+            href="/tools"
             className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
           >
-            &larr; Back to Free Plate Check
+            &larr; Back to all tools
           </a>
           <h1 className="text-3xl font-bold text-slate-100">
             What Does It Cost to Run Your Car?

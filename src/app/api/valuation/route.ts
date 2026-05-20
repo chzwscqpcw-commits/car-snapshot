@@ -47,6 +47,34 @@ async function getEbayToken(): Promise<string | null> {
   }
 }
 
+// ── Make aliases — eBay listings often abbreviate; we need to match what
+// people actually type in titles, not just the DVLA canonical name.
+const MAKE_ALIASES: Record<string, string[]> = {
+  VOLKSWAGEN: ["VOLKSWAGEN", "VW"],
+  VW: ["VW", "VOLKSWAGEN"],
+  "MERCEDES-BENZ": ["MERCEDES-BENZ", "MERCEDES", "MERC", "BENZ"],
+  MERCEDES: ["MERCEDES", "MERCEDES-BENZ", "MERC", "BENZ"],
+  "LAND ROVER": ["LAND ROVER", "LANDROVER", "LAND-ROVER", "LR"],
+  LANDROVER: ["LANDROVER", "LAND ROVER", "LAND-ROVER"],
+  "ALFA ROMEO": ["ALFA ROMEO", "ALFA-ROMEO", "ALFA"],
+  ALFA: ["ALFA", "ALFA ROMEO"],
+  BMW: ["BMW"],
+  MINI: ["MINI"],
+  "ROLLS-ROYCE": ["ROLLS-ROYCE", "ROLLS ROYCE", "ROLLS"],
+  "ASTON MARTIN": ["ASTON MARTIN", "ASTON-MARTIN", "ASTON"],
+};
+
+function expandMakeTokens(makeUpper: string): string[] {
+  if (MAKE_ALIASES[makeUpper]) return MAKE_ALIASES[makeUpper];
+  // Default: just the make itself, plus its first token if multi-word
+  const tokens = [makeUpper];
+  const firstWord = makeUpper.split(/[\s-]+/)[0];
+  if (firstWord && firstWord !== makeUpper && firstWord.length >= 3) {
+    tokens.push(firstWord);
+  }
+  return tokens;
+}
+
 // ── Fuel type mapping (DVLA → eBay aspect values) ──────────────────────────
 
 const FUEL_TYPE_MAP: Record<string, string> = {
@@ -175,18 +203,37 @@ async function searchEbay(
     };
   };
 
-  if (!data.itemSummaries || data.itemSummaries.length === 0) return null;
+  const rawCount = data.itemSummaries?.length ?? 0;
+  if (!data.itemSummaries || rawCount === 0) {
+    console.log(`[VALUATION] eBay ${make} ${model} year=${yearFilter}: 0 raw items`);
+    return null;
+  }
 
-  const makeUpper = make.toUpperCase();
-  const modelUpper = model.toUpperCase();
+  // Build accept-set of make tokens to handle aliases ("VW" ↔ "VOLKSWAGEN",
+  // multi-word makes like "ALFA ROMEO" / "LAND ROVER" / "MERCEDES-BENZ") and
+  // model tokens — require the primary model token rather than the full string.
+  const makeUpper = make.toUpperCase().trim();
+  const makeTokens = expandMakeTokens(makeUpper);
+  const modelTokens = model
+    .toUpperCase()
+    .split(/[\s/-]+/)
+    .filter((t) => t.length >= 2);
+  const primaryModelToken = modelTokens[0] ?? "";
 
-  // Filter: title must contain both make AND model, and have a valid price
+  // Filter: title must contain at least one make-token AND the primary
+  // model-token, and have a valid price.
   const validItems = data.itemSummaries.filter((item) => {
     const title = (item.title || "").toUpperCase();
-    if (!title.includes(makeUpper) || !title.includes(modelUpper)) return false;
+    const makeOk = makeTokens.some((t) => title.includes(t));
+    const modelOk = primaryModelToken && title.includes(primaryModelToken);
+    if (!makeOk || !modelOk) return false;
     const price = parseFloat(item.price?.value || "0");
     return price > 0;
   });
+
+  console.log(
+    `[VALUATION] eBay ${make} ${model} year=${yearFilter}: raw=${rawCount} kept=${validItems.length}`
+  );
 
   const prices = validItems.map((item) => parseFloat(item.price!.value));
 
@@ -254,9 +301,11 @@ async function fetchEbayComparables(
   if (!token) return null;
 
   try {
-    // Attempt 1: Exact year aspect + fuel type
+    // Attempt 1: Exact year aspect + fuel type. Bumped threshold from 3→5 so
+    // we widen sooner — users want a meaningful sample size, not just the
+    // bare minimum.
     const r1 = await searchEbay(token, make, model, `{${year}}`, fuelType, depreciationEstimate);
-    if (r1 && r1.listingCount >= 3) return r1;
+    if (r1 && r1.listingCount >= 5) return r1;
 
     // Attempt 2: Adjacent years ±1 aspect + fuel type
     const r2 = await searchEbay(
@@ -264,26 +313,27 @@ async function fetchEbayComparables(
       `{${year - 1}|${year}|${year + 1}}`,
       fuelType, depreciationEstimate,
     );
-    if (r2 && r2.listingCount >= 3) return { ...r2, yearWidened: true };
+    if (r2 && r2.listingCount >= 5) return { ...r2, yearWidened: true };
 
     // Attempt 3: ±2 years aspect + fuel type
     const years = [year - 2, year - 1, year, year + 1, year + 2].join("|");
     const r3 = await searchEbay(
       token, make, model, `{${years}}`, fuelType, depreciationEstimate,
     );
-    if (r3 && r3.listingCount >= 3) return { ...r3, yearWidened: true };
+    if (r3 && r3.listingCount >= 5) return { ...r3, yearWidened: true };
 
     // Attempt 4: Drop year aspect, keep fuel type
     const r4 = await searchEbay(token, make, model, null, fuelType, depreciationEstimate);
-    if (r4 && r4.listingCount >= 3) return { ...r4, yearWidened: true };
+    if (r4 && r4.listingCount >= 5) return { ...r4, yearWidened: true };
 
     // Attempt 5: Drop year and fuel type
     const r5 = await searchEbay(token, make, model, null, null, depreciationEstimate);
     if (r5) return { ...r5, yearWidened: true };
 
     // Return whatever we got from earlier attempts if any had results
-    if (r1) return r1;
+    if (r3) return { ...r3, yearWidened: true };
     if (r2) return { ...r2, yearWidened: true };
+    if (r1) return r1;
 
     return null;
   } catch (error: any) {

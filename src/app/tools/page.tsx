@@ -167,6 +167,36 @@ export default function ToolsPage() {
       </section>
 
       {/* Checks */}
+      {/* All-In-One CTA — top of the hub */}
+      <section className="mx-auto max-w-5xl px-4 pt-6 sm:pt-8">
+        <div className="relative overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/30 via-slate-900/80 to-slate-950 p-5 sm:p-8">
+          <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div className="flex-shrink-0">
+              <BoltMark className="h-9 w-9 sm:h-10 sm:w-10" glow />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
+                All-in-one
+              </div>
+              <h2 className="mt-1 text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Run every check at once from a single reg
+              </h2>
+              <p className="mt-1.5 text-sm text-slate-400">
+                MOT · tax · mileage · ULEZ · recalls · valuation · running costs — one page.
+              </p>
+            </div>
+            <Link
+              href="/"
+              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+            >
+              Run full check
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Section
         eyebrow="Checks"
         title="Focused vehicle checks"
@@ -183,33 +213,6 @@ export default function ToolsPage() {
       >
         <ToolGrid tools={UTILITIES} accent="blue" />
       </Section>
-
-      {/* CTA strip */}
-      <section className="border-t border-slate-800/60 bg-gradient-to-b from-slate-950 to-slate-900/40">
-        <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
-          <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-950 p-6 sm:p-10 relative overflow-hidden">
-            <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
-            <div className="relative">
-              <BoltMark className="h-6 w-6 mb-3" glow />
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                Want everything in one go?
-              </h2>
-              <p className="mt-2 max-w-xl text-sm sm:text-base text-slate-400">
-                The full Free Plate Check report combines every tool above into one
-                comprehensive view — MOT, tax, mileage, recalls, ULEZ, valuation,
-                running costs and more, all from a single reg.
-              </p>
-              <Link
-                href="/"
-                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
-              >
-                Run the full check
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
@@ -251,7 +254,7 @@ function ToolGrid({
   accent: "cyan" | "blue";
 }) {
   return (
-    <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-2.5 grid-cols-2 sm:gap-4 lg:grid-cols-3">
       {tools.map((t) => (
         <ToolCard key={t.href} tool={t} accent={accent} />
       ))}
@@ -272,25 +275,29 @@ function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
   return (
     <Link
       href={tool.href}
-      className={`group relative flex flex-col gap-3 rounded-xl border border-slate-800/80 bg-slate-900/40 p-5 transition-all hover:bg-slate-900/70 hover:shadow-xl ${accentRing}`}
+      className={`group relative flex flex-col gap-2 sm:gap-3 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3 sm:p-5 transition-all hover:bg-slate-900/70 hover:shadow-xl ${accentRing}`}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-2">
         <div
-          className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentIcon} text-white shadow-md shadow-cyan-500/10`}
+          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentIcon} text-white shadow-md shadow-cyan-500/10`}
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
         {tool.badge && (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+          <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-wider rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
             {tool.badge}
           </span>
         )}
       </div>
       <div className="flex-1">
-        <h3 className="text-base font-semibold text-white">{tool.title}</h3>
-        <p className="mt-1 text-sm text-slate-400 leading-relaxed">{tool.blurb}</p>
+        <h3 className="text-sm sm:text-base font-semibold text-white leading-tight">
+          {tool.title}
+        </h3>
+        <p className="mt-1 text-xs sm:text-sm text-slate-400 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
+          {tool.blurb}
+        </p>
       </div>
-      <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 group-hover:text-cyan-300 transition-colors">
+      <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-medium text-slate-500 group-hover:text-cyan-300 transition-colors">
         Open tool
         <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
       </div>

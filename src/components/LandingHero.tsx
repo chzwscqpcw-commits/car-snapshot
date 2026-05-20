@@ -26,8 +26,8 @@ export default function LandingHero({
   subtitle,
   bullets,
   exampleCard,
-  backLinkHref = "/",
-  backLinkText = "← Back to Free Plate Check",
+  backLinkHref = "/tools",
+  backLinkText = "← Back to all tools",
   badgeText = "Free · No signup · Official UK data",
 }: LandingHeroProps) {
   return (

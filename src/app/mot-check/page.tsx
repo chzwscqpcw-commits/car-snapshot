@@ -159,10 +159,10 @@ export default async function MotCheckPage({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_60%)]" />
         <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-10">
           <a
-            href="/"
+            href="/tools"
             className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block"
           >
-            &larr; Back to Free Plate Check
+            &larr; Back to all tools
           </a>
 
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
