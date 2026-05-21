@@ -47,7 +47,7 @@ This is where the differences are most dramatic. Based on average UK fuel prices
 
 The raw fuel cost favours electric by a wide margin. A driver covering 10,000 miles a year would spend roughly £1,600 on petrol, £1,300 on diesel, or £400 on home-charged electricity.
 
-You can check any car's fuel economy data for free using [Free Plate Check](/) — we show real-world figures alongside official numbers.
+You can check any car's fuel economy data for free using [Free Plate Check](/car-check) — we show real-world figures alongside official numbers.
 
 ## Road tax (VED)
 
@@ -134,4 +134,4 @@ For the average UK driver covering 8,000-10,000 miles a year, mostly around town
 
 There's no universal answer — it depends on your mileage, driving style, and how long you plan to keep the car. The best starting point is to check the actual specs, fuel economy, and running costs for any car you're considering.
 
-[Run a free plate check](/) to see fuel type, CO2 emissions, tax costs, and more for any UK vehicle — then make your decision based on real numbers, not assumptions.
+[Run a free plate check](/car-check) to see fuel type, CO2 emissions, tax costs, and more for any UK vehicle — then make your decision based on real numbers, not assumptions.

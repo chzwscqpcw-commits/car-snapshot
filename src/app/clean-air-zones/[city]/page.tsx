@@ -343,9 +343,9 @@ export default async function CityCleanAirZonePage({ params }: Props) {
                 Since the {zone.city} Clean Air Zone was{" "}
                 {zone.status === "cancelled" ? "cancelled" : "deferred"}, there
                 is no compliance requirement. However, you can still check your
-                vehicle&apos;s Euro emission standard on our{" "}
-                <a href="/" className="text-blue-400 hover:text-blue-300">
-                  homepage
+                vehicle&apos;s Euro emission standard with our{" "}
+                <a href="/ulez-check" className="text-blue-400 hover:text-blue-300">
+                  free ULEZ &amp; emissions check
                 </a>{" "}
                 — useful if you plan to drive in other UK cities with active
                 Clean Air Zones.
@@ -354,8 +354,8 @@ export default async function CityCleanAirZonePage({ params }: Props) {
               <>
                 <p className="leading-relaxed mb-3">
                   Enter your registration number on our{" "}
-                  <a href="/" className="text-blue-400 hover:text-blue-300">
-                    homepage
+                  <a href="/ulez-check" className="text-blue-400 hover:text-blue-300">
+                    free ULEZ &amp; emissions check
                   </a>{" "}
                   to see your vehicle&apos;s Euro emission standard. This is the
                   key factor that determines whether your vehicle will be charged

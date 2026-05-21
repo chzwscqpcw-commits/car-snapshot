@@ -99,4 +99,4 @@ Clocking is a criminal offence under the Consumer Protection from Unfair Trading
 
 The easiest way to protect yourself takes about 30 seconds: check the MOT mileage history before you buy. It's free, it's instant, and it catches the vast majority of clocking cases.
 
-Enter any UK reg into [Free Plate Check](/) and look at the mileage recorded at each MOT test. If the readings go steadily up, you can relax. If they jump around or drop — keep looking for a different car.
+Enter any UK reg into our [free mileage check](/mileage-check) and look at the mileage recorded at each MOT test. If the readings go steadily up, you can relax. If they jump around or drop — keep looking for a different car.

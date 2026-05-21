@@ -66,7 +66,7 @@ Getting the timing right is useful, but it counts for nothing if you buy a car w
 
 ### Vehicle history
 
-Run the registration through a [free plate check](/) to verify the MOT history, tax status, and mileage records. Look for consistent mileage progression through the MOT records — gaps or sudden drops are a warning sign of potential [mileage tampering](/blog/how-to-spot-a-clocked-car). Check that the vehicle has valid tax and a current MOT, and review any [advisories from previous tests](/blog/what-does-mot-advisory-mean).
+Run the registration through a [free plate check](/car-check) to verify the MOT history, tax status, and mileage records. Look for consistent mileage progression through the MOT records — gaps or sudden drops are a warning sign of potential [mileage tampering](/blog/how-to-spot-a-clocked-car). Check that the vehicle has valid tax and a current MOT, and review any [advisories from previous tests](/blog/what-does-mot-advisory-mean).
 
 ### ULEZ and emissions
 
@@ -78,12 +78,12 @@ Use the [valuation tool](/car-valuation) to see how the asking price compares to
 
 ### Outstanding finance and write-off status
 
-Check whether the vehicle has outstanding finance or has been recorded as an insurance write-off. A [comprehensive vehicle check](/) covers these essentials and takes just seconds. Buying a car with outstanding finance means the lender could repossess it, regardless of whether you paid the seller in good faith.
+Check whether the vehicle has outstanding finance or has been recorded as an insurance write-off. A [comprehensive vehicle check](/car-check) covers these essentials and takes just seconds. Buying a car with outstanding finance means the lender could repossess it, regardless of whether you paid the seller in good faith.
 
 ## The bottom line
 
 The best time to buy a used car in the UK follows a clear pattern: prices tend to be lowest in winter (December to February) and in the weeks following the March and September plate changes. End-of-quarter months give you extra negotiating power, and the final days of those months are when dealer urgency peaks.
 
-That said, the "right" time is also when you find the right car. A clean vehicle history, fair price, and solid condition matter far more than saving a couple of hundred pounds by waiting for December. If you spot a good deal, act on it — just make sure you [check the vehicle's history](/) first.
+That said, the "right" time is also when you find the right car. A clean vehicle history, fair price, and solid condition matter far more than saving a couple of hundred pounds by waiting for December. If you spot a good deal, act on it — just make sure you [check the vehicle's history](/car-check) first.
 
-Run a free check on any vehicle at [Free Plate Check](/) before you buy. It takes seconds, costs nothing, and could save you thousands.
+Run a free check on any vehicle at [Free Plate Check](/car-check) before you buy. It takes seconds, costs nothing, and could save you thousands.

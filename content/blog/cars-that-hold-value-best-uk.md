@@ -89,7 +89,7 @@ Higher trim levels hold value better in both absolute and percentage terms. Desi
 
 ### Service history
 
-A full [service history](/blog/how-to-check-car-service-history), ideally with main dealer stamps, adds genuine value. It proves the car has been maintained properly and gives the buyer confidence. Missing service records reduce value — sometimes significantly. Check a vehicle's [service and MOT history](/) before buying to understand what you are getting.
+A full [service history](/blog/how-to-check-car-service-history), ideally with main dealer stamps, adds genuine value. It proves the car has been maintained properly and gives the buyer confidence. Missing service records reduce value — sometimes significantly. Check a vehicle's [service and MOT history](/mot-check) before buying to understand what you are getting.
 
 ### Condition
 
@@ -107,4 +107,4 @@ If you are selling, the same tool helps you set a realistic price. Overpricing b
 
 Depreciation is unavoidable, but it is not unpredictable. Cars from reliable brands, in popular colours, with strong specifications and full service histories hold their value best. Buying smartly on the depreciation curve — and understanding what affects resale — is one of the most effective ways to reduce the real cost of motoring.
 
-Enter any registration on [Free Plate Check](/) to see the full vehicle details, history, and estimated value — completely free, no signup needed.
+Enter any registration on [Free Plate Check](/car-check) to see the full vehicle details, history, and estimated value — completely free, no signup needed.

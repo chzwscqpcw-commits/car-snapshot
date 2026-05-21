@@ -67,7 +67,7 @@ In winter, you drive in the dark far more than in summer. Many commuters leave a
 - Clean the light lenses. Road grime and salt spray can reduce light output significantly without you noticing the gradual decline.
 - Check your headlight alignment. Misaligned headlights dazzle oncoming drivers and reduce your own visibility. If your beams seem to point in odd directions, most garages can adjust them for a few pounds.
 
-If your MOT is due soon, sorting lights now avoids the most common MOT failure category. Check your [MOT due date](/mot-check) and review any [advisories from your last test](/) to see if lighting was flagged.
+If your MOT is due soon, sorting lights now avoids the most common MOT failure category. Check your [MOT due date](/mot-check) and review any [advisories from your last test](/mot-check) to see if lighting was flagged.
 
 ## Wiper blades and the demister
 
@@ -101,7 +101,7 @@ UK winters produce ice, snow, flooding, and fog — sometimes all in the same we
 
 Winter is a bad time to discover your MOT has expired. Driving without a valid MOT invalidates your insurance, and no one wants to deal with that on top of an icy morning breakdown.
 
-Run a [free vehicle check](/) to confirm your MOT expiry date and [tax status](/tax-check). If your MOT is due in the coming months, book early — garages get busy in the run-up to Christmas. Review the [most common MOT failures](/blog/most-common-mot-failures) and address any obvious issues before your appointment.
+Run a [free vehicle check](/car-check) to confirm your MOT expiry date and [tax status](/tax-check). If your MOT is due in the coming months, book early — garages get busy in the run-up to Christmas. Review the [most common MOT failures](/blog/most-common-mot-failures) and address any obvious issues before your appointment.
 
 [Compare MOT and winter service prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices and availability at local garages. A combined winter check, oil change, and MOT is usually cheaper than booking each separately, and most garages will replace bulbs, wipers, and topping up fluids as part of the visit.
 
@@ -115,4 +115,4 @@ If you drive in London, confirm your [ULEZ compliance](/ulez-check) status. The 
 
 The best time to prepare your car for winter is before winter arrives. An October afternoon spent checking tyres, topping up fluids, and testing lights is a small investment against the cold, dark months ahead. By the time frost is on the ground, you want to be ready — not scrambling for a garage appointment.
 
-Run a [free vehicle check](/) today, work through this guide, and drive through winter with confidence.
+Run a [free vehicle check](/car-check) today, work through this guide, and drive through winter with confidence.

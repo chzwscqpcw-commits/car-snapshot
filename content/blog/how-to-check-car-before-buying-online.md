@@ -27,7 +27,7 @@ Here's how to check a car thoroughly before you set off.
 
 The single most useful thing you can do before viewing any used car is to look up its registration number. If the seller won't provide the reg, that's a red flag in itself — walk away.
 
-With the registration, you can check the following for free using [Free Plate Check](/):
+With the registration, you can check the following for free using [Free Plate Check](/car-check):
 
 ### MOT history
 
@@ -107,6 +107,6 @@ If everything checks out, protect yourself when paying:
 
 ## The two-minute check that can save you hours
 
-The whole point of checking a car online first is to avoid wasted trips and nasty surprises. A two-minute [free plate check](/) will reveal mileage inconsistencies, MOT red flags, tax status, ULEZ compliance, and recall information — all before you've left the house.
+The whole point of checking a car online first is to avoid wasted trips and nasty surprises. A two-minute [free plate check](/car-check) will reveal mileage inconsistencies, MOT red flags, tax status, ULEZ compliance, and recall information — all before you've left the house.
 
 If you're buying a used car, make it your first step. And if you want the complete checklist, our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying) covers everything from vehicle history to what to look for under the bonnet.

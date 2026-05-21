@@ -94,7 +94,7 @@ A 2015 car can legally display a 1990s prefix plate, a dateless plate, or any pl
 
 This means that when you see a car with a private plate, you cannot reliably judge its age from the registration. A gleaming SUV with a short dateless plate might look brand new, but it could be fifteen years old. The plate tells you nothing.
 
-This is exactly why checking the actual vehicle data matters. Enter any registration — personalised or otherwise — on [Free Plate Check](/) and you will see the real first registration date, along with the make, model, colour, [MOT history](/mot-check), [tax status](/tax-check), and [mileage records](/mileage-check). The plate might be misleading, but the DVLA data is not.
+This is exactly why checking the actual vehicle data matters. Enter any registration — personalised or otherwise — on [Free Plate Check](/car-check) and you will see the real first registration date, along with the make, model, colour, [MOT history](/mot-check), [tax status](/tax-check), and [mileage records](/mileage-check). The plate might be misleading, but the DVLA data is not.
 
 If you are buying a used car and the seller has a private plate fitted, pay extra attention to the vehicle details. Confirm the registration date matches what the seller claims, and check the [mileage progression](/blog/how-to-check-mileage-used-car) through the MOT records to make sure everything adds up.
 
@@ -122,6 +122,6 @@ The registration number is the key that unlocks a vehicle's entire history. With
 - Estimated [vehicle valuation](/car-valuation)
 - [Safety recall](/recall-check) information
 
-All of this is available free on [Free Plate Check](/) — just enter the registration and see everything in seconds. Whether you are buying a used car, checking your own vehicle, or simply curious about that interesting car you spotted in traffic, the plate is your starting point.
+All of this is available free on [Free Plate Check](/car-check) — just enter the registration and see everything in seconds. Whether you are buying a used car, checking your own vehicle, or simply curious about that interesting car you spotted in traffic, the plate is your starting point.
 
 Next time you are stuck in traffic, try decoding the plates around you. You will be surprised how much you can learn from seven characters.

@@ -46,7 +46,7 @@ This 12-point checklist covers everything you should look at before setting off 
 
 ## Before you start: run a quick vehicle check
 
-The fastest way to get an overview of your car's status is to run a [free vehicle check](/) using your registration number. In seconds, you will see your MOT expiry date, tax status, mileage history, and any outstanding advisories from previous MOT tests. If anything looks off, you have time to deal with it.
+The fastest way to get an overview of your car's status is to run a [free vehicle check](/car-check) using your registration number. In seconds, you will see your MOT expiry date, tax status, mileage history, and any outstanding advisories from previous MOT tests. If anything looks off, you have time to deal with it.
 
 ## The 12-point checklist
 
@@ -118,7 +118,7 @@ If driving in Europe, research the specific legal requirements of each country y
 
 ## Check your previous MOT advisories
 
-Before you leave, review the advisories from your last MOT. An advisory for "tyre approaching minimum tread" or "brake disc worn but above limit" might have been borderline six months ago and could now be a real problem. Check your full [MOT history](/) to see what was flagged and address anything that has had time to worsen.
+Before you leave, review the advisories from your last MOT. An advisory for "tyre approaching minimum tread" or "brake disc worn but above limit" might have been borderline six months ago and could now be a real problem. Check your full [MOT history](/mot-check) to see what was flagged and address anything that has had time to worsen.
 
 For a deeper understanding of what each advisory means and how seriously to take it, read our guide on [what MOT advisories actually mean](/blog/what-does-mot-advisory-mean).
 
@@ -132,4 +132,4 @@ If anything on the checklist felt out of your depth — brakes that don't feel r
 
 Every item on this list takes minutes to check. The whole checklist can be completed in under an hour, and most of it requires no tools or specialist knowledge. Compare that to the hours you would lose sitting on the hard shoulder waiting for a recovery truck, and the investment is obvious.
 
-Run a [free vehicle check](/) before you go, work through the list, and hit the road with confidence. If you are buying a car specifically for a trip, our guide on [essential checks before buying a used car](/blog/used-car-checks-before-buying) covers everything you need to know.
+Run a [free vehicle check](/car-check) before you go, work through the list, and hit the road with confidence. If you are buying a car specifically for a trip, our guide on [essential checks before buying a used car](/blog/used-car-checks-before-buying) covers everything you need to know.

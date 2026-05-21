@@ -118,4 +118,4 @@ A "good" mileage for a used car isn't a single number. It's mileage that's consi
 
 A 90,000-mile car with a full service history and clean MOT record is almost always a better buy than a 30,000-mile car with no history and unexplained gaps.
 
-Before you buy any used car, [check the mileage history free](/) — it takes seconds and could save you thousands. For a complete buying checklist, see our guide to [used car checks before buying](/blog/used-car-checks-before-buying).
+Before you buy any used car, [check the mileage history free](/mileage-check) — it takes seconds and could save you thousands. For a complete buying checklist, see our guide to [used car checks before buying](/blog/used-car-checks-before-buying).

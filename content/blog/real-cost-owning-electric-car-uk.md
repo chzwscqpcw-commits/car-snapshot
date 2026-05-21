@@ -31,7 +31,7 @@ Electric cars still cost more to buy than their petrol or diesel equivalents. A 
 
 The used market is where things get interesting. Early EVs with small batteries (24–30 kWh Nissan Leafs, for example) have depreciated heavily, making them genuinely affordable. Meanwhile, newer models with larger batteries and better range are starting to appear at the three to four year mark with reasonable mileage, offering the best value proposition for many buyers.
 
-Before buying any used EV, it is worth checking the full vehicle history. Enter the registration on [Free Plate Check](/) to see MOT records, mileage progression, and tax status — plus the EV specs section shows battery capacity and range data where available.
+Before buying any used EV, it is worth checking the full vehicle history. Enter the registration on [Free Plate Check](/car-check) to see MOT records, mileage progression, and tax status — plus the EV specs section shows battery capacity and range data where available.
 
 ## Charging costs: home vs public
 
@@ -103,7 +103,7 @@ The used EV market is growing rapidly, and there are genuine bargains to be foun
 
 - **Battery health:** Ask for the battery health report if available. Degradation below 80% significantly affects range and value.
 - **Charging history:** Frequent rapid charging accelerates battery degradation. A car primarily home-charged is preferable.
-- **MOT history:** Electric cars still need an MOT after three years. Check the [full history](/) for any advisories or failures.
+- **MOT history:** Electric cars still need an MOT after three years. Check the [full history](/mot-check) for any advisories or failures.
 - **Mileage consistency:** As with any used car, verify [mileage progression](/mileage-check) through the MOT records to spot potential tampering.
 - **ULEZ compliance:** All pure EVs are [ULEZ compliant](/ulez-check), but plug-in hybrids may not be — always check.
 
@@ -113,4 +113,4 @@ For drivers who can charge at home, cover reasonable annual mileage, and plan to
 
 For those without home charging, or who cover very low mileage, the sums are less compelling right now — though they improve every year as public charging prices come down and purchase prices fall.
 
-Whatever you are considering, check the full specs, history, and running costs of any vehicle for free on [Free Plate Check](/) — just enter the registration and see everything in one place.
+Whatever you are considering, check the full specs, history, and running costs of any vehicle for free on [Free Plate Check](/car-check) — just enter the registration and see everything in one place.

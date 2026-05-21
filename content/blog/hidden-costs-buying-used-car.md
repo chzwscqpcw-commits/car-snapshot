@@ -59,7 +59,7 @@ A car advertised as doing 55mpg might actually return 42mpg in daily driving. Ov
 
 The difference is even more pronounced with plug-in hybrids. Official PHEV fuel economy figures assume regular charging and lots of electric-only driving. If you don't have a home charger, a PHEV can actually cost more to run than a conventional petrol car because you're carrying the weight of batteries you're not using.
 
-You can check fuel economy data for any vehicle on [Free Plate Check](/) — we show both official and real-world figures where available.
+You can check fuel economy data for any vehicle on [Free Plate Check](/car-check) — we show both official and real-world figures where available.
 
 ## ULEZ and Clean Air Zone charges
 
@@ -95,7 +95,7 @@ Common advisory-related costs:
 - Exhaust section replacement: £100-£300
 - Drive shaft boot: £80-£150
 
-A car with four or five significant advisories could easily need £500-£1,000 of work before its next MOT. Check the [MOT history](/) for any car before buying — the advisories are all there in black and white.
+A car with four or five significant advisories could easily need £500-£1,000 of work before its next MOT. Check the [MOT history](/mot-check) for any car before buying — the advisories are all there in black and white.
 
 ## First service costs
 
@@ -141,6 +141,6 @@ That's nearly £3,000 on top of the sticker price — and this doesn't include U
 
 ## Check before you buy
 
-The good news is that most of these hidden costs are discoverable before you hand over any money. A [free plate check](/) reveals MOT history and advisories, tax costs, ULEZ compliance, fuel economy data, recall status, and an estimated [market valuation](/car-valuation).
+The good news is that most of these hidden costs are discoverable before you hand over any money. A [free plate check](/car-check) reveals MOT history and advisories, tax costs, ULEZ compliance, fuel economy data, recall status, and an estimated [market valuation](/car-valuation).
 
 Two minutes of checking can save you thousands in surprises. Run a free check on any car you're considering — because the real price is never the one on the windscreen.

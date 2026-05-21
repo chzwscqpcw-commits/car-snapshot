@@ -86,10 +86,10 @@ export default function CleanAirZonesPage() {
             Clean Air Zone compliance.
           </p>
           <a
-            href="/"
+            href="/ulez-check"
             className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
           >
-            Look up a vehicle
+            Check ULEZ &amp; emissions
           </a>
         </div>
 
@@ -264,9 +264,16 @@ export default function CleanAirZonesPage() {
             </h2>
             <p className="leading-relaxed mb-3">
               The quickest way to check is to enter your registration number on
-              our homepage. We will show you the Euro emission standard recorded
-              against your vehicle, which is the key factor in determining Clean
-              Air Zone compliance.
+              our{" "}
+              <a
+                href="/ulez-check"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                free ULEZ &amp; emissions check
+              </a>
+              . We will show you the Euro emission standard recorded against
+              your vehicle, which is the key factor in determining Clean Air
+              Zone compliance.
             </p>
             <p className="leading-relaxed mb-3">
               As a general guide: if your petrol car was registered after January

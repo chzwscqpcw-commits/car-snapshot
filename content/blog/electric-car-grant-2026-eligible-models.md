@@ -125,7 +125,7 @@ The case for a used EV is stronger if you:
 - Are happy with 2022–2024 battery range (which is still strong)
 - Plan to keep the car for 3–5 years
 
-Whichever you choose, run a [free vehicle check](/) on any used EV before buying — it will show MOT history, mileage trend, and any advisories. Our guide on [the real cost of owning an electric car](/blog/real-cost-owning-electric-car-uk) breaks down running costs over a typical ownership period.
+Whichever you choose, run a [free vehicle check](/car-check) on any used EV before buying — it will show MOT history, mileage trend, and any advisories. Our guide on [the real cost of owning an electric car](/blog/real-cost-owning-electric-car-uk) breaks down running costs over a typical ownership period.
 
 ## EVs still need servicing
 

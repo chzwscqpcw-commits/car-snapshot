@@ -82,7 +82,7 @@ Recurring advisories are one of the most reliable indicators of a neglected car.
 
 ## How to check a car's MOT advisory history
 
-You can view the complete MOT history for any UK vehicle — including every advisory, failure, and mileage reading — for free. Simply enter the registration number on [Free Plate Check](/) or use our dedicated [MOT history check](/mot-check).
+You can view the complete MOT history for any UK vehicle — including every advisory, failure, and mileage reading — for free. Simply enter the registration number on our [MOT history check](/mot-check).
 
 Our tool groups advisories by type and highlights patterns across tests, making it easy to spot recurring issues at a glance. You'll also see mileage plotted across tests, so you can check for consistency.
 
@@ -90,6 +90,6 @@ Our tool groups advisories by type and highlights patterns across tests, making 
 
 MOT advisories aren't inherently bad. Every older car accumulates them, and a few cosmetic or minor wear notes are perfectly normal. What matters is the type, severity, and pattern.
 
-Before you view any used car, [check its MOT history for free](/) and read through the advisories carefully. A few minutes of research can save you from an expensive mistake — or give you the confidence to negotiate a better deal.
+Before you view any used car, [check its MOT history for free](/mot-check) and read through the advisories carefully. A few minutes of research can save you from an expensive mistake — or give you the confidence to negotiate a better deal.
 
 If you're in the process of buying, our complete [used car checks guide](/blog/used-car-checks-before-buying) covers everything else you should verify before handing over any money.

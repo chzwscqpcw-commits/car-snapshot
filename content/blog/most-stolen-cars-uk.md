@@ -75,7 +75,7 @@ Older, mass-market models like the Fiesta and Corsa are often stolen to be strip
 
 ## How to check a car's theft risk
 
-If you're buying a used car, it's worth checking for signs that the vehicle may have been stolen or cloned. Run a [free car check](/) to look for:
+If you're buying a used car, it's worth checking for signs that the vehicle may have been stolen or cloned. Run a [free car check](/car-check) to look for:
 
 - **Mismatched details** — Does the colour, engine size, or fuel type on the DVLA record match the car you're looking at?
 - **Suspicious MOT gaps** — A vehicle with unexplained breaks in its [MOT history](/mot-check) may have been off the road for concerning reasons.
@@ -117,6 +117,6 @@ For a definitive stolen vehicle check against the Police National Computer, you'
 
 ## Check your vehicle now
 
-Knowing your car's risk profile starts with understanding what you're driving. Run a [free vehicle check](/) to see your car's full details, MOT history, and tax status — or use our [car valuation tool](/car-valuation) to understand what your vehicle is worth to a thief.
+Knowing your car's risk profile starts with understanding what you're driving. Run a [free vehicle check](/car-check) to see your car's full details, MOT history, and tax status — or use our [car valuation tool](/car-valuation) to understand what your vehicle is worth to a thief.
 
 If you're buying a used car, always check the vehicle thoroughly before handing over any money. Our guide to [used car checks before buying](/blog/used-car-checks-before-buying) covers everything you need to know.

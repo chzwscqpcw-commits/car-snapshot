@@ -70,7 +70,7 @@ For a detailed breakdown at your actual mileage, see our [fuel type comparison c
 
 If you drive 8,000 miles per year in a typical petrol car, the price rise from February to April alone has added roughly **£200 to your annual fuel bill**. Diesel drivers have been hit even harder — an increase of around **£350 per year** over the same period.
 
-These are averages. Your actual costs depend on your car's fuel economy, which can vary enormously depending on the vehicle, your driving style, and journey types. You can [check your car's specific fuel economy](/), along with its MOT history and running costs, using our free vehicle check.
+These are averages. Your actual costs depend on your car's fuel economy, which can vary enormously depending on the vehicle, your driving style, and journey types. You can [check your car's specific fuel economy](/car-check), along with its MOT history and running costs, using our free vehicle check.
 
 ## What you can do
 
@@ -92,7 +92,7 @@ While you can't control global oil prices, there are practical steps to minimise
 
 ## Check your car's running costs
 
-With prices this volatile, it's worth understanding exactly what your car costs to run. Enter your registration number in our [free vehicle check](/) to see:
+With prices this volatile, it's worth understanding exactly what your car costs to run. Enter your registration number in our [free vehicle check](/car-check) to see:
 
 - Your car's fuel type, engine size, and official fuel economy
 - Estimated annual fuel costs at current prices
