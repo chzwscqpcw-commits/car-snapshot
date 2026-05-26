@@ -8,7 +8,7 @@ import {
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Car Guides — Reliability, Safety & Running Costs | Free Plate Check",
+  title: "Car Guides — Depreciation, Reliability & Running Costs | Free Plate Check",
   description:
     "Free buyer's guides for the UK's most popular cars. Compare MOT pass rates, NCAP safety ratings, running costs, depreciation and more.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/cars",
   },
   openGraph: {
-    title: "Car Guides — Reliability, Safety & Running Costs",
+    title: "Car Guides — Depreciation, Reliability & Running Costs",
     description:
       "Free buyer's guides for the UK's most popular cars. Compare MOT pass rates, safety ratings and running costs.",
     url: "https://www.freeplatecheck.co.uk/cars",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Car Guides — Reliability, Safety & Running Costs",
+    title: "Car Guides — Depreciation, Reliability & Running Costs",
     description:
       "Free buyer's guides for the UK's most popular cars. Compare MOT pass rates, safety ratings and running costs.",
   },

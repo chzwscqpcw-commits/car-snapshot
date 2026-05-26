@@ -35,10 +35,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const data = getModelGuideData(make, model);
   if (!data) return {};
 
-  const title = `${data.displayName} — Reliability, Safety & Running Costs | Free Plate Check`;
+  const title = `${data.displayName} — Depreciation, Reliability & Running Costs | Free Plate Check`;
 
   // Build a compelling, data-rich description (target 120-160 chars)
   const highlights: string[] = [];
+  const depreciationAt5 = data.depreciationCurve.find((p) => p.year === 5)?.retainedPercent;
+  if (depreciationAt5 !== undefined) {
+    highlights.push(`retains ${depreciationAt5}% after 5 years`);
+  }
   if (data.motPassRate) {
     highlights.push(
       `${data.motPassRate.passRate}% MOT pass rate${data.motPassRate.aboveAverage ? " (above average)" : ""}`
