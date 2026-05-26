@@ -16,6 +16,22 @@ function isValidVrm(vrm: string) {
   return /^[A-Z0-9]{2,7}$/.test(vrm);
 }
 
+/**
+ * Identify emails created by verification / test scripts so they don't
+ * pollute the real reminders table (or trigger emails to fake recipients).
+ * Matches a `verify-test+` local-part OR any RFC 2606 reserved domain.
+ * Real users will never have these addresses.
+ */
+function isTestEmail(email: string): boolean {
+  const e = email.toLowerCase();
+  if (e.startsWith("verify-test+")) return true;
+  if (e.endsWith("@example.com")) return true;
+  if (e.endsWith("@example.org")) return true;
+  if (e.endsWith("@example.net")) return true;
+  if (e.endsWith("@test.invalid")) return true;
+  return false;
+}
+
 function formatDateDDMMYYYY(iso: string): string {
   const d = new Date(iso);
   const day = String(d.getDate()).padStart(2, "0");
@@ -162,6 +178,15 @@ export async function POST(req: Request) {
 
     if (!isValidVrm(vrm)) {
       return NextResponse.json({ ok: false, error: "Invalid registration." }, { status: 400 });
+    }
+
+    // Test-pattern emails short-circuit: return success so verify scripts can
+    // still confirm the gtag conversion fires, but skip the DB write and the
+    // Resend email so the real subscribers table stays clean. See the verify
+    // skill output and scripts/cleanup-test-reminders.ts for the rationale.
+    if (isTestEmail(email)) {
+      console.log("mot_reminder_test_email_skipped:", email, vrm);
+      return NextResponse.json({ ok: true, test: true });
     }
 
     // Validate expiry date if provided (allow past dates — user may want a reminder for next year)

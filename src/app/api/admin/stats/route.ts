@@ -93,6 +93,38 @@ async function countUniqueVisitors(
   return data ?? 0;
 }
 
+/**
+ * Count rows in `mot_reminders` while excluding test/verify emails so the
+ * admin dashboard never includes our own QA traffic. Mirrors the patterns
+ * filtered at the write path in /api/mot-reminder/route.ts and cleaned up
+ * by scripts/cleanup-test-reminders.ts.
+ */
+async function countMotRemindersExcludingTests(
+  sb: ReturnType<typeof supabaseServer>,
+  filter?: { column: "active" | "created_at"; op: "eq" | "gte"; value: string | boolean },
+): Promise<number> {
+  let query = sb
+    .from("mot_reminders")
+    .select("*", { count: "exact", head: true })
+    .not("email", "ilike", "verify-test+%")
+    .not("email", "ilike", "%@example.com")
+    .not("email", "ilike", "%@example.org")
+    .not("email", "ilike", "%@example.net")
+    .not("email", "ilike", "%@test.invalid");
+
+  if (filter) {
+    if (filter.op === "gte") query = query.gte(filter.column, filter.value as string);
+    else query = query.eq(filter.column, filter.value);
+  }
+
+  const { count, error } = await query;
+  if (error) {
+    console.error(`[STATS] Error counting mot_reminders:`, error.message);
+    return 0;
+  }
+  return count ?? 0;
+}
+
 async function countTable(
   sb: ReturnType<typeof supabaseServer>,
   table: string,
@@ -233,12 +265,12 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countUniqueVisitors(sb, sevenDaysAgo),
     countTable(sb, "email_signups"),
     countTable(sb, "vehicle_valuations"),
-    countTable(sb, "mot_reminders", { column: "active", op: "eq", value: true }),
+    countMotRemindersExcludingTests(sb, { column: "active", op: "eq", value: true }),
     countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
     countTable(sb, "contact_messages"),
-    countTable(sb, "mot_reminders", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
-    countTable(sb, "mot_reminders", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
+    countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
+    countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     topMakesSince(sb, todayStart, 5),
     countEvents(sb, "results_view", todayStart),
     countEvents(sb, "mot_reminder_view", todayStart),
