@@ -41,7 +41,7 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Free Car Tax Check — Is My Car Taxed? | Free Plate Check",
+  title: "Free Car Tax Check 2026 — Is My Car Taxed? | Free Plate Check",
   description:
     "Check if any UK vehicle is taxed, SORN'd or untaxed. See the expiry date and VED band. Free instant results.",
   keywords: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/tax-check",
   },
   openGraph: {
-    title: "Free Car Tax Check — Is My Car Taxed?",
+    title: "Free Car Tax Check 2026 — Is My Car Taxed?",
     description:
       "Check if any UK vehicle is taxed, SORN'd or untaxed. See the expiry date and VED band. Free and instant.",
     url: "https://www.freeplatecheck.co.uk/tax-check",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Car Tax Check — Is My Car Taxed?",
+    title: "Free Car Tax Check 2026 — Is My Car Taxed?",
     description:
       "Check if any UK vehicle is taxed, SORN'd or untaxed. See the expiry date and VED band. Free and instant.",
   },

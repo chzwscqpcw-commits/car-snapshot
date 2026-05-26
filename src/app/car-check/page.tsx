@@ -41,7 +41,7 @@ const FAQ_ITEMS: FaqItem[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Free Car Check — UK Vehicle Lookup | Free Plate Check",
+  title: "Free Car Check 2026 — UK Vehicle Lookup | Free Plate Check",
   description:
     "Look up any UK vehicle by reg. See make, model, colour, engine size, fuel type and more from official DVLA data. Free, no signup.",
   keywords: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/car-check",
   },
   openGraph: {
-    title: "Free Car Check — UK Vehicle Lookup",
+    title: "Free Car Check 2026 — UK Vehicle Lookup",
     description:
       "Look up any UK vehicle by reg. See make, model, colour, engine size, fuel type and more from official DVLA data. Free, no signup.",
     url: "https://www.freeplatecheck.co.uk/car-check",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Car Check — UK Vehicle Lookup",
+    title: "Free Car Check 2026 — UK Vehicle Lookup",
     description:
       "Look up any UK vehicle by reg. See make, model, colour, engine size, fuel type and more from official DVLA data. Free, no signup.",
   },

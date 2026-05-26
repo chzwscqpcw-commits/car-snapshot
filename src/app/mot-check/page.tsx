@@ -44,7 +44,7 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Free MOT History Check — Full MOT Results | Free Plate Check",
+  title: "Free MOT History Check 2026 — Full MOT Results | Free Plate Check",
   description:
     "See every MOT result, advisory and failure since 2005. Check mileage history and spot problems before buying. Free, no signup required.",
   keywords: [
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/mot-check",
   },
   openGraph: {
-    title: "Free MOT History Check — Full MOT Results",
+    title: "Free MOT History Check 2026 — Full MOT Results",
     description:
       "See every MOT result, advisory and failure since 2005. Check mileage history and spot problems before buying.",
     url: "https://www.freeplatecheck.co.uk/mot-check",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free MOT History Check — Full MOT Results",
+    title: "Free MOT History Check 2026 — Full MOT Results",
     description:
       "See every MOT result, advisory and failure since 2005. Check mileage history and spot problems before buying.",
   },

@@ -52,7 +52,7 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Free Car Valuation — How Much Is My Car Worth? | Free Plate Check",
+  title: "Free Car Valuation 2026 — How Much Is My Car Worth? | Free Plate Check",
   description:
     "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
   keywords: [
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/car-valuation",
   },
   openGraph: {
-    title: "Free Car Valuation — How Much Is My Car Worth?",
+    title: "Free Car Valuation 2026 — How Much Is My Car Worth?",
     description:
       "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
     url: "https://www.freeplatecheck.co.uk/car-valuation",
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Car Valuation — How Much Is My Car Worth?",
+    title: "Free Car Valuation 2026 — How Much Is My Car Worth?",
     description:
       "Get a free instant car valuation with no signup. Enter any UK registration number to see an estimated value based on depreciation, mileage and live UK market data.",
   },

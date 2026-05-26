@@ -46,7 +46,7 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Free ULEZ Check — Is My Car ULEZ Compliant? | Free Plate Check",
+  title: "Free ULEZ Check 2026 — Is My Car ULEZ Compliant? | Free Plate Check",
   description:
     "Check if your car is ULEZ compliant for free. See Euro status, Clean Air Zone charges and exemptions. Enter a registration number to check instantly.",
   keywords: [
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/ulez-check",
   },
   openGraph: {
-    title: "Free ULEZ Check — Is My Car ULEZ Compliant?",
+    title: "Free ULEZ Check 2026 — Is My Car ULEZ Compliant?",
     description:
       "Check if your car is ULEZ compliant for free. See Euro status, Clean Air Zone charges and exemptions. Enter a registration number to check instantly.",
     url: "https://www.freeplatecheck.co.uk/ulez-check",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free ULEZ Check — Is My Car ULEZ Compliant?",
+    title: "Free ULEZ Check 2026 — Is My Car ULEZ Compliant?",
     description:
       "Check if your car is ULEZ compliant for free. See Euro status, Clean Air Zone charges and exemptions. Enter a registration number to check instantly.",
   },

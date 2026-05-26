@@ -41,7 +41,7 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Free Mileage Check — Spot Clocking | Free Plate Check",
+  title: "Free Mileage Check 2026 — Spot Clocking | Free Plate Check",
   description:
     "Track odometer readings across MOT tests to spot mileage fraud. See if a car has been clocked before you buy. Free, no signup required.",
   keywords: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/mileage-check",
   },
   openGraph: {
-    title: "Free Mileage Check — Spot Clocking",
+    title: "Free Mileage Check 2026 — Spot Clocking",
     description:
       "Track odometer readings across MOT tests to spot mileage fraud. See if a car has been clocked before you buy. Free, no signup required.",
     url: "https://www.freeplatecheck.co.uk/mileage-check",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Mileage Check — Spot Clocking",
+    title: "Free Mileage Check 2026 — Spot Clocking",
     description:
       "Track odometer readings across MOT tests to spot mileage fraud. See if a car has been clocked before you buy. Free, no signup required.",
   },
