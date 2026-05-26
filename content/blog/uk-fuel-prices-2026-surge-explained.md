@@ -2,7 +2,7 @@
 title: "UK Fuel Prices in 2026: Why Costs Are Surging and What It Means for Drivers"
 description: "Petrol and diesel prices have surged in early 2026, with diesel approaching record levels. We explain what's driving the increase, how it affects running costs, and what you can do about it."
 date: "2026-04-09"
-lastModified: "2026-04-09"
+lastModified: "2026-05-26"
 keywords: ["fuel prices 2026", "petrol price UK", "diesel price UK", "fuel cost increase", "running costs 2026", "fuel price surge", "Middle East oil prices", "fuel duty 2026"]
 author: "Free Plate Check"
 faqItems:
@@ -15,10 +15,12 @@ faqItems:
   - question: "How can I reduce my fuel costs?"
     answer: "The most effective ways to cut fuel costs are: checking your car's real-world fuel economy (which can differ significantly from official figures), maintaining correct tyre pressures, removing unnecessary weight, avoiding harsh acceleration, and shopping around for cheaper forecourts. Longer term, switching to a hybrid or electric vehicle offers the biggest savings."
   - question: "Will fuel prices come down in 2026?"
-    answer: "Forecasts vary, but most analysts expect prices to remain elevated through 2026 while Middle East tensions persist. The UK government has now confirmed the 5p fuel duty cut will be unwound in three stages: +1p on 1 September 2026, +2p on 1 December 2026, and a further +2p on 1 March 2027. By next spring, pump prices will be roughly 6p/litre higher (including VAT) just from duty changes."
+    answer: "Forecasts vary, but most analysts expect prices to remain elevated through 2026 while Middle East tensions persist. The good news for drivers: at PMQs on 20 May 2026 the Prime Minister scrapped the planned staged fuel duty rise and extended the 5p cut to the end of 2026. That means no policy-driven pump price rise this autumn or winter — but wholesale prices remain the dominant variable. What happens to duty after December 2026 has not yet been decided."
 ---
 
 If you've been wincing at the forecourt lately, you're not alone. UK fuel prices have surged dramatically in early 2026, with diesel prices approaching levels not seen since the 2022 energy crisis. Here's what's happening, why, and what it means for your wallet.
+
+> **Update — 20 May 2026:** At PMQs the Prime Minister scrapped the planned staged fuel duty rise and extended the 5p cut to the end of 2026. The +1p rise pencilled in for 1 September and the +2p rise pencilled in for 1 December are both off the table. Wholesale prices — the focus of this article — remain the main driver of what you pay at the pump for the rest of the year. See our [fuel duty U-turn explainer](/blog/fuel-duty-rise-september-2026) for the full announcement.
 
 ## Where are prices right now?
 
@@ -106,6 +108,6 @@ It takes seconds and it's completely free — no signup required.
 
 The honest answer is that nobody knows for certain. Much depends on how Middle East tensions develop and whether OPEC chooses to increase production. Most analyst forecasts suggest prices will remain elevated through at least mid-2026.
 
-The UK government has now confirmed the end of the 5p fuel duty cut introduced in March 2022. The reversal will be staged: **+1p per litre from 1 September 2026**, a further **+2p from 1 December 2026**, and a final **+2p from 1 March 2027**. That's roughly an extra 6p per litre at the pump (including VAT) by next spring — the first fuel duty rise in 16 years. Drivers should plan for sustained higher costs and take whatever steps they can to reduce consumption.
+On the duty side, the picture has just changed. At PMQs on 20 May 2026 the Prime Minister **scrapped the planned staged rise** and extended the 5p fuel duty cut to the end of 2026. The +1p increase pencilled in for 1 September and the +2p increase pencilled in for 1 December are both cancelled. What happens to duty in 2027 has not yet been decided — drivers could still face the full 5p in one go in the spring, a new phased schedule, or another extension. For the rest of 2026 at least, wholesale prices are the variable to watch, not policy. Our [fuel duty U-turn explainer](/blog/fuel-duty-rise-september-2026) breaks down the announcement in detail.
 
 We'll continue to update our [fuel price tracker](/stats/fuel-prices) weekly with the latest government data, so you can monitor the trend as it develops.
