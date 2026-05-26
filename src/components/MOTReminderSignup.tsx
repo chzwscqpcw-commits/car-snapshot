@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Bell, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackConversion, trackEvent } from "@/lib/tracking";
+import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 
 interface MOTReminderSignupProps {
   context: "generic" | "due-soon" | "expired" | "post-lookup";
@@ -343,6 +343,7 @@ export default function MOTReminderSignup({
                 href={bmgLink}
                 target="_blank"
                 rel={bmgRel}
+                onClick={() => trackPartnerClick("bookMyGarage", "mot-reminder-success")}
                 className="mt-3 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
               >
                 Compare MOT prices near {firstReg}
