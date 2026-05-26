@@ -3,13 +3,17 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Activity,
+  AlertTriangle,
   Bell,
   Calculator,
   ChevronDown,
   Database,
+  Eye,
+  Filter,
   Fuel,
   Lock,
   Mail,
+  MousePointerClick,
   RefreshCw,
   Search,
   TrendingDown,
@@ -33,6 +37,9 @@ type HealthData = {
 };
 
 type TopMake = { make: string; count: number };
+type CaptureTrigger = { trigger_variant: string; count: number };
+type PartnerContextCount = { context: string; count: number };
+type SectionReach = { section_id: string; count: number; pct: number };
 
 type StatsData = {
   lookups: {
@@ -55,6 +62,29 @@ type StatsData = {
   contactMessages: { today: number; last7d: number; allTime: number };
   motRemindersLast7d: number;
   topMakesToday: TopMake[];
+  funnel: {
+    lookupsToday: number;
+    resultsViewsToday: number;
+    reminderViewsToday: number;
+    reminderSignupsToday: number;
+  };
+  captureByTriggerLast7d: CaptureTrigger[];
+  partnerClicks: {
+    today: number;
+    last7d: number;
+    byContextToday: PartnerContextCount[];
+  };
+  sectionReachToday: {
+    resultsViews: number;
+    sections: SectionReach[];
+  };
+  reminderFormToday: {
+    views: number;
+    attempts: number;
+    successes: number;
+    validationErrors: number;
+    submitErrors: { duplicate: number; server: number; network: number };
+  };
 };
 
 type DataFileEntry = {
@@ -215,6 +245,115 @@ function Delta({ current, prior, label }: { current: number; prior: number; labe
       {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
       {Math.abs(pct)}%
     </span>
+  );
+}
+
+// ── Funnel helpers ────────────────────────────────────────────────────────────
+
+function pct(numerator: number, denominator: number): number | null {
+  if (!denominator) return null;
+  return Math.round((numerator / denominator) * 100);
+}
+
+function prettifyTriggerVariant(v: string): string {
+  // Make trigger_variant slugs readable in the UI without losing the
+  // underlying values you'd search GA4 for. e.g. "results_due_soon" → "Results · Due soon".
+  if (!v || v === "(not set)") return v || "(not set)";
+  if (v === "homepage") return "Homepage form";
+  if (v === "reminder_page") return "/mot-reminder page";
+  if (v === "blog_footer") return "Blog footer";
+  if (v === "post_pdf") return "After PDF download";
+  if (v === "widget") return "Inline lookup widget";
+  if (v.startsWith("results_")) {
+    const tail = v.slice("results_".length).replace(/_/g, " ");
+    return `Results · ${tail.replace(/\b\w/g, (c) => c.toUpperCase())}`;
+  }
+  return v;
+}
+
+function prettifySectionId(id: string): string {
+  if (id === "section-health") return "Health & Safety";
+  if (id === "section-money") return "Financial Picture";
+  if (id === "section-facts") return "Key Insights";
+  if (id === "section-mot") return "MOT History";
+  if (id === "section-next") return "Next Steps";
+  return id;
+}
+
+function FunnelStep({
+  label,
+  value,
+  conversionPct,
+  icon: Icon,
+}: {
+  label: string;
+  value: number;
+  conversionPct?: number | null;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-3.5">
+      <div className="flex items-center justify-between mb-1.5">
+        <Icon className="h-3.5 w-3.5 text-slate-500" />
+        {conversionPct != null && (
+          <span className="text-[10px] font-semibold text-cyan-300 tabular-nums">
+            {conversionPct}%
+          </span>
+        )}
+      </div>
+      <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 leading-tight">
+        {label}
+      </p>
+      <p className="mt-0.5 text-xl sm:text-2xl font-bold text-white tabular-nums">
+        {value.toLocaleString()}
+      </p>
+    </div>
+  );
+}
+
+type BarItem = { label: string; count: number; suffix?: string; mono?: boolean };
+
+function BarList({ items, emptyMessage }: { items: BarItem[]; emptyMessage: string }) {
+  if (items.length === 0) {
+    return (
+      <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
+        <p className="text-xs text-slate-500">{emptyMessage}</p>
+      </div>
+    );
+  }
+  const max = Math.max(...items.map((i) => i.count));
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+      {items.map((item, i) => {
+        const pctWidth = max > 0 ? (item.count / max) * 100 : 0;
+        return (
+          <div
+            key={item.label}
+            className={`relative px-4 py-2.5 flex items-center justify-between gap-3 ${
+              i < items.length - 1 ? "border-b border-slate-800/60" : ""
+            }`}
+          >
+            <div
+              className="absolute inset-y-0 left-0 bg-cyan-500/5 pointer-events-none"
+              style={{ width: `${pctWidth}%` }}
+            />
+            <span
+              className={`relative text-sm font-medium text-slate-200 truncate ${
+                item.mono ? "font-mono" : ""
+              }`}
+            >
+              {item.label}
+            </span>
+            <span className="relative flex items-center gap-2 flex-shrink-0">
+              {item.suffix && (
+                <span className="text-[11px] text-cyan-300 tabular-nums">{item.suffix}</span>
+              )}
+              <span className="text-sm text-slate-400 tabular-nums">{item.count}</span>
+            </span>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -488,6 +627,175 @@ export default function DataHealthPage() {
                   tone="amber"
                 />
               </div>
+            )}
+
+            {/* ── TODAY'S CONVERSION FUNNEL ── */}
+            {stats && (
+              <Section
+                title="Today's conversion funnel"
+                hint="From mirrored gtag events · resets at 00:00 UTC"
+              >
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  <FunnelStep
+                    icon={Search}
+                    label="Lookups"
+                    value={stats.funnel.lookupsToday}
+                  />
+                  <FunnelStep
+                    icon={Eye}
+                    label="Results viewed"
+                    value={stats.funnel.resultsViewsToday}
+                    conversionPct={pct(stats.funnel.resultsViewsToday, stats.funnel.lookupsToday)}
+                  />
+                  <FunnelStep
+                    icon={Bell}
+                    label="Reminder offered"
+                    value={stats.funnel.reminderViewsToday}
+                    conversionPct={pct(
+                      stats.funnel.reminderViewsToday,
+                      stats.funnel.resultsViewsToday,
+                    )}
+                  />
+                  <FunnelStep
+                    icon={TrendingUp}
+                    label="Reminder signups"
+                    value={stats.funnel.reminderSignupsToday}
+                    conversionPct={pct(
+                      stats.funnel.reminderSignupsToday,
+                      stats.funnel.reminderViewsToday,
+                    )}
+                  />
+                </div>
+              </Section>
+            )}
+
+            {/* ── CAPTURE TRIGGER PERFORMANCE ── */}
+            {stats && (
+              <Section
+                title="Capture trigger performance"
+                hint={`Reminder signups by trigger · last 7d`}
+              >
+                <BarList
+                  items={stats.captureByTriggerLast7d.map((t) => ({
+                    label: prettifyTriggerVariant(t.trigger_variant),
+                    count: t.count,
+                  }))}
+                  emptyMessage="No reminder signups in the last 7 days yet — data starts populating with new traffic."
+                />
+              </Section>
+            )}
+
+            {/* ── PARTNER CLICKS ── */}
+            {stats && (
+              <Section
+                title="Partner clicks today"
+                hint={`${stats.partnerClicks.last7d.toLocaleString()} last 7d · total ${stats.partnerClicks.today.toLocaleString()}`}
+              >
+                <BarList
+                  items={stats.partnerClicks.byContextToday.map((c) => ({
+                    label: c.context,
+                    count: c.count,
+                    mono: true,
+                  }))}
+                  emptyMessage="No partner clicks yet today."
+                />
+              </Section>
+            )}
+
+            {/* ── SECTION REACH ── */}
+            {stats && (
+              <Section
+                title="Section reach today"
+                hint={
+                  stats.sectionReachToday.resultsViews > 0
+                    ? `% of ${stats.sectionReachToday.resultsViews} result views`
+                    : "Awaiting result views"
+                }
+              >
+                <BarList
+                  items={stats.sectionReachToday.sections.map((s) => ({
+                    label: prettifySectionId(s.section_id),
+                    count: s.count,
+                    suffix: `${s.pct}%`,
+                  }))}
+                  emptyMessage="No section visibility events yet today."
+                />
+              </Section>
+            )}
+
+            {/* ── REMINDER FORM DROP-OFF ── */}
+            {stats && (
+              <Section title="Reminder form funnel today" hint="Views → attempts → successes">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  <FunnelStep
+                    icon={Eye}
+                    label="Form views"
+                    value={stats.reminderFormToday.views}
+                  />
+                  <FunnelStep
+                    icon={MousePointerClick}
+                    label="Submit attempts"
+                    value={stats.reminderFormToday.attempts}
+                    conversionPct={pct(
+                      stats.reminderFormToday.attempts,
+                      stats.reminderFormToday.views,
+                    )}
+                  />
+                  <FunnelStep
+                    icon={TrendingUp}
+                    label="Successes"
+                    value={stats.reminderFormToday.successes}
+                    conversionPct={pct(
+                      stats.reminderFormToday.successes,
+                      stats.reminderFormToday.attempts,
+                    )}
+                  />
+                  <FunnelStep
+                    icon={Filter}
+                    label="Validation errors"
+                    value={stats.reminderFormToday.validationErrors}
+                  />
+                </div>
+
+                {(stats.reminderFormToday.submitErrors.duplicate > 0 ||
+                  stats.reminderFormToday.submitErrors.server > 0 ||
+                  stats.reminderFormToday.submitErrors.network > 0) && (
+                  <div className="mt-3 rounded-xl border border-amber-800/40 bg-amber-950/20 p-3.5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-300">
+                        Submit errors today
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
+                          Duplicate
+                        </p>
+                        <p className="text-sm font-bold text-white tabular-nums">
+                          {stats.reminderFormToday.submitErrors.duplicate}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
+                          Server
+                        </p>
+                        <p className="text-sm font-bold text-white tabular-nums">
+                          {stats.reminderFormToday.submitErrors.server}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
+                          Network
+                        </p>
+                        <p className="text-sm font-bold text-white tabular-nums">
+                          {stats.reminderFormToday.submitErrors.network}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Section>
             )}
 
             {/* ── SYSTEM STATUS ── */}
