@@ -302,7 +302,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* MOT reminder signup — blog footer */}
       <div className="max-w-3xl mx-auto px-4 mt-12">
-        <MOTReminderSignup context="generic" />
+        <MOTReminderSignup context="generic" triggerVariant="blog_footer" />
       </div>
 
       {/* Related posts */}

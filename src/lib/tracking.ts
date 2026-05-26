@@ -80,3 +80,27 @@ export function trackConversion(
 
   window.gtag("event", "conversion", payload);
 }
+
+/**
+ * Fire a non-conversion lifecycle event (form views, submit attempts, errors,
+ * section visibility, etc.). Use this for funnel-stage measurement that isn't
+ * itself a conversion. Active experiment variants are attached automatically
+ * so funnel events can be sliced by variant in GA4.
+ */
+export function trackEvent(
+  eventName: string,
+  metadata?: Record<string, unknown>
+): void {
+  if (typeof window === "undefined" || !window.gtag) return;
+
+  const payload: Record<string, unknown> = { ...metadata };
+
+  for (const experimentId of Object.values(EXPERIMENTS)) {
+    const variant = getActiveExperimentVariant(experimentId);
+    if (variant) {
+      payload[`exp_${experimentId}`] = variant;
+    }
+  }
+
+  window.gtag("event", eventName, payload);
+}

@@ -139,7 +139,7 @@ import BoltMark from "@/components/BoltMark";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackPartnerClick } from "@/lib/tracking";
+import { trackPartnerClick, trackConversion, trackEvent } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -453,8 +453,31 @@ function DataReveal({ delay = 0, children, className }: { delay?: number; childr
 
 // Section group divider with uppercase label
 function SectionGroup({ icon: Icon, label, children, id }: { icon: React.ReactNode; label: string; children: React.ReactNode; id?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const firedRef = useRef(false);
+  useEffect(() => {
+    if (firedRef.current || !id || !ref.current) return;
+    if (typeof IntersectionObserver === "undefined") return;
+    const node = ref.current;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !firedRef.current) {
+            firedRef.current = true;
+            trackEvent("results_section_view", { section_id: id, section_label: label });
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [id, label]);
+
   return (
-    <div className="mt-14 first:mt-0" id={id}>
+    <div ref={ref} className="mt-14 first:mt-0" id={id}>
       <div className="flex items-center gap-3 mb-7">
         <span
           className="block w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)] shrink-0"
@@ -1775,6 +1798,21 @@ export default function Home() {
         return;
       }
 
+      trackConversion("reg_search", { vrm: compareReg1, flow: "compare", paired_vrm: compareReg2 });
+      trackConversion("reg_search", { vrm: compareReg2, flow: "compare", paired_vrm: compareReg1 });
+      for (const v of [json1.data, json2.data]) {
+        trackEvent("results_view", {
+          flow: "compare",
+          make: v.make ?? null,
+          mot_status: v.motStatus ?? null,
+          fuel_type: v.fuelType ?? null,
+          year_of_manufacture: v.yearOfManufacture ?? null,
+          tax_status: v.taxStatus ?? null,
+          euro_status: v.euroStatus ?? null,
+          has_mot_expiry: !!v.motExpiryDate,
+        });
+      }
+
       // Enrich both vehicles with client-side lookups
       async function enrichVehicle(vData: VehicleData): Promise<CompareEnriched> {
         const parsed = vData.model ? parseModel(vData.model, vData.make) : null;
@@ -1914,6 +1952,17 @@ export default function Home() {
 
       setData(json.data);
       setCheckedItems(new Set());
+      trackConversion("reg_search", { vrm: cleanedReg, flow: "main" });
+      trackEvent("results_view", {
+        flow: "main",
+        make: json.data.make ?? null,
+        mot_status: json.data.motStatus ?? null,
+        fuel_type: json.data.fuelType ?? null,
+        year_of_manufacture: json.data.yearOfManufacture ?? null,
+        tax_status: json.data.taxStatus ?? null,
+        euro_status: json.data.euroStatus ?? null,
+        has_mot_expiry: !!json.data.motExpiryDate,
+      });
 
       // Save to recent lookups (localStorage)
       if (typeof window !== "undefined") {
@@ -3412,7 +3461,7 @@ END:VEVENT
             <div className="mt-8 mb-4">
               <h2 className="text-lg font-bold text-slate-100 mb-1">Never miss your MOT again</h2>
               <p className="text-sm text-slate-400 mb-4">Driving with an expired MOT is illegal and carries a fine of up to &pound;1,000. We&apos;ll remind you &mdash; for free.</p>
-              <MOTReminderSignup context="generic" />
+              <MOTReminderSignup context="generic" triggerVariant="homepage" />
             </div>
           )}
         </div>
@@ -3576,6 +3625,13 @@ END:VEVENT
                         : motDaysUntilExpiry <= 60
                           ? "due-soon"
                           : "post-lookup"
+                    }
+                    triggerVariant={
+                      showMotBanner === "expired"
+                        ? "results_expired"
+                        : motDaysUntilExpiry <= 60
+                          ? "results_due_soon"
+                          : "results_far"
                     }
                     regNumber={data?.registrationNumber}
                     motExpiryDate={data?.motExpiryDate}
@@ -4863,6 +4919,7 @@ END:VEVENT
               <div className="mb-8">
                 <MOTReminderSignup
                   context="post-lookup"
+                  triggerVariant="post_pdf"
                   regNumber={data?.registrationNumber}
                   motExpiryDate={data?.motExpiryDate}
                   makeModel={data ? `${data.make} ${data.model}` : undefined}

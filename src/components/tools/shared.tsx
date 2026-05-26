@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
+import { trackEvent } from "@/lib/tracking";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
 
@@ -83,7 +84,18 @@ export function useVehicleLookup(vrm: string): LookupState {
         return v;
       })
       .then((v) => {
-        if (!cancelled) setState({ kind: "ok", vehicle: v });
+        if (cancelled) return;
+        setState({ kind: "ok", vehicle: v });
+        trackEvent("results_view", {
+          flow: "tool",
+          make: v.make ?? null,
+          mot_status: v.motStatus ?? null,
+          fuel_type: v.fuelType ?? null,
+          year_of_manufacture: v.yearOfManufacture ?? null,
+          tax_status: v.taxStatus ?? null,
+          euro_status: v.euroStatus ?? null,
+          has_mot_expiry: !!v.motExpiryDate,
+        });
       })
       .catch((err: Error) => {
         if (!cancelled)

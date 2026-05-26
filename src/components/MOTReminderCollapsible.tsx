@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bell, ChevronDown } from "lucide-react";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
+import { trackEvent } from "@/lib/tracking";
 
 type Context = "generic" | "due-soon" | "expired" | "post-lookup";
 
 interface Props {
   context: Context;
+  triggerVariant?: string;
   regNumber?: string;
   motExpiryDate?: string;
   makeModel?: string;
@@ -20,11 +22,35 @@ interface Props {
  */
 export default function MOTReminderCollapsible({
   context,
+  triggerVariant,
   regNumber,
   motExpiryDate,
   makeModel,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const chipRef = useRef<HTMLButtonElement | null>(null);
+  const viewedRef = useRef(false);
+
+  useEffect(() => {
+    if (open || viewedRef.current) return;
+    const node = chipRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !viewedRef.current) {
+            viewedRef.current = true;
+            trackEvent("mot_reminder_chip_view", { context, trigger_variant: triggerVariant ?? null });
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [open, context, triggerVariant]);
 
   const accent =
     context === "expired"
@@ -45,6 +71,7 @@ export default function MOTReminderCollapsible({
       <div className="animate-mot-collapse-open">
         <MOTReminderSignup
           context={context}
+          triggerVariant={triggerVariant}
           regNumber={regNumber}
           motExpiryDate={motExpiryDate}
           makeModel={makeModel}
@@ -70,8 +97,12 @@ export default function MOTReminderCollapsible({
 
   return (
     <button
+      ref={chipRef}
       type="button"
-      onClick={() => setOpen(true)}
+      onClick={() => {
+        trackEvent("mot_reminder_chip_click", { context, trigger_variant: triggerVariant ?? null });
+        setOpen(true);
+      }}
       className={`group w-full rounded-xl border ${accent.border} ${accent.bg} px-4 py-3 flex items-center gap-3 hover:bg-slate-900/40 transition-colors`}
       aria-expanded="false"
     >

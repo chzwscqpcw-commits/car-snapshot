@@ -3,9 +3,16 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Bell, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
+import { trackConversion, trackEvent } from "@/lib/tracking";
 
 interface MOTReminderSignupProps {
   context: "generic" | "due-soon" | "expired" | "post-lookup";
+  /**
+   * Specific capture-trigger label for analytics (independent of the visual
+   * `context` which controls copy/colour). Lets GA4 distinguish triggers like
+   * "homepage" vs "blog_footer" that share the same generic visual variant.
+   */
+  triggerVariant?: string;
   regNumber?: string;
   motExpiryDate?: string;
   makeModel?: string;
@@ -85,6 +92,7 @@ function isValidReg(reg: string): boolean {
 
 export default function MOTReminderSignup({
   context,
+  triggerVariant,
   regNumber,
   motExpiryDate,
   makeModel,
@@ -117,6 +125,30 @@ export default function MOTReminderSignup({
       return () => cancelAnimationFrame(raf);
     }
   }, [success]);
+
+  // Fire mot_reminder_view once when the form first becomes 50% visible. Lets
+  // GA4 split "form was on the page" from "form was actually seen".
+  const viewedRef = useRef(false);
+  useEffect(() => {
+    if (viewedRef.current) return;
+    const node = formRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !viewedRef.current) {
+            viewedRef.current = true;
+            trackEvent("mot_reminder_view", { context, trigger_variant: triggerVariant ?? null });
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [context]);
 
   const addVehicle = useCallback(() => {
     if (regs.length < 5) {
@@ -168,7 +200,11 @@ export default function MOTReminderSignup({
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!validate()) return;
+      trackEvent("mot_reminder_submit_attempt", { context, trigger_variant: triggerVariant ?? null, vrm_count: regs.length });
+      if (!validate()) {
+        trackEvent("mot_reminder_validation_error", { context, trigger_variant: triggerVariant ?? null });
+        return;
+      }
 
       setSubmitting(true);
       setErrors({});
@@ -224,6 +260,7 @@ export default function MOTReminderSignup({
           if (!res.ok) {
             const data = await res.json().catch(() => null);
             if (res.status === 409) {
+              trackEvent("mot_reminder_submit_error", { context, trigger_variant: triggerVariant ?? null, error_type: "duplicate" });
               setErrors({
                 general:
                   "We already have a reminder set for this vehicle. Check your inbox.",
@@ -231,6 +268,12 @@ export default function MOTReminderSignup({
               setSubmitting(false);
               return;
             }
+            trackEvent("mot_reminder_submit_error", {
+              context,
+              trigger_variant: triggerVariant ?? null,
+              error_type: "server",
+              status: res.status,
+            });
             setErrors({
               general:
                 data?.error || "Something went wrong \u2014 please try again",
@@ -244,7 +287,9 @@ export default function MOTReminderSignup({
         setSuccessEmail(trimmedEmail);
         setSuccessExpiry(motExpiryDate || "");
         setSuccess(true);
+        trackConversion("mot_reminder", { context, trigger_variant: triggerVariant ?? null, vrm_count: regs.length });
       } catch {
+        trackEvent("mot_reminder_submit_error", { context, trigger_variant: triggerVariant ?? null, error_type: "network" });
         setErrors({
           general: "Something went wrong \u2014 please try again",
         });
@@ -252,7 +297,7 @@ export default function MOTReminderSignup({
         setSubmitting(false);
       }
     },
-    [regs, email, motExpiryDate, makeModel, validate]
+    [regs, email, motExpiryDate, makeModel, validate, context, triggerVariant]
   );
 
   // --- Success state ---

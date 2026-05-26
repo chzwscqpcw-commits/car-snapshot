@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackConversion } from "@/lib/tracking";
+import { trackConversion, trackEvent } from "@/lib/tracking";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -109,21 +109,26 @@ export default function ConversionWidget({
 
   async function handleReminder(e: React.FormEvent) {
     e.preventDefault();
+    trackEvent("mot_reminder_submit_attempt", { context: "widget" });
     const cleanedReg = cleanReg(reminderReg);
 
     if (!cleanedReg) {
+      trackEvent("mot_reminder_validation_error", { context: "widget", field: "reg_empty" });
       setReminderError("Please enter a registration number");
       return;
     }
     if (!isValidReg(reminderReg)) {
+      trackEvent("mot_reminder_validation_error", { context: "widget", field: "reg_invalid" });
       setReminderError("That doesn\u2019t look like a valid UK registration");
       return;
     }
     if (!reminderEmail.trim()) {
+      trackEvent("mot_reminder_validation_error", { context: "widget", field: "email_empty" });
       setReminderError("Please enter your email address");
       return;
     }
     if (!isValidEmail(reminderEmail.trim())) {
+      trackEvent("mot_reminder_validation_error", { context: "widget", field: "email_invalid" });
       setReminderError("Please check your email address");
       return;
     }
@@ -167,10 +172,16 @@ export default function ConversionWidget({
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         if (res.status === 409) {
+          trackEvent("mot_reminder_submit_error", { context: "widget", error_type: "duplicate" });
           setReminderError(
             "We already have a reminder set for this vehicle. Check your inbox."
           );
         } else {
+          trackEvent("mot_reminder_submit_error", {
+            context: "widget",
+            error_type: "server",
+            status: res.status,
+          });
           setReminderError(
             data?.error || "Something went wrong \u2014 please try again"
           );
@@ -179,9 +190,10 @@ export default function ConversionWidget({
         return;
       }
 
-      trackConversion("mot_reminder", { vrm: cleanedReg });
+      trackConversion("mot_reminder", { vrm: cleanedReg, context: "widget" });
       setReminderSuccess(true);
     } catch {
+      trackEvent("mot_reminder_submit_error", { context: "widget", error_type: "network" });
       setReminderError("Something went wrong \u2014 please try again");
     } finally {
       setReminderSubmitting(false);
