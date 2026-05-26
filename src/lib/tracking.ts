@@ -4,13 +4,33 @@ declare global {
   }
 }
 
-export function trackPartnerClick(partnerId: string, context: string): void {
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", "partner_click", {
-      partner_id: partnerId,
-      click_context: context,
-    });
+/**
+ * Fire-and-forget mirror of an event to our own /api/event sink so it lands
+ * in Supabase `site_events` for the admin dashboard. Independent of gtag so
+ * ad-blockers blocking GA4 don't blank out our own telemetry. `keepalive`
+ * lets the request survive page unload — important for partner_click events
+ * that fire immediately before the user navigates away.
+ */
+function mirrorToServer(eventName: string, payload?: Record<string, unknown>): void {
+  if (typeof window === "undefined") return;
+  try {
+    fetch("/api/event", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: eventName, payload: payload ?? {} }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // Swallow — telemetry must never break the user-facing flow.
   }
+}
+
+export function trackPartnerClick(partnerId: string, context: string): void {
+  const payload = { partner_id: partnerId, click_context: context };
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "partner_click", payload);
+  }
+  mirrorToServer("partner_click", payload);
 }
 
 // Registry of running experiments. Keep keys here so conversion tracking can
@@ -33,21 +53,19 @@ export function getActiveExperimentVariant(experimentId: string): string | null 
 }
 
 export function trackExperimentImpression(experimentId: string, variant: string): void {
+  const payload = { experiment_id: experimentId, variant };
   if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", "experiment_impression", {
-      experiment_id: experimentId,
-      variant,
-    });
+    window.gtag("event", "experiment_impression", payload);
   }
+  mirrorToServer("experiment_impression", payload);
 }
 
 export function trackExperimentClick(experimentId: string, variant: string): void {
+  const payload = { experiment_id: experimentId, variant };
   if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", "experiment_click", {
-      experiment_id: experimentId,
-      variant,
-    });
+    window.gtag("event", "experiment_click", payload);
   }
+  mirrorToServer("experiment_click", payload);
 }
 
 export type ConversionType = "reg_search" | "mot_reminder";
@@ -61,7 +79,7 @@ export function trackConversion(
   conversionType: ConversionType,
   metadata?: Record<string, unknown>
 ): void {
-  if (typeof window === "undefined" || !window.gtag) return;
+  if (typeof window === "undefined") return;
 
   const payload: Record<string, unknown> = {
     conversion_type: conversionType,
@@ -78,7 +96,12 @@ export function trackConversion(
     }
   }
 
-  window.gtag("event", "conversion", payload);
+  if (window.gtag) window.gtag("event", "conversion", payload);
+
+  // Mirror under the conversion_type so site_events stays queryable by
+  // semantic event name (reg_search / mot_reminder) rather than a single
+  // generic "conversion" bucket.
+  mirrorToServer(conversionType, payload);
 }
 
 /**
@@ -91,7 +114,7 @@ export function trackEvent(
   eventName: string,
   metadata?: Record<string, unknown>
 ): void {
-  if (typeof window === "undefined" || !window.gtag) return;
+  if (typeof window === "undefined") return;
 
   const payload: Record<string, unknown> = { ...metadata };
 
@@ -102,5 +125,6 @@ export function trackEvent(
     }
   }
 
-  window.gtag("event", eventName, payload);
+  if (window.gtag) window.gtag("event", eventName, payload);
+  mirrorToServer(eventName, payload);
 }
