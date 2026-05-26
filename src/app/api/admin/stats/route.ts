@@ -5,6 +5,10 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 export type TopMake = { make: string; count: number };
 
+export type CaptureTrigger = { trigger_variant: string; count: number };
+export type PartnerContextCount = { context: string; count: number };
+export type SectionReach = { section_id: string; count: number; pct: number };
+
 export type StatsResponse = {
   lookups: {
     last1h: number;
@@ -27,6 +31,30 @@ export type StatsResponse = {
   contactMessages: { today: number; last7d: number; allTime: number };
   motRemindersLast7d: number;
   topMakesToday: TopMake[];
+  // Funnel + capture metrics, sourced from mirrored gtag events in site_events
+  funnel: {
+    lookupsToday: number;
+    resultsViewsToday: number;
+    reminderViewsToday: number;
+    reminderSignupsToday: number;
+  };
+  captureByTriggerLast7d: CaptureTrigger[];
+  partnerClicks: {
+    today: number;
+    last7d: number;
+    byContextToday: PartnerContextCount[];
+  };
+  sectionReachToday: {
+    resultsViews: number;
+    sections: SectionReach[];
+  };
+  reminderFormToday: {
+    views: number;
+    attempts: number;
+    successes: number;
+    validationErrors: number;
+    submitErrors: { duplicate: number; server: number; network: number };
+  };
 };
 
 async function countEvents(
@@ -82,6 +110,35 @@ async function countTable(
     return 0;
   }
   return count ?? 0;
+}
+
+/**
+ * Group `site_events` rows of a single event_type by a metadata field and
+ * return the counts. Done client-side because the JS supabase client doesn't
+ * expose a clean group-by; row volume per event_type stays manageable.
+ */
+async function groupByMetadataField(
+  sb: ReturnType<typeof supabaseServer>,
+  eventType: string,
+  field: string,
+  since: Date,
+  limit = 5000,
+): Promise<Map<string, number>> {
+  const { data, error } = await sb
+    .from("site_events")
+    .select("metadata")
+    .eq("event_type", eventType)
+    .gte("created_at", since.toISOString())
+    .limit(limit);
+  if (error || !data) return new Map();
+
+  const counts = new Map<string, number>();
+  for (const row of data) {
+    const value = (row.metadata as Record<string, unknown> | null)?.[field];
+    if (typeof value !== "string" || value.length === 0) continue;
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return counts;
 }
 
 async function topMakesSince(
@@ -147,7 +204,21 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     contact7d,
     contactAllTime,
     motRemindersLast7d,
+    motRemindersToday,
     topMakesToday,
+    // Funnel-stage event counts (today)
+    resultsViewsToday,
+    reminderViewsToday,
+    reminderAttemptsToday,
+    reminderSuccessesToday,
+    reminderValidationErrorsToday,
+    partnerClicksToday,
+    partnerClicks7d,
+    // Grouped breakdowns
+    triggerCountsLast7d,
+    partnerContextCountsToday,
+    sectionCountsToday,
+    submitErrorMetaToday,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -167,8 +238,42 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
     countTable(sb, "contact_messages"),
     countTable(sb, "mot_reminders", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
+    countTable(sb, "mot_reminders", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     topMakesSince(sb, todayStart, 5),
+    countEvents(sb, "results_view", todayStart),
+    countEvents(sb, "mot_reminder_view", todayStart),
+    countEvents(sb, "mot_reminder_submit_attempt", todayStart),
+    countEvents(sb, "mot_reminder", todayStart),
+    countEvents(sb, "mot_reminder_validation_error", todayStart),
+    countEvents(sb, "partner_click", todayStart),
+    countEvents(sb, "partner_click", sevenDaysAgo),
+    groupByMetadataField(sb, "mot_reminder", "trigger_variant", sevenDaysAgo),
+    groupByMetadataField(sb, "partner_click", "click_context", todayStart),
+    groupByMetadataField(sb, "results_section_view", "section_id", todayStart),
+    groupByMetadataField(sb, "mot_reminder_submit_error", "error_type", todayStart),
   ]);
+
+  const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
+    .map(([trigger_variant, count]) => ({ trigger_variant, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const partnerContextByCount: PartnerContextCount[] = Array.from(partnerContextCountsToday.entries())
+    .map(([context, count]) => ({ context, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const sectionReachSections: SectionReach[] = Array.from(sectionCountsToday.entries())
+    .map(([section_id, count]) => ({
+      section_id,
+      count,
+      pct: resultsViewsToday > 0 ? Math.round((count / resultsViewsToday) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const submitErrors = {
+    duplicate: submitErrorMetaToday.get("duplicate") ?? 0,
+    server: submitErrorMetaToday.get("server") ?? 0,
+    network: submitErrorMetaToday.get("network") ?? 0,
+  };
 
   return NextResponse.json({
     lookups: {
@@ -195,5 +300,28 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     },
     motRemindersLast7d,
     topMakesToday,
+    funnel: {
+      lookupsToday,
+      resultsViewsToday,
+      reminderViewsToday,
+      reminderSignupsToday: motRemindersToday,
+    },
+    captureByTriggerLast7d,
+    partnerClicks: {
+      today: partnerClicksToday,
+      last7d: partnerClicks7d,
+      byContextToday: partnerContextByCount,
+    },
+    sectionReachToday: {
+      resultsViews: resultsViewsToday,
+      sections: sectionReachSections,
+    },
+    reminderFormToday: {
+      views: reminderViewsToday,
+      attempts: reminderAttemptsToday,
+      successes: reminderSuccessesToday,
+      validationErrors: reminderValidationErrorsToday,
+      submitErrors,
+    },
   });
 }
