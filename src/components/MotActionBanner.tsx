@@ -78,34 +78,34 @@ export default function MotActionBanner({
   const urgency = getUrgency(motStatus, daysUntilExpiry);
 
   const ref = useRef<HTMLDivElement | null>(null);
-  const viewedRef = useRef(false);
+  const lastViewedUrgency = useRef<Urgency | null>(null);
   const [reminderOpen, setReminderOpen] = useState(false);
 
-  // Banner-view IntersectionObserver. Has to live above the early return
-  // so the hook order is stable across renders where motStatus changes.
+  // Banner-view event. Previously used IntersectionObserver with a 50%
+  // threshold, but the banner is wrapped in DataReveal (opacity-0 →
+  // animate-fadeInUp) and the two observers' setup/teardown timing was
+  // racing — the banner's observer often disconnected before producing
+  // an intersection entry. Result: events stopped firing in production
+  // around 18:16 UTC on 2026-05-28 with no user-visible symptom.
+  //
+  // Since the banner only renders when MOT urgency is meaningful (the
+  // !urgency early return below covers the rest), if it renders we
+  // want to count it. Mount-firing — gated by per-urgency dedup so a
+  // re-render due to other state changes doesn't double-count, but a
+  // genuine urgency change (e.g. user looks up a different car) fires
+  // a fresh event — is simpler and more honest. Hook order stays
+  // stable across the null-urgency case so React doesn't complain.
   useEffect(() => {
-    if (!urgency) return;
-    if (viewedRef.current || !ref.current) return;
-    if (typeof IntersectionObserver === "undefined") return;
-    const node = ref.current;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && !viewedRef.current) {
-            viewedRef.current = true;
-            trackEvent("mot_action_banner_view", {
-              urgency,
-              days_until_expiry: daysUntilExpiry,
-            });
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { threshold: 0.5 },
-    );
-    obs.observe(node);
-    return () => obs.disconnect();
+    if (!urgency) {
+      lastViewedUrgency.current = null;
+      return;
+    }
+    if (lastViewedUrgency.current === urgency) return;
+    lastViewedUrgency.current = urgency;
+    trackEvent("mot_action_banner_view", {
+      urgency,
+      days_until_expiry: daysUntilExpiry,
+    });
   }, [urgency, daysUntilExpiry]);
 
   if (!urgency) return null;
