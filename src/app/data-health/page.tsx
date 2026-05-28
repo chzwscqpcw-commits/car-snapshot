@@ -426,7 +426,11 @@ function eventTone(eventType: string): { dot: string; text: string } {
   if (eventType === "partner_click") {
     return { dot: "bg-emerald-400", text: "text-emerald-300" };
   }
-  if (eventType === "reg_search" || eventType === "mot_reminder") {
+  if (
+    eventType === "reg_search" ||
+    eventType === "mot_reminder" ||
+    eventType === "contact_submit"
+  ) {
     return { dot: "bg-cyan-400", text: "text-cyan-300" };
   }
   if (eventType.endsWith("_click")) {
@@ -466,6 +470,12 @@ function summarizeEvent(e: RecentEvent): string {
     case "experiment_impression":
     case "experiment_click":
       return `${get("experiment_id") ?? "?"} = ${get("variant") ?? "?"}`;
+    case "contact_submit":
+      return `${get("category") ?? "?"} · ${get("msg_length_bucket") ?? "?"}${m.has_name ? " · named" : ""}`;
+    case "contact_submit_error":
+      return `${get("error_type") ?? "?"} · ${get("category") ?? "?"}`;
+    case "contact_validation_error":
+      return `${get("field") ?? "?"}${get("category") ? ` · ${get("category")}` : ""}`;
     default: {
       // Generic fallback — show first metadata value if any
       const keys = Object.keys(m);

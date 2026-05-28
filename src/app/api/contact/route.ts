@@ -76,6 +76,29 @@ function getClientIp(req: Request): string {
   return "unknown";
 }
 
+/**
+ * Fire a site_events row mirroring the contact form lifecycle. Used by the
+ * admin dashboard's real-time activity feed. Intentionally minimal metadata
+ * — only category / message-length bucket / error type. No PII (email,
+ * message body, ip in cleartext) makes it into the events table; that
+ * already lives in contact_messages with proper RLS.
+ *
+ * Fire-and-forget: failures are swallowed so dashboard telemetry never
+ * breaks an actual user submission.
+ */
+function logContactEvent(
+  sb: ReturnType<typeof supabaseServer>,
+  eventType: string,
+  metadata: Record<string, unknown>,
+): void {
+  sb.from("site_events")
+    .insert({ event_type: eventType, metadata })
+    .then(
+      () => {},
+      () => {},
+    );
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -100,7 +123,20 @@ export async function POST(req: Request) {
   const honeypot = typeof body.website === "string" ? body.website.trim() : "";
   const timeOnPage = typeof body.timeOnPage === "number" ? body.timeOnPage : 0;
 
+  // Build the shared client up-front so spam-gate logging can use it.
+  // Rate-limit reads use the anon client (read-only against indexed cols
+  // is fine even with RLS enabled). Inserts use the service-role client
+  // so they bypass RLS — the contact_messages table is RLS-protected
+  // because the anon key is public-facing and we don't want anyone to be
+  // able to spam-insert directly via the Supabase REST API.
+  const sb = supabaseServer();
+  const sbWrite = supabaseServerRole();
+
   // ─── Spam gates ───
+  // Honeypot + time-on-page failures are almost certainly bots — don't
+  // pollute the activity feed with their volume. The only spam path that
+  // *does* log is the explicit validation error, since that's a real user
+  // hitting a real form rule.
   if (honeypot.length > 0) {
     // Pretend it worked so bots don't probe further
     return NextResponse.json({ ok: true });
@@ -109,35 +145,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
   if (!email || !EMAIL_RE.test(email)) {
+    logContactEvent(sb, "contact_validation_error", { field: "email", category });
     return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
   }
   if (message.length < 20) {
+    logContactEvent(sb, "contact_validation_error", {
+      field: "message_too_short",
+      category,
+      msg_length: message.length,
+    });
     return NextResponse.json(
       { error: "Please write a slightly longer message (20+ characters)." },
       { status: 400 }
     );
   }
   if (message.length > 2000) {
+    logContactEvent(sb, "contact_validation_error", {
+      field: "message_too_long",
+      category,
+      msg_length: message.length,
+    });
     return NextResponse.json(
       { error: "Message too long — please keep it under 2,000 characters." },
       { status: 400 }
     );
   }
   if (!ALLOWED_CATEGORIES.has(category)) {
+    logContactEvent(sb, "contact_validation_error", { field: "category" });
     return NextResponse.json({ error: "Invalid category." }, { status: 400 });
   }
 
   const ip = getClientIp(req);
   const ipHash = hashIp(ip);
   const userAgent = req.headers.get("user-agent")?.slice(0, 240) ?? null;
-
-  // Rate-limit reads use the anon client (read-only against indexed cols
-  // is fine even with RLS enabled). Inserts use the service-role client
-  // so they bypass RLS — the contact_messages table is RLS-protected
-  // because the anon key is public-facing and we don't want anyone to be
-  // able to spam-insert directly via the Supabase REST API.
-  const sb = supabaseServer();
-  const sbWrite = supabaseServerRole();
   const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
@@ -148,6 +188,7 @@ export async function POST(req: Request) {
       .eq("ip_hash", ipHash)
       .gte("created_at", hourAgo);
     if ((ipCount ?? 0) >= 3) {
+      logContactEvent(sb, "contact_submit_error", { error_type: "rate_limited_ip", category });
       return NextResponse.json(
         { error: "Too many messages from your network — try again in an hour." },
         { status: 429 }
@@ -160,6 +201,7 @@ export async function POST(req: Request) {
       .eq("email", email)
       .gte("created_at", tenMinsAgo);
     if ((emailCount ?? 0) >= 1) {
+      logContactEvent(sb, "contact_submit_error", { error_type: "rate_limited_email", category });
       return NextResponse.json(
         { error: "We've just received a message from this email — give us a few minutes." },
         { status: 429 }
@@ -194,6 +236,7 @@ export async function POST(req: Request) {
     messageId = data?.id ?? null;
   } catch (err) {
     console.error("[contact] insert failed:", err);
+    logContactEvent(sb, "contact_submit_error", { error_type: "insert", category });
     return NextResponse.json(
       { error: "We couldn't save your message — please try again in a moment." },
       { status: 500 },
@@ -204,6 +247,7 @@ export async function POST(req: Request) {
   const resend = getResend();
   if (!resend) {
     console.error("[contact] RESEND_API_KEY missing — cannot send");
+    logContactEvent(sb, "contact_submit_error", { error_type: "email_unavailable", category });
     return NextResponse.json(
       { error: "Email service unavailable — please try again later." },
       { status: 503 }
@@ -271,6 +315,7 @@ export async function POST(req: Request) {
     });
     if (error) {
       console.error("[contact] resend error:", error);
+      logContactEvent(sb, "contact_submit_error", { error_type: "email_send", category });
       return NextResponse.json(
         { error: "Couldn't deliver your message — please try again." },
         { status: 502 }
@@ -278,6 +323,7 @@ export async function POST(req: Request) {
     }
   } catch (err) {
     console.error("[contact] resend exception:", err);
+    logContactEvent(sb, "contact_submit_error", { error_type: "email_exception", category });
     return NextResponse.json(
       { error: "Couldn't deliver your message — please try again." },
       { status: 502 }
@@ -296,6 +342,17 @@ export async function POST(req: Request) {
         () => {}
       );
   }
+
+  // Success — log to the activity feed. Bucket msg_length rather than
+  // storing the exact count so we don't leak fingerprinting data while
+  // still giving the feed something useful to render.
+  const lengthBucket =
+    message.length < 100 ? "short" : message.length < 500 ? "medium" : "long";
+  logContactEvent(sb, "contact_submit", {
+    category,
+    has_name: Boolean(name),
+    msg_length_bucket: lengthBucket,
+  });
 
   return NextResponse.json({ ok: true });
 }
