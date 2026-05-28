@@ -6,7 +6,12 @@ import { CAZ_ZONES } from "@/data/caz-zones";
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
 
-  const blogPosts = posts.map((post) => ({
+  // Skip noindex'd posts. If they're not indexable, they shouldn't be
+  // discoverable via the sitemap either — keeps the sitemap clean and
+  // signals to Google that these aren't part of our intended surface.
+  const indexablePosts = posts.filter((post) => !post.noindex);
+
+  const blogPosts = indexablePosts.map((post) => ({
     url: `https://www.freeplatecheck.co.uk/blog/${post.slug}`,
     lastModified: new Date(post.lastModified || post.date),
     changeFrequency: "monthly" as const,

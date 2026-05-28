@@ -4,6 +4,11 @@ description: "How to declare a SORN on your vehicle, when you need one, and what
 date: "2026-02-21"
 keywords: ["how to SORN a car", "SORN online", "declare SORN", "SORN rules UK", "statutory off road notification", "SORN a vehicle"]
 author: "Free Plate Check"
+# Diluter (GSC): 1,499 impressions / 0 clicks / position 67. SORN is a
+# government process — gov.uk owns this query and ranks pages 1-2.
+# Position 67 after months in index means we won't climb. Noindexed to
+# remove the quality drag on site-average position.
+noindex: true
 ---
 
 If you're taking your car off the road — whether for storage, repairs, or because you don't need it for a while — you need to declare a SORN. It's a legal requirement, and failing to do so can result in automatic fines from the DVLA.

@@ -5,6 +5,12 @@ date: "2026-02-14"
 lastModified: "2026-02-18"
 keywords: ["cat N car", "cat S car", "insurance write-off categories", "what does cat N mean", "what does cat S mean", "written off car UK", "car write-off categories"]
 author: "Free Plate Check"
+# Diluter (GSC): 2,535 impressions / 0 clicks / position 74. AA, RAC,
+# Confused own this topic and rank pages 1-2. Position 74 after months
+# in index = not climbing. Noindexed for now; revisit if rewritten as a
+# deeper guide that pivots on /car-check (which can detect Cat S/N
+# status directly from DVLA data).
+noindex: true
 faqItems:
   - question: "What does Cat N mean?"
     answer: "Cat N (Category N) means the vehicle has suffered non-structural damage — such as body panels, bumpers, lights, or mechanical parts — and has been written off by an insurer. It can be repaired and returned to the road."

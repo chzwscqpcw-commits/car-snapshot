@@ -37,6 +37,13 @@ export interface BlogPost {
   wordCount: number;
   howToSteps?: HowToStep[];
   faqItems?: FaqItem[];
+  /**
+   * Set to true in frontmatter to exclude the post from search engine
+   * indexing AND from the sitemap. Used for diluter pages identified
+   * by GSC analysis — pages that rank too deep to convert but still
+   * contribute to site-wide quality signals.
+   */
+  noindex?: boolean;
 }
 
 export interface BlogPostMeta {
@@ -49,6 +56,7 @@ export interface BlogPostMeta {
   author: string;
   readingTime: number;
   wordCount: number;
+  noindex?: boolean;
 }
 
 function slugify(text: string): string {
@@ -137,6 +145,7 @@ export function getPostMeta(slug: string): BlogPostMeta | null {
     author: data.author || "Free Plate Check",
     readingTime: calculateReadingTime(content),
     wordCount: words,
+    noindex: Boolean(data.noindex),
   };
 }
 
@@ -246,5 +255,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     wordCount: words,
     howToSteps: data.howToSteps || undefined,
     faqItems: data.faqItems || undefined,
+    noindex: Boolean(data.noindex),
   };
 }

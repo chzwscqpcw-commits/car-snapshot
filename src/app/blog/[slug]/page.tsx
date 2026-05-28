@@ -24,6 +24,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${post.title} | Free Plate Check`,
     description: post.description,
     keywords: post.keywords,
+    robots: post.noindex
+      ? { index: false, follow: true }
+      : undefined,
     alternates: {
       canonical: `https://www.freeplatecheck.co.uk/blog/${slug}`,
     },
