@@ -3698,13 +3698,15 @@ END:VEVENT
                   })()}
                 </div>
 
-                {/* MOT Booking CTA */}
+                {/* MOT Booking CTA — specs placement (near top, before
+                    SectionGroups) */}
                 {isOver3Years && (
                   <div className="mb-3">
                     <MOTBookingCTA
                       regNumber={data?.registrationNumber || ""}
                       context={showMotBanner === "expired" ? "expired" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
                       expandable={showMotBanner !== "expired" && motDaysUntilExpiry > 60}
+                      placement="specs"
                     />
                   </div>
                 )}
@@ -3935,6 +3937,23 @@ END:VEVENT
                   )}
 
                   <p className="text-[10px] text-slate-600 mt-3">{motReadiness.disclaimer}</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* MOT Booking CTA — health placement. Reaches users who
+                actually scrolled into Health & Safety (~22% of result
+                viewers vs ~4% who reach Next Steps). Distinct
+                placement="health" so dashboard partner_click events can
+                attribute conversions to this slot vs the specs slot. */}
+            {isOver3Years && motReadiness && !motReadiness.isMotExempt && (
+              <DataReveal delay={225}>
+                <div className="mb-8">
+                  <MOTBookingCTA
+                    regNumber={data?.registrationNumber || ""}
+                    context={showMotBanner === "expired" ? "expired" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
+                    placement="health"
+                  />
                 </div>
               </DataReveal>
             )}

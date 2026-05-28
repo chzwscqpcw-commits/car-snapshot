@@ -9,6 +9,14 @@ interface MOTBookingCTAProps {
   regNumber: string;
   context: 'expired' | 'due-soon' | 'reminder-set' | 'neutral';
   expandable?: boolean;
+  /**
+   * Where on the page this CTA renders. Used in the trackPartnerClick
+   * click_context so the same component can appear in multiple slots
+   * (e.g. Vehicle Specs section + Health & Safety section) and we can
+   * measure which placement actually converts. Defaults to omitted so
+   * existing call sites preserve their original click_context strings.
+   */
+  placement?: 'specs' | 'health' | 'next-steps';
 }
 
 const COPY: Record<
@@ -37,9 +45,17 @@ export default function MOTBookingCTA({
   regNumber,
   context,
   expandable = false,
+  placement,
 }: MOTBookingCTAProps) {
   const [expanded, setExpanded] = useState(false);
   const { heading, body } = COPY[context];
+
+  // Compose click_context. Without a placement we keep the legacy form
+  // (`mot-booking-cta-<context>`) so historical dashboard rows stay
+  // attributable to their existing surface.
+  const clickContext = placement
+    ? `mot-booking-cta-${placement}-${context}`
+    : `mot-booking-cta-${context}`;
 
   const partner = PARTNER_LINKS.bookMyGarage;
   const href = partner.buildLink
@@ -66,7 +82,7 @@ export default function MOTBookingCTA({
           href={href}
           target="_blank"
           rel={rel}
-          onClick={() => trackPartnerClick('bookMyGarage', `mot-booking-cta-${context}`)}
+          onClick={() => trackPartnerClick('bookMyGarage', clickContext)}
           className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20"
         >
           Compare prices near {formattedReg} — BookMyGarage ↗
