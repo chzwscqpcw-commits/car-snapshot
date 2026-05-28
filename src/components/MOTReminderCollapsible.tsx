@@ -27,7 +27,15 @@ export default function MOTReminderCollapsible({
   motExpiryDate,
   makeModel,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  // High-intent contexts open the form by default — users with an expired
+  // MOT or one due within 60 days are precisely the audience the reminder
+  // is built for, and the tap-to-expand step was costing us ~90% of them.
+  // For "post-lookup" (MOT >60 days away), the chip stays collapsed so the
+  // results page isn't dominated by a form for users who don't need it
+  // urgently. See dashboard funnel: chip_view → tap → form_view was the
+  // pinch point.
+  const autoOpen = context === "expired" || context === "due-soon";
+  const [open, setOpen] = useState(autoOpen);
   const chipRef = useRef<HTMLButtonElement | null>(null);
   const viewedRef = useRef(false);
 
