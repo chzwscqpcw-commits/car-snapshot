@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { Resend } from "resend";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
 
 /**
  * Contact form endpoint.
@@ -131,8 +131,13 @@ export async function POST(req: Request) {
   const ipHash = hashIp(ip);
   const userAgent = req.headers.get("user-agent")?.slice(0, 240) ?? null;
 
-  // ─── Rate limits via Supabase ───
+  // Rate-limit reads use the anon client (read-only against indexed cols
+  // is fine even with RLS enabled). Inserts use the service-role client
+  // so they bypass RLS — the contact_messages table is RLS-protected
+  // because the anon key is public-facing and we don't want anyone to be
+  // able to spam-insert directly via the Supabase REST API.
   const sb = supabaseServer();
+  const sbWrite = supabaseServerRole();
   const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
@@ -167,9 +172,13 @@ export async function POST(req: Request) {
   }
 
   // ─── Persist ───
+  // Insert errors used to be silently swallowed (the email would still go,
+  // but no row would land — exactly how the contact_messages count stayed at
+  // 0 unnoticed for weeks). Now we surface the error so the user gets a
+  // clear failure and the operator sees the problem immediately.
   let messageId: string | null = null;
   try {
-    const { data, error } = await sb
+    const { data, error } = await sbWrite
       .from("contact_messages")
       .insert({
         name: name || null,
@@ -185,7 +194,10 @@ export async function POST(req: Request) {
     messageId = data?.id ?? null;
   } catch (err) {
     console.error("[contact] insert failed:", err);
-    // Continue anyway — sending the email is the main thing.
+    return NextResponse.json(
+      { error: "We couldn't save your message — please try again in a moment." },
+      { status: 500 },
+    );
   }
 
   // ─── Email ───
@@ -272,9 +284,11 @@ export async function POST(req: Request) {
     );
   }
 
-  // Mark as delivered (best-effort)
+  // Mark as delivered (best-effort) — needs the service-role client because
+  // RLS would block the anon client's UPDATE the same way it blocked INSERT.
   if (messageId) {
-    sb.from("contact_messages")
+    sbWrite
+      .from("contact_messages")
       .update({ delivered: true })
       .eq("id", messageId)
       .then(
