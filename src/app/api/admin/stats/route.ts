@@ -33,7 +33,11 @@ export type StatsResponse = {
   topMakesToday: TopMake[];
   // Funnel + capture metrics, sourced from mirrored gtag events in site_events
   funnel: {
-    lookupsToday: number;
+    // searchesToday counts reg_search events (one per user-initiated search).
+    // Distinct from the hero KPI's lookups.today which counts /api/lookup
+    // calls — that number is inflated ~2x by tool-page re-fetches and so
+    // makes for a misleading conversion-rate denominator.
+    searchesToday: number;
     resultsViewsToday: number;
     reminderViewsToday: number;
     reminderSignupsToday: number;
@@ -238,7 +242,10 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     motRemindersLast7d,
     motRemindersToday,
     topMakesToday,
-    // Funnel-stage event counts (today)
+    // Funnel-stage event counts (today). The top-step uses reg_search
+    // (per-user-action) not lookup (per-API-call) so the downstream
+    // conversion ratios are meaningful.
+    searchesToday,
     resultsViewsToday,
     reminderViewsToday,
     reminderAttemptsToday,
@@ -272,6 +279,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
     countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     topMakesSince(sb, todayStart, 5),
+    countEvents(sb, "reg_search", todayStart),
     countEvents(sb, "results_view", todayStart),
     countEvents(sb, "mot_reminder_view", todayStart),
     countEvents(sb, "mot_reminder_submit_attempt", todayStart),
@@ -333,7 +341,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     motRemindersLast7d,
     topMakesToday,
     funnel: {
-      lookupsToday,
+      searchesToday,
       resultsViewsToday,
       reminderViewsToday,
       reminderSignupsToday: motRemindersToday,

@@ -63,7 +63,7 @@ type StatsData = {
   motRemindersLast7d: number;
   topMakesToday: TopMake[];
   funnel: {
-    lookupsToday: number;
+    searchesToday: number;
     resultsViewsToday: number;
     reminderViewsToday: number;
     reminderSignupsToday: number;
@@ -633,19 +633,22 @@ export default function DataHealthPage() {
             {stats && (
               <Section
                 title="Today's conversion funnel"
-                hint="From mirrored gtag events · resets at 00:00 UTC"
+                hint="Per-user actions · resets at 00:00 UTC"
               >
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
                   <FunnelStep
                     icon={Search}
-                    label="Lookups"
-                    value={stats.funnel.lookupsToday}
+                    label="Searches"
+                    value={stats.funnel.searchesToday}
                   />
                   <FunnelStep
                     icon={Eye}
                     label="Results viewed"
                     value={stats.funnel.resultsViewsToday}
-                    conversionPct={pct(stats.funnel.resultsViewsToday, stats.funnel.lookupsToday)}
+                    conversionPct={pct(
+                      stats.funnel.resultsViewsToday,
+                      stats.funnel.searchesToday,
+                    )}
                   />
                   <FunnelStep
                     icon={Bell}
