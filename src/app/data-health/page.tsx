@@ -429,7 +429,8 @@ function eventTone(eventType: string): { dot: string; text: string } {
   if (
     eventType === "reg_search" ||
     eventType === "mot_reminder" ||
-    eventType === "contact_submit"
+    eventType === "contact_submit" ||
+    eventType === "mot_action_banner_reminder_open"
   ) {
     return { dot: "bg-cyan-400", text: "text-cyan-300" };
   }
@@ -470,6 +471,10 @@ function summarizeEvent(e: RecentEvent): string {
     case "experiment_impression":
     case "experiment_click":
       return `${get("experiment_id") ?? "?"} = ${get("variant") ?? "?"}`;
+    case "mot_action_banner_view":
+      return `${get("urgency") ?? "?"} · ${getNum("days_until_expiry") ?? "?"}d to expiry`;
+    case "mot_action_banner_reminder_open":
+      return `${get("urgency") ?? "?"}`;
     case "contact_submit":
       return `${get("category") ?? "?"} · ${get("msg_length_bucket") ?? "?"}${m.has_name ? " · named" : ""}`;
     case "contact_submit_error":

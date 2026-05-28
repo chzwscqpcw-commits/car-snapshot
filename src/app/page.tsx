@@ -178,7 +178,7 @@ import newPricesData from "@/data/new-prices.json";
 import { latestWeek as latestFuelWeek } from "@/lib/stats-data/fuel-prices";
 import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
-import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
+import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 
 type VehicleData = {
@@ -3612,75 +3612,20 @@ END:VEVENT
 
             </DataReveal>
 
-            {/* PRIMARY MOT REMINDER SIGNUP — collapsible chip so it doesn't
-                dominate the view above the rich data sections. One tap
-                expands the inline form. */}
-            {isOver3Years && (
+            {/* STATUS-AWARE ACTION BANNER — single unified surface that
+                replaced the old expired/expiring banner + the reminder
+                chip. Adapts to MOT urgency: BMG primary + reminder
+                secondary for expired/due-soon, reminder-only for far.
+                Lives above the SectionGroups for 100% visibility. */}
+            {isOver3Years && data && (
               <DataReveal delay={45}>
-                <div className="mb-6">
-                  <MOTReminderCollapsible
-                    context={
-                      showMotBanner === "expired"
-                        ? "expired"
-                        : motDaysUntilExpiry <= 60
-                          ? "due-soon"
-                          : "post-lookup"
-                    }
-                    triggerVariant={
-                      showMotBanner === "expired"
-                        ? "results_expired"
-                        : motDaysUntilExpiry <= 60
-                          ? "results_due_soon"
-                          : "results_far"
-                    }
-                    regNumber={data?.registrationNumber}
-                    motExpiryDate={data?.motExpiryDate}
-                    makeModel={data ? `${data.make} ${data.model}` : undefined}
-                  />
-                </div>
-              </DataReveal>
-            )}
-
-            {/* MOT EXPIRED / EXPIRING BANNER */}
-            {showMotBanner && (
-              <DataReveal delay={50}>
-                <div className={`mb-6 p-4 rounded-lg border flex items-start gap-3 ${
-                  showMotBanner === "expired"
-                    ? "bg-red-950/40 border-red-700/60"
-                    : "bg-amber-950/40 border-amber-700/60"
-                }`}>
-                  {showMotBanner === "expired" ? (
-                    <AlertTriangle className="w-6 h-6 text-red-400 shrink-0 mt-0.5" />
-                  ) : (
-                    <Clock className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-bold ${showMotBanner === "expired" ? "text-red-200" : "text-amber-200"}`}>
-                      {showMotBanner === "expired"
-                        ? "MOT EXPIRED"
-                        : `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`}
-                    </p>
-                    <p className="text-xs text-slate-300 mt-0.5">
-                      {showMotBanner === "expired"
-                        ? `Expired ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — this vehicle cannot legally be driven on public roads without a valid MOT.`
-                        : `Expires ${data.motExpiryDate ? formatDate(data.motExpiryDate) : ""} — book early and compare prices. You can get an MOT up to 28 days before expiry without losing any days.`}
-                    </p>
-                  </div>
-                  <a
-                    href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url}
-                    target="_blank"
-                    rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-                    onClick={() => trackPartnerClick("bookMyGarage", "mot-banner")}
-                    className={`shrink-0 px-4 py-2.5 sm:py-2 rounded-lg text-sm sm:text-xs font-semibold transition-colors flex items-center gap-1.5 ${
-                      showMotBanner === "expired"
-                        ? "bg-red-600/30 hover:bg-red-600/50 border border-red-600/50 text-red-100"
-                        : "bg-amber-600/30 hover:bg-amber-600/50 border border-amber-600/50 text-amber-100"
-                    }`}
-                  >
-                    Book MOT
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
+                <MotActionBanner
+                  motStatus={data.motStatus}
+                  motExpiryDate={data.motExpiryDate}
+                  daysUntilExpiry={motDaysUntilExpiry}
+                  registrationNumber={data.registrationNumber}
+                  makeModel={data ? `${data.make} ${data.model}` : undefined}
+                />
               </DataReveal>
             )}
 
