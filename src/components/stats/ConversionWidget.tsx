@@ -94,7 +94,16 @@ export default function ConversionWidget({
         setRegError(msg);
         return;
       }
-      trackConversion("reg_search", { vrm: cleaned });
+      // flow = "tool" distinguishes widget-originated reg_search events
+      // (entry point on tool pages and stats pages) from the homepage's
+      // "main" flow and the homepage compare flow. Lets the dashboard /
+      // GA4 split conversions by entry surface. target_path adds extra
+      // resolution for which specific tool page was the entry point.
+      trackConversion("reg_search", {
+        vrm: cleaned,
+        flow: "tool",
+        target_path: targetPath,
+      });
       const join = targetPath.includes("?") ? "&" : "?";
       router.push(`${targetPath}${join}vrm=${cleaned}`);
     } catch (err) {
