@@ -372,6 +372,10 @@ export default async function CarValuationPage({
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How much is my car worth?</p>
             <p className="text-xs text-slate-500 mt-2">Same valuation, methodology-led — explains how the number is calculated and the four different &quot;worth&quot; numbers.</p>
           </a>
+          <a href="/car-valuation-no-signup" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car valuation — no signup, no marketing</p>
+            <p className="text-xs text-slate-500 mt-2">Privacy-first framing — what other sites do with your data, why we don&apos;t ask for it, and exactly what we do collect.</p>
+          </a>
         </div>
 
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>

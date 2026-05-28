@@ -507,6 +507,10 @@ export default async function HowMuchIsMyCarWorthPage({
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Value my car — 30 seconds, no email</p>
                 <p className="text-xs text-slate-500 mt-2">The valuation framed as an action — same tool, when-to-sell timing detail.</p>
               </a>
+              <a href="/car-valuation-no-signup" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car valuation — no signup, no marketing</p>
+                <p className="text-xs text-slate-500 mt-2">Privacy-first framing of the same tool — what other sites do with your details, and why we don&apos;t ask for them.</p>
+              </a>
               <a href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Complete car valuation guide</p>
                 <p className="text-xs text-slate-500 mt-2">How valuations work, what affects value, and how to get the best price.</p>
