@@ -24,7 +24,6 @@ export type StatsResponse = {
     yesterday: number;
   };
   uniqueVisitors: { last24h: number; last7d: number };
-  emailSignups: number;
   valuations: number;
   motReminders: number;
   // New for the richer dashboard
@@ -233,7 +232,6 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     pageViewsYesterday,
     uniqueVisitors24h,
     uniqueVisitors7d,
-    emailSignups,
     valuations,
     motReminders,
     contactToday,
@@ -270,7 +268,6 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEvents(sb, "page_view", yesterdayStart, todayStart),
     countUniqueVisitors(sb, oneDayAgo),
     countUniqueVisitors(sb, sevenDaysAgo),
-    countTable(sb, "email_signups"),
     countTable(sb, "vehicle_valuations"),
     countMotRemindersExcludingTests(sb, { column: "active", op: "eq", value: true }),
     countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
@@ -330,7 +327,6 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       yesterday: pageViewsYesterday,
     },
     uniqueVisitors: { last24h: uniqueVisitors24h, last7d: uniqueVisitors7d },
-    emailSignups,
     valuations,
     motReminders,
     contactMessages: {

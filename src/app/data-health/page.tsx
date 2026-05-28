@@ -56,7 +56,6 @@ type StatsData = {
     yesterday: number;
   };
   uniqueVisitors: { last24h: number; last7d: number };
-  emailSignups: number;
   valuations: number;
   motReminders: number;
   contactMessages: { today: number; last7d: number; allTime: number };
@@ -851,12 +850,6 @@ export default function DataHealthPage() {
                     value={stats.valuations}
                     sub="all time"
                     icon={Calculator}
-                  />
-                  <MiniStat
-                    label="Email signups"
-                    value={stats.emailSignups}
-                    sub="all time"
-                    icon={Mail}
                   />
                 </div>
                 {fuelPrices && (

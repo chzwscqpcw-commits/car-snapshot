@@ -65,7 +65,6 @@
 ### Existing capture points
 1. **Results page inline form** — `page.tsx:~3523` — Single email field with "Remind Me" button. Appears within the MOT history section. VRM is auto-populated from current lookup. Shows success message with MOT expiry date.
 2. **MOT reminder landing page** — `/mot-reminder` — No form on this page; directs users to homepage to look up a vehicle first, then set a reminder from results.
-3. **General email signup** — `/api/signup` — Stores to `email_signups` Supabase table with optional MOT reminder flag.
 
 ### Form details
 - **Fields:** Email only (single field). VRM passed as hidden field from current lookup.
@@ -85,7 +84,6 @@
 
 ### Supabase tables
 - `mot_reminders` — email, vrm, make_model, mot_expiry, reminder_28d_sent, reminder_7d_sent, active, unsubscribe_token — UNIQUE(email, vrm)
-- `email_signups` — email, source, wants_reminders, last_vrm_hash, mot_expiry, tax_due
 
 ### What's missing (for Phase 2)
 - No capture trigger for MOT due within 60 days (Trigger A)
