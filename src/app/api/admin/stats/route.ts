@@ -47,6 +47,14 @@ export type StatsResponse = {
     reminderViewsToday: number;
     reminderSignupsToday: number;
   };
+  funnel7d: {
+    // Same shape as funnel above but with a 7-day window — smooths out
+    // low-volume mornings where today's numbers haven't accumulated yet.
+    searches: number;
+    resultsViews: number;
+    reminderViews: number;
+    reminderSignups: number;
+  };
   captureByTriggerLast7d: CaptureTrigger[];
   partnerClicks: {
     today: number;
@@ -277,8 +285,11 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     // (per-user-action) not lookup (per-API-call) so the downstream
     // conversion ratios are meaningful.
     searchesToday,
+    searches7d,
     resultsViewsToday,
+    resultsViews7d,
     reminderViewsToday,
+    reminderViews7d,
     reminderAttemptsToday,
     reminderSuccessesToday,
     reminderValidationErrorsToday,
@@ -312,8 +323,11 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     topMakesSince(sb, todayStart, 5),
     countEvents(sb, "reg_search", todayStart),
+    countEvents(sb, "reg_search", sevenDaysAgo),
     countEvents(sb, "results_view", todayStart),
+    countEvents(sb, "results_view", sevenDaysAgo),
     countEvents(sb, "mot_reminder_view", todayStart),
+    countEvents(sb, "mot_reminder_view", sevenDaysAgo),
     countEvents(sb, "mot_reminder_submit_attempt", todayStart),
     countEvents(sb, "mot_reminder", todayStart),
     countEvents(sb, "mot_reminder_validation_error", todayStart),
@@ -381,6 +395,12 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       resultsViewsToday,
       reminderViewsToday,
       reminderSignupsToday: motRemindersToday,
+    },
+    funnel7d: {
+      searches: searches7d,
+      resultsViews: resultsViews7d,
+      reminderViews: reminderViews7d,
+      reminderSignups: motRemindersLast7d,
     },
     captureByTriggerLast7d,
     partnerClicks: {

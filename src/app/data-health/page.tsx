@@ -72,6 +72,12 @@ type StatsData = {
     reminderViewsToday: number;
     reminderSignupsToday: number;
   };
+  funnel7d: {
+    searches: number;
+    resultsViews: number;
+    reminderViews: number;
+    reminderSignups: number;
+  };
   captureByTriggerLast7d: CaptureTrigger[];
   partnerClicks: {
     today: number;
@@ -119,6 +125,15 @@ type FuelPriceData = {
   diesel: number;
   date: string | null;
 };
+
+type RecentEvent = {
+  id: string;
+  created_at: string;
+  event_type: string;
+  metadata: Record<string, unknown> | null;
+};
+
+type RecentEventsData = { events: RecentEvent[] };
 
 // ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
@@ -188,6 +203,35 @@ function StatusDot({ status }: { status: "ok" | "warning" | "error" }) {
     error: "bg-red-400 animate-pulse",
   };
   return <div className={`w-2.5 h-2.5 rounded-full ${colors[status]} shrink-0`} />;
+}
+
+// Latency thresholds. Tuned for our typical mix: Supabase usually <300ms,
+// DVLA/MOT/eBay 100-400ms. 500ms is "something's slow", 2000ms is "user
+// will notice / risk of timeout cascade".
+function latencyStatus(ms?: number): "ok" | "warning" | "error" {
+  if (ms == null) return "ok";
+  if (ms >= 2000) return "error";
+  if (ms >= 500) return "warning";
+  return "ok";
+}
+
+// Combine explicit service status with latency-based status; whichever is
+// worse wins. Lets a fully-responding-but-slow Supabase show as amber even
+// though /api/admin/health reports it as ok.
+function effectiveServiceStatus(
+  explicit: "ok" | "warning" | "error",
+  ms?: number,
+): "ok" | "warning" | "error" {
+  const order = { ok: 0, warning: 1, error: 2 } as const;
+  const lat = latencyStatus(ms);
+  return order[lat] > order[explicit] ? lat : explicit;
+}
+
+function latencyTextColor(ms?: number): string {
+  const s = latencyStatus(ms);
+  if (s === "error") return "text-red-300";
+  if (s === "warning") return "text-amber-300";
+  return "text-slate-500";
 }
 
 function getFreshnessStatus(daysAgo: number, threshold: number): "ok" | "warning" | "error" {
@@ -361,6 +405,121 @@ function BarList({ items, emptyMessage }: { items: BarItem[]; emptyMessage: stri
   );
 }
 
+// ── Recent events feed ────────────────────────────────────────────────────────
+
+function relativeTime(iso: string): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const s = Math.round(diffMs / 1000);
+  if (s < 5) return "now";
+  if (s < 60) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h}h`;
+  return `${Math.round(h / 24)}d`;
+}
+
+function eventTone(eventType: string): { dot: string; text: string } {
+  if (eventType.endsWith("_error") || eventType.includes("validation_error")) {
+    return { dot: "bg-red-400", text: "text-red-300" };
+  }
+  if (eventType === "partner_click") {
+    return { dot: "bg-emerald-400", text: "text-emerald-300" };
+  }
+  if (eventType === "reg_search" || eventType === "mot_reminder") {
+    return { dot: "bg-cyan-400", text: "text-cyan-300" };
+  }
+  if (eventType.endsWith("_click")) {
+    return { dot: "bg-violet-400", text: "text-violet-300" };
+  }
+  if (eventType.endsWith("_view")) {
+    return { dot: "bg-sky-500", text: "text-sky-300" };
+  }
+  return { dot: "bg-slate-500", text: "text-slate-300" };
+}
+
+function summarizeEvent(e: RecentEvent): string {
+  const m = (e.metadata ?? {}) as Record<string, unknown>;
+  const get = (k: string) => (typeof m[k] === "string" ? (m[k] as string) : null);
+  const getNum = (k: string) => (typeof m[k] === "number" ? (m[k] as number) : null);
+
+  switch (e.event_type) {
+    case "partner_click":
+      return `${get("partner_id") ?? "?"} · ${get("click_context") ?? "?"}`;
+    case "reg_search":
+      return `vrm=${get("vrm") ?? "?"} · ${get("flow") ?? "?"}`;
+    case "mot_reminder":
+      return `${get("trigger_variant") ?? "?"} · ${getNum("vrm_count") ?? 1} vrm`;
+    case "results_view":
+      return `${get("make") ?? "?"} · MOT ${get("mot_status") ?? "?"} · ${getNum("year_of_manufacture") ?? "?"}`;
+    case "results_section_view":
+      return get("section_label") ?? get("section_id") ?? "?";
+    case "mot_reminder_view":
+    case "mot_reminder_chip_view":
+    case "mot_reminder_chip_click":
+      return `${get("trigger_variant") ?? get("context") ?? "?"}`;
+    case "mot_reminder_submit_attempt":
+      return `${get("trigger_variant") ?? "?"} · ${getNum("vrm_count") ?? 1} vrm`;
+    case "mot_reminder_submit_error":
+    case "mot_reminder_validation_error":
+      return `${get("error_type") ?? get("field") ?? "?"} · ${get("trigger_variant") ?? get("context") ?? "?"}`;
+    case "experiment_impression":
+    case "experiment_click":
+      return `${get("experiment_id") ?? "?"} = ${get("variant") ?? "?"}`;
+    default: {
+      // Generic fallback — show first metadata value if any
+      const keys = Object.keys(m);
+      if (keys.length === 0) return "—";
+      return keys
+        .slice(0, 2)
+        .map((k) => `${k}=${String(m[k] ?? "").slice(0, 24)}`)
+        .join(" · ");
+    }
+  }
+}
+
+function RecentEventsFeed({ events }: { events: RecentEvent[] }) {
+  if (events.length === 0) {
+    return (
+      <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
+        <p className="text-xs text-slate-500">No recent events yet.</p>
+      </div>
+    );
+  }
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+      {events.map((e, i) => {
+        const tone = eventTone(e.event_type);
+        return (
+          <div
+            key={e.id}
+            className={`px-3.5 py-2 flex items-center gap-3 ${
+              i < events.length - 1 ? "border-b border-slate-800/60" : ""
+            }`}
+          >
+            <span
+              className={`w-2 h-2 rounded-full ${tone.dot} shrink-0`}
+              aria-hidden="true"
+            />
+            <span className="text-[10px] font-mono text-slate-500 tabular-nums w-10 flex-shrink-0">
+              {relativeTime(e.created_at)}
+            </span>
+            <span
+              className={`text-[11px] font-medium ${tone.text} truncate w-32 sm:w-44 flex-shrink-0`}
+              title={e.event_type}
+            >
+              {e.event_type}
+            </span>
+            <span className="text-xs text-slate-400 truncate min-w-0">
+              {summarizeEvent(e)}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Hero KPI card ─────────────────────────────────────────────────────────────
 
 function KpiCard({
@@ -442,6 +601,7 @@ export default function DataHealthPage() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [dataHealth, setDataHealth] = useState<DataHealthData | null>(null);
   const [fuelPrices, setFuelPrices] = useState<FuelPriceData | null>(null);
+  const [recentEvents, setRecentEvents] = useState<RecentEventsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedFile, setExpandedFile] = useState<string | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -452,16 +612,18 @@ export default function DataHealthPage() {
 
   const fetchDashboardData = useCallback(async () => {
     try {
-      const [healthRes, statsRes, dataRes, fuelRes] = await Promise.all([
+      const [healthRes, statsRes, dataRes, fuelRes, recentRes] = await Promise.all([
         fetch("/api/admin/health").then((r) => r.json()).catch(() => null),
         fetch("/api/admin/stats").then((r) => r.json()).catch(() => null),
         fetch("/api/data-health").then((r) => r.json()).catch(() => null),
         fetch("/api/fuel-prices").then((r) => r.json()).catch(() => null),
+        fetch("/api/admin/recent-events").then((r) => r.json()).catch(() => null),
       ]);
       if (healthRes) setHealth(healthRes);
       if (statsRes) setStats(statsRes);
       if (dataRes) setDataHealth(dataRes);
       if (fuelRes) setFuelPrices(fuelRes);
+      if (recentRes) setRecentEvents(recentRes);
       setLastRefreshed(new Date());
     } finally {
       setLoading(false);
@@ -676,6 +838,59 @@ export default function DataHealthPage() {
               </Section>
             )}
 
+            {/* ── 7-DAY CONVERSION FUNNEL ── */}
+            {stats && (
+              <Section
+                title="Last 7 days conversion funnel"
+                hint="Stabler signal · smooths low-volume mornings"
+              >
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  <FunnelStep
+                    icon={Search}
+                    label="Searches"
+                    value={stats.funnel7d.searches}
+                  />
+                  <FunnelStep
+                    icon={Eye}
+                    label="Results viewed"
+                    value={stats.funnel7d.resultsViews}
+                    conversionPct={pct(
+                      stats.funnel7d.resultsViews,
+                      stats.funnel7d.searches,
+                    )}
+                  />
+                  <FunnelStep
+                    icon={Bell}
+                    label="Reminder offered"
+                    value={stats.funnel7d.reminderViews}
+                    conversionPct={pct(
+                      stats.funnel7d.reminderViews,
+                      stats.funnel7d.resultsViews,
+                    )}
+                  />
+                  <FunnelStep
+                    icon={TrendingUp}
+                    label="Reminder signups"
+                    value={stats.funnel7d.reminderSignups}
+                    conversionPct={pct(
+                      stats.funnel7d.reminderSignups,
+                      stats.funnel7d.reminderViews,
+                    )}
+                  />
+                </div>
+              </Section>
+            )}
+
+            {/* ── REAL-TIME EVENTS FEED ── */}
+            {recentEvents && (
+              <Section
+                title="Real-time activity"
+                hint={`Last ${recentEvents.events.length} events · excludes page_view noise`}
+              >
+                <RecentEventsFeed events={recentEvents.events} />
+              </Section>
+            )}
+
             {/* ── CAPTURE TRIGGER PERFORMANCE ── */}
             {stats && (
               <Section
@@ -815,27 +1030,32 @@ export default function DataHealthPage() {
                 })}`}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                  {health.services.map((service) => (
-                    <div
-                      key={service.name}
-                      className="bg-slate-900 border border-slate-800 rounded-xl p-3.5"
-                    >
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <StatusDot status={service.status} />
-                        <span className="text-sm font-semibold text-white">
-                          {service.name}
-                        </span>
-                        {service.latencyMs != null && (
-                          <span className="text-[10px] text-slate-500 ml-auto tabular-nums">
-                            {service.latencyMs}ms
+                  {health.services.map((service) => {
+                    const effective = effectiveServiceStatus(service.status, service.latencyMs);
+                    return (
+                      <div
+                        key={service.name}
+                        className="bg-slate-900 border border-slate-800 rounded-xl p-3.5"
+                      >
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <StatusDot status={effective} />
+                          <span className="text-sm font-semibold text-white">
+                            {service.name}
                           </span>
-                        )}
+                          {service.latencyMs != null && (
+                            <span
+                              className={`text-[10px] ml-auto tabular-nums ${latencyTextColor(service.latencyMs)}`}
+                            >
+                              {service.latencyMs}ms
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                          {service.message}
+                        </p>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed">
-                        {service.message}
-                      </p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Section>
             )}
