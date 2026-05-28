@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
 
 export type TopMake = { make: string; count: number };
 
@@ -250,6 +250,10 @@ function startOfUtcDay(d: Date): Date {
 
 export async function GET(): Promise<NextResponse<StatsResponse>> {
   const sb = supabaseServer();
+  // contact_messages has RLS enabled — the anon client returns empty result
+  // sets silently, with no error. Use the service-role client for any count
+  // against RLS-protected tables so the dashboard doesn't read 0s as truth.
+  const sbRead = supabaseServerRole();
 
   const now = new Date();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
@@ -316,9 +320,9 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countUniqueVisitorsBetween(sb, yesterdayStart, todayStart),
     countTable(sb, "vehicle_valuations"),
     countMotRemindersExcludingTests(sb, { column: "active", op: "eq", value: true }),
-    countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
-    countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
-    countTable(sb, "contact_messages"),
+    countTable(sbRead, "contact_messages", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
+    countTable(sbRead, "contact_messages", { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
+    countTable(sbRead, "contact_messages"),
     countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: sevenDaysAgo.toISOString() }),
     countMotRemindersExcludingTests(sb, { column: "created_at", op: "gte", value: todayStart.toISOString() }),
     topMakesSince(sb, todayStart, 5),
