@@ -433,9 +433,14 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       if (!(hasDvlaKey && cached.source === "mock")) {
         console.log(`[LOOKUP] Using cached data for VRM: ${vrm}`);
         const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
+        // Pull make off the cached payload too so Top Makes counts both
+        // cache hits and fresh fetches — otherwise the dashboard ranking
+        // is biased toward whichever vehicles miss the cache.
+        const cachedMake =
+          (cached.data as { make?: string } | null | undefined)?.make ?? null;
         sb.from("site_events").insert({
           event_type: "lookup",
-          metadata: { cached: true },
+          metadata: { cached: true, make: cachedMake },
           ip_hash: ipHash,
         }).then(() => {}, () => {});
         return NextResponse.json({

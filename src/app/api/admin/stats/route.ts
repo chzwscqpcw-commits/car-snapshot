@@ -23,7 +23,13 @@ export type StatsResponse = {
     today: number;
     yesterday: number;
   };
-  uniqueVisitors: { last24h: number; last7d: number };
+  uniqueVisitors: {
+    last24h: number;
+    last7d: number;
+    // UTC-day-aligned, so a meaningful day-over-day delta can be drawn.
+    today: number;
+    yesterday: number;
+  };
   valuations: number;
   motReminders: number;
   // New for the richer dashboard
@@ -94,6 +100,31 @@ async function countUniqueVisitors(
     return 0;
   }
   return data ?? 0;
+}
+
+/**
+ * Count distinct ip_hashes in a UTC-day-aligned window. Used for the
+ * dashboard's day-over-day visitor delta — the RPC version only takes a
+ * `since` parameter, so it can't bound a "yesterday only" count.
+ */
+async function countUniqueVisitorsBetween(
+  sb: ReturnType<typeof supabaseServer>,
+  since: Date,
+  until: Date,
+): Promise<number> {
+  const { data, error } = await sb
+    .from("site_events")
+    .select("ip_hash")
+    .eq("event_type", "page_view")
+    .gte("created_at", since.toISOString())
+    .lt("created_at", until.toISOString())
+    .not("ip_hash", "is", null)
+    .limit(10000);
+  if (error || !data) {
+    console.error("[STATS] Error counting unique visitors between:", error?.message);
+    return 0;
+  }
+  return new Set(data.map((r) => r.ip_hash)).size;
 }
 
 /**
@@ -232,6 +263,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     pageViewsYesterday,
     uniqueVisitors24h,
     uniqueVisitors7d,
+    uniqueVisitorsToday,
+    uniqueVisitorsYesterday,
     valuations,
     motReminders,
     contactToday,
@@ -268,6 +301,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEvents(sb, "page_view", yesterdayStart, todayStart),
     countUniqueVisitors(sb, oneDayAgo),
     countUniqueVisitors(sb, sevenDaysAgo),
+    countUniqueVisitorsBetween(sb, todayStart, new Date(now.getTime() + 60_000)),
+    countUniqueVisitorsBetween(sb, yesterdayStart, todayStart),
     countTable(sb, "vehicle_valuations"),
     countMotRemindersExcludingTests(sb, { column: "active", op: "eq", value: true }),
     countTable(sb, "contact_messages", { column: "created_at", op: "gte", value: todayStart.toISOString() }),
@@ -326,7 +361,12 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       today: pageViewsToday,
       yesterday: pageViewsYesterday,
     },
-    uniqueVisitors: { last24h: uniqueVisitors24h, last7d: uniqueVisitors7d },
+    uniqueVisitors: {
+      last24h: uniqueVisitors24h,
+      last7d: uniqueVisitors7d,
+      today: uniqueVisitorsToday,
+      yesterday: uniqueVisitorsYesterday,
+    },
     valuations,
     motReminders,
     contactMessages: {

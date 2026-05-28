@@ -55,7 +55,12 @@ type StatsData = {
     today: number;
     yesterday: number;
   };
-  uniqueVisitors: { last24h: number; last7d: number };
+  uniqueVisitors: {
+    last24h: number;
+    last7d: number;
+    today: number;
+    yesterday: number;
+  };
   valuations: number;
   motReminders: number;
   contactMessages: { today: number; last7d: number; allTime: number };
@@ -571,22 +576,22 @@ export default function DataHealthPage() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
                 <KpiCard
                   icon={Search}
-                  label="Lookups today"
+                  label="API lookups today"
                   value={stats.lookups.today}
                   delta={
                     <Delta current={stats.lookups.today} prior={stats.lookups.yesterday} />
                   }
-                  sub={`${stats.lookups.last7d.toLocaleString()} last 7d`}
+                  sub={`${stats.lookups.last7d.toLocaleString()} last 7d · per-call`}
                   tone="cyan"
                 />
                 <KpiCard
                   icon={Users}
                   label="Visitors today"
-                  value={stats.uniqueVisitors.last24h}
+                  value={stats.uniqueVisitors.today}
                   delta={
                     <Delta
-                      current={stats.pageViews.today}
-                      prior={stats.pageViews.yesterday}
+                      current={stats.uniqueVisitors.today}
+                      prior={stats.uniqueVisitors.yesterday}
                     />
                   }
                   sub={`${stats.uniqueVisitors.last7d.toLocaleString()} last 7d`}
@@ -632,7 +637,7 @@ export default function DataHealthPage() {
             {stats && (
               <Section
                 title="Today's conversion funnel"
-                hint="Per-user actions · resets at 00:00 UTC"
+                hint="Per-user actions (not API calls) · resets at 00:00 UTC"
               >
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
                   <FunnelStep
