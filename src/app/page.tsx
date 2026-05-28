@@ -2945,18 +2945,34 @@ END:VEVENT
               <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
                 Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
               </p>
-              <p className="mt-3 text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1">
+              {/* Trust strip — visually anchored, more confident than the
+                  previous one-liner. The live dot signals real-time data
+                  feeds (countered the "is this just a scraped cache?"
+                  doubt new visitors land with). Privacy promise is now
+                  explicit about the THREE things people fear losing: no
+                  signup, no email, no tracking. */}
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-400">
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    className="block w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] animate-pulse"
+                    aria-hidden="true"
+                  />
+                  <span>Live DVLA &amp; MOT data</span>
+                </span>
                 {vehiclesChecked !== null && vehiclesChecked > 0 && (
                   <>
-                    <span className="font-mono text-slate-300 tracking-wide">
-                      <CountUp target={Math.floor(vehiclesChecked / 100) * 100} />+
+                    <span className="text-slate-600" aria-hidden="true">·</span>
+                    <span className="inline-flex items-baseline gap-1">
+                      <span className="font-mono text-slate-200 tracking-wide font-semibold">
+                        <CountUp target={Math.floor(vehiclesChecked / 100) * 100} />+
+                      </span>
+                      <span>checked</span>
                     </span>
-                    <span>vehicles checked</span>
-                    <span className="text-slate-700" aria-hidden="true">·</span>
                   </>
                 )}
-                <span>No signup, no tracking</span>
-              </p>
+                <span className="text-slate-600" aria-hidden="true">·</span>
+                <span className="font-medium text-emerald-300/90">No signup, no email, no tracking</span>
+              </div>
             </>
           )}
 
