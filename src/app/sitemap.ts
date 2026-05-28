@@ -102,6 +102,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/value-my-car",
+      lastModified: new Date("2026-05-28"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/how-much-is-my-car-worth",
+      lastModified: new Date("2026-05-28"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/running-costs",
       lastModified: new Date("2026-03-13"),
       changeFrequency: "monthly",

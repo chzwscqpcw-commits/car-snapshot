@@ -360,8 +360,20 @@ export default async function CarValuationPage({
         />
       </div>
 
-      {/* Related guides */}
+      {/* Also try */}
       <div className="max-w-3xl mx-auto px-4 mt-16">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Also try</h2>
+        <div className="grid gap-4 sm:grid-cols-2 mb-8">
+          <a href="/value-my-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Value my car — 30 seconds, no email</p>
+            <p className="text-xs text-slate-500 mt-2">Same valuation tool, action-focused — covers when to sell and timing the market.</p>
+          </a>
+          <a href="/how-much-is-my-car-worth" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How much is my car worth?</p>
+            <p className="text-xs text-slate-500 mt-2">Same valuation, methodology-led — explains how the number is calculated and the four different &quot;worth&quot; numbers.</p>
+          </a>
+        </div>
+
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <a href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
