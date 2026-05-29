@@ -181,8 +181,8 @@ function PlateE({ reg }: { reg: string }) {
         className="absolute inset-0 opacity-40 plate-holo-sweep"
         style={{
           background:
-            "linear-gradient(110deg, transparent 30%, rgba(34,211,238,0.4) 45%, rgba(168,85,247,0.4) 55%, transparent 70%)",
-          backgroundSize: "200% 100%",
+            "linear-gradient(110deg, transparent 0%, transparent 33%, rgba(34,211,238,0.35) 42%, rgba(168,85,247,0.35) 50%, rgba(34,211,238,0.35) 58%, transparent 67%, transparent 100%)",
+          backgroundSize: "300% 100%",
         }}
       />
       <span
@@ -192,16 +192,21 @@ function PlateE({ reg }: { reg: string }) {
         {reg || "AB12 CDE"}
       </span>
       <style jsx>{`
+        /* Linear timing + symmetric start/end positions so the loop
+           reads as a continuous drift, not a return-to-zero snap. The
+           gradient is sized 300% wide and the sweep travels exactly
+           one gradient-width, so the end frame is visually identical
+           to the start frame — no perceptible seam. */
         @keyframes plateHoloSweep {
           0% {
-            background-position: -100% 0;
+            background-position: 0% 0;
           }
           100% {
-            background-position: 200% 0;
+            background-position: -200% 0;
           }
         }
         .plate-holo-sweep {
-          animation: plateHoloSweep 3s ease-in-out infinite;
+          animation: plateHoloSweep 4s linear infinite;
         }
       `}</style>
     </div>
