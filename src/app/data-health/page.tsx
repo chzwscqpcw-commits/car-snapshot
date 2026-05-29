@@ -5,9 +5,13 @@ import {
   Activity,
   AlertTriangle,
   Bell,
+  Bookmark,
   Calculator,
+  CheckCircle2,
   ChevronDown,
   Database,
+  Download,
+  ExternalLink,
   Eye,
   Filter,
   Fuel,
@@ -16,9 +20,11 @@ import {
   MousePointerClick,
   RefreshCw,
   Search,
+  Sparkles,
   TrendingDown,
   TrendingUp,
   Users,
+  Wand2,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -83,6 +89,7 @@ type StatsData = {
     today: number;
     last7d: number;
     byContextToday: PartnerContextCount[];
+    byContextLast7d: PartnerContextCount[];
   };
   sectionReachToday: {
     resultsViews: number;
@@ -94,6 +101,19 @@ type StatsData = {
     successes: number;
     validationErrors: number;
     submitErrors: { duplicate: number; server: number; network: number };
+  };
+  bookingWizardLast7d: {
+    starts: number;
+    stepCompletes: { step: number; count: number }[];
+    handoffs: number;
+    sources: { source: string; count: number }[];
+  };
+  newEventsLast7d: {
+    pdfDownloads: number;
+    pdfErrors: number;
+    vehiclesSaved: number;
+    outboundClicks: number;
+    scrollDepth: { threshold_pct: number; count: number }[];
   };
 };
 
@@ -1039,6 +1059,133 @@ export default function DataHealthPage() {
                           {stats.reminderFormToday.submitErrors.network}
                         </p>
                       </div>
+                    </div>
+                  </div>
+                )}
+              </Section>
+            )}
+
+            {/* ── BOOKING WIZARD FUNNEL (last 7d) ── */}
+            {stats && (
+              <Section
+                title="Booking wizard funnel"
+                hint={`Last 7d · Step 1 = wizard starts (${stats.bookingWizardLast7d.starts.toLocaleString()})`}
+              >
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
+                  <FunnelStep
+                    icon={Wand2}
+                    label="Wizard starts"
+                    value={stats.bookingWizardLast7d.starts}
+                  />
+                  {[2, 3, 4].map((stepNum) => {
+                    const step = stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === stepNum);
+                    const prevStep = stepNum === 2
+                      ? stats.bookingWizardLast7d.starts
+                      : (stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === stepNum - 1)?.count ?? 0);
+                    return (
+                      <FunnelStep
+                        key={stepNum}
+                        icon={CheckCircle2}
+                        label={`Step ${stepNum} reached`}
+                        value={step?.count ?? 0}
+                        conversionPct={pct(step?.count ?? 0, prevStep)}
+                      />
+                    );
+                  })}
+                  <FunnelStep
+                    icon={ExternalLink}
+                    label="BMG handoffs"
+                    value={stats.bookingWizardLast7d.handoffs}
+                    conversionPct={pct(
+                      stats.bookingWizardLast7d.handoffs,
+                      stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === 4)?.count ?? 0,
+                    )}
+                  />
+                </div>
+              </Section>
+            )}
+
+            {/* ── BOOKING WIZARD SOURCES ── */}
+            {stats && (
+              <Section
+                title="Booking wizard sources"
+                hint="Which CTAs drove wizard starts · last 7d"
+              >
+                <BarList
+                  items={stats.bookingWizardLast7d.sources.map((s) => ({
+                    label: s.source,
+                    count: s.count,
+                    mono: true,
+                  }))}
+                  emptyMessage="No wizard entries yet — first user clicks land here once the new CTAs see traffic."
+                />
+              </Section>
+            )}
+
+            {/* ── PARTNER CLICKS LAST 7D ── */}
+            {stats && (
+              <Section
+                title="Partner clicks last 7 days"
+                hint={`${stats.partnerClicks.last7d.toLocaleString()} total · per-CTA attribution`}
+              >
+                <BarList
+                  items={stats.partnerClicks.byContextLast7d.map((c) => ({
+                    label: c.context,
+                    count: c.count,
+                    mono: true,
+                  }))}
+                  emptyMessage="No partner clicks in the last 7 days yet."
+                />
+              </Section>
+            )}
+
+            {/* ── NEW EVENTS TRACKED ── */}
+            {stats && (
+              <Section
+                title="New events tracked"
+                hint="Shipped May 2026 · last 7d"
+              >
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  <FunnelStep
+                    icon={Download}
+                    label="PDF downloads"
+                    value={stats.newEventsLast7d.pdfDownloads}
+                  />
+                  <FunnelStep
+                    icon={Bookmark}
+                    label="Vehicles saved"
+                    value={stats.newEventsLast7d.vehiclesSaved}
+                  />
+                  <FunnelStep
+                    icon={ExternalLink}
+                    label="Outbound clicks"
+                    value={stats.newEventsLast7d.outboundClicks}
+                  />
+                  <FunnelStep
+                    icon={Sparkles}
+                    label="PDF errors"
+                    value={stats.newEventsLast7d.pdfErrors}
+                  />
+                </div>
+                {stats.newEventsLast7d.scrollDepth.length > 0 && (
+                  <div className="mt-3.5 rounded-xl border border-slate-800 bg-slate-900/40 p-3.5">
+                    <p className="text-[11px] font-medium text-slate-400 mb-2">
+                      Scroll depth on results page (% of users reaching each threshold)
+                    </p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {stats.newEventsLast7d.scrollDepth.map((b) => (
+                        <div
+                          key={b.threshold_pct}
+                          className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-center"
+                        >
+                          <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                            {b.threshold_pct}%
+                          </p>
+                          <p className="text-sm font-mono font-semibold text-cyan-300 tabular-nums mt-0.5">
+                            {b.count.toLocaleString()}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

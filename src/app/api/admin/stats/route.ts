@@ -8,6 +8,9 @@ export type TopMake = { make: string; count: number };
 export type CaptureTrigger = { trigger_variant: string; count: number };
 export type PartnerContextCount = { context: string; count: number };
 export type SectionReach = { section_id: string; count: number; pct: number };
+export type BookingStepCount = { step: number; count: number };
+export type BookingSource = { source: string; count: number };
+export type ScrollThreshold = { threshold_pct: number; count: number };
 
 export type StatsResponse = {
   lookups: {
@@ -60,6 +63,10 @@ export type StatsResponse = {
     today: number;
     last7d: number;
     byContextToday: PartnerContextCount[];
+    // 7-day per-context attribution — the today-only view is too sparse
+    // for many of the long-tail CTAs (servicing page, brake-pads page,
+    // mot_cta placements). 7d gives a meaningful per-CTA picture.
+    byContextLast7d: PartnerContextCount[];
   };
   sectionReachToday: {
     resultsViews: number;
@@ -71,6 +78,24 @@ export type StatsResponse = {
     successes: number;
     validationErrors: number;
     submitErrors: { duplicate: number; server: number; network: number };
+  };
+  // Booking-wizard funnel — wizard_start → step_complete → BMG handoff.
+  // The handoff count comes from partner_click events whose click_context
+  // starts with "booking-flow-" (the Step4Review pattern).
+  bookingWizardLast7d: {
+    starts: number;
+    stepCompletes: BookingStepCount[];
+    handoffs: number;
+    sources: BookingSource[];
+  };
+  // New events shipped May 2026 — surfacing them so we can see they're
+  // actually firing in production rather than only in dev.
+  newEventsLast7d: {
+    pdfDownloads: number;
+    pdfErrors: number;
+    vehiclesSaved: number;
+    outboundClicks: number;
+    scrollDepth: ScrollThreshold[];
   };
 };
 
@@ -302,8 +327,20 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     // Grouped breakdowns
     triggerCountsLast7d,
     partnerContextCountsToday,
+    partnerContextCountsLast7d,
     sectionCountsToday,
     submitErrorMetaToday,
+    // Booking wizard funnel (last 7 days)
+    bookingStarts7d,
+    bookingStepCompletes7d,
+    bookingHandoffsByContext7d,
+    bookingSources7d,
+    // New events (last 7 days)
+    pdfDownloads7d,
+    pdfErrors7d,
+    vehiclesSaved7d,
+    outboundClicks7d,
+    scrollDepthCounts7d,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -339,8 +376,24 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEvents(sb, "partner_click", sevenDaysAgo),
     groupByMetadataField(sb, "mot_reminder", "trigger_variant", sevenDaysAgo),
     groupByMetadataField(sb, "partner_click", "click_context", todayStart),
+    groupByMetadataField(sb, "partner_click", "click_context", sevenDaysAgo),
     groupByMetadataField(sb, "results_section_view", "section_id", todayStart),
     groupByMetadataField(sb, "mot_reminder_submit_error", "error_type", todayStart),
+    countEvents(sb, "booking_wizard_start", sevenDaysAgo),
+    // step_complete fires once per advance; we group by `step` so the
+    // funnel shows 2 (entered Step 2) → 3 → 4 distinctly. Step 1 is
+    // implicit in the wizard_start count.
+    groupByMetadataField(sb, "booking_step_complete", "step", sevenDaysAgo),
+    // BMG handoffs are partner_clicks where click_context starts with
+    // "booking-flow-" (the Step4Review CTA pattern). We re-use the 7d
+    // partner-context map and filter client-side below.
+    groupByMetadataField(sb, "partner_click", "click_context", sevenDaysAgo),
+    groupByMetadataField(sb, "booking_wizard_start", "source", sevenDaysAgo),
+    countEvents(sb, "pdf_download", sevenDaysAgo),
+    countEvents(sb, "pdf_download_error", sevenDaysAgo),
+    countEvents(sb, "vehicle_saved", sevenDaysAgo),
+    countEvents(sb, "outbound_click", sevenDaysAgo),
+    groupByMetadataField(sb, "scroll_depth", "threshold_pct", sevenDaysAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
@@ -350,6 +403,31 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
   const partnerContextByCount: PartnerContextCount[] = Array.from(partnerContextCountsToday.entries())
     .map(([context, count]) => ({ context, count }))
     .sort((a, b) => b.count - a.count);
+
+  const partnerContextByCountLast7d: PartnerContextCount[] = Array.from(partnerContextCountsLast7d.entries())
+    .map(([context, count]) => ({ context, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // Booking step completes: numeric step values converted from string keys
+  const bookingStepCounts: BookingStepCount[] = Array.from(bookingStepCompletes7d.entries())
+    .map(([stepStr, count]) => ({ step: Number(stepStr), count }))
+    .filter((s) => Number.isFinite(s.step))
+    .sort((a, b) => a.step - b.step);
+
+  // BMG handoffs = sum of partner_clicks whose click_context starts with
+  // "booking-flow-" (matches the wizard Step4Review clickref pattern).
+  const bookingHandoffsCount = Array.from(bookingHandoffsByContext7d.entries())
+    .filter(([ctx]) => ctx.startsWith("booking-flow-"))
+    .reduce((sum, [, count]) => sum + count, 0);
+
+  const bookingWizardSources: BookingSource[] = Array.from(bookingSources7d.entries())
+    .map(([source, count]) => ({ source, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const scrollDepthBuckets: ScrollThreshold[] = Array.from(scrollDepthCounts7d.entries())
+    .map(([thresholdStr, count]) => ({ threshold_pct: Number(thresholdStr), count }))
+    .filter((s) => Number.isFinite(s.threshold_pct))
+    .sort((a, b) => a.threshold_pct - b.threshold_pct);
 
   const sectionReachSections: SectionReach[] = Array.from(sectionCountsToday.entries())
     .map(([section_id, count]) => ({
@@ -411,6 +489,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       today: partnerClicksToday,
       last7d: partnerClicks7d,
       byContextToday: partnerContextByCount,
+      byContextLast7d: partnerContextByCountLast7d,
     },
     sectionReachToday: {
       resultsViews: resultsViewsToday,
@@ -422,6 +501,19 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       successes: reminderSuccessesToday,
       validationErrors: reminderValidationErrorsToday,
       submitErrors,
+    },
+    bookingWizardLast7d: {
+      starts: bookingStarts7d,
+      stepCompletes: bookingStepCounts,
+      handoffs: bookingHandoffsCount,
+      sources: bookingWizardSources,
+    },
+    newEventsLast7d: {
+      pdfDownloads: pdfDownloads7d,
+      pdfErrors: pdfErrors7d,
+      vehiclesSaved: vehiclesSaved7d,
+      outboundClicks: outboundClicks7d,
+      scrollDepth: scrollDepthBuckets,
     },
   });
 }
