@@ -607,6 +607,65 @@ function SectionGroup({ icon: Icon, label, children, id }: { icon: React.ReactNo
   );
 }
 
+/**
+ * Branded toast — replaces the plain "dark card with text" treatment we
+ * had before. Infers tone (icon + accent colour) from the message string
+ * so every existing showToast() call site benefits without needing to
+ * pass a type. Cyan left accent strip echoes the email InfoCard pattern.
+ * Frosted backdrop matches the on-site card surface.
+ *
+ * Why string-matching? The showToast() helper is called from 15+ places
+ * scattered across the file. Adding a tone parameter would mean touching
+ * every call site for marginal benefit; string-matching is one place,
+ * easy to extend, and the matches are deliberately permissive (substring
+ * checks) so message-copy tweaks don't silently break the visuals.
+ */
+function BrandedToast({ msg }: { msg: string }) {
+  const tone = getToastTone(msg);
+  const Icon = tone.icon;
+  return (
+    <div className="fixed bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm z-50 animate-fadeInUp">
+      <div className="relative overflow-hidden rounded-xl border border-slate-700/80 bg-slate-900/95 backdrop-blur-sm shadow-2xl shadow-slate-950/50">
+        <div className={`absolute left-0 top-0 bottom-0 w-1 ${tone.accentBg}`} />
+        <div className="flex items-start gap-3 px-4 py-3.5 pl-5">
+          <div className={`shrink-0 mt-0.5 ${tone.iconColor}`}>
+            <Icon className="h-4 w-4" />
+          </div>
+          <p className="text-sm text-slate-100 leading-snug flex-1 font-medium">
+            {msg}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getToastTone(msg: string) {
+  const m = msg.toLowerCase();
+  if (m.includes("could not") || m.includes("failed") || m.includes("error")) {
+    return { icon: AlertTriangle, iconColor: "text-amber-300", accentBg: "bg-amber-500" };
+  }
+  if (m.includes("favourite") || m.includes("favorite")) {
+    return { icon: Heart, iconColor: "text-rose-400", accentBg: "bg-rose-500" };
+  }
+  if (m.includes("my vehicles") || m.includes("my car")) {
+    return { icon: Car, iconColor: "text-emerald-300", accentBg: "bg-emerald-500" };
+  }
+  if (m.includes("calendar")) {
+    return { icon: Calendar, iconColor: "text-cyan-300", accentBg: "bg-cyan-500" };
+  }
+  if (m.includes("download") || m.includes("pdf") || m.includes("report")) {
+    return { icon: FileText, iconColor: "text-cyan-300", accentBg: "bg-cyan-500" };
+  }
+  if (m.includes("copied") || m.includes("clipboard") || m.includes("link")) {
+    return { icon: ExternalLink, iconColor: "text-cyan-300", accentBg: "bg-cyan-500" };
+  }
+  if (m.includes("cleared") || m.includes("removed")) {
+    return { icon: Info, iconColor: "text-slate-400", accentBg: "bg-slate-500" };
+  }
+  return { icon: CheckCircle2, iconColor: "text-cyan-300", accentBg: "bg-cyan-500" };
+}
+
 // Quick navigation bar for jumping between section groups
 function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
   const sections = [
@@ -2210,7 +2269,7 @@ export default function Home() {
     const updated = [favorite, ...favorites.filter(f => f.registrationNumber !== data.registrationNumber)];
     setFavorites(updated);
     saveFavoritesToStorage(updated);
-    showToast("Added to favorites ❤️");
+    showToast("Added to favorites");
     trackEvent("vehicle_saved", {
       kind: "favorite",
       reg: data.registrationNumber,
@@ -2265,7 +2324,7 @@ export default function Home() {
     const updated = [vehicle, ...myVehicles.filter(v => v.registrationNumber !== data.registrationNumber)];
     setMyVehicles(updated);
     saveMyVehiclesToStorage(updated);
-    showToast("Added to My Vehicles ✓");
+    showToast("Added to My Vehicles");
     trackEvent("vehicle_saved", {
       kind: "my_vehicles",
       reg: data.registrationNumber,
@@ -5519,11 +5578,7 @@ END:VEVENT
         )}
 
         {/* TOAST NOTIFICATION */}
-        {toastMsg && (
-          <div className="fixed bottom-6 left-6 right-6 sm:left-auto sm:right-6 max-w-sm p-4 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 text-sm shadow-lg animate-fadeInUp">
-            {toastMsg}
-          </div>
-        )}
+        {toastMsg && <BrandedToast msg={toastMsg} />}
       </div>
 
       {/* SHARE TOAST — first lookup (Moment A) */}
