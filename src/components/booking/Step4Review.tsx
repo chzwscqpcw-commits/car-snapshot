@@ -122,7 +122,7 @@ export default function Step4Review({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 pb-24 sm:pb-0">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-white">Ready to compare prices</h2>
         <p className="mt-1 text-sm text-slate-400">
@@ -184,18 +184,25 @@ export default function Step4Review({
         </p>
       </div>
 
-      {/* CTAs */}
-      <div className="space-y-2">
-        <a
-          href={handoffUrl}
-          target="_blank"
-          rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-          onClick={handleHandoffClick}
-          className="flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:from-emerald-400 hover:to-cyan-400"
-        >
-          Compare prices on BookMyGarage
-          <ExternalLink className="h-4 w-4" />
-        </a>
+      {/* CTAs — primary becomes sticky-bottom on mobile so users always see
+          the hand-off button without scrolling past the review summary.
+          Desktop keeps the original inline layout. The pb-32 sm:pb-0 on
+          the parent wrapper (added below) creates space for the sticky bar
+          so it doesn't cover the disclaimer when scrolled to bottom. */}
+      <div className="space-y-2 sm:relative">
+        {/* Mobile sticky bar */}
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-0">
+          <a
+            href={handoffUrl}
+            target="_blank"
+            rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+            onClick={handleHandoffClick}
+            className="flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:from-emerald-400 hover:to-cyan-400"
+          >
+            Compare prices on BookMyGarage
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
         <button
           type="button"
           onClick={onEdit}

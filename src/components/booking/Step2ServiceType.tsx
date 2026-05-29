@@ -46,7 +46,7 @@ export default function Step2ServiceType({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {SERVICE_CARDS.map((card) => {
           const isRecommended = card.id === recommendation.service;
           const meta = serviceMeta(card.id);
@@ -57,7 +57,7 @@ export default function Step2ServiceType({
               key={card.id}
               type="button"
               onClick={() => onSelect(card.id)}
-              className={`group relative text-left rounded-xl border p-4 sm:p-5 transition-all hover:translate-y-[-1px] ${
+              className={`group relative text-left rounded-xl border p-3 sm:p-5 transition-all hover:translate-y-[-1px] ${
                 isRecommended
                   ? "border-cyan-500/50 bg-gradient-to-br from-cyan-950/50 via-slate-900 to-slate-900 shadow-md shadow-cyan-500/10"
                   : "border-slate-800 bg-slate-900 hover:border-slate-700"
@@ -69,24 +69,34 @@ export default function Step2ServiceType({
                   Recommended
                 </span>
               )}
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2.5 sm:gap-3">
                 <Icon className={`h-5 w-5 shrink-0 mt-0.5 ${isRecommended ? "text-cyan-300" : "text-slate-400"}`} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-base font-semibold text-white">{card.title}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{card.oneLiner}</p>
-                  <p className="mt-2 text-sm font-mono tabular-nums">
+                  <div className="flex items-baseline justify-between gap-2 sm:block">
+                    <p className="text-sm sm:text-base font-semibold text-white truncate">{card.title}</p>
+                    <p
+                      className={`sm:hidden text-sm font-mono tabular-nums shrink-0 ${isRecommended ? "text-cyan-300" : "text-emerald-300"}`}
+                    >
+                      {formatPriceRange(price)}
+                    </p>
+                  </div>
+                  <p className="hidden sm:block text-xs text-slate-400 mt-0.5">{card.oneLiner}</p>
+                  <p className="hidden sm:block mt-2 text-sm font-mono tabular-nums">
                     <span className={isRecommended ? "text-cyan-300" : "text-emerald-300"}>
                       {formatPriceRange(price)}
                     </span>
                     <span className="text-slate-600 ml-2">· ~{meta.durationMins} min</span>
                   </p>
+                  <p className="sm:hidden text-[11px] text-slate-500 mt-0.5 truncate">
+                    {card.oneLiner}
+                  </p>
                   {isRecommended && (
-                    <p className="mt-2 text-[11px] text-cyan-200/80 leading-relaxed">
+                    <p className="mt-1.5 sm:mt-2 text-[11px] text-cyan-200/80 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                       {recommendation.reason}
                     </p>
                   )}
                 </div>
-                <ChevronRight className="h-4 w-4 text-slate-600 shrink-0 mt-1 group-hover:text-slate-400 transition-colors" />
+                <ChevronRight className="hidden sm:block h-4 w-4 text-slate-600 shrink-0 mt-1 group-hover:text-slate-400 transition-colors" />
               </div>
             </button>
           );

@@ -133,17 +133,19 @@ export default function BookingPage() {
 
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.12),_transparent_60%)]" />
-        <div className="relative max-w-3xl mx-auto px-4 pt-8 pb-6">
-          <a href="/tools" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
+        <div className="relative max-w-3xl mx-auto px-4 pt-5 pb-4 sm:pt-8 sm:pb-6">
+          <a href="/tools" className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm mb-3 sm:mb-6 inline-block">
             &larr; Back to all tools
           </a>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 leading-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
             Book your MOT or service
           </h1>
-          <p className="mt-2 text-sm font-medium text-emerald-300">
+          <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium text-emerald-300">
             Pre-fill once · Compare prices in seconds · Free
           </p>
-          <p className="mt-3 text-sm text-slate-400 leading-relaxed">
+          {/* Description shown only on tablet+ — on mobile the wizard takes
+              priority and the description belongs in the FAQ at the bottom. */}
+          <p className="hidden sm:block mt-3 text-sm text-slate-400 leading-relaxed">
             We pull your vehicle details from DVLA, recommend the right service for its
             age and MOT history, and show local price ranges — then hand off to BookMyGarage
             with everything ready to go.
@@ -151,7 +153,7 @@ export default function BookingPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:py-10">
+      <div className="max-w-3xl mx-auto px-4 py-5 sm:py-10">
         <Suspense
           fallback={
             <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-6 h-96 animate-pulse" />
@@ -160,8 +162,8 @@ export default function BookingPage() {
           <BookingWizard />
         </Suspense>
 
-        <section className="mt-12">
-          <h2 className="text-xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
+        <section className="mt-8 sm:mt-12">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-100 mb-3 sm:mb-4">Frequently asked questions</h2>
           <FaqAccordion items={FAQ_ITEMS} />
         </section>
       </div>
