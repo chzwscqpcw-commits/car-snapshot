@@ -26,6 +26,26 @@ interface Props {
   onEdit: () => void;
 }
 
+/**
+ * BMG's results page URL is the same shape for every service — only the `p`
+ * query param changes. Mapping derived from observing the redirect after
+ * submitting the search form on each of BMG's service-landing pages:
+ *   /mot/             → p=1
+ *   /car-servicing/   → p=3   (covers both interim and full service)
+ *   /car-repairs/     → p=8   (covers diagnostic checks)
+ */
+function bmgResultsServiceId(service: ServiceType): string {
+  switch (service) {
+    case "mot":
+      return "1";
+    case "interim":
+    case "full":
+      return "3";
+    case "diagnostic":
+      return "8";
+  }
+}
+
 function buildBmgHandoffUrl(
   service: ServiceType,
   vrm: string,
@@ -34,23 +54,21 @@ function buildBmgHandoffUrl(
 ): string {
   // The Awin tracker still wraps the destination so attribution works.
   //
-  // When we have BOTH vrm and postcode AND the service is MOT, deep-link
-  // straight to BMG's results page — skipping the search form and its
-  // "Compare Prices Instantly" click. The URL pattern was confirmed by
-  // observing the redirect after submitting the search form on
-  // bookmygarage.com/mot/. Saves the user one tap and removes the
-  // friction of seeing their already-pre-filled details on a form they
-  // didn't fill in.
+  // When we have BOTH vrm and postcode, deep-link to BMG's results page
+  // for the chosen service — skipping the search form and its "Compare
+  // Prices Instantly" click. Confirmed safe for affiliate attribution
+  // (May 29 2026 verification: a real-user click via the deep-linked MOT
+  // results URL landed in Awin within minutes, with clickref tagging
+  // preserved). Same URL shape for all services, only the p param
+  // differs.
   //
-  // For service / diagnostic, or when postcode is missing, we still
-  // route to the search page — BMG's results URL pattern for those
-  // services isn't confirmed yet, and the search page works as a safe
-  // fallback either way.
+  // When postcode is missing, we fall back to the per-service search
+  // page so BMG can still ask for the postcode itself.
   const hasFullContext = vrm && postcode;
   let destination: string;
-  if (hasFullContext && service === "mot") {
+  if (hasFullContext) {
     const params = new URLSearchParams();
-    params.set("p", "1");
+    params.set("p", bmgResultsServiceId(service));
     params.set("postcode", postcode);
     params.set("vrm", vrm);
     destination = `https://bookmygarage.com/results/?${params.toString()}`;
