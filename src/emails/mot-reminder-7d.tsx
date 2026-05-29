@@ -12,6 +12,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
 import { CTAButton } from "./components/CTAButton";
+import { EmailRegPlate } from "./components/RegPlate";
 
 const body: React.CSSProperties = {
   backgroundColor: "#0a0a0a",
@@ -119,9 +120,10 @@ export default function MOTReminder7d({
         <Container style={container}>
           <Header />
           <Section style={content}>
+            <EmailRegPlate reg={regNumber} />
             <Text style={heading}>Your MOT expires next week</Text>
             <Text style={subtext}>
-              The MOT for your {make} {model} ({regNumber}) expires on {expiryDate}. Book now to avoid driving without a valid MOT.
+              The MOT for your {make} {model} expires on {expiryDate}. Book now to avoid driving without a valid MOT.
             </Text>
             <InfoCard>
               <Text style={labelStyle}>Days Remaining</Text>

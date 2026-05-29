@@ -1,10 +1,20 @@
 import { Section } from "@react-email/components";
 
+/**
+ * Branded info-card surface — a 3px cyan accent strip across the top
+ * makes the card feel like an on-site frosted card without the
+ * email-incompatible backdrop-filter. Slightly elevated background
+ * + softened border for additional depth.
+ */
+
 const card: React.CSSProperties = {
   backgroundColor: "#1a1a2e",
-  border: "1px solid #2d2d2d",
-  borderRadius: "8px",
-  padding: "20px 24px",
+  borderTop: "3px solid #06b6d4",
+  borderLeft: "1px solid #2d2d2d",
+  borderRight: "1px solid #2d2d2d",
+  borderBottom: "1px solid #2d2d2d",
+  borderRadius: "10px",
+  padding: "22px 24px",
   margin: "0 0 24px",
 };
 

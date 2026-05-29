@@ -11,6 +11,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
 import { CTAButton } from "./components/CTAButton";
+import { EmailRegPlate } from "./components/RegPlate";
 
 const body: React.CSSProperties = {
   backgroundColor: "#0a0a0a",
@@ -81,9 +82,10 @@ export default function MOTReminderSet({
         <Container style={container}>
           <Header />
           <Section style={content}>
-            <Text style={heading}>MOT reminder set!</Text>
+            <EmailRegPlate reg={regNumber} />
+            <Text style={heading}>MOT reminder set</Text>
             <Text style={subtext}>
-              You&apos;ll receive two email reminders for {make} {model} ({regNumber}):
+              You&apos;ll receive two email reminders for your {make} {model} before the MOT runs out.
             </Text>
             <InfoCard>
               <Text style={labelStyle}>MOT Expiry Date</Text>
