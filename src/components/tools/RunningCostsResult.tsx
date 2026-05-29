@@ -204,6 +204,15 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           totalAnnual={totals?.annual ?? ownership.totalAnnual}
         />
       )}
+      {ownership && vehicle.yearOfManufacture && (
+        <CostForecastCard
+          vehicle={vehicle}
+          ved={ved}
+          scaledFuelCost={scaledFuelCost}
+          segment={segment}
+          insurance={insurance}
+        />
+      )}
       <InsurancePanel
         inputs={insuranceInputs}
         setInputs={setInsuranceInputs}
@@ -880,5 +889,140 @@ function InsuranceField({
       </div>
       <p className="mt-1 text-[10px] text-slate-500">{field.helper}</p>
     </div>
+  );
+}
+
+/**
+ * Five-year cost forecast. Matches the visual language of the year-by-year
+ * cards on Mileage / Tax / Valuation / MOT — one row per future year,
+ * gradient bar scaled to the most-expensive year, total at the bottom.
+ *
+ * Methodology: re-runs the existing calculateOwnershipCost model with an
+ * incremented vehicleAge for each future year. That picks up the natural
+ * curve baked into the model:
+ *   - depreciation per year falls as the car ages (steeper losses are
+ *     already behind us)
+ *   - maintenance per year rises (older cars need more work)
+ *   - VED + fuel are held constant at today's figures (rates can change
+ *     at Budget time; fuel prices fluctuate unpredictably)
+ *
+ * Insurance is handwritten in the forecast because the insurance lib
+ * doesn't model "next year". We apply a -3% per-year drift (replacement
+ * cost falls as the car depreciates, so premiums typically ease slightly)
+ * — rough but more honest than holding it flat.
+ */
+function CostForecastCard({
+  vehicle,
+  ved,
+  scaledFuelCost,
+  segment,
+  insurance,
+}: {
+  vehicle: LookupVehicle;
+  ved: { estimatedAnnualRate: number | null };
+  scaledFuelCost: number | null;
+  segment: VehicleSegment;
+  insurance: InsuranceEstimate;
+}) {
+  if (!vehicle.yearOfManufacture) return null;
+
+  const HORIZON = 5;
+  const thisYear = new Date().getFullYear();
+  const currentAge = thisYear - vehicle.yearOfManufacture;
+  const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
+
+  const rows = Array.from({ length: HORIZON }, (_, i) => {
+    const offset = i + 1; // next year, 2 years out, etc.
+    const futureAge = currentAge + offset;
+    const calendarYear = thisYear + offset;
+    const isOver3Years = futureAge > 3;
+
+    const own = calculateOwnershipCost({
+      vedAnnualRate: ved.estimatedAnnualRate,
+      fuelAnnualCost: scaledFuelCost,
+      newPrice,
+      vehicleAge: futureAge,
+      make: vehicle.make,
+      model: vehicle.model,
+      isOver3Years,
+      segment,
+    });
+
+    // Insurance — assume a gentle drift down as the car ages. Floor at
+    // 70% of today's premium so the forecast doesn't claim insurance
+    // halves over five years (it doesn't).
+    const insuranceDrift = Math.max(0.7, 1 - 0.03 * offset);
+    const futureInsurance = Math.round(insurance.estimatedAnnual * insuranceDrift);
+
+    const total = (own?.totalAnnual ?? 0) + futureInsurance;
+    return {
+      year: calendarYear,
+      total,
+      fuel: own?.breakdown.fuel ?? 0,
+      ved: own?.breakdown.ved ?? 0,
+      depreciation: own?.breakdown.depreciation ?? 0,
+      maintenance: own?.breakdown.maintenance ?? 0,
+      mot: own?.breakdown.mot ?? 0,
+      insurance: futureInsurance,
+    };
+  });
+
+  const maxTotal = Math.max(...rows.map((r) => r.total), 1);
+  const fiveYearTotal = rows.reduce((s, r) => s + r.total, 0);
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="text-sm font-semibold text-slate-100">Cost forecast</h3>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          Next {HORIZON} years
+        </span>
+      </div>
+      <p className="text-xs text-slate-500 mb-4">
+        Projected total annual cost — fuel, road tax, maintenance, depreciation
+        and insurance. Depreciation per year eases as the car ages; maintenance
+        gently rises. Fuel and VED held constant at today&apos;s rates.
+      </p>
+
+      <div className="space-y-2">
+        {rows.map((row) => {
+          const widthPct = Math.max(5, Math.round((row.total / maxTotal) * 100));
+          return (
+            <div
+              key={row.year}
+              className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3"
+            >
+              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
+                {row.year}
+              </span>
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
+                  style={{ width: `${widthPct}%` }}
+                />
+              </div>
+              <span className="font-mono text-xs sm:text-sm font-semibold text-slate-100 tabular-nums tracking-tight whitespace-nowrap">
+                £{row.total.toLocaleString("en-GB")}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-slate-800/60 flex items-baseline justify-between gap-3">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          {HORIZON}-year total
+        </span>
+        <span className="font-mono text-base sm:text-lg font-bold text-cyan-300 tabular-nums">
+          £{fiveYearTotal.toLocaleString("en-GB")}
+        </span>
+      </div>
+
+      <p className="mt-3 text-[10px] text-slate-500 leading-relaxed">
+        Excludes parking, finance and unforeseen repairs. Insurance assumed to
+        drift -3%/year as the replacement value falls. Actual costs depend on
+        your driving habits, postcode and the car&apos;s specific condition.
+      </p>
+    </section>
   );
 }
