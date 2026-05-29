@@ -146,6 +146,20 @@ export function VehiclePill({ reg, label }: { reg: string; label?: string }) {
   );
 }
 
+/**
+ * Per-tool loading state used by /mot-check, /tax-check, /ulez-check,
+ * /recall-check, /mileage-check, /car-valuation and /running-costs.
+ *
+ * Same four brand signatures as the homepage skeleton — spinning
+ * cyan→blue gradient ring, BoltMark pulse, frosted RegPlate, mono
+ * status — but scaled down because each tool surfaces a single topic
+ * rather than the full report. The hint string is tool-specific
+ * ("Reading the MOT history…", "Running the valuation model…"), so
+ * the loading moment also tells the user which work is in flight.
+ *
+ * Below the hero, a card-shaped pulse outline previews where the
+ * single-topic result will land so there's no surprise layout shift.
+ */
 export function LookupSkeleton({
   vrm,
   hint = "Reading DVLA & MOT records…",
@@ -155,13 +169,60 @@ export function LookupSkeleton({
 }) {
   return (
     <div className="mx-auto max-w-3xl px-4 pt-8 pb-12">
-      <VehiclePill reg={vrm} />
-      <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 animate-pulse">
-        <div className="flex items-center gap-3">
-          <Loader2 className="h-4 w-4 text-cyan-400 animate-spin" />
-          <span className="text-sm text-slate-400">{hint}</span>
+      <div className="flex flex-col items-center gap-4 py-4">
+        <div className="relative w-14 h-14">
+          <svg
+            className="absolute inset-0 w-full h-full animate-spin-slow"
+            viewBox="0 0 100 100"
+            fill="none"
+          >
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              stroke="url(#toolSkeletonGradient)"
+              strokeWidth="2"
+              strokeDasharray="120 80"
+              strokeLinecap="round"
+            />
+            <defs>
+              <linearGradient id="toolSkeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BoltMark
+              glow
+              className="w-5 h-7 animate-pulse drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+            />
+          </div>
         </div>
-        <div className="mt-6 space-y-3">
+        <RegPlate reg={vrm} size="md" />
+        <div className="flex flex-col items-center gap-1.5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">
+            {hint}
+          </p>
+          <div className="flex gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
+            <span
+              className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse"
+              style={{ animationDelay: "0.2s" }}
+            />
+            <span
+              className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse"
+              style={{ animationDelay: "0.4s" }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Single-topic result preview — smaller than the homepage skeleton
+          because each tool page surfaces one focused result rather than
+          the full multi-section report. */}
+      <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 animate-pulse">
+        <div className="space-y-3">
           <div className="h-3 w-32 rounded bg-slate-800" />
           <div className="h-10 w-64 rounded bg-slate-800" />
           <div className="h-3 w-48 rounded bg-slate-800" />
