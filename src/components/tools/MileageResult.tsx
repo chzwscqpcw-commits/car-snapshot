@@ -22,6 +22,19 @@ interface Reading {
   value: number; // miles
 }
 
+interface YearlyMileage {
+  /** Calendar year of the end-reading. The "miles driven in 2018" header. */
+  year: number;
+  /** Miles between the previous reading and the end reading. */
+  miles: number;
+  /** Number of days covered by the interval — surfaced when not roughly 12 months so the user can interpret unusual periods. */
+  daysCovered: number;
+  /** Pct above (+) or below (-) the UK-average yearly mileage. Scaled to a full-year-equivalent so short or long intervals are still comparable. */
+  deltaPct: number;
+  /** Date of the end reading — used as a stable React key and surfaced in the tooltip. */
+  endDate: Date;
+}
+
 interface MileageAnalysis {
   readings: Reading[];
   current: number | null;
@@ -30,6 +43,8 @@ interface MileageAnalysis {
   ukAverage: number; // benchmark
   delta: number | null; // pct above/below UK avg
   clockingFlags: ClockingFlag[];
+  /** Per-year mileage between consecutive readings. Empty when fewer than 2 readings exist. */
+  yearly: YearlyMileage[];
 }
 
 interface ClockingFlag {
@@ -59,6 +74,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       <MileageHero analysis={analysis} />
       {analysis.readings.length >= 2 && (
         <SparklineCard analysis={analysis} />
+      )}
+      {analysis.yearly.length > 0 && (
+        <YearByYearCard analysis={analysis} />
       )}
       {analysis.clockingFlags.length > 0 && (
         <ClockingCard flags={analysis.clockingFlags} />
@@ -258,6 +276,83 @@ function SparklineCard({ analysis }: { analysis: MileageAnalysis }) {
   );
 }
 
+/**
+ * Year-by-year mileage breakdown. For most cars with annual MOTs this
+ * surfaces twelve+ rows showing exactly how many miles were driven each
+ * year, sorted oldest to newest, with a UK-average comparison badge.
+ * Unique granularity vs every competing reg-check site we've looked at,
+ * and the most-requested kind of detail from buyers checking a used car.
+ */
+function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
+  const { yearly, ukAverage } = analysis;
+  const maxMiles = Math.max(...yearly.map((y) => y.miles), ukAverage);
+  // UK-average reference line position as a percent of the bar width.
+  const ukAvgPct = Math.round((ukAverage / maxMiles) * 100);
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="text-sm font-semibold text-slate-100">Year-by-year mileage</h3>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          {yearly.length} year{yearly.length === 1 ? "" : "s"}
+        </span>
+      </div>
+      <p className="text-xs text-slate-500 mb-4">
+        Miles driven between each MOT. Yellow line marks the UK average of{" "}
+        {ukAverage.toLocaleString("en-GB")} mi/yr.
+      </p>
+
+      <div className="space-y-2">
+        {yearly.map((y) => {
+          const widthPct = Math.max(2, Math.round((y.miles / maxMiles) * 100));
+          const aboveAvg = y.deltaPct > 0;
+          const partial = y.daysCovered < 305 || y.daysCovered > 425;
+          return (
+            <div
+              key={y.endDate.toISOString()}
+              className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3"
+            >
+              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
+                {y.year}
+              </span>
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+                {/* The mileage bar — cyan→blue gradient matching the sparkline. */}
+                <div
+                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
+                  style={{ width: `${widthPct}%` }}
+                />
+                {/* UK average reference line — sits on top of the bar, vertical amber stripe. */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-y-0 w-px bg-amber-400/70"
+                  style={{ left: `${ukAvgPct}%` }}
+                />
+              </div>
+              <div className="flex items-center gap-1.5 text-right">
+                <span className="font-mono text-xs sm:text-sm font-semibold text-slate-100 tabular-nums tracking-tight whitespace-nowrap">
+                  {y.miles.toLocaleString("en-GB")}
+                  <span className="text-[10px] text-slate-500 ml-0.5">mi</span>
+                </span>
+                <span
+                  className={`hidden sm:inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+                    aboveAvg
+                      ? "bg-amber-500/10 text-amber-300"
+                      : "bg-emerald-500/10 text-emerald-300"
+                  }`}
+                  title={partial ? `${y.daysCovered} days covered` : undefined}
+                >
+                  {aboveAvg ? "+" : ""}
+                  {y.deltaPct}%
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function ClockingCard({ flags }: { flags: ClockingFlag[] }) {
   return (
     <section className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-950/30 p-5 sm:p-6">
@@ -365,6 +460,34 @@ function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
     }
   }
 
+  // Year-by-year miles between consecutive readings. We skip rollback
+  // pairs (already flagged separately) to keep the breakdown chart
+  // free of negative bars. The "year" label is the calendar year of
+  // the END reading — for an annual MOT cycle this maps cleanly to
+  // "miles driven during 2018" etc. deltaPct is scaled to a
+  // full-year-equivalent so periods that aren't exactly 365 days
+  // (skipped tests, SORN gaps, registration partial years) still
+  // compare meaningfully against the UK average.
+  const yearly: YearlyMileage[] = [];
+  for (let i = 1; i < readings.length; i++) {
+    const prev = readings[i - 1];
+    const curr = readings[i];
+    const miles = curr.value - prev.value;
+    if (miles < 0) continue; // rollback — covered by clocking flags
+    const daysCovered = Math.max(1, daysBetween(prev.date, curr.date));
+    const annualisedRate = (miles / daysCovered) * 365;
+    const deltaPct = Math.round(
+      ((annualisedRate - UK_AVG_MILES_PER_YEAR) / UK_AVG_MILES_PER_YEAR) * 100,
+    );
+    yearly.push({
+      year: curr.date.getFullYear(),
+      miles,
+      daysCovered,
+      deltaPct,
+      endDate: curr.date,
+    });
+  }
+
   return {
     readings,
     current,
@@ -373,5 +496,6 @@ function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
     ukAverage: UK_AVG_MILES_PER_YEAR,
     delta,
     clockingFlags,
+    yearly,
   };
 }

@@ -56,8 +56,25 @@ export type LookupState =
 
 /* ─── Hook ───────────────────────────────────────────────────────────── */
 
-export function useVehicleLookup(vrm: string): LookupState {
+/**
+ * Minimum time the loading skeleton stays visible on tool pages. The
+ * per-tool hint string ("Reading the MOT history…", "Running the
+ * valuation model…", etc.) is one of the few moments the user gets a
+ * specific brand-led message; without a floor, fast lookups flash it
+ * for one frame and the brand reveal is lost. 900 ms lets the hint be
+ * read, the spinner complete a visible rotation and the dots animate
+ * through at least one cycle. Errors bypass the floor — failure
+ * feedback should always be instant. Override for an individual tool
+ * by passing { minLoadingMs: 0 } if a future surface needs to opt out.
+ */
+const TOOL_MIN_LOADING_MS = 900;
+
+export function useVehicleLookup(
+  vrm: string,
+  opts: { minLoadingMs?: number } = {},
+): LookupState {
   const [state, setState] = useState<LookupState>({ kind: "loading" });
+  const minLoadingMs = opts.minLoadingMs ?? TOOL_MIN_LOADING_MS;
 
   useEffect(() => {
     // Skip the fetch when called with an empty vrm — used by the preview
@@ -67,6 +84,9 @@ export function useVehicleLookup(vrm: string): LookupState {
     if (!vrm) return;
     let cancelled = false;
     setState({ kind: "loading" });
+    const start =
+      typeof performance !== "undefined" ? performance.now() : Date.now();
+
     fetch("/api/lookup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -84,7 +104,17 @@ export function useVehicleLookup(vrm: string): LookupState {
         if (!v) throw new Error("No data returned for that registration.");
         return v;
       })
-      .then((v) => {
+      .then(async (v) => {
+        // Honour the minimum-display floor so the brand-led hint
+        // ("Reading the MOT history…" etc.) is on screen long enough
+        // to be read. No-op when the lookup itself was slower.
+        const elapsed =
+          (typeof performance !== "undefined" ? performance.now() : Date.now()) -
+          start;
+        const remaining = minLoadingMs - elapsed;
+        if (remaining > 0) {
+          await new Promise((r) => setTimeout(r, remaining));
+        }
         if (cancelled) return;
         setState({ kind: "ok", vehicle: v });
         trackEvent("results_view", {
@@ -99,13 +129,14 @@ export function useVehicleLookup(vrm: string): LookupState {
         });
       })
       .catch((err: Error) => {
+        // Errors skip the floor — failure feedback should be instant.
         if (!cancelled)
           setState({ kind: "error", message: err.message || "Lookup failed — try again." });
       });
     return () => {
       cancelled = true;
     };
-  }, [vrm]);
+  }, [vrm, minLoadingMs]);
 
   return state;
 }
