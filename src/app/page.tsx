@@ -2076,6 +2076,18 @@ export default function Home() {
       });
     }
 
+    // Minimum skeleton-display time on mobile. The DVLA lookup often
+    // completes in 300-500 ms, which on a phone makes the skeleton flash
+    // for one frame and disappear before the user has registered what's
+    // happening — feels messy. A floor of ~700 ms lets the shimmer
+    // animate at least once and gives the layout shift time to settle.
+    // Desktop is fast enough that the floor would feel sluggish — left
+    // unchanged. Errors bypass the floor so failure feedback is instant.
+    const isMobileViewport =
+      typeof window !== "undefined" && window.innerWidth < 640;
+    const MOBILE_SKELETON_FLOOR_MS = 700;
+    const fetchStart = typeof performance !== "undefined" ? performance.now() : Date.now();
+
     try {
       const res = await fetch("/api/lookup", {
         method: "POST",
@@ -2088,6 +2100,18 @@ export default function Home() {
       if (!json.ok) {
         setError(json.error);
         return;
+      }
+
+      // Hold the skeleton until at least MOBILE_SKELETON_FLOOR_MS has
+      // elapsed on a mobile viewport — only kicks in when the lookup
+      // returned faster than that, otherwise no-op.
+      if (isMobileViewport) {
+        const elapsed =
+          (typeof performance !== "undefined" ? performance.now() : Date.now()) - fetchStart;
+        const remaining = MOBILE_SKELETON_FLOOR_MS - elapsed;
+        if (remaining > 0) {
+          await new Promise((r) => setTimeout(r, remaining));
+        }
       }
 
       setData(json.data);
