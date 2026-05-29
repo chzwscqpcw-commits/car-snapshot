@@ -7,17 +7,39 @@ declare global {
 /**
  * Fire-and-forget mirror of an event to our own /api/event sink so it lands
  * in Supabase `site_events` for the admin dashboard. Independent of gtag so
- * ad-blockers blocking GA4 don't blank out our own telemetry. `keepalive`
- * lets the request survive page unload — important for partner_click events
- * that fire immediately before the user navigates away.
+ * ad-blockers blocking GA4 don't blank out our own telemetry — this is the
+ * source of truth for /data-health funnel numbers; GA4 should be considered
+ * sample-only since Brave/uBlock/Pi-hole reliably drop 30-60% of gtag hits.
+ *
+ * Prefer sendBeacon when available (it queues at the browser level and is
+ * guaranteed-delivered even mid page-unload — critical for partner_click
+ * events that fire immediately before navigation). Fall back to fetch with
+ * keepalive when sendBeacon isn't supported or when the Blob fails (some
+ * Safari versions return false from sendBeacon for CORS reasons even on
+ * same-origin POSTs — the fetch keeps us covered).
  */
 function mirrorToServer(eventName: string, payload?: Record<string, unknown>): void {
   if (typeof window === "undefined") return;
+  const body = JSON.stringify({ type: eventName, payload: payload ?? {} });
+
+  // sendBeacon path: browser-queued, survives unload, no response handling.
+  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    try {
+      const blob = new Blob([body], { type: "application/json" });
+      if (navigator.sendBeacon("/api/event", blob)) {
+        return;
+      }
+      // sendBeacon returned false → request not queued; fall through to fetch.
+    } catch {
+      // Blob constructor or sendBeacon threw → fall through to fetch.
+    }
+  }
+
   try {
     fetch("/api/event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: eventName, payload: payload ?? {} }),
+      body,
       keepalive: true,
     }).catch(() => {});
   } catch {

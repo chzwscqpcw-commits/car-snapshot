@@ -2,6 +2,26 @@
 
 This doc captures the GA4 event model the site fires, how to register the custom dimensions so they're queryable, and how to build the funnel + Looker Studio dashboard that tells the story of user behaviour end-to-end.
 
+## 0. Source of truth
+
+**Always trust Supabase `site_events` over GA4 for funnel-stage volumes.**
+Every `trackEvent`/`trackConversion` call mirrors to `/api/event` via
+`sendBeacon` (same-origin, ad-blocker-immune) and to GA4 via gtag (third-party,
+blocked by Brave / uBlock / Pi-hole / etc.). On the live site Brave+uBlock
+share alone are dropping 30-60% of gtag hits, so GA4 numbers for any custom
+event are a sample, not a count.
+
+Practical consequence: if an event "looks missing" from GA4 or Looker Studio,
+check `/data-health` first — if the event is present in `reminderFormToday.*`,
+`partnerClicks.byContextLast7d`, `bookingWizardLast7d.*` or the real-time
+activity feed, it IS firing. The gap is GA4's, not the code's. We chased this
+once for `mot_reminder_submit_attempt`; the event was firing fine, GA4 just
+wasn't recording it.
+
+Use GA4 + Looker Studio for: audience composition, channel attribution,
+geographic split, device breakdown, anything where GA4's built-in dimensions
+add value. Use `/data-health` for: anything we instrumented ourselves.
+
 ## 1. Event reference
 
 All events route through `src/lib/tracking.ts`. Two helpers:
