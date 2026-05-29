@@ -659,7 +659,7 @@ function ConditionField({
 
 function BmgHook({ vrm }: { vrm: string }) {
   const href =
-    PARTNER_LINKS.bookMyGarageService.buildLink?.(vrm) ??
+    PARTNER_LINKS.bookMyGarageService.buildLink?.(vrm, "valuation-result-bmg-hook") ??
     PARTNER_LINKS.bookMyGarageService.url;
   const rel = getPartnerRel(PARTNER_LINKS.bookMyGarageService);
   return (

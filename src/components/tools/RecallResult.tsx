@@ -211,7 +211,7 @@ function RecallList({ recalls }: { recalls: Recall[] }) {
 }
 
 function BmgHook({ vrm }: { vrm: string }) {
-  const href = PARTNER_LINKS.bookMyGarageRepair.buildLink?.(vrm) ?? PARTNER_LINKS.bookMyGarageRepair.url;
+  const href = PARTNER_LINKS.bookMyGarageRepair.buildLink?.(vrm, "recall-result-bmg-hook") ?? PARTNER_LINKS.bookMyGarageRepair.url;
   const rel = getPartnerRel(PARTNER_LINKS.bookMyGarageRepair);
   return (
     <section className="mt-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">

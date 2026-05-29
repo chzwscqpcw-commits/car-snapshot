@@ -41,9 +41,10 @@ export default function RepairCostCTA({
   const [regError, setRegError] = useState("");
 
   const partnerConfig = PARTNER_LINKS[partner];
+  const clickref = `repair-cost-cta-${jobName.replace(/\s+/g, "-").toLowerCase()}`;
   const partnerHref = partnerConfig.buildLink
     ? cleanReg(reg)
-      ? partnerConfig.buildLink(cleanReg(reg))
+      ? partnerConfig.buildLink(cleanReg(reg), clickref)
       : partnerConfig.url
     : partnerConfig.url;
   const partnerRel = getPartnerRel(partnerConfig);

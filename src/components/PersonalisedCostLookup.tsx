@@ -122,8 +122,9 @@ export default function PersonalisedCostLookup({
   // ─── Personalised result state ───
   if (result) {
     const { vehicle, estimate } = result;
+    const partnerClickref = `personalised-cost-${slug}`;
     const partnerHref = partnerConfig.buildLink
-      ? partnerConfig.buildLink(vehicle.registrationNumber)
+      ? partnerConfig.buildLink(vehicle.registrationNumber, partnerClickref)
       : partnerConfig.url;
     const isNotApplicable = estimate.range === "n/a";
 

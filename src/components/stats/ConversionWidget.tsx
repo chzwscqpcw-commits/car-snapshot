@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackConversion, trackEvent } from "@/lib/tracking";
+import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -377,9 +377,10 @@ export default function ConversionWidget({
                   postcode.
                 </p>
                 <a
-                  href={PARTNER_LINKS.bookMyGarage.buildLink!(cleanReg(reminderReg))}
+                  href={PARTNER_LINKS.bookMyGarage.buildLink!(cleanReg(reminderReg), "widget-reminder-success")}
                   target="_blank"
                   rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                  onClick={() => trackPartnerClick("bookMyGarage", "widget-reminder-success")}
                   className="mt-3 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
                 >
                   Compare MOT prices near {cleanReg(reminderReg)}

@@ -13,7 +13,30 @@ export interface PartnerLink {
   pending?: boolean;
   description?: string;
   shortDescription?: string;
-  buildLink?: (reg: string) => string;
+  /**
+   * Construct the affiliate URL for a given vehicle reg.
+   *
+   * @param reg The vehicle registration to pre-fill on the merchant page.
+   * @param clickref Optional Awin clickref — Awin passes this through to
+   *   commission reports so we can filter conversions by which CTA the user
+   *   clicked. Should match the click_context passed to trackPartnerClick
+   *   for that same callsite so the dashboard event and the Awin commission
+   *   line up. Strongly recommended on every callsite — gives per-CTA
+   *   conversion attribution within Awin's admin.
+   */
+  buildLink?: (reg: string, clickref?: string) => string;
+}
+
+/**
+ * Append an Awin clickref to a tracker URL. Awin accepts &clickref=X on the
+ * cread.php query string and passes the value through to the commission
+ * record on the publisher side. Used by every BMG buildLink so we can
+ * attribute commissions to specific CTAs in your Awin dashboard.
+ */
+function withClickref(awinUrl: string, clickref?: string): string {
+  if (!clickref) return awinUrl;
+  const sep = awinUrl.includes("?") ? "&" : "?";
+  return `${awinUrl}${sep}clickref=${encodeURIComponent(clickref)}`;
 }
 
 export function isPartnerConfigured(partner: PartnerLink): boolean {
@@ -27,9 +50,12 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     isAffiliate: true,
     description: "Compare MOT prices at local garages",
     shortDescription: "MOT quotes",
-    buildLink: (reg: string) => {
+    buildLink: (reg: string, clickref?: string) => {
       const destination = encodeURIComponent(`https://www.bookmygarage.com/mot/?vrm=${reg}`);
-      return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
     },
   },
   bookMyGarageService: {
@@ -38,9 +64,12 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     isAffiliate: true,
     description: "Compare car service prices at local garages",
     shortDescription: "Service quotes",
-    buildLink: (reg: string) => {
+    buildLink: (reg: string, clickref?: string) => {
       const destination = encodeURIComponent(`https://www.bookmygarage.com/car-servicing/?vrm=${reg}`);
-      return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
     },
   },
   bookMyGarageRepair: {
@@ -49,9 +78,12 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     isAffiliate: true,
     description: "Compare car repair prices at local garages",
     shortDescription: "Repair quotes",
-    buildLink: (reg: string) => {
+    buildLink: (reg: string, clickref?: string) => {
       const destination = encodeURIComponent(`https://www.bookmygarage.com/car-repairs/?vrm=${reg}`);
-      return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
     },
   },
   // Extended car warranty (Awin) — applied 2026-05-17, pending approval

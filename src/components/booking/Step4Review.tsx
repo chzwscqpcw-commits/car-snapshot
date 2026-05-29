@@ -26,7 +26,12 @@ interface Props {
   onEdit: () => void;
 }
 
-function buildBmgHandoffUrl(service: ServiceType, vrm: string, postcode: string): string {
+function buildBmgHandoffUrl(
+  service: ServiceType,
+  vrm: string,
+  postcode: string,
+  clickref: string,
+): string {
   // The Awin tracker still wraps the destination so attribution works.
   //
   // When we have BOTH vrm and postcode AND the service is MOT, deep-link
@@ -64,7 +69,11 @@ function buildBmgHandoffUrl(service: ServiceType, vrm: string, postcode: string)
   }
 
   const encoded = encodeURIComponent(destination);
-  return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${encoded}`;
+  // clickref gets passed through to Awin commission reports so we can
+  // attribute every conversion to a specific CTA in the Awin dashboard.
+  // Matches the click_context fired via trackPartnerClick.
+  const clickrefParam = clickref ? `&clickref=${encodeURIComponent(clickref)}` : "";
+  return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598${clickrefParam}&ued=${encoded}`;
 }
 
 function formatDateFriendly(iso: string): string {
@@ -87,10 +96,11 @@ export default function Step4Review({
   const region = resolveRegion(postcode);
   const price = priceRangeFor(service, category, region);
   const meta = serviceMeta(service);
-  const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode);
+  const clickref = `booking-flow-${service}`;
+  const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode, clickref);
 
   function handleHandoffClick() {
-    trackPartnerClick("bookMyGarage", `booking-flow-${service}`);
+    trackPartnerClick("bookMyGarage", clickref);
   }
 
   return (

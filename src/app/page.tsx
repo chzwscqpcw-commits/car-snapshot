@@ -1423,7 +1423,11 @@ export default function Home() {
     const motExpiringSoon = isOver3Years && !motExpired && motDaysUntilExpiry >= 0 && motDaysUntilExpiry <= 30;
     const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Not Taxed";
     const hasAdvisories = isOver3Years && !motExpired && latestAdvisoryCount > 0;
-    const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url;
+    // Build a fresh BMG link per ActionPrompt so each variant carries its
+    // own clickref into Awin (commission attribution per CTA).
+    const buildBmg = (clickref: string) =>
+      PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber, clickref) ??
+      PARTNER_LINKS.bookMyGarage.url;
 
     // 1. MOT expired
     if (motExpired) {
@@ -1433,7 +1437,7 @@ export default function Home() {
         title: "MOT expired — this vehicle cannot legally be driven",
         description: "Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.",
         linkText: "Book MOT — BookMyGarage",
-        linkHref: bmgLink,
+        linkHref: buildBmg("action-mot-expired"),
         partnerId: "bookMyGarage",
         trackingContext: "action-mot-expired",
         secondaryLink: {
@@ -1453,7 +1457,7 @@ export default function Home() {
         title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
         description: "Book up to 28 days early without losing your current expiry date.",
         linkText: "Compare MOT prices — BookMyGarage",
-        linkHref: bmgLink,
+        linkHref: buildBmg("action-mot-expiring"),
         partnerId: "bookMyGarage",
         trackingContext: "action-mot-expiring",
       });
@@ -1481,7 +1485,7 @@ export default function Home() {
         title: `${latestAdvisoryCount} MOT advisor${latestAdvisoryCount !== 1 ? "ies" : "y"} on record`,
         description: "Advisories aren't failures, but may need attention before your next test.",
         linkText: "Find a garage — BookMyGarage",
-        linkHref: bmgLink,
+        linkHref: buildBmg("action-advisories"),
         partnerId: "bookMyGarage",
         trackingContext: "action-advisories",
       });
@@ -4605,9 +4609,10 @@ END:VEVENT
                             <p className="text-xs text-slate-300 mt-1">
                               {motInsights.daysUntilExpiry < 0 ? "MOT expired" : motInsights.daysUntilExpiry < 30 ? "Due soon" : ""}
                               <a
-                                href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url}
+                                href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber, "mot-insights-next-due") ?? PARTNER_LINKS.bookMyGarage.url}
                                 target="_blank"
                                 rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+                                onClick={() => trackPartnerClick("bookMyGarage", "mot-insights-next-due")}
                                 className="text-emerald-400 text-sm hover:underline ml-2"
                               >
                                 Compare prices &#8599;
@@ -4752,7 +4757,7 @@ END:VEVENT
                   {/* Inline partner link after most recent test */}
                   {data.motTests[0] && (data.motTests[0].testResult === "FAILED" || data.motTests[0].rfrAndComments?.some(r => r.type === "ADVISORY" || r.type === "DEFECT")) && (
                     <p className="mt-3 text-xs text-slate-400">
-                      Get these checked — <a href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber) ?? PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "mot-history-inline")} className="text-blue-400 hover:text-blue-300 transition-colors">compare garage prices on BookMyGarage <ExternalLink className="w-3 h-3 inline" /></a>
+                      Get these checked — <a href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber, "mot-history-inline") ?? PARTNER_LINKS.bookMyGarage.url} target="_blank" rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)} onClick={() => trackPartnerClick("bookMyGarage", "mot-history-inline")} className="text-blue-400 hover:text-blue-300 transition-colors">compare garage prices on BookMyGarage <ExternalLink className="w-3 h-3 inline" /></a>
                     </p>
                   )}
 

@@ -138,7 +138,7 @@ export async function GET(req: Request) {
 
         const { make, model } = parseMakeModel(reminder.make_model || "");
         const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
-        const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm);
+        const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm, "email-mot-reminder-7d");
 
         const result = await sendEmail({
           to: reminder.email,

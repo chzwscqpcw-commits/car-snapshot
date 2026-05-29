@@ -66,7 +66,11 @@ async function sendCatchUpReminders(
   const make = parts[0] || "Your";
   const model = parts.slice(1).join(" ") || "vehicle";
   const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${unsubscribeToken}`;
-  const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(vrm);
+  // Note: the same bmgUrl serves both 28-day and 7-day "catch-up" emails
+  // fired on signup if the MOT is already within the window. We use
+  // "email-reminder-catchup" so commission attribution doesn't conflate
+  // these with the scheduled 28d/7d cron emails.
+  const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(vrm, "email-reminder-catchup");
   const formattedExpiry = formatDateDDMMYYYY(motExpiry);
   const sb = supabaseServer();
 

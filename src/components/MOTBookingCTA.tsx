@@ -59,7 +59,7 @@ export default function MOTBookingCTA({
 
   const partner = PARTNER_LINKS.bookMyGarage;
   const href = partner.buildLink
-    ? partner.buildLink(regNumber)
+    ? partner.buildLink(regNumber, clickContext)
     : partner.url;
   const rel = getPartnerRel(partner);
 

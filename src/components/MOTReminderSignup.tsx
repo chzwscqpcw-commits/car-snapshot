@@ -303,7 +303,7 @@ export default function MOTReminderSignup({
   // --- Success state ---
   if (success) {
     const firstReg = cleanReg(regs[0]);
-    const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink!(firstReg);
+    const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink!(firstReg, "mot-reminder-success");
     const bmgRel = getPartnerRel(PARTNER_LINKS.bookMyGarage);
 
     return (

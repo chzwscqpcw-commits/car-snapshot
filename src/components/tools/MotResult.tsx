@@ -408,7 +408,7 @@ function AdvisoryPreview({
 function BmgHook({ vrm, stats }: { vrm: string; stats: MotStats }) {
   const urgent =
     stats.daysToExpiry !== null && stats.daysToExpiry <= 30;
-  const href = PARTNER_LINKS.bookMyGarage.buildLink?.(vrm) ?? PARTNER_LINKS.bookMyGarage.url;
+  const href = PARTNER_LINKS.bookMyGarage.buildLink?.(vrm, "mot-result-bmg-hook") ?? PARTNER_LINKS.bookMyGarage.url;
   const rel = getPartnerRel(PARTNER_LINKS.bookMyGarage);
   return (
     <section

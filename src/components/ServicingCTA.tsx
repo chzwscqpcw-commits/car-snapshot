@@ -33,8 +33,9 @@ export default function ServicingCTA({
 }: ServicingCTAProps) {
   const { heading, body } = COPY[context];
   const partner = PARTNER_LINKS.bookMyGarageService;
+  const clickref = `servicing-cta-${context}`;
   const href = regNumber && partner.buildLink
-    ? partner.buildLink(regNumber)
+    ? partner.buildLink(regNumber, clickref)
     : partner.url;
   const rel = getPartnerRel(partner);
   const formattedReg = regNumber.toUpperCase();

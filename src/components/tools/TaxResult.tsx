@@ -272,7 +272,7 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
 
   const motDueSoon = motDays !== null && motDays <= 60;
 
-  const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink?.(vrm) ?? PARTNER_LINKS.bookMyGarage.url;
+  const bmgLink = PARTNER_LINKS.bookMyGarage.buildLink?.(vrm, "tax-result-bmg-hook") ?? PARTNER_LINKS.bookMyGarage.url;
   const bmgRel = getPartnerRel(PARTNER_LINKS.bookMyGarage);
 
   const vehicleLabel = [
