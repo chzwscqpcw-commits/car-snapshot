@@ -110,6 +110,30 @@ export default function BookingWizard() {
     saveToStorage(state);
   }, [state]);
 
+  // Background-fetch the vehicle when we have a vrm but no vehicle data.
+  // Happens after deep-link entry (skipped Step 1) or after sessionStorage
+  // restore (we don't persist the vehicle blob). Without this, the Step 4
+  // summary reads "(no vehicle selected)" for deep-link users and the
+  // category falls back to medium_petrol for service price calculations.
+  useEffect(() => {
+    if (!state.vrm || state.vehicle) return;
+    let cancelled = false;
+    fetch("/api/lookup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vrm: state.vrm }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload) => {
+        if (cancelled || !payload?.data) return;
+        setState((s) => (s.vrm === state.vrm ? { ...s, vehicle: payload.data } : s));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [state.vrm, state.vehicle]);
+
   function goTo(step: Step) {
     setState((s) => ({ ...s, step }));
   }

@@ -87,7 +87,7 @@ export default function Step4Review({
             <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Vehicle</p>
             <p className="mt-0.5 text-base font-semibold text-white truncate">
               {vrm && <span className="font-mono tracking-wider text-cyan-300 mr-2">{vrm}</span>}
-              {vehicleLabel || "(no vehicle selected)"}
+              {vehicleLabel || (vrm ? "Loading vehicle…" : "No vehicle selected")}
             </p>
           </div>
         </div>
