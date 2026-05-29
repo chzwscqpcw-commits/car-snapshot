@@ -1,47 +1,44 @@
+/**
+ * robots.txt for freeplatecheck.co.uk
+ *
+ * Default rule blocks all crawler access to:
+ * - /api/         — JSON endpoints; nothing to index
+ * - /data-health  — admin dashboard behind a PIN gate; SEO-irrelevant
+ * - /preview/     — internal screenshot/preview routes with fixture data,
+ *                   explicitly tagged "not linked, robots-noindex" in code
+ * - /demo/        — affiliate-partner demo previews behind a password
+ *
+ * AI crawlers (GPTBot, ChatGPT-User, ClaudeBot, PerplexityBot etc.) are
+ * explicitly welcomed at the top level so the site shows up in LLM
+ * citations — same disallows otherwise. Without these, some AI crawlers
+ * default to blocked.
+ */
+
+const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/"];
+
+const AI_CRAWLERS = [
+  "GPTBot",
+  "ChatGPT-User",
+  "ClaudeBot",
+  "PerplexityBot",
+  "Google-Extended",
+  "Applebot-Extended",
+  "cohere-ai",
+];
+
 export default function robots() {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: "/api/",
+        disallow: DISALLOW,
       },
-      // Explicitly welcome AI crawlers for citation visibility
-      {
-        userAgent: "GPTBot",
+      ...AI_CRAWLERS.map((userAgent) => ({
+        userAgent,
         allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "ChatGPT-User",
-        allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "ClaudeBot",
-        allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "PerplexityBot",
-        allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "Google-Extended",
-        allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "Applebot-Extended",
-        allow: "/",
-        disallow: "/api/",
-      },
-      {
-        userAgent: "cohere-ai",
-        allow: "/",
-        disallow: "/api/",
-      },
+        disallow: DISALLOW,
+      })),
     ],
     sitemap: "https://www.freeplatecheck.co.uk/sitemap.xml",
   };

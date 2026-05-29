@@ -161,6 +161,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/contact",
+      lastModified: new Date("2026-03-13"),
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/tools",
+      lastModified: new Date("2026-05-29"),
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/privacy",
       lastModified: new Date("2026-01-01"),
       changeFrequency: "yearly",
@@ -264,7 +276,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: "https://www.freeplatecheck.co.uk/servicing",
-      lastModified: new Date("2026-03-17"),
+      lastModified: new Date("2026-05-29"),
       changeFrequency: "monthly",
       priority: 0.9,
     },
@@ -294,7 +306,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: "https://www.freeplatecheck.co.uk/repair-costs/brake-pads-replacement",
-      lastModified: new Date("2026-05-12"),
+      lastModified: new Date("2026-05-29"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
