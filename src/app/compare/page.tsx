@@ -11,6 +11,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
+import { RegPlate } from "@/components/RegPlate";
 
 /* ---------- types ---------- */
 
@@ -359,16 +360,8 @@ export default function ComparePage() {
                   key={i}
                   className="bg-slate-900 border border-slate-800 rounded-xl p-5 text-center"
                 >
-                  <div className="inline-block bg-yellow-300 border-2 border-yellow-800 rounded-sm px-3 py-1 mb-3">
-                    <span
-                      className="text-sm font-black text-black tracking-widest"
-                      style={{
-                        fontFamily: "Arial Black, sans-serif",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
-                      {v!.registrationNumber}
-                    </span>
+                  <div className="mb-3 inline-block">
+                    <RegPlate reg={v!.registrationNumber} size="sm" />
                   </div>
                   <h2 className="text-xl font-bold text-slate-100">
                     {v!.make} {v!.model}
