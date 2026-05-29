@@ -2062,6 +2062,13 @@ export default function Home() {
     setFavorites(updated);
     saveFavoritesToStorage(updated);
     showToast("Added to favorites ❤️");
+    trackEvent("vehicle_saved", {
+      kind: "favorite",
+      reg: data.registrationNumber,
+      make: data.make ?? null,
+      model: data.model ?? null,
+      total_favorites: updated.length,
+    });
   }
 
   function removeFavorite(registrationNumber: string) {
@@ -2110,6 +2117,13 @@ export default function Home() {
     setMyVehicles(updated);
     saveMyVehiclesToStorage(updated);
     showToast("Added to My Vehicles ✓");
+    trackEvent("vehicle_saved", {
+      kind: "my_vehicles",
+      reg: data.registrationNumber,
+      make: data.make ?? null,
+      model: data.model ?? null,
+      total_my_vehicles: updated.length,
+    });
   }
 
   function removeFromMyVehicles(registrationNumber: string) {
@@ -2780,12 +2794,22 @@ END:VEVENT
     if (!data?.registrationNumber) return;
     const reg = cleanReg(data.registrationNumber);
     const url = `https://www.check-mot.service.gov.uk/results?registration=${encodeURIComponent(reg)}`;
+    trackEvent("outbound_click", {
+      destination: "gov.uk_mot_history",
+      url,
+      reg: data.registrationNumber,
+    });
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
   async function openTflWithCopiedReg() {
     const reg = cleanReg(data?.registrationNumber ?? "");
     if (!reg) return;
+    trackEvent("outbound_click", {
+      destination: "tfl_ulez",
+      url: "https://tfl.gov.uk/modes/driving/check-your-vehicle/",
+      reg: data?.registrationNumber ?? null,
+    });
     window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
 
     try {

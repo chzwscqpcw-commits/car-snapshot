@@ -213,6 +213,39 @@ export default function ToolsPage() {
       >
         <ToolGrid tools={UTILITIES} accent="blue" />
       </Section>
+
+      {/* Booking wizard CTA — sister to the All-in-One banner at the top.
+          The hero pitches "investigate"; this pitches "act". Sits at the
+          end of the page so users who've browsed the tool catalogue and
+          decided they want to book are caught here before they leave. */}
+      <section className="mx-auto max-w-5xl px-4 pb-12 sm:pb-16">
+        <div className="relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-900/30 via-slate-900/80 to-slate-950 p-5 sm:p-8">
+          <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div className="flex-shrink-0">
+              <Wrench className="h-9 w-9 sm:h-10 sm:w-10 text-emerald-300" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">
+                Book it
+              </div>
+              <h2 className="mt-1 text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Found an issue? Book an MOT or service in seconds
+              </h2>
+              <p className="mt-1.5 text-sm text-slate-400">
+                Pre-fill the reg once, compare prices from local garages, hand off to BookMyGarage. No email needed.
+              </p>
+            </div>
+            <Link
+              href="/booking?source=tools_page_footer"
+              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-all shadow-md shadow-emerald-500/20"
+            >
+              Book MOT or service
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
