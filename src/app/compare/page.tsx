@@ -288,8 +288,7 @@ export default function ComparePage() {
                 }}
                 placeholder="AB12 CDE"
                 maxLength={10}
-                className="w-full px-4 py-3 bg-yellow-400 text-slate-900 font-bold text-lg uppercase tracking-wider rounded-lg border-2 border-yellow-500 placeholder:text-yellow-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center"
-                style={{ fontFamily: "Arial Black, sans-serif" }}
+                className="w-full px-4 py-3 bg-slate-900/80 backdrop-blur-sm border border-slate-700/70 rounded-xl text-cyan-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.18em] font-bold text-center"
               />
             </div>
 
@@ -315,8 +314,7 @@ export default function ComparePage() {
                 }}
                 placeholder="FG34 HIJ"
                 maxLength={10}
-                className="w-full px-4 py-3 bg-yellow-400 text-slate-900 font-bold text-lg uppercase tracking-wider rounded-lg border-2 border-yellow-500 placeholder:text-yellow-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center"
-                style={{ fontFamily: "Arial Black, sans-serif" }}
+                className="w-full px-4 py-3 bg-slate-900/80 backdrop-blur-sm border border-slate-700/70 rounded-xl text-cyan-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.18em] font-bold text-center"
               />
             </div>
           </div>

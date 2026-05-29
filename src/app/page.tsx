@@ -136,6 +136,7 @@ import {
 } from "lucide-react";
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import BoltMark from "@/components/BoltMark";
+import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
@@ -363,38 +364,34 @@ function extractEuroNumber(euroStatus?: string) {
  * piece via a shared className for visual consistency.
  */
 function ResultsSkeleton({ reg }: { reg: string }) {
-  const formattedReg = reg.replace(/\s+/g, "").toUpperCase();
   return (
     <div className="space-y-5">
-      {/* Top: reg the user typed + status line. Real text — not skeleton. */}
-      <div className="flex items-center gap-3.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-3.5">
-        <div className="relative h-10 w-10 shrink-0">
-          <svg className="absolute inset-0 h-full w-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              stroke="url(#skeletonGradient)"
-              strokeWidth="3"
-              strokeDasharray="120 80"
-              strokeLinecap="round"
-            />
-            <defs>
-              <linearGradient id="skeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#22d3ee" />
-                <stop offset="100%" stopColor="#3b82f6" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <BoltMark className="h-4 w-4 animate-pulse" />
+      {/* Top: the plate the user typed, centered as the hero element of
+          the loading state. Uses RegPlate so the skeleton matches the
+          eventual results-header treatment — no surprise when data lands. */}
+      <div className="flex flex-col items-center gap-3 py-2">
+        <RegPlate reg={reg} size="lg" />
+        <div className="flex items-center gap-2">
+          <div className="relative h-3.5 w-3.5">
+            <svg className="absolute inset-0 h-full w-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke="url(#skeletonGradient)"
+                strokeWidth="6"
+                strokeDasharray="120 80"
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient id="skeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#22d3ee" />
+                  <stop offset="100%" stopColor="#3b82f6" />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-base sm:text-lg font-bold tracking-wider text-cyan-300 truncate">
-            {formattedReg || "Looking up reg…"}
-          </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 mt-0.5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">
             Fetching from DVLA…
           </p>
         </div>
@@ -3746,12 +3743,8 @@ END:VEVENT
             <DataReveal delay={0} className="relative z-20">
               <div className="mb-6 p-4 sm:p-6 bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600/50 rounded-lg backdrop-blur relative">
                 {/* Row 1: Reg plate + Make/Model + pills */}
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <div className="bg-yellow-300 border-2 border-yellow-800 rounded-sm px-2 py-1 inline-flex items-center shrink-0">
-                    <span className="text-sm font-black text-black tracking-widest" style={{ fontFamily: "Arial Black, sans-serif", letterSpacing: "0.08em" }}>
-                      {data.registrationNumber}
-                    </span>
-                  </div>
+                <div className="flex flex-wrap items-center gap-3 mb-1">
+                  <RegPlate reg={data.registrationNumber} size="sm" />
                   <h2 className="text-lg sm:text-xl font-bold text-slate-100 leading-tight">
                     {data.make || "—"} {data.model || "—"}
                     {data.variant && <span className="text-base font-medium text-slate-300 ml-1.5">{data.variant}</span>}

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
+import { RegPlate } from "@/components/RegPlate";
 import { trackEvent } from "@/lib/tracking";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
@@ -138,10 +139,8 @@ export function vehicleLabel(v: LookupVehicle): string {
 
 export function VehiclePill({ reg, label }: { reg: string; label?: string }) {
   return (
-    <div className="inline-flex items-center gap-3 rounded-full border border-slate-800 bg-slate-900/60 pl-1 pr-4 py-1">
-      <span className="rounded-full bg-amber-400 px-3 py-1 font-mono text-sm font-bold tracking-wider text-slate-900 shadow-inner">
-        {reg}
-      </span>
+    <div className="inline-flex items-center gap-3">
+      <RegPlate reg={reg} size="sm" />
       {label && <span className="text-sm text-slate-300">{label}</span>}
     </div>
   );
