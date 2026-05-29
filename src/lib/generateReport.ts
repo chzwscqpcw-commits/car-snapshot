@@ -290,15 +290,22 @@ function drawStatusBadge(
   doc.text(value, x + w / 2, y + 15, { align: "center" });
 }
 
-function drawNumberPlate(doc: jsPDF, x: number, y: number, reg: string) {
-  const plateW = 70;
-  const plateH = 14;
+function drawNumberPlate(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  reg: string,
+  size: "default" | "hero" = "default",
+) {
+  const plateW = size === "hero" ? 78 : 70;
+  const plateH = size === "hero" ? 16 : 14;
+  const fontSize = size === "hero" ? 19 : 16;
   const px = x - plateW / 2;
   drawRoundedRect(doc, px, y, plateW, plateH, 3, C.yellow);
-  doc.setFontSize(16);
+  doc.setFontSize(fontSize);
   setTextColor(doc, C.yellowDark);
   doc.setFont("helvetica", "bold");
-  doc.text(reg, x, y + 10, { align: "center" });
+  doc.text(reg, x, y + plateH * 0.72, { align: "center" });
 }
 
 function addNewPage(doc: jsPDF) {

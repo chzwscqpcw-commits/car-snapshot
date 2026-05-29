@@ -1,19 +1,22 @@
 import { Section, Text } from "@react-email/components";
 
 /**
- * Email-safe rendition of the site's yellow pill plate (the same
- * RegPlate variant="pill" treatment used on /tax-check, the homepage
- * results header, and the compare cards). Renders as a yellow rounded
- * pill with bold black mono text — reads instantly as "UK number
- * plate" in any email client.
+ * Email-safe rendition of the site's RegPlate variant="frosted". A
+ * dark slate background with a cyan border + light cyan mono text —
+ * the same treatment used as the hero plate on the homepage loading
+ * skeleton and tool-page result headers.
  *
- * Used in the three reminder templates so the user sees "their" plate
- * presented exactly the same way as on the site, reinforcing the
- * brand and making the email feel like an extension of the product.
+ * Earlier iteration used the yellow pill (matching variant="pill")
+ * which works well on the bright on-site rendering but was being
+ * aggressively darkened to brown by Outlook iOS in dark mode and
+ * isn't a brand colour in the first place — it's a UK number-plate
+ * convention. The frosted treatment is built on actual brand
+ * colours (cyan-500 border, slate-900 surface) so it stays
+ * recognisable through dark-mode mangling and reads as "Free Plate
+ * Check" not "a generic UK plate".
  *
- * Sized larger than the on-site sm pill (18px text vs 14px) because
- * inbox typography reads smaller than web — needs an extra notch to
- * have the same visual weight on a phone screen.
+ * Sized at 20px text so it reads as the hero of the email content
+ * area on a phone screen.
  */
 
 const wrapper: React.CSSProperties = {
@@ -23,16 +26,18 @@ const wrapper: React.CSSProperties = {
 
 const plate: React.CSSProperties = {
   display: "inline-block",
-  backgroundColor: "#fbbf24",
-  color: "#0f172a",
-  fontSize: "18px",
+  backgroundColor: "#0f172a",
+  border: "1px solid #06b6d4",
+  color: "#a5f3fc",
+  fontSize: "20px",
   fontWeight: 700,
   fontFamily: "'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace",
-  padding: "7px 16px",
-  borderRadius: "9999px",
-  letterSpacing: "0.06em",
+  padding: "10px 22px",
+  borderRadius: "10px",
+  letterSpacing: "0.18em",
   lineHeight: "1",
   margin: "0",
+  boxShadow: "0 0 0 1px rgba(6, 182, 212, 0.15), 0 4px 14px rgba(6, 182, 212, 0.18)",
 };
 
 interface EmailRegPlateProps {
