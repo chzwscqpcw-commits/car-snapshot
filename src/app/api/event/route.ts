@@ -45,14 +45,39 @@ export async function POST(req: Request) {
     const ipHash = ip !== "unknown" ? hashIp(ip) : null;
 
     const sb = supabaseServer();
-    sb.from("site_events").insert({
-      event_type: type,
-      metadata,
-      ip_hash: ipHash,
-    }).then(() => {}, () => {});
+    // Await the insert (was previously fire-and-forget). The endpoint is
+    // called from navigator.sendBeacon / fetch with keepalive — neither
+    // cares about response time, but the previous .then(noop, noop) pattern
+    // swallowed any failure silently and returned ok: true regardless. That
+    // made it impossible to spot Supabase rate-limit hits, RLS regressions
+    // or transient network blips. Now we log + return the real status; the
+    // client still ignores it but Vercel logs surface the failure mode.
+    const { error: insertError } = await sb
+      .from("site_events")
+      .insert({
+        event_type: type,
+        metadata,
+        ip_hash: ipHash,
+      });
+
+    if (insertError) {
+      console.error(
+        `[event] insert failed for ${type}:`,
+        insertError.code,
+        insertError.message,
+      );
+      return NextResponse.json(
+        { ok: false, error: "insert_failed" },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error(
+      "[event] route threw:",
+      err instanceof Error ? err.message : String(err),
+    );
+    return NextResponse.json({ ok: false, error: "exception" }, { status: 500 });
   }
 }
