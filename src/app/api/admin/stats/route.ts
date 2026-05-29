@@ -330,6 +330,14 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     partnerContextCountsLast7d,
     sectionCountsToday,
     submitErrorMetaToday,
+    // Reminder-success conversion events. Counting the `mot_reminder` event
+    // in site_events (vs counting rows in the mot_reminders table) catches
+    // reactivations — when a user submits the same (email, vrm) twice, the
+    // API updates the existing row rather than inserting, so the table-row
+    // count misses the second "successful conversion" even though the event
+    // legitimately fired. Event count is closer to the funnel's intent.
+    motReminderEventsToday,
+    motReminderEvents7d,
     // Booking wizard funnel (last 7 days)
     bookingStarts7d,
     bookingStepCompletes7d,
@@ -379,6 +387,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     groupByMetadataField(sb, "partner_click", "click_context", sevenDaysAgo),
     groupByMetadataField(sb, "results_section_view", "section_id", todayStart),
     groupByMetadataField(sb, "mot_reminder_submit_error", "error_type", todayStart),
+    countEvents(sb, "mot_reminder", todayStart),
+    countEvents(sb, "mot_reminder", sevenDaysAgo),
     countEvents(sb, "booking_wizard_start", sevenDaysAgo),
     // step_complete fires once per advance; we group by `step` so the
     // funnel shows 2 (entered Step 2) → 3 → 4 distinctly. Step 1 is
@@ -476,13 +486,15 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       searchesToday,
       resultsViewsToday,
       reminderViewsToday,
-      reminderSignupsToday: motRemindersToday,
+      // Use the event count (catches reactivations) — see comment near the
+      // motReminderEventsToday declaration above for why.
+      reminderSignupsToday: motReminderEventsToday,
     },
     funnel7d: {
       searches: searches7d,
       resultsViews: resultsViews7d,
       reminderViews: reminderViews7d,
-      reminderSignups: motRemindersLast7d,
+      reminderSignups: motReminderEvents7d,
     },
     captureByTriggerLast7d,
     partnerClicks: {
