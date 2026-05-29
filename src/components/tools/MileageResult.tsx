@@ -33,6 +33,14 @@ interface YearlyMileage {
   deltaPct: number;
   /** Date of the end reading — used as a stable React key and surfaced in the tooltip. */
   endDate: Date;
+  /**
+   * True for the pre-MOT-exemption years (typically the first three
+   * after registration). We don't have a real reading for these — we
+   * spread the very first known reading evenly across the period.
+   * Rendered with muted styling + an "est." tag to make the inference
+   * obvious.
+   */
+  isEstimated?: boolean;
 }
 
 interface MileageAnalysis {
@@ -288,6 +296,7 @@ function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
   const maxMiles = Math.max(...yearly.map((y) => y.miles), ukAverage);
   // UK-average reference line position as a percent of the bar width.
   const ukAvgPct = Math.round((ukAverage / maxMiles) * 100);
+  const hasEstimated = yearly.some((y) => y.isEstimated);
 
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
@@ -300,27 +309,59 @@ function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
       <p className="text-xs text-slate-500 mb-4">
         Miles driven between each MOT. Yellow line marks the UK average of{" "}
         {ukAverage.toLocaleString("en-GB")} mi/yr.
+        {hasEstimated && (
+          <>
+            {" "}
+            <span className="text-slate-400">
+              First three years are MOT-exempt and shown as evenly-spread estimates
+              from the first known reading.
+            </span>
+          </>
+        )}
       </p>
 
       <div className="space-y-2">
         {yearly.map((y) => {
           const widthPct = Math.max(2, Math.round((y.miles / maxMiles) * 100));
           const aboveAvg = y.deltaPct > 0;
-          const partial = y.daysCovered < 305 || y.daysCovered > 425;
+          const partial = !y.isEstimated && (y.daysCovered < 305 || y.daysCovered > 425);
           return (
             <div
-              key={y.endDate.toISOString()}
-              className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3"
+              key={`${y.year}-${y.isEstimated ? "est" : "real"}`}
+              className="grid grid-cols-[3.5rem_1fr_auto] items-center gap-2 sm:gap-3"
             >
-              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
-                {y.year}
+              <span className="font-mono text-xs sm:text-sm tabular-nums flex items-center gap-1.5">
+                <span className={y.isEstimated ? "text-slate-500" : "text-slate-400"}>
+                  {y.year}
+                </span>
+                {y.isEstimated && (
+                  <span
+                    className="inline-flex items-center text-[9px] font-semibold uppercase tracking-wider text-slate-500"
+                    title="MOT not required until the car was 3 years old — this row spreads the first known reading evenly across the pre-MOT years."
+                  >
+                    est
+                  </span>
+                )}
               </span>
               <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
-                {/* The mileage bar — cyan→blue gradient matching the sparkline. */}
-                <div
-                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
-                  style={{ width: `${widthPct}%` }}
-                />
+                {/* The mileage bar — solid cyan→blue gradient for measured
+                    rows; muted slate hatching for estimates so the eye can
+                    instantly tell them apart from real data. */}
+                {y.isEstimated ? (
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-md transition-all"
+                    style={{
+                      width: `${widthPct}%`,
+                      backgroundImage:
+                        "repeating-linear-gradient(135deg, rgba(148,163,184,0.35) 0, rgba(148,163,184,0.35) 4px, rgba(148,163,184,0.18) 4px, rgba(148,163,184,0.18) 8px)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
+                    style={{ width: `${widthPct}%` }}
+                  />
+                )}
                 {/* UK average reference line — sits on top of the bar, vertical amber stripe. */}
                 <div
                   aria-hidden="true"
@@ -329,13 +370,21 @@ function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
                 />
               </div>
               <div className="flex items-center gap-1.5 text-right">
-                <span className="font-mono text-xs sm:text-sm font-semibold text-slate-100 tabular-nums tracking-tight whitespace-nowrap">
+                <span
+                  className={`font-mono text-xs sm:text-sm tabular-nums tracking-tight whitespace-nowrap ${
+                    y.isEstimated
+                      ? "font-medium text-slate-400 italic"
+                      : "font-semibold text-slate-100"
+                  }`}
+                >
                   {y.miles.toLocaleString("en-GB")}
                   <span className="text-[10px] text-slate-500 ml-0.5">mi</span>
                 </span>
                 <span
                   className={`hidden sm:inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
-                    aboveAvg
+                    y.isEstimated
+                      ? "bg-slate-700/40 text-slate-400"
+                      : aboveAvg
                       ? "bg-amber-500/10 text-amber-300"
                       : "bg-emerald-500/10 text-emerald-300"
                   }`}
@@ -460,33 +509,81 @@ function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
     }
   }
 
-  // Year-by-year miles between consecutive readings. We skip rollback
-  // pairs (already flagged separately) to keep the breakdown chart
-  // free of negative bars. The "year" label is the calendar year of
-  // the END reading — for an annual MOT cycle this maps cleanly to
-  // "miles driven during 2018" etc. deltaPct is scaled to a
+  // Year-by-year miles between consecutive readings, bucketed by the
+  // END reading's calendar year. Bucketing dedupes vehicles that had
+  // two MOTs in the same calendar year (early retest after a fail,
+  // accelerated renewal etc.) — without it, the chart shows two rows
+  // for the same year which reads as a bug. deltaPct is scaled to a
   // full-year-equivalent so periods that aren't exactly 365 days
   // (skipped tests, SORN gaps, registration partial years) still
   // compare meaningfully against the UK average.
-  const yearly: YearlyMileage[] = [];
+  const yearBuckets = new Map<number, { miles: number; daysCovered: number; endDate: Date }>();
   for (let i = 1; i < readings.length; i++) {
     const prev = readings[i - 1];
     const curr = readings[i];
     const miles = curr.value - prev.value;
     if (miles < 0) continue; // rollback — covered by clocking flags
     const daysCovered = Math.max(1, daysBetween(prev.date, curr.date));
-    const annualisedRate = (miles / daysCovered) * 365;
-    const deltaPct = Math.round(
-      ((annualisedRate - UK_AVG_MILES_PER_YEAR) / UK_AVG_MILES_PER_YEAR) * 100,
-    );
-    yearly.push({
-      year: curr.date.getFullYear(),
-      miles,
-      daysCovered,
-      deltaPct,
-      endDate: curr.date,
-    });
+    const year = curr.date.getFullYear();
+    const existing = yearBuckets.get(year);
+    if (existing) {
+      existing.miles += miles;
+      existing.daysCovered += daysCovered;
+      if (curr.date > existing.endDate) existing.endDate = curr.date;
+    } else {
+      yearBuckets.set(year, { miles, daysCovered, endDate: curr.date });
+    }
   }
+
+  const yearly: YearlyMileage[] = Array.from(yearBuckets.entries()).map(
+    ([year, bucket]) => {
+      const annualisedRate = (bucket.miles / bucket.daysCovered) * 365;
+      return {
+        year,
+        miles: bucket.miles,
+        daysCovered: bucket.daysCovered,
+        deltaPct: Math.round(
+          ((annualisedRate - UK_AVG_MILES_PER_YEAR) / UK_AVG_MILES_PER_YEAR) * 100,
+        ),
+        endDate: bucket.endDate,
+      };
+    },
+  );
+
+  // Pre-MOT estimate. UK cars don't need an MOT until they're 3 years
+  // old, so a typical 12-year-old car has 3 years of mileage we can't
+  // see directly. Rather than leave those years blank — which hides
+  // the fact that the car was being driven during them — we infer
+  // them from the very first known reading: that number represents
+  // the accumulated mileage from registration to first MOT, so we
+  // can spread it evenly across the calendar years in that window.
+  // Marked isEstimated so the UI can render it differently.
+  if (vehicle.yearOfManufacture && readings.length > 0) {
+    const regYear = vehicle.yearOfManufacture;
+    const firstReading = readings[0];
+    const firstReadingYear = firstReading.date.getFullYear();
+    const preMotYearsCount = firstReadingYear - regYear;
+    if (preMotYearsCount > 0 && firstReading.value > 0) {
+      const milesPerYear = Math.round(firstReading.value / preMotYearsCount);
+      const annualisedRate = milesPerYear; // already a per-year figure
+      const deltaPct = Math.round(
+        ((annualisedRate - UK_AVG_MILES_PER_YEAR) / UK_AVG_MILES_PER_YEAR) * 100,
+      );
+      for (let y = regYear; y < firstReadingYear; y++) {
+        yearly.push({
+          year: y,
+          miles: milesPerYear,
+          daysCovered: 365,
+          deltaPct,
+          endDate: new Date(y, 11, 31),
+          isEstimated: true,
+        });
+      }
+    }
+  }
+
+  // Final sort: oldest → newest so estimates flow naturally into measured.
+  yearly.sort((a, b) => a.year - b.year);
 
   return {
     readings,
