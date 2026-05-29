@@ -554,43 +554,69 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   paintBackground(doc);
 
   // ── Header banner ──
-  // Banner is taller (24mm) to give the brand mark proper presence.
-  const BANNER_H = 24;
+  // Taller (32mm) so the brand mark + tagline have room to breathe.
+  // Bookended top + bottom with thin cyan stripes — the closest static
+  // print equivalent of the on-site cyan loading ring + CTA gradient.
+  const BANNER_H = 32;
   drawRoundedRect(doc, 0, 0, 210, BANNER_H, 0, C.slate800);
   setFill(doc, C.cyan);
   doc.rect(0, 0, 210, 1.5, "F");
 
-  // BoltMark (14mm tall, 10.5mm wide given 24×32 proportions), centered
-  // vertically within the banner. Wordmark sized up to 22pt white.
-  const boltH = 14;
+  // BoltMark + wordmark sized up. Bolt 16mm (was 14mm), wordmark 24pt
+  // (was 22pt). Centered as a single unit.
+  const boltH = 16;
   const boltW = boltH * (24 / 32);
-  doc.setFontSize(22);
+  doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
   setTextColor(doc, C.white);
   const brandTextW = doc.getTextWidth("Free Plate Check");
-  const brandGap = 4;
+  const brandGap = 4.5;
   const brandTotalW = boltW + brandGap + brandTextW;
   const brandStartX = (210 - brandTotalW) / 2;
-  const boltY = (BANNER_H - boltH) / 2 + 0.5;
+  // Brand sits slightly above vertical centre to leave room for the
+  // tagline. Same "logo + tagline" stack used on the homepage hero.
+  const brandCentreY = BANNER_H / 2 - 1.5;
+  const boltY = brandCentreY - boltH / 2;
   drawBoltMark(doc, brandStartX, boltY, boltH);
-  doc.text("Free Plate Check", brandStartX + boltW + brandGap, BANNER_H / 2 + 4);
+  doc.text("Free Plate Check", brandStartX + boltW + brandGap, brandCentreY + 3);
 
-  // Date below banner
+  // Tagline under the wordmark — same value-prop the homepage uses.
   doc.setFontSize(FONT.small);
-  setTextColor(doc, C.labelText);
   doc.setFont("helvetica", "normal");
+  setTextColor(doc, C.cyan300);
+  doc.text(
+    "Everything DVLA knows about any UK car",
+    105,
+    brandCentreY + 11.5,
+    { align: "center" },
+  );
+
+  // Bottom accent stripe — bookends the top stripe.
+  setFill(doc, C.cyan);
+  doc.rect(0, BANNER_H - 0.8, 210, 0.8, "F");
+
   const genDate = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  doc.text(`Vehicle Report \u00B7 ${genDate}`, 105, BANNER_H + 6, { align: "center" });
+  // "VEHICLE REPORT" eyebrow + mono date on the right. Reads as a
+  // deliberate product asset rather than a one-liner meta string.
+  const eyebrowY = BANNER_H + 8;
+  doc.setFontSize(FONT.tiny);
+  doc.setFont("helvetica", "bold");
+  setTextColor(doc, C.cyan);
+  doc.text("VEHICLE REPORT", MARGIN, eyebrowY);
+  doc.setFont("courier", "normal");
+  setTextColor(doc, C.labelText);
+  doc.text(genDate, 210 - MARGIN, eyebrowY, { align: "right" });
 
-  let y = BANNER_H + 12;
+  let y = eyebrowY + 8;
 
-  // ── Number plate ──
-  drawNumberPlate(doc, 105, y, data.registrationNumber);
-  y += 20;
+  // Hero treatment — larger than the in-document plate so this moment
+  // reads as "your vehicle" rather than "a piece of data".
+  drawNumberPlate(doc, 105, y, data.registrationNumber, "hero");
+  y += 22;
 
   // ── Vehicle description ──
   const parts: string[] = [];
