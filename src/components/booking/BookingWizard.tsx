@@ -110,6 +110,18 @@ export default function BookingWizard() {
     saveToStorage(state);
   }, [state]);
 
+  // Scroll to top of the page on every step change. Without this, advancing
+  // from a tall step (Step 3 has postcode + date + flexibility + price
+  // context) leaves the user halfway down the page when Step 4 mounts,
+  // hiding the hero, progress dots and the summary heading. We scroll
+  // instantly (not smooth) so the new step's content is visible from the
+  // first paint rather than animating up over hundreds of ms.
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+  }, [state.step]);
+
   // Background-fetch the vehicle when we have a vrm but no vehicle data.
   // Happens after deep-link entry (skipped Step 1) or after sessionStorage
   // restore (we don't persist the vehicle blob). Without this, the Step 4
