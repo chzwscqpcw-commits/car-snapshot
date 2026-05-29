@@ -28,22 +28,43 @@ interface Props {
 
 function buildBmgHandoffUrl(service: ServiceType, vrm: string, postcode: string): string {
   // The Awin tracker still wraps the destination so attribution works.
-  // We deep-link the most specific BMG page for the chosen service and
-  // append vrm + (optionally) postcode for pre-fill. BMG accepts vrm
-  // consistently; postcode is best-effort and falls back silently.
-  const base =
-    service === "mot"
-      ? "https://www.bookmygarage.com/mot/"
-      : service === "diagnostic"
-        ? "https://www.bookmygarage.com/car-repairs/"
-        : "https://www.bookmygarage.com/car-servicing/";
+  //
+  // When we have BOTH vrm and postcode AND the service is MOT, deep-link
+  // straight to BMG's results page — skipping the search form and its
+  // "Compare Prices Instantly" click. The URL pattern was confirmed by
+  // observing the redirect after submitting the search form on
+  // bookmygarage.com/mot/. Saves the user one tap and removes the
+  // friction of seeing their already-pre-filled details on a form they
+  // didn't fill in.
+  //
+  // For service / diagnostic, or when postcode is missing, we still
+  // route to the search page — BMG's results URL pattern for those
+  // services isn't confirmed yet, and the search page works as a safe
+  // fallback either way.
+  const hasFullContext = vrm && postcode;
+  let destination: string;
+  if (hasFullContext && service === "mot") {
+    const params = new URLSearchParams();
+    params.set("p", "1");
+    params.set("postcode", postcode);
+    params.set("vrm", vrm);
+    destination = `https://bookmygarage.com/results/?${params.toString()}`;
+  } else {
+    const base =
+      service === "mot"
+        ? "https://www.bookmygarage.com/mot/"
+        : service === "diagnostic"
+          ? "https://www.bookmygarage.com/car-repairs/"
+          : "https://www.bookmygarage.com/car-servicing/";
+    const params = new URLSearchParams();
+    if (vrm) params.set("vrm", vrm);
+    if (postcode) params.set("postcode", postcode);
+    const query = params.toString();
+    destination = query ? `${base}?${query}` : base;
+  }
 
-  const params = new URLSearchParams();
-  if (vrm) params.set("vrm", vrm);
-  if (postcode) params.set("postcode", postcode);
-
-  const destination = encodeURIComponent(`${base}?${params.toString()}`);
-  return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`;
+  const encoded = encodeURIComponent(destination);
+  return `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${encoded}`;
 }
 
 function formatDateFriendly(iso: string): string {
