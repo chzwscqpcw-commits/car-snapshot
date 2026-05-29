@@ -25,6 +25,8 @@ import {
   getConditionAdjustment,
   getColourAdjustment,
   getMileageAdjustment,
+  getDepreciationMultiplier,
+  getMakeRetentionMultiplier,
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
 } from "@/lib/valuation";
@@ -213,6 +215,15 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           valuation={valuation}
           serverData={serverData}
           condition={condition}
+        />
+      )}
+      {newPrice !== null && age !== null && (
+        <DepreciationCurveCard
+          newPrice={newPrice}
+          age={age}
+          make={vehicle.make}
+          model={vehicle.model}
+          currentEstimate={valuation?.estimatedValue ?? depEstimate}
         />
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
@@ -718,4 +729,117 @@ function latestMileage(tests?: MotTest[]): number | null {
   let miles = latest.odometer.value;
   if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
   return miles;
+}
+
+
+/**
+ * Depreciation curve: shows the year-by-year journey from new price
+ * (year 0) through today, plus three years of projected future value.
+ * Each row is one year of ownership; the bar length scales to the new
+ * price so the visual is the curve itself. The current year is
+ * highlighted with a cyan dot + "Today" tag so the user can immediately
+ * locate where the vehicle is on its curve.
+ *
+ * The numbers come from the same depreciation + retention model the
+ * Hero card uses, so this card is an honest visualisation of how we
+ * arrived at the headline figure — not a separate calculation.
+ */
+function DepreciationCurveCard({
+  newPrice,
+  age,
+  make,
+  model,
+  currentEstimate,
+}: {
+  newPrice: number;
+  age: number;
+  make?: string;
+  model?: string;
+  currentEstimate: number | null;
+}) {
+  const HISTORY = age;
+  const FORECAST = 3;
+  const totalYears = HISTORY + FORECAST + 1; // +1 for year 0 (new)
+  const retention = getMakeRetentionMultiplier(make, model);
+
+  const rows = Array.from({ length: totalYears }, (_, y) => {
+    const value = Math.round(newPrice * getDepreciationMultiplier(y) * retention);
+    return {
+      year: y,
+      value,
+      isNow: y === HISTORY,
+      isFuture: y > HISTORY,
+    };
+  });
+
+  const max = rows[0].value; // year 0 — the new price — is always the max
+  const thisYear = new Date().getFullYear();
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="text-sm font-semibold text-slate-100">Depreciation curve</h3>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          {HISTORY} yr history · {FORECAST} yr forecast
+        </span>
+      </div>
+      <p className="text-xs text-slate-500 mb-4">
+        Estimated value at each year of ownership from new. Current year highlighted.
+      </p>
+
+      <div className="space-y-2">
+        {rows.map((row) => {
+          const widthPct = Math.max(3, Math.round((row.value / max) * 100));
+          const calendarYear = thisYear - HISTORY + row.year;
+          const barClass = row.isFuture
+            ? "from-slate-600/60 to-slate-500/60"
+            : row.isNow
+            ? "from-cyan-400 to-blue-400"
+            : "from-cyan-500/70 to-blue-500/70";
+          return (
+            <div
+              key={row.year}
+              className={`grid grid-cols-[4rem_1fr_auto] items-center gap-2 sm:gap-3 ${
+                row.isNow ? "py-1" : ""
+              }`}
+            >
+              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums flex items-center gap-1">
+                {calendarYear}
+                {row.isNow && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                )}
+              </span>
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+                <div
+                  className={`absolute inset-y-0 left-0 rounded-md bg-gradient-to-r transition-all ${barClass}`}
+                  style={{ width: `${widthPct}%` }}
+                />
+                {row.isNow && (
+                  <span className="absolute top-1/2 -translate-y-1/2 right-2 text-[10px] font-semibold uppercase tracking-wider text-cyan-100">
+                    Today
+                  </span>
+                )}
+              </div>
+              <span
+                className={`font-mono text-xs sm:text-sm tabular-nums tracking-tight whitespace-nowrap ${
+                  row.isNow ? "font-bold text-cyan-300" : "font-semibold text-slate-100"
+                } ${row.isFuture ? "text-slate-400" : ""}`}
+              >
+                £{row.value.toLocaleString("en-GB")}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {currentEstimate !== null && (
+        <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
+          The headline value of £{currentEstimate.toLocaleString("en-GB")} is what we
+          actually estimate after combining this depreciation curve with live market
+          listings and condition adjustments. The forecast rows assume no major market
+          shift, model discontinuation or accident history.
+        </p>
+      )}
+    </section>
+  );
 }

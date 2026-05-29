@@ -368,6 +368,19 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
         </section>
       )}
 
+      {/* Year-by-year VED forecast */}
+      {ved.estimatedAnnualRate !== null && (
+        <VedForecastCard
+          currentRate={ved.estimatedAnnualRate}
+          registrationYear={
+            vehicle.monthOfFirstRegistration
+              ? Number(vehicle.monthOfFirstRegistration.split("-")[0])
+              : vehicle.yearOfManufacture ?? null
+          }
+          isPostApril2017={ved.rateType === "post-2017"}
+        />
+      )}
+
       {/* Contextual BMG hook — only when MOT is also due soon */}
       {motDueSoon && (
         <section className="mt-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">
@@ -445,6 +458,109 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
         </div>
       </section>
     </div>
+  );
+}
+
+/**
+ * Five-year VED forecast. Most cars roll the same standard rate each
+ * year, so the chart looks flat — but it answers the question users
+ * actually ask ("what am I going to pay over the next five years?")
+ * with a single number rendered as bars, a total at the bottom, and
+ * an honest disclaimer about budget-driven rate changes.
+ *
+ * Special handling for post-2017 vehicles where the year-2-to-year-6
+ * window may have included the £40k "expensive car supplement". We
+ * don't have list-price data so can't apply the supplement directly,
+ * but we surface a note explaining the supplement when relevant
+ * (i.e. when the vehicle's reg year places years 2-6 partly in the
+ * forecast window).
+ */
+function VedForecastCard({
+  currentRate,
+  registrationYear,
+  isPostApril2017,
+}: {
+  currentRate: number;
+  registrationYear: number | null;
+  isPostApril2017: boolean;
+}) {
+  const thisYear = new Date().getFullYear();
+  const HORIZON = 5;
+  const forecast = Array.from({ length: HORIZON }, (_, i) => ({
+    year: thisYear + i,
+    rate: currentRate,
+  }));
+  const total = forecast.reduce((s, r) => s + r.rate, 0);
+  const maxRate = Math.max(...forecast.map((r) => r.rate));
+
+  // Whether the £40k supplement window (years 2-6 of registration) overlaps
+  // the forecast horizon. Shown as a contextual note, not applied.
+  const supplementEndsYear =
+    registrationYear !== null ? registrationYear + 6 : null;
+  const supplementOverlaps =
+    isPostApril2017 &&
+    supplementEndsYear !== null &&
+    supplementEndsYear >= thisYear;
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="text-sm font-semibold text-slate-100">VED forecast</h3>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          Next {HORIZON} years
+        </span>
+      </div>
+      <p className="text-xs text-slate-500 mb-4">
+        Estimated annual road tax over the next {HORIZON} years at today&apos;s rate.
+        Actual rates can change each Budget — typically rising 2-3% with inflation.
+      </p>
+
+      <div className="space-y-2">
+        {forecast.map((row) => {
+          const widthPct = Math.max(5, Math.round((row.rate / maxRate) * 100));
+          return (
+            <div
+              key={row.year}
+              className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3"
+            >
+              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
+                {row.year}
+              </span>
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
+                  style={{ width: `${widthPct}%` }}
+                />
+              </div>
+              <span className="font-mono text-xs sm:text-sm font-semibold text-slate-100 tabular-nums tracking-tight whitespace-nowrap">
+                £{row.rate.toLocaleString("en-GB")}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-slate-800/60 flex items-baseline justify-between gap-3">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          {HORIZON}-year total
+        </span>
+        <span className="font-mono text-base sm:text-lg font-bold text-cyan-300 tabular-nums">
+          £{total.toLocaleString("en-GB")}
+        </span>
+      </div>
+
+      {supplementOverlaps && (
+        <p className="mt-3 text-[11px] text-amber-300/80 leading-relaxed">
+          Note: vehicles with a list price over £40,000 pay an additional ~£425/year
+          supplement for years 2-6 of registration (
+          {supplementEndsYear && supplementEndsYear >= thisYear
+            ? `ends ${supplementEndsYear}`
+            : "already ended"}
+          ). We don&apos;t have list-price data so this isn&apos;t included in the
+          totals above — add it manually if your car had a list price over £40k.
+        </p>
+      )}
+    </section>
   );
 }
 
