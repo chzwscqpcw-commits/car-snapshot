@@ -430,7 +430,9 @@ function eventTone(eventType: string): { dot: string; text: string } {
     eventType === "reg_search" ||
     eventType === "mot_reminder" ||
     eventType === "contact_submit" ||
-    eventType === "mot_action_banner_reminder_open"
+    eventType === "mot_action_banner_reminder_open" ||
+    eventType === "booking_wizard_start" ||
+    eventType === "booking_step_complete"
   ) {
     return { dot: "bg-cyan-400", text: "text-cyan-300" };
   }
@@ -475,6 +477,14 @@ function summarizeEvent(e: RecentEvent): string {
       return `${get("urgency") ?? "?"} · ${getNum("days_until_expiry") ?? "?"}d to expiry`;
     case "mot_action_banner_reminder_open":
       return `${get("urgency") ?? "?"}`;
+    case "action_banner_booking_click":
+      return `${get("urgency") ?? "?"} → wizard`;
+    case "booking_wizard_start":
+      return `from ${get("source") ?? "direct"}${m.prefilled_vrm ? " · pre-filled" : ""}`;
+    case "booking_step_complete":
+      return `step ${getNum("step") ?? "?"}${get("service") ? " · " + get("service") : ""}${get("postcode") ? " · pc=" + get("postcode")?.slice(0, 4) : ""}`;
+    case "booking_step_back":
+      return `${getNum("from_step") ?? "?"} → ${getNum("to_step") ?? "?"}`;
     case "contact_submit":
       return `${get("category") ?? "?"} · ${get("msg_length_bucket") ?? "?"}${m.has_name ? " · named" : ""}`;
     case "contact_submit_error":

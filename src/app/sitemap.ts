@@ -125,6 +125,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/booking",
+      lastModified: new Date("2026-05-29"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/running-costs",
       lastModified: new Date("2026-03-13"),
       changeFrequency: "monthly",

@@ -1,0 +1,206 @@
+{
+  "_meta": {
+    "compiled": "2026-05-29",
+    "sources": [
+      "GOV.UK MOT fee schedule (legal max £54.85)",
+      "Halfords Autocentres published prices",
+      "RAC service price guide 2026",
+      "Which? annual servicing report",
+      "BookMyGarage average garage pricing tier"
+    ],
+    "notes": [
+      "Ranges represent typical garage offerings (independent + chain).",
+      "Region multipliers approximate; London / South-East carry premium.",
+      "Premium-brand prices reflect main-dealer + specialist costs.",
+      "EV servicing is typically simpler than ICE but parts/specialist labour offsets."
+    ]
+  },
+
+  "mot": {
+    "min": 35,
+    "max": 54.85,
+    "median": 45,
+    "legalMax": 54.85,
+    "durationMins": 45,
+    "summary": "Annual MOT test (Class 4 — cars and small vans)",
+    "includes": [
+      "Brakes, tyres, suspension, steering",
+      "Lights, mirrors, wipers, horn",
+      "Seatbelts, structure, body condition",
+      "Emissions and exhaust",
+      "Fuel system, vehicle identification"
+    ]
+  },
+
+  "interimService": {
+    "summary": "6-month / 6,000-mile check — essential safety + oil/filter",
+    "durationMins": 60,
+    "includes": [
+      "Engine oil & oil filter change",
+      "Top up all fluid levels",
+      "Brake fluid level check",
+      "Visual brake inspection",
+      "Tyre pressure & condition check",
+      "Lights, horn, wipers check",
+      "Battery condition test"
+    ],
+    "byCategory": {
+      "small_petrol":  { "min": 75,  "max": 120 },
+      "small_diesel":  { "min": 85,  "max": 135 },
+      "medium_petrol": { "min": 90,  "max": 150 },
+      "medium_diesel": { "min": 100, "max": 165 },
+      "large_petrol":  { "min": 115, "max": 200 },
+      "large_diesel":  { "min": 125, "max": 220 },
+      "premium":       { "min": 150, "max": 280 },
+      "premium_large": { "min": 200, "max": 380 },
+      "ev_small":      { "min": 85,  "max": 140 },
+      "ev_medium":     { "min": 110, "max": 180 },
+      "ev_premium":    { "min": 160, "max": 280 }
+    }
+  },
+
+  "fullService": {
+    "summary": "12-month / 12,000-mile thorough service — more parts replaced",
+    "durationMins": 150,
+    "includes": [
+      "All interim service items",
+      "Air filter change",
+      "Fuel filter change (diesel)",
+      "Spark plugs check / change (petrol)",
+      "Brake pads + discs full inspection",
+      "Suspension + steering inspection",
+      "Cooling system check & antifreeze top-up",
+      "Driveshafts, gaiters, exhaust inspection",
+      "Diagnostic scan (most modern cars)"
+    ],
+    "byCategory": {
+      "small_petrol":  { "min": 145, "max": 235 },
+      "small_diesel":  { "min": 160, "max": 260 },
+      "medium_petrol": { "min": 175, "max": 295 },
+      "medium_diesel": { "min": 195, "max": 320 },
+      "large_petrol":  { "min": 215, "max": 380 },
+      "large_diesel":  { "min": 235, "max": 410 },
+      "premium":       { "min": 280, "max": 480 },
+      "premium_large": { "min": 360, "max": 620 },
+      "ev_small":      { "min": 175, "max": 290 },
+      "ev_medium":     { "min": 220, "max": 370 },
+      "ev_premium":    { "min": 320, "max": 540 }
+    }
+  },
+
+  "diagnostic": {
+    "summary": "Computer diagnosis of fault codes, warning lights, or specific symptoms",
+    "durationMins": 60,
+    "includes": [
+      "Plug-in OBD diagnostic scan",
+      "Fault-code interpretation",
+      "Test-drive if symptoms require",
+      "Written report of findings",
+      "Cost estimate for repairs"
+    ],
+    "min": 40,
+    "max": 110,
+    "median": 65,
+    "note": "Repair costs are separate — quoted after diagnosis"
+  },
+
+  "regions": {
+    "london": {
+      "multiplier": 1.30,
+      "label": "London",
+      "outcodes": [
+        "E", "EC", "N", "NW", "SE", "SW", "W", "WC"
+      ]
+    },
+    "south_east": {
+      "multiplier": 1.15,
+      "label": "South East",
+      "outcodes": [
+        "BN", "BR", "CR", "CT", "DA", "GU", "HA", "HP", "IG", "KT",
+        "ME", "MK", "OX", "PO", "RG", "RH", "RM", "SL", "SM", "SO",
+        "TN", "TW", "UB", "WD"
+      ]
+    },
+    "east": {
+      "multiplier": 1.05,
+      "label": "East",
+      "outcodes": ["AL", "CB", "CM", "CO", "EN", "IP", "LU", "NR", "PE", "SG", "SS", "WD"]
+    },
+    "south_west": {
+      "multiplier": 1.00,
+      "label": "South West",
+      "outcodes": ["BA", "BH", "BS", "DT", "EX", "GL", "PL", "SN", "SP", "TA", "TQ", "TR"]
+    },
+    "midlands_west": {
+      "multiplier": 1.00,
+      "label": "West Midlands",
+      "outcodes": ["B", "CV", "DY", "HR", "ST", "SY", "TF", "WR", "WS", "WV"]
+    },
+    "midlands_east": {
+      "multiplier": 0.95,
+      "label": "East Midlands",
+      "outcodes": ["DE", "DN", "LE", "LN", "NG", "NN"]
+    },
+    "north_west": {
+      "multiplier": 1.00,
+      "label": "North West",
+      "outcodes": ["BB", "BL", "CA", "CH", "CW", "FY", "L", "LA", "M", "OL", "PR", "SK", "WA", "WN"]
+    },
+    "yorkshire": {
+      "multiplier": 0.95,
+      "label": "Yorkshire & Humber",
+      "outcodes": ["BD", "DN", "HD", "HG", "HU", "HX", "LS", "S", "WF", "YO"]
+    },
+    "north_east": {
+      "multiplier": 0.95,
+      "label": "North East",
+      "outcodes": ["DH", "DL", "NE", "SR", "TS"]
+    },
+    "scotland": {
+      "multiplier": 0.95,
+      "label": "Scotland",
+      "outcodes": ["AB", "DD", "DG", "EH", "FK", "G", "HS", "IV", "KA", "KW", "KY", "ML", "PA", "PH", "TD", "ZE"]
+    },
+    "wales": {
+      "multiplier": 0.90,
+      "label": "Wales",
+      "outcodes": ["CF", "LD", "LL", "NP", "SA", "SY"]
+    },
+    "northern_ireland": {
+      "multiplier": 0.85,
+      "label": "Northern Ireland",
+      "outcodes": ["BT"]
+    }
+  },
+
+  "categoryRules": {
+    "_note": "Vehicle category determined in this priority order. Premium brands override engine-size rules. EV fuel overrides everything else.",
+
+    "premiumMakes": [
+      "BMW", "MERCEDES-BENZ", "MERCEDES", "AUDI", "PORSCHE", "LEXUS",
+      "TESLA", "JAGUAR", "LAND ROVER", "RANGE ROVER", "MASERATI",
+      "BENTLEY", "ROLLS-ROYCE", "ASTON MARTIN", "FERRARI", "LAMBORGHINI",
+      "MCLAREN", "ALPINA", "POLESTAR", "GENESIS"
+    ],
+    "largePremiumModels": [
+      "RANGE ROVER", "DEFENDER", "DISCOVERY", "X5", "X6", "X7", "GLE",
+      "GLS", "Q7", "Q8", "CAYENNE", "MACAN", "LEVANTE", "URUS", "RX",
+      "LX", "EQS", "MODEL X"
+    ],
+
+    "engineThresholds": {
+      "smallMaxCc": 1399,
+      "largeMinCc": 2001
+    },
+
+    "evFuelTypes": ["ELECTRICITY", "ELECTRIC"]
+  },
+
+  "garageDensity": {
+    "_note": "Approximate count of BookMyGarage partner garages within typical commuting distance of an outcode area. Used only for the 'X garages near you' Step 3 context line — not a precise number. Pulled from BMG public marketing claims; intentionally given as a range rather than a count.",
+
+    "high":   { "label": "50+", "outcodePrefixes": ["E", "EC", "N", "NW", "SE", "SW", "W", "WC", "M", "L", "B", "BS", "LS", "S", "EH", "G", "CF", "NE"] },
+    "medium": { "label": "20-50", "outcodePrefixes": ["BR", "CR", "DA", "EN", "HA", "IG", "KT", "RM", "SM", "TW", "UB", "WD", "BN", "GU", "ME", "OX", "PO", "RG", "RH", "SO", "TN", "CV", "DE", "DY", "LE", "NG", "PR", "SK", "WA", "WN", "BD", "HD", "HX", "WF", "YO", "DH", "SR", "TS", "AB", "DD", "FK", "KY", "PA", "PH", "SA", "NP"] },
+    "low":    { "label": "5-20", "outcodePrefixes": ["BT", "HS", "IV", "KW", "LD", "LL", "TR", "TD", "ZE"] }
+  }
+}

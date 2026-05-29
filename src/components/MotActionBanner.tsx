@@ -5,12 +5,11 @@ import {
   AlertTriangle,
   Bell,
   Calendar,
+  ChevronRight,
   Clock,
-  ExternalLink,
 } from "lucide-react";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
-import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackEvent, trackPartnerClick } from "@/lib/tracking";
+import { trackEvent } from "@/lib/tracking";
 
 type Urgency = "expired" | "due-soon" | "far";
 
@@ -169,11 +168,14 @@ export default function MotActionBanner({
         ? "Also set reminder"
         : "Set MOT reminder";
 
-  const bmgHref =
-    PARTNER_LINKS.bookMyGarage.buildLink?.(registrationNumber) ??
-    PARTNER_LINKS.bookMyGarage.url;
-  const bmgRel = getPartnerRel(PARTNER_LINKS.bookMyGarage);
-  const bmgContext = `mot-action-banner-${urgency}`;
+  // Route to the internal /booking wizard rather than directly to BMG so
+  // we can qualify intent (postcode, flexibility, recommended service) and
+  // surface our own price context before hand-off. The wizard fires
+  // booking_wizard_start with source=action_banner_{urgency} and the
+  // final partner_click happens at Step 4 with click_context=
+  // "booking-flow-mot". This is the A/B test: action banner → wizard vs
+  // every other BMG CTA still goes direct.
+  const bookingHref = `/booking?vrm=${encodeURIComponent(registrationNumber)}&type=mot&source=action_banner_${urgency}`;
 
   const reminderContext =
     urgency === "expired"
@@ -203,14 +205,14 @@ export default function MotActionBanner({
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         {showBmg && (
           <a
-            href={bmgHref}
-            target="_blank"
-            rel={bmgRel}
-            onClick={() => trackPartnerClick("bookMyGarage", bmgContext)}
+            href={bookingHref}
+            onClick={() =>
+              trackEvent("action_banner_booking_click", { urgency })
+            }
             className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-initial ${palette.primary}`}
           >
             {bmgLabel}
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ChevronRight className="h-3.5 w-3.5" />
           </a>
         )}
         <button
