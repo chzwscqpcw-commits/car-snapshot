@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { ExternalLink, Edit3, ShieldCheck } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
@@ -222,25 +224,22 @@ export default function Step4Review({
         </p>
       </div>
 
-      {/* CTAs — primary becomes sticky-bottom on mobile so users always see
-          the hand-off button without scrolling past the review summary.
-          Desktop keeps the original inline layout. The pb-32 sm:pb-0 on
-          the parent wrapper (added below) creates space for the sticky bar
-          so it doesn't cover the disclaimer when scrolled to bottom. */}
-      <div className="space-y-2 sm:relative">
-        {/* Mobile sticky bar */}
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-800 bg-slate-950/95 backdrop-blur-md p-3 sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-0">
-          <a
-            href={handoffUrl}
-            target="_blank"
-            rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-            onClick={handleHandoffClick}
-            className="flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:from-emerald-400 hover:to-cyan-400"
-          >
-            Compare prices on BookMyGarage
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        </div>
+      {/* Inline CTAs — desktop primary path. On mobile the Compare-prices
+          button is rendered via Portal below (outside the wizard's
+          backdrop-blur stacking context, which would otherwise break
+          position: fixed on its children). The inline button is desktop-
+          only on mobile we rely on the portaled sticky bar. */}
+      <div className="space-y-2">
+        <a
+          href={handoffUrl}
+          target="_blank"
+          rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+          onClick={handleHandoffClick}
+          className="hidden sm:flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:from-emerald-400 hover:to-cyan-400"
+        >
+          Compare prices on BookMyGarage
+          <ExternalLink className="h-4 w-4" />
+        </a>
         <button
           type="button"
           onClick={onEdit}
@@ -253,6 +252,51 @@ export default function Step4Review({
           Free comparison · No booking fee · Free Plate Check earns a small commission
         </p>
       </div>
+
+      <StickyMobileCta
+        href={handoffUrl}
+        onClick={handleHandoffClick}
+      />
     </div>
+  );
+}
+
+/**
+ * Mobile-only sticky hand-off button. Rendered via Portal to document.body
+ * so it lives outside the wizard container's backdrop-blur / animate-fadeInUp
+ * stacking context, both of which break position:fixed on descendants.
+ * Hidden on tablet+ where the inline button takes over.
+ */
+function StickyMobileCta({
+  href,
+  onClick,
+}: {
+  href: string;
+  onClick: () => void;
+}) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="sm:hidden fixed inset-x-0 bottom-0 z-50 border-t border-slate-800 bg-slate-950/95 backdrop-blur-md px-3 pt-3"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+    >
+      <a
+        href={href}
+        target="_blank"
+        rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+        onClick={onClick}
+        className="flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all"
+      >
+        Compare prices on BookMyGarage
+        <ExternalLink className="h-4 w-4" />
+      </a>
+    </div>,
+    document.body,
   );
 }
