@@ -366,34 +366,61 @@ function extractEuroNumber(euroStatus?: string) {
 function ResultsSkeleton({ reg }: { reg: string }) {
   return (
     <div className="space-y-5">
-      {/* Top: the plate the user typed, centered as the hero element of
-          the loading state. Uses RegPlate so the skeleton matches the
-          eventual results-header treatment — no surprise when data lands. */}
-      <div className="flex flex-col items-center gap-3 py-2">
-        <RegPlate reg={reg} size="lg" />
-        <div className="flex items-center gap-2">
-          <div className="relative h-3.5 w-3.5">
-            <svg className="absolute inset-0 h-full w-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="url(#skeletonGradient)"
-                strokeWidth="6"
-                strokeDasharray="120 80"
-                strokeLinecap="round"
-              />
-              <defs>
-                <linearGradient id="skeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#3b82f6" />
-                </linearGradient>
-              </defs>
-            </svg>
+      {/* Brand-led loading hero. The big spinning gradient ring with the
+          BoltMark pulsing in the centre is one of the signature visual
+          moments on the site — every user gets it on every successful
+          search. Plate underneath grounds the moment as "your search is
+          being processed" rather than abstract loading.
+
+          Layout intentionally matches the original LoadingAnimation
+          dimensions (w-16 h-16 ring, w-6 h-8 bolt) so brand muscle memory
+          is preserved end-to-end with the previous incarnation. */}
+      <div className="flex flex-col items-center gap-4 py-4">
+        <div className="relative w-16 h-16">
+          <svg
+            className="absolute inset-0 w-full h-full animate-spin-slow"
+            viewBox="0 0 100 100"
+            fill="none"
+          >
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              stroke="url(#skeletonGradient)"
+              strokeWidth="2"
+              strokeDasharray="120 80"
+              strokeLinecap="round"
+            />
+            <defs>
+              <linearGradient id="skeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BoltMark
+              glow
+              className="w-6 h-8 animate-pulse drop-shadow-[0_0_12px_rgba(34,211,238,0.5)]"
+            />
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">
-            Fetching from DVLA…
+        </div>
+        <RegPlate reg={reg} size="lg" />
+        <div className="flex flex-col items-center gap-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">
+            Fetching from DVLA
           </p>
+          <div className="flex gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
+            <span
+              className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse"
+              style={{ animationDelay: "0.2s" }}
+            />
+            <span
+              className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse"
+              style={{ animationDelay: "0.4s" }}
+            />
+          </div>
         </div>
       </div>
 
