@@ -137,7 +137,7 @@ export default function BookingPage() {
           <a href="/tools" className="text-blue-400 hover:text-blue-300 text-xs sm:text-sm mb-3 sm:mb-6 inline-block">
             &larr; Back to all tools
           </a>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
             Book your MOT or service
           </h1>
           <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium text-emerald-300">

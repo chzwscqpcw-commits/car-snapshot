@@ -121,29 +121,65 @@ export default function Step4Review({
     trackPartnerClick("bookMyGarage", clickref);
   }
 
+  const timingLine =
+    flexibility === "browsing"
+      ? "Just browsing"
+      : `${flexibilityLabel(flexibility)} · ${formatDateFriendly(date)}`;
+
   return (
-    <div className="space-y-5 pb-24 sm:pb-0">
+    <div className="space-y-3 sm:space-y-5 pb-24 sm:pb-0">
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-white">Ready to compare prices</h2>
-        <p className="mt-1 text-sm text-slate-400">
+        <h2 className="text-lg sm:text-2xl font-bold text-white">Ready to compare prices</h2>
+        <p className="hidden sm:block mt-1 text-sm text-slate-400">
           Here&apos;s what we&apos;ll send to BookMyGarage. You can edit anything, or hand off now.
         </p>
       </div>
 
-      <div className="rounded-xl border border-slate-700/60 bg-slate-900 p-4 sm:p-5 space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Vehicle</p>
-            <p className="mt-0.5 text-base font-semibold text-white truncate">
-              {vrm && <span className="font-mono tracking-wider text-cyan-300 mr-2">{vrm}</span>}
-              {vehicleLabel || (vrm ? "Loading vehicle…" : "No vehicle selected")}
-            </p>
-          </div>
+      {/* Compact summary — single card with each row condensed to one line on
+          mobile. The labels live on the left in a fixed column so values
+          align, and multiple semantically-related values share a line
+          (estimated price next to the service, location + timing on one
+          row). On tablet+ we expand back into a 2x2 grid with sub-text
+          for breathing room. */}
+      <div className="rounded-xl border border-slate-700/60 bg-slate-900 p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
+        {/* Vehicle */}
+        <div className="flex items-baseline justify-between gap-2 sm:block">
+          <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500 shrink-0">Vehicle</p>
+          <p className="text-sm sm:text-base sm:mt-0.5 font-semibold text-white truncate">
+            {vrm && <span className="font-mono tracking-wider text-cyan-300 mr-1.5">{vrm}</span>}
+            <span className="text-slate-200 sm:text-white">
+              {vehicleLabel || (vrm ? "Loading…" : "—")}
+            </span>
+          </p>
         </div>
 
         <hr className="border-slate-800" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
+        {/* Mobile-compact rows: service+price on one line, location+timing on next */}
+        <div className="sm:hidden space-y-2">
+          <div className="flex items-baseline justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Service</p>
+              <p className="text-sm text-white font-medium truncate">{serviceLabel(service)}</p>
+            </div>
+            <p className="text-sm text-emerald-300 font-mono font-semibold tabular-nums whitespace-nowrap shrink-0">
+              {formatPriceRange(price)}
+            </p>
+          </div>
+          <div className="flex items-baseline justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Location</p>
+              <p className="text-sm text-white font-mono truncate">{postcode || "Not specified"}</p>
+            </div>
+            <div className="min-w-0 text-right">
+              <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Timing</p>
+              <p className="text-sm text-white truncate">{timingLine}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop full grid */}
+        <div className="hidden sm:grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Service</p>
             <p className="mt-0.5 text-white font-medium">{serviceLabel(service)}</p>
@@ -162,25 +198,27 @@ export default function Step4Review({
           </div>
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Timing</p>
-            <p className="mt-0.5 text-white">
-              {flexibility === "browsing"
-                ? "Just browsing"
-                : `${flexibilityLabel(flexibility)} · ${formatDateFriendly(date)}`}
-            </p>
+            <p className="mt-0.5 text-white">{timingLine}</p>
           </div>
         </div>
       </div>
 
-      {/* What happens next */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-        <div className="flex items-center gap-2 mb-2">
+      {/* "What happens next" — single-line privacy reassurance on mobile so
+          it doesn't push the summary off-screen. Full paragraph on desktop
+          where the space exists. */}
+      <div className="sm:rounded-xl sm:border sm:border-slate-800 sm:bg-slate-900/40 sm:p-4">
+        <div className="hidden sm:flex items-center gap-2 mb-2">
           <ShieldCheck className="h-4 w-4 text-cyan-400" />
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">What happens next</p>
         </div>
-        <p className="text-sm text-slate-400 leading-relaxed">
+        <p className="hidden sm:block text-sm text-slate-400 leading-relaxed">
           You&apos;ll hand off to BookMyGarage with your reg{postcode ? " and postcode" : ""} pre-filled.
           You&apos;ll see real-time quotes from local garages, then book with whichever
           suits you. We don&apos;t share your email or sell your details — that stays at BMG.
+        </p>
+        <p className="sm:hidden inline-flex items-center gap-1.5 text-[11px] text-slate-500">
+          <ShieldCheck className="h-3 w-3 text-cyan-400 shrink-0" />
+          Pre-filled hand-off. No email shared.
         </p>
       </div>
 
