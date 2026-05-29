@@ -1032,6 +1032,41 @@ export default function Home() {
     document.title = "Free Plate Check - UK Vehicle Lookup";
   }, []);
 
+  // Scroll-depth tracking on the results page. Fires at 25/50/75/100% and
+  // each threshold only fires once per vehicle (reset by the `data` dep so
+  // a fresh lookup gets a fresh funnel). Bound to data presence — no point
+  // measuring scroll on the empty pre-search homepage.
+  useEffect(() => {
+    if (!data || typeof window === "undefined") return;
+    const fired = new Set<number>();
+    const thresholds = [25, 50, 75, 100];
+    function check() {
+      const doc = document.documentElement;
+      const scrolled = window.scrollY + window.innerHeight;
+      const pct = doc.scrollHeight > 0 ? Math.round((scrolled / doc.scrollHeight) * 100) : 0;
+      for (const t of thresholds) {
+        if (pct >= t && !fired.has(t)) {
+          fired.add(t);
+          trackEvent("scroll_depth", { threshold_pct: t, vrm: data?.registrationNumber ?? null });
+        }
+      }
+    }
+    let raf = 0;
+    function onScroll() {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        check();
+      });
+    }
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [data]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -2716,6 +2751,17 @@ END:VEVENT
 
       showToast("PDF report downloaded!");
 
+      // Fire the pdf_download conversion event. Captures the make/model and
+      // whether we delivered via Web Share (mobile) or anchor download
+      // (desktop) so we can spot if either path silently breaks.
+      trackEvent("pdf_download", {
+        reg: data.registrationNumber,
+        make: data.make ?? null,
+        model: data.model ?? null,
+        delivery: isMobileDevice() && navigator.canShare?.({ files: [file] }) ? "web_share" : "anchor",
+        has_mot_history: Array.isArray(data.motTests) && data.motTests.length > 0,
+      });
+
       // Trigger E — show MOT reminder prompt after PDF download
       if (isOver3Years && data.motExpiryDate) {
         setShowPdfReminderPrompt(true);
@@ -2723,6 +2769,10 @@ END:VEVENT
     } catch (error) {
       console.error("PDF generation failed:", error);
       showToast("PDF generation failed. Please try the text version.");
+      trackEvent("pdf_download_error", {
+        reg: data.registrationNumber,
+        error: error instanceof Error ? error.message : "unknown",
+      });
     }
   }
 
@@ -2977,6 +3027,21 @@ END:VEVENT
                 <span className="text-slate-600" aria-hidden="true">·</span>
                 <span className="font-medium text-emerald-300/90">No signup, no email, no tracking</span>
               </div>
+              {/* Secondary entry into the booking wizard. Quiet by design —
+                  the primary action on this page is always the reg input
+                  below. This is for the smaller "I already know I need an
+                  MOT or service" slice of traffic, plus the SEO benefit
+                  of an internal link from the homepage to /booking. */}
+              <a
+                href="/booking?source=homepage_hero"
+                onClick={() => trackEvent("homepage_wizard_cta_click", { placement: "hero" })}
+                className="mt-3 inline-flex items-center gap-1.5 text-xs text-cyan-300/80 hover:text-cyan-200 transition-colors group"
+              >
+                <span>Already know what you need?</span>
+                <span className="font-medium underline underline-offset-2 decoration-cyan-500/40 group-hover:decoration-cyan-300">
+                  Book MOT or service →
+                </span>
+              </a>
             </>
           )}
 

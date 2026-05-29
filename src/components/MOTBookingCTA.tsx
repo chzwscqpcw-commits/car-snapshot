@@ -57,10 +57,18 @@ export default function MOTBookingCTA({
     ? `mot-booking-cta-${placement}-${context}`
     : `mot-booking-cta-${context}`;
 
+  // Route through our /booking wizard rather than directly to BookMyGarage.
+  // The wizard pre-fills the reg, lets users confirm postcode/timing, then
+  // hands off to BMG with our affiliate clickref intact at Step 4. Trade-off:
+  // one extra screen on the user's side; gain: per-step funnel visibility,
+  // service-type recommendation based on vehicle age, AND localised price
+  // ranges before the BMG hand-off. The source param ties the eventual
+  // commission back to this CTA placement when it lands in Awin.
   const partner = PARTNER_LINKS.bookMyGarage;
-  const href = partner.buildLink
-    ? partner.buildLink(regNumber, clickContext)
-    : partner.url;
+  const wizardSource = placement
+    ? `mot_cta_${placement}_${context}`
+    : `mot_cta_${context}`;
+  const href = `/booking?vrm=${encodeURIComponent(regNumber)}&type=mot&source=${encodeURIComponent(wizardSource)}`;
   const rel = getPartnerRel(partner);
 
   const formattedReg = regNumber.toUpperCase();
@@ -76,16 +84,18 @@ export default function MOTBookingCTA({
       {/* Body copy */}
       <p className="text-sm text-slate-300 mb-4 ml-8">{body}</p>
 
-      {/* CTA button */}
+      {/* CTA button — internal nav to the booking wizard (no target=_blank).
+          trackPartnerClick still fires so partner_click attribution flows;
+          the BMG hand-off (with clickref) happens at the end of the wizard
+          via Step 4, so commission tracking is preserved end-to-end. */}
       <div className="ml-8">
         <a
           href={href}
-          target="_blank"
           rel={rel}
           onClick={() => trackPartnerClick('bookMyGarage', clickContext)}
           className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20"
         >
-          Compare prices near {formattedReg} — BookMyGarage ↗
+          Compare prices near {formattedReg} →
         </a>
       </div>
 
