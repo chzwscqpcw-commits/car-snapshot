@@ -2063,6 +2063,19 @@ export default function Home() {
     setDownloadSharePrompt(false);
     setShowPdfReminderPrompt(false);
 
+    // Pull the viewport to the top so the skeleton is visible from frame
+    // one — especially important on mobile when the lookup was triggered
+    // from a saved-vehicle tap deep in the recent/saved list. Smooth
+    // scroll so it feels intentional, not jarring. Reduced-motion users
+    // get an instant jump.
+    if (typeof window !== "undefined") {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
+    }
+
     try {
       const res = await fetch("/api/lookup", {
         method: "POST",
@@ -3096,8 +3109,8 @@ END:VEVENT
           (the sticky top bar) already has the bolt + wordmark — no need
           to repeat the brand a second time directly below it.
         */}
-        <header className={data ? "mb-3" : "mb-6"}>
-          {!data && (
+        <header className={data || loading ? "mb-3" : "mb-6"}>
+          {!data && !loading && (
             <>
               <div className="flex items-center gap-3 mb-4 group">
                 <BoltMark
@@ -3157,8 +3170,13 @@ END:VEVENT
             </>
           )}
 
-          {/* TABBED SECTION: Recent / Saved / My Cars */}
-          {(recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
+          {/* TABBED SECTION: Recent / Saved / My Cars.
+              Hidden during loading so the layout collapses and the
+              ResultsSkeleton appears in the viewport immediately rather
+              than below a long entry-state stack — especially important
+              on mobile where the user tapped a saved vehicle from a
+              scrolled position. */}
+          {!loading && (recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
             <div className={data ? "" : "mt-4 pt-4 border-t border-slate-700/50"}>
               {/* Tab bar */}
               <div className={`flex gap-1 border-b border-slate-700/50 ${data ? "mb-2" : "mb-4"}`}>
