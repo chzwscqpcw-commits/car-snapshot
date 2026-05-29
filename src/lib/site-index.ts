@@ -92,6 +92,27 @@ export const SITE_ITEMS: SiteItem[] = [
 
   // ─── Tools ───
   {
+    title: "Book MOT or service",
+    subtitle: "Compare local garage prices — pre-filled hand-off",
+    href: "/booking",
+    category: "action",
+    keywords: [
+      "book",
+      "booking",
+      "garage",
+      "service",
+      "interim",
+      "full service",
+      "mot test",
+      "mot near me",
+      "diagnostic",
+      "compare prices",
+      "bookmygarage",
+      "bmg",
+    ],
+    icon: "calendar-check",
+  },
+  {
     title: "Free MOT reminder",
     subtitle: "We email you 28 & 7 days before",
     href: "/mot-reminder",
