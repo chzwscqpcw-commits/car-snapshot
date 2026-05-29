@@ -350,57 +350,145 @@ function extractEuroNumber(euroStatus?: string) {
   return m ? Number(m[1]) : null;
 }
 
-// Loading animation component
-function LoadingAnimation() {
+/**
+ * Layout-aware skeleton shown during /api/lookup + downstream enrichment.
+ * Replaces the generic centered spinner — the shape mirrors the eventual
+ * results layout (vehicle header, status badges, three section groups)
+ * so the user gets an immediate preview of what's coming and the wait
+ * feels significantly shorter. The reg they typed is shown as real text
+ * (not skeleton) at the top so they know we got their input correctly.
+ *
+ * Animation strategy: a continuous shimmer sweep across the skeleton
+ * pieces, not a flat pulse. The shimmer gradient is reused on every
+ * piece via a shared className for visual consistency.
+ */
+function ResultsSkeleton({ reg }: { reg: string }) {
+  const formattedReg = reg.replace(/\s+/g, "").toUpperCase();
   return (
-    <div className="flex flex-col items-center justify-center py-10 space-y-5">
-      {/* Spinning ring with the brand BoltMark pulsing in the centre */}
-      <div className="relative w-16 h-16">
-        <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="45" stroke="url(#loaderGradient)" strokeWidth="2" strokeDasharray="120 80" strokeLinecap="round" />
-          <defs>
-            <linearGradient id="loaderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#22d3ee" />
-              <stop offset="100%" stopColor="#3b82f6" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <BoltMark className="w-6 h-8 animate-pulse" />
+    <div className="space-y-5">
+      {/* Top: reg the user typed + status line. Real text — not skeleton. */}
+      <div className="flex items-center gap-3.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-3.5">
+        <div className="relative h-10 w-10 shrink-0">
+          <svg className="absolute inset-0 h-full w-full animate-spin-slow" viewBox="0 0 100 100" fill="none">
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              stroke="url(#skeletonGradient)"
+              strokeWidth="3"
+              strokeDasharray="120 80"
+              strokeLinecap="round"
+            />
+            <defs>
+              <linearGradient id="skeletonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BoltMark className="h-4 w-4 animate-pulse" />
+          </div>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-base sm:text-lg font-bold tracking-wider text-cyan-300 truncate">
+            {formattedReg || "Looking up reg…"}
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 mt-0.5">
+            Fetching from DVLA…
+          </p>
         </div>
       </div>
 
-      {/* Status line in mono — reads like a diagnostic terminal */}
-      <div className="text-center">
-        <p className="text-slate-300 font-mono text-xs uppercase tracking-[0.2em]">Fetching from DVLA</p>
-        <p className="text-xs text-slate-500 mt-1.5">Retrieving vehicle details</p>
+      {/* Vehicle header skeleton — make/model + badge row */}
+      <SkeletonBlock>
+        <div className="space-y-3 p-5">
+          <div className="h-6 w-2/3 rounded-md bg-slate-800/80 shimmer" />
+          <div className="h-3.5 w-1/3 rounded bg-slate-800/60 shimmer" />
+          <div className="flex flex-wrap gap-2 pt-2">
+            {[18, 14, 22, 16].map((w, i) => (
+              <div
+                key={i}
+                className="h-6 rounded-full bg-slate-800/70 shimmer"
+                style={{ width: `${w * 4}px` }}
+              />
+            ))}
+          </div>
+        </div>
+      </SkeletonBlock>
+
+      {/* Spec grid skeleton — 4 IconBadges */}
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="h-16 rounded-xl border border-slate-800 bg-slate-900/40 shimmer"
+          />
+        ))}
       </div>
 
-      {/* Progress dots */}
-      <div className="flex gap-2">
-        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
-        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }} />
-        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }} />
-      </div>
+      {/* Three section-group skeletons with visible labels — previews the
+          intent-based groups the real layout uses, giving the user a sense
+          of "this is what your full report will contain". */}
+      <SectionLabelSkeleton icon={<ShieldCheck className="h-3.5 w-3.5" />} label="Health & Safety" />
+      <SkeletonBlock>
+        <div className="space-y-3 p-5">
+          <div className="h-4 w-2/5 rounded bg-slate-800/70 shimmer" />
+          <div className="h-20 rounded-lg bg-slate-800/40 shimmer" />
+          <div className="h-12 rounded-lg bg-slate-800/40 shimmer" />
+        </div>
+      </SkeletonBlock>
+
+      <SectionLabelSkeleton
+        icon={<PoundSterling className="h-3.5 w-3.5" />}
+        label="Financial Picture"
+      />
+      <SkeletonBlock>
+        <div className="space-y-3 p-5">
+          <div className="h-4 w-1/3 rounded bg-slate-800/70 shimmer" />
+          <div className="h-24 rounded-lg bg-slate-800/40 shimmer" />
+        </div>
+      </SkeletonBlock>
+
+      <SectionLabelSkeleton icon={<Lightbulb className="h-3.5 w-3.5" />} label="Key Facts" />
+      <SkeletonBlock>
+        <div className="space-y-3 p-5">
+          <div className="h-4 w-2/5 rounded bg-slate-800/70 shimmer" />
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            <div className="h-16 rounded-lg bg-slate-800/40 shimmer" />
+            <div className="h-16 rounded-lg bg-slate-800/40 shimmer" />
+          </div>
+        </div>
+      </SkeletonBlock>
     </div>
   );
 }
 
-// Loading skeleton component
-function LoadingSkeleton() {
+/**
+ * Wraps a skeleton card in the same border + background as the real
+ * results sections so the visual transition from skeleton to real content
+ * is minimal (no layout shift, same elevation).
+ */
+function SkeletonBlock({ children }: { children: React.ReactNode }) {
   return (
-    <div className="animate-pulse space-y-4">
-      <div className="h-12 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg w-2/3"></div>
-      <div className="space-y-3">
-        <div className="h-20 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-        <div className="h-20 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-        <div className="h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-lg"></div>
-      </div>
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Renders an uppercase section-group divider matching SectionGroup's real
+ * look. Labels stay readable; only the surrounding content is skeletonized.
+ */
+function SectionLabelSkeleton({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="flex items-center gap-2 pt-3 pb-1">
+      <span className="text-slate-600">{icon}</span>
+      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        {label}
+      </span>
+      <span className="flex-1 h-px bg-slate-800/60 ml-2" />
     </div>
   );
 }
@@ -3579,7 +3667,7 @@ END:VEVENT
         {/* RESULTS SECTION */}
         {loading && (
           <div className="mb-10">
-            <LoadingAnimation />
+            <ResultsSkeleton reg={vrm} />
           </div>
         )}
 

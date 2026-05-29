@@ -265,3 +265,35 @@ a {
     opacity: 1;
   }
 }
+
+/* Skeleton shimmer — used on loading placeholders to give a sense of
+   "data is coming". A cyan-tinted gradient sweeps across the placeholder
+   left-to-right on a 1.8s loop. Faster than a pulse, more directional,
+   and ties visually to the brand's cyan accent without being noisy. */
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: skeletonShimmer 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+    background: rgba(34, 211, 238, 0.04);
+  }
+}
