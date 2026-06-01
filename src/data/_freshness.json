@@ -3,8 +3,8 @@
   "colour-popularity.json": "2026-02-18T21:13:37Z",
   "ev-specs.json": "2026-02-18T22:30:43Z",
   "fuel-economy.json": "2026-05-20T13:27:30Z",
-  "fuel-prices-weekly.json": "2026-05-20T15:39:38.939Z",
-  "how-many-left.json": "2026-05-20T15:39:38.939Z",
+  "fuel-prices-weekly.json": "2026-05-29T18:53:53.286Z",
+  "how-many-left.json": "2026-05-29T18:53:53.286Z",
   "mot-failure-reasons.json": "2026-02-21T13:50:28Z",
   "mot-pass-rates.json": "2026-02-18T21:13:37Z",
   "ncap-ratings.json": "2026-05-20T13:27:30Z",
@@ -12,5 +12,6 @@
   "recalls.json": "2026-05-20T12:28:58+01:00",
   "theft-risk.json": "2026-02-18T22:30:43Z",
   "tyre-sizes.json": "2026-02-21T13:50:28Z",
-  "vehicle-dimensions.json": "2026-02-21T13:50:28Z"
+  "vehicle-dimensions.json": "2026-02-21T13:50:28Z",
+  "service-prices.json": "2026-05-29T18:44:31.809Z"
 }
