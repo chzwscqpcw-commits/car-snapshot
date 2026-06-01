@@ -229,16 +229,13 @@ const MARKETCHECK_FETCH_ROWS = 50;
 const MARKETCHECK_TIMEOUT_MS = 6000;
 
 /**
- * REAL fetch — MarketCheck Active Listings → price aggregate.
+ * REAL fetch — MarketCheck UK Active Listings → price aggregate.
  *
- * ⚠ BEST-EFFORT against the standard MarketCheck v2 shape. VERIFY against your
- * UK docs (developers.marketcheck.com/uk) and correct if they differ — the
- * likely deviations are:
- *   • Host/path — some accounts use a region host; override MARKETCHECK_API_BASE.
- *   • Used-vehicle param — `car_type=used` here; could be `listing_type`.
- *   • Price field — top-level `listing.price` here; some payloads nest it.
- * The code below is defensive (tolerates missing fields) and degrades to null,
- * so a wrong field name fails safe (no MarketCheck signal) rather than crashing.
+ * Verified against the live UK API (Jun 2026): endpoint /search/car/uk/active,
+ * country=uk, listings[].price is a top-level GBP number (also carries miles,
+ * inventory_type, etc.). Defensive: tolerates missing fields and degrades to
+ * null on any non-200/parse error, so it fails safe (no MarketCheck signal)
+ * rather than crashing. Host/path overridable via MARKETCHECK_API_BASE.
  */
 export async function fetchListingsLive(
   make: string,
@@ -250,14 +247,13 @@ export async function fetchListingsLive(
 
   const params = new URLSearchParams({
     api_key: apiKey,
-    country: "GB",
-    car_type: "used",
+    country: "uk",
     make,
     model,
     year: String(year),
     rows: String(MARKETCHECK_FETCH_ROWS),
   });
-  const url = `${MARKETCHECK_API_BASE}/search/car/active?${params.toString()}`;
+  const url = `${MARKETCHECK_API_BASE}/search/car/uk/active?${params.toString()}`;
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), MARKETCHECK_TIMEOUT_MS);
