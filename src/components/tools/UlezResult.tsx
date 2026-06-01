@@ -228,8 +228,8 @@ function ZonesGrid({
 function Footnote() {
   return (
     <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
-      Compliance is determined from the vehicle's Euro standard, fuel type and
-      registration date. If your Euro standard isn't in the DVLA record we estimate
+      Compliance is determined from the vehicle&#39;s Euro standard, fuel type and
+      registration date. If your Euro standard isn&#39;t in the DVLA record we estimate
       from registration date — check the official TfL ULEZ checker for the final word.
     </p>
   );

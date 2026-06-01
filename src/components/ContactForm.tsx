@@ -94,7 +94,7 @@ export default function ContactForm() {
         </div>
         <h2 className="text-xl font-bold text-white">Message sent.</h2>
         <p className="mt-2 text-sm text-slate-300">
-          Thanks — we'll get back to you at{" "}
+          Thanks — we&#39;ll get back to you at{" "}
           <span className="text-cyan-300 font-medium">{email || "your email"}</span>{" "}
           as soon as we can.
         </p>

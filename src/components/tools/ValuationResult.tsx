@@ -318,7 +318,7 @@ function Hero({
           </>
         ) : (
           <p className="mt-2 text-xl text-slate-300">
-            Couldn't price this vehicle — we don't have a new-price record for {vehicle.make} {vehicle.model}.
+            Couldn&#39;t price this vehicle — we don&#39;t have a new-price record for {vehicle.make} {vehicle.model}.
           </p>
         )}
 
@@ -611,7 +611,7 @@ function ConditionPanel({
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-1">
         <h3 className="text-sm font-semibold text-slate-100">
-          Refine the figure for your car's condition
+          Refine the figure for your car&#39;s condition
         </h3>
         {active && (
           <button

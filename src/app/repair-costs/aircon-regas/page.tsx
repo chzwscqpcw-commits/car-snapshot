@@ -238,7 +238,7 @@ export default function AirconRegasPage() {
               — labour is already on the clock.
             </li>
             <li>
-              <strong className="text-slate-100">Don&apos;t pay for "aircon antibacterial treatment" without thinking.</strong>{" "}
+              <strong className="text-slate-100">Don&apos;t pay for &#34;aircon antibacterial treatment&#34; without thinking.</strong>{" "}
               The £25–£40 upsell is genuinely useful if your vents smell musty,
               but otherwise it&apos;s optional. Decide before you arrive.
             </li>

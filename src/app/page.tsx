@@ -5301,7 +5301,7 @@ END:VEVENT
                 </div>
 
                 <div className="mb-4 pb-4 border-b border-slate-700">
-                  <p className="text-xs text-slate-400 mb-3">I'm checking this vehicle because I am:</p>
+                  <p className="text-xs text-slate-400 mb-3">I&#39;m checking this vehicle because I am:</p>
                   <div className="flex gap-2 flex-wrap">
                     {[
                       { value: "owner" as const, label: "The owner" },
@@ -5630,7 +5630,7 @@ END:VEVENT
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 max-w-sm w-full shadow-xl">
               <h3 className="text-lg font-semibold text-slate-100 mb-4">Insurance Policy Expiry Date</h3>
-              <p className="text-sm text-slate-400 mb-4">Enter your car insurance policy expiry date. When you export to calendar, we'll show a 7-day renewal window (20-27 days before expiry) — the sweet spot for getting the best renewal rates.</p>
+              <p className="text-sm text-slate-400 mb-4">Enter your car insurance policy expiry date. When you export to calendar, we&#39;ll show a 7-day renewal window (20-27 days before expiry) — the sweet spot for getting the best renewal rates.</p>
               
               <input
                 type="date"

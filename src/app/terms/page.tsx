@@ -53,7 +53,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using Free Plate Check ("the Service"), you agree to be bound by these Terms of Service. 
+              By accessing and using Free Plate Check (&#34;the Service&#34;), you agree to be bound by these Terms of Service. 
               If you do not agree to these terms, do not use the Service.
             </p>
           </section>
@@ -63,7 +63,7 @@ export default function TermsPage() {
             <p>
               Free Plate Check is a vehicle information lookup tool that provides publicly available data about UK registered vehicles,
               including tax status, MOT information, and checklists for vehicle owners, buyers, and sellers.
-              We also offer an optional MOT reminder email service that notifies you before your vehicle's MOT expires.
+              We also offer an optional MOT reminder email service that notifies you before your vehicle&#39;s MOT expires.
             </p>
           </section>
 
@@ -71,7 +71,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold text-slate-100 mb-4">3. Data Source & Accuracy</h2>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>We source vehicle data from the DVLA (Driver and Vehicle Licensing Agency)</li>
-              <li>Data is provided "as-is" without warranty of accuracy or completeness</li>
+              <li>Data is provided &#34;as-is&#34; without warranty of accuracy or completeness</li>
               <li>We recommend you <strong>always verify information with official sources</strong> before making decisions</li>
               <li>Registration numbers are hashed and not stored by Free Plate Check</li>
             </ul>
@@ -106,7 +106,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">6. Email Communications & MOT Reminders</h2>
             <p className="mb-4">
-              If you sign up for MOT reminders, you agree to receive email communications related to your vehicle's MOT status.
+              If you sign up for MOT reminders, you agree to receive email communications related to your vehicle&#39;s MOT status.
             </p>
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">What we send</h3>
@@ -116,7 +116,7 @@ export default function TermsPage() {
               <li>A final reminder approximately 7 days before your MOT expires</li>
             </ul>
             <p className="mt-3">
-              That's a maximum of 3 emails per vehicle per year. We do not send marketing emails, newsletters, or promotional content.
+              That&#39;s a maximum of 3 emails per vehicle per year. We do not send marketing emails, newsletters, or promotional content.
             </p>
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Affiliate links in reminder emails</h3>
@@ -136,7 +136,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold text-slate-100 mb-4">7. Liability Disclaimer</h2>
             <p className="mb-4 font-semibold text-slate-200">TO THE FULLEST EXTENT PERMITTED BY LAW:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Free Plate Check is provided "AS-IS" without warranties</li>
+              <li>Free Plate Check is provided &#34;AS-IS&#34; without warranties</li>
               <li>We are not liable for decisions made based on information provided</li>
               <li>We are not liable for vehicle purchase/sale decisions</li>
               <li>We are not liable for data inaccuracies or omissions</li>

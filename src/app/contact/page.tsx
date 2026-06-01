@@ -31,7 +31,7 @@ export default function ContactPage() {
             Contact
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            Tell us what's on your mind.
+            Tell us what&#39;s on your mind.
           </h1>
           <p className="mt-3 max-w-xl text-base text-slate-400 leading-relaxed">
             Free Plate Check is built by a small team on zero budget. Spotted a
@@ -50,11 +50,11 @@ export default function ContactPage() {
       <section className="mx-auto max-w-2xl px-4 pb-16">
         <div className="grid gap-3 sm:grid-cols-2 text-xs text-slate-400">
           <NoteCard title="What happens to your message">
-            It's sent direct to our inbox, with your email as the Reply-To so we
-            can respond. We don't add you to any list.
+            It&#39;s sent direct to our inbox, with your email as the Reply-To so we
+            can respond. We don&#39;t add you to any list.
           </NoteCard>
           <NoteCard title="Response time">
-            We're a tiny team. Most messages get a reply within a few days. Bug
+            We&#39;re a tiny team. Most messages get a reply within a few days. Bug
             reports and business enquiries get priority.
           </NoteCard>
           <NoteCard title="Privacy">

@@ -214,7 +214,7 @@ export default function CarBatteryPage() {
             ))}
           </ul>
           <p className="mt-4 text-sm leading-relaxed">
-            <strong className="text-slate-100">Be wary of "battery dead" diagnoses without a test.</strong>{" "}
+            <strong className="text-slate-100">Be wary of &#34;battery dead&#34; diagnoses without a test.</strong>{" "}
             Many alternator and starter-motor issues mimic a flat battery.
             Replacing a healthy battery won&apos;t fix an alternator that
             isn&apos;t charging.

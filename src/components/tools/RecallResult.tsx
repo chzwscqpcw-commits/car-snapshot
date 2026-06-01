@@ -108,7 +108,7 @@ function Hero({ state, vrm }: { state: RecallState; vrm: string }) {
           <AlertTriangle className="h-5 w-5 text-amber-300 flex-shrink-0 mt-0.5" />
           <div>
             <h2 className="text-base font-semibold text-amber-200">
-              Couldn't reach the recall service
+              Couldn&#39;t reach the recall service
             </h2>
             <p className="mt-1 text-sm text-amber-200/80">{state.message}</p>
           </div>
@@ -143,7 +143,7 @@ function Hero({ state, vrm }: { state: RecallState; vrm: string }) {
                 All clear
               </p>
               <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-                No open DVSA safety recalls match this vehicle's make
+                No open DVSA safety recalls match this vehicle&#39;s make
                 {state.recalls.length > 0 ? "" : ", model"} and year. We check the official
                 UK recalls database, refreshed weekly.
               </p>
@@ -222,7 +222,7 @@ function BmgHook({ vrm }: { vrm: string }) {
             Get this checked at a trusted garage
           </h3>
           <p className="mt-1 text-xs text-slate-400 leading-relaxed">
-            Recalls are best handled by a franchised dealer (free), but if you'd like a
+            Recalls are best handled by a franchised dealer (free), but if you&#39;d like a
             second opinion or an unrelated repair quote, BookMyGarage compares local
             prices with {vrm} pre-loaded.
           </p>

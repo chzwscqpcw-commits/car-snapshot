@@ -117,7 +117,7 @@ async function scrapeOne(
   try {
     await page.evaluateOnNewDocument(() => {
       Object.defineProperty(navigator, "webdriver", { get: () => undefined });
-      // @ts-expect-error
+      // @ts-expect-error window.chrome isn't typed on the browser Window here
       window.chrome = { runtime: {} };
       Object.defineProperty(navigator, "languages", { get: () => ["en-GB", "en"] });
     });

@@ -147,7 +147,7 @@ export default async function TaxCheckPage({
           {/* Slim trust footer below the result */}
           <div className="border-t border-slate-800/60 bg-slate-900/40">
             <div className="mx-auto max-w-3xl px-4 py-6 text-center text-xs text-slate-500">
-              Tax status comes from the DVLA's live VED database. VED rate is
+              Tax status comes from the DVLA&#39;s live VED database. VED rate is
               estimated from current GOV.UK bands — your renewal letter is the
               authoritative figure.
             </div>

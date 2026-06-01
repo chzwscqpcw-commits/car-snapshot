@@ -219,8 +219,8 @@ export default async function MotPricesTownPage({ params }: Props) {
             <p className="leading-relaxed mb-3">{competition}</p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
               <li><strong className="text-slate-100">Compare before booking.</strong> Enter your reg above to see what {town.name} garages are charging right now.</li>
-              <li><strong className="text-slate-100">Try independents and council centres</strong>, not just the big chains — they're often cheapest and don't push upsells.</li>
-              <li><strong className="text-slate-100">Bundle with a service</strong> if one's due — it usually unlocks a discounted or free MOT.</li>
+              <li><strong className="text-slate-100">Try independents and council centres</strong>, not just the big chains — they&#39;re often cheapest and don&#39;t push upsells.</li>
+              <li><strong className="text-slate-100">Bundle with a service</strong> if one&#39;s due — it usually unlocks a discounted or free MOT.</li>
             </ul>
             <p className="leading-relaxed">
               The test is identical at every garage, so a cheaper {town.name} MOT
@@ -237,7 +237,7 @@ export default async function MotPricesTownPage({ params }: Props) {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">When to book your MOT in {town.name}</h2>
             <p className="leading-relaxed mb-3">
-              March and September are the UK's busiest MOT months &mdash; cars
+              March and September are the UK&#39;s busiest MOT months &mdash; cars
               first registered in those plate-change months all come due together
               three years later. Demand pushes {town.name} garages busier and
               prices firmer, so a quieter week can be cheaper.

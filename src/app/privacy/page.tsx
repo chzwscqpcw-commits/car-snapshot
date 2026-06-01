@@ -53,12 +53,12 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">1. Introduction</h2>
             <p>
-              Free Plate Check ("we," "us," "our") is committed to protecting your privacy. We believe in a <strong>privacy-first approach</strong> and 
+              Free Plate Check (&#34;we,&#34; &#34;us,&#34; &#34;our&#34;) is committed to protecting your privacy. We believe in a <strong>privacy-first approach</strong> and 
               collect only the minimal data necessary to provide our Service.
             </p>
             <p>
               This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and Service. 
-              The key principle: <strong>we don't store information about which vehicles you look up, and we don't sell your data.</strong>
+              The key principle: <strong>we don&#39;t store information about which vehicles you look up, and we don&#39;t sell your data.</strong>
             </p>
             <p>
               Please read this Privacy Policy carefully. If you do not agree with our policies and practices, please do not use our Service.
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li><strong>Email:</strong> If you sign up for MOT reminders, general updates, or contact us</li>
               <li><strong>Feedback:</strong> If you contact us with feedback or questions</li>
-              <li><strong>No payment data:</strong> Free Plate Check is free and doesn't process payments</li>
+              <li><strong>No payment data:</strong> Free Plate Check is free and doesn&#39;t process payments</li>
             </ul>
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">MOT Reminder Service</h3>
@@ -105,12 +105,12 @@ export default function PrivacyPage() {
             <p className="mt-3 bg-slate-900 border-l-4 border-amber-500 p-4 rounded">
               <strong>Important distinction:</strong> The MOT reminder service is separate from the vehicle lookup.
               When you look up a vehicle, we do NOT store the registration number.
-              When you sign up for a reminder, we DO store the registration number because it's necessary to send you timed reminders.
+              When you sign up for a reminder, we DO store the registration number because it&#39;s necessary to send you timed reminders.
               This data is only used for delivering reminders and is never shared for marketing purposes.
             </p>
 
             <p className="mt-4 bg-slate-900 border-l-4 border-blue-500 p-4 rounded">
-              <strong>Privacy-First Approach:</strong> We collect only what's necessary to provide the Service.
+              <strong>Privacy-First Approach:</strong> We collect only what&#39;s necessary to provide the Service.
               Vehicle lookups are anonymous — we do not store which vehicles you look up. MOT reminder data is stored only
               because the service requires it, and you can unsubscribe at any time.
             </p>
@@ -137,7 +137,7 @@ export default function PrivacyPage() {
               <li><strong>Explicit Consent</strong> - When you sign up for MOT reminders, you explicitly consent to us storing your email and vehicle details for that purpose</li>
               <li><strong>Legitimate Interest</strong> - To improve and maintain the Service</li>
               <li><strong>Legal Obligation</strong> - To comply with applicable laws</li>
-              <li><strong>Contract</strong> - To provide the Service you've requested</li>
+              <li><strong>Contract</strong> - To provide the Service you&#39;ve requested</li>
             </ul>
           </section>
 
@@ -221,11 +221,11 @@ export default function PrivacyPage() {
             </ul>
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Your GDPR Rights</h3>
-            <p>If you've provided data to us (email signup, feedback, contact):</p>
+            <p>If you&#39;ve provided data to us (email signup, feedback, contact):</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>✅ <strong>Access</strong> - Request a copy of data we hold about you</li>
               <li>✅ <strong>Correction</strong> - Request we correct inaccurate data</li>
-              <li>✅ <strong>Deletion</strong> - Request we delete your data ("Right to be Forgotten")</li>
+              <li>✅ <strong>Deletion</strong> - Request we delete your data (&#34;Right to be Forgotten&#34;)</li>
               <li>✅ <strong>Restriction</strong> - Request we limit how we use your data</li>
               <li>✅ <strong>Portability</strong> - Request your data in a portable format</li>
               <li>✅ <strong>Withdraw Consent</strong> - Opt out of email updates or analytics</li>
@@ -234,7 +234,7 @@ export default function PrivacyPage() {
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Our Response to Data Requests</h3>
             <p>
               If you request your data, we will provide any email address associated with your account,
-              any MOT reminder records linked to your email, copies of any feedback or messages you've sent us,
+              any MOT reminder records linked to your email, copies of any feedback or messages you&#39;ve sent us,
               and confirmation that vehicle lookups do not store registration numbers or analytics data linked to your identity.
             </p>
 
@@ -287,7 +287,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Children's Privacy</h2>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">12. Children&#39;s Privacy</h2>
             <p>
               Free Plate Check is not directed to children under 18. We do not knowingly collect data from children. 
               If we become aware a child has used the Service, we will delete their data promptly.
@@ -297,7 +297,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">13. Do Not Track</h2>
             <p>
-              Some browsers have "Do Not Track" features. We currently do not respond to Do Not Track signals, 
+              Some browsers have &#34;Do Not Track&#34; features. We currently do not respond to Do Not Track signals, 
               but you can opt out of analytics through your browser settings.
             </p>
           </section>
@@ -324,7 +324,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">16. Complaint Rights</h2>
             <p>
-              You have the right to lodge a complaint with the UK Information Commissioner's Office (ICO):
+              You have the right to lodge a complaint with the UK Information Commissioner&#39;s Office (ICO):
             </p>
             <ul className="ml-2">
               <li><strong>Website:</strong> www.ico.org.uk</li>

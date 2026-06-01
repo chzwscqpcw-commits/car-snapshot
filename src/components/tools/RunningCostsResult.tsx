@@ -305,7 +305,7 @@ function Hero({
           </>
         ) : (
           <p className="mt-3 text-xl text-slate-300">
-            Couldn't calculate running costs — we're missing key data for this vehicle.
+            Couldn&#39;t calculate running costs — we&#39;re missing key data for this vehicle.
           </p>
         )}
       </div>

@@ -317,7 +317,7 @@ export function LookupError({
           <AlertTriangle className="h-5 w-5 text-rose-400 flex-shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-semibold text-rose-200">
-              Couldn't pull this check
+              Couldn&#39;t pull this check
             </h2>
             <p className="mt-1 text-sm text-rose-200/80">{message}</p>
           </div>
