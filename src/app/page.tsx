@@ -29,7 +29,7 @@ function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
   const vehicleAge = yearOfManufacture ? new Date().getFullYear() - yearOfManufacture : null;
 
   let avgMilesPerYear = 0;
-  let mileageWarnings: string[] = [];
+  const mileageWarnings: string[] = [];
   let mileageTrend = "normal";
 
   // Canonical: LIFETIME average = latest reading ÷ vehicle age. Falls back to
@@ -1072,7 +1072,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((results) => setRecalls(Array.isArray(results) ? results : []))
       .catch(() => setRecalls([]));
-  }, [data?.make, data?.model, data?.yearOfManufacture, lookupModel]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data?.make, data?.model, data?.yearOfManufacture, lookupModel]);
 
   // Fetch fuel economy when vehicle data changes
   useEffect(() => {
@@ -1089,7 +1089,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((result) => setFuelEconomy(result))
       .catch(() => setFuelEconomy(null));
-  }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType, lookupModel, parsedModel?.bodyStyle]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data?.make, data?.model, data?.engineCapacity, data?.fuelType, lookupModel, parsedModel?.bodyStyle]);
 
   // Recalculate annual fuel cost using live prices when available
   const liveAnnualCost = useMemo((): number | null => {
@@ -1187,7 +1187,7 @@ export default function Home() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data]);
 
   // Load insurance dates from localStorage
   useEffect(() => {
@@ -2416,9 +2416,9 @@ END:VTIMEZONE
         const motDate = vehicle.motExpiryDate; // Format: YYYY-MM or YYYY-MM-DD
         if (motDate && motDate.length >= 7) {
           // Parse date - might be YYYY-MM or YYYY-MM-DD
-          let year = motDate.substring(0, 4);
-          let month = motDate.substring(5, 7);
-          let day = motDate.length > 7 ? motDate.substring(8, 10) : "01";
+          const year = motDate.substring(0, 4);
+          const month = motDate.substring(5, 7);
+          const day = motDate.length > 7 ? motDate.substring(8, 10) : "01";
           
           const dateStr = `${year}${month}${day}`;
           const nextDayNum = parseInt(day) + 1;
@@ -2445,9 +2445,9 @@ END:VEVENT
         const taxDate = vehicle.taxDueDate; // Format: YYYY-MM-DD
         if (taxDate && taxDate.length >= 7) {
           // Parse date
-          let year = taxDate.substring(0, 4);
-          let month = taxDate.substring(5, 7);
-          let day = taxDate.length > 7 ? taxDate.substring(8, 10) : "01";
+          const year = taxDate.substring(0, 4);
+          const month = taxDate.substring(5, 7);
+          const day = taxDate.length > 7 ? taxDate.substring(8, 10) : "01";
           
           const dateStr = `${year}${month}${day}`;
           const nextDayNum = parseInt(day) + 1;

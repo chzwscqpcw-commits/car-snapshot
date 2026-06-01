@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description = full;
     } else {
       // Drop highlights from the end until it fits
-      let trimmed = highlights.slice(0);
+      const trimmed = highlights.slice(0);
       while (trimmed.length > 1) {
         trimmed.pop();
         const candidate = `${prefix} — ${trimmed.join(", ")}. ${suffix}`;

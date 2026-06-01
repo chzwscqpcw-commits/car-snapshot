@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated build output — `vercel build` writes here locally; it's
+    // gitignored and minified/vendored, so linting it is noise (was ~113
+    // phantom errors: no-this-alias, no-require-imports, etc.).
+    ".vercel/**",
   ]),
 ]);
 

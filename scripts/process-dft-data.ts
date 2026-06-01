@@ -211,7 +211,7 @@ async function main() {
 
   console.log(`Processing ${csvFiles.length} file(s): ${csvFiles.join(", ")}`);
 
-  let allData: MakeModelMap = {};
+  const allData: MakeModelMap = {};
 
   for (const file of csvFiles) {
     const filePath = path.resolve(file);
