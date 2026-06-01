@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
@@ -336,7 +337,7 @@ export default async function MotCheckPage({
               <li>Scratches outside the driver&apos;s critical viewing area</li>
             </ul>
             <p className="leading-relaxed">
-              Same advisory year after year? The owner&apos;s been ignoring it — often a sign of deferred maintenance. More in our <a href="/blog/what-does-mot-advisory-mean" className="text-blue-400 hover:text-blue-300">guide to MOT advisories</a>.
+              Same advisory year after year? The owner&apos;s been ignoring it — often a sign of deferred maintenance. More in our <Link href="/blog/what-does-mot-advisory-mean" className="text-blue-400 hover:text-blue-300">guide to MOT advisories</Link>.
             </p>
           </section>
 
@@ -386,26 +387,26 @@ export default async function MotCheckPage({
       <div className="max-w-3xl mx-auto px-4 mt-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/blog/how-much-does-mot-cost" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/how-much-does-mot-cost" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How Much Does an MOT Cost in 2026?</p>
             <p className="text-xs text-slate-500 mt-2">The maximum fee, typical garage prices, free retests, and how to pay less for your annual test.</p>
-          </a>
-          <a href="/blog/how-to-read-mot-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/how-to-read-mot-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Read a Car&apos;s MOT History</p>
             <p className="text-xs text-slate-500 mt-2">Understand test results, advisories, and how to spot red flags in a vehicle&apos;s history.</p>
-          </a>
-          <a href="/blog/when-is-my-mot-due" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/when-is-my-mot-due" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">When Is My MOT Due?</p>
             <p className="text-xs text-slate-500 mt-2">How to check when your MOT is due and make sure you never miss it.</p>
-          </a>
-          <a href="/blog/what-happens-driving-without-mot" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/what-happens-driving-without-mot" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">What Happens if You Drive Without an MOT?</p>
             <p className="text-xs text-slate-500 mt-2">Penalties, insurance issues, and the exceptions you need to know about.</p>
-          </a>
-          <a href="/blog/how-to-appeal-mot-failure" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/how-to-appeal-mot-failure" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Appeal an MOT Failure</p>
             <p className="text-xs text-slate-500 mt-2">Your rights explained — how the appeal process works and when it&apos;s worth challenging.</p>
-          </a>
+          </Link>
         </div>
       </div>
       <MotReminderBanner />

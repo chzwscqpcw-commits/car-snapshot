@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { CAZ_ZONES } from "@/data/caz-zones";
 
@@ -58,12 +59,12 @@ export default function CleanAirZonesPage() {
       {/* Header */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
+          <Link
             href="/"
             className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
           >
             &larr; Back to Free Plate Check
-          </a>
+          </Link>
           <h1 className="text-3xl font-bold text-slate-100">
             UK Clean Air Zones
           </h1>

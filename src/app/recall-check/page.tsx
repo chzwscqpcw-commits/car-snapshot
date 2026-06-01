@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
@@ -276,7 +277,7 @@ export default async function RecallCheckPage({
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Frequently asked questions</h2>
             <FaqAccordion items={FAQ_ITEMS} />
             <p className="text-sm text-slate-400 mt-4">
-              More in our <a href="/blog/car-safety-recalls-guide" className="text-blue-400 hover:text-blue-300">complete guide to vehicle safety recalls</a>.
+              More in our <Link href="/blog/car-safety-recalls-guide" className="text-blue-400 hover:text-blue-300">complete guide to vehicle safety recalls</Link>.
             </p>
           </section>
         </div>
@@ -291,14 +292,14 @@ export default async function RecallCheckPage({
       <div className="max-w-3xl mx-auto px-4 mt-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/blog/used-car-checks-before-buying" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/used-car-checks-before-buying" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
             <p className="text-xs text-slate-500 mt-2">A practical checklist — from MOT history to mileage red flags.</p>
-          </a>
-          <a href="/blog/first-car-checklist-new-drivers" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/first-car-checklist-new-drivers" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">First Car Checklist for New Drivers</p>
             <p className="text-xs text-slate-500 mt-2">Insurance, tax, MOT, running costs, and the checks that could save you money.</p>
-          </a>
+          </Link>
         </div>
       </div>
       <MotReminderBanner />

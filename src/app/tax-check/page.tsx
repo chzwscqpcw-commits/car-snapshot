@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
@@ -270,7 +271,7 @@ export default async function TaxCheckPage({
               Statutory Off Road Notification — the car&apos;s off the public road. Once SORN&apos;d, it can&apos;t be driven or parked on public roads. Stays in place until taxed, sold, scrapped, or exported.
             </p>
             <p className="leading-relaxed">
-              Buying a SORN&apos;d car? Tax it before driving away. It also needs insurance and a valid MOT (if 3+ years old). More in our <a href="/blog/what-is-sorn-and-when-do-you-need-one" className="text-blue-400 hover:text-blue-300">SORN guide</a>.
+              Buying a SORN&apos;d car? Tax it before driving away. It also needs insurance and a valid MOT (if 3+ years old). More in our <Link href="/blog/what-is-sorn-and-when-do-you-need-one" className="text-blue-400 hover:text-blue-300">SORN guide</Link>.
             </p>
           </section>
 
@@ -299,18 +300,18 @@ export default async function TaxCheckPage({
       <div className="max-w-3xl mx-auto px-4 mt-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/blog/how-to-tax-a-car-online" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/how-to-tax-a-car-online" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Tax a Car Online</p>
             <p className="text-xs text-slate-500 mt-2">Step-by-step guide to taxing your car with the DVLA, what you need, and what it costs.</p>
-          </a>
-          <a href="/blog/cheapest-cars-to-tax-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/cheapest-cars-to-tax-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cheapest Cars to Tax in the UK</p>
             <p className="text-xs text-slate-500 mt-2">Which vehicles pay zero or low road tax, how VED bands work, and how to check.</p>
-          </a>
-          <a href="/blog/how-to-sorn-a-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/how-to-sorn-a-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to SORN a Car Online</p>
             <p className="text-xs text-slate-500 mt-2">When you need a SORN and how to declare one — a quick step-by-step guide.</p>
-          </a>
+          </Link>
         </div>
       </div>
       <MotReminderBanner />

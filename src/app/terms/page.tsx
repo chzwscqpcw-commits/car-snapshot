@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -38,9 +39,9 @@ export default function TermsPage() {
       {/* Header */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <a href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">
+          <Link href="/" className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">
             ← Back to Free Plate Check
-          </a>
+          </Link>
           <h1 className="text-3xl font-bold text-slate-100">Terms of Service</h1>
           <p className="text-sm text-slate-400 mt-2">Last Updated: March 2026</p>
         </div>

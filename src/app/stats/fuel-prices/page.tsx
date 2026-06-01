@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
@@ -212,12 +213,12 @@ export default function FuelPricesPage() {
             how much it actually costs to run — or compare it against more efficient alternatives.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <a
+            <Link
               href="/"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600"
             >
               Check your car&apos;s running costs
-            </a>
+            </Link>
             <a
               href="/stats/fuel-type-comparison"
               className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-5 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:border-slate-500 hover:text-white"

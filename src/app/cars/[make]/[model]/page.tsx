@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ConversionWidget from "@/components/stats/ConversionWidget";
@@ -273,9 +274,9 @@ export default async function ModelGuidePage({ params }: PageProps) {
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <div className="flex items-center gap-2 text-sm text-slate-400 mb-3">
-            <a href="/cars" className="text-blue-400 hover:text-blue-300">
+            <Link href="/cars" className="text-blue-400 hover:text-blue-300">
               Cars
-            </a>
+            </Link>
             <span>/</span>
             <a
               href={`/cars/${make}`}

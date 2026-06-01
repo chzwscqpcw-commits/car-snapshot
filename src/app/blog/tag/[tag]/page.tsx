@@ -170,12 +170,12 @@ export default async function TagPage({ params }: PageProps) {
             Enter a registration to see MOT history, tax status, mileage and
             more — no signup required.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
           >
             Look up a vehicle
-          </a>
+          </Link>
         </div>
       </div>
 

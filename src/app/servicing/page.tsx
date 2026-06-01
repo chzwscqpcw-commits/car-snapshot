@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
@@ -435,7 +436,7 @@ export default function ServicingPage() {
               The biggest single saving you can make is choosing an <strong className="text-slate-100">independent garage over a main dealer</strong>. For identical work, independents typically charge 30–50% less, with no impact on warranty (see Block Exemption below). The trade-off: you lose the dealer&apos;s digital service record entry on some manufacturers, though most independents now have access to manufacturer digital systems too.
             </p>
             <p className="leading-relaxed mt-3">
-              See what your specific car costs to run overall with our <a href="/running-costs" className="text-blue-400 hover:text-blue-300">running costs calculator</a>, and check whether your tax bill could be lower in our guide to <a href="/blog/cheapest-cars-to-tax-uk" className="text-blue-400 hover:text-blue-300">the cheapest cars to tax in the UK</a>.
+              See what your specific car costs to run overall with our <a href="/running-costs" className="text-blue-400 hover:text-blue-300">running costs calculator</a>, and check whether your tax bill could be lower in our guide to <Link href="/blog/cheapest-cars-to-tax-uk" className="text-blue-400 hover:text-blue-300">the cheapest cars to tax in the UK</Link>.
             </p>
           </section>
 
@@ -618,14 +619,14 @@ export default function ServicingPage() {
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Repair Cost Guides</p>
             <p className="text-xs text-slate-500 mt-2">Free UK price guides for cambelt, DPF, aircon, brakes, battery and clutch.</p>
           </a>
-          <a href="/blog/mot-vs-service" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/mot-vs-service" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT vs Service Guide</p>
             <p className="text-xs text-slate-500 mt-2">Understand what&apos;s covered by each — and whether to combine them.</p>
-          </a>
-          <a href="/blog/cheapest-cars-to-tax-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/cheapest-cars-to-tax-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cheapest Cars to Tax in the UK</p>
             <p className="text-xs text-slate-500 mt-2">Cut your annual running costs by hundreds with a lower-tax car.</p>
-          </a>
+          </Link>
         </div>
       </div>
 

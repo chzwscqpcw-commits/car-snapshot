@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import MotPriceFinder from "@/components/MotPriceFinder";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
@@ -219,7 +220,7 @@ export default function CheapMotPage() {
               Other classes are capped differently: motorcycles at &pound;29.65,
               and larger vans (Class 7) at &pound;58.60. For the full breakdown,
               see our guide to{" "}
-              <a href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs</a>.
+              <Link href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs</Link>.
             </p>
           </section>
 
@@ -282,7 +283,7 @@ export default function CheapMotPage() {
               Always ask the garage to confirm the retest terms before you collect
               the car &mdash; it can save the whole test fee again. More on what to
               do in our guide to{" "}
-              <a href="/blog/what-to-do-if-car-fails-mot" className="text-blue-400 hover:text-blue-300">what to do if your car fails its MOT</a>.
+              <Link href="/blog/what-to-do-if-car-fails-mot" className="text-blue-400 hover:text-blue-300">what to do if your car fails its MOT</Link>.
             </p>
           </section>
 
@@ -292,7 +293,7 @@ export default function CheapMotPage() {
               What you&apos;ll pay varies by region &mdash; London and the South
               East run near the &pound;54.85 cap, while the North, Wales and
               Scotland sit well below. See{" "}
-              <a href="/mot-prices" className="text-blue-400 hover:text-blue-300">typical MOT prices for your town</a>, or jump straight to a few popular areas:
+              <Link href="/mot-prices" className="text-blue-400 hover:text-blue-300">typical MOT prices for your town</Link>, or jump straight to a few popular areas:
             </p>
             <div className="flex flex-wrap gap-2">
               {[
@@ -349,22 +350,22 @@ export default function CheapMotPage() {
       <div className="max-w-3xl mx-auto px-4 mt-16 pb-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/blog/how-much-does-mot-cost" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/how-much-does-mot-cost" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How Much Does an MOT Cost in 2026?</p>
             <p className="text-xs text-slate-500 mt-2">The maximum fee, typical garage prices, free retests, and practical ways to save.</p>
-          </a>
-          <a href="/blog/spring-mot-rush-beat-the-queues" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/spring-mot-rush-beat-the-queues" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Spring MOT Rush: How to Beat the Queues</p>
             <p className="text-xs text-slate-500 mt-2">Why March and September are MOT peaks and how to book around them.</p>
-          </a>
-          <a href="/blog/mot-vs-service" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/mot-vs-service" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT vs Service — Do You Need Both?</p>
             <p className="text-xs text-slate-500 mt-2">The difference, and why bundling them often unlocks a cheaper MOT.</p>
-          </a>
-          <a href="/blog/can-you-get-mot-done-early" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/can-you-get-mot-done-early" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Can You Get Your MOT Done Early?</p>
             <p className="text-xs text-slate-500 mt-2">How early you can test without losing time on your certificate.</p>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

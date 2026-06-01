@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
@@ -492,10 +493,10 @@ export default async function CarValuationNoSignupPage({
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How much is my car worth?</p>
                 <p className="text-xs text-slate-500 mt-2">Methodology-led answer to the question — explains how the number is calculated.</p>
               </a>
-              <a href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+              <Link href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Complete car valuation guide</p>
                 <p className="text-xs text-slate-500 mt-2">How valuations work, what affects value, and how to get the best price.</p>
-              </a>
+              </Link>
             </div>
           </div>
           <MotReminderBanner />

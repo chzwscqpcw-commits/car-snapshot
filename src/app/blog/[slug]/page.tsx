@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
@@ -190,13 +191,13 @@ export default async function BlogPostPage({ params }: PageProps) {
               title={post.title}
             />
             <div className="flex flex-wrap gap-1.5 ml-2">
-              <a
+              <Link
                 href="/blog"
                 className="inline-flex items-center gap-1 rounded-full border border-slate-600/60 bg-slate-800/80 px-2 py-0.5 text-[10px] font-medium text-slate-200 transition-opacity hover:opacity-80"
               >
                 <ArrowLeft className="h-3 w-3" />
                 All guides
-              </a>
+              </Link>
               {tags.map((tag) => (
                 <a
                   key={tag}
@@ -292,12 +293,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                 Enter a registration to see MOT history, tax status, mileage and
                 more — no signup required.
               </p>
-              <a
+              <Link
                 href="/"
                 className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
               >
                 Look up a vehicle
-              </a>
+              </Link>
             </div>
           );
         })()}

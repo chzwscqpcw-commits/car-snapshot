@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getUniqueMakes,
@@ -63,12 +64,12 @@ export default function CarsIndexPage() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
+          <Link
             href="/"
             className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
           >
             &larr; Back to Free Plate Check
-          </a>
+          </Link>
           <h1 className="text-3xl font-bold text-slate-100">
             Car Buyer&apos;s Guides
           </h1>
@@ -89,12 +90,12 @@ export default function CarsIndexPage() {
             Enter any UK registration number to see the full MOT history, tax
             status, mileage, recalls and estimated value.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
           >
             Look up a vehicle
-          </a>
+          </Link>
         </div>
 
         {/* ── Makes grid ───────────────────────────────────────────────── */}
@@ -152,9 +153,9 @@ export default function CarsIndexPage() {
           <p className="leading-relaxed">
             These guides are a starting point. Once you find a specific car
             you&apos;re interested in, enter its registration number on our{" "}
-            <a href="/" className="text-blue-400 hover:text-blue-300">
+            <Link href="/" className="text-blue-400 hover:text-blue-300">
               homepage
-            </a>{" "}
+            </Link>{" "}
             to see the full individual vehicle check — including its complete MOT
             history, tax status, mileage timeline and more.
           </p>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
@@ -380,22 +381,22 @@ export default async function CarValuationPage({
 
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <Link href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How Much Is My Car Worth? A Valuation Guide</p>
             <p className="text-xs text-slate-500 mt-2">How valuations work, what affects your vehicle&apos;s value, and how to get the best price.</p>
-          </a>
-          <a href="/blog/how-to-check-car-service-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/how-to-check-car-service-history" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to Check a Car&apos;s Service History</p>
             <p className="text-xs text-slate-500 mt-2">What a full service history means and why gaps should raise red flags.</p>
-          </a>
-          <a href="/blog/what-to-check-on-a-test-drive" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/what-to-check-on-a-test-drive" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">What to Check on a Test Drive</p>
             <p className="text-xs text-slate-500 mt-2">Engine, brakes, steering, gearbox, and the warning signs to walk away from.</p>
-          </a>
-          <a href="/blog/cars-that-hold-value-best-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          </Link>
+          <Link href="/blog/cars-that-hold-value-best-uk" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cars That Hold Their Value Best in the UK</p>
             <p className="text-xs text-slate-500 mt-2">Which makes and models depreciate slowest, and why.</p>
-          </a>
+          </Link>
         </div>
       </div>
       <MotReminderBanner />

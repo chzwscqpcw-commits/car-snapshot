@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MotPriceFinder from "@/components/MotPriceFinder";
@@ -151,9 +152,9 @@ export default async function MotPricesTownPage({ params }: Props) {
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_60%)]" />
         <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-6 lg:pb-10">
-          <a href="/mot-prices" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
+          <Link href="/mot-prices" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
             &larr; All MOT price locations
-          </a>
+          </Link>
           <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-10 lg:items-center">
             <div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-100 leading-tight">
@@ -210,7 +211,7 @@ export default async function MotPricesTownPage({ params }: Props) {
               the same national rules &mdash; so the difference between the
               cheapest and dearest test for the same car comes down to which
               garage you choose. For the full national picture, see{" "}
-              <a href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs in 2026</a>.
+              <Link href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs in 2026</Link>.
             </p>
           </section>
 
@@ -226,7 +227,7 @@ export default async function MotPricesTownPage({ params }: Props) {
               The test is identical at every garage, so a cheaper {town.name} MOT
               is a genuine saving, not a corner cut &mdash; more on that in our
               guide to whether{" "}
-              <a href="/blog/are-cheap-mot-deals-worth-it" className="text-blue-400 hover:text-blue-300">cheap MOT deals are worth it</a>.
+              <Link href="/blog/are-cheap-mot-deals-worth-it" className="text-blue-400 hover:text-blue-300">cheap MOT deals are worth it</Link>.
             </p>
           </section>
 
@@ -244,7 +245,7 @@ export default async function MotPricesTownPage({ params }: Props) {
             </p>
             <p className="leading-relaxed">
               You can{" "}
-              <a href="/blog/can-you-get-mot-done-early" className="text-blue-400 hover:text-blue-300">test up to a month early</a>{" "}
+              <Link href="/blog/can-you-get-mot-done-early" className="text-blue-400 hover:text-blue-300">test up to a month early</Link>{" "}
               without losing any days on the certificate &mdash; useful breathing
               room to shop around rather than booking in a panic.
             </p>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState, useRef, useEffect } from "react";
 
 // MOT Insights calculation
@@ -3805,7 +3806,7 @@ END:VEVENT
           {!data && !loading && (
             <div className="mt-8 pt-6 border-t border-slate-800/60 space-y-5">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</a>
+                <Link href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Guides &amp; Tips</Link>
                 <span className="text-slate-700 hidden sm:inline" aria-hidden="true">&middot;</span>
                 <a href="/stats" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">UK Car Stats</a>
                 <span className="text-slate-700 hidden sm:inline" aria-hidden="true">&middot;</span>
@@ -5359,41 +5360,41 @@ END:VEVENT
               <h3 className="text-base font-semibold text-slate-100 mb-4">What to check next</h3>
               <div className="space-y-3">
                 {data.motTests?.some(t => t.rfrAndComments?.some(r => r.type === "ADVISORY")) && (
-                  <a href="/blog/what-does-mot-advisory-mean" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <Link href="/blog/what-does-mot-advisory-mean" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                     <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">What Does an MOT Advisory Mean?</p>
                     <p className="text-xs text-slate-500 mt-1">This vehicle has MOT advisories — learn what they mean and when to act.</p>
-                  </a>
+                  </Link>
                 )}
                 {(data.taxStatus === "SORN" || data.taxStatus === "Untaxed") && (
-                  <a href="/blog/what-is-sorn-and-when-do-you-need-one" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <Link href="/blog/what-is-sorn-and-when-do-you-need-one" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                     <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">What Is a SORN and When Do You Need One?</p>
                     <p className="text-xs text-slate-500 mt-1">This vehicle is {data.taxStatus === "SORN" ? "SORN'd" : "untaxed"} — understand the rules.</p>
-                  </a>
+                  </Link>
                 )}
                 {ulezResult && ulezResult.status === "non-compliant" && (
-                  <a href="/blog/is-my-car-ulez-compliant" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <Link href="/blog/is-my-car-ulez-compliant" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                     <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">Is My Car ULEZ Compliant?</p>
                     <p className="text-xs text-slate-500 mt-1">This vehicle may not be ULEZ compliant — learn about charges, exemptions and your options.</p>
-                  </a>
+                  </Link>
                 )}
                 {recalls.length > 0 && (
-                  <a href="/blog/car-safety-recalls-guide" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <Link href="/blog/car-safety-recalls-guide" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                     <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">Car Safety Recalls: What You Need to Know</p>
                     <p className="text-xs text-slate-500 mt-1">This vehicle has {recalls.length} matching recall{recalls.length !== 1 ? "s" : ""} — learn how to get free repairs.</p>
-                  </a>
+                  </Link>
                 )}
-                <a href="/blog/how-to-read-mot-history" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                <Link href="/blog/how-to-read-mot-history" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                   <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Read MOT History</p>
                   <p className="text-xs text-slate-500 mt-1">Understand what the test results, mileage and advisories mean.</p>
-                </a>
-                <a href="/blog/how-to-check-if-a-car-is-taxed" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                </Link>
+                <Link href="/blog/how-to-check-if-a-car-is-taxed" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                   <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Check if a Car Is Taxed</p>
                   <p className="text-xs text-slate-500 mt-1">Everything you need to know about vehicle tax status in the UK.</p>
-                </a>
-                <a href="/blog/used-car-checks-before-buying" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                </Link>
+                <Link href="/blog/used-car-checks-before-buying" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
                   <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
                   <p className="text-xs text-slate-500 mt-1">A practical checklist to protect yourself when buying second-hand.</p>
-                </a>
+                </Link>
               </div>
             </div>
             </DataReveal>
@@ -5557,13 +5558,13 @@ END:VEVENT
               </div>
               <p className="text-sm text-slate-400">Search DVSA safety recalls for any UK car model. Outstanding recalls mean free repairs at dealers.</p>
             </a>
-            <a href="/clean-air-zones" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+            <Link href="/clean-air-zones" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <Leaf className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Clean Air Zones</h3>
               </div>
               <p className="text-sm text-slate-400">Check Clean Air Zone charges by city — see which zones your vehicle can enter for free.</p>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -5616,9 +5617,9 @@ END:VEVENT
               ))}
             </div>
             <div className="mt-4 text-center">
-              <a href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+              <Link href="/blog" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
                 See all guides &rarr;
-              </a>
+              </Link>
             </div>
           </div>
         )}

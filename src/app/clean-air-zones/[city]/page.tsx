@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CAZ_ZONES, getCazBySlug, getAllCazSlugs } from "@/data/caz-zones";
@@ -102,12 +103,12 @@ export default async function CityCleanAirZonePage({ params }: Props) {
       {/* Header */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
+          <Link
             href="/clean-air-zones"
             className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
           >
             &larr; All UK Clean Air Zones
-          </a>
+          </Link>
           <h1 className="text-3xl font-bold text-slate-100">
             {zone.city} Clean Air Zone
           </h1>
@@ -421,12 +422,12 @@ export default async function CityCleanAirZonePage({ params }: Props) {
               ))}
             </div>
             <p className="text-sm mt-4">
-              <a
+              <Link
                 href="/clean-air-zones"
                 className="text-blue-400 hover:text-blue-300"
               >
                 View all UK Clean Air Zones &rarr;
-              </a>
+              </Link>
             </p>
           </section>
         </div>

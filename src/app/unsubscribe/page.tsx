@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -21,12 +22,12 @@ function UnsubscribeContent() {
             <p className="text-slate-400 text-sm mb-6">
               You&apos;ve been removed from MOT reminders for this vehicle. You won&apos;t receive any more emails.
             </p>
-            <a
+            <Link
               href="/"
               className="text-cyan-400 hover:text-cyan-300 text-sm underline underline-offset-2"
             >
               Back to Free Plate Check
-            </a>
+            </Link>
           </div>
         )}
 
@@ -41,12 +42,12 @@ function UnsubscribeContent() {
             <p className="text-slate-400 text-sm mb-6">
               This reminder has already been cancelled, or the link has expired.
             </p>
-            <a
+            <Link
               href="/"
               className="text-cyan-400 hover:text-cyan-300 text-sm underline underline-offset-2"
             >
               Back to Free Plate Check
-            </a>
+            </Link>
           </div>
         )}
 
@@ -61,12 +62,12 @@ function UnsubscribeContent() {
             <p className="text-slate-400 text-sm mb-6">
               This unsubscribe link is invalid or has expired. If you&apos;re still receiving emails, please check your vehicle on our site and sign up again with a new reminder.
             </p>
-            <a
+            <Link
               href="/"
               className="text-cyan-400 hover:text-cyan-300 text-sm underline underline-offset-2"
             >
               Back to Free Plate Check
-            </a>
+            </Link>
           </div>
         )}
       </div>
