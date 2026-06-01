@@ -214,14 +214,80 @@ export function fetchListingsStub(
   return aggregatePrices(prices);
 }
 
+/** Base URL + tuning for the live API. Overridable via env so the endpoint can
+ *  be corrected without a code change once verified against the UK docs. */
+const MARKETCHECK_API_BASE = process.env.MARKETCHECK_API_BASE ?? "https://api.marketcheck.com/v2";
+const MARKETCHECK_FETCH_ROWS = 50;
+const MARKETCHECK_TIMEOUT_MS = 6000;
+
 /**
- * REAL fetch (not wired until we have a key). Sketch of the MarketCheck UK
- * Active Listings call: GET https://api.marketcheck.com/v2/search/car/active
- *   ?api_key=...&country=GB&make=...&model=...&year=...&car_type=used&rows=50
- * then map listings[].price → aggregatePrices(). Kept here so swapping stub →
- * real is a one-line change in defaultDeps.fetchListings.
+ * REAL fetch — MarketCheck Active Listings → price aggregate.
+ *
+ * ⚠ BEST-EFFORT against the standard MarketCheck v2 shape. VERIFY against your
+ * UK docs (developers.marketcheck.com/uk) and correct if they differ — the
+ * likely deviations are:
+ *   • Host/path — some accounts use a region host; override MARKETCHECK_API_BASE.
+ *   • Used-vehicle param — `car_type=used` here; could be `listing_type`.
+ *   • Price field — top-level `listing.price` here; some payloads nest it.
+ * The code below is defensive (tolerates missing fields) and degrades to null,
+ * so a wrong field name fails safe (no MarketCheck signal) rather than crashing.
  */
-// async function fetchListingsLive(make, model, year): Promise<MarketCheckAggregate | null> { ... }
+export async function fetchListingsLive(
+  make: string,
+  model: string,
+  year: number,
+): Promise<MarketCheckAggregate | null> {
+  const apiKey = process.env.MARKETCHECK_API_KEY;
+  if (!apiKey) return null;
+
+  const params = new URLSearchParams({
+    api_key: apiKey,
+    country: "GB",
+    car_type: "used",
+    make,
+    model,
+    year: String(year),
+    rows: String(MARKETCHECK_FETCH_ROWS),
+  });
+  const url = `${MARKETCHECK_API_BASE}/search/car/active?${params.toString()}`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), MARKETCHECK_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) {
+      // 401 = bad key, 429 = rate limit, etc. Log and fail safe.
+      console.error(`[MARKETCHECK] live fetch HTTP ${res.status} for ${make} ${model} ${year}`);
+      return null;
+    }
+    const json = (await res.json()) as { listings?: unknown };
+    const listings = Array.isArray(json?.listings) ? (json.listings as Record<string, unknown>[]) : [];
+    const prices = listings
+      .map((l) => {
+        // Best-effort price extraction — adjust if the real field differs.
+        const raw =
+          (l?.price as unknown) ??
+          ((l?.dealer as Record<string, unknown>)?.price as unknown) ??
+          ((l?.build as Record<string, unknown>)?.price as unknown);
+        const n = typeof raw === "string" ? parseFloat(raw.replace(/[^0-9.]/g, "")) : raw;
+        return typeof n === "number" ? n : NaN;
+      })
+      .filter((n) => Number.isFinite(n) && n > 0);
+    return aggregatePrices(prices);
+  } catch (err) {
+    const e = err as Error;
+    console.error(
+      `[MARKETCHECK] live fetch ${e?.name === "AbortError" ? "timeout" : "error"} for ${make} ${model} ${year}:`,
+      e?.message || e,
+    );
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 // ── Default Supabase-backed deps ─────────────────────────────────────────────
 
@@ -276,9 +342,9 @@ const defaultDeps: MarketCheckDeps = {
   },
 
   async fetchListings(make, model, year) {
+    // Stub when there's no API key; the real call once MARKETCHECK_API_KEY is set.
     if (usingStub()) return fetchListingsStub(make, model, year);
-    // return fetchListingsLive(make, model, year);  // ← swap in once keyed
-    return fetchListingsStub(make, model, year);
+    return fetchListingsLive(make, model, year);
   },
 
   async writeCache(make, model, year, agg) {
