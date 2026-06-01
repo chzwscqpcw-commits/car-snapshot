@@ -449,6 +449,24 @@ export function roundTo50(value: number): number {
 }
 
 /**
+ * A single MOT odometer reading, normalised to MILES. DVLA records some
+ * vehicles (typically imports) in km — display/aggregate as miles everywhere.
+ * SINGLE SOURCE OF TRUTH for per-reading conversion: anywhere that reads an
+ * odometer value (valuation, MOT history, mileage chart, PDF) must go through
+ * this so km cars aren't shown ~1.6× too high. Returns null if no usable value.
+ */
+export function odometerMiles(
+  odometer?: { value?: number; unit?: string } | null,
+): number | null {
+  if (!odometer || typeof odometer.value !== "number" || !Number.isFinite(odometer.value)) {
+    return null;
+  }
+  return odometer.unit?.toUpperCase() === "KM"
+    ? Math.round(odometer.value * 0.621371)
+    : odometer.value;
+}
+
+/**
  * Most recent recorded odometer reading, in miles, for the valuation mileage
  * adjustment. Don't rely on MOT-test array order — sort by completedDate
  * descending and take the newest test that actually carries an odometer.
@@ -469,9 +487,6 @@ export function latestRecordedMileage(
     (a, b) =>
       new Date(b.completedDate ?? 0).getTime() - new Date(a.completedDate ?? 0).getTime(),
   );
-  const latest = sorted.find((t) => typeof t.odometer?.value === "number");
-  if (!latest?.odometer) return null;
-  let miles = latest.odometer.value;
-  if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
-  return miles;
+  const latest = sorted.find((t) => odometerMiles(t.odometer) != null);
+  return odometerMiles(latest?.odometer);
 }

@@ -3,60 +3,76 @@
 import { useMemo, useState, useRef, useEffect } from "react";
 
 // MOT Insights calculation
-function calculateMotInsights(motTests: any[]) {
+function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
   if (!motTests || motTests.length === 0) {
     return null;
   }
 
-  const sortedTests = [...motTests].sort((a, b) => 
+  const sortedTests = [...motTests].sort((a, b) =>
     new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime()
   );
 
-  const passedTests = motTests.filter(t => t.testResult === "PASSED").length;
-  const passRate = Math.round((passedTests / motTests.length) * 100);
+  // Pass rate over GRADED tests only (PASSED/FAILED) — "No details held" entries
+  // aren't a pass or a fail, so they don't belong in the denominator. Matches
+  // the standalone MOT tool.
+  const gradedTests = motTests.filter(t => t.testResult === "PASSED" || t.testResult === "FAILED");
+  const passedTests = gradedTests.filter(t => t.testResult === "PASSED").length;
+  const passRate = gradedTests.length > 0 ? Math.round((passedTests / gradedTests.length) * 100) : 0;
 
-  const mileageTests = sortedTests.filter(t => t.odometer?.value).map(t => ({
-    date: new Date(t.completedDate),
-    mileage: t.odometer.value,
-    test: t
-  }));
+  // Odometer readings normalised to MILES (handles km imports) via the shared
+  // helper, so every surface agrees on mileage.
+  const mileageTests = sortedTests
+    .map(t => ({ date: new Date(t.completedDate), mileage: odometerMiles(t.odometer), test: t }))
+    .filter((m): m is { date: Date; mileage: number; test: any } => m.mileage != null);
+
+  const latestMileage = mileageTests.length > 0 ? mileageTests[mileageTests.length - 1].mileage : null;
+  const vehicleAge = yearOfManufacture ? new Date().getFullYear() - yearOfManufacture : null;
 
   let avgMilesPerYear = 0;
   let mileageWarnings: string[] = [];
   let mileageTrend = "normal";
 
-  if (mileageTests.length >= 2) {
+  // Canonical: LIFETIME average = latest reading ÷ vehicle age. Falls back to
+  // the MOT-window rate only when age is unknown.
+  if (latestMileage != null && vehicleAge && vehicleAge >= 1) {
+    avgMilesPerYear = Math.round(latestMileage / vehicleAge);
+  } else if (mileageTests.length >= 2) {
     const oldest = mileageTests[0];
     const newest = mileageTests[mileageTests.length - 1];
     const yearsSpan = (newest.date.getTime() - oldest.date.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
-    const totalMiles = newest.mileage - oldest.mileage;
+    if (yearsSpan > 0) avgMilesPerYear = Math.round((newest.mileage - oldest.mileage) / yearsSpan);
+  }
 
-    avgMilesPerYear = Math.round(totalMiles / yearsSpan);
+  if (avgMilesPerYear > 0 && avgMilesPerYear < 4000) {
+    mileageWarnings.push("⚠️ Unusually low annual mileage (under 4,000 miles/year) - verify vehicle usage or check for odometer issues");
+    mileageTrend = "low";
+  } else if (avgMilesPerYear > 15000) {
+    mileageWarnings.push("ℹ️ High annual mileage (over 15,000 miles/year) - vehicle has seen heavy use");
+    mileageTrend = "high";
+  }
 
-    if (avgMilesPerYear < 4000) {
-      mileageWarnings.push("⚠️ Unusually low annual mileage (under 4,000 miles/year) - verify vehicle usage or check for odometer issues");
-      mileageTrend = "low";
-    } else if (avgMilesPerYear > 15000) {
-      mileageWarnings.push("ℹ️ High annual mileage (over 15,000 miles/year) - vehicle has seen heavy use");
-      mileageTrend = "high";
-    }
+  // Clocking detection: a rollback is ALWAYS flagged; an increase is flagged if
+  // it's either an extreme absolute jump (>40k miles in <400 days) OR runs
+  // >2× the car's own average rate (in <1 year). Matches the standalone tool.
+  for (let i = 1; i < mileageTests.length; i++) {
+    const prev = mileageTests[i - 1];
+    const curr = mileageTests[i];
+    const daysBetween = (curr.date.getTime() - prev.date.getTime()) / (1000 * 60 * 60 * 24);
+    const milesDifference = curr.mileage - prev.mileage;
 
-    for (let i = 1; i < mileageTests.length; i++) {
-      const prev = mileageTests[i - 1];
-      const curr = mileageTests[i];
-      const daysBetween = (curr.date.getTime() - prev.date.getTime()) / (1000 * 60 * 60 * 24);
-      const milesDifference = curr.mileage - prev.mileage;
-
-      if (milesDifference < 0) {
-        mileageWarnings.push(`🚨 ALERT: Mileage decreased by ${Math.abs(milesDifference).toLocaleString()} miles between ${prev.date.toLocaleDateString()} and ${curr.date.toLocaleDateString()} - possible odometer tamper`);
-      } else if (daysBetween > 0) {
-        const milesPerDay = milesDifference / daysBetween;
-        const expectedMilesPerDay = avgMilesPerYear / 365;
-        
-        if (milesPerDay > expectedMilesPerDay * 2 && daysBetween < 365) {
-          const percentageAbove = Math.round(((milesPerDay / expectedMilesPerDay) - 1) * 100);
-          mileageWarnings.push(`ℹ️ Unusual mileage increase of ${milesDifference.toLocaleString()} miles in ${Math.round(daysBetween)} days (${percentageAbove}% above average)`);
-        }
+    if (milesDifference < 0) {
+      mileageWarnings.push(`🚨 ALERT: Mileage decreased by ${Math.abs(milesDifference).toLocaleString()} miles between ${prev.date.toLocaleDateString()} and ${curr.date.toLocaleDateString()} - possible odometer tamper`);
+    } else if (daysBetween > 0) {
+      const milesPerDay = milesDifference / daysBetween;
+      const expectedMilesPerDay = avgMilesPerYear > 0 ? avgMilesPerYear / 365 : Infinity;
+      const relativeSpike = milesPerDay > expectedMilesPerDay * 2 && daysBetween < 365;
+      const absoluteSpike = milesDifference > 40000 && daysBetween < 400;
+      if (relativeSpike || absoluteSpike) {
+        const pctAbove =
+          Number.isFinite(expectedMilesPerDay) && expectedMilesPerDay > 0
+            ? ` (${Math.round(((milesPerDay / expectedMilesPerDay) - 1) * 100)}% above average)`
+            : "";
+        mileageWarnings.push(`ℹ️ Unusual mileage increase of ${milesDifference.toLocaleString()} miles in ${Math.round(daysBetween)} days${pctAbove}`);
       }
     }
   }
@@ -89,13 +105,13 @@ function calculateMotInsights(motTests: any[]) {
   return {
     passRate,
     passedTests,
-    totalTests: motTests.length,
+    totalTests: gradedTests.length,
     avgMilesPerYear,
     mileageWarnings,
     mileageTrend,
     recurringAdvisories,
     daysUntilExpiry,
-    latestMileage: mileageTests[mileageTests.length - 1]?.mileage
+    latestMileage,
   };
 }
 import {
@@ -172,6 +188,7 @@ import {
   getColourAdjustment,
   combineValuationLayers,
   latestRecordedMileage,
+  odometerMiles,
   type ValuationResult,
   type ConditionInputs,
 } from "@/lib/valuation";
@@ -1402,7 +1419,7 @@ export default function Home() {
   // Vehicle Health Score
   const healthScore = useMemo((): HealthScoreResult | null => {
     if (!data) return null;
-    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
     const hasMileageDiscrepancy = motInsightsData?.mileageWarnings?.some(w => w.includes("ALERT") || w.includes("decreased")) ?? false;
     return calculateHealthScore({
       passRate: motInsightsData?.passRate,
@@ -1435,7 +1452,7 @@ export default function Home() {
   // MOT Readiness Score
   const motReadiness = useMemo((): MotReadinessResult | null => {
     if (!data) return null;
-    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
     const latestAdvisoryTexts = (data.motTests?.[0]?.rfrAndComments
       ?.filter((r: { type: string }) => r.type === "ADVISORY")
       .map((r: { text: string }) => r.text)) ?? [];
@@ -1485,13 +1502,10 @@ export default function Home() {
     if (!newPrice) return null;
 
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
-    // Get latest mileage from MOT tests (sorted oldest first, so last element is latest)
-    const sortedTests = data.motTests ? [...data.motTests].sort(
-      (a, b) => new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime()
-    ) : [];
-    const latestMileage = sortedTests.length > 0
-      ? sortedTests[sortedTests.length - 1]?.odometer?.value ?? null
-      : null;
+    // Same shared helper as the /api/valuation call above and the standalone
+    // tool — converts km→miles and picks the newest reading, so the report's
+    // local baseline can't disagree with the figure it sent to the API.
+    const latestMileage = latestRecordedMileage(data.motTests);
 
     const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
     const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge);
@@ -1570,7 +1584,7 @@ export default function Home() {
   const negotiation = useMemo((): NegotiationResult | null => {
     if (!data?.yearOfManufacture || !valuationResult?.estimatedValue || !motReadiness) return null;
     if (motReadiness.isMotExempt || motReadiness.advisoryCount <= 0) return null;
-    const motInsights = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const motInsights = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
     return calculateNegotiation({
       totalEstimatedCost: motReadiness.totalEstimatedCost,
       motReadinessScore: motReadiness.score,
@@ -1584,7 +1598,7 @@ export default function Home() {
   // Assemble all enrichment signals for dynamic checklists
   const checklistSignals = useMemo((): ChecklistSignals | null => {
     if (!data) return null;
-    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
     return {
       motStatus: data.motStatus,
       taxStatus: data.taxStatus,
@@ -2521,7 +2535,7 @@ END:VEVENT
       day: "numeric",
     });
     const dateStr = new Date().toISOString().slice(0, 10);
-    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests) : null;
+    const motInsightsData = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
 
     const sep = "────────────────────────────────────────────────────────────────";
     const dblSep = "═════════════════════════════════════════════════════════════════";
@@ -2819,7 +2833,8 @@ END:VEVENT
       lines.push("");
 
       for (const test of data.motTests) {
-        const mileage = test.odometer?.value ? `${test.odometer.value.toLocaleString()} miles` : "—";
+        const mileageMi = odometerMiles(test.odometer);
+        const mileage = mileageMi != null ? `${mileageMi.toLocaleString()} miles` : "—";
         lines.push(`  ${formatDate(test.completedDate)}  ${test.testResult}  ${mileage}${test.motTestNumber ? `  Ref: ${test.motTestNumber}` : ""}`);
         const items = test.rfrAndComments || [];
         for (const item of items) {
@@ -2882,7 +2897,7 @@ END:VEVENT
 
       const blob = await generateVehicleReport({
         data,
-        motInsights: data.motTests ? calculateMotInsights(data.motTests) : null,
+        motInsights: data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null,
         checklist: allChecklists,
         parsedModel: (parsedModel || vcaParsedModel) ? {
           bodyStyle: bodyStyle,
@@ -4910,7 +4925,7 @@ END:VEVENT
 
                   {/* MOT Insights grid — above test cards */}
                   {(() => {
-                    const motInsights = calculateMotInsights(data.motTests);
+                    const motInsights = calculateMotInsights(data.motTests, data?.yearOfManufacture);
                     if (!motInsights) return null;
 
                     return (
@@ -5005,7 +5020,7 @@ END:VEVENT
                           </div>
                           <div>
                             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
-                            <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"}<span className="font-sans ml-1 text-slate-400 font-normal">miles</span></p>
+                            <p className="text-sm font-mono font-semibold text-slate-100 tracking-wide">{odometerMiles(test.odometer)?.toLocaleString() ?? "—"}<span className="font-sans ml-1 text-slate-400 font-normal">miles</span></p>
                           </div>
                           {test.expiryDate && (
                             <div>
@@ -5123,7 +5138,7 @@ END:VEVENT
                             </div>
                             <div>
                               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
-                              <p className="text-sm font-semibold text-slate-100">{test.odometer?.value ? test.odometer.value.toLocaleString() : "—"} miles</p>
+                              <p className="text-sm font-semibold text-slate-100">{odometerMiles(test.odometer)?.toLocaleString() ?? "—"} miles</p>
                             </div>
                             {test.expiryDate && (
                               <div>

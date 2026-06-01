@@ -493,7 +493,12 @@ function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
     // Implausible jump: > 40k miles between two consecutive MOTs
     const gapDays = daysBetween(prev.date, curr.date);
     const milesAdded = curr.value - prev.value;
-    if (gapDays > 0 && gapDays < 400 && milesAdded > 40000) {
+    // Flag if either: extreme absolute jump (>40k in <400 days) OR a rate >2×
+    // this car's own average (in <1 year). Matches the in-report detection.
+    const expectedPerDay = avgPerYear != null && avgPerYear > 0 ? avgPerYear / 365 : Infinity;
+    const absoluteSpike = gapDays > 0 && gapDays < 400 && milesAdded > 40000;
+    const relativeSpike = gapDays > 0 && gapDays < 365 && milesAdded / gapDays > expectedPerDay * 2;
+    if (absoluteSpike || relativeSpike) {
       clockingFlags.push({
         kind: "implausible_jump",
         message: `+${milesAdded.toLocaleString("en-GB")} mi between ${prev.date.toLocaleDateString(

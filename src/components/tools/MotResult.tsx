@@ -21,6 +21,7 @@ import {
 } from "@/components/tools/shared";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { odometerMiles } from "@/lib/valuation";
 
 interface MotResultProps {
   vrm: string;
@@ -362,8 +363,8 @@ function Hero({ stats, vrm }: { stats: MotStats; vrm: string }) {
                 {stats.latest.testResult}
               </span>{" "}
               · {formatLongDate(stats.latest.completedDate)}
-              {stats.latest.odometer &&
-                ` · ${stats.latest.odometer.value.toLocaleString("en-GB")} mi`}
+              {odometerMiles(stats.latest.odometer) != null &&
+                ` · ${odometerMiles(stats.latest.odometer)!.toLocaleString("en-GB")} mi`}
             </p>
           )}
         </div>
