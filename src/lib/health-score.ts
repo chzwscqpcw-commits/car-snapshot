@@ -45,6 +45,7 @@ export function calculateHealthScore(params: {
   recallCount?: number;
   taxCurrent?: boolean;
   motCurrent?: boolean;
+  motNoRecord?: boolean;
   ulezCompliant?: boolean;
 }): HealthScoreResult {
   const breakdown: HealthBreakdown[] = [];
@@ -52,13 +53,24 @@ export function calculateHealthScore(params: {
 
   // Cars under 3 years old don't require MOT — award full marks for MOT-dependent categories
   const motExempt = params.vehicleAge != null && params.vehicleAge <= 3;
+  // DVLA holds no MOT history (new/recently-registered vehicle, or no records
+  // on file). There is no pass-rate or odometer data to assess, so the
+  // MOT-derived categories must NOT be scored as failures — mirror the exempt
+  // treatment. This also covers the boundary case where the coarse year-only
+  // age above reads as 3+ but the vehicle has never actually been tested.
+  const noMotHistory = motExempt || !!params.motNoRecord;
 
   // 1. MOT History: 25 pts (pass rate scaled)
   const maxMot = 25;
   let motScore = 0;
-  if (motExempt) {
+  if (noMotHistory) {
     motScore = maxMot;
-    breakdown.push({ category: "MOT History", score: motScore, maxScore: maxMot, detail: "Under 3 years — MOT not yet required" });
+    breakdown.push({
+      category: "MOT History",
+      score: motScore,
+      maxScore: maxMot,
+      detail: motExempt ? "Under 3 years — MOT not yet required" : "No MOT history on record",
+    });
   } else if (params.passRate != null && params.totalTests != null && params.totalTests > 0) {
     motScore = Math.round((params.passRate / 100) * maxMot);
     breakdown.push({
@@ -96,9 +108,9 @@ export function calculateHealthScore(params: {
   // 3. Mileage Consistency: 15 pts
   const maxMileage = 15;
   let mileageScore: number;
-  if (motExempt) {
+  if (noMotHistory) {
     mileageScore = maxMileage;
-    breakdown.push({ category: "Mileage Consistency", score: mileageScore, maxScore: maxMileage, detail: "No MOT mileage records yet" });
+    breakdown.push({ category: "Mileage Consistency", score: mileageScore, maxScore: maxMileage, detail: motExempt ? "No MOT mileage records yet" : "No MOT mileage records on file" });
   } else {
     mileageScore = params.hasMileageDiscrepancy ? 0 : 15;
     breakdown.push({
@@ -113,8 +125,8 @@ export function calculateHealthScore(params: {
   // 4. Age-Adjusted Mileage: 10 pts
   const maxAgeMileage = 10;
   let ageMileageScore = 10;
-  if (motExempt) {
-    breakdown.push({ category: "Annual Mileage", score: ageMileageScore, maxScore: maxAgeMileage, detail: "New vehicle" });
+  if (noMotHistory) {
+    breakdown.push({ category: "Annual Mileage", score: ageMileageScore, maxScore: maxAgeMileage, detail: motExempt ? "New vehicle" : "No MOT mileage records on file" });
   } else if (params.avgMilesPerYear != null && params.avgMilesPerYear > 0) {
     if (params.avgMilesPerYear >= 5000 && params.avgMilesPerYear <= 12000) {
       ageMileageScore = 10;
@@ -171,13 +183,18 @@ export function calculateHealthScore(params: {
   // 7. Tax & MOT Currency: 5 pts
   const maxCurrency = 5;
   let currencyScore = 0;
-  // Cars under 3 years don't need MOT — treat as effectively "current"
-  const effectiveMotCurrent = params.motCurrent || motExempt;
+  // Cars under 3 years don't need MOT — treat as effectively "current".
+  // Likewise, when DVLA holds no MOT record we have no evidence of an expired
+  // test, so don't dock points or claim "expired" (factually wrong).
+  const motUnknown = !!params.motNoRecord && !motExempt;
+  const effectiveMotCurrent = params.motCurrent || motExempt || motUnknown;
   if (params.taxCurrent && effectiveMotCurrent) currencyScore = 5;
   else if (params.taxCurrent || effectiveMotCurrent) currencyScore = 3;
   const currencyDetail = motExempt
     ? (params.taxCurrent ? "Tax current, MOT not yet required" : "Tax expired, MOT not yet required")
-    : (params.taxCurrent && params.motCurrent ? "Both current" : !params.taxCurrent && !params.motCurrent ? "Both expired or unknown" : params.taxCurrent ? "Tax current, MOT expired" : "MOT current, tax expired");
+    : motUnknown
+      ? (params.taxCurrent ? "Tax current, no MOT on record" : "Tax expired, no MOT on record")
+      : (params.taxCurrent && params.motCurrent ? "Both current" : !params.taxCurrent && !params.motCurrent ? "Both expired or unknown" : params.taxCurrent ? "Tax current, MOT expired" : "MOT current, tax expired");
   breakdown.push({
     category: "Tax & MOT",
     score: currencyScore,

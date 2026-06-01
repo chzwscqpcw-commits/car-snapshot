@@ -11,7 +11,7 @@ import {
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import { trackEvent } from "@/lib/tracking";
 
-type Urgency = "expired" | "due-soon" | "far";
+type Urgency = "expired" | "due-soon" | "far" | "no-record";
 
 interface Props {
   motStatus?: string;
@@ -22,7 +22,10 @@ interface Props {
 }
 
 function getUrgency(motStatus: string | undefined, days: number): Urgency | null {
-  if (!motStatus) return null;
+  // No MOT held by DVLA — the vehicle is too new to have needed one yet, or
+  // DVLA simply holds no test history. This is NOT the same as an expired
+  // MOT: asserting "MOT expired" here is factually wrong and erodes trust.
+  if (!motStatus || motStatus === "No details held by DVLA") return "no-record";
   if (motStatus !== "Valid") return "expired"; // covers "Expired" and "Not valid"
   if (days <= 0) return "expired";
   if (days <= 60) return "due-soon";
@@ -112,16 +115,20 @@ export default function MotActionBanner({
   const headline =
     urgency === "expired"
       ? "MOT expired"
-      : urgency === "due-soon"
-        ? `MOT due in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? "" : "s"}`
-        : `Next MOT: ${formatExpiryDisplay(motExpiryDate)}`;
+      : urgency === "no-record"
+        ? "No MOT history on record"
+        : urgency === "due-soon"
+          ? `MOT due in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? "" : "s"}`
+          : `Next MOT: ${formatExpiryDisplay(motExpiryDate)}`;
 
   const subhead =
     urgency === "expired"
       ? "Driving without a valid MOT is illegal — fines up to £1,000 and invalidated insurance. Book a test today to get back on the road."
-      : urgency === "due-soon"
-        ? "Book up to 28 days early without losing any days. Garages near you can be £20+ cheaper than chain centres."
-        : "Set a free email reminder so you never get caught out. Two emails, 28 & 7 days before expiry. No spam.";
+      : urgency === "no-record"
+        ? "DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). Set a free reminder so it never catches you out."
+        : urgency === "due-soon"
+          ? "Book up to 28 days early without losing any days. Garages near you can be £20+ cheaper than chain centres."
+          : "Set a free email reminder so you never get caught out. Two emails, 28 & 7 days before expiry. No spam.";
 
   const Icon =
     urgency === "expired" ? AlertTriangle : urgency === "due-soon" ? Clock : Calendar;
@@ -186,9 +193,11 @@ export default function MotActionBanner({
   const reminderTriggerVariant =
     urgency === "expired"
       ? "action_banner_expired"
-      : urgency === "due-soon"
-        ? "action_banner_due_soon"
-        : "action_banner_far";
+      : urgency === "no-record"
+        ? "action_banner_no_record"
+        : urgency === "due-soon"
+          ? "action_banner_due_soon"
+          : "action_banner_far";
 
   return (
     <div ref={ref} className={`mb-6 rounded-xl border p-4 sm:p-5 ${palette.container}`}>

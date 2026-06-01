@@ -1324,8 +1324,11 @@ export default function Home() {
   }, [data]);
 
   // MOT banner for expired / expiring-soon vehicles
-  const showMotBanner = useMemo((): "expired" | "expiring" | null => {
+  const showMotBanner = useMemo((): "expired" | "expiring" | "no-record" | null => {
     if (!data || !isOver3Years) return null;
+    // DVLA holds no MOT record (new vehicle, or no test history) — this is
+    // not an expiry. Treating it as "expired" is factually wrong.
+    if (!data.motStatus || data.motStatus === "No details held by DVLA") return "no-record";
     if (data.motStatus !== "Valid" || motDaysUntilExpiry < 0) return "expired";
     if (motDaysUntilExpiry <= 90) return "expiring";
     return null;
@@ -1411,6 +1414,7 @@ export default function Home() {
       recallCount: recalls.length,
       taxCurrent: data.taxStatus === "Taxed",
       motCurrent: data.motStatus === "Valid",
+      motNoRecord: !data.motStatus || data.motStatus === "No details held by DVLA",
       ulezCompliant: ulezResult?.status === "compliant" || ulezResult?.status === "exempt",
     });
   }, [data, latestAdvisoryCount, ncapRating, recalls, ulezResult]);
@@ -4006,8 +4010,8 @@ END:VEVENT
                   <div className="mb-3">
                     <MOTBookingCTA
                       regNumber={data?.registrationNumber || ""}
-                      context={showMotBanner === "expired" ? "expired" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
-                      expandable={showMotBanner !== "expired" && motDaysUntilExpiry > 60}
+                      context={showMotBanner === "expired" ? "expired" : showMotBanner === "no-record" ? "neutral" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
+                      expandable={showMotBanner !== "expired" && (showMotBanner === "no-record" || motDaysUntilExpiry > 60)}
                       placement="specs"
                     />
                   </div>
@@ -4253,7 +4257,7 @@ END:VEVENT
                 <div className="mb-8">
                   <MOTBookingCTA
                     regNumber={data?.registrationNumber || ""}
-                    context={showMotBanner === "expired" ? "expired" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
+                    context={showMotBanner === "expired" ? "expired" : showMotBanner === "no-record" ? "neutral" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
                     placement="health"
                   />
                 </div>
