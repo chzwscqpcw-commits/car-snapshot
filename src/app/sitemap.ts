@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllPosts, getAllTags, getPostTags } from "@/lib/blog";
 import { MODEL_REGISTRY, getUniqueMakes } from "@/lib/model-guides";
 import { CAZ_ZONES } from "@/data/caz-zones";
+import { MOT_TOWNS } from "@/data/mot-locations";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -136,6 +137,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
+    {
+      url: "https://www.freeplatecheck.co.uk/mot-prices",
+      lastModified: new Date("2026-06-01"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    ...MOT_TOWNS.map((t) => ({
+      url: `https://www.freeplatecheck.co.uk/mot-prices/${t.slug}`,
+      lastModified: new Date("2026-06-01"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     {
       url: "https://www.freeplatecheck.co.uk/running-costs",
       lastModified: new Date("2026-03-13"),

@@ -287,6 +287,36 @@ export default function CheapMotPage() {
           </section>
 
           <section>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">MOT prices in your area</h2>
+            <p className="leading-relaxed mb-3">
+              What you&apos;ll pay varies by region &mdash; London and the South
+              East run near the &pound;54.85 cap, while the North, Wales and
+              Scotland sit well below. See{" "}
+              <a href="/mot-prices" className="text-blue-400 hover:text-blue-300">typical MOT prices for your town</a>, or jump straight to a few popular areas:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                ["London", "london"],
+                ["Birmingham", "birmingham"],
+                ["Manchester", "manchester"],
+                ["Leeds", "leeds"],
+                ["Glasgow", "glasgow"],
+                ["Bristol", "bristol"],
+                ["Cardiff", "cardiff"],
+                ["Liverpool", "liverpool"],
+              ].map(([label, slug]) => (
+                <a
+                  key={slug}
+                  href={`/mot-prices/${slug}`}
+                  className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/60 px-3.5 py-1.5 text-sm text-slate-300 transition-colors hover:border-slate-600 hover:text-blue-300"
+                >
+                  MOT in {label}
+                </a>
+              ))}
+            </div>
+          </section>
+
+          <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Check before you book</h2>
             <p className="leading-relaxed mb-3">
               Before paying for a test, it&apos;s worth a 10-second check of the
