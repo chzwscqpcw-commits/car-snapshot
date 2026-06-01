@@ -21,6 +21,8 @@ export default function DidYouKnow() {
 
   // Shuffle on mount (SSR-safe — renders null until effect fires)
   useEffect(() => {
+    // Shuffle (Math.random) deferred to mount to avoid an SSR hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setQueue(shuffle(facts));
     setVisible(true);
   }, []);

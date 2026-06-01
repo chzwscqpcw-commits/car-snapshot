@@ -39,6 +39,8 @@ export default function CountUp({
 
   useEffect(() => {
     if (target === 0) {
+      // Drives the count-up animation; snaps to 0 when the target is 0.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayed(0);
       return;
     }

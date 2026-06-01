@@ -118,6 +118,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   // ── Server call for live listings + cache ──────────────────────────────
   useEffect(() => {
     if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
+      // Skip/early-exit state for the valuation fetch this effect performs.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setServerState("skipped");
       return;
     }

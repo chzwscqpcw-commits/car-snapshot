@@ -76,6 +76,8 @@ export default function SiteNav() {
 
   // Close drawer on route change
   useEffect(() => {
+    // Close the mobile drawer on route change (reacting to pathname).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDrawerOpen(false);
   }, [pathname]);
 

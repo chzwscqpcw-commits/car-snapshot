@@ -47,6 +47,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
 
   useEffect(() => {
     if (!vehicle.make) {
+      // Early-exit state for the recalls fetch this effect performs.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState({ kind: "ok", recalls: [] });
       return;
     }

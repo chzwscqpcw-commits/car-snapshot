@@ -52,7 +52,7 @@ and runs three steps:
 | Step | What it checks | Blocking? |
 |------|----------------|-----------|
 | **Typecheck** | TypeScript holds together (`tsc --noEmit`) | ✅ fails the build |
-| **Lint** | Code style/quality (`eslint`) | ⚠️ non-blocking for now (see below) |
+| **Lint** | Code style/quality (`eslint`) | ✅ fails the build |
 | **PDF report smoke-test** | A report still generates correctly — right valuation figure + range, and mileage shown in **miles not km** ([`scripts/test-pdf-report.ts`](scripts/test-pdf-report.ts)) | ✅ fails the build |
 
 ### How to use it
@@ -72,13 +72,6 @@ practice:
 The live status is also shown on the internal **Data Health dashboard**
 (`/data-health`, under *Build*), so you can see build health alongside data
 freshness.
-
-### Lint is non-blocking (for now)
-
-The repo currently carries a backlog of pre-existing ESLint errors, so the lint
-step runs with `continue-on-error: true` — it **reports** issues in the CI log
-but doesn't fail the build. Once that backlog is cleared, remove
-`continue-on-error` from the Lint step in `ci.yml` to make it a hard gate.
 
 ## Learn More
 

@@ -191,6 +191,8 @@ function Palette({ onClose }: { onClose: () => void }) {
 
   // Read recents once on mount
   useEffect(() => {
+    // Recent vehicles come from localStorage, unavailable during SSR render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRecent(readRecentVehicles());
   }, []);
 
@@ -271,11 +273,15 @@ function Palette({ onClose }: { onClose: () => void }) {
 
   // Clamp selection when rows change
   useEffect(() => {
+    // Clamp the keyboard selection when the row count shrinks.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelected((s) => Math.min(s, Math.max(0, rows.length - 1)));
   }, [rows.length]);
 
   // Reset selection when query changes
   useEffect(() => {
+    // Reset the keyboard selection to the top when the query changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelected(0);
   }, [query]);
 

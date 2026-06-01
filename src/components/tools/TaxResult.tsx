@@ -155,6 +155,8 @@ export default function TaxResult({ vrm, previewVehicle }: TaxResultProps) {
   useEffect(() => {
     if (previewVehicle) return; // preview mode skips the lookup
     let cancelled = false;
+    // Loading state for the lookup fetch this effect performs.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ kind: "loading" });
     fetch("/api/lookup", {
       method: "POST",

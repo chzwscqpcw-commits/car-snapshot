@@ -569,6 +569,8 @@ function DataReveal({ delay = 0, children, className }: { delay?: number; childr
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
+      // Reduced-motion users: reveal immediately. matchMedia is browser-only (no SSR).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
       return;
     }

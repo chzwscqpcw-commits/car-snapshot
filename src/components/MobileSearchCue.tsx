@@ -42,6 +42,8 @@ export default function MobileSearchCue() {
 
   useEffect(() => {
     const v = getOrAssignVariant();
+    // A/B variant is read from client storage on mount; SSR has no access.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVariant(v);
     trackExperimentImpression(EXPERIMENT_ID, v);
   }, []);

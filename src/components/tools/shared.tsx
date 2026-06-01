@@ -83,6 +83,8 @@ export function useVehicleLookup(
     // before rendering it.
     if (!vrm) return;
     let cancelled = false;
+    // Loading state for the lookup fetch this effect performs.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ kind: "loading" });
     const start =
       typeof performance !== "undefined" ? performance.now() : Date.now();

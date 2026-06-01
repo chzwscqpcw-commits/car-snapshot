@@ -14,6 +14,8 @@ export default function MotReminderBanner() {
   useEffect(() => {
     // Check if already dismissed this session
     if (sessionStorage.getItem("mot-banner-dismissed")) {
+      // Reads sessionStorage (browser-only) to honour a prior dismissal.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDismissed(true);
       return;
     }

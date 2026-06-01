@@ -256,6 +256,8 @@ function PreviewFrame({
   const [origin, setOrigin] = useState<string>("");
 
   useEffect(() => {
+    // window.location.origin is only available after mount, not during SSR render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
   }, []);
 

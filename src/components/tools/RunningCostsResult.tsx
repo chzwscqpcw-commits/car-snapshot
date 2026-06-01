@@ -73,6 +73,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   // Fetch fuel economy
   useEffect(() => {
     if (!vehicle.make || !vehicle.model) {
+      // Early-exit state for the fuel-economy fetch this effect performs.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFuelState("done");
       return;
     }

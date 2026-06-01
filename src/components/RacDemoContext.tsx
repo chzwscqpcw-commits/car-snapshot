@@ -27,6 +27,8 @@ export function RacDemoProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check immediately on mount
+    // Syncs from a cookie on mount and on visibilitychange (external store).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     sync();
 
     // Re-check when the tab becomes visible (covers navigations, redirects, tab switches)

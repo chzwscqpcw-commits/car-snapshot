@@ -276,6 +276,8 @@ function StickyMobileCta({
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    // SSR hydration guard — render nothing until mounted on the client.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

@@ -105,6 +105,8 @@ export function useVehicleValuation(
 
   useEffect(() => {
     if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
+      // Reset/early-exit state for the valuation fetch this effect performs.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setServerData(null);
       setLoading(false);
       return;
