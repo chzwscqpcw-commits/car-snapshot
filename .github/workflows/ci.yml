@@ -1,0 +1,37 @@
+name: CI
+
+# Lightweight checks on every push / PR to main. Vercel handles the full
+# production build on push; this gate catches type regressions and report
+# rendering regressions (the valuation headline + km→miles conversion) before
+# they ship. The PDF smoke-test is dependency-free — it asserts on jsPDF's
+# uncompressed output buffer, so no poppler/browser is needed.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: PDF report smoke-test
+        run: npm run test:pdf
