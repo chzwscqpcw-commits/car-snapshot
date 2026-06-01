@@ -181,6 +181,7 @@ import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import PdfPromoBanner from "@/components/PdfPromoBanner";
 
 type VehicleData = {
   registrationNumber: string;
@@ -903,6 +904,7 @@ export default function Home() {
 
   // MOT reminder state
   const [showPdfReminderPrompt, setShowPdfReminderPrompt] = useState(false);
+  const [showPdfPromo, setShowPdfPromo] = useState(false);
 
   // Fetch live fuel prices once on mount
   useEffect(() => {
@@ -2991,6 +2993,14 @@ END:VEVENT
       // Trigger E — show MOT reminder prompt after PDF download
       if (isOver3Years && data.motExpiryDate) {
         setShowPdfReminderPrompt(true);
+      }
+
+      // Post-PDF cheap-MOT promo. PDF downloaders are highly engaged, so this
+      // is a prime moment to surface the booking offer. Shown for MOT-relevant
+      // (3+ year) vehicles regardless of whether an expiry date is on record
+      // (covers the "no MOT history" case too).
+      if (isOver3Years) {
+        setShowPdfPromo(true);
       }
     } catch (error) {
       console.error("PDF generation failed:", error);
@@ -5207,6 +5217,17 @@ END:VEVENT
                 </button>
               </div>
             </DataReveal>
+
+            {/* Post-PDF cheap-MOT promo banner — booking intent (revenue),
+                shown above the reminder (email capture). */}
+            {showPdfPromo && isOver3Years && (
+              <div className="mb-8">
+                <PdfPromoBanner
+                  regNumber={data?.registrationNumber}
+                  makeModel={data ? `${data.make} ${data.model}` : undefined}
+                />
+              </div>
+            )}
 
             {/* Trigger E — Post-PDF download MOT reminder prompt */}
             {showPdfReminderPrompt && (
