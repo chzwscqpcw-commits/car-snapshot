@@ -1580,6 +1580,26 @@ export default function DataHealthPage() {
                     icon={Database}
                   />
                 </div>
+
+                {/* Live CI status — the GitHub Actions badge auto-updates
+                    green/red; clicking opens the workflow runs. */}
+                <a
+                  href="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2.5 inline-flex items-center gap-2.5 rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 hover:border-slate-700 transition-colors"
+                >
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                    Continuous Integration
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- external GH badge SVG, not a local asset */}
+                  <img
+                    src="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml/badge.svg"
+                    alt="CI status"
+                    className="h-[18px]"
+                  />
+                  <ExternalLink className="h-3 w-3 text-slate-500" />
+                </a>
               </Section>
             )}
 

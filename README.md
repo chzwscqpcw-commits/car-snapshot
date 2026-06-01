@@ -24,6 +24,62 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Development
+
+Useful local commands:
+
+```bash
+npm run dev          # start the dev server (http://localhost:3000)
+npm run build        # production build (also runs the prebuild data scripts)
+npm run typecheck    # tsc --noEmit — catch type errors
+npm run lint         # eslint
+npm test             # PDF report smoke-test (alias of test:pdf)
+```
+
+## Continuous Integration (CI)
+
+[![CI](https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml/badge.svg)](https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml)
+
+**CI = Continuous Integration** — an automated set of checks that GitHub runs in
+the cloud on every push and pull request to `main`. It spins up a clean machine,
+installs the project from scratch, and runs the checks below. The point is to
+catch regressions *before* they reach the live site, without anyone having to
+remember to test by hand.
+
+The pipeline is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+and runs three steps:
+
+| Step | What it checks | Blocking? |
+|------|----------------|-----------|
+| **Typecheck** | TypeScript holds together (`tsc --noEmit`) | ✅ fails the build |
+| **Lint** | Code style/quality (`eslint`) | ⚠️ non-blocking for now (see below) |
+| **PDF report smoke-test** | A report still generates correctly — right valuation figure + range, and mileage shown in **miles not km** ([`scripts/test-pdf-report.ts`](scripts/test-pdf-report.ts)) | ✅ fails the build |
+
+### How to use it
+
+You don't trigger CI manually — it runs automatically when you `git push`. In
+practice:
+
+1. **Push your change** as normal.
+2. **Watch the badge / the [Actions tab](https://github.com/chzwscqpcw-commits/car-snapshot/actions).**
+   Green ✅ = all checks passed. Red ❌ = something failed.
+3. **If it's red,** click the failed run to see which step broke and read the
+   log — it tells you exactly what failed (e.g. a type error, or the report
+   test finding a wrong figure). Fix it and push again.
+4. **To check before pushing,** run the same checks locally: `npm run typecheck`
+   and `npm test`.
+
+The live status is also shown on the internal **Data Health dashboard**
+(`/data-health`, under *Build*), so you can see build health alongside data
+freshness.
+
+### Lint is non-blocking (for now)
+
+The repo currently carries a backlog of pre-existing ESLint errors, so the lint
+step runs with `continue-on-error: true` — it **reports** issues in the CI log
+but doesn't fail the build. Once that backlog is cleared, remove
+`continue-on-error` from the Lint step in `ci.yml` to make it a hard gate.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
