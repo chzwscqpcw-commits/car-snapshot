@@ -33,5 +33,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Non-blocking for now: the repo carries ~309 pre-existing ESLint errors,
+      # so this surfaces lint output in the run without failing the build. Flip
+      # to a hard gate (drop continue-on-error) once that count is driven to zero.
+      - name: Lint
+        continue-on-error: true
+        run: npm run lint
+
       - name: PDF report smoke-test
         run: npm run test:pdf
