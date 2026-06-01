@@ -410,3 +410,31 @@ export function combineValuationLayers(
 export function roundTo50(value: number): number {
   return Math.round(value / 50) * 50;
 }
+
+/**
+ * Most recent recorded odometer reading, in miles, for the valuation mileage
+ * adjustment. Don't rely on MOT-test array order — sort by completedDate
+ * descending and take the newest test that actually carries an odometer.
+ * Converts km readings to miles. Returns null when no reading is available.
+ *
+ * SINGLE SOURCE OF TRUTH: both the standalone valuation tool (ValuationResult)
+ * and the in-report valuation (page.tsx) call this, so their mileage — and
+ * therefore their estimate — agree. Previously page.tsx read
+ * motTests[length-1] (the OLDEST test) directly, feeding a stale, far-too-low
+ * mileage into the depreciation model and knocking £1k–£3k off the report's
+ * valuation versus the tool. Keep them on this one helper.
+ */
+export function latestRecordedMileage(
+  tests?: Array<{ completedDate?: string; odometer?: { value: number; unit?: string } }>,
+): number | null {
+  if (!tests || tests.length === 0) return null;
+  const sorted = [...tests].sort(
+    (a, b) =>
+      new Date(b.completedDate ?? 0).getTime() - new Date(a.completedDate ?? 0).getTime(),
+  );
+  const latest = sorted.find((t) => typeof t.odometer?.value === "number");
+  if (!latest?.odometer) return null;
+  let miles = latest.odometer.value;
+  if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
+  return miles;
+}

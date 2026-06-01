@@ -27,6 +27,7 @@ import {
   getMileageAdjustment,
   getDepreciationMultiplier,
   getMakeRetentionMultiplier,
+  latestRecordedMileage,
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
 } from "@/lib/valuation";
@@ -90,7 +91,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         : null,
     [vehicle.yearOfManufacture]
   );
-  const mileage = useMemo(() => latestMileage(vehicle.motTests), [vehicle.motTests]);
+  const mileage = useMemo(() => latestRecordedMileage(vehicle.motTests), [vehicle.motTests]);
   const advisoryCount = useMemo(
     () =>
       vehicle.motTests?.[0]?.rfrAndComments?.filter((r) => r.type === "ADVISORY")
@@ -738,18 +739,6 @@ function Disclaimer() {
 }
 
 /* ─── Helpers ─────────────────────────────────────────────────────────── */
-
-function latestMileage(tests?: MotTest[]): number | null {
-  if (!tests || tests.length === 0) return null;
-  const sorted = [...tests].sort(
-    (a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime()
-  );
-  const latest = sorted.find((t) => t.odometer);
-  if (!latest?.odometer) return null;
-  let miles = latest.odometer.value;
-  if (latest.odometer.unit?.toUpperCase() === "KM") miles = Math.round(miles * 0.621371);
-  return miles;
-}
 
 
 /**

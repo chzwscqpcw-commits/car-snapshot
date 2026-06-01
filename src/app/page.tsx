@@ -171,6 +171,7 @@ import {
   getConditionAdjustment,
   getColourAdjustment,
   combineValuationLayers,
+  latestRecordedMileage,
   type ValuationResult,
   type ConditionInputs,
 } from "@/lib/valuation";
@@ -1084,9 +1085,7 @@ export default function Home() {
       setValuationServerData(null);
       return;
     }
-    const latestMileage = data.motTests?.[data.motTests.length - 1]?.odometer?.value
-      ?? data.motTests?.[0]?.odometer?.value
-      ?? null;
+    const latestMileage = latestRecordedMileage(data.motTests);
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
     const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
 
