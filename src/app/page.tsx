@@ -4496,11 +4496,21 @@ END:VEVENT
                       {valuationResult.confidence === "high" ? "High confidence" :
                        valuationResult.confidence === "medium" ? "Medium confidence" :
                        "Low confidence"}
+                      {valuationResult.estimatedValue
+                        ? ` ±${Math.round(((valuationResult.rangeHigh - valuationResult.rangeLow) / 2 / valuationResult.estimatedValue) * 100)}%`
+                        : ""}
                     </span>
                   </div>
 
-                  <p className="text-3xl font-mono font-bold text-slate-100 mb-1 tracking-tight">
-                    £{valuationResult.rangeLow.toLocaleString()} – £{valuationResult.rangeHigh.toLocaleString()}
+                  <p className="text-3xl font-mono font-bold text-slate-100 mb-0.5 tracking-tight tabular-nums">
+                    £{(valuationResult.estimatedValue ?? Math.round((valuationResult.rangeLow + valuationResult.rangeHigh) / 2)).toLocaleString()}
+                  </p>
+
+                  <p className="text-sm text-slate-400 mb-2">
+                    Typical range:{" "}
+                    <span className="font-semibold text-slate-300 tabular-nums">
+                      £{valuationResult.rangeLow.toLocaleString()} – £{valuationResult.rangeHigh.toLocaleString()}
+                    </span>
                   </p>
 
                   <p className="text-xs text-slate-400 mb-1">
