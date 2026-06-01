@@ -1560,8 +1560,11 @@ export default function Home() {
       model: data.model,
       isOver3Years,
       segment: vehicleSegment,
+      // Anchor the depreciation line to the blended market valuation so it
+      // matches the valuation card (not the raw model).
+      currentValue: valuationResult?.estimatedValue ?? null,
     });
-  }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel, vehicleSegment]);
+  }, [data, vedResult, fuelEconomy, liveAnnualCost, isOver3Years, lookupModel, vehicleSegment, valuationResult]);
 
   // Negotiation helper
   const negotiation = useMemo((): NegotiationResult | null => {

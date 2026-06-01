@@ -59,21 +59,38 @@ export function calculateOwnershipCost(params: {
   model?: string;
   isOver3Years: boolean;
   segment?: VehicleSegment;
+  /** Blended market valuation (the headline estimate). When provided, the
+   *  depreciation line is anchored to it so it matches the valuation card's
+   *  curve rather than the raw model. */
+  currentValue?: number | null;
 }): OwnershipCostResult | null {
-  const { vedAnnualRate, fuelAnnualCost, newPrice, vehicleAge, make, model, isOver3Years, segment } = params;
+  const { vedAnnualRate, fuelAnnualCost, newPrice, vehicleAge, make, model, isOver3Years, segment, currentValue } = params;
 
   const disclaimer =
     "Estimated annual running costs based on available data. " +
     "Excludes insurance, parking, and finance costs. " +
     "Actual costs depend on your driving habits and circumstances.";
 
-  // Calculate depreciation if newPrice available
+  // Calculate depreciation if newPrice available. When we have a blended market
+  // valuation (currentValue), anchor it to that value using the SAME curve the
+  // valuation card shows — so the running-cost depreciation can never contradict
+  // the headline value (the raw model often overstates value for hard-
+  // depreciating cars). Falls back to the raw model when no valuation is given.
   let depreciation: number | null = null;
   if (newPrice && vehicleAge >= 1) {
     const retention = getMakeRetentionMultiplier(make, model);
-    const valueStart = newPrice * getDepreciationMultiplier(vehicleAge - 1) * retention;
-    const valueEnd = newPrice * getDepreciationMultiplier(vehicleAge) * retention;
-    depreciation = Math.round(valueStart - valueEnd);
+    const rawStart = newPrice * getDepreciationMultiplier(vehicleAge - 1) * retention;
+    const rawNow = newPrice * getDepreciationMultiplier(vehicleAge) * retention;
+    if (currentValue != null && rawNow > 0) {
+      // Identical anchoring to DepreciationCurveCard: interpolate the correction
+      // factor from 1.0 (new) to currentValue/rawNow (today) across the history,
+      // so last year's value − this year's value = the curve's final step.
+      const anchorFactor = currentValue / rawNow;
+      const valueStart = rawStart * (1 + (anchorFactor - 1) * ((vehicleAge - 1) / vehicleAge));
+      depreciation = Math.round(valueStart - currentValue);
+    } else {
+      depreciation = Math.round(rawStart - rawNow);
+    }
     if (depreciation < 0) depreciation = 0;
   } else if (newPrice && vehicleAge === 0) {
     // First year depreciation

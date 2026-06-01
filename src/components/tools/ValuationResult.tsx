@@ -781,8 +781,32 @@ function DepreciationCurveCard({
   const totalYears = HISTORY + FORECAST + 1; // +1 for year 0 (new)
   const retention = getMakeRetentionMultiplier(make, model);
 
+  const rawValue = (y: number) =>
+    Math.round(newPrice * getDepreciationMultiplier(y) * retention);
+  const rawNow = rawValue(HISTORY); // the model's raw "today" value (pre-market)
+
+  // Anchor the curve to the blended headline estimate. The generic depreciation
+  // model often disagrees with the live market (e.g. premium German diesels
+  // depreciate harder than average), which left the curve's "today" bar
+  // contradicting the headline figure. We bend the curve so the current year
+  // lands exactly on our actual estimate: the new-price anchor (year 0) is
+  // preserved and the correction factor is interpolated across the history
+  // years, so the curve gets steeper/shallower to reflect how THIS car really
+  // depreciated — and now agrees with the headline. Forecast years extend
+  // forward from the anchored value at the model's rate. Falls back to the raw
+  // model when no estimate is available.
+  const anchorFactor =
+    currentEstimate != null && rawNow > 0 ? currentEstimate / rawNow : 1;
+
   const rows = Array.from({ length: totalYears }, (_, y) => {
-    const value = Math.round(newPrice * getDepreciationMultiplier(y) * retention);
+    const raw = rawValue(y);
+    let value: number;
+    if (y <= HISTORY) {
+      const t = HISTORY === 0 ? 1 : y / HISTORY; // 0 at new → 1 at today
+      value = Math.round(raw * (1 + (anchorFactor - 1) * t));
+    } else {
+      value = Math.round((currentEstimate ?? raw) * (raw / (rawNow || 1)));
+    }
     return {
       year: y,
       value,
@@ -803,7 +827,7 @@ function DepreciationCurveCard({
         </span>
       </div>
       <p className="text-xs text-slate-500 mb-4">
-        Estimated value at each year of ownership from new. Current year highlighted.
+        Estimated value each year of ownership, anchored to today&apos;s market estimate. Current year highlighted.
       </p>
 
       <div className="space-y-2">
@@ -853,10 +877,11 @@ function DepreciationCurveCard({
 
       {currentEstimate !== null && (
         <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
-          The headline value of £{currentEstimate.toLocaleString("en-GB")} is what we
-          actually estimate after combining this depreciation curve with live market
-          listings and condition adjustments. The forecast rows assume no major market
-          shift, model discontinuation or accident history.
+          The current-year bar is our headline estimate of £{currentEstimate.toLocaleString("en-GB")} —
+          the curve is anchored to it (and to the original new price), so the earlier
+          years show this car&apos;s likely path to today and the later years project
+          forward. Forecasts assume no major market shift, model discontinuation or
+          accident history.
         </p>
       )}
     </section>
