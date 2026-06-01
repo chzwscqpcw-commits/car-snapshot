@@ -1,5 +1,14 @@
 import type { jsPDF } from "jspdf";
 import { drawIcon, drawToneIcon, toneFromAccent, drawBoltMark, drawArc, type Tone } from "./pdf-icons";
+import { odometerMiles } from "./valuation";
+
+/** MOT odometer reading in miles for display — converts km→mi (some imported
+ *  vehicles record in km) using the SAME shared helper as the website, so the
+ *  PDF can never overstate mileage relative to the live tools. Returns null
+ *  when there's no usable reading. */
+function odoMiles(odometer?: { value?: number; unit?: string } | null): number | null {
+  return odometerMiles(odometer);
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -729,7 +738,7 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     doc.setFont("helvetica", "normal");
     const summaryParts = [
       formatDate(latest.completedDate),
-      latest.odometer?.value ? `${formatMileage(latest.odometer.value)} mi` : null,
+      odoMiles(latest.odometer) != null ? `${formatMileage(odoMiles(latest.odometer))} mi` : null,
       advisoryCount > 0 ? `${advisoryCount} advisor${advisoryCount !== 1 ? "ies" : "y"}` : null,
       defectCount > 0 ? `${defectCount} defect${defectCount !== 1 ? "s" : ""}` : null,
     ].filter(Boolean);
@@ -794,7 +803,7 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
 
   for (let i = 0; i < mileageEntries.length; i++) {
     const entry = mileageEntries[i];
-    const mileage = entry.odometer!.value;
+    const mileage = odoMiles(entry.odometer) ?? 0;
     const entryDate = new Date(entry.completedDate);
 
     let change = "";
@@ -804,7 +813,7 @@ function renderMileageProgression(doc: jsPDF, input: ReportInput, y: number): nu
 
     if (i > 0) {
       const prev = mileageEntries[i - 1];
-      const prevMileage = prev.odometer!.value;
+      const prevMileage = odoMiles(prev.odometer) ?? 0;
       const prevDate = new Date(prev.completedDate);
       const diff = mileage - prevMileage;
       const daysBetween = (entryDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24);
@@ -926,7 +935,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
 
       if (test.odometer?.value) {
         doc.text(
-          `${formatMileage(test.odometer.value)} mi`,
+          `${formatMileage(odoMiles(test.odometer))} mi`,
           MARGIN + CONTENT_W - 5,
           y + 4.5,
           { align: "right" },
@@ -936,7 +945,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
       if (test.motTestNumber) {
         doc.setFontSize(FONT.tiny);
         setTextColor(doc, C.secondaryText);
-        const mileageTextW = test.odometer?.value ? doc.getTextWidth(`${formatMileage(test.odometer.value)} mi`) + 6 : 0;
+        const mileageTextW = test.odometer?.value ? doc.getTextWidth(`${formatMileage(odoMiles(test.odometer))} mi`) + 6 : 0;
         doc.text(`Ref: ${test.motTestNumber}`, MARGIN + CONTENT_W - 5 - mileageTextW, y + 4.5, { align: "right" });
       }
 
@@ -970,7 +979,7 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(FONT.body);
     if (test.odometer?.value) {
-      doc.text(`${formatMileage(test.odometer.value)} miles`, MARGIN + CONTENT_W - 7, y + 3, { align: "right" });
+      doc.text(`${formatMileage(odoMiles(test.odometer))} miles`, MARGIN + CONTENT_W - 7, y + 3, { align: "right" });
     }
 
     if (test.motTestNumber) {
@@ -1450,30 +1459,50 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
 
   // Pre-compute first-block height and reserve it with the header so the
   // title can never widow at the bottom of a page.
-  const headlineH = 20;
+  const headlineH = 24;
   y = startSection(doc, y, "Estimated Value", headlineH + 4);
 
-  // Headline price card with mono \u00A3 range
+  // Headline card mirrors the website: a single estimated market value as the
+  // hero figure, with the typical range on the line beneath (not the range as
+  // the headline). estimatedValue is the same blended number the live tool
+  // shows; fall back to the range midpoint only if it is somehow absent.
   drawRoundedRect(doc, MARGIN, y, CONTENT_W, headlineH, 3, C.cardBg, C.cardBorder);
   setFill(doc, C.cyan);
   doc.rect(MARGIN, y + 1.5, CARD_ACCENT_W, headlineH - 3, "F");
 
-  doc.setFontSize(18);
+  const estValue =
+    valuation!.estimatedValue ?? Math.round((valuation!.rangeLow + valuation!.rangeHigh) / 2);
+
+  // Hero figure
+  doc.setFontSize(20);
   setTextColor(doc, C.headingText);
   doc.setFont("courier", "bold");
-  doc.text(`\u00A3${valuation!.rangeLow.toLocaleString()} \u2013 \u00A3${valuation!.rangeHigh.toLocaleString()}`, MARGIN + 8, y + 13);
+  doc.text(`£${estValue.toLocaleString()}`, MARGIN + 8, y + 12);
   doc.setFont("helvetica", "normal");
 
-  // Confidence badge — vertically aligned to taller headline card
+  // Typical range, beneath the figure
+  doc.setFontSize(FONT.small);
+  setTextColor(doc, C.secondaryText);
+  doc.text(
+    `Typical range: £${valuation!.rangeLow.toLocaleString()} – £${valuation!.rangeHigh.toLocaleString()}`,
+    MARGIN + 8,
+    y + 19,
+  );
+
+  // Confidence badge with range percent (matches the website confidence chip)
   const confLabel = valuation!.confidence === "high" ? "High" : valuation!.confidence === "medium" ? "Medium" : "Low";
   const confColor = valuation!.confidence === "high" ? C.emerald : valuation!.confidence === "medium" ? C.amber : C.red;
+  const halfRange = (valuation!.rangeHigh - valuation!.rangeLow) / 2;
+  const rangePct = estValue > 0 ? Math.round((halfRange / estValue) * 100) : null;
   doc.setFontSize(FONT.small);
   doc.setFont("helvetica", "bold");
-  const confText = `${confLabel} confidence`;
+  const confText =
+    rangePct != null ? `${confLabel} confidence  ±${rangePct}%` : `${confLabel} confidence`;
   const confW = doc.getTextWidth(confText) + 4;
-  drawRoundedRect(doc, MARGIN + CONTENT_W - 5 - confW, y + 7.5, confW, 5, 1.5, confColor);
+  drawRoundedRect(doc, MARGIN + CONTENT_W - 5 - confW, y + 4, confW, 5, 1.5, confColor);
   setTextColor(doc, C.white);
-  doc.text(confText, MARGIN + CONTENT_W - 5 - confW / 2, y + 11, { align: "center" });
+  doc.text(confText, MARGIN + CONTENT_W - 5 - confW / 2, y + 7.5, { align: "center" });
+  doc.setFont("helvetica", "normal");
 
   y += headlineH + 3;
 

@@ -2773,7 +2773,8 @@ END:VEVENT
     // ── VALUATION ──
     if (valuationResult) {
       lines.push(sep, "VEHICLE VALUATION", sep, "");
-      lines.push(`Estimated Range:     £${valuationResult.rangeLow.toLocaleString()} – £${valuationResult.rangeHigh.toLocaleString()}`);
+      lines.push(`Estimated Value:     £${valuationResult.estimatedValue.toLocaleString()}`);
+      lines.push(`Typical Range:       £${valuationResult.rangeLow.toLocaleString()} – £${valuationResult.rangeHigh.toLocaleString()}`);
       const confLabel = valuationResult.confidence === "high" ? "High" : valuationResult.confidence === "medium" ? "Medium" : "Low";
       lines.push(`Confidence:          ${confLabel}`);
       lines.push(`Sources:             ${valuationResult.sources.join(", ")}`);
