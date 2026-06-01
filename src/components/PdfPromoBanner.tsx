@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { PoundSterling, ChevronRight, Wrench } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 
@@ -23,6 +24,18 @@ export default function PdfPromoBanner({
   makeModel?: string;
 }) {
   const reg = (regNumber ?? "").toUpperCase();
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  // The banner only mounts after a PDF download (showPdfPromo trigger). The
+  // download button can be far up the report, so scroll the banner into view
+  // to make sure the engaged-moment offer is actually seen. Respect
+  // reduced-motion. Runs once on mount.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+  }, []);
 
   function bookingHref(type: "mot" | "full") {
     const qs = new URLSearchParams({ type, source: "pdf_promo" });
@@ -31,7 +44,7 @@ export default function PdfPromoBanner({
   }
 
   return (
-    <div className="rounded-xl border border-emerald-700/50 bg-gradient-to-br from-emerald-950/60 to-cyan-950/40 p-5 sm:p-6">
+    <div ref={ref} className="scroll-mt-24 rounded-xl border border-emerald-700/50 bg-gradient-to-br from-emerald-950/60 to-cyan-950/40 p-5 sm:p-6">
       <div className="flex items-start gap-3">
         <PoundSterling className="h-6 w-6 shrink-0 text-emerald-400 mt-0.5" aria-hidden="true" />
         <div className="min-w-0 flex-1">
