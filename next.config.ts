@@ -74,6 +74,16 @@ const nextConfig: NextConfig = {
         },
       ],
     },
+    {
+      // Generated OG/social preview images are assets referenced in meta
+      // tags, not pages. Tell Google not to index them as pages — this clears
+      // the "Crawled - currently not indexed" noise they create. Done via a
+      // noindex header rather than a robots.txt Disallow on purpose: social
+      // scrapers (Twitterbot/LinkedInBot) must still be able to FETCH the
+      // image, and X-Robots-Tag noindex doesn't block the fetch.
+      source: "/:path*/opengraph-image",
+      headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+    },
   ],
 };
 

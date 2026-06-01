@@ -7,6 +7,13 @@
  * - /preview/     — internal screenshot/preview routes with fixture data,
  *                   explicitly tagged "not linked, robots-noindex" in code
  * - /demo/        — affiliate-partner demo previews behind a password
+ * - /*?reg=       — homepage reg-lookup deep-links (e.g. /?reg=AB12CDE and the
+ *                   SearchAction schema's literal /?reg={search_term_string}).
+ *                   Thin, near-duplicate, effectively-infinite param URLs that
+ *                   were piling up in "Crawled - currently not indexed" and
+ *                   wasting crawl budget. Blocking them lets the crawler reach
+ *                   real content sooner; every canonical page is param-free, so
+ *                   nothing indexable is lost.
  *
  * AI crawlers (GPTBot, ChatGPT-User, ClaudeBot, PerplexityBot etc.) are
  * explicitly welcomed at the top level so the site shows up in LLM
@@ -14,7 +21,7 @@
  * default to blocked.
  */
 
-const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/"];
+const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/", "/*?reg="];
 
 const AI_CRAWLERS = [
   "GPTBot",
