@@ -2,6 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { getMarketCheckValuation } from "@/lib/marketcheck";
 
 // ── eBay OAuth token cache ──────────────────────────────────────────────────
 
@@ -583,6 +584,12 @@ type ValuationResponse = {
   ebayYearTolerance: number | null;
   cacheMedian: number | null;
   cacheEntryCount: number;
+  // MarketCheck UK (prototype, flag-gated) — second used-comparable signal.
+  marketcheckMedian: number | null;
+  marketcheckQ1: number | null;
+  marketcheckQ3: number | null;
+  marketcheckListingCount: number;
+  marketcheckSource: "cache" | "api" | null;
   sources: string[];
   debug?: any;
 };
@@ -623,14 +630,21 @@ export async function GET(
     // Always hit both eBay AND cache. eBay is the freshest signal; cache is
     // a confirmation/fallback. Previously we short-circuited to cache when
     // it had ≥3 entries, which let data go stale.
-    const [cacheResult, { result: ebayResult, debug: ebayDebug }] = await Promise.all([
+    const [cacheResult, { result: ebayResult, debug: ebayDebug }, mcOutcome] = await Promise.all([
       checkCache(make, model, year),
       fetchEbayComparables(make, model, year, fuelType, depEstimate, debug),
+      // Flag-gated; resolves to {ok:false} (no throw) when disabled/capped. The
+      // free-tier monthly cap and TTL cache live inside this call.
+      getMarketCheckValuation(make, model, year),
     ]);
+
+    const marketcheck = mcOutcome.ok ? mcOutcome.aggregate : null;
+    const marketcheckSource = mcOutcome.ok ? mcOutcome.source : null;
 
     const sources: string[] = [];
     if (ebayResult) sources.push("ebay");
     if (cacheResult) sources.push("cache");
+    if (marketcheck) sources.push("marketcheck");
 
     const colourAdj = colourStr ? parseFloat(colourStr) : undefined;
 
@@ -677,12 +691,18 @@ export async function GET(
       ebayYearTolerance: ebayResult?.yearTolerance ?? null,
       cacheMedian: cacheResult?.median ?? null,
       cacheEntryCount: cacheResult?.entryCount ?? 0,
+      marketcheckMedian: marketcheck?.median ?? null,
+      marketcheckQ1: marketcheck?.q1 ?? null,
+      marketcheckQ3: marketcheck?.q3 ?? null,
+      marketcheckListingCount: marketcheck?.listingCount ?? 0,
+      marketcheckSource,
       sources,
     };
 
     if (debug) {
       response.debug = {
         ...(ebayDebug || {}),
+        marketcheck: { reason: mcOutcome.ok ? mcOutcome.source : mcOutcome.reason, aggregate: marketcheck },
         rejectedByTitle: ebayResult?.rejectedByTitle,
         rejectedByPriceFloor: ebayResult?.rejectedByPriceFloor,
         rejectedByIqr: ebayResult?.rejectedByIqr,
