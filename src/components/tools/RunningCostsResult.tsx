@@ -39,6 +39,7 @@ import {
   type NcdBand,
   type OccupationBand,
 } from "@/lib/insurance-estimate";
+import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -134,6 +135,11 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     );
   }, [fuel, milesPerYear]);
 
+  // Shared valuation pipeline — gives us the same blended estimate the report
+  // and the valuation tool use, so the depreciation line anchors to it (instead
+  // of the raw model) and matches across surfaces.
+  const { estimatedValue: blendedValue } = useVehicleValuation(vehicle);
+
   const ownership = useMemo<OwnershipCostResult | null>(() => {
     if (!vehicle.yearOfManufacture) return null;
     const vehicleAge = new Date().getFullYear() - vehicle.yearOfManufacture;
@@ -148,8 +154,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       model: vehicle.model,
       isOver3Years,
       segment,
+      currentValue: blendedValue,
     });
-  }, [vehicle, ved, scaledFuelCost, segment]);
+  }, [vehicle, ved, scaledFuelCost, segment, blendedValue]);
 
   // Insurance (excluded by ownership-cost lib; we layer it on here)
   const insurance = useMemo<InsuranceEstimate>(

@@ -31,6 +31,7 @@ import {
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
 } from "@/lib/valuation";
+import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick, trackEvent } from "@/lib/tracking";
@@ -85,10 +86,14 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const [condition, setCondition] = useState<ConditionInputs | null>(null);
 
   // ── Derived inputs ─────────────────────────────────────────────────────
-  const newPrice = useMemo(
-    () => lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model),
-    [vehicle.make, vehicle.model]
-  );
+  const newPrice = useMemo(() => {
+    if (!vehicle.make || !vehicle.model) return null;
+    // Expanded/parsed model (e.g. "320d" → "3 Series") for the new-price lookup,
+    // matching the full report so the same car finds the same new price.
+    const parsed = parseModel(vehicle.model, vehicle.make);
+    const lookupModel = expandBaseModelForLookup(vehicle.make, parsed);
+    return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model);
+  }, [vehicle.make, vehicle.model]);
   const age = useMemo(
     () =>
       vehicle.yearOfManufacture
