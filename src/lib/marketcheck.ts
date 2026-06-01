@@ -53,10 +53,18 @@
  *       returning calls into reserved;
  *     return reserved is not null;
  *   end; $$;
+ *
+ *   -- These tables are written/read ONLY by the server via the service-role
+ *   -- client (which bypasses RLS), so enable RLS with NO policies — that locks
+ *   -- them from the public anon key (important: an open marketcheck_usage row
+ *   -- could be tampered with to bypass the spend cap). In the Supabase SQL
+ *   -- editor choose "Run and enable RLS"; or run:
+ *   alter table marketcheck_cache enable row level security;
+ *   alter table marketcheck_usage enable row level security;
  * ───────────────────────────────────────────────────────────────────────────
  */
 
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServerRole } from "@/lib/supabaseServer";
 
 /** Max LIVE API calls per calendar month. MarketCheck Starter is pay-per-call
  *  at £0.0010/call (the first 1,000 are a one-time free credit MarketCheck
@@ -294,7 +302,7 @@ export async function fetchListingsLive(
 const defaultDeps: MarketCheckDeps = {
   async readCache(make, model, year) {
     try {
-      const sb = supabaseServer();
+      const sb = supabaseServerRole();
       const ttlAgo = new Date(
         Date.now() - MARKETCHECK_CACHE_TTL_DAYS * 24 * 60 * 60 * 1000,
       ).toISOString();
@@ -325,7 +333,7 @@ const defaultDeps: MarketCheckDeps = {
   async reserveCall(month, limit) {
     // Atomic + fail-closed: any error → false (don't call the API).
     try {
-      const sb = supabaseServer();
+      const sb = supabaseServerRole();
       const { data, error } = await sb.rpc("reserve_marketcheck_call", {
         p_month: month,
         p_limit: limit,
@@ -349,7 +357,7 @@ const defaultDeps: MarketCheckDeps = {
 
   async writeCache(make, model, year, agg) {
     try {
-      const sb = supabaseServer();
+      const sb = supabaseServerRole();
       await sb.from("marketcheck_cache").insert({
         make: make.toUpperCase(),
         model: model.toUpperCase(),
