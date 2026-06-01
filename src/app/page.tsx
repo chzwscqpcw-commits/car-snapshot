@@ -895,7 +895,7 @@ export default function Home() {
   const [recentGuides, setRecentGuides] = useState<{ slug: string; title: string; description: string; date: string; readingTime: number }[]>([]);
   const [recalls, setRecalls] = useState<Recall[]>([]);
   const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
-  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayQ1Price: number | null; ebayQ3Price: number | null; ebayListingCount: number; ebayMinPrice: number | null; ebayMaxPrice: number | null; ebayTotalListings: number | null; ebayDominantTransmission: string | null; ebayDominantBodyType: string | null; ebayYearWidened: boolean; cacheMedian: number | null; cacheEntryCount: number; sources: string[] } | null>(null);
+  const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayQ1Price: number | null; ebayQ3Price: number | null; ebayListingCount: number; ebayMinPrice: number | null; ebayMaxPrice: number | null; ebayTotalListings: number | null; ebayDominantTransmission: string | null; ebayDominantBodyType: string | null; ebayYearWidened: boolean; cacheMedian: number | null; cacheEntryCount: number; marketcheckMedian: number | null; marketcheckQ1: number | null; marketcheckQ3: number | null; marketcheckListingCount: number; marketcheckSource: "cache" | "api" | null; sources: string[] } | null>(null);
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
@@ -1519,6 +1519,10 @@ export default function Home() {
       valuationServerData?.ebayYearWidened ?? false,
       valuationServerData?.ebayQ1Price ?? null,
       valuationServerData?.ebayQ3Price ?? null,
+      valuationServerData?.marketcheckMedian ?? null,
+      valuationServerData?.marketcheckListingCount ?? 0,
+      valuationServerData?.marketcheckQ1 ?? null,
+      valuationServerData?.marketcheckQ3 ?? null,
     );
 
     if (result) {

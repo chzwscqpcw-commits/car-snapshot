@@ -53,6 +53,11 @@ interface ServerValuation {
   ebayYearWidened: boolean;
   cacheMedian: number | null;
   cacheEntryCount: number;
+  marketcheckMedian: number | null;
+  marketcheckQ1: number | null;
+  marketcheckQ3: number | null;
+  marketcheckListingCount: number;
+  marketcheckSource: "cache" | "api" | null;
   sources: string[];
 }
 
@@ -178,7 +183,11 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       serverData?.ebayDominantBodyType ?? null,
       serverData?.ebayYearWidened ?? false,
       serverData?.ebayQ1Price ?? null,
-      serverData?.ebayQ3Price ?? null
+      serverData?.ebayQ3Price ?? null,
+      serverData?.marketcheckMedian ?? null,
+      serverData?.marketcheckListingCount ?? 0,
+      serverData?.marketcheckQ1 ?? null,
+      serverData?.marketcheckQ3 ?? null
     );
     if (result) {
       result.mileageAdjustmentPercent = getMileageAdjustment(mileage, age ?? 0);
@@ -397,7 +406,8 @@ function SourceBreakdown({
   serverData: ServerValuation | null;
   condition: ConditionInputs | null;
 }) {
-  const liveCount = serverData?.ebayListingCount ?? 0;
+  // Combined live comparable pool — eBay + MarketCheck (the two fused signals).
+  const liveCount = (serverData?.ebayListingCount ?? 0) + (serverData?.marketcheckListingCount ?? 0);
   const cacheCount = serverData?.cacheEntryCount ?? 0;
   const hasLive = liveCount > 0;
   const hasCache = cacheCount > 0;

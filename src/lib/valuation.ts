@@ -278,6 +278,13 @@ export function combineValuationLayers(
   ebayYearWidened: boolean,
   ebayQ1Price: number | null,
   ebayQ3Price: number | null,
+  // MarketCheck UK — second live asking-price signal, fused with eBay below.
+  // Optional/defaulted so existing callers stay valid and the maths is
+  // unchanged when MarketCheck is absent.
+  marketcheckMedian: number | null = null,
+  marketcheckCount: number = 0,
+  marketcheckQ1: number | null = null,
+  marketcheckQ3: number | null = null,
 ): ValuationResult | null {
   if (!depreciationEstimate) return null;
 
@@ -294,35 +301,65 @@ export function combineValuationLayers(
   let fallbackPercent: number;
   const sources: string[] = ["depreciation model"];
 
-  const totalOnMarket = ebayTotalListings || 0;
-
-  if (ebayMedian && cacheMedian) {
-    // All three sources — reduce eBay weight when year widened
-    if (ebayYearWidened) {
-      estimatedValue = depreciationEstimate * 0.30 + ebayMedian * 0.30 + cacheMedian * 0.40;
+  // ── Fuse the two live asking-price signals (eBay + MarketCheck) into one ──
+  // market signal, weighted by listing count so the larger/cleaner source
+  // dominates without hard-coded favouritism (count-weighted fusion). MarketCheck
+  // is year-exact dealer forecourt stock; eBay is mixed private/auction and is
+  // sometimes year-widened. When MarketCheck carries at least as many listings,
+  // treat the blended signal as year-exact (it is) and use its tighter IQR.
+  const ebCount = ebayListingCount || 0;
+  const mcCount = marketcheckCount || 0;
+  let marketMedian: number | null;
+  let marketWidened: boolean;
+  let rangeQ1: number | null;
+  let rangeQ3: number | null;
+  let rangeIqrCount: number;
+  if (ebayMedian != null && marketcheckMedian != null) {
+    const w = ebCount + mcCount || 1;
+    marketMedian = Math.round((ebayMedian * ebCount + marketcheckMedian * mcCount) / w);
+    marketWidened = ebayYearWidened && mcCount < ebCount;
+    if (mcCount >= ebCount && marketcheckQ1 != null && marketcheckQ3 != null) {
+      rangeQ1 = marketcheckQ1; rangeQ3 = marketcheckQ3; rangeIqrCount = mcCount;
     } else {
-      estimatedValue = depreciationEstimate * 0.20 + ebayMedian * 0.40 + cacheMedian * 0.40;
+      rangeQ1 = ebayQ1Price; rangeQ3 = ebayQ3Price; rangeIqrCount = ebCount;
+    }
+  } else if (marketcheckMedian != null) {
+    marketMedian = marketcheckMedian; marketWidened = false;
+    rangeQ1 = marketcheckQ1; rangeQ3 = marketcheckQ3; rangeIqrCount = mcCount;
+  } else if (ebayMedian != null) {
+    marketMedian = ebayMedian; marketWidened = ebayYearWidened;
+    rangeQ1 = ebayQ1Price; rangeQ3 = ebayQ3Price; rangeIqrCount = ebCount;
+  } else {
+    marketMedian = null; marketWidened = ebayYearWidened;
+    rangeQ1 = ebayQ1Price; rangeQ3 = ebayQ3Price; rangeIqrCount = ebCount;
+  }
+  // Combined live comparable pool (eBay total + MarketCheck listings)
+  const totalOnMarket = (ebayTotalListings || 0) + mcCount;
+  const liveCount = ebCount + mcCount;
+  const marketLabel = `${totalOnMarket > liveCount ? totalOnMarket : liveCount} similar vehicle${liveCount !== 1 ? "s" : ""} on the market`;
+
+  if (marketMedian && cacheMedian) {
+    // All three sources — reduce market weight when year widened
+    if (marketWidened) {
+      estimatedValue = depreciationEstimate * 0.30 + marketMedian * 0.30 + cacheMedian * 0.40;
+    } else {
+      estimatedValue = depreciationEstimate * 0.20 + marketMedian * 0.40 + cacheMedian * 0.40;
     }
     confidence = totalOnMarket >= 100 ? "high" : "medium";
     fallbackPercent = confidence === "high" ? 8 : 12;
-    sources.push(
-      `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
-      "recent valuations",
-    );
-  } else if (ebayMedian) {
-    // Depreciation + eBay — give depreciation more weight when year widened
-    if (ebayYearWidened) {
-      estimatedValue = depreciationEstimate * 0.55 + ebayMedian * 0.45;
+    sources.push(marketLabel, "recent valuations");
+  } else if (marketMedian) {
+    // Depreciation + market — give depreciation more weight when year widened
+    if (marketWidened) {
+      estimatedValue = depreciationEstimate * 0.55 + marketMedian * 0.45;
       confidence = totalOnMarket >= 5 ? "medium" : "low";
       fallbackPercent = confidence === "medium" ? 15 : 18;
     } else {
-      estimatedValue = depreciationEstimate * 0.35 + ebayMedian * 0.65;
+      estimatedValue = depreciationEstimate * 0.35 + marketMedian * 0.65;
       confidence = totalOnMarket >= 100 ? "high" : totalOnMarket >= 20 ? "medium" : "low";
       fallbackPercent = confidence === "high" ? 8 : 12;
     }
-    sources.push(
-      `${totalOnMarket > ebayListingCount ? totalOnMarket : ebayListingCount} similar vehicle${ebayListingCount !== 1 ? "s" : ""} on the market`,
-    );
+    sources.push(marketLabel);
   } else if (cacheMedian) {
     // Depreciation + cache
     estimatedValue = depreciationEstimate * 0.25 + cacheMedian * 0.75;
@@ -337,17 +374,17 @@ export function combineValuationLayers(
   }
 
   // Widened year search caps confidence at medium
-  if (ebayYearWidened && confidence === "high") {
+  if (marketWidened && confidence === "high") {
     confidence = "medium";
   }
 
   // ── Compute range (IQR path vs fallback percentage) ──────────────────────
   let rangePercent: number;
-  const hasIQR = ebayQ1Price != null && ebayQ3Price != null && ebayListingCount >= 5;
-
-  if (hasIQR) {
+  // Direct null-check (not an aliased boolean) so TS narrows the reassignable
+  // rangeQ1/rangeQ3 inside the block.
+  if (rangeQ1 != null && rangeQ3 != null && rangeIqrCount >= 5) {
     // IQR half-width as percentage of estimatedValue
-    const iqrHalfRange = (ebayQ3Price - ebayQ1Price) / 2;
+    const iqrHalfRange = (rangeQ3 - rangeQ1) / 2;
     const iqrPercent = Math.max((iqrHalfRange / estimatedValue) * 100, 3); // min 3% half-range
 
     // Blend IQR with fallback by confidence
@@ -397,9 +434,9 @@ export function combineValuationLayers(
     ebayMaxPrice,
     ebayDominantTransmission,
     ebayDominantBodyType,
-    ebayYearWidened,
-    ebayQ1Price: ebayQ1Price ?? null,
-    ebayQ3Price: ebayQ3Price ?? null,
+    ebayYearWidened: marketWidened,
+    ebayQ1Price: rangeQ1 ?? null,
+    ebayQ3Price: rangeQ3 ?? null,
     marketSupply,
     disclaimer,
   };
