@@ -5,11 +5,11 @@ import {
   getMakeRetentionMultiplier,
 } from "@/lib/valuation";
 import { lookupBodyType } from "@/lib/body-type";
+import { ASSUMED_ANNUAL_MILES } from "@/lib/fuel-economy";
 import newPricesData from "@/data/new-prices.json";
 import evSpecsData from "@/data/ev-specs.json";
 
 const MOT_FEE = 54.85;
-const ASSUMED_ANNUAL_MILES = 8000;
 
 // Annual maintenance base costs by vehicle segment (servicing, wear items, minor repairs)
 const SEGMENT_MAINTENANCE_BASE: Record<string, number> = {

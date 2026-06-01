@@ -38,7 +38,10 @@ const FUEL_PRICES: Record<string, number> = {
   default: Math.round((_latest.petrol + _latest.diesel) / 2),
 };
 
-export const ASSUMED_ANNUAL_MILES = 8000;
+// DfT 2025 average annual mileage. SINGLE SOURCE OF TRUTH for the baseline
+// mileage used across fuel cost, cost-per-mile and ownership cost, so every
+// surface (the report + the standalone running-costs tool) assumes the same.
+export const ASSUMED_ANNUAL_MILES = 7400;
 const LITRES_PER_GALLON = 4.546;
 
 function normalizeStr(s: string): string {

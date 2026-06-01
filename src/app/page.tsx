@@ -93,13 +93,15 @@ function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 3);
 
-  // Days until next MOT - use the FIRST test (newest) not the last
+  // Days until next MOT - use the FIRST test (newest) not the last.
+  // Same calendar-day calc as daysUntil() / the standalone tools.
   const latestTest = motTests[0];
   let daysUntilExpiry = 0;
   if (latestTest.expiryDate) {
     const expiryDate = new Date(latestTest.expiryDate);
-    const today = new Date();
-    daysUntilExpiry = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (!Number.isNaN(expiryDate.getTime())) {
+      daysUntilExpiry = calendarDaysBetween(new Date(), expiryDate);
+    }
   }
 
   return {
@@ -298,18 +300,26 @@ function parseISODate(iso?: string) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+// Calendar-day difference (UTC, date-only, rounded) — matches the standalone
+// tools' daysBetween() so "days left / days ago" agree across surfaces, and is
+// timezone-stable (counts whole days, not hours).
+const DAY_MS = 1000 * 60 * 60 * 24;
+function calendarDaysBetween(from: Date, to: Date): number {
+  const start = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate());
+  const end = Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate());
+  return Math.round((end - start) / DAY_MS);
+}
+
 function daysSince(iso?: string) {
   const d = parseISODate(iso);
   if (!d) return null;
-  const diff = Date.now() - d.getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
+  return calendarDaysBetween(d, new Date());
 }
 
 function daysUntil(iso?: string) {
   const d = parseISODate(iso);
   if (!d) return null;
-  const diff = d.getTime() - Date.now();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
+  return calendarDaysBetween(new Date(), d);
 }
 
 function getTaxStatusColor(taxStatus?: string, taxDueDate?: string) {
