@@ -32,7 +32,7 @@ import {
 } from "@/lib/valuation";
 import newPricesData from "@/data/new-prices.json";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackPartnerClick } from "@/lib/tracking";
+import { trackPartnerClick, trackEvent } from "@/lib/tracking";
 
 interface ValuationResultProps {
   vrm: string;
@@ -697,6 +697,26 @@ function BmgHook({ vrm }: { vrm: string }) {
             Compare service prices for {vrm}
             <ArrowRight className="h-3 w-3" />
           </a>
+          {/* Secondary path: valuation visitors arrive via "what's my car
+              worth" intent, but most own a car that needs an annual MOT.
+              Bridge that audience into the MOT booking flow with the reg
+              pre-filled. source=valuation_result keeps attribution distinct
+              from the service hook above. */}
+          <p className="mt-3 text-xs text-slate-400">
+            Just need an MOT?{" "}
+            <a
+              href={`/booking?vrm=${encodeURIComponent(vrm)}&type=mot&source=valuation_result`}
+              onClick={() =>
+                trackEvent("cheap_mot_compare_click", {
+                  has_reg: true,
+                  source: "valuation_result",
+                })
+              }
+              className="font-semibold text-cyan-300 underline-offset-2 hover:underline"
+            >
+              Compare cheap MOT prices for {vrm} &rarr;
+            </a>
+          </p>
         </div>
       </div>
     </section>

@@ -91,6 +91,12 @@ const CHECKS: Tool[] = [
 
 const UTILITIES: Tool[] = [
   {
+    title: "Cheap MOT — compare prices",
+    blurb: "Compare local garage MOT prices — many beat the £54.85 legal maximum.",
+    href: "/cheap-mot",
+    icon: PoundSterling,
+  },
+  {
     title: "Free MOT reminder",
     blurb: "We email you 28 and 7 days before expiry. No signup, no spam.",
     href: "/mot-reminder",
