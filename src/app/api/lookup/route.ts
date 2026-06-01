@@ -33,10 +33,22 @@ type MOTTest = {
   }>;
 };
 
-function transformMotTest(apiTest: any): MOTTest {
+type RawMotTest = {
+  completedDate?: string;
+  testResult?: string;
+  expiryDate?: string;
+  motTestNumber?: string;
+  odometerValue?: string;
+  odometerUnit?: string;
+  defects?: Array<{ type?: string; text?: string }>;
+  advisories?: Array<{ advisoryText?: string; text?: string }>;
+  comments?: Array<{ commentText?: string; text?: string }>;
+};
+
+function transformMotTest(apiTest: RawMotTest): MOTTest {
   const transformed: MOTTest = {
-    completedDate: apiTest.completedDate,
-    testResult: apiTest.testResult || "NO DETAILS HELD",
+    completedDate: apiTest.completedDate ?? "",
+    testResult: (apiTest.testResult as MOTTest["testResult"]) || "NO DETAILS HELD",
     expiryDate: apiTest.expiryDate,
     motTestNumber: apiTest.motTestNumber,
   };
@@ -53,7 +65,7 @@ function transformMotTest(apiTest: any): MOTTest {
   const rfrAndComments: Array<{ text: string; type: "COMMENT" | "DEFECT" | "ADVISORY" }> = [];
 
   if (Array.isArray(apiTest.defects)) {
-    apiTest.defects.forEach((defect: any) => {
+    apiTest.defects.forEach((defect) => {
       // Use the defect's type field to categorize
       let commentType: "COMMENT" | "DEFECT" | "ADVISORY" = "DEFECT";
       
@@ -71,7 +83,7 @@ function transformMotTest(apiTest: any): MOTTest {
   }
 
   if (Array.isArray(apiTest.advisories)) {
-    apiTest.advisories.forEach((advisory: any) => {
+    apiTest.advisories.forEach((advisory) => {
       rfrAndComments.push({
         text: advisory.advisoryText || advisory.text || "Unknown advisory",
         type: "ADVISORY",
@@ -80,7 +92,7 @@ function transformMotTest(apiTest: any): MOTTest {
   }
 
   if (Array.isArray(apiTest.comments)) {
-    apiTest.comments.forEach((comment: any) => {
+    apiTest.comments.forEach((comment) => {
       rfrAndComments.push({
         text: comment.commentText || comment.text || "Unknown comment",
         type: "COMMENT",
@@ -227,7 +239,7 @@ async function getMOTAuthToken(): Promise<string | null> {
       return null;
     }
 
-    const data = (await response.json()) as any;
+    const data = await response.json();
     const token = data.access_token;
     const expiresIn = data.expires_in || 3600;
 
@@ -238,8 +250,8 @@ async function getMOTAuthToken(): Promise<string | null> {
 
     console.log("[MOT] Token obtained successfully");
     return token;
-  } catch (error: any) {
-    console.error("[MOT] Token fetch error:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("[MOT] Token fetch error:", (error as Error)?.message || error);
     return null;
   }
 }
@@ -288,7 +300,7 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
       return null;
     }
 
-    const data = (await response.json()) as any;
+    const data = await response.json();
 
     if (Array.isArray(data) && data.length > 0) {
       const motData = data[0];
@@ -308,11 +320,11 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
     }
 
     return null;
-  } catch (error: any) {
-    if (error.name === "AbortError") {
+  } catch (error: unknown) {
+    if ((error as Error).name === "AbortError") {
       console.error("[MOT] Request timeout");
     } else {
-      console.error("[MOT] Fetch error:", error?.message || error);
+      console.error("[MOT] Fetch error:", (error as Error)?.message || error);
     }
     return null;
   }
@@ -355,9 +367,9 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
     }
 
     return data;
-  } catch (err: any) {
+  } catch (err: unknown) {
     clearTimeout(timeout);
-    if (err.name === "AbortError") {
+    if ((err as Error).name === "AbortError") {
       return { error: "DVLA request timed out. Please try again.", status: 504 };
     }
     return { error: "Network error contacting DVLA. Please try again.", status: 503 };
@@ -513,8 +525,8 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     } as CombinedResponse, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
-  } catch (err: any) {
-    console.error("lookup_error:", err?.message || err);
+  } catch (err: unknown) {
+    console.error("lookup_error:", (err as Error)?.message || err);
     return NextResponse.json(
       { ok: false, error: "Server error. Please try again." } as ErrorResponse,
       { status: 500 }

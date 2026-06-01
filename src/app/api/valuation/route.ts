@@ -42,8 +42,8 @@ async function getEbayToken(): Promise<string | null> {
       expiresAt: Date.now() + data.expires_in * 1000,
     };
     return cachedEbayToken.token;
-  } catch (error: any) {
-    console.error("[VALUATION] eBay token error:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("[VALUATION] eBay token error:", (error as Error)?.message || error);
     return null;
   }
 }
@@ -433,7 +433,7 @@ async function fetchEbayComparables(
   fuelType: string | null,
   depEstimate: number | undefined,
   debug: boolean,
-): Promise<{ result: EbayResult | null; debug?: any }> {
+): Promise<{ result: EbayResult | null; debug?: Record<string, unknown> }> {
   const token = await getEbayToken();
   if (!token) return { result: null };
 
@@ -461,11 +461,11 @@ async function fetchEbayComparables(
       };
     }
     return { result };
-  } catch (error: any) {
-    if (error?.name === "AbortError") {
+  } catch (error: unknown) {
+    if ((error as Error)?.name === "AbortError") {
       console.error("[VALUATION] eBay request timeout");
     } else {
-      console.error("[VALUATION] eBay search error:", error?.message || error);
+      console.error("[VALUATION] eBay search error:", (error as Error)?.message || error);
     }
     return { result: null };
   }
@@ -514,8 +514,8 @@ async function checkCache(
         : values[mid];
 
     return { median, entryCount: values.length };
-  } catch (error: any) {
-    console.error("[VALUATION] Cache read error:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("[VALUATION] Cache read error:", (error as Error)?.message || error);
     return null;
   }
 }
@@ -563,8 +563,8 @@ async function writeCache(params: {
       combined_low: params.combinedLow || null,
       combined_high: params.combinedHigh || null,
     });
-  } catch (error: any) {
-    console.error("[VALUATION] Cache write error:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("[VALUATION] Cache write error:", (error as Error)?.message || error);
   }
 }
 
@@ -591,7 +591,7 @@ type ValuationResponse = {
   marketcheckListingCount: number;
   marketcheckSource: "cache" | "api" | null;
   sources: string[];
-  debug?: any;
+  debug?: Record<string, unknown>;
 };
 
 export async function GET(
@@ -713,8 +713,8 @@ export async function GET(
     return NextResponse.json(response, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
-  } catch (error: any) {
-    console.error("[VALUATION] Route error:", error?.message || error);
+  } catch (error: unknown) {
+    console.error("[VALUATION] Route error:", (error as Error)?.message || error);
     return NextResponse.json(
       { error: "Valuation service error" },
       { status: 500 },

@@ -59,6 +59,9 @@ export default function BlogPage() {
     : 0;
   const latestDate = posts.length ? new Date(posts[0].date) : null;
   const latestAgeDays = latestDate
+    // Server Component: Date.now() runs once server-side at request render, so
+    // the "unstable across re-renders" concern (the rule's purpose) can't occur.
+    // eslint-disable-next-line react-hooks/purity
     ? Math.max(0, Math.floor((Date.now() - latestDate.getTime()) / (1000 * 60 * 60 * 24)))
     : null;
   const updatedLabel =

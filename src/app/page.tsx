@@ -4,7 +4,14 @@ import Link from "next/link";
 import { useMemo, useState, useRef, useEffect } from "react";
 
 // MOT Insights calculation
-function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
+type MotInsightTest = {
+  completedDate: string;
+  testResult?: string;
+  expiryDate?: string;
+  odometer?: { value?: number; unit?: string } | null;
+  rfrAndComments?: Array<{ type?: string; text: string }>;
+};
+function calculateMotInsights(motTests: MotInsightTest[], yearOfManufacture?: number) {
   if (!motTests || motTests.length === 0) {
     return null;
   }
@@ -24,7 +31,7 @@ function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
   // helper, so every surface agrees on mileage.
   const mileageTests = sortedTests
     .map(t => ({ date: new Date(t.completedDate), mileage: odometerMiles(t.odometer), test: t }))
-    .filter((m): m is { date: Date; mileage: number; test: any } => m.mileage != null);
+    .filter((m): m is { date: Date; mileage: number; test: MotInsightTest } => m.mileage != null);
 
   const latestMileage = mileageTests.length > 0 ? mileageTests[mileageTests.length - 1].mileage : null;
   const vehicleAge = yearOfManufacture ? new Date().getFullYear() - yearOfManufacture : null;
@@ -80,7 +87,7 @@ function calculateMotInsights(motTests: any[], yearOfManufacture?: number) {
 
   const allAdvisories: { [key: string]: number } = {};
   motTests.forEach(test => {
-    test.rfrAndComments?.forEach((item: any) => {
+    test.rfrAndComments?.forEach((item) => {
       if (item.type === "ADVISORY") {
         const key = item.text.substring(0, 50);
         allAdvisories[key] = (allAdvisories[key] || 0) + 1;
@@ -2101,8 +2108,8 @@ export default function Home() {
 
       setCompareVehicle1(enriched1);
       setCompareVehicle2(enriched2);
-    } catch (err: any) {
-      setError(err?.message ? String(err.message) : "Could not load comparison data.");
+    } catch (err: unknown) {
+      setError((err as Error)?.message ? String((err as Error).message) : "Could not load comparison data.");
     } finally {
       setCompareLoading(false);
     }
@@ -2258,8 +2265,8 @@ export default function Home() {
           console.error("Failed to save recent lookup:", err);
         }
       }
-    } catch (err: any) {
-      setError(err?.message ? String(err.message) : "Could not complete lookup.");
+    } catch (err: unknown) {
+      setError((err as Error)?.message ? String((err as Error).message) : "Could not complete lookup.");
     } finally {
       setLoading(false);
     }

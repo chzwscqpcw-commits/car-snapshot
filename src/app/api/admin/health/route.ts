@@ -33,11 +33,11 @@ async function checkSupabase(): Promise<ServiceStatus> {
       message: `Connected — ${count?.toLocaleString() ?? "?"} cached lookups`,
       latencyMs: Date.now() - start,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       name: "Supabase",
       status: "error",
-      message: err?.message || "Connection failed",
+      message: (err as Error)?.message || "Connection failed",
       latencyMs: Date.now() - start,
     };
   }
@@ -90,11 +90,11 @@ async function checkMot(): Promise<ServiceStatus> {
       message: "OAuth2 token OK",
       latencyMs: Date.now() - start,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       name: "MOT (DVSA)",
       status: "error",
-      message: err?.message || "Token fetch failed",
+      message: (err as Error)?.message || "Token fetch failed",
       latencyMs: Date.now() - start,
     };
   }
@@ -136,11 +136,11 @@ async function checkEbay(): Promise<ServiceStatus> {
       message: "OAuth2 token OK",
       latencyMs: Date.now() - start,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       name: "eBay",
       status: "warning",
-      message: err?.message || "Token fetch failed",
+      message: (err as Error)?.message || "Token fetch failed",
       latencyMs: Date.now() - start,
     };
   }
@@ -208,11 +208,11 @@ async function checkFuelPrices(): Promise<ServiceStatus> {
       message: priceInfo,
       latencyMs: Date.now() - start,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       name: "Fuel Prices",
       status: "warning",
-      message: err?.message || "Fetch failed",
+      message: (err as Error)?.message || "Fetch failed",
       latencyMs: Date.now() - start,
     };
   }
