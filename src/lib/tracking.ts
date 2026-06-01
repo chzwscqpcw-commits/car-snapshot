@@ -55,11 +55,14 @@ export function trackPartnerClick(partnerId: string, context: string): void {
   mirrorToServer("partner_click", payload);
 }
 
-// Registry of running experiments. Keep keys here so conversion tracking can
-// look up the active variant for each experiment a visitor has been bucketed into.
-export const EXPERIMENTS = {
-  MOBILE_SEARCH_CUE: "mobile_search_cue_v1",
-} as const;
+// Registry of *running* experiments. Conversion/event tracking auto-attaches
+// the active variant for every experiment a visitor is bucketed into. Add a
+// `KEY: "experiment_id"` entry to start a new A/B test; remove it to stand the
+// experiment down (historical events stay in Supabase either way).
+//
+// Currently none running. mobile_search_cue_v1 concluded — variant C (bold
+// block CTA) shipped as the permanent MobileSearchCue.
+export const EXPERIMENTS: Record<string, string> = {};
 
 function experimentStorageKey(experimentId: string): string {
   return `experiment_${experimentId}`;
