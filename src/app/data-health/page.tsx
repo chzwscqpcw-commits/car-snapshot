@@ -15,6 +15,7 @@ import {
   Eye,
   Filter,
   Fuel,
+  Gauge,
   Lock,
   Mail,
   MousePointerClick,
@@ -132,12 +133,25 @@ type DataFileEntry = {
   sourceUrl: string | null;
 };
 
+type MarketCheckUsage = {
+  enabled: boolean;
+  month: string;
+  calls: number;
+  limit: number;
+  percent: number;
+  remaining: number;
+  estSpendGbp: number;
+  cacheTtlDays: number;
+  cacheEntries: number | null;
+};
+
 type DataHealthData = {
   buildTime: string;
   commit: string;
   totalEntries: number;
   staleCount: number;
   files: DataFileEntry[];
+  marketcheck?: MarketCheckUsage;
 };
 
 type FuelPriceData = {
@@ -635,6 +649,82 @@ function Section({
       </div>
       {children}
     </section>
+  );
+}
+
+// MarketCheck monthly spend-cap gauge — a horizontal % bar plus the key
+// numbers (calls used / limit, estimated spend, cache size). Colour shifts
+// amber→rose as the cap fills so an approaching limit is obvious at a glance.
+function MarketCheckGauge({ usage }: { usage: MarketCheckUsage }) {
+  const { enabled, calls, limit, percent, remaining, estSpendGbp, cacheTtlDays, cacheEntries } = usage;
+  const tone =
+    percent >= 90
+      ? { bar: "bg-rose-500", text: "text-rose-300", ring: "border-rose-500/30 bg-rose-500/5" }
+      : percent >= 70
+      ? { bar: "bg-amber-500", text: "text-amber-300", ring: "border-amber-500/30 bg-amber-500/5" }
+      : { bar: "bg-emerald-500", text: "text-emerald-300", ring: "border-emerald-500/25 bg-emerald-500/5" };
+
+  return (
+    <div className={`rounded-xl border p-4 sm:p-5 ${tone.ring}`}>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2">
+          <Gauge className={`h-4 w-4 ${tone.text}`} />
+          <span className="text-sm font-semibold text-slate-100">Live API calls this month</span>
+        </div>
+        <span
+          className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+            enabled
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+              : "border-slate-600/60 bg-slate-700/40 text-slate-400"
+          }`}
+        >
+          {enabled ? "Live" : "Disabled"}
+        </span>
+      </div>
+
+      {/* Percentage bar */}
+      <div className="flex items-baseline justify-between mb-1.5">
+        <span className={`text-2xl font-bold tabular-nums ${tone.text}`}>{percent}%</span>
+        <span className="text-xs text-slate-400 tabular-nums">
+          {calls.toLocaleString()} / {limit.toLocaleString()} calls
+        </span>
+      </div>
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-800">
+        <div
+          className={`h-full rounded-full transition-all ${tone.bar}`}
+          style={{ width: `${Math.max(percent, calls > 0 ? 2 : 0)}%` }}
+        />
+      </div>
+
+      {/* Numbers */}
+      <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <GaugeStat label="Remaining" value={remaining.toLocaleString()} sub="calls left" />
+        <GaugeStat label="Est. spend" value={`£${estSpendGbp.toFixed(2)}`} sub="≈ £0.0010/call" />
+        <GaugeStat
+          label="Cache"
+          value={cacheEntries == null ? "—" : cacheEntries.toLocaleString()}
+          sub={`${cacheTtlDays}d TTL`}
+        />
+        <GaugeStat label="Resets" value="1st" sub="of each month" />
+      </div>
+
+      {percent >= 90 && (
+        <p className="mt-3 text-[11px] text-rose-300/90">
+          Near the cap — new lookups fall back to depreciation + eBay until the month resets or you raise
+          MARKETCHECK_MONTHLY_CALL_LIMIT.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function GaugeStat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2">
+      <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
+      <p className="mt-0.5 text-base font-semibold text-slate-100 tabular-nums">{value}</p>
+      <p className="text-[10px] text-slate-600">{sub}</p>
+    </div>
   );
 }
 
@@ -1314,6 +1404,16 @@ export default function DataHealthPage() {
                     );
                   })}
                 </div>
+              </Section>
+            )}
+
+            {/* ── MARKETCHECK SPEND CAP ── */}
+            {dataHealth?.marketcheck && (
+              <Section
+                title="MarketCheck usage"
+                hint={`Monthly spend cap · ${dataHealth.marketcheck.month} (UTC)`}
+              >
+                <MarketCheckGauge usage={dataHealth.marketcheck} />
               </Section>
             )}
 

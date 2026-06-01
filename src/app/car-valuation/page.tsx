@@ -23,7 +23,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How accurate is a free car valuation?",
     answer:
-      "We combine a depreciation model with live comparable listings. It's a guide — actual value depends on condition, spec, service history, and local demand. The condition questionnaire helps narrow it.",
+      "About as accurate as a free, reg-only estimate gets. Unlike tools that just apply a generic depreciation curve, we anchor to your car's real DVLA-recorded mileage and to live prices from multiple UK marketplaces for the same make, model and year — then show you every source and a confidence band, so nothing is hidden. It's still a guide: the exact sale price depends on condition, spec, service history and local demand, which the condition questionnaire helps pin down.",
   },
   {
     question: "What affects my car's value?",
@@ -307,7 +307,7 @@ export default async function CarValuationPage({
               Most free valuation tools online want your email, phone, and postcode before they show you a number. We don&apos;t. Enter a reg, get an estimate — no signup, no personal data.
             </p>
             <p className="leading-relaxed">
-              The figure combines a UK-calibrated depreciation model with live market data from similar cars currently listed. Estimates improve as more users look up vehicles and the comparable dataset grows.
+              The figure combines a UK-calibrated depreciation model with live asking prices from multiple UK marketplaces for cars like yours listed right now, anchored to your car&apos;s real DVLA-recorded mileage. Estimates improve as more users look up vehicles and the comparable dataset grows.
             </p>
           </section>
 
@@ -330,7 +330,7 @@ export default async function CarValuationPage({
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How our valuation works</h2>
             <p className="leading-relaxed mb-3">
-              Three data layers: a depreciation model based on age/make/mileage, live market data from similar listings, and an accumulating cache of recent valuations for the same make/model/year.
+              Three data layers: a UK-calibrated depreciation model (age, make, mileage), live asking prices pulled in real time from multiple UK marketplaces for the same make/model/year, and an accumulating cache of recent valuations. Your car&apos;s real DVLA-recorded mileage feeds the figure — not a guess.
             </p>
             <p className="leading-relaxed mb-3">
               Strong market data → tighter range, higher confidence. Limited data → wider range, more reliance on the depreciation model. We always show the confidence level so you know how strong the signal is.

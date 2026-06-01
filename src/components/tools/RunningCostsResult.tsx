@@ -267,6 +267,9 @@ function Hero({
                 £{totals.annual.toLocaleString("en-GB")}
               </span>
               <span className="text-base text-slate-400">/year</span>
+              <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[11px] font-semibold text-cyan-300">
+                incl. insurance
+              </span>
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-3">

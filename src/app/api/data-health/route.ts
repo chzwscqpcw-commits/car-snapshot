@@ -14,7 +14,12 @@ import colourPopularity from "@/data/colour-popularity.json";
 import tyreSizes from "@/data/tyre-sizes.json";
 import vehicleDimensions from "@/data/vehicle-dimensions.json";
 import freshness from "@/data/_freshness.json";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
+import {
+  MARKETCHECK_MONTHLY_CALL_LIMIT,
+  MARKETCHECK_CACHE_TTL_DAYS,
+  marketCheckEnabled,
+} from "@/lib/marketcheck";
 
 // Dynamic so we can query the Supabase data_cache table on each request and
 // report the actual freshness of what production users see — not just the
@@ -171,6 +176,56 @@ async function fetchProductionAge(key: string): Promise<string | null> {
   }
 }
 
+// ── MarketCheck monthly spend cap usage ───────────────────────────────────
+
+type MarketCheckUsage = {
+  enabled: boolean;
+  month: string; // 'YYYY-MM' (UTC)
+  calls: number;
+  limit: number;
+  percent: number; // 0–100, clamped
+  remaining: number;
+  estSpendGbp: number; // calls × £0.0010
+  cacheTtlDays: number;
+  cacheEntries: number | null;
+};
+
+// Reads the current month's MarketCheck call count + cache size via the
+// service-role client (the usage/cache tables are RLS-locked from the anon
+// key). Surfaces the spend cap as a percentage so usage is visible at a
+// glance during the rollout phase.
+async function fetchMarketCheckUsage(now: Date): Promise<MarketCheckUsage> {
+  const month = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
+  const limit = MARKETCHECK_MONTHLY_CALL_LIMIT;
+  const base: MarketCheckUsage = {
+    enabled: marketCheckEnabled(),
+    month,
+    calls: 0,
+    limit,
+    percent: 0,
+    remaining: limit,
+    estSpendGbp: 0,
+    cacheTtlDays: MARKETCHECK_CACHE_TTL_DAYS,
+    cacheEntries: null,
+  };
+  try {
+    const sb = supabaseServerRole();
+    const [usageRes, cacheRes] = await Promise.all([
+      sb.from("marketcheck_usage").select("calls").eq("month", month).maybeSingle(),
+      sb.from("marketcheck_cache").select("*", { count: "exact", head: true }),
+    ]);
+    const calls = (usageRes.data?.calls as number | undefined) ?? 0;
+    base.calls = calls;
+    base.remaining = Math.max(0, limit - calls);
+    base.percent = limit > 0 ? Math.min(100, Math.round((calls / limit) * 100)) : 0;
+    base.estSpendGbp = Math.round(calls * 0.001 * 100) / 100;
+    base.cacheEntries = cacheRes.count ?? null;
+  } catch {
+    // Leave defaults (zeros) — the dashboard renders an "unavailable" state.
+  }
+  return base;
+}
+
 // ── Compute freshness at request time ─────────────────────────────────────
 
 const DATA_FILES: Record<string, unknown> = {
@@ -244,6 +299,8 @@ export async function GET() {
   const staleCount = files.filter((f) => f.stale).length;
   const totalEntries = files.reduce((sum, f) => sum + f.entries, 0);
 
+  const marketcheck = await fetchMarketCheckUsage(now);
+
   return NextResponse.json({
     status: "ok",
     buildTime: BUILD_TIME,
@@ -251,5 +308,6 @@ export async function GET() {
     totalEntries,
     staleCount,
     files,
+    marketcheck,
   });
 }

@@ -4719,6 +4719,9 @@ END:VEVENT
                   <div className="flex items-center gap-2 mb-3">
                     <PoundSterling className="w-5 h-5 text-blue-400" />
                     <h3 className="text-sm font-semibold text-slate-200">Annual Running Costs</h3>
+                    <span className="ml-auto rounded-full border border-slate-600/60 bg-slate-700/40 px-2 py-0.5 text-[10px] font-medium text-slate-400">
+                      excl. insurance
+                    </span>
                   </div>
 
                   <p className="text-2xl font-mono font-bold text-slate-100 mb-0.5 tracking-tight">
