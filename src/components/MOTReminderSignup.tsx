@@ -148,7 +148,7 @@ export default function MOTReminderSignup({
     );
     obs.observe(node);
     return () => obs.disconnect();
-  }, [context]);
+  }, [context, triggerVariant]);
 
   const addVehicle = useCallback(() => {
     if (regs.length < 5) {
@@ -297,7 +297,7 @@ export default function MOTReminderSignup({
         setSubmitting(false);
       }
     },
-    [regs, email, motExpiryDate, makeModel, validate, context, triggerVariant]
+    [regs, email, motExpiryDate, makeModel, validate, context, triggerVariant, regNumber]
   );
 
   // --- Success state ---

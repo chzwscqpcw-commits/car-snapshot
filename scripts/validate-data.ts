@@ -9,7 +9,7 @@
  * Exit code 0 = all pass, 1 = any fail
  */
 
-import { validateAll, type ValidationResult } from "./lib/validators";
+import { validateAll } from "./lib/validators";
 
 const jsonMode = process.argv.includes("--json");
 

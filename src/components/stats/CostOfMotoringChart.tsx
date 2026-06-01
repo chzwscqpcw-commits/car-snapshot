@@ -36,10 +36,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   total: "Total",
 };
 
-const MILEAGE_STEPS = [
-  3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000,
-  15000, 16000, 17000, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000,
-];
 
 type FuelType = "petrol" | "diesel" | "hybrid" | "ev";
 type ValueBand = "under10k" | "10to20k" | "20to30k" | "over30k";

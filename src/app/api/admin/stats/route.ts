@@ -308,7 +308,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     contact7d,
     contactAllTime,
     motRemindersLast7d,
-    motRemindersToday,
+    _motRemindersToday,
     topMakesToday,
     // Funnel-stage event counts (today). The top-step uses reg_search
     // (per-user-action) not lookup (per-API-call) so the downstream

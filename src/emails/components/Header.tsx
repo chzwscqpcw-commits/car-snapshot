@@ -62,6 +62,7 @@ export function Header() {
             {/* BoltMark — 32×42 cyan, geometric bolt. Inline SVG via data
                 URI so every client renders identically without an asset
                 load. Width/height attributes are required for Outlook. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- email HTML cannot use next/image; inline data-URI SVG */}
             <img
               src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='42' viewBox='0 0 24 32' fill='%2322d3ee'%3E%3Cpath d='M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z'/%3E%3C/svg%3E"
               width="32"

@@ -92,7 +92,7 @@ function titleCase(s: string): string {
 
 // ── Core parser ──────────────────────────────────────────────────────────────
 
-export function parseModel(model: string, make?: string): ParsedModel {
+export function parseModel(model: string, _make?: string): ParsedModel {
   if (!model || model.trim().length === 0) {
     return { baseModel: model || "", bodyStyle: null, trim: null, fuelIndicator: null, transmission: null, driveType: null, engineDesc: null };
   }

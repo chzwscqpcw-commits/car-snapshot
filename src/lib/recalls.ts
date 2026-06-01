@@ -15,10 +15,6 @@ function normalizeStr(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// Known fuel/engine variant suffixes that don't change the base model.
-// "320D" is a diesel 320, "118I" is a petrol 118 — same recall applies.
-// But "500X" is a different model from "500" — X is NOT a fuel suffix.
-const FUEL_SUFFIXES = /^(D|I|E|S|DI|TD|TDI|CDI|HDI|TDCI|TFSI|TSI|GTI|GTD|GTE|SDI|CRDI|PHEV|EV|BEV)$/;
 
 /**
  * Strip a known fuel/engine suffix from a numeric model code.

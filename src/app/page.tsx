@@ -96,7 +96,7 @@ function calculateMotInsights(motTests: MotInsightTest[], yearOfManufacture?: nu
   });
 
   const recurringAdvisories = Object.entries(allAdvisories)
-    .filter(([_, count]) => count >= 2)
+    .filter(([, count]) => count >= 2)
     .map(([text, count]) => ({ text, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 3);
@@ -144,7 +144,6 @@ import {
   FileText,
   ArrowLeftRight,
   Shield,
-  Star,
   Leaf,
   PoundSterling,
   ChevronDown,
@@ -156,7 +155,6 @@ import {
   Lightbulb,
   History,
   ArrowRight,
-  Clock,
   Ruler,
   Weight,
 } from "lucide-react";
@@ -284,9 +282,6 @@ function cleanReg(s: string) {
   return s.replace(/\s+/g, "").toUpperCase();
 }
 
-function looksLikeEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim().toLowerCase());
-}
 
 function formatDate(iso?: string) {
   if (!iso) return "—";
@@ -361,15 +356,6 @@ function getMotTestResultColor(result?: string): "emerald" | "red" | "slate" {
   return "slate";
 }
 
-function getStatusBgClass(color: string) {
-  const bgMap: { [key: string]: string } = {
-    emerald: "bg-emerald-950/40 border-emerald-900/40",
-    amber: "bg-amber-950/40 border-amber-900/40",
-    red: "bg-red-950/40 border-red-900/40",
-    slate: "bg-slate-800/50 border-slate-700/50",
-  };
-  return `border ${bgMap[color] || bgMap.slate}`;
-}
 
 function addYearsToYearMonth(ym: string, years: number) {
   const m = /^(\d{4})-(\d{2})$/.exec(ym);
@@ -382,11 +368,6 @@ function addYearsToYearMonth(ym: string, years: number) {
   return `${outYear}-${outMonth}`;
 }
 
-function extractEuroNumber(euroStatus?: string) {
-  if (!euroStatus) return null;
-  const m = /EURO\s*([0-9]+)/i.exec(euroStatus);
-  return m ? Number(m[1]) : null;
-}
 
 /**
  * Layout-aware skeleton shown during /api/lookup + downstream enrichment.
@@ -753,15 +734,6 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
 }
 
 // Icon badge for vehicle attributes
-function IconBadge({ icon: Icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:border-slate-600/50 transition-colors">
-      <div className="text-slate-400">{Icon}</div>
-      <div className="text-xs font-medium text-slate-400 uppercase tracking-wide">{label}</div>
-      <div className="text-sm font-mono font-semibold text-slate-100 text-center tracking-wide">{value}</div>
-    </div>
-  );
-}
 
 // Insight card with color-coded tone
 function InsightCard({ insight, delay = 0 }: { insight: Insight; delay?: number }) {
@@ -899,7 +871,6 @@ export default function Home() {
   const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set([0, 1, 2]));
   const [showAllMotTests, setShowAllMotTests] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
 
   const [favorites, setFavorites] = useState<(VehicleData & { savedAt: number })[]>([]);
@@ -2168,14 +2139,6 @@ export default function Home() {
     }
   }
 
-  async function handleFooterShare() {
-    if (isMobileDevice()) {
-      await triggerShare();
-    } else {
-      const ok = await triggerShare();
-      if (ok) showToast("Link copied to clipboard");
-    }
-  }
 
   // Extract core lookup logic so it can be called with a registration directly
   async function performLookup(cleanedReg: string, skipCache: boolean = false) {
@@ -3054,35 +3017,7 @@ END:VEVENT
     }
   }
 
-  function openMotHistoryPrefilled() {
-    if (!data?.registrationNumber) return;
-    const reg = cleanReg(data.registrationNumber);
-    const url = `https://www.check-mot.service.gov.uk/results?registration=${encodeURIComponent(reg)}`;
-    trackEvent("outbound_click", {
-      destination: "gov.uk_mot_history",
-      url,
-      reg: data.registrationNumber,
-    });
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
 
-  async function openTflWithCopiedReg() {
-    const reg = cleanReg(data?.registrationNumber ?? "");
-    if (!reg) return;
-    trackEvent("outbound_click", {
-      destination: "tfl_ulez",
-      url: "https://tfl.gov.uk/modes/driving/check-your-vehicle/",
-      reg: data?.registrationNumber ?? null,
-    });
-    window.open("https://tfl.gov.uk/modes/driving/check-your-vehicle/", "_blank", "noopener,noreferrer");
-
-    try {
-      await navigator.clipboard.writeText(reg);
-      showToast(`Copied ${reg} to clipboard. Paste it in the TfL checker.`);
-    } catch {
-      showToast(`Couldn't auto-copy. Your reg is: ${reg}`);
-    }
-  }
 
   function toggleChecklistItem(index: number) {
     setCheckedItems((prev) => {
@@ -3175,6 +3110,7 @@ END:VEVENT
       {/* Full-screen logo reveal overlay */}
       {showLogoReveal && data?.make && getMakeLogoPath(data.make) && (
         <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element -- decorative, dynamically-sourced animated overlay; next/image adds no value */}
           <img
             src={getMakeLogoPath(data.make)!}
             alt=""

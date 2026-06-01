@@ -8,9 +8,7 @@ import {
   findModelEntry,
   getModelGuideData,
   getModelsForMake,
-  getDisplayMake,
   getDisplayModel,
-  type ModelGuideData,
   type DepreciationPoint,
   type FaqItem,
 } from "@/lib/model-guides";

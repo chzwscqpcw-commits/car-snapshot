@@ -406,7 +406,7 @@ function Palette({ onClose }: { onClose: () => void }) {
           {/* Recents (empty-query state) */}
           {!query.trim() && recent.length > 0 && (
             <Section label="Recent vehicles">
-              {recent.map((v, i) => {
+              {recent.map((v) => {
                 const rowIndex =
                   rows.findIndex(
                     (r) => r.kind === "recent" && r.vehicle.reg === v.reg

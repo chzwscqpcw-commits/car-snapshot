@@ -90,14 +90,6 @@ function filesChangedInHead(): Set<string> {
   }
 }
 
-function statMtimeIso(file: string): string | null {
-  try {
-    const stat = fs.statSync(path.join(DATA_DIR, file));
-    return stat.mtime.toISOString();
-  } catch {
-    return null;
-  }
-}
 
 function loadExistingManifest(): Record<string, string> {
   // The manifest is committed to git and serves as the source of truth.

@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import {
-  Search,
-  Wrench,
   Loader2,
-  CheckCircle2,
   AlertCircle,
   ArrowRight,
   Sparkles,

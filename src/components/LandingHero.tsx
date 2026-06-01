@@ -32,7 +32,6 @@ export default function LandingHero({
   exampleCard,
   backLinkHref = "/tools",
   backLinkText = "← Back to all tools",
-  badgeText = "Free · No signup · Official UK data",
   previewImage,
 }: LandingHeroProps) {
   return (

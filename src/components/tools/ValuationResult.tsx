@@ -16,7 +16,6 @@ import {
   LookupError,
   ToolResultLayout,
   type LookupVehicle,
-  type MotTest,
 } from "@/components/tools/shared";
 import {
   lookupNewPrice,
