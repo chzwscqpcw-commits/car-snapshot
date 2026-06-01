@@ -4014,6 +4014,13 @@ END:VEVENT
                       expandable={showMotBanner !== "expired" && (showMotBanner === "no-record" || motDaysUntilExpiry > 60)}
                       placement="specs"
                     />
+                    <p className="mt-2 text-xs text-slate-500">
+                      Shopping on price?{" "}
+                      <a href="/cheap-mot" className="text-blue-400 hover:text-blue-300">
+                        See how to find a cheap MOT near you
+                      </a>
+                      .
+                    </p>
                   </div>
                 )}
 
@@ -5402,6 +5409,13 @@ END:VEVENT
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT History Check</h3>
               </div>
               <p className="text-sm text-slate-400">Full MOT history since 2005 — pass/fail results, advisories, failures and mileage readings.</p>
+            </a>
+            <a href="/cheap-mot" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-3 mb-2">
+                <PoundSterling className="w-5 h-5 text-blue-400" />
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cheap MOT Prices</h3>
+              </div>
+              <p className="text-sm text-slate-400">Compare local garage MOT prices — many beat the £54.85 legal maximum. Free, no signup.</p>
             </a>
             <a href="/mot-reminder" className="p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
               <div className="flex items-center gap-3 mb-2">

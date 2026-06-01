@@ -3,6 +3,7 @@ import BoltMark from "@/components/BoltMark";
 
 const TOOL_LINKS = [
   { href: "/mot-check", label: "MOT history check" },
+  { href: "/cheap-mot", label: "Cheap MOT prices" },
   { href: "/tax-check", label: "Tax check" },
   { href: "/car-check", label: "Free car check" },
   { href: "/car-valuation", label: "Car valuation" },
