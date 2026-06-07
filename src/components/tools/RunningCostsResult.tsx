@@ -11,6 +11,7 @@ import {
   Loader2,
   Info,
   Gauge,
+  ArrowLeftRight,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -69,6 +70,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const [fuelState, setFuelState] = useState<"loading" | "done">("loading");
   const [milesPerYear, setMilesPerYear] = useState<number>(UK_AVG_MILES_PER_YEAR);
   const [insuranceInputs, setInsuranceInputs] = useState<InsuranceInputs>({});
+  // Headline toggle: include insurance in the total or not (the report excludes
+  // it — this lets users match either view). Defaults to included.
+  const [includeInsurance, setIncludeInsurance] = useState(true);
 
   // Fetch fuel economy
   useEffect(() => {
@@ -166,17 +170,18 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     [segment, insuranceInputs, milesPerYear]
   );
 
-  // Augmented totals that include insurance and use the user's actual mileage
+  // Headline + breakdown totals — insurance counted only when the toggle is on.
+  // Uses the user's actual mileage for the per-mile/monthly/daily figures.
   const totals = useMemo(() => {
     if (!ownership) return null;
-    const total = ownership.totalAnnual + insurance.estimatedAnnual;
+    const total = ownership.totalAnnual + (includeInsurance ? insurance.estimatedAnnual : 0);
     return {
       annual: total,
       monthly: Math.round(total / 12),
       daily: Math.round((total / 365) * 100) / 100,
       perMile: milesPerYear > 0 ? total / milesPerYear : 0,
     };
-  }, [ownership, insurance.estimatedAnnual, milesPerYear]);
+  }, [ownership, insurance.estimatedAnnual, includeInsurance, milesPerYear]);
 
   return (
     <ToolResultLayout
@@ -191,6 +196,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         fuel={fuel}
         milesPerYear={milesPerYear}
         insuranceIsCustomised={insurance.isCustomised}
+        includeInsurance={includeInsurance}
+        onToggleInsurance={() => setIncludeInsurance((v) => !v)}
       />
       <MileageSlider
         miles={milesPerYear}
@@ -203,6 +210,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           fuel={fuel}
           segment={segment}
           insurance={insurance}
+          includeInsurance={includeInsurance}
           totalAnnual={totals?.annual ?? ownership.totalAnnual}
         />
       )}
@@ -210,6 +218,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         <StackedBar
           ownership={ownership}
           insurance={insurance}
+          includeInsurance={includeInsurance}
           totalAnnual={totals?.annual ?? ownership.totalAnnual}
         />
       )}
@@ -240,12 +249,16 @@ function Hero({
   fuel,
   milesPerYear,
   insuranceIsCustomised,
+  includeInsurance,
+  onToggleInsurance,
 }: {
   totals: { annual: number; monthly: number; daily: number; perMile: number } | null;
   loading: boolean;
   fuel: FuelEconomyResult | null;
   milesPerYear: number;
   insuranceIsCustomised: boolean;
+  includeInsurance: boolean;
+  onToggleInsurance: () => void;
 }) {
   return (
     <section className="relative mt-4 overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-6 sm:p-8">
@@ -269,9 +282,20 @@ function Hero({
                 £{totals.annual.toLocaleString("en-GB")}
               </span>
               <span className="text-base text-slate-400">/year</span>
-              <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[11px] font-semibold text-cyan-300">
-                incl. insurance
-              </span>
+              <button
+                type="button"
+                onClick={onToggleInsurance}
+                aria-pressed={includeInsurance}
+                title={
+                  includeInsurance
+                    ? "Insurance is included — tap to exclude it"
+                    : "Insurance is excluded — tap to include it"
+                }
+                className="group inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[11px] font-semibold text-cyan-300 transition-colors hover:bg-cyan-500/20 cursor-pointer"
+              >
+                {includeInsurance ? "incl. insurance" : "excl. insurance"}
+                <ArrowLeftRight className="h-2.5 w-2.5 opacity-60 transition-opacity group-hover:opacity-100" />
+              </button>
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-3">
@@ -285,7 +309,7 @@ function Hero({
                 accent
               />
             </div>
-            {(fuel?.combinedMpg || !insuranceIsCustomised) && (
+            {(fuel?.combinedMpg || !includeInsurance || !insuranceIsCustomised) && (
               <p className="mt-4 text-xs text-slate-500">
                 {fuel?.combinedMpg && (
                   <>
@@ -296,12 +320,16 @@ function Hero({
                     miles per year.
                   </>
                 )}
-                {!insuranceIsCustomised && (
+                {!includeInsurance ? (
+                  <>
+                    {" "}Insurance is excluded — tap the badge to add it back in.
+                  </>
+                ) : !insuranceIsCustomised ? (
                   <>
                     {" "}Insurance uses a segment-median baseline — refine below for a
                     sharper estimate.
                   </>
-                )}
+                ) : null}
               </p>
             )}
           </>
@@ -521,12 +549,14 @@ function BreakdownGrid({
   fuel,
   segment,
   insurance,
+  includeInsurance,
   totalAnnual,
 }: {
   ownership: OwnershipCostResult;
   fuel: FuelEconomyResult | null;
   segment: VehicleSegment;
   insurance: InsuranceEstimate;
+  includeInsurance: boolean;
   totalAnnual: number;
 }) {
   const { breakdown } = ownership;
@@ -590,13 +620,15 @@ function BreakdownGrid({
         </span>
       </div>
       <div className="grid gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <CategoryCard
-            key={item.key}
-            item={item}
-            totalAnnual={totalAnnual}
-          />
-        ))}
+        {items
+          .filter((item) => item.key !== "insurance" || includeInsurance)
+          .map((item) => (
+            <CategoryCard
+              key={item.key}
+              item={item}
+              totalAnnual={totalAnnual}
+            />
+          ))}
       </div>
     </section>
   );
@@ -658,10 +690,12 @@ function CategoryCard({
 function StackedBar({
   ownership,
   insurance,
+  includeInsurance,
   totalAnnual,
 }: {
   ownership: OwnershipCostResult;
   insurance: InsuranceEstimate;
+  includeInsurance: boolean;
   totalAnnual: number;
 }) {
   const { breakdown } = ownership;
@@ -669,7 +703,7 @@ function StackedBar({
   const segments = [
     { label: "Depreciation", value: breakdown.depreciation ?? 0, colour: "bg-rose-500/70" },
     { label: "Fuel", value: breakdown.fuel ?? 0, colour: "bg-amber-500/70" },
-    { label: "Insurance", value: insurance.estimatedAnnual, colour: "bg-violet-500/70" },
+    { label: "Insurance", value: includeInsurance ? insurance.estimatedAnnual : 0, colour: "bg-violet-500/70" },
     {
       label: "MOT &amp; servicing",
       value: (breakdown.mot ?? 0) + (breakdown.maintenance ?? 0),
