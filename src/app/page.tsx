@@ -207,6 +207,7 @@ import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import InspectionCTA from "@/components/InspectionCTA";
 import PdfPromoBanner from "@/components/PdfPromoBanner";
 
 type VehicleData = {
@@ -5189,6 +5190,16 @@ END:VEVENT
                     <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
                   ))}
                   <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* CLICKMECHANIC PRE-PURCHASE INSPECTION — buyer intent (renders
+                null until the partner is approved; see partners.ts). */}
+            {data && (
+              <DataReveal delay={730}>
+                <div className="mb-8">
+                  <InspectionCTA context="buyer-next-steps" regNumber={data.registrationNumber} />
                 </div>
               </DataReveal>
             )}

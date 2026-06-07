@@ -40,7 +40,9 @@ function withClickref(awinUrl: string, clickref?: string): string {
 }
 
 export function isPartnerConfigured(partner: PartnerLink): boolean {
-  return !partner.pending && !partner.url.includes("PENDING_AWINMID");
+  // Any PENDING_* placeholder (PENDING_AWINMID, PENDING_WEBGAINS) means the
+  // tracking IDs aren't provisioned yet — render nothing.
+  return !partner.pending && !partner.url.includes("PENDING");
 }
 
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
@@ -110,6 +112,44 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     buildLink: (reg: string) => {
       const destination = encodeURIComponent(`https://www.cuvva.com/?vrm=${reg}`);
       return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
+    },
+  },
+  // ClickMechanic — pre-purchase inspections + mobile-mechanic servicing/repairs
+  // (Awin merchant 67328) — applied 2026-06-07, pending approval. Flip
+  // pending:false to activate once approved.
+  clickMechanic: {
+    url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2F",
+    name: "ClickMechanic",
+    isAffiliate: true,
+    pending: true,
+    description: "Book a pre-purchase inspection or repair with a vetted mobile mechanic",
+    shortDescription: "Mechanic quotes",
+    // On activation you may swap the ued destination for ClickMechanic's
+    // approved pre-purchase-inspection deep link from their Awin creative.
+    buildLink: (_reg: string, clickref?: string) => {
+      const destination = encodeURIComponent("https://www.clickmechanic.com/");
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
+    },
+  },
+  // We Buy Any Car — sell-your-car instant offer. NOTE: Webgains, NOT Awin.
+  // Applied 2026-06-07; pending Webgains account + programme approval. Webgains
+  // tracker format:
+  //   https://track.webgains.com/click.html?wgcampaignid=<YOUR_CAMPAIGN_ID>&wgprogramid=<WBAC_PROGRAM_ID>&wgtarget=<encoded dest>
+  // Fill both IDs from the Webgains dashboard on approval, then flip pending:false.
+  weBuyAnyCar: {
+    url: "https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=https%3A%2F%2Fwww.webuyanycar.com%2F",
+    name: "We Buy Any Car",
+    isAffiliate: true,
+    pending: true,
+    description: "Get a free instant offer to sell your car",
+    shortDescription: "Instant offer",
+    buildLink: (reg: string, clickref?: string) => {
+      const destination = encodeURIComponent(`https://www.webuyanycar.com/?vrm=${reg}`);
+      const base = `https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=${destination}`;
+      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
   govTaxVehicle: {

@@ -17,6 +17,7 @@ import {
   ToolResultLayout,
   type LookupVehicle,
 } from "@/components/tools/shared";
+import SellCarCTA from "@/components/SellCarCTA";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -243,6 +244,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         />
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
+      <SellCarCTA context="valuation-result" regNumber={vrm} />
       <BmgHook vrm={vrm} />
       <Disclaimer />
     </ToolResultLayout>
