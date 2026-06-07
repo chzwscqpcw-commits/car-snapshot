@@ -3228,8 +3228,10 @@ END:VEVENT
                   previous one-liner. The live dot signals real-time data
                   feeds (countered the "is this just a scraped cache?"
                   doubt new visitors land with). Privacy promise is now
-                  explicit about the THREE things people fear losing: no
-                  signup, no email, no tracking. */}
+                  explicit about the THREE things people fear: no signup, no
+                  email, no catch. ("no tracking" was dropped — we run GA4
+                  analytics + AdSense on the blog, so the absolute claim no
+                  longer holds.) */}
               <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-400">
                 <span className="inline-flex items-center gap-1.5">
                   <span
@@ -3250,7 +3252,7 @@ END:VEVENT
                   </>
                 )}
                 <span className="text-slate-600" aria-hidden="true">·</span>
-                <span className="font-medium text-emerald-300/90">No signup, no email, no tracking</span>
+                <span className="font-medium text-emerald-300/90">No signup, no email, no catch</span>
               </div>
               {/* Secondary entry into the booking wizard. Quiet by design —
                   the primary action on this page is always the reg input

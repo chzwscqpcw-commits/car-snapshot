@@ -171,9 +171,9 @@ export default function PrivacyPage() {
               that help you book an MOT. These are affiliate links — we may earn a commission at no cost to you.
               Clicking these links takes you to third-party sites with their own privacy policies.
             </p>
-            <p className="mt-4"><strong>We do NOT share with:</strong></p>
+            <p className="mt-4"><strong>We do NOT sell your personal data to:</strong></p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Advertisers or marketing companies</li>
+              <li>Advertisers or marketing companies (our blog and guide pages show Google ads, which use cookies — see section 10 — but we never sell your personal information)</li>
               <li>Insurance or finance companies</li>
               <li>Any third parties without your consent</li>
             </ul>
@@ -264,7 +264,12 @@ export default function PrivacyPage() {
               <li><strong>Essential:</strong> To make the website function</li>
               <li><strong>Analytics:</strong> To understand user behavior (Google Analytics)</li>
               <li><strong>Preferences:</strong> To remember your settings</li>
+              <li><strong>Advertising:</strong> On our blog and guide pages only (never the vehicle-check tool), Google AdSense and its partners use cookies to serve, personalise and measure ads</li>
             </ul>
+            <p className="mt-4"><strong>Advertising:</strong> We show Google AdSense ads on our blog and guide pages — never on the vehicle-check tool itself. Google and its partners may set cookies to serve, personalise and measure these ads. If you are in the UK, EEA or Switzerland we ask for your consent before any personalised ads are shown, via a consent banner, and you can change or withdraw that choice at any time. You can also review and opt out of personalised advertising in your{" "}
+              <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">Google Ad Settings</a>, and read how Google uses data from sites that use its services{" "}
+              <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">here</a>.
+            </p>
             <p className="mt-4"><strong>How to manage cookies:</strong></p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Most browsers allow you to refuse cookies or alert you when cookies are sent</li>
