@@ -71,6 +71,14 @@ export const metadata: Metadata = {
   verification: {
     google: "02sH93JGp8XsbrfdNpHmwLLXY_Kw9NdmXGVCcGgduH0",
   },
+  // AdSense site-ownership association — renders
+  // <meta name="google-adsense-account" content="ca-pub-1311169650949315">
+  // site-wide (zero perf cost; no ad code). Lets AdSense verify via the
+  // "Meta tag" method, which reads the page head directly (faster than the
+  // ads.txt crawl).
+  other: {
+    "google-adsense-account": "ca-pub-1311169650949315",
+  },
 };
 
 const organizationJsonLd = {
