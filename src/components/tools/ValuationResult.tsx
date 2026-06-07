@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PoundSterling,
   Sparkles,
@@ -9,6 +9,7 @@ import {
   CircleCheck,
   Loader2,
   TrendingDown,
+  Gauge,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -101,7 +102,14 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         : null,
     [vehicle.yearOfManufacture]
   );
-  const mileage = useMemo(() => latestRecordedMileage(vehicle.motTests), [vehicle.motTests]);
+  // Mileage drives the estimate more than anything else. Pre-fill from the last
+  // MOT reading, but let the user adjust to their car's actual current mileage
+  // (the MOT can be up to a year old). Falls back to an age-based estimate when
+  // there's no MOT reading.
+  const defaultMileage = useMemo(() => latestRecordedMileage(vehicle.motTests), [vehicle.motTests]);
+  const [mileage, setMileage] = useState<number>(
+    defaultMileage ?? (age != null ? age * 7400 : 60000)
+  );
   const advisoryCount = useMemo(
     () =>
       vehicle.motTests?.[0]?.rfrAndComments?.filter((r) => r.type === "ADVISORY")
@@ -115,9 +123,25 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model, mileage);
   }, [newPrice, age, vehicle.make, vehicle.model, mileage]);
 
+  // The server returns market COMPARABLES (eBay/MarketCheck/cache), which depend
+  // on make/model/year — NOT on the user's mileage. So the fetch is keyed on
+  // vehicle identity only; the live mileage/depEstimate ride in via refs (used
+  // for the server's cache write + floor). This means dragging the mileage
+  // control recomputes the estimate instantly client-side (depEstimate →
+  // valuation useMemos) without re-hitting the API on every tick.
+  const depEstimateRef = useRef<number | null>(depEstimate);
+  const mileageRef = useRef<number>(mileage);
+  // Keep the latest depEstimate/mileage available to the fetch effect without
+  // making it re-fire on every change. Writing refs in an effect (not during
+  // render) satisfies the rules of React.
+  useEffect(() => {
+    depEstimateRef.current = depEstimate;
+    mileageRef.current = mileage;
+  });
+
   // ── Server call for live listings + cache ──────────────────────────────
   useEffect(() => {
-    if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
+    if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimateRef.current === null) {
       // Skip/early-exit state for the valuation fetch this effect performs.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setServerState("skipped");
@@ -129,12 +153,12 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       make: vehicle.make,
       model: vehicle.model,
       year: String(vehicle.yearOfManufacture),
-      depreciationEstimate: String(depEstimate),
+      depreciationEstimate: String(depEstimateRef.current),
     });
     if (newPrice) params.set("newPrice", String(newPrice));
     if (vehicle.fuelType) params.set("fuelType", vehicle.fuelType);
     if (vehicle.engineCapacity) params.set("engineCapacity", String(vehicle.engineCapacity));
-    if (mileage) params.set("mileage", String(mileage));
+    if (mileageRef.current) params.set("mileage", String(mileageRef.current));
     if (vehicle.colour) params.set("colour", String(getColourAdjustment(vehicle.colour)));
 
     fetch(`/api/valuation?${params}`)
@@ -161,9 +185,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     vehicle.fuelType,
     vehicle.engineCapacity,
     vehicle.colour,
-    mileage,
     newPrice,
-    depEstimate,
   ]);
 
   // ── Combined valuation ─────────────────────────────────────────────────
@@ -224,9 +246,11 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         depEstimate={depEstimate}
         newPrice={newPrice}
         age={age}
+        mileage={mileage}
         vehicle={vehicle}
         serverState={serverState}
       />
+      <MileagePanel mileage={mileage} defaultMileage={defaultMileage} onChange={setMileage} />
       {valuation && (
         <SourceBreakdown
           valuation={valuation}
@@ -258,6 +282,7 @@ function Hero({
   depEstimate,
   newPrice,
   age,
+  mileage,
   vehicle,
   serverState,
 }: {
@@ -265,6 +290,7 @@ function Hero({
   depEstimate: number | null;
   newPrice: number | null;
   age: number | null;
+  mileage: number;
   vehicle: LookupVehicle;
   serverState: "loading" | "ok" | "skipped";
 }) {
@@ -328,6 +354,7 @@ function Hero({
         <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-400">
           <Chip>{vehicle.make ?? "—"} {vehicle.model ?? ""}</Chip>
           {age !== null && <Chip>{age} yr{age === 1 ? "" : "s"} old</Chip>}
+          <Chip>{mileage.toLocaleString("en-GB")} mi</Chip>
           {vehicle.fuelType && <Chip>{vehicle.fuelType}</Chip>}
           {newPrice && <Chip>New ~£{newPrice.toLocaleString("en-GB")}</Chip>}
         </div>
@@ -599,6 +626,88 @@ const DEFAULT_CONDITION: ConditionInputs = {
   owners: "2-3",
   accidents: "none",
 };
+
+/* ─── Mileage control ──────────────────────────────────────────────────── */
+
+function MileagePanel({
+  mileage,
+  defaultMileage,
+  onChange,
+}: {
+  mileage: number;
+  defaultMileage: number | null;
+  onChange: (m: number) => void;
+}) {
+  const sliderMax = Math.max(150000, Math.ceil((mileage + 20000) / 10000) * 10000);
+  const changed = defaultMileage != null && mileage !== defaultMileage;
+
+  return (
+    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-100">
+          <Gauge className="h-4 w-4 text-cyan-400" />
+          Mileage
+        </h3>
+        {changed && (
+          <button
+            type="button"
+            onClick={() => onChange(defaultMileage!)}
+            className="text-[11px] text-slate-400 underline underline-offset-2 hover:text-slate-200 transition-colors"
+          >
+            Reset to MOT reading
+          </button>
+        )}
+      </div>
+
+      <div className="flex items-baseline gap-2">
+        <span className="text-4xl font-bold text-white tabular-nums">
+          {mileage.toLocaleString("en-GB")}
+        </span>
+        <span className="text-sm text-slate-400">miles</span>
+      </div>
+
+      <input
+        type="range"
+        min={0}
+        max={sliderMax}
+        step={500}
+        value={Math.min(mileage, sliderMax)}
+        onChange={(e) => onChange(parseInt(e.target.value, 10))}
+        aria-label="Adjust mileage"
+        className="mt-4 w-full cursor-pointer accent-cyan-500"
+      />
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <label htmlFor="exact-mileage" className="text-xs text-slate-400">
+          Know it exactly?
+        </label>
+        <input
+          id="exact-mileage"
+          type="text"
+          inputMode="numeric"
+          value={String(mileage)}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/[^0-9]/g, "");
+            onChange(digits === "" ? 0 : Math.min(parseInt(digits, 10), 500000));
+          }}
+          aria-label="Enter exact mileage"
+          className="w-28 rounded-lg border border-slate-700 bg-slate-950/50 px-2.5 py-1.5 text-sm text-slate-100 tabular-nums outline-none focus:border-cyan-500"
+        />
+      </div>
+
+      <p className="mt-3 text-xs text-slate-500">
+        {defaultMileage != null ? (
+          <>
+            Pre-filled from the last MOT ({defaultMileage.toLocaleString("en-GB")} miles).
+            Adjust to your car&apos;s current mileage for a sharper estimate.
+          </>
+        ) : (
+          <>Estimated from the car&apos;s age — set your actual mileage for a sharper estimate.</>
+        )}
+      </p>
+    </section>
+  );
+}
 
 function ConditionPanel({
   condition,
