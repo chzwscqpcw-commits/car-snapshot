@@ -43,7 +43,7 @@ export default function PrivacyPage() {
             ← Back to Free Plate Check
           </Link>
           <h1 className="text-3xl font-bold text-slate-100">Privacy Policy</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: March 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: June 2026</p>
         </div>
       </div>
 
