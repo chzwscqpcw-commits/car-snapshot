@@ -7,6 +7,7 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
+import AdUnit from "@/components/ads/AdUnit";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -244,6 +245,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             title={post.title}
           />
         </div>
+
+        {/* In-article ad — blog-only, renders nothing until AdSense is
+            configured (see config/ads.ts). */}
+        <AdUnit slot="blogInArticle" className="max-w-[700px] mx-auto mt-10" />
 
         {/* MOT Booking CTA — only for MOT-related posts */}
         {hasMotKeywords(post.keywords) && (
