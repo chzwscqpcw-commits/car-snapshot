@@ -8,6 +8,21 @@ import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/con
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import AdUnit from "@/components/ads/AdUnit";
+import MotBookingInline from "@/components/MotBookingInline";
+
+/**
+ * Split rendered post HTML just before the 2nd <h2> so an inline CTA can sit
+ * after the intro + first section. Returns null if there are fewer than two
+ * headings (too short to interrupt — fall back to a single article block).
+ */
+function splitAtSecondH2(html: string): [string, string] | null {
+  const re = /<h2\b/gi;
+  const idx: number[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html)) !== null && idx.length < 2) idx.push(m.index);
+  if (idx.length < 2) return null;
+  return [html.slice(0, idx[1]), html.slice(idx[1])];
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -233,10 +248,27 @@ export default async function BlogPostPage({ params }: PageProps) {
           </nav>
         )}
 
-        <article
-          className="blog-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        {(() => {
+          // For MOT posts, drop a subtle BookMyGarage prompt after the first
+          // section so the (affiliate) booking link appears early, not only at
+          // the foot of a long article.
+          const split = hasMotKeywords(post.keywords) ? splitAtSecondH2(post.content) : null;
+          if (split) {
+            return (
+              <>
+                <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[0] }} />
+                <MotBookingInline clickref="blog-mot-inline" />
+                <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[1] }} />
+              </>
+            );
+          }
+          return (
+            <article
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          );
+        })()}
 
         {/* Share buttons (bottom) */}
         <div className="max-w-[700px] mx-auto mt-10 pt-6 border-t border-slate-800">
@@ -256,7 +288,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             <p className="text-sm text-slate-300">
               Need to book an MOT?{" "}
               <a
-                href={PARTNER_LINKS.bookMyGarage.url}
+                href={PARTNER_LINKS.bookMyGarage.buildLink?.("", "blog-mot-foot") ?? PARTNER_LINKS.bookMyGarage.url}
                 target="_blank"
                 rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
                 className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
