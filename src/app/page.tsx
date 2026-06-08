@@ -4108,24 +4108,19 @@ END:VEVENT
                   })()}
                 </div>
 
-                {/* MOT Booking CTA — specs placement (near top, before
-                    SectionGroups) */}
+                {/* Specs-placement MOTBookingCTA removed (Phase 2 CTA de-dup) —
+                    it sat directly under the status-aware MotActionBanner above,
+                    a duplicate ask. BMG now surfaces as: MotActionBanner (top) +
+                    the Health & Safety MOTBookingCTA (distinct lower audience) +
+                    subtle in-flow links. Kept the cheap-MOT internal link. */}
                 {isOver3Years && (
-                  <div className="mb-3">
-                    <MOTBookingCTA
-                      regNumber={data?.registrationNumber || ""}
-                      context={showMotBanner === "expired" ? "expired" : showMotBanner === "no-record" ? "neutral" : motDaysUntilExpiry <= 60 ? "due-soon" : "neutral"}
-                      expandable={showMotBanner !== "expired" && (showMotBanner === "no-record" || motDaysUntilExpiry > 60)}
-                      placement="specs"
-                    />
-                    <p className="mt-2 text-xs text-slate-500">
-                      Shopping on price?{" "}
-                      <a href="/cheap-mot" className="text-blue-400 hover:text-blue-300">
-                        See how to find a cheap MOT near you
-                      </a>
-                      .
-                    </p>
-                  </div>
+                  <p className="mb-3 text-xs text-slate-500">
+                    Shopping on price?{" "}
+                    <a href="/cheap-mot" className="text-blue-400 hover:text-blue-300">
+                      See how to find a cheap MOT near you
+                    </a>
+                    .
+                  </p>
                 )}
 
                 {/* Vehicle specs — wrap on all sizes */}
