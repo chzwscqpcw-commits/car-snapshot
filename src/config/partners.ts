@@ -153,25 +153,23 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
-  // Carwow "Sell my Car" — Awin (~£50/sale CPA, 90-day cookie). Reachable
-  // alternative to We Buy Any Car for the sell-car / valuation audience while
-  // We Buy Any Car (Webgains) is parked behind Webgains' ~10k-unique-visitors
-  // gate. Staged 2026-06-08 — apply on Awin (the "Carwow Sell my Car" offer),
-  // swap PENDING_AWINMID for the real merchant ID, then flip pending:false. On
-  // activation you may swap the destination for Carwow's approved sell deep link.
+  // Carwow "Sell my Car" — sell-car / valuation audience. CORRECTION (2026-06-08):
+  // Carwow's Awin UK programme is CLOSED. The live UK networks are Impact.com /
+  // TradeDoubler / FlexOffers (Impact.com = best pick: major + reputable), NONE
+  // of which we're on yet (we have Awin + Webgains only). So this is PARKED until
+  // the owner decides to join a new network. On joining, replace the whole
+  // url/buildLink with that network's tracking-link format, then flip
+  // pending:false. Kept staged so the intent + path is documented.
   carwowSell: {
-    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.carwow.co.uk%2Fsell-my-car",
+    url: "https://www.carwow.co.uk/sell-my-car?ref=PENDING_NETWORK",
     name: "Carwow",
     isAffiliate: true,
     pending: true,
     description: "Sell your car — Carwow has dealers bid for it, often beating instant-buyer offers",
     shortDescription: "Sell your car",
     buildLink: (_reg: string, clickref?: string) => {
-      const destination = encodeURIComponent("https://www.carwow.co.uk/sell-my-car");
-      return withClickref(
-        `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`,
-        clickref,
-      );
+      const base = "https://www.carwow.co.uk/sell-my-car?ref=PENDING_NETWORK";
+      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
   // carVertical — full vehicle history check (finance, stolen, write-off,
