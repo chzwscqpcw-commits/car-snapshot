@@ -20,6 +20,7 @@ const allStats: StatsPage[] = [
   { slug: "uk-mileage", title: "UK Mileage Trends", description: "Average annual mileage over the decades" },
   { slug: "road-safety", title: "Road Safety", description: "Fatalities & casualties since 1970" },
   { slug: "popular-cars", title: "Most Popular Cars", description: "Top makes & models on UK roads" },
+  { slug: "car-colours", title: "Car Colours", description: "Most popular new car colours in the UK" },
 ];
 
 export default function StatsRelated({ exclude }: { exclude: string }) {

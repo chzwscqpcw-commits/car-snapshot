@@ -252,6 +252,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/stats/car-colours",
+      lastModified: new Date("2026-06-08"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
       lastModified: new Date("2026-03-07"),
       changeFrequency: "monthly",

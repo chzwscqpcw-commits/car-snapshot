@@ -197,6 +197,17 @@ export default function StatsIndex() {
             ]}
             delay={650}
           />
+          <StatsHubPreviewCard
+            href="/stats/car-colours"
+            icon="🎨"
+            title="Car Colours"
+            description="Britain's most popular new-car colours by 2025 registration share — and why grey keeps winning."
+            stats={[
+              { value: "Grey", label: "#1 for 8 yrs", colour: "emerald" },
+              { value: "27.6%", label: "grey share", colour: "emerald" },
+            ]}
+            delay={700}
+          />
         </StatsHubCategoryGroup>
 
         {/* ── Group 3: Market & Safety ── */}
