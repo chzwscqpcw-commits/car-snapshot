@@ -4015,6 +4015,13 @@ END:VEVENT
                 const tone: ChipTone = g === "A" || g === "B" ? "emerald" : g === "C" ? "amber" : "red";
                 chips.push({ label: `Health ${g}`, tone, href: "#section-health" });
               }
+              if (valuationResult?.estimatedValue) {
+                chips.push({
+                  label: `≈ £${valuationResult.estimatedValue.toLocaleString("en-GB")}`,
+                  tone: "slate",
+                  href: "#section-money",
+                });
+              }
               return (
                 <DataReveal delay={30}>
                   <div className="mb-6 flex flex-wrap gap-2" aria-label="Report summary">
