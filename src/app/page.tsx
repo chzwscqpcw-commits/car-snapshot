@@ -3976,6 +3976,61 @@ END:VEVENT
 
             </DataReveal>
 
+            {/* REPORT SUMMARY — verdict-first status chips directly under the
+                header (Phase 2). Each chip is tone-coloured (good/warn/risk) and,
+                where a section exists, anchors to it for quick triage. */}
+            {data && (() => {
+              type ChipTone = "emerald" | "amber" | "red" | "slate";
+              const toneChip: Record<ChipTone, string> = {
+                emerald: "border-emerald-700/50 bg-emerald-950/40 text-emerald-300",
+                amber: "border-amber-700/50 bg-amber-950/40 text-amber-300",
+                red: "border-red-700/50 bg-red-950/40 text-red-300",
+                slate: "border-slate-700/50 bg-slate-800/60 text-slate-300",
+              };
+              const chips: { label: string; tone: ChipTone; href?: string }[] = [];
+              chips.push({
+                label: `MOT: ${data.motStatus ?? "—"}`,
+                tone: getMotStatusColor(data.motStatus, data.motExpiryDate) as ChipTone,
+                href: data.motTests && data.motTests.length > 0 ? "#section-mot" : undefined,
+              });
+              chips.push({
+                label: `Tax: ${data.taxStatus ?? "—"}`,
+                tone: getTaxStatusColor(data.taxStatus, data.taxDueDate) as ChipTone,
+              });
+              if (recallSummary) {
+                chips.push({
+                  label: `${recallSummary.total} recall${recallSummary.total !== 1 ? "s" : ""}`,
+                  tone: recallSummary.freshness === "Recent" ? "amber" : "slate",
+                  href: "#section-health",
+                });
+              } else {
+                chips.push({ label: "No recalls", tone: "emerald", href: "#section-health" });
+              }
+              if (ulezResult && ulezResult.status !== "unknown") {
+                const ok = ulezResult.status === "compliant" || ulezResult.status === "exempt";
+                chips.push({ label: ok ? "ULEZ ✓" : "ULEZ ✗", tone: ok ? "emerald" : "amber", href: "#section-health" });
+              }
+              if (healthScore) {
+                const g = healthScore.grade;
+                const tone: ChipTone = g === "A" || g === "B" ? "emerald" : g === "C" ? "amber" : "red";
+                chips.push({ label: `Health ${g}`, tone, href: "#section-health" });
+              }
+              return (
+                <DataReveal delay={30}>
+                  <div className="mb-6 flex flex-wrap gap-2" aria-label="Report summary">
+                    {chips.map((c, i) => {
+                      const cls = `inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium ${toneChip[c.tone]}`;
+                      return c.href ? (
+                        <a key={i} href={c.href} className={`${cls} hover:brightness-125 transition`}>{c.label}</a>
+                      ) : (
+                        <span key={i} className={cls}>{c.label}</span>
+                      );
+                    })}
+                  </div>
+                </DataReveal>
+              );
+            })()}
+
             {/* STATUS-AWARE ACTION BANNER — single unified surface that
                 replaced the old expired/expiring banner + the reminder
                 chip. Adapts to MOT urgency: BMG primary + reminder
