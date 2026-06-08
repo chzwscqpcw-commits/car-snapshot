@@ -93,6 +93,8 @@ export type StatsResponse = {
   newEventsLast7d: {
     pdfDownloads: number;
     pdfErrors: number;
+    pdfChunkErrors: number;
+    motHistoryExpands: number;
     vehiclesSaved: number;
     outboundClicks: number;
     scrollDepth: ScrollThreshold[];
@@ -115,6 +117,29 @@ async function countEvents(
   const { count, error } = await query;
   if (error) {
     console.error(`[STATS] Error counting ${eventType}:`, error.message);
+    return 0;
+  }
+  return count ?? 0;
+}
+
+// Count events of a type whose metadata JSON field equals a value (text
+// comparison via the ->> operator). Used to split pdf_download_error into
+// stale-chunk (benign — auto-recovers on reload) vs real faults.
+async function countEventsWithMetaEq(
+  sb: ReturnType<typeof supabaseServer>,
+  eventType: string,
+  jsonPath: string,
+  value: string,
+  since: Date,
+): Promise<number> {
+  const { count, error } = await sb
+    .from("site_events")
+    .select("*", { count: "exact", head: true })
+    .eq("event_type", eventType)
+    .filter(jsonPath, "eq", value)
+    .gte("created_at", since.toISOString());
+  if (error) {
+    console.error(`[STATS] Error counting ${eventType} ${jsonPath}=${value}:`, error.message);
     return 0;
   }
   return count ?? 0;
@@ -349,6 +374,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     vehiclesSaved7d,
     outboundClicks7d,
     scrollDepthCounts7d,
+    motHistoryExpands7d,
+    pdfChunkErrors7d,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -404,6 +431,11 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEvents(sb, "vehicle_saved", sevenDaysAgo),
     countEvents(sb, "outbound_click", sevenDaysAgo),
     groupByMetadataField(sb, "scroll_depth", "threshold_pct", sevenDaysAgo),
+    // Phase 2 reveal telemetry: how often the collapsed MOT history is opened
+    // (confirms tucking it away didn't kill engagement).
+    countEvents(sb, "mot_history_expand", sevenDaysAgo),
+    // Of the PDF errors, how many were the benign stale-chunk kind.
+    countEventsWithMetaEq(sb, "pdf_download_error", "metadata->>chunk_error", "true", sevenDaysAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
@@ -523,6 +555,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     newEventsLast7d: {
       pdfDownloads: pdfDownloads7d,
       pdfErrors: pdfErrors7d,
+      pdfChunkErrors: pdfChunkErrors7d,
+      motHistoryExpands: motHistoryExpands7d,
       vehiclesSaved: vehiclesSaved7d,
       outboundClicks: outboundClicks7d,
       scrollDepth: scrollDepthBuckets,

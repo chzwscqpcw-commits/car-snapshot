@@ -112,6 +112,8 @@ type StatsData = {
   newEventsLast7d: {
     pdfDownloads: number;
     pdfErrors: number;
+    pdfChunkErrors: number;
+    motHistoryExpands: number;
     vehiclesSaved: number;
     outboundClicks: number;
     scrollDepth: { threshold_pct: number; count: number }[];
@@ -1235,11 +1237,16 @@ export default function DataHealthPage() {
                 title="New events tracked"
                 hint="Shipped May 2026 · last 7d"
               >
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
                   <FunnelStep
                     icon={Download}
                     label="PDF downloads"
                     value={stats.newEventsLast7d.pdfDownloads}
+                  />
+                  <FunnelStep
+                    icon={Eye}
+                    label="MOT history opened"
+                    value={stats.newEventsLast7d.motHistoryExpands}
                   />
                   <FunnelStep
                     icon={Bookmark}
@@ -1257,6 +1264,19 @@ export default function DataHealthPage() {
                     value={stats.newEventsLast7d.pdfErrors}
                   />
                 </div>
+                {stats.newEventsLast7d.pdfErrors > 0 && (
+                  <p className="mt-2 text-[11px] text-slate-500 leading-relaxed">
+                    Of {stats.newEventsLast7d.pdfErrors} PDF error
+                    {stats.newEventsLast7d.pdfErrors !== 1 ? "s" : ""},{" "}
+                    <span className="text-slate-400">{stats.newEventsLast7d.pdfChunkErrors}</span>{" "}
+                    {stats.newEventsLast7d.pdfChunkErrors === 1 ? "was" : "were"} stale-chunk
+                    (benign — auto-recovers on reload);{" "}
+                    <span className="text-slate-400">
+                      {stats.newEventsLast7d.pdfErrors - stats.newEventsLast7d.pdfChunkErrors}
+                    </span>{" "}
+                    real. Untagged errors predate the 2026-06-08 fix.
+                  </p>
+                )}
                 {stats.newEventsLast7d.scrollDepth.length > 0 && (
                   <div className="mt-3.5 rounded-xl border border-slate-800 bg-slate-900/40 p-3.5">
                     <p className="text-[11px] font-medium text-slate-400 mb-2">
