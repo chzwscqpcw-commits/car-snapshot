@@ -163,7 +163,7 @@ import BoltMark from "@/components/BoltMark";
 import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
-import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
+import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick, trackConversion, trackEvent } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
@@ -1718,19 +1718,20 @@ export default function Home() {
       });
     }
 
-    // 5. Insurance group lookup (low priority — only if space)
-    if (prompts.length < 3) {
-      const makeModel = data.make && data.model ? `${data.make} ${data.model}` : "";
-      const parkersQuery = makeModel ? encodeURIComponent(makeModel.toLowerCase()) : "";
+    // 5. Car insurance comparison (low priority — only if space). Gated on
+    //    isPartnerConfigured so it appears only once Confused.com (Awin) is
+    //    approved — replaces the old non-affiliate Parkers insurance-group leak.
+    if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.confusedInsurance)) {
+      const makeModel = data.make && data.model ? `${data.make} ${data.model}` : "this car";
       prompts.push({
         variant: "subtle",
         icon: <Shield className="w-5 h-5 text-slate-400" />,
-        title: "Check your insurance group",
-        description: "Insurance groups (1–50) affect your premium. Look up this vehicle's group rating for free.",
-        linkText: "Check insurance group — Parkers",
-        linkHref: `https://www.parkers.co.uk/car-insurance/insurance-groups/${parkersQuery ? `?q=${parkersQuery}` : ""}`,
-        partnerId: "parkersInsurance",
-        trackingContext: "action-insurance-group",
+        title: "Compare car insurance quotes",
+        description: `Insurance is a big running cost (groups 1–50 affect your premium). Compare quotes for ${makeModel} from 100+ providers.`,
+        linkText: "Compare quotes — Confused.com",
+        linkHref: PARTNER_LINKS.confusedInsurance.buildLink?.(data.registrationNumber, "action-insurance") ?? PARTNER_LINKS.confusedInsurance.url,
+        partnerId: "confusedInsurance",
+        trackingContext: "action-insurance",
       });
     }
 

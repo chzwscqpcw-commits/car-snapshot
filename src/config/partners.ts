@@ -222,11 +222,28 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     name: "GOV.UK Find MOT Centre",
     isAffiliate: false,
   },
-  parkersInsurance: {
-    url: "https://www.parkers.co.uk/car-insurance/insurance-groups/",
-    name: "Parkers Insurance Groups",
-    isAffiliate: false,
-    description: "Free insurance group lookup tool",
+  // Confused.com — car-insurance comparison (Awin merchant 4445). Pays £2.30 per
+  // COMPLETED quote (user reaches the final prices page — no purchase needed),
+  // 30-day cookie. Replaces the old non-affiliate Parkers insurance-group leak
+  // (£0, off-site, not even pre-filled). awinmid is known (4445), so on approval
+  // just flip pending:false. The action prompt is gated on isPartnerConfigured
+  // so we never promote it before Awin accepts us. Applied 2026-06-08.
+  confusedInsurance: {
+    url: "https://www.awin1.com/cread.php?awinmid=4445&awinaffid=2729598&ued=https%3A%2F%2Fwww.confused.com%2Fcar-insurance",
+    name: "Confused.com",
+    isAffiliate: true,
+    pending: true,
+    description: "Compare car insurance quotes from 100+ providers",
+    shortDescription: "Insurance quotes",
+    // On activation you may swap the ued destination for Confused.com's approved
+    // affiliate car-insurance deep link from their Awin creative.
+    buildLink: (_reg: string, clickref?: string) => {
+      const destination = encodeURIComponent("https://www.confused.com/car-insurance");
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=4445&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
+    },
   },
 };
 
