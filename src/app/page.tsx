@@ -3729,6 +3729,13 @@ END:VEVENT
                 <input
                   ref={searchInputRef}
                   type="text"
+                  inputMode="text"
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={8}
+                  aria-label="Vehicle registration"
                   placeholder="AB12 CDE"
                   value={vrm}
                   onChange={(e) => {
@@ -5244,7 +5251,7 @@ END:VEVENT
                   {actionPrompts.map((prompt, idx) => (
                     <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
                   ))}
-                  <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
+                  <p className="text-xs text-slate-400">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
                 </div>
               </DataReveal>
             )}

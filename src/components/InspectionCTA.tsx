@@ -50,8 +50,8 @@ export default function InspectionCTA({ context, regNumber }: InspectionCTAProps
         </span>
       </div>
 
-      <p className="text-xs text-slate-500 mt-3 ml-8">
-        Free Plate Check may earn a small commission from this link.
+      <p className="text-xs text-slate-400 mt-3 ml-8">
+        Free Plate Check may earn a small commission from this link — it never costs you more.
       </p>
     </div>
   );
