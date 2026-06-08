@@ -223,9 +223,10 @@ export default async function CarValuationNoSignupPage({
               {/* DESKTOP LAYOUT */}
               <div className="hidden lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:items-center">
                 <div>
-                  <h1 className="text-5xl font-bold text-slate-100 leading-tight">
+                  {/* Desktop hero — <p> not a 2nd <h1> (mobile layout has the page's single h1) */}
+                  <p className="text-5xl font-bold text-slate-100 leading-tight">
                     Car valuation — no signup
-                  </h1>
+                  </p>
                   <p className="mt-3 text-sm font-medium text-emerald-300">
                     No email · No phone · No signup · No marketing calls
                   </p>

@@ -219,9 +219,12 @@ export default async function MotCheckPage({
           {/* DESKTOP LAYOUT (≥lg) */}
           <div className="hidden lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:items-center">
             <div>
-              <h1 className="text-5xl font-bold text-slate-100 leading-tight">
+              {/* Desktop hero heading — a <p>, not a second <h1>: the mobile
+                  layout above already carries the page's single <h1> (one h1
+                  per page; fixes Bing's "multiple <h1>" flag). */}
+              <p className="text-5xl font-bold text-slate-100 leading-tight">
                 Free MOT History Check
-              </h1>
+              </p>
               <a
                 href="#mot-reminder"
                 className="inline-flex items-center gap-1.5 mt-4 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1.5 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
