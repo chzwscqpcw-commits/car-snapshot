@@ -6,6 +6,7 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import CarTheftCharts from "@/components/stats/CarTheftCharts";
+import CiteThisData from "@/components/stats/CiteThisData";
 
 export const metadata: Metadata = {
   title: "Most Stolen Cars in the UK 2026 — Full Theft Rate List",
@@ -114,6 +115,13 @@ export default function CarTheftPage() {
 
         {/* Charts */}
         <CarTheftCharts />
+
+        {/* Cite-this-data box — makes it frictionless for journalists/bloggers
+            to credit the figures WITH a link back (digital-PR backlink play). */}
+        <CiteThisData
+          title="Most Stolen Cars in the UK"
+          url="https://www.freeplatecheck.co.uk/stats/car-theft"
+        />
 
         {/* Insight copy */}
         <div className="my-10 space-y-4 text-sm leading-relaxed text-gray-300">
