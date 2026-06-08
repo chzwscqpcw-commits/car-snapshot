@@ -3900,7 +3900,7 @@ END:VEVENT
                 <p className="text-xs text-slate-500 mb-3">DVLA data · <span className="font-mono">{new Date().toLocaleDateString()}</span></p>
 
                 {/* Row 3: Icon action buttons + primary PDF */}
-                <div className="flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-2">
                     {/* Save */}
                     <button
                       onClick={isFavorited(data.registrationNumber) ? () => removeFavorite(data.registrationNumber) : addFavorite}
@@ -3913,7 +3913,7 @@ END:VEVENT
                       aria-label={isFavorited(data.registrationNumber) ? "Remove from saved vehicles" : "Save this vehicle"}
                     >
                       <Heart className="w-4 h-4" fill={isFavorited(data.registrationNumber) ? "currentColor" : "none"} />
-                      <span className="text-[10px] font-medium leading-tight">Save</span>
+                      <span className="text-[11px] font-medium leading-tight">Save</span>
                     </button>
 
                     {/* My Car */}
@@ -3928,7 +3928,7 @@ END:VEVENT
                       aria-label={isMyVehicle(data.registrationNumber) ? "Remove from My Vehicles" : "Mark as My Car"}
                     >
                       <Car className="w-4 h-4" />
-                      <span className="text-[10px] font-medium leading-tight">My Car</span>
+                      <span className="text-[11px] font-medium leading-tight">My Car</span>
                     </button>
 
                     {/* Compare */}
@@ -3947,7 +3947,7 @@ END:VEVENT
                       aria-label="Compare vehicles"
                     >
                       <ArrowLeftRight className="w-4 h-4" />
-                      <span className="text-[10px] font-medium leading-tight">Compare</span>
+                      <span className="text-[11px] font-medium leading-tight">Compare</span>
                     </button>
 
                     {/* Text download */}
@@ -3958,7 +3958,7 @@ END:VEVENT
                       aria-label="Export as text file"
                     >
                       <FileText className="w-4 h-4" />
-                      <span className="text-[10px] font-medium leading-tight">Export</span>
+                      <span className="text-[11px] font-medium leading-tight">Export</span>
                     </button>
 
                     {/* Primary PDF button */}
