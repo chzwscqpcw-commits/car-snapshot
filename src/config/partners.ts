@@ -153,6 +153,27 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
+  // Carwow "Sell my Car" — Awin (~£50/sale CPA, 90-day cookie). Reachable
+  // alternative to We Buy Any Car for the sell-car / valuation audience while
+  // We Buy Any Car (Webgains) is parked behind Webgains' ~10k-unique-visitors
+  // gate. Staged 2026-06-08 — apply on Awin (the "Carwow Sell my Car" offer),
+  // swap PENDING_AWINMID for the real merchant ID, then flip pending:false. On
+  // activation you may swap the destination for Carwow's approved sell deep link.
+  carwowSell: {
+    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.carwow.co.uk%2Fsell-my-car",
+    name: "Carwow",
+    isAffiliate: true,
+    pending: true,
+    description: "Sell your car — Carwow has dealers bid for it, often beating instant-buyer offers",
+    shortDescription: "Sell your car",
+    buildLink: (_reg: string, clickref?: string) => {
+      const destination = encodeURIComponent("https://www.carwow.co.uk/sell-my-car");
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
+    },
+  },
   // carVertical — full vehicle history check (finance, stolen, write-off,
   // mileage anomalies). Pure referral: the customer buys from carVertical under
   // carVertical's own terms — we never originate, store or handle the report,
