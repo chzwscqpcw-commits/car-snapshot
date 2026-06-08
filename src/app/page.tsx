@@ -4847,6 +4847,18 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* CLICKMECHANIC PRE-PURCHASE INSPECTION — sits right after the
+                Negotiation Helper, at peak buying intent (a buyer has just seen
+                the valuation + how to negotiate). Renders null until the partner
+                is approved; see partners.ts. */}
+            {data && (
+              <DataReveal delay={480}>
+                <div className="mb-8">
+                  <InspectionCTA context="buyer-after-negotiation" regNumber={data.registrationNumber} />
+                </div>
+              </DataReveal>
+            )}
+
             </SectionGroup>
 
             {/* ═══ GROUP 4: KEY FACTS ═══ */}
@@ -5233,16 +5245,6 @@ END:VEVENT
                     <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
                   ))}
                   <p className="text-[11px] text-slate-600">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
-                </div>
-              </DataReveal>
-            )}
-
-            {/* CLICKMECHANIC PRE-PURCHASE INSPECTION — buyer intent (renders
-                null until the partner is approved; see partners.ts). */}
-            {data && (
-              <DataReveal delay={730}>
-                <div className="mb-8">
-                  <InspectionCTA context="buyer-next-steps" regNumber={data.registrationNumber} />
                 </div>
               </DataReveal>
             )}
