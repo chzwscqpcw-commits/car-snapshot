@@ -74,9 +74,14 @@ import { supabaseServerRole } from "@/lib/supabaseServer";
  *  allows — any sane value sits far below MarketCheck's £250/mo early-billing
  *  threshold. Raised 1,000 → 2,500 on 2026-06-08 as valuation volume grew. */
 export const MARKETCHECK_MONTHLY_CALL_LIMIT = Number(process.env.MARKETCHECK_MONTHLY_CALL_LIMIT ?? 2500);
-/** Cache freshness. Refreshing is cheap (£0.0010), so 30 days keeps the second
- *  signal current without over-spending; raise via env to stretch the budget. */
-export const MARKETCHECK_CACHE_TTL_DAYS = Number(process.env.MARKETCHECK_CACHE_TTL_DAYS ?? 30);
+/** Cache freshness. Refreshing is cheap (£0.0010), so the constraint is signal
+ *  staleness, not cost. Used-car make/model/year aggregates drift slowly and the
+ *  reading is cushioned by a live (uncached) eBay comparable, so 90 days stays
+ *  accurate while cutting refresh churn ~3x (re-warming our ~286 cached cars
+ *  monthly → quarterly), reclaiming cap headroom. Raised 30 → 90 on 2026-06-08.
+ *  Beyond ~90d seasonal + depreciation drift gets material — don't stretch it
+ *  much further. Override via env. */
+export const MARKETCHECK_CACHE_TTL_DAYS = Number(process.env.MARKETCHECK_CACHE_TTL_DAYS ?? 90);
 
 export type MarketCheckAggregate = {
   median: number;
