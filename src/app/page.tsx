@@ -4122,7 +4122,9 @@ END:VEVENT
                   return (
                     <div className="mt-3">
                       <button
+                        type="button"
                         onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                        aria-expanded={showTechnicalDetails}
                         className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-300 transition-colors"
                       >
                         {showTechnicalDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -4347,7 +4349,9 @@ END:VEVENT
 
                     {/* Toggle button */}
                     <button
+                      type="button"
                       onClick={() => setShowRecallDetails(!showRecallDetails)}
+                      aria-expanded={showRecallDetails}
                       className="mt-3 flex items-center gap-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {showRecallDetails ? (
@@ -4591,7 +4595,9 @@ END:VEVENT
 
                   {/* Condition refinement toggle */}
                   <button
+                    type="button"
                     onClick={() => setShowConditionForm(!showConditionForm)}
+                    aria-expanded={showConditionForm}
                     className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors mb-2"
                   >
                     {showConditionForm ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -5157,7 +5163,9 @@ END:VEVENT
                   {/* Show earlier MOT history toggle */}
                   {data.motTests.length > 3 && (
                     <button
+                      type="button"
                       onClick={() => setShowAllMotTests(!showAllMotTests)}
+                      aria-expanded={showAllMotTests}
                       className="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {showAllMotTests ? "Hide earlier tests" : `Show earlier MOT history (${data.motTests.length - 3} more)`}
@@ -5704,7 +5712,7 @@ END:VEVENT
             </div>
             <button
               onClick={handleShareToastClick}
-              className="px-3.5 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-xs font-semibold rounded-full transition-all whitespace-nowrap"
+              className="px-3.5 py-1.5 bg-slate-200 hover:bg-white text-slate-900 text-xs font-semibold rounded-full transition-colors whitespace-nowrap"
             >
               {shareCopied ? "Copied!" : (isMobileDevice() ? "Share" : "Copy Link")}
             </button>
@@ -5728,7 +5736,7 @@ END:VEVENT
             </p>
             <button
               onClick={handleDownloadShare}
-              className="px-3.5 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-xs font-semibold rounded-full transition-all whitespace-nowrap"
+              className="px-3.5 py-1.5 bg-slate-200 hover:bg-white text-slate-900 text-xs font-semibold rounded-full transition-colors whitespace-nowrap"
             >
               {downloadShareCopied ? "Copied!" : (isMobileDevice() ? "Share" : "Copy Link")}
             </button>
@@ -5742,6 +5750,10 @@ END:VEVENT
           </div>
         </div>
       )}
+
+      {/* Bottom clearance so the fixed QuickNav bar never covers the final
+          content on mobile (it spans nearly full-width there). */}
+      {data && <div aria-hidden="true" className="h-24 sm:hidden" />}
     </main>
   );
 }
