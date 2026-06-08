@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import MileageCharts from "@/components/stats/MileageCharts";
@@ -211,6 +212,9 @@ export default function UkMileagePage() {
         <ConversionWidget headline="Check any vehicle's mileage history" subtext="Worried about clocking? Enter a reg plate to see full MOT mileage records and spot any red flags instantly." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="Average UK Car Mileage" url="https://www.freeplatecheck.co.uk/stats/uk-mileage" />
+
         <StatsRelated exclude="uk-mileage" />
       </div>
     </>

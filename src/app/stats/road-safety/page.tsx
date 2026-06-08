@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import RoadSafetyCharts from "@/components/stats/RoadSafetyCharts";
@@ -209,6 +210,9 @@ export default function RoadSafetyPage() {
         <ConversionWidget headline="Check your car's safety rating" subtext="Enter a reg plate to see Euro NCAP scores, safety recalls, and a full vehicle health check — free and instant." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK Road Safety Statistics" url="https://www.freeplatecheck.co.uk/stats/road-safety" />
+
         <StatsRelated exclude="road-safety" />
       </div>
     </>

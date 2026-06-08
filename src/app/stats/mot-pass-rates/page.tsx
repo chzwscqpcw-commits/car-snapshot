@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import passRateData from "@/data/mot-pass-rates.json";
 
 import MotPassRateCharts from "@/components/stats/MotPassRateCharts";
@@ -253,6 +254,9 @@ export default function MotPassRatesPage() {
         <ConversionWidget headline="When is your MOT due?" subtext="Enter a reg plate to see your vehicle's full MOT history, pass rate, and advisories — plus set a free reminder." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK MOT Pass Rates" url="https://www.freeplatecheck.co.uk/stats/mot-pass-rates" />
+
         <StatsRelated exclude="mot-pass-rates" />
       </div>
     </>

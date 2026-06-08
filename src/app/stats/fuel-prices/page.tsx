@@ -4,6 +4,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import { latestWeek, weeklyData } from "@/lib/stats-data/fuel-prices";
 
@@ -235,6 +236,9 @@ export default function FuelPricesPage() {
         <ConversionWidget headline="What does your car cost to run?" subtext="Enter any UK reg to see your vehicle's fuel economy, running costs, and real-world data from MOT records — calculated using the latest fuel prices." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK Fuel Prices" url="https://www.freeplatecheck.co.uk/stats/fuel-prices" />
+
         <StatsRelated exclude="fuel-prices" />
       </div>
     </>

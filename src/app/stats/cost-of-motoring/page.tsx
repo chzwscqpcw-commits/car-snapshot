@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 
 import CostOfMotoringChart from "@/components/stats/CostOfMotoringChart";
 
@@ -223,6 +224,9 @@ export default function CostOfMotoringPage() {
         <ConversionWidget headline="See your car's real running costs" subtext="Enter a reg plate to get a personalised breakdown — fuel, road tax, depreciation, and MOT costs for your vehicle." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="The Cost of Motoring in the UK" url="https://www.freeplatecheck.co.uk/stats/cost-of-motoring" />
+
         <StatsRelated exclude="cost-of-motoring" />
       </div>
     </>

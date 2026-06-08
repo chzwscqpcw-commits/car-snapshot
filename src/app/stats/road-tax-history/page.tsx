@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import VedHistoryCharts from "@/components/stats/VedHistoryCharts";
@@ -212,6 +213,9 @@ export default function RoadTaxHistoryPage() {
         <ConversionWidget headline="Check your vehicle's tax status" subtext="Enter any UK reg plate to see current tax status, VED band, and how much road tax costs for your car." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK Road Tax (VED) Rates History" url="https://www.freeplatecheck.co.uk/stats/road-tax-history" />
+
         <StatsRelated exclude="road-tax-history" />
       </div>
     </>

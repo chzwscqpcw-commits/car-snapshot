@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import EvAdoptionCharts from "@/components/stats/EvAdoptionCharts";
@@ -212,6 +213,9 @@ export default function EvAdoptionPage() {
         <ConversionWidget headline="Thinking about going electric?" subtext="Enter any UK reg plate to check EV specs, running costs, ULEZ compliance, and get a full vehicle report — free." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="Electric Car Adoption in the UK" url="https://www.freeplatecheck.co.uk/stats/ev-adoption" />
+
         <StatsRelated exclude="ev-adoption" />
       </div>
     </>

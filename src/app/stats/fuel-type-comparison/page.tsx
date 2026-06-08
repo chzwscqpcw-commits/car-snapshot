@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import { perMileCosts, lastUpdated } from "@/lib/stats-data/fuel-comparison";
 
 import FuelComparisonChart from "@/components/stats/FuelComparisonChart";
@@ -222,6 +223,9 @@ export default function FuelTypeComparisonPage() {
         <ConversionWidget headline="What fuel type is your car?" subtext="Enter a reg plate to see your vehicle's fuel economy, emissions, ULEZ compliance, and estimated running costs — calculated with today's fuel prices." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK Cars by Fuel Type" url="https://www.freeplatecheck.co.uk/stats/fuel-type-comparison" />
+
         <StatsRelated exclude="fuel-type-comparison" />
       </div>
     </>

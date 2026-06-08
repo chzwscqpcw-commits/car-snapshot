@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import ReliabilityCharts from "@/components/stats/ReliabilityCharts";
@@ -211,6 +212,9 @@ export default function MostReliableCarsPage() {
         <ConversionWidget headline="How reliable is your car?" subtext="Enter any UK reg to see MOT pass rate, recurring advisories, and a full reliability picture for your vehicle." />
 
         {/* Related */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="Most Reliable Cars in the UK" url="https://www.freeplatecheck.co.uk/stats/most-reliable-cars" />
+
         <StatsRelated exclude="most-reliable-cars" />
       </div>
     </>

@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 
 import UsedCarPriceChart from "@/components/stats/UsedCarPriceChart";
 
@@ -219,6 +220,9 @@ export default function UsedCarPricesPage() {
         <ConversionWidget headline="Get a free instant car valuation" subtext="Enter any UK reg plate to see an estimated value based on age, mileage, condition, and real market data." />
 
         {/* Related Stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK Used Car Prices" url="https://www.freeplatecheck.co.uk/stats/used-car-prices" />
+
         <StatsRelated exclude="used-car-prices" />
       </div>
     </>

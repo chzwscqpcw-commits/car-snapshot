@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import CarRegistrationCharts from "@/components/stats/CarRegistrationCharts";
@@ -208,6 +209,9 @@ export default function CarRegistrationsPage() {
         <ConversionWidget headline="Check any registered vehicle" subtext="Enter a reg plate to see full specs, MOT history, tax status, mileage, valuation, and more — all free." />
 
         {/* Related stats */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="UK New Car Registrations" url="https://www.freeplatecheck.co.uk/stats/car-registrations" />
+
         <StatsRelated exclude="car-registrations" />
       </div>
     </>

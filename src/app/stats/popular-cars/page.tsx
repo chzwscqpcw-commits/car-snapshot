@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import PopularCarsCharts from "@/components/stats/PopularCarsCharts";
@@ -211,6 +212,9 @@ export default function PopularCarsPage() {
         <ConversionWidget headline="Check any vehicle on the road" subtext="Enter a UK reg plate for a free instant check — MOT history, tax status, mileage, valuation, and more." />
 
         {/* Related */}
+        {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
+        <CiteThisData title="Most Popular Cars in the UK" url="https://www.freeplatecheck.co.uk/stats/popular-cars" />
+
         <StatsRelated exclude="popular-cars" />
       </div>
     </>
