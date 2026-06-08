@@ -1721,16 +1721,16 @@ export default function Home() {
     // 5. Car insurance comparison (low priority — only if space). Gated on
     //    isPartnerConfigured so it appears only once Confused.com (Awin) is
     //    approved — replaces the old non-affiliate Parkers insurance-group leak.
-    if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.confusedInsurance)) {
+    if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.goCompare)) {
       const makeModel = data.make && data.model ? `${data.make} ${data.model}` : "this car";
       prompts.push({
         variant: "subtle",
         icon: <Shield className="w-5 h-5 text-slate-400" />,
         title: "Compare car insurance quotes",
-        description: `Insurance is a big running cost (groups 1–50 affect your premium). Compare quotes for ${makeModel} from 100+ providers.`,
-        linkText: "Compare quotes — Confused.com",
-        linkHref: PARTNER_LINKS.confusedInsurance.buildLink?.(data.registrationNumber, "action-insurance") ?? PARTNER_LINKS.confusedInsurance.url,
-        partnerId: "confusedInsurance",
+        description: `Insurance is a big running cost (groups 1–50 affect your premium). Compare quotes for ${makeModel} from 170+ insurance brands.`,
+        linkText: "Compare quotes — GoCompare",
+        linkHref: PARTNER_LINKS.goCompare.buildLink?.(data.registrationNumber, "action-insurance") ?? PARTNER_LINKS.goCompare.url,
+        partnerId: "goCompare",
         trackingContext: "action-insurance",
       });
     }
