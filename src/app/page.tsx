@@ -164,7 +164,7 @@ import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
-import { trackPartnerClick, trackConversion, trackEvent } from "@/lib/tracking";
+import { trackPartnerClick, trackConversion, trackEvent, EXPERIMENTS, assignExperimentVariant, trackExperimentImpression } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -859,6 +859,9 @@ function ActionPrompt({
 export default function Home() {
   const [vrm, setVrm] = useState("");
   const [showAllInsights, setShowAllInsights] = useState(false);
+  // A/B test (pdf_cta_copy_v1): sticky variant + once-per-load impression guard.
+  const [pdfCtaVariant, setPdfCtaVariant] = useState<string | null>(null);
+  const pdfCtaImpressionFired = useRef(false);
   const [data, setData] = useState<VehicleData | null>(null);
   const { setHasResult } = useHomeResult();
   useEffect(() => {
@@ -1263,6 +1266,20 @@ export default function Home() {
       }
     }
   }, []);
+
+  // A/B test: PDF CTA copy (pdf_cta_copy_v1) — assign sticky variant on mount.
+  useEffect(() => {
+    setPdfCtaVariant(assignExperimentVariant(EXPERIMENTS.PDF_CTA, ["A", "B"]));
+  }, []);
+
+  // Record exposure once results (with the PDF button) first render — the
+  // button is above the fold, so render ≈ seen.
+  useEffect(() => {
+    if (data && pdfCtaVariant && !pdfCtaImpressionFired.current) {
+      pdfCtaImpressionFired.current = true;
+      trackExperimentImpression(EXPERIMENTS.PDF_CTA, pdfCtaVariant);
+    }
+  }, [data, pdfCtaVariant]);
 
   // Auto-lookup from ?vrm= query param (used by 404 page)
   useEffect(() => {
@@ -3969,7 +3986,7 @@ END:VEVENT
                       title="Download PDF report"
                     >
                       <FileText className="w-4 h-4" />
-                      <span className="hidden sm:inline">Free report</span>
+                      <span className="hidden sm:inline">{pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
                       <span className="sm:hidden">PDF</span>
                     </button>
                 </div>

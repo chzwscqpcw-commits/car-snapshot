@@ -61,7 +61,12 @@ export function trackPartnerClick(partnerId: string, context: string): void {
 //
 // Currently none running. mobile_search_cue_v1 concluded — variant C (bold
 // block CTA) shipped as the permanent MobileSearchCue.
-export const EXPERIMENTS: Record<string, string> = {};
+export const EXPERIMENTS: Record<string, string> = {
+  // PDF download CTA copy test — control "Free report" vs "Get my report".
+  // Conversion = pdf_download (auto-attributed via trackEvent for exposed
+  // sessions). Note: at current traffic this needs weeks to reach significance.
+  PDF_CTA: "pdf_cta_copy_v1",
+};
 
 // ── A/B attribution model (three tiers) ─────────────────────────────────────
 //
@@ -98,6 +103,26 @@ export function getActiveExperimentVariant(experimentId: string): string | null 
   } catch {
     return null;
   }
+}
+
+/**
+ * Assign (or return the sticky) variant for an A/B test: buckets the visitor
+ * randomly on first encounter and persists to localStorage so they keep the
+ * same variant across visits. Pair with trackExperimentImpression on actual
+ * visibility; conversions then auto-attribute via trackEvent/trackConversion.
+ */
+export function assignExperimentVariant(experimentId: string, variants: string[]): string {
+  const existing = getActiveExperimentVariant(experimentId);
+  if (existing && variants.includes(existing)) return existing;
+  const variant = variants[Math.floor(Math.random() * variants.length)] ?? variants[0];
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(experimentStorageKey(experimentId), variant);
+    } catch {
+      // localStorage unavailable — still return a variant for this render.
+    }
+  }
+  return variant;
 }
 
 /** The variant THIS session was exposed to (saw an impression for), or null if
