@@ -874,7 +874,6 @@ export default function Home() {
   // Per-test RfR detail is opt-in now that the whole test list sits behind a
   // Reveal (Phase 2) — start with none expanded so the panel opens compact.
   const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set());
-  const [showAllMotTests, setShowAllMotTests] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
 
@@ -5050,9 +5049,11 @@ END:VEVENT
                     openLabel="Hide tests"
                   >
 
-                  {/* Test cards — most recent first */}
+                  {/* Test cards — all tests, most recent first (Phase 2 de-dup:
+                      the old first-3 / "show earlier" split is gone; the whole
+                      list lives in the Reveal). */}
                   <div className="space-y-3 pt-3">
-                    {data.motTests.slice(0, 3).map((test, idx) => (
+                    {data.motTests.map((test, idx) => (
                       <div
                         key={idx}
                         className="p-4 sm:p-6 rounded-lg border transition-all"
@@ -5159,109 +5160,6 @@ END:VEVENT
                     </p>
                   )}
 
-                  {/* Show earlier MOT history toggle */}
-                  {data.motTests.length > 3 && (
-                    <button
-                      type="button"
-                      onClick={() => setShowAllMotTests(!showAllMotTests)}
-                      aria-expanded={showAllMotTests}
-                      className="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                    >
-                      {showAllMotTests ? "Hide earlier tests" : `Show earlier MOT history (${data.motTests.length - 3} more)`}
-                    </button>
-                  )}
-                  {showAllMotTests && data.motTests.length > 3 && (
-                    <div className="mt-4 space-y-3">
-                      {data.motTests.slice(3).map((test, idx) => (
-                        <div
-                          key={idx + 3}
-                          className="p-4 sm:p-6 rounded-lg border transition-all"
-                          style={{
-                            backgroundColor: { emerald: "rgba(5, 150, 105, 0.1)", red: "rgba(220, 38, 38, 0.1)", slate: "rgba(71, 85, 105, 0.2)" }[getMotTestResultColor(test.testResult)],
-                            borderColor: { emerald: "rgba(5, 150, 105, 0.4)", red: "rgba(220, 38, 38, 0.4)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
-                          }}
-                        >
-                          <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
-                            <div>
-                              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Test Date</p>
-                              <p className="text-sm font-semibold text-slate-100">{formatDate(test.completedDate)}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Mileage</p>
-                              <p className="text-sm font-semibold text-slate-100">{odometerMiles(test.odometer)?.toLocaleString() ?? "—"} miles</p>
-                            </div>
-                            {test.expiryDate && (
-                              <div>
-                                <p className="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-1">Valid Until</p>
-                                <p className="text-sm font-semibold text-slate-100">{formatDate(test.expiryDate)}</p>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex gap-2 flex-wrap">
-                              {test.rfrAndComments?.some(r => r.type === "ADVISORY") && (
-                                <span className="px-2 py-1 rounded text-xs font-semibold bg-amber-900/40 text-amber-300 border border-amber-700/50">
-                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").length} Advisor{test.rfrAndComments.filter(r => r.type === "ADVISORY").length !== 1 ? "ies" : "y"}
-                                </span>
-                              )}
-                              {test.rfrAndComments?.some(r => r.type === "DEFECT") && (
-                                <span className="px-2 py-1 rounded text-xs font-semibold bg-red-900/40 text-red-300 border border-red-700/50">
-                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").length} Defect{test.rfrAndComments.filter(r => r.type === "DEFECT").length !== 1 ? "s" : ""}
-                                </span>
-                              )}
-                            </div>
-                            <span
-                              className="px-3 py-1 rounded-full text-xs font-semibold"
-                              style={{
-                                backgroundColor: { emerald: "rgba(5, 150, 105, 0.3)", red: "rgba(220, 38, 38, 0.3)", slate: "rgba(71, 85, 105, 0.3)" }[getMotTestResultColor(test.testResult)],
-                                color: { emerald: "#10b981", red: "#ef4444", slate: "#94a3b8" }[getMotTestResultColor(test.testResult)],
-                              }}
-                            >
-                              {test.testResult}
-                            </span>
-                          </div>
-                          {test.rfrAndComments && test.rfrAndComments.length > 0 && (
-                            <div className="mt-3 border-t border-slate-700/50 pt-3">
-                              <button
-                                onClick={() => {
-                                  const newSet = new Set(expandedMotTests);
-                                  if (newSet.has(idx + 3)) {
-                                    newSet.delete(idx + 3);
-                                  } else {
-                                    newSet.add(idx + 3);
-                                  }
-                                  setExpandedMotTests(newSet);
-                                }}
-                                className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
-                              >
-                                <span>{expandedMotTests.has(idx + 3) ? "−" : "+"}</span>
-                                <span>Click to view details</span>
-                              </button>
-                              {expandedMotTests.has(idx + 3) && (
-                                <div className="mt-3 space-y-2">
-                                  {test.rfrAndComments.filter(r => r.type === "DEFECT").map((defect, didx) => (
-                                    <p key={`defect-${didx}`} className="text-xs text-red-300 pl-3 border-l border-red-500">
-                                      <span className="font-semibold">Defect:</span> {defect.text}
-                                    </p>
-                                  ))}
-                                  {test.rfrAndComments.filter(r => r.type === "ADVISORY").map((advisory, aidx) => (
-                                    <p key={`advisory-${aidx}`} className="text-xs text-amber-300 pl-3 border-l border-amber-500">
-                                      <span className="font-semibold">Advisory:</span> {advisory.text}
-                                    </p>
-                                  ))}
-                                  {test.rfrAndComments.filter(r => r.type === "COMMENT").map((comment, cidx) => (
-                                    <p key={`comment-${cidx}`} className="text-xs text-slate-300 pl-3 border-l border-slate-500">
-                                      <span className="font-semibold">Note:</span> {comment.text}
-                                    </p>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
 
                   </Reveal>
                   )}
