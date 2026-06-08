@@ -152,6 +152,48 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
+  // carVertical — full vehicle history check (finance, stolen, write-off,
+  // mileage anomalies). Pure referral: the customer buys from carVertical under
+  // carVertical's own terms — we never originate, store or handle the report,
+  // so none of the data liability that shelved a self-built check sits with us.
+  // Awin programme; staged 2026-06-08 — apply on Awin, then swap PENDING_AWINMID
+  // for the real merchant ID and flip pending:false on approval. 90-day cookie,
+  // tiered/uncapped commission.
+  carVertical: {
+    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.carvertical.com%2Fgb",
+    name: "carVertical",
+    isAffiliate: true,
+    pending: true,
+    description: "Full vehicle history check — finance, stolen, write-off & mileage records",
+    shortDescription: "History check",
+    // On activation, swap the ued destination for carVertical's approved
+    // deep link / VRM param from their Awin creative.
+    buildLink: (_reg: string, clickref?: string) => {
+      const destination = encodeURIComponent("https://www.carvertical.com/gb");
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`,
+        clickref,
+      );
+    },
+  },
+  // HPI Check — the brand-name UK history check (the phrase consumers actually
+  // search for). Pure referral, same as carVertical: the customer contracts
+  // with HPI directly, so no data liability sits with us. NOTE: Webgains, NOT
+  // Awin. Staged 2026-06-08 — apply on Webgains, then fill both IDs from the
+  // Webgains dashboard and flip pending:false on approval.
+  hpiCheck: {
+    url: "https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=https%3A%2F%2Fwww.hpi.co.uk%2F",
+    name: "HPI Check",
+    isAffiliate: true,
+    pending: true,
+    description: "The UK's best-known vehicle history check — finance, stolen & write-off",
+    shortDescription: "History check",
+    buildLink: (_reg: string, clickref?: string) => {
+      const destination = encodeURIComponent("https://www.hpi.co.uk/");
+      const base = `https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=${destination}`;
+      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
+    },
+  },
   govTaxVehicle: {
     url: "https://www.gov.uk/tax-your-vehicle",
     name: "GOV.UK Tax Vehicle",
