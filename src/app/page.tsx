@@ -1681,7 +1681,7 @@ export default function Home() {
         icon: <AlertCircle className="w-5 h-5 text-amber-400" />,
         title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
         description: "Book up to 28 days early without losing your current expiry date.",
-        linkText: "Compare MOT prices — BookMyGarage",
+        linkText: "Compare MOT prices near me — BookMyGarage",
         linkHref: buildBmg("action-mot-expiring"),
         partnerId: "bookMyGarage",
         trackingContext: "action-mot-expiring",
@@ -1709,7 +1709,7 @@ export default function Home() {
         icon: <Info className="w-5 h-5 text-blue-400" />,
         title: `${latestAdvisoryCount} MOT advisor${latestAdvisoryCount !== 1 ? "ies" : "y"} on record`,
         description: "Advisories aren't failures, but may need attention before your next test.",
-        linkText: "Find a garage — BookMyGarage",
+        linkText: "Compare local garage prices — BookMyGarage",
         linkHref: buildBmg("action-advisories"),
         partnerId: "bookMyGarage",
         trackingContext: "action-advisories",
@@ -3966,7 +3966,7 @@ END:VEVENT
                       title="Download PDF report"
                     >
                       <FileText className="w-4 h-4" />
-                      <span className="hidden sm:inline">PDF Report</span>
+                      <span className="hidden sm:inline">Free report</span>
                       <span className="sm:hidden">PDF</span>
                     </button>
                 </div>
@@ -4497,19 +4497,9 @@ END:VEVENT
 
             </SectionGroup>
 
-            {/* Mid-page PDF CTA */}
-            <DataReveal delay={320}>
-              <div className="mb-6 flex items-center gap-3 px-4 py-3 rounded-lg border border-blue-800/40 bg-blue-950/20">
-                <FileText className="w-5 h-5 text-blue-400 shrink-0" />
-                <p className="text-sm text-slate-300 flex-1">Save everything so far as a shareable report.</p>
-                <button
-                  onClick={() => downloadPDF()}
-                  className="shrink-0 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors"
-                >
-                  Get PDF
-                </button>
-              </div>
-            </DataReveal>
+            {/* Mid-page PDF CTA removed (Phase 1 de-dup) — the header button and
+                the Next Steps "Save this report" cover PDF without repeating it
+                three times across the page. */}
 
             {/* ═══ GROUP 3: FINANCIAL PICTURE ═══ */}
             <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture" id="section-money">
@@ -4552,29 +4542,18 @@ END:VEVENT
                     Based on: {valuationResult.sources.join(", ")}
                   </p>
 
-                  {/* Market Snapshot */}
+                  {/* Market snapshot — condensed from a panel to a one-line strip
+                      (Phase 1 length trim; full detail lives in the PDF). */}
                   {(valuationResult.ebayMinPrice || valuationResult.marketSupply) && (
-                    <div className="mb-4 mt-3 p-3 rounded-md bg-slate-900/50 border border-slate-800/50">
-                      <p className="text-xs font-semibold text-slate-300 mb-2">Market Snapshot</p>
-                      <div className="space-y-1">
-                        {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && (
-                          <p className="text-xs text-slate-400">
-                            Asking prices: <span className="font-mono">£{valuationResult.ebayMinPrice.toLocaleString()} – £{valuationResult.ebayMaxPrice.toLocaleString()}</span>
-                          </p>
-                        )}
-                        {(valuationResult.ebayDominantTransmission || valuationResult.ebayDominantBodyType) && (
-                          <p className="text-xs text-slate-400">
-                            Most common spec: {[data?.fuelType?.charAt(0).toUpperCase() + (data?.fuelType?.slice(1).toLowerCase() || ""), valuationResult.ebayDominantTransmission, valuationResult.ebayDominantBodyType].filter(Boolean).join(", ")}
-                          </p>
-                        )}
-                        {valuationResult.marketSupply && (
-                          <p className="text-xs text-slate-400">
-                            Market supply: {valuationResult.marketSupply === "good" ? "Good" : valuationResult.marketSupply === "moderate" ? "Moderate" : "Limited"}
-                            {valuationResult.ebayTotalListings && ` (${valuationResult.ebayTotalListings}+ available)`}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    <p className="text-xs text-slate-400 mb-4 mt-3">
+                      <span className="font-semibold text-slate-300">Market:</span>{" "}
+                      {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && (
+                        <span className="font-mono">£{valuationResult.ebayMinPrice.toLocaleString()}–£{valuationResult.ebayMaxPrice.toLocaleString()}</span>
+                      )}
+                      {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && valuationResult.marketSupply ? " asking · " : ""}
+                      {valuationResult.marketSupply && `${valuationResult.marketSupply === "good" ? "good" : valuationResult.marketSupply === "moderate" ? "moderate" : "limited"} supply`}
+                      {valuationResult.marketSupply && valuationResult.ebayTotalListings ? ` (${valuationResult.ebayTotalListings}+ listed)` : ""}
+                    </p>
                   )}
 
                   {/* Adjustment factors */}
@@ -5295,7 +5274,7 @@ END:VEVENT
                   onClick={() => downloadPDF()}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
                 >
-                  Download PDF
+                  Download free report
                 </button>
               </div>
             </DataReveal>
