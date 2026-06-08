@@ -115,13 +115,14 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     },
   },
   // ClickMechanic — pre-purchase inspections + mobile-mechanic servicing/repairs
-  // (Awin merchant 67328) — applied 2026-06-07, pending approval. Flip
-  // pending:false to activate once approved.
+  // (Awin merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
+  // Standard commission 2.5%; scott@clickmechanic.com offered to discuss a
+  // higher rate + customer offers once volume builds — worth revisiting.
   clickMechanic: {
     url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2F",
     name: "ClickMechanic",
     isAffiliate: true,
-    pending: true,
+    pending: false,
     description: "Book a pre-purchase inspection or repair with a vetted mobile mechanic",
     shortDescription: "Mechanic quotes",
     // On activation you may swap the ued destination for ClickMechanic's
