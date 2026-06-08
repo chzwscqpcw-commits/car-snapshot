@@ -69,10 +69,11 @@ import { supabaseServerRole } from "@/lib/supabaseServer";
 /** Max LIVE API calls per calendar month. MarketCheck Starter is pay-per-call
  *  at £0.0010/call (the first 1,000 are a one-time free credit MarketCheck
  *  applies automatically). So this is a monthly SPEND cap: max monthly data
- *  fee ≈ limit × £0.0010 (e.g. 1,000 → ~£1/mo, 5,000 → ~£5/mo). Caching means
- *  most lookups never spend a call. Raise via env as appetite allows — any
- *  sane value sits far below MarketCheck's £250/mo early-billing threshold. */
-export const MARKETCHECK_MONTHLY_CALL_LIMIT = Number(process.env.MARKETCHECK_MONTHLY_CALL_LIMIT ?? 1000);
+ *  fee ≈ limit × £0.0010 (e.g. 2,500 → ~£2.50/mo, 5,000 → ~£5/mo). Caching means
+ *  most lookups never spend a call. Raise via env (or this default) as appetite
+ *  allows — any sane value sits far below MarketCheck's £250/mo early-billing
+ *  threshold. Raised 1,000 → 2,500 on 2026-06-08 as valuation volume grew. */
+export const MARKETCHECK_MONTHLY_CALL_LIMIT = Number(process.env.MARKETCHECK_MONTHLY_CALL_LIMIT ?? 2500);
 /** Cache freshness. Refreshing is cheap (£0.0010), so 30 days keeps the second
  *  signal current without over-spending; raise via env to stretch the budget. */
 export const MARKETCHECK_CACHE_TTL_DAYS = Number(process.env.MARKETCHECK_CACHE_TTL_DAYS ?? 30);
