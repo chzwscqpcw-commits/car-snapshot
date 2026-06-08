@@ -165,7 +165,7 @@ export default async function RunningCostsPage({
               <div className="lg:hidden relative">
                 <Image
                   src="/previews/running-costs.png"
-                  alt=""
+                  alt="Sample running-cost breakdown"
                   width={110}
                   height={145}
                   className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"

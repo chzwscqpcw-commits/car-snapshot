@@ -198,7 +198,7 @@ export default async function HowMuchIsMyCarWorthPage({
                     <div className="relative">
                       <Image
                         src="/previews/car-valuation.png"
-                        alt=""
+                        alt="Sample car valuation result"
                         width={110}
                         height={145}
                         className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
