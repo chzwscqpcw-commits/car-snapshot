@@ -116,6 +116,14 @@ export default function CarTheftPage() {
         {/* Charts */}
         <CarTheftCharts />
 
+        {/* Source / methodology note — keeps the figures honest by the letter
+            now that the page actively invites citation. */}
+        <p className="mt-3 text-xs text-slate-500">
+          Figures are representative of relative theft risk by model, based on
+          the latest available data and updated periodically — indicative of
+          which models are most at risk rather than a precise annual count.
+        </p>
+
         {/* Cite-this-data box — makes it frictionless for journalists/bloggers
             to credit the figures WITH a link back (digital-PR backlink play). */}
         <CiteThisData
