@@ -796,8 +796,8 @@ function ActionPrompt({
     subtle: "bg-slate-800/30 border-slate-700/30",
   };
   const linkStyles = {
-    urgent: "bg-red-600/30 hover:bg-red-600/50 border-red-600/50 text-red-100",
-    warning: "bg-amber-600/30 hover:bg-amber-600/50 border-amber-600/50 text-amber-100",
+    urgent: "bg-red-600 hover:bg-red-500 border-red-600 text-white",
+    warning: "bg-amber-500 hover:bg-amber-400 border-amber-500 text-white",
     info: "bg-slate-700/50 hover:bg-slate-700/80 border-slate-600/50 text-slate-200",
     subtle: "bg-slate-700/30 hover:bg-slate-700/50 border-slate-600/30 text-slate-400 hover:text-slate-200",
   };
@@ -831,7 +831,7 @@ function ActionPrompt({
                 target="_blank"
                 rel={rel}
                 onClick={() => trackPartnerClick(partnerId, trackingContext)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 border rounded text-xs font-medium transition-colors ${linkStyles[variant]}`}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 border rounded-lg text-sm font-medium transition-colors ${linkStyles[variant]}`}
               >
                 {linkText}
                 <ExternalLink className="w-3 h-3" />
@@ -857,6 +857,7 @@ function ActionPrompt({
 
 export default function Home() {
   const [vrm, setVrm] = useState("");
+  const [showAllInsights, setShowAllInsights] = useState(false);
   const [data, setData] = useState<VehicleData | null>(null);
   const { setHasResult } = useHomeResult();
   useEffect(() => {
@@ -4921,16 +4922,35 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* KEY INSIGHTS */}
-            {insights.length > 0 && (
-              <DataReveal delay={530}>
-                <div className="mb-8 space-y-3">
-                  {insights.map((insight, idx) => (
-                    <InsightCard key={idx} insight={insight} delay={idx * 80} />
-                  ))}
-                </div>
-              </DataReveal>
-            )}
+            {/* KEY INSIGHTS — sorted by tone (risk > warn > good > info) and
+                capped; the rest reveal on demand to keep the page short. */}
+            {insights.length > 0 && (() => {
+              const tonePriority: Record<string, number> = { risk: 0, warn: 1, good: 2, info: 3 };
+              const sorted = [...insights].sort((a, b) => tonePriority[a.tone] - tonePriority[b.tone]);
+              const INSIGHT_CAP = 4;
+              const visible = showAllInsights ? sorted : sorted.slice(0, INSIGHT_CAP);
+              const hiddenCount = sorted.length - INSIGHT_CAP;
+              return (
+                <DataReveal delay={530}>
+                  <div className="mb-8 space-y-3">
+                    {visible.map((insight, idx) => (
+                      <InsightCard key={idx} insight={insight} delay={idx * 80} />
+                    ))}
+                    {hiddenCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllInsights((v) => !v)}
+                        aria-expanded={showAllInsights}
+                        className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-sm font-medium text-slate-300 hover:bg-slate-800/70 hover:text-white transition-colors"
+                      >
+                        {showAllInsights ? "Show fewer insights" : `Show ${hiddenCount} more insight${hiddenCount === 1 ? "" : "s"}`}
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showAllInsights ? "rotate-180" : ""}`} />
+                      </button>
+                    )}
+                  </div>
+                </DataReveal>
+              );
+            })()}
 
             </SectionGroup>
 
