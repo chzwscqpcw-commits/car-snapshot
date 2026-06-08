@@ -2872,6 +2872,9 @@ END:VEVENT
   async function downloadPDF() {
     if (!data) return;
 
+    // Guards a one-shot reload recovery for stale-chunk load failures (below).
+    const chunkReloadGuardKey = "fpc-pdf-chunk-reload";
+
     try {
       const { generateVehicleReport } = await import("@/lib/generateReport");
 
@@ -2985,6 +2988,12 @@ END:VEVENT
 
       showToast("PDF report downloaded!");
 
+      // A download succeeded — reset the stale-chunk reload guard so a later
+      // deploy in the same session can still trigger a one-shot recovery.
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem(chunkReloadGuardKey);
+      }
+
       // Fire the pdf_download conversion event. Captures the make/model and
       // whether we delivered via Web Share (mobile) or anchor download
       // (desktop) so we can spot if either path silently breaks.
@@ -3010,11 +3019,43 @@ END:VEVENT
       }
     } catch (error) {
       console.error("PDF generation failed:", error);
-      showToast("PDF generation failed. Please try the text version.");
+      const message = error instanceof Error ? error.message : "unknown";
+
+      // The PDF generator is a dynamically-imported (code-split) chunk. When a
+      // tab predates a fresh deploy, that hashed chunk has rotated away and the
+      // import 404s ("Failed to load chunk …"). It's a recoverable stale-asset
+      // error, not a real PDF fault — reloading pulls the current asset
+      // manifest. We restore the user's place via the ?vrm= auto-lookup.
+      const isChunkLoadError =
+        error instanceof Error &&
+        (error.name === "ChunkLoadError" ||
+          /loading chunk|failed to load chunk|dynamically imported module|importing a module script failed/i.test(
+            message,
+          ));
+      const alreadyReloaded =
+        typeof window !== "undefined" &&
+        sessionStorage.getItem(chunkReloadGuardKey) === "1";
+
       trackEvent("pdf_download_error", {
         reg: data.registrationNumber,
-        error: error instanceof Error ? error.message : "unknown",
+        error: message,
+        chunk_error: isChunkLoadError,
+        auto_reloading: isChunkLoadError && !alreadyReloaded,
       });
+
+      if (isChunkLoadError && !alreadyReloaded && typeof window !== "undefined") {
+        // One-shot recovery: set the guard (so we never loop), tell the user,
+        // then reload with the reg in the URL so the vehicle auto-restores.
+        sessionStorage.setItem(chunkReloadGuardKey, "1");
+        showToast("A new version was just released — refreshing so your PDF can download…");
+        const cleanedReg = data.registrationNumber.replace(/\s+/g, "");
+        setTimeout(() => {
+          window.location.assign(`/?vrm=${encodeURIComponent(cleanedReg)}`);
+        }, 1200);
+        return;
+      }
+
+      showToast("PDF generation failed. Please try the text version.");
     }
   }
 
