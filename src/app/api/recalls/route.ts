@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import recallsData from "@/data/recalls.json";
 import { findRecalls, type Recall } from "@/lib/recalls";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServerRole } from "@/lib/supabaseServer";
 
 /** Max age for Supabase cached recalls data (7 days in ms) */
 const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -12,7 +12,7 @@ const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
  */
 async function getCachedRecalls(): Promise<Recall[] | null> {
   try {
-    const sb = supabaseServer();
+    const sb = supabaseServerRole();
     const { data, error } = await sb
       .from("data_cache")
       .select("data, updated_at")

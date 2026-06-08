@@ -2,7 +2,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServerRole } from "@/lib/supabaseServer";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -359,8 +359,9 @@ export async function GET(req: Request) {
     // 2. Parse in memory
     const result = processCSVText(csvText);
 
-    // 3. Store in Supabase data_cache table
-    const sb = supabaseServer();
+    // 3. Store in Supabase data_cache table (service-role: data_cache is
+    // RLS-locked with no anon policy, so the anon client's write is rejected).
+    const sb = supabaseServerRole();
     const now = new Date().toISOString();
 
     const { error: upsertError } = await sb.from("data_cache").upsert(

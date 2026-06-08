@@ -14,7 +14,7 @@ import colourPopularity from "@/data/colour-popularity.json";
 import tyreSizes from "@/data/tyre-sizes.json";
 import vehicleDimensions from "@/data/vehicle-dimensions.json";
 import freshness from "@/data/_freshness.json";
-import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
+import { supabaseServerRole } from "@/lib/supabaseServer";
 import {
   MARKETCHECK_MONTHLY_CALL_LIMIT,
   MARKETCHECK_CACHE_TTL_DAYS,
@@ -163,7 +163,7 @@ function daysBetween(a: Date, b: Date): number {
 // freshness of data refreshed via cron rather than the (older) JSON fallback.
 async function fetchProductionAge(key: string): Promise<string | null> {
   try {
-    const sb = supabaseServer();
+    const sb = supabaseServerRole();
     const { data, error } = await sb
       .from("data_cache")
       .select("updated_at")
