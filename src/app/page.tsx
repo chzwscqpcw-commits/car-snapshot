@@ -208,6 +208,7 @@ import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
+import Reveal from "@/components/Reveal";
 import PdfPromoBanner from "@/components/PdfPromoBanner";
 
 type VehicleData = {
@@ -870,7 +871,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [checklistRole, setChecklistRole] = useState<"owner" | "buyer" | "seller">("owner");
-  const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set([0, 1, 2]));
+  // Per-test RfR detail is opt-in now that the whole test list sits behind a
+  // Reveal (Phase 2) — start with none expanded so the panel opens compact.
+  const [expandedMotTests, setExpandedMotTests] = useState<Set<number>>(new Set());
   const [showAllMotTests, setShowAllMotTests] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [recentLookups, setRecentLookups] = useState<string[]>([]);
@@ -5030,8 +5033,25 @@ END:VEVENT
                     );
                   })()}
 
-                  {/* Test cards — first 3 expanded by default */}
-                  <div className="space-y-3">
+                  {/* MOT test history collapsed behind one Reveal (Phase 2) — the
+                      insights grid + recurring advisories above stay open as the
+                      glance signal; the test detail collapses. Content stays in
+                      the DOM for SEO / in-page find. */}
+                  {data.motTests.length > 0 && (
+                  <Reveal
+                    eventName="mot_history_expand"
+                    summary={
+                      <>
+                        <span className="font-semibold text-slate-200">MOT test history</span>
+                        <span className="ml-2 text-slate-400 font-normal">{data.motTests.filter((t) => t.testResult === "PASSED").length}/{data.motTests.length} passed · last {formatDate(data.motTests[0].completedDate)}</span>
+                      </>
+                    }
+                    closedLabel={`View all ${data.motTests.length} test${data.motTests.length !== 1 ? "s" : ""}`}
+                    openLabel="Hide tests"
+                  >
+
+                  {/* Test cards — most recent first */}
+                  <div className="space-y-3 pt-3">
                     {data.motTests.slice(0, 3).map((test, idx) => (
                       <div
                         key={idx}
@@ -5241,6 +5261,9 @@ END:VEVENT
                         </div>
                       ))}
                     </div>
+                  )}
+
+                  </Reveal>
                   )}
                 </div>
               </DataReveal>
