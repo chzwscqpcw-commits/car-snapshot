@@ -156,24 +156,22 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // mileage anomalies). Pure referral: the customer buys from carVertical under
   // carVertical's own terms — we never originate, store or handle the report,
   // so none of the data liability that shelved a self-built check sits with us.
-  // Awin programme; staged 2026-06-08 — apply on Awin, then swap PENDING_AWINMID
-  // for the real merchant ID and flip pending:false on approval. 90-day cookie,
-  // tiered/uncapped commission.
+  // IN-HOUSE programme, NOT Awin — only a DE-region feed appears on Awin; the
+  // UK programme is direct via carvertical.com/gb/affiliate-program (free,
+  // 90-day cookie, from €4/sale tiered+uncapped). Staged 2026-06-08 — apply
+  // direct; on approval carVertical issues its OWN tracking link (Post Affiliate
+  // Pro), so replace the whole url/buildLink below with their link format (and
+  // its sub-id/clickref param name), then flip pending:false.
   carVertical: {
-    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.carvertical.com%2Fgb",
+    url: "https://www.carvertical.com/gb?ref=PENDING_CARVERTICAL_REF",
     name: "carVertical",
     isAffiliate: true,
     pending: true,
     description: "Full vehicle history check — finance, stolen, write-off & mileage records",
     shortDescription: "History check",
-    // On activation, swap the ued destination for carVertical's approved
-    // deep link / VRM param from their Awin creative.
     buildLink: (_reg: string, clickref?: string) => {
-      const destination = encodeURIComponent("https://www.carvertical.com/gb");
-      return withClickref(
-        `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`,
-        clickref,
-      );
+      const base = "https://www.carvertical.com/gb?ref=PENDING_CARVERTICAL_REF";
+      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
     },
   },
   // HPI Check — the brand-name UK history check (the phrase consumers actually
