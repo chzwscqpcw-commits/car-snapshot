@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Search, ArrowRight, PoundSterling } from "lucide-react";
+import { Zap, Search, MousePointerClick, ArrowRight, PoundSterling } from "lucide-react";
 import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 
-const CM = "#0a9cd8";
+const CM = "#009dff";
 
 const PAGES = [
   {
@@ -23,6 +23,14 @@ const PAGES = [
     title: "Pre-Purchase Inspection",
     desc: "The buyer's-toolkit play — pairs with a carVertical history check. A mobile mechanic inspects the car before you pay (from £79). The product BMG can't offer.",
     cta: "View the inspection page",
+  },
+  {
+    href: "/preview/clickmechanic/inline-widget",
+    Icon: MousePointerClick,
+    tag: "In-results widget",
+    title: "“Buying this car?” reveal",
+    desc: "How the inspection offer sits inside a real results page — a one-tap question that reveals the ClickMechanic offer only for buyers, never owners.",
+    cta: "Try the widget",
   },
 ];
 

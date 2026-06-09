@@ -16,7 +16,7 @@ import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 
-const CM = "#0a9cd8";
+const CM = "#009dff";
 const partner = PARTNER_LINKS.clickMechanic;
 const href = partner.url;
 
