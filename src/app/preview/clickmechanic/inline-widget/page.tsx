@@ -5,7 +5,7 @@ import { ArrowLeft, ShieldCheck, Calendar, Gauge, Lightbulb } from "lucide-react
 import PreviewGate from "@/components/preview/PreviewGate";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 
-const CM = "#009dff";
+const CM = "#3c93f7";
 
 export default function InlineWidgetPreview() {
   return (

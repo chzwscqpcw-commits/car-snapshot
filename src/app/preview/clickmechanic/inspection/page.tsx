@@ -16,7 +16,7 @@ import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 
-const CM = "#009dff";
+const CM = "#3c93f7";
 const partner = PARTNER_LINKS.clickMechanic;
 const href = partner.url;
 
@@ -40,7 +40,7 @@ export default function ClickMechanicInspectionPreview() {
         <div className="mx-auto max-w-4xl px-4 py-8">
           <div className="mb-6 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
             Mock-up for review — a <strong>Free Plate Check-hosted</strong> page funnelling
-            to ClickMechanic. CM logo is a placeholder; official creative on launch.
+            to ClickMechanic, using their own logo and brand blue.
           </div>
           <Link
             href="/preview/clickmechanic"

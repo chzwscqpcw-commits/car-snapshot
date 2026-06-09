@@ -5,7 +5,7 @@ import { Zap, Search, MousePointerClick, ArrowRight, PoundSterling } from "lucid
 import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 
-const CM = "#009dff";
+const CM = "#3c93f7";
 
 const PAGES = [
   {
@@ -40,8 +40,8 @@ export default function ClickMechanicPreviewHub() {
       <main className="min-h-screen bg-slate-950 text-slate-100">
         <div className="mx-auto max-w-3xl px-4 py-12">
           <div className="mb-6 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
-            Mock-ups for review — not live. CM logo &amp; imagery are placeholders;
-            official creative drops in on launch.
+            Mock-ups for review — not live. Uses ClickMechanic&apos;s own logo and
+            brand blue; swap for any final approved creative on launch.
           </div>
 
           <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: CM }}>

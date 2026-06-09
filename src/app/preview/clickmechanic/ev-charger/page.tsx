@@ -18,7 +18,7 @@ import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 
-const CM = "#009dff";
+const CM = "#3c93f7";
 
 const partner = PARTNER_LINKS.clickMechanic;
 const href = partner.url;
@@ -74,8 +74,8 @@ export default function ClickMechanicEvPreview() {
           {/* Mock-up banner */}
           <div className="mb-6 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
             Mock-up for review — a <strong>Free Plate Check-hosted</strong> page that
-            funnels to ClickMechanic. ClickMechanic branding (mark + brand blue) is
-            reflected; final launch would use CM&apos;s official logo asset.
+            funnels to ClickMechanic, using their own logo and brand blue. Hero is our
+            own image.
           </div>
           <Link
             href="/preview/clickmechanic"
@@ -125,7 +125,7 @@ export default function ClickMechanicEvPreview() {
             {/* Hero photo — masked + gradient-overlaid so it reads as design */}
             <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl border border-slate-800 sm:max-w-none">
               <Image
-                src="/man-charging-car.png"
+                src="/woman-charging-car.png"
                 alt="Driver charging an electric car on their home driveway"
                 fill
                 sizes="(max-width: 640px) 80vw, 40vw"

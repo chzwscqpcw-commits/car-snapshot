@@ -6,7 +6,7 @@ import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 
-const CM = "#009dff";
+const CM = "#3c93f7";
 const partner = PARTNER_LINKS.clickMechanic;
 
 const CHECKS = [
