@@ -61,7 +61,7 @@ export default function HowManyLeftExplorer() {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [rarity, setRarity] = useState<RarityResult | null>(null);
   const [copied, setCopied] = useState(false);
-  const [mode, setMode] = useState<"reg" | "model">("reg");
+  const [mode, setMode] = useState<"reg" | "model">("model");
   const [modelQuery, setModelQuery] = useState("");
   const [suggestions, setSuggestions] = useState<{ make: string; model: string }[]>([]);
   const meterRef = useRef<HTMLDivElement>(null);
