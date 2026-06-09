@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
-export type CarRow = { name: string; licensed: number; sorn: number };
+export type CarRow = { name: string; licensed: number; sorn: number; img?: string; credit?: string };
 export type MothRow = { name: string; licensed: number; sornPct: number };
 
 // Reveal-on-scroll: returns true once the element enters the viewport.
@@ -79,31 +80,68 @@ export function MostCommonChart({ rows }: { rows: CarRow[] }) {
 
 export function EndangeredList({ rows }: { rows: CarRow[] }) {
   const { ref, inView } = useInView<HTMLDivElement>();
+  const credited = rows.filter((r) => r.credit);
   return (
-    <div ref={ref} className="grid gap-3 sm:grid-cols-2">
-      {rows.map((r, i) => (
-        <div
-          key={r.name}
-          className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-950/30 to-slate-900/40 p-4 transition-all duration-500"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(12px)",
-            transitionDelay: `${i * 70}ms`,
-          }}
-        >
-          <div className="flex items-baseline justify-between gap-2">
-            <span className="truncate text-sm font-semibold text-white">{r.name}</span>
-            <span className="shrink-0 rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
-              Endangered
-            </span>
+    <>
+      <div ref={ref} className="grid gap-3 sm:grid-cols-2">
+        {rows.map((r, i) => (
+          <div
+            key={r.name}
+            className="overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-950/30 to-slate-900/40 transition-all duration-500"
+            style={{
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateY(0)" : "translateY(12px)",
+              transitionDelay: `${i * 70}ms`,
+            }}
+          >
+            {r.img && (
+              <div className="relative aspect-[16/10] w-full">
+                <Image
+                  src={`/cars/${r.img}.webp`}
+                  alt={`${r.name} — a now-rare UK car`}
+                  fill
+                  sizes="(max-width: 640px) 92vw, 360px"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent" />
+                <span className="absolute bottom-2 left-3 text-sm font-bold text-white drop-shadow">{r.name}</span>
+                <span className="absolute right-2 top-2 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                  Endangered
+                </span>
+              </div>
+            )}
+            <div className="flex items-end justify-between gap-2 p-4">
+              <div>
+                <p className="font-[family-name:var(--font-geist-mono)] text-3xl font-bold text-red-300">
+                  <CountCell value={r.licensed} run={inView} />
+                </p>
+                <p className="text-xs text-slate-500">left on UK roads</p>
+              </div>
+              {!r.img && (
+                <span className="shrink-0 rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
+                  Endangered
+                </span>
+              )}
+            </div>
           </div>
-          <p className="mt-2 font-[family-name:var(--font-geist-mono)] text-3xl font-bold text-red-300">
-            <CountCell value={r.licensed} run={inView} />
+        ))}
+      </div>
+      {credited.length > 0 && (
+        <details className="mt-4 text-xs text-slate-500">
+          <summary className="cursor-pointer hover:text-slate-300">Image credits</summary>
+          <p className="mt-2 leading-relaxed">
+            Photos via Wikimedia Commons:{" "}
+            {credited.map((r, i) => (
+              <span key={r.name}>
+                {i > 0 && "; "}
+                {r.name} © {r.credit}
+              </span>
+            ))}
+            .
           </p>
-          <p className="text-xs text-slate-500">left on UK roads</p>
-        </div>
-      ))}
-    </div>
+        </details>
+      )}
+    </>
   );
 }
 

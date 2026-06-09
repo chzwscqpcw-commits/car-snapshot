@@ -69,26 +69,29 @@ const MOTHBALLED: MothRow[] = carRows
 
 // Curated, recognisable endangered models (display names fixed; counts pulled
 // from the data, skipping any not present).
+// Curated, recognisable endangered models with a representative period photo
+// (Wikimedia Commons, free-licensed — credits rendered on the page). Counts are
+// pulled from the data; any not present are skipped.
 const ENDANGERED: CarRow[] = (
   [
-    ["MG|MAESTRO", "MG Maestro"],
-    ["FIAT|UNO", "Fiat Uno"],
-    ["TRIUMPH|ACCLAIM", "Triumph Acclaim"],
-    ["CITROEN|AX", "Citroën AX"],
-    ["AUSTIN|METRO", "Austin Metro"],
-    ["NISSAN|SUNNY", "Nissan Sunny"],
-    ["MORRIS|MARINA", "Morris Marina"],
-    ["DAEWOO|MATIZ", "Daewoo Matiz"],
-    ["TOYOTA|CARINA", "Toyota Carina"],
-    ["VAUXHALL|NOVA", "Vauxhall Nova"],
-    ["RENAULT|5", "Renault 5"],
-    ["FORD|SIERRA", "Ford Sierra"],
-  ] as [string, string][]
+    { key: "MG|MAESTRO", name: "MG Maestro", img: "mg_maestro", credit: "Vauxford (CC BY-SA 4.0)" },
+    { key: "FIAT|UNO", name: "Fiat Uno", img: "fiat_uno", credit: "Rutger van der Maar (CC BY 2.0)" },
+    { key: "TRIUMPH|ACCLAIM", name: "Triumph Acclaim", img: "triumph_acclaim", credit: "Charles01 (CC BY-SA 3.0)" },
+    { key: "CITROEN|AX", name: "Citroën AX", img: "citroen_ax", credit: "Rudolf Stricker (CC BY-SA 3.0)" },
+    { key: "AUSTIN|METRO", name: "Austin Metro", img: "austin_metro", credit: "Charles01 (CC BY-SA 4.0)" },
+    { key: "NISSAN|SUNNY", name: "Nissan Sunny", img: "nissan_sunny", credit: "TTTNIS (public domain)" },
+    { key: "MORRIS|MARINA", name: "Morris Marina", img: "morris_marina", credit: "Vauxford (CC BY-SA 4.0)" },
+    { key: "DAEWOO|MATIZ", name: "Daewoo Matiz", img: "daewoo_matiz", credit: "Vauxford (CC BY-SA 4.0)" },
+    { key: "TOYOTA|CARINA", name: "Toyota Carina", img: "toyota_carina", credit: "Mr.choppers (CC BY-SA 4.0)" },
+    { key: "VAUXHALL|NOVA", name: "Vauxhall Nova", img: "vauxhall_nova", credit: "Elstro (CC BY 3.0)" },
+    { key: "RENAULT|5", name: "Renault 5", img: "renault_5", credit: "Charlie (CC BY 2.0)" },
+    { key: "FORD|SIERRA", name: "Ford Sierra", img: "ford_sierra", credit: "Norbert Schnitzler (CC BY-SA 3.0)" },
+  ] as { key: string; name: string; img: string; credit: string }[]
 )
-  .filter(([k]) => HML[k])
-  .map(([k, name]) => {
-    const [lic, sorn] = HML[k];
-    return { name, licensed: lic, sorn };
+  .filter((e) => HML[e.key])
+  .map((e) => {
+    const [lic, sorn] = HML[e.key];
+    return { name: e.name, licensed: lic, sorn, img: e.img, credit: e.credit };
   })
   .sort((a, b) => a.licensed - b.licensed);
 
