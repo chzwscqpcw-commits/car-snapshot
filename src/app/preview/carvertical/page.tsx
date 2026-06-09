@@ -61,16 +61,47 @@ export default function CarVerticalPreviewPage() {
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-12">
       <div className="mx-auto max-w-2xl">
-        <div className="mb-6 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
+        <div className="mb-8 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
           Mock-up for review — not live on the site. The carVertical logo is a
-          placeholder wordmark; their official asset goes in on launch.
+          placeholder wordmark; their official asset goes in on launch. Two
+          placements are proposed, shown below.
         </div>
-        <h1 className="mb-1 text-xl font-bold text-white">carVertical report — in-results CTA</h1>
-        <p className="mb-6 text-sm text-slate-400">
-          How the &ldquo;full history&rdquo; prompt would appear within a
-          vehicle&apos;s results.
-        </p>
-        <CarVerticalReportCTA preview regNumber="AB12CDE" />
+
+        {/* Placement 1 — in the vehicle results */}
+        <section className="mb-12">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
+            Placement 1
+          </p>
+          <h2 className="mb-1 text-xl font-bold text-white">In the vehicle report</h2>
+          <p className="mb-5 text-sm text-slate-400">
+            Shown after someone looks up a car they&apos;re considering buying —
+            the full free-vs-paid comparison. Appears on the results page and the
+            buyer-intent landing pages (/car-check, /mot-check).
+          </p>
+          <CarVerticalReportCTA preview regNumber="AB12CDE" variant="report" />
+        </section>
+
+        {/* Placement 2 — the mileage-check landing page */}
+        <section>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
+            Placement 2
+          </p>
+          <h2 className="mb-1 text-xl font-bold text-white">
+            On the mileage-check page
+          </h2>
+          <p className="mb-5 text-sm text-slate-400">
+            A clocking-themed prompt for{" "}
+            <span className="text-slate-300">freeplatecheck.co.uk/mileage-check</span>{" "}
+            — leading with odometer-rollback detection, where carVertical&apos;s
+            mileage cross-checks add most over our free MOT-mileage timeline.
+          </p>
+          <CarVerticalReportCTA
+            preview
+            regNumber="AB12CDE"
+            variant="mileage"
+            context="mileage-carvertical"
+          />
+        </section>
       </div>
     </main>
   );

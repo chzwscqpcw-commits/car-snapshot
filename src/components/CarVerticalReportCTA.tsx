@@ -1,10 +1,12 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { ShieldCheck, Check, Minus, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
+
+type Variant = "report" | "mileage";
 
 interface CarVerticalReportCTAProps {
   /** Vehicle reg, passed through for the affiliate link / clickref. */
@@ -13,11 +15,14 @@ interface CarVerticalReportCTAProps {
   context?: string;
   /** Render even while the partner is still pending — for the password-gated mock-up. */
   preview?: boolean;
+  /** `report` = full free-vs-paid box (in-results); `mileage` = clocking-themed
+   *  placement for the /mileage-check landing page. */
+  variant?: Variant;
 }
 
-/** Free vs carVertical comparison rows (shown only when the user expands the
- *  compact CTA). `free` = also covered by Free Plate Check's free check. Keep
- *  factual (agreement 3.1); coordinate changes with carVertical (1.1/1.4). */
+/** Free vs carVertical comparison rows (report variant). `free` = also covered by
+ *  Free Plate Check's free check. Keep factual (agreement 3.1); coordinate changes
+ *  with carVertical (1.1/1.4). */
 const ROWS: { label: string; free: boolean }[] = [
   { label: "MOT history & advisories", free: true },
   { label: "Tax & mileage record", free: true },
@@ -31,22 +36,69 @@ const ROWS: { label: string; free: boolean }[] = [
   { label: "Import / export history", free: false },
 ];
 
+/** Mileage variant: carVertical extras most relevant to odometer/clocking intent.
+ *  Honest framing — our free check already lists MOT mileage; these are the
+ *  cross-checks the MOT timeline alone can't make. */
+const MILEAGE_FEATURES: string[] = [
+  "Odometer rollback & anomaly detection",
+  "National Mileage Register cross-check",
+  "Mileage from European import records",
+  "Damage, write-off & finance history",
+];
+
+const VARIANTS: Record<
+  Variant,
+  {
+    Icon: typeof ShieldCheck;
+    heading: string;
+    value: string;
+    cta: string;
+    open: string;
+    close: string;
+  }
+> = {
+  report: {
+    Icon: ShieldCheck,
+    heading: "Buying this car? Get the full history",
+    value:
+      "Outstanding finance, write-offs, stolen markers & mileage anomalies your free check can't show.",
+    cta: "Get a carVertical report",
+    open: "Compare with free",
+    close: "Hide comparison",
+  },
+  mileage: {
+    Icon: Gauge,
+    heading: "Worried this car's been clocked?",
+    value:
+      "Your free check lists every MOT mileage reading since 2005. A carVertical report cross-checks the National Mileage Register and European import records — flagging rollbacks between tests or before the car was imported.",
+    cta: "Run a carVertical mileage check",
+    open: "What carVertical adds",
+    close: "Hide details",
+  },
+};
+
 /**
- * Compact "full history report" CTA promoting carVertical's paid report at
- * buyer intent. Slim by default (heading + logo + one-line value + button); the
- * full free-vs-paid comparison table sits behind a "Free vs full check" toggle
- * to keep it short and mobile-sleek. Clear carVertical attribution (agreement
- * 1.3) + affiliate disclosure. Renders null until live unless `preview`.
+ * carVertical paid-report CTA, shown at buyer intent. Two variants:
+ *  - `report` (default): the full free-vs-paid comparison box for the vehicle
+ *    results page.
+ *  - `mileage`: a clocking-themed placement for the /mileage-check landing page,
+ *    leading with odometer-rollback detection (carVertical's flagship feature).
+ * Slim by default; supporting detail sits behind a toggle to stay mobile-sleek.
+ * Clear carVertical attribution (agreement 1.3) + affiliate disclosure. Renders
+ * null until live unless `preview`.
  */
 export default function CarVerticalReportCTA({
   regNumber,
   context = "report-carvertical",
   preview = false,
+  variant = "report",
 }: CarVerticalReportCTAProps) {
-  const [showCompare, setShowCompare] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const partner = PARTNER_LINKS.carVertical;
   if (!preview && !isPartnerConfigured(partner)) return null;
 
+  const cfg = VARIANTS[variant];
+  const Icon = cfg.Icon;
   const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
 
   return (
@@ -54,21 +106,16 @@ export default function CarVerticalReportCTA({
       {/* Heading + logo */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
-          <ShieldCheck className="h-5 w-5 shrink-0 text-[#1b54ff]" />
-          <h3 className="truncate text-sm font-semibold text-white sm:text-base">
-            Buying this car? Get the full history
-          </h3>
+          <Icon className="h-5 w-5 shrink-0 text-[#1b54ff]" />
+          <h3 className="truncate text-sm font-semibold text-white sm:text-base">{cfg.heading}</h3>
         </div>
         <CarVerticalLogo className="shrink-0 text-xs" />
       </div>
 
       {/* One-line value */}
-      <p className="mt-1.5 text-xs leading-relaxed text-slate-400 sm:text-sm">
-        Outstanding finance, write-offs, stolen markers &amp; mileage anomalies
-        your free check can&apos;t show.
-      </p>
+      <p className="mt-1.5 text-xs leading-relaxed text-slate-400 sm:text-sm">{cfg.value}</p>
 
-      {/* CTA + compare toggle */}
+      {/* CTA + toggle */}
       <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
         <a
           href={href}
@@ -77,21 +124,21 @@ export default function CarVerticalReportCTA({
           onClick={() => trackPartnerClick("carVertical", context)}
           className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#1b54ff] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1746e0] sm:w-auto"
         >
-          Get a carVertical report <ArrowUpRight className="h-4 w-4" />
+          {cfg.cta} <ArrowUpRight className="h-4 w-4" />
         </a>
         <button
           type="button"
-          onClick={() => setShowCompare((v) => !v)}
-          aria-expanded={showCompare}
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
           className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-600/70 bg-slate-800/40 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/80 hover:text-white sm:w-auto"
         >
-          {showCompare ? "Hide comparison" : "Compare with free"}
-          <ChevronDown className={`h-4 w-4 transition-transform ${showCompare ? "rotate-180" : ""}`} />
+          {expanded ? cfg.close : cfg.open}
+          <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
       </div>
 
-      {/* Collapsible comparison table */}
-      {showCompare && (
+      {/* Expandable detail */}
+      {expanded && variant === "report" && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           <div className="grid grid-cols-[1fr_3.5rem_5rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>
@@ -124,6 +171,22 @@ export default function CarVerticalReportCTA({
               );
             })}
           </div>
+        </div>
+      )}
+
+      {expanded && variant === "mileage" && (
+        <div className="mt-3 rounded-lg border border-slate-700/50 bg-[#1b54ff]/[0.06] p-3">
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[#7da2ff]">
+            Beyond the MOT mileage timeline
+          </p>
+          <ul className="space-y-1.5">
+            {MILEAGE_FEATURES.map((f) => (
+              <li key={f} className="flex items-start gap-2 text-xs text-slate-200">
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#7da2ff]" aria-hidden />
+                {f}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
