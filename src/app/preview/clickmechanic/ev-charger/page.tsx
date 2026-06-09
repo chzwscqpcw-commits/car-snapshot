@@ -13,6 +13,8 @@ import {
   Wifi,
   CheckCircle2,
   Home,
+  Plug,
+  BatteryCharging,
 } from "lucide-react";
 import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
@@ -23,34 +25,33 @@ const CM = "#3c93f7";
 const partner = PARTNER_LINKS.clickMechanic;
 const href = partner.url;
 
-// Real ClickMechanic data (clickmechanic.com/ev-charger-installation, Jun 2026).
-const MODELS = [
-  { brand: "Evec", name: "VEC01", price: "£752", note: "Best value" },
-  { brand: "Evec", name: "VEC03", price: "£841", note: "" },
-  { brand: "Ohme", name: "ePod", price: "£932", note: "" },
-  { brand: "Ohme", name: "HomePro 5M", price: "£970", note: "" },
-  { brand: "MyEnergi", name: "Zappi (untethered)", price: "£1,078", note: "Solar-ready" },
-  { brand: "Ohme", name: "HomePro 8M", price: "£1,081", note: "" },
+// A selection of the chargers ClickMechanic installs — names only; CM owns the
+// pricing on their own pages (clickmechanic.com/ev-charger-installation).
+const CHARGERS = [
+  { brand: "Ohme", name: "HomePro", tag: "Smart tariff control" },
+  { brand: "Ohme", name: "ePod", tag: "Compact design" },
+  { brand: "MyEnergi", name: "Zappi", tag: "Solar-ready" },
+  { brand: "Evec", name: "VEC Series", tag: "Great value" },
 ];
 
 const STEPS = [
-  { n: "1", t: "Instant quote", d: "Enter your property details and get fixed, upfront pricing — no surveyor visit needed first." },
+  { n: "1", t: "Instant quote", d: "Enter your property details for fixed, upfront pricing — no surveyor visit needed first." },
   { n: "2", t: "Pick your charger", d: "Choose from Ohme, Evec or MyEnergi Zappi — all 7kW smart chargers, free fitting included." },
   { n: "3", t: "Choose a day", d: "Book an install slot, Monday–Friday. A certified local installer is assigned to you." },
-  { n: "4", t: "Fitted in ~2 hours", d: "The installer arrives in your window, fits and tests it, and you only pay on completion." },
+  { n: "4", t: "Fitted in ~2 hours", d: "The installer arrives in your window, fits and tests it, and you pay on completion." },
 ];
 
 const INCLUDED = [
-  { Icon: PoundSterling, t: "Free fitting", d: "Installation included in every price — from £752 all-in." },
+  { Icon: PoundSterling, t: "Free fitting", d: "Professional installation included — nothing extra to pay on the day." },
   { Icon: ShieldCheck, t: "Warranty", d: "1-year workmanship + 36-month manufacturer device warranty." },
   { Icon: Zap, t: "7kW smart charger", d: "7.0–7.4kW, 32A — a full overnight charge for any EV or PHEV." },
-  { Icon: Wifi, t: "OZEV-approved", d: "EVHS/WCS-approved devices, compliant with UK smart-charging rules." },
+  { Icon: Wifi, t: "OZEV-approved", d: "Certified devices, compliant with UK smart-charging rules." },
 ];
 
 const FAQ = [
   {
     q: "How much does a home EV charger cost to install?",
-    a: "From £752 all-in with ClickMechanic — that includes the charger and free professional fitting. Prices run to around £1,096 depending on the model (Ohme, Evec or MyEnergi Zappi).",
+    a: "From £752 all-in with ClickMechanic — that includes the charger and free professional fitting. You'll see the exact price for each model when you get your instant quote.",
   },
   {
     q: "How long does installation take?",
@@ -58,13 +59,21 @@ const FAQ = [
   },
   {
     q: "Is it cheaper than charging in public?",
-    a: "Almost always. Charging at home on an EV tariff costs a fraction of public rapid-charging — see our guide to the real cost of running an electric car for the numbers.",
+    a: "Almost always. Charging at home on an EV night tariff costs a fraction of public rapid-charging — see our guide to the real cost of running an electric car for the numbers.",
   },
   {
     q: "Which charger should I choose?",
-    a: "All are 7kW smart chargers. Ohme and MyEnergi Zappi suit drivers who want tariff and solar integration; Evec is the best-value entry point. The quote tool recommends based on your property.",
+    a: "All are 7kW smart chargers. Ohme and MyEnergi Zappi suit drivers who want tariff and solar integration; Evec is a great-value choice. The quote tool recommends one based on your property.",
   },
 ];
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: CM }}>
+      {children}
+    </p>
+  );
+}
 
 export default function ClickMechanicEvPreview() {
   return (
@@ -79,34 +88,52 @@ export default function ClickMechanicEvPreview() {
           </div>
           <Link
             href="/preview/clickmechanic"
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white"
+            className="mb-8 inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" /> Back to the ClickMechanic mock-ups
           </Link>
 
           {/* HERO */}
-          <section className="grid items-center gap-8 sm:grid-cols-2">
-            <div>
+          <section className="relative grid items-center gap-8 sm:grid-cols-2">
+            {/* glow */}
+            <div
+              className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full opacity-30 blur-3xl"
+              style={{ background: `radial-gradient(circle, ${CM}, transparent 70%)` }}
+              aria-hidden
+            />
+            <div className="relative">
               <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300">
-                <Zap className="h-3.5 w-3.5" style={{ color: CM }} /> Home EV charging · Installed by{" "}
-                <ClickMechanicLogo className="text-xs" />
+                <Zap className="h-3.5 w-3.5" style={{ color: CM }} /> Home EV charging ·
+                Installed by <ClickMechanicLogo className="text-xs" />
               </div>
-              <h1 className="mt-4 text-3xl font-bold leading-tight text-white sm:text-4xl">
-                Get a home EV charger fitted{" "}
-                <span style={{ color: CM }}>from £752</span>
+              <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+                Charge at home,{" "}
+                <span className="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                  wake up full.
+                </span>
               </h1>
-              <p className="mt-3 text-base leading-relaxed text-slate-300">
-                Fixed upfront pricing, free fitting, and a certified installer at your
-                door in about two hours. Charge overnight for a fraction of public
-                rates.
+              <p className="mt-4 text-base leading-relaxed text-slate-300">
+                A certified installer fits a 7kW smart charger on your driveway in about
+                two hours — fixed price, free fitting, no fuss.
               </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+
+              {/* price chip */}
+              <div
+                className="mt-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm"
+                style={{ borderColor: `${CM}55`, backgroundColor: `${CM}14` }}
+              >
+                <BatteryCharging className="h-4 w-4" style={{ color: CM }} />
+                <span className="font-semibold text-white">From £752</span>
+                <span className="text-slate-400">· free fitting included</span>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href={href}
                   target="_blank"
                   rel={getPartnerRel(partner)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: CM }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-[1.02]"
+                  style={{ backgroundColor: CM, boxShadow: `0 10px 30px -10px ${CM}` }}
                 >
                   Get an instant quote <ArrowUpRight className="h-4 w-4" />
                 </a>
@@ -116,87 +143,137 @@ export default function ClickMechanicEvPreview() {
                   Trustpilot reviews
                 </div>
               </div>
-              <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-500">
+              <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-slate-500">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Free fitting ·
                 7kW smart charger · OZEV-approved
               </p>
             </div>
 
             {/* Hero photo — masked + gradient-overlaid so it reads as design */}
-            <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl border border-slate-800 sm:max-w-none">
+            <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-3xl border border-slate-800 shadow-2xl ring-1 ring-white/5 sm:max-w-none">
               <Image
-                src="/woman-charging-car.png"
+                src="/woman-charging-car.webp"
                 alt="Driver charging an electric car on their home driveway"
                 fill
                 sizes="(max-width: 640px) 80vw, 40vw"
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+              <div
+                className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-lg"
+                style={{ backgroundColor: CM }}
+              >
+                From £752
+              </div>
               <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur">
                 Installed by <ClickMechanicLogo className="text-xs" />
               </div>
             </div>
           </section>
 
+          {/* SAVINGS STRIP */}
+          <section className="mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-900/30 p-6 sm:p-7">
+            <div className="grid items-center gap-6 sm:grid-cols-3">
+              <div className="sm:col-span-1">
+                <Eyebrow>The home-charging difference</Eyebrow>
+                <p className="mt-2 text-lg font-bold text-white">
+                  Pennies a mile, not pounds.
+                </p>
+                <p className="mt-1 text-sm text-slate-400">
+                  Overnight on an EV tariff vs public rapid charging.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-4 sm:col-span-2">
+                <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-4 text-center">
+                  <p className="text-xs text-slate-500">Home, night tariff</p>
+                  <p className="mt-1 text-3xl font-extrabold" style={{ color: CM }}>~2p</p>
+                  <p className="text-xs text-slate-500">per mile*</p>
+                </div>
+                <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-4 text-center">
+                  <p className="text-xs text-slate-500">Public rapid</p>
+                  <p className="mt-1 text-3xl font-extrabold text-slate-300">~20p</p>
+                  <p className="text-xs text-slate-500">per mile*</p>
+                </div>
+              </div>
+            </div>
+            <p className="mt-4 text-[11px] text-slate-600">
+              *Illustrative. Actual cost depends on your tariff and car — see our{" "}
+              <Link href="/blog/real-cost-owning-electric-car-uk" className="text-slate-400 underline hover:text-slate-200">
+                real cost of owning an EV
+              </Link>{" "}
+              guide.
+            </p>
+          </section>
+
           {/* WHY HOME CHARGING */}
           <section className="mt-14">
-            <h2 className="text-xl font-bold text-white">Why fit a charger at home?</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <Eyebrow>Why fit one</Eyebrow>
+            <h2 className="mt-1 text-2xl font-bold text-white">The case for a home charger</h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-3">
               {[
                 { Icon: PoundSterling, t: "Far cheaper per mile", d: "Overnight home charging on an EV tariff costs pennies next to public rapid chargers." },
                 { Icon: Clock, t: "Wake up full", d: "Plug in at night, leave with 100%. No detours, no queues at the forecourt." },
-                { Icon: Home, t: "Adds to your home", d: "A fitted 7kW point is a selling point buyers increasingly look for." },
+                { Icon: Home, t: "Adds to your home", d: "A fitted 7kW point is a feature buyers increasingly look for." },
               ].map(({ Icon, t, d }) => (
-                <div key={t} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-                  <Icon className="h-5 w-5" style={{ color: CM }} />
-                  <p className="mt-2 font-semibold text-white">{t}</p>
+                <div
+                  key={t}
+                  className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-slate-700"
+                >
+                  <span
+                    className="flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: `${CM}1f` }}
+                  >
+                    <Icon className="h-5 w-5" style={{ color: CM }} />
+                  </span>
+                  <p className="mt-3 font-semibold text-white">{t}</p>
                   <p className="mt-1 text-sm text-slate-400">{d}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-sm text-slate-500">
-              See the full sums in our guide to{" "}
-              <Link href="/blog/real-cost-owning-electric-car-uk" className="text-blue-400 hover:text-blue-300">
-                the real cost of owning an electric car
-              </Link>
-              .
-            </p>
           </section>
 
-          {/* MODELS */}
+          {/* CHARGERS WE INSTALL — no pricing */}
           <section className="mt-14">
-            <h2 className="text-xl font-bold text-white">Chargers &amp; pricing</h2>
+            <Eyebrow>The kit</Eyebrow>
+            <h2 className="mt-1 text-2xl font-bold text-white">Chargers we install</h2>
             <p className="mt-1 text-sm text-slate-400">
-              All 7kW smart chargers. Every price includes the unit{" "}
-              <span className="text-slate-200">and</span> free professional fitting.
+              A selection of 7kW smart chargers — tethered or untethered, app-controlled.
+              You&apos;ll pick the right one when you get your quote.
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {MODELS.map((m) => (
-                <div key={m.name} className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-slate-500">{m.brand}</p>
-                    <p className="font-semibold text-white">{m.name}</p>
-                    {m.note && (
-                      <span className="mt-1 inline-block rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-medium text-slate-300">
-                        {m.note}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-lg font-bold" style={{ color: CM }}>{m.price}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {CHARGERS.map((c) => (
+                <div
+                  key={`${c.brand}-${c.name}`}
+                  className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-all hover:-translate-y-0.5 hover:border-slate-600"
+                >
+                  <Plug className="h-5 w-5" style={{ color: CM }} />
+                  <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">{c.brand}</p>
+                  <p className="text-lg font-bold text-white">{c.name}</p>
+                  <span
+                    className="mt-2 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-medium"
+                    style={{ backgroundColor: `${CM}1f`, color: CM }}
+                  >
+                    {c.tag}
+                  </span>
                 </div>
               ))}
             </div>
+            <p className="mt-4 text-sm text-slate-500">
+              All fitted from £752 including installation. Full model pricing is shown
+              when you get your instant quote on ClickMechanic.
+            </p>
           </section>
 
           {/* HOW IT WORKS */}
           <section className="mt-14">
-            <h2 className="text-xl font-bold text-white">How it works</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-4">
+            <Eyebrow>Start to finish</Eyebrow>
+            <h2 className="mt-1 text-2xl font-bold text-white">How it works</h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-4">
               {STEPS.map((s) => (
-                <div key={s.n} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div key={s.n} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
                   <div
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white"
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white"
                     style={{ backgroundColor: CM }}
                   >
                     {s.n}
@@ -209,9 +286,10 @@ export default function ClickMechanicEvPreview() {
           </section>
 
           {/* INCLUDED */}
-          <section className="mt-14 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-            <h2 className="text-xl font-bold text-white">What you get</h2>
-            <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <section className="mt-14 overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-900/30 p-6 sm:p-8">
+            <Eyebrow>Every install</Eyebrow>
+            <h2 className="mt-1 text-2xl font-bold text-white">What you get</h2>
+            <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {INCLUDED.map(({ Icon, t, d }) => (
                 <div key={t}>
                   <Icon className="h-6 w-6" style={{ color: CM }} />
@@ -224,8 +302,9 @@ export default function ClickMechanicEvPreview() {
 
           {/* FAQ */}
           <section className="mt-14">
-            <h2 className="text-xl font-bold text-white">Common questions</h2>
-            <div className="mt-4 divide-y divide-slate-800 rounded-2xl border border-slate-800">
+            <Eyebrow>Good to know</Eyebrow>
+            <h2 className="mt-1 text-2xl font-bold text-white">Common questions</h2>
+            <div className="mt-5 divide-y divide-slate-800 rounded-2xl border border-slate-800">
               {FAQ.map((f) => (
                 <details key={f.q} className="group p-4">
                   <summary className="cursor-pointer list-none font-medium text-slate-100 marker:content-none">
@@ -238,25 +317,32 @@ export default function ClickMechanicEvPreview() {
           </section>
 
           {/* FINAL CTA */}
-          <section className="mt-14 rounded-2xl border p-6 text-center" style={{ borderColor: `${CM}55`, backgroundColor: `${CM}14` }}>
-            <h2 className="text-2xl font-bold text-white">Ready to charge at home?</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
-              Get a fixed quote in under a minute — free fitting, certified installers,
-              from £752.
-            </p>
-            <a
-              href={href}
-              target="_blank"
-              rel={getPartnerRel(partner)}
-              className="mt-5 inline-flex items-center justify-center gap-1.5 rounded-lg px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: CM }}
-            >
-              Get an instant quote <ArrowUpRight className="h-4 w-4" />
-            </a>
-            <p className="mt-4 text-[11px] text-slate-500">
-              EV charger supply &amp; installation is provided by ClickMechanic. Free
-              Plate Check may earn a commission — it never costs you more.
-            </p>
+          <section className="relative mt-14 overflow-hidden rounded-3xl border p-8 text-center" style={{ borderColor: `${CM}55` }}>
+            <div
+              className="pointer-events-none absolute inset-0 opacity-20"
+              style={{ background: `radial-gradient(circle at 50% 0%, ${CM}, transparent 60%)` }}
+              aria-hidden
+            />
+            <div className="relative">
+              <h2 className="text-3xl font-bold text-white">Ready to charge at home?</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
+                Get a fixed quote in under a minute — free fitting, certified installers,
+                from £752.
+              </p>
+              <a
+                href={href}
+                target="_blank"
+                rel={getPartnerRel(partner)}
+                className="mt-6 inline-flex items-center justify-center gap-1.5 rounded-xl px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-[1.02]"
+                style={{ backgroundColor: CM, boxShadow: `0 10px 30px -10px ${CM}` }}
+              >
+                Get an instant quote <ArrowUpRight className="h-4 w-4" />
+              </a>
+              <p className="mt-5 text-[11px] text-slate-500">
+                EV charger supply &amp; installation is provided by ClickMechanic. Free
+                Plate Check may earn a commission — it never costs you more.
+              </p>
+            </div>
           </section>
         </div>
       </main>

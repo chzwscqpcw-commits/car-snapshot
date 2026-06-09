@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   Search,
@@ -50,33 +51,68 @@ export default function ClickMechanicInspectionPreview() {
           </Link>
 
           {/* HERO */}
-          <section>
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300">
-              <Search className="h-3.5 w-3.5" style={{ color: CM }} /> Pre-purchase
-              inspection · by <ClickMechanicLogo className="text-xs" />
-            </div>
-            <h1 className="mt-4 max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl">
-              Don&apos;t buy a used car blind.{" "}
-              <span style={{ color: CM }}>Get it inspected first — from £79.</span>
-            </h1>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-300">
-              A qualified mechanic travels to the car and checks it over before you hand
-              any money across — then sends you a full written report.
-            </p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <a
-                href={href}
-                target="_blank"
-                rel={getPartnerRel(partner)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-lg px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: CM }}
+          <section className="relative grid items-center gap-8 sm:grid-cols-2">
+            <div
+              className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full opacity-30 blur-3xl"
+              style={{ background: `radial-gradient(circle, ${CM}, transparent 70%)` }}
+              aria-hidden
+            />
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300">
+                <Search className="h-3.5 w-3.5" style={{ color: CM }} /> Pre-purchase
+                inspection · by <ClickMechanicLogo className="text-xs" />
+              </div>
+              <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+                Don&apos;t buy a used car{" "}
+                <span className="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                  blind.
+                </span>
+              </h1>
+              <p className="mt-4 text-base leading-relaxed text-slate-300">
+                A qualified mechanic travels to the car and checks it over before you
+                hand any money across — then sends you a full written report.
+              </p>
+
+              <div
+                className="mt-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm"
+                style={{ borderColor: `${CM}55`, backgroundColor: `${CM}14` }}
               >
-                Book an inspection <ArrowUpRight className="h-4 w-4" />
-              </a>
-              <div className="flex items-center gap-1.5 text-sm text-slate-400">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <span className="font-semibold text-slate-200">4.8</span> · 24,000+
-                Trustpilot reviews
+                <Search className="h-4 w-4" style={{ color: CM }} />
+                <span className="font-semibold text-white">From £79</span>
+                <span className="text-slate-400">· a mechanic comes to the car</span>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <a
+                  href={href}
+                  target="_blank"
+                  rel={getPartnerRel(partner)}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-[1.02]"
+                  style={{ backgroundColor: CM, boxShadow: `0 10px 30px -10px ${CM}` }}
+                >
+                  Book an inspection <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <div className="flex items-center gap-1.5 text-sm text-slate-400">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <span className="font-semibold text-slate-200">4.8</span> · 24,000+
+                  Trustpilot reviews
+                </div>
+              </div>
+            </div>
+
+            {/* Hero photo */}
+            <div className="relative mx-auto aspect-[3/2] w-full overflow-hidden rounded-3xl border border-slate-800 shadow-2xl ring-1 ring-white/5">
+              <Image
+                src="/mechanic.webp"
+                alt="A mechanic inspecting a used car on a home driveway"
+                fill
+                sizes="(max-width: 640px) 90vw, 45vw"
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+              <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur">
+                Carried out by <ClickMechanicLogo className="text-xs" />
               </div>
             </div>
           </section>
