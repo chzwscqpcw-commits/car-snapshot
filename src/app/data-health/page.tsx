@@ -16,6 +16,7 @@ import {
   Lock,
   RefreshCw,
   Search,
+  Sparkles,
   TrendingDown,
   TrendingUp,
   Users,
@@ -125,6 +126,11 @@ type FuelPriceData = {
   diesel: number;
   date: string | null;
 };
+
+type InsightsData =
+  | { status: "ok"; summary: string; generatedAt: string; cached: boolean }
+  | { status: "no_key"; summary: null }
+  | { status: "error"; summary: null };
 
 // ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
@@ -485,6 +491,94 @@ function GaugeStat({ label, value, sub }: { label: string; value: string; sub: s
   );
 }
 
+// ── AI activity summary ───────────────────────────────────────────────────────
+
+function relativeTime(iso: string): string {
+  const then = new Date(iso).getTime();
+  if (!Number.isFinite(then)) return "just now";
+  const secs = Math.max(0, Math.round((Date.now() - then) / 1000));
+  if (secs < 60) return "just now";
+  const mins = Math.round(secs / 60);
+  if (mins < 60) return `${mins} min${mins === 1 ? "" : "s"} ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.round(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+function ActivitySummaryCard({
+  insights,
+  loading,
+  onRefresh,
+}: {
+  insights: InsightsData | null;
+  loading: boolean;
+  onRefresh: () => void;
+}) {
+  const showInitialSpinner = loading && !insights;
+
+  return (
+    <div className="mb-5 rounded-xl border border-violet-500/30 bg-gradient-to-br from-violet-950/40 via-slate-900 to-slate-900 p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <Sparkles className="h-4 w-4 text-violet-300 flex-shrink-0" />
+          <span className="text-sm font-semibold text-slate-100">Activity summary</span>
+          <span className="rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-violet-300">
+            AI-generated
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={onRefresh}
+          disabled={loading}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950/40 px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:border-slate-600 hover:text-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Regenerate the AI summary"
+        >
+          <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+          Refresh analysis
+        </button>
+      </div>
+
+      {showInitialSpinner && (
+        <div className="space-y-2">
+          <div className="h-3 w-full animate-pulse rounded bg-slate-800" />
+          <div className="h-3 w-11/12 animate-pulse rounded bg-slate-800" />
+          <div className="h-3 w-4/5 animate-pulse rounded bg-slate-800" />
+        </div>
+      )}
+
+      {!showInitialSpinner && insights?.status === "no_key" && (
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Add <code className="font-mono text-slate-400">ANTHROPIC_API_KEY</code> in Vercel to
+          enable AI summaries.
+        </p>
+      )}
+
+      {!showInitialSpinner && insights?.status === "error" && (
+        <p className="text-xs text-amber-300/90 leading-relaxed">
+          Couldn&apos;t generate a summary just now — try again.
+        </p>
+      )}
+
+      {!showInitialSpinner && insights?.status === "ok" && (
+        <>
+          <div className="space-y-2.5">
+            {insights.summary.split(/\n\n+/).map((para, i) => (
+              <p key={i} className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+                {para.trim()}
+              </p>
+            ))}
+          </div>
+          <p className="mt-3 text-[10px] text-slate-600">
+            Generated {relativeTime(insights.generatedAt)}
+            {insights.cached ? " · cached" : ""}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 export default function DataHealthPage() {
@@ -496,9 +590,25 @@ export default function DataHealthPage() {
   const [loading, setLoading] = useState(true);
   const [expandedFile, setExpandedFile] = useState<string | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+  const [insights, setInsights] = useState<InsightsData | null>(null);
+  const [insightsLoading, setInsightsLoading] = useState(true);
 
   useEffect(() => {
     if (sessionStorage.getItem(SESSION_KEY) === "1") setAuthed(true);
+  }, []);
+
+  // AI activity summary — fetched once on mount; refresh button passes force=1.
+  const fetchInsights = useCallback(async (force = false) => {
+    setInsightsLoading(true);
+    try {
+      const res = await fetch(`/api/admin/insights${force ? "?force=1" : ""}`)
+        .then((r) => r.json())
+        .catch(() => null);
+      if (res) setInsights(res as InsightsData);
+      else setInsights({ status: "error", summary: null });
+    } finally {
+      setInsightsLoading(false);
+    }
   }, []);
 
   const fetchDashboardData = useCallback(async () => {
@@ -522,9 +632,10 @@ export default function DataHealthPage() {
   useEffect(() => {
     if (!authed) return;
     fetchDashboardData();
+    fetchInsights();
     const interval = setInterval(fetchDashboardData, 60_000);
     return () => clearInterval(interval);
-  }, [authed, fetchDashboardData]);
+  }, [authed, fetchDashboardData, fetchInsights]);
 
   if (!authed) return <PinGate onAuth={() => setAuthed(true)} />;
 
@@ -606,6 +717,13 @@ export default function DataHealthPage() {
 
         {!loading && (
           <>
+            {/* ── AI ACTIVITY SUMMARY ── */}
+            <ActivitySummaryCard
+              insights={insights}
+              loading={insightsLoading}
+              onRefresh={() => fetchInsights(true)}
+            />
+
             {/* Service alert */}
             {unhealthyServices.length > 0 && (
               <div className="bg-red-950/40 border border-red-800/50 rounded-xl p-4 mb-5 flex items-start gap-3">

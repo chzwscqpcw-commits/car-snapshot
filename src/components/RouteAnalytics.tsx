@@ -21,8 +21,19 @@ import { usePathname } from "next/navigation";
  * Delivery mirrors src/lib/tracking.ts: prefer navigator.sendBeacon (queued at
  * the browser level, survives unload) and fall back to fetch+keepalive.
  */
+// Internal/admin path prefixes — the owner's own visits. We never fire a
+// page_view from these, and the server-side analytics aggregation excludes
+// the same prefixes so historical owner views don't pollute the stats either.
+const INTERNAL_PATH_PREFIXES = ["/data-health", "/preview", "/demo"];
+
 function sendPageView(): void {
   if (typeof window === "undefined") return;
+
+  // Skip internal/admin pages (owner's own visits) so they don't pollute stats.
+  const pathname = window.location.pathname;
+  if (INTERNAL_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+    return;
+  }
 
   let utmSource: string | undefined;
   try {

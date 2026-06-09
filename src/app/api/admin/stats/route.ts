@@ -109,6 +109,19 @@ export type StatsResponse = {
   trafficSources: TrafficSource[];
 };
 
+// Internal/admin path prefixes — the owner's own visits to /data-health,
+// /preview and /demo. These are excluded from page-view analytics (both
+// topPages and trafficSources) so historical owner traffic doesn't pollute
+// the stats. Mirrors the capture-side guard in src/components/RouteAnalytics.tsx.
+const INTERNAL_PATH_PREFIXES = ["/data-health", "/preview", "/demo"];
+
+function isInternalPath(path: unknown): boolean {
+  return (
+    typeof path === "string" &&
+    INTERNAL_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))
+  );
+}
+
 // ── Traffic-source classification ───────────────────────────────────────────
 
 // Our own hosts — referrers from these are internal navigation, not acquisition.
@@ -395,6 +408,10 @@ async function pageViewAnalytics(
     const metadata = (row.metadata as Record<string, unknown> | null) ?? null;
 
     const path = metadata?.path;
+    // Exclude internal/admin pages (owner's own visits) from BOTH topPages
+    // and trafficSources aggregation.
+    if (isInternalPath(path)) continue;
+
     if (typeof path === "string" && path.length > 0) {
       pathCounts.set(path, (pathCounts.get(path) ?? 0) + 1);
     }
