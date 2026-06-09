@@ -20,7 +20,10 @@ function useInView<T extends HTMLElement>() {
           obs.disconnect();
         }
       },
-      { threshold: 0.25 }
+      // threshold 0 + rootMargin so it fires as soon as any part enters — a tall
+      // single-column grid on mobile never reaches a 0.25 ratio, which would
+      // otherwise leave the content stuck hidden.
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -83,46 +86,35 @@ export function EndangeredList({ rows }: { rows: CarRow[] }) {
   const credited = rows.filter((r) => r.credit);
   return (
     <>
-      <div ref={ref} className="grid gap-3 sm:grid-cols-2">
+      <div ref={ref} className="grid gap-2.5 sm:grid-cols-2">
         {rows.map((r, i) => (
           <div
             key={r.name}
-            className="overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-950/30 to-slate-900/40 transition-all duration-500"
+            className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-gradient-to-br from-red-950/25 to-slate-900/40 p-2.5 transition-all duration-500"
             style={{
               opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: `${i * 70}ms`,
+              transform: inView ? "translateY(0)" : "translateY(10px)",
+              transitionDelay: `${i * 45}ms`,
             }}
           >
             {r.img && (
-              <div className="relative aspect-[16/10] w-full">
+              <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg">
                 <Image
                   src={`/cars/${r.img}.webp`}
                   alt={`${r.name} — a now-rare UK car`}
                   fill
-                  sizes="(max-width: 640px) 92vw, 360px"
+                  sizes="96px"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent" />
-                <span className="absolute bottom-2 left-3 text-sm font-bold text-white drop-shadow">{r.name}</span>
-                <span className="absolute right-2 top-2 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                  Endangered
-                </span>
               </div>
             )}
-            <div className="flex items-end justify-between gap-2 p-4">
-              <div>
-                <p className="font-[family-name:var(--font-geist-mono)] text-3xl font-bold text-red-300">
-                  <CountCell value={r.licensed} run={inView} />
-                </p>
-                <p className="text-xs text-slate-500">left on UK roads</p>
-              </div>
-              {!r.img && (
-                <span className="shrink-0 rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
-                  Endangered
-                </span>
-              )}
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-white">{r.name}</p>
+              <p className="text-[11px] text-slate-500">left on UK roads</p>
             </div>
+            <p className="shrink-0 font-[family-name:var(--font-geist-mono)] text-2xl font-bold text-red-300">
+              <CountCell value={r.licensed} run={inView} />
+            </p>
           </div>
         ))}
       </div>
