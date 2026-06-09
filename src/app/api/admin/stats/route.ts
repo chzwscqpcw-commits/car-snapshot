@@ -11,6 +11,8 @@ export type SectionReach = { section_id: string; count: number; pct: number };
 export type BookingStepCount = { step: number; count: number };
 export type BookingSource = { source: string; count: number };
 export type ScrollThreshold = { threshold_pct: number; count: number };
+export type TopPage = { path: string; views: number };
+export type TrafficSource = { source: string; visits24h: number; visits7d: number };
 
 export type StatsResponse = {
   lookups: {
@@ -99,7 +101,69 @@ export type StatsResponse = {
     outboundClicks: number;
     scrollDepth: ScrollThreshold[];
   };
+  // Top paths by page_view count over the last 7 days.
+  topPages: TopPage[];
+  // page_view events grouped by a classified traffic source, for 24h + 7d.
+  // "Internal" (same-host) referrals are excluded — this is "how people got
+  // here", not internal navigation.
+  trafficSources: TrafficSource[];
 };
+
+// ── Traffic-source classification ───────────────────────────────────────────
+
+// Our own hosts — referrers from these are internal navigation, not acquisition.
+const OWN_HOSTS = new Set([
+  "freeplatecheck.co.uk",
+  "www.freeplatecheck.co.uk",
+]);
+
+function titleCase(s: string): string {
+  return s
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+/**
+ * Classify a page_view's traffic source from its metadata. Precedence:
+ *   1. utm_source (Title-cased) wins if present.
+ *   2. Otherwise classify the referrer hostname into a known channel, our own
+ *      host ("Internal"), "Direct" (no referrer), or the bare referral domain.
+ * Returns "Internal" for same-host referrers (caller filters these out).
+ */
+function classifySource(metadata: Record<string, unknown> | null): string {
+  const utm = metadata?.utm_source;
+  if (typeof utm === "string" && utm.trim().length > 0) {
+    return titleCase(utm.trim());
+  }
+
+  const referrer = metadata?.referrer;
+  if (typeof referrer !== "string" || referrer.trim().length === 0) {
+    return "Direct";
+  }
+
+  let host: string;
+  try {
+    host = new URL(referrer).hostname.toLowerCase();
+  } catch {
+    return "Direct";
+  }
+  if (!host) return "Direct";
+
+  if (OWN_HOSTS.has(host)) return "Internal";
+  if (host.includes("google.")) return "Google";
+  if (host.includes("bing.")) return "Bing";
+  if (host.includes("duckduckgo")) return "DuckDuckGo";
+  if (host.includes("linkedin") || host.includes("lnkd.in")) return "LinkedIn";
+  if (host.includes("facebook") || host.includes("fb.")) return "Facebook";
+  if (host === "t.co" || host.includes("twitter") || host.includes("x.com")) return "X/Twitter";
+  if (host.includes("instagram")) return "Instagram";
+  if (host.includes("reddit")) return "Reddit";
+
+  // Unknown referral — surface the bare hostname (strip a leading www.).
+  return host.replace(/^www\./, "");
+}
 
 async function countEvents(
   sb: ReturnType<typeof supabaseServer>,
@@ -298,6 +362,64 @@ function startOfUtcDay(d: Date): Date {
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 }
 
+/**
+ * Fetch page_view events in the last 7 days (metadata + created_at only, row-
+ * capped) and aggregate two views in JS: top paths and classified traffic
+ * sources (24h + 7d). Done in one pass to avoid a second scan of the same rows.
+ * The 50k cap bounds memory/latency; at current volume (~3.4k sessions/mo) 7d
+ * of page_views sits well under it.
+ */
+async function pageViewAnalytics(
+  sb: ReturnType<typeof supabaseServer>,
+  sevenDaysAgo: Date,
+  oneDayAgo: Date,
+): Promise<{ topPages: TopPage[]; trafficSources: TrafficSource[] }> {
+  const { data, error } = await sb
+    .from("site_events")
+    .select("metadata, created_at")
+    .eq("event_type", "page_view")
+    .gte("created_at", sevenDaysAgo.toISOString())
+    .limit(50000);
+
+  if (error || !data) {
+    if (error) console.error("[STATS] Error fetching page_view analytics:", error.message);
+    return { topPages: [], trafficSources: [] };
+  }
+
+  const oneDayMs = oneDayAgo.getTime();
+  const pathCounts = new Map<string, number>();
+  const source7d = new Map<string, number>();
+  const source24h = new Map<string, number>();
+
+  for (const row of data) {
+    const metadata = (row.metadata as Record<string, unknown> | null) ?? null;
+
+    const path = metadata?.path;
+    if (typeof path === "string" && path.length > 0) {
+      pathCounts.set(path, (pathCounts.get(path) ?? 0) + 1);
+    }
+
+    const source = classifySource(metadata);
+    if (source !== "Internal") {
+      source7d.set(source, (source7d.get(source) ?? 0) + 1);
+      if (typeof row.created_at === "string" && new Date(row.created_at).getTime() >= oneDayMs) {
+        source24h.set(source, (source24h.get(source) ?? 0) + 1);
+      }
+    }
+  }
+
+  const topPages: TopPage[] = Array.from(pathCounts.entries())
+    .map(([path, views]) => ({ path, views }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 8);
+
+  const trafficSources: TrafficSource[] = Array.from(source7d.entries())
+    .map(([source, visits7d]) => ({ source, visits7d, visits24h: source24h.get(source) ?? 0 }))
+    .sort((a, b) => b.visits7d - a.visits7d);
+
+  return { topPages, trafficSources };
+}
+
 export async function GET(): Promise<NextResponse<StatsResponse>> {
   const sb = supabaseServer();
   // contact_messages has RLS enabled — the anon client returns empty result
@@ -376,6 +498,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     scrollDepthCounts7d,
     motHistoryExpands7d,
     pdfChunkErrors7d,
+    pageViewAggregates,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -436,6 +559,8 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEvents(sb, "mot_history_expand", sevenDaysAgo),
     // Of the PDF errors, how many were the benign stale-chunk kind.
     countEventsWithMetaEq(sb, "pdf_download_error", "metadata->>chunk_error", "true", sevenDaysAgo),
+    // Top pages + traffic sources (single page_view scan, JS-aggregated).
+    pageViewAnalytics(sb, sevenDaysAgo, oneDayAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
@@ -561,5 +686,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       outboundClicks: outboundClicks7d,
       scrollDepth: scrollDepthBuckets,
     },
+    topPages: pageViewAggregates.topPages,
+    trafficSources: pageViewAggregates.trafficSources,
   });
 }

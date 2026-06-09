@@ -31,7 +31,24 @@ export async function POST(req: Request) {
     // sits on the body root; everything else uses an explicit payload object.
     let metadata: Record<string, unknown> | null = null;
     if (type === "page_view") {
-      metadata = { path: typeof body.path === "string" ? body.path : "/" };
+      // New shape: { type: "page_view", payload: { path, referrer, utm_source } }
+      // from the global RouteAnalytics tracker. Legacy shape (homepage-only,
+      // now removed): { type: "page_view", path: "/foo" }. Support both.
+      const p =
+        body?.payload && typeof body.payload === "object" && !Array.isArray(body.payload)
+          ? (body.payload as Record<string, unknown>)
+          : {};
+      const path =
+        typeof p.path === "string"
+          ? p.path
+          : typeof body.path === "string"
+            ? body.path
+            : "/";
+      metadata = { path };
+      if (typeof p.referrer === "string") metadata.referrer = p.referrer;
+      if (typeof p.utm_source === "string" && p.utm_source.length > 0) {
+        metadata.utm_source = p.utm_source;
+      }
     } else if (body?.payload && typeof body.payload === "object" && !Array.isArray(body.payload)) {
       metadata = body.payload as Record<string, unknown>;
     }

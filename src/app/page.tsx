@@ -939,14 +939,9 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  // Track page view
-  useEffect(() => {
-    fetch("/api/event", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "page_view", path: window.location.pathname }),
-    }).catch(() => {});
-  }, []);
+  // Page-view tracking is now global — fired once per route by
+  // <RouteAnalytics /> in the root layout (with referrer + utm_source). The
+  // homepage-only fetch was removed to avoid double-counting.
 
   // Animated reg-plate placeholder — types and clears example regs in the
   // search input. Pauses when the user has typed anything, has focus, or

@@ -9,6 +9,7 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import { HomeResultProvider } from "@/components/HomeResultContext";
+import RouteAnalytics from "@/components/RouteAnalytics";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -152,6 +153,7 @@ export default function RootLayout({
         <Script id="google-analytics" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`}
         </Script>
+        <RouteAnalytics />
         <RacDemoProvider>
           <CommandPaletteProvider>
             <HomeResultProvider>

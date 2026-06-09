@@ -3,29 +3,22 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Activity,
-  AlertTriangle,
   Bell,
-  Bookmark,
   Calculator,
-  CheckCircle2,
   ChevronDown,
   Database,
   Download,
   ExternalLink,
   Eye,
-  Filter,
   Fuel,
   Gauge,
+  Globe,
   Lock,
-  Mail,
-  MousePointerClick,
   RefreshCw,
   Search,
-  Sparkles,
   TrendingDown,
   TrendingUp,
   Users,
-  Wand2,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -44,9 +37,9 @@ type HealthData = {
 };
 
 type TopMake = { make: string; count: number };
-type CaptureTrigger = { trigger_variant: string; count: number };
 type PartnerContextCount = { context: string; count: number };
-type SectionReach = { section_id: string; count: number; pct: number };
+type TopPage = { path: string; views: number };
+type TrafficSource = { source: string; visits24h: number; visits7d: number };
 
 type StatsData = {
   lookups: {
@@ -70,44 +63,13 @@ type StatsData = {
   };
   valuations: number;
   motReminders: number;
-  contactMessages: { today: number; last7d: number; allTime: number };
   motRemindersLast7d: number;
   topMakesToday: TopMake[];
-  funnel: {
-    searchesToday: number;
-    resultsViewsToday: number;
-    reminderViewsToday: number;
-    reminderSignupsToday: number;
-  };
-  funnel7d: {
-    searches: number;
-    resultsViews: number;
-    reminderViews: number;
-    reminderSignups: number;
-  };
-  captureByTriggerLast7d: CaptureTrigger[];
   partnerClicks: {
     today: number;
     last7d: number;
     byContextToday: PartnerContextCount[];
     byContextLast7d: PartnerContextCount[];
-  };
-  sectionReachToday: {
-    resultsViews: number;
-    sections: SectionReach[];
-  };
-  reminderFormToday: {
-    views: number;
-    attempts: number;
-    successes: number;
-    validationErrors: number;
-    submitErrors: { duplicate: number; server: number; network: number };
-  };
-  bookingWizardLast7d: {
-    starts: number;
-    stepCompletes: { step: number; count: number }[];
-    handoffs: number;
-    sources: { source: string; count: number }[];
   };
   newEventsLast7d: {
     pdfDownloads: number;
@@ -118,6 +80,8 @@ type StatsData = {
     outboundClicks: number;
     scrollDepth: { threshold_pct: number; count: number }[];
   };
+  topPages: TopPage[];
+  trafficSources: TrafficSource[];
 };
 
 type DataFileEntry = {
@@ -161,15 +125,6 @@ type FuelPriceData = {
   diesel: number;
   date: string | null;
 };
-
-type RecentEvent = {
-  id: string;
-  created_at: string;
-  event_type: string;
-  metadata: Record<string, unknown> | null;
-};
-
-type RecentEventsData = { events: RecentEvent[] };
 
 // ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
@@ -332,70 +287,9 @@ function Delta({ current, prior, label }: { current: number; prior: number; labe
   );
 }
 
-// ── Funnel helpers ────────────────────────────────────────────────────────────
+// ── Bar list ──────────────────────────────────────────────────────────────────
 
-function pct(numerator: number, denominator: number): number | null {
-  if (!denominator) return null;
-  return Math.round((numerator / denominator) * 100);
-}
-
-function prettifyTriggerVariant(v: string): string {
-  // Make trigger_variant slugs readable in the UI without losing the
-  // underlying values you'd search GA4 for. e.g. "results_due_soon" → "Results · Due soon".
-  if (!v || v === "(not set)") return v || "(not set)";
-  if (v === "homepage") return "Homepage form";
-  if (v === "reminder_page") return "/mot-reminder page";
-  if (v === "blog_footer") return "Blog footer";
-  if (v === "post_pdf") return "After PDF download";
-  if (v === "widget") return "Inline lookup widget";
-  if (v.startsWith("results_")) {
-    const tail = v.slice("results_".length).replace(/_/g, " ");
-    return `Results · ${tail.replace(/\b\w/g, (c) => c.toUpperCase())}`;
-  }
-  return v;
-}
-
-function prettifySectionId(id: string): string {
-  if (id === "section-health") return "Health & Safety";
-  if (id === "section-money") return "Financial Picture";
-  if (id === "section-facts") return "Key Insights";
-  if (id === "section-mot") return "MOT History";
-  if (id === "section-next") return "Next Steps";
-  return id;
-}
-
-function FunnelStep({
-  label,
-  value,
-  conversionPct,
-  icon: Icon,
-}: {
-  label: string;
-  value: number;
-  conversionPct?: number | null;
-  icon: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-3.5">
-      <div className="flex items-center justify-between mb-1.5">
-        <Icon className="h-3.5 w-3.5 text-slate-500" />
-        {conversionPct != null && (
-          <span className="text-[10px] font-semibold text-cyan-300 tabular-nums">
-            {conversionPct}%
-          </span>
-        )}
-      </div>
-      <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 leading-tight">
-        {label}
-      </p>
-      <p className="mt-0.5 text-xl sm:text-2xl font-bold text-white tabular-nums">
-        {value.toLocaleString()}
-      </p>
-    </div>
-  );
-}
-
-type BarItem = { label: string; count: number; suffix?: string; mono?: boolean };
+type BarItem = { label: string; count: number; suffix?: string; mono?: boolean; highlight?: boolean };
 
 function BarList({ items, emptyMessage }: { items: BarItem[]; emptyMessage: string }) {
   if (items.length === 0) {
@@ -422,9 +316,9 @@ function BarList({ items, emptyMessage }: { items: BarItem[]; emptyMessage: stri
               style={{ width: `${pctWidth}%` }}
             />
             <span
-              className={`relative text-sm font-medium text-slate-200 truncate ${
-                item.mono ? "font-mono" : ""
-              }`}
+              className={`relative text-sm font-medium truncate ${
+                item.highlight ? "text-cyan-300" : "text-slate-200"
+              } ${item.mono ? "font-mono" : ""}`}
             >
               {item.label}
             </span>
@@ -441,145 +335,6 @@ function BarList({ items, emptyMessage }: { items: BarItem[]; emptyMessage: stri
   );
 }
 
-// ── Recent events feed ────────────────────────────────────────────────────────
-
-function relativeTime(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const s = Math.round(diffMs / 1000);
-  if (s < 5) return "now";
-  if (s < 60) return `${s}s`;
-  const m = Math.round(s / 60);
-  if (m < 60) return `${m}m`;
-  const h = Math.round(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.round(h / 24)}d`;
-}
-
-function eventTone(eventType: string): { dot: string; text: string } {
-  if (eventType.endsWith("_error") || eventType.includes("validation_error")) {
-    return { dot: "bg-red-400", text: "text-red-300" };
-  }
-  if (eventType === "partner_click") {
-    return { dot: "bg-emerald-400", text: "text-emerald-300" };
-  }
-  if (
-    eventType === "reg_search" ||
-    eventType === "mot_reminder" ||
-    eventType === "contact_submit" ||
-    eventType === "mot_action_banner_reminder_open" ||
-    eventType === "booking_wizard_start" ||
-    eventType === "booking_step_complete"
-  ) {
-    return { dot: "bg-cyan-400", text: "text-cyan-300" };
-  }
-  if (eventType.endsWith("_click")) {
-    return { dot: "bg-violet-400", text: "text-violet-300" };
-  }
-  if (eventType.endsWith("_view")) {
-    return { dot: "bg-sky-500", text: "text-sky-300" };
-  }
-  return { dot: "bg-slate-500", text: "text-slate-300" };
-}
-
-function summarizeEvent(e: RecentEvent): string {
-  const m = (e.metadata ?? {}) as Record<string, unknown>;
-  const get = (k: string) => (typeof m[k] === "string" ? (m[k] as string) : null);
-  const getNum = (k: string) => (typeof m[k] === "number" ? (m[k] as number) : null);
-
-  switch (e.event_type) {
-    case "partner_click":
-      return `${get("partner_id") ?? "?"} · ${get("click_context") ?? "?"}`;
-    case "reg_search":
-      return `vrm=${get("vrm") ?? "?"} · ${get("flow") ?? "?"}`;
-    case "mot_reminder":
-      return `${get("trigger_variant") ?? "?"} · ${getNum("vrm_count") ?? 1} vrm`;
-    case "results_view":
-      return `${get("make") ?? "?"} · MOT ${get("mot_status") ?? "?"} · ${getNum("year_of_manufacture") ?? "?"}`;
-    case "results_section_view":
-      return get("section_label") ?? get("section_id") ?? "?";
-    case "mot_reminder_view":
-    case "mot_reminder_chip_view":
-    case "mot_reminder_chip_click":
-      return `${get("trigger_variant") ?? get("context") ?? "?"}`;
-    case "mot_reminder_submit_attempt":
-      return `${get("trigger_variant") ?? "?"} · ${getNum("vrm_count") ?? 1} vrm`;
-    case "mot_reminder_submit_error":
-    case "mot_reminder_validation_error":
-      return `${get("error_type") ?? get("field") ?? "?"} · ${get("trigger_variant") ?? get("context") ?? "?"}`;
-    case "experiment_impression":
-    case "experiment_click":
-      return `${get("experiment_id") ?? "?"} = ${get("variant") ?? "?"}`;
-    case "mot_action_banner_view":
-      return `${get("urgency") ?? "?"} · ${getNum("days_until_expiry") ?? "?"}d to expiry`;
-    case "mot_action_banner_reminder_open":
-      return `${get("urgency") ?? "?"}`;
-    case "action_banner_booking_click":
-      return `${get("urgency") ?? "?"} → wizard`;
-    case "booking_wizard_start":
-      return `from ${get("source") ?? "direct"}${m.prefilled_vrm ? " · pre-filled" : ""}`;
-    case "booking_step_complete":
-      return `step ${getNum("step") ?? "?"}${get("service") ? " · " + get("service") : ""}${get("postcode") ? " · pc=" + get("postcode")?.slice(0, 4) : ""}`;
-    case "booking_step_back":
-      return `${getNum("from_step") ?? "?"} → ${getNum("to_step") ?? "?"}`;
-    case "contact_submit":
-      return `${get("category") ?? "?"} · ${get("msg_length_bucket") ?? "?"}${m.has_name ? " · named" : ""}`;
-    case "contact_submit_error":
-      return `${get("error_type") ?? "?"} · ${get("category") ?? "?"}`;
-    case "contact_validation_error":
-      return `${get("field") ?? "?"}${get("category") ? ` · ${get("category")}` : ""}`;
-    default: {
-      // Generic fallback — show first metadata value if any
-      const keys = Object.keys(m);
-      if (keys.length === 0) return "—";
-      return keys
-        .slice(0, 2)
-        .map((k) => `${k}=${String(m[k] ?? "").slice(0, 24)}`)
-        .join(" · ");
-    }
-  }
-}
-
-function RecentEventsFeed({ events }: { events: RecentEvent[] }) {
-  if (events.length === 0) {
-    return (
-      <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
-        <p className="text-xs text-slate-500">No recent events yet.</p>
-      </div>
-    );
-  }
-  return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-      {events.map((e, i) => {
-        const tone = eventTone(e.event_type);
-        return (
-          <div
-            key={e.id}
-            className={`px-3.5 py-2 flex items-center gap-3 ${
-              i < events.length - 1 ? "border-b border-slate-800/60" : ""
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${tone.dot} shrink-0`}
-              aria-hidden="true"
-            />
-            <span className="text-[10px] font-mono text-slate-500 tabular-nums w-10 flex-shrink-0">
-              {relativeTime(e.created_at)}
-            </span>
-            <span
-              className={`text-[11px] font-medium ${tone.text} truncate w-32 sm:w-44 flex-shrink-0`}
-              title={e.event_type}
-            >
-              {e.event_type}
-            </span>
-            <span className="text-xs text-slate-400 truncate min-w-0">
-              {summarizeEvent(e)}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 // ── Hero KPI card ─────────────────────────────────────────────────────────────
 
@@ -738,7 +493,6 @@ export default function DataHealthPage() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [dataHealth, setDataHealth] = useState<DataHealthData | null>(null);
   const [fuelPrices, setFuelPrices] = useState<FuelPriceData | null>(null);
-  const [recentEvents, setRecentEvents] = useState<RecentEventsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedFile, setExpandedFile] = useState<string | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -749,18 +503,16 @@ export default function DataHealthPage() {
 
   const fetchDashboardData = useCallback(async () => {
     try {
-      const [healthRes, statsRes, dataRes, fuelRes, recentRes] = await Promise.all([
+      const [healthRes, statsRes, dataRes, fuelRes] = await Promise.all([
         fetch("/api/admin/health").then((r) => r.json()).catch(() => null),
         fetch("/api/admin/stats").then((r) => r.json()).catch(() => null),
         fetch("/api/data-health").then((r) => r.json()).catch(() => null),
         fetch("/api/fuel-prices").then((r) => r.json()).catch(() => null),
-        fetch("/api/admin/recent-events").then((r) => r.json()).catch(() => null),
       ]);
       if (healthRes) setHealth(healthRes);
       if (statsRes) setStats(statsRes);
       if (dataRes) setDataHealth(dataRes);
       if (fuelRes) setFuelPrices(fuelRes);
-      if (recentRes) setRecentEvents(recentRes);
       setLastRefreshed(new Date());
     } finally {
       setLoading(false);
@@ -914,311 +666,141 @@ export default function DataHealthPage() {
                   tone="violet"
                 />
                 <KpiCard
-                  icon={Mail}
-                  label="Contact msgs"
-                  value={stats.contactMessages.today}
+                  icon={Eye}
+                  label="Page views today"
+                  value={stats.pageViews.today}
                   delta={
-                    stats.contactMessages.last7d > 0 ? (
-                      <span className="text-amber-400">
-                        {stats.contactMessages.last7d} this week
-                      </span>
-                    ) : (
-                      <span className="text-slate-500">—</span>
-                    )
+                    <Delta current={stats.pageViews.today} prior={stats.pageViews.yesterday} />
                   }
-                  sub={`${stats.contactMessages.allTime} all time`}
+                  sub={`${stats.pageViews.last7d.toLocaleString()} last 7d`}
                   tone="amber"
                 />
               </div>
             )}
 
-            {/* ── TODAY'S CONVERSION FUNNEL ── */}
+            {/* ── HOW PEOPLE GOT HERE ── */}
             {stats && (
               <Section
-                title="Today's conversion funnel"
-                hint="Per-user actions (not API calls) · resets at 00:00 UTC"
+                title="How people got here"
+                hint="Traffic sources · 24h / 7d · excludes internal nav"
               >
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  <FunnelStep
-                    icon={Search}
-                    label="Searches"
-                    value={stats.funnel.searchesToday}
-                  />
-                  <FunnelStep
-                    icon={Eye}
-                    label="Results viewed"
-                    value={stats.funnel.resultsViewsToday}
-                    conversionPct={pct(
-                      stats.funnel.resultsViewsToday,
-                      stats.funnel.searchesToday,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={Bell}
-                    label="Reminder offered"
-                    value={stats.funnel.reminderViewsToday}
-                    conversionPct={pct(
-                      stats.funnel.reminderViewsToday,
-                      stats.funnel.resultsViewsToday,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={TrendingUp}
-                    label="Reminder signups"
-                    value={stats.funnel.reminderSignupsToday}
-                    conversionPct={pct(
-                      stats.funnel.reminderSignupsToday,
-                      stats.funnel.reminderViewsToday,
-                    )}
-                  />
-                </div>
-              </Section>
-            )}
-
-            {/* ── 7-DAY CONVERSION FUNNEL ── */}
-            {stats && (
-              <Section
-                title="Last 7 days conversion funnel"
-                hint="Stabler signal · smooths low-volume mornings"
-              >
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  <FunnelStep
-                    icon={Search}
-                    label="Searches"
-                    value={stats.funnel7d.searches}
-                  />
-                  <FunnelStep
-                    icon={Eye}
-                    label="Results viewed"
-                    value={stats.funnel7d.resultsViews}
-                    conversionPct={pct(
-                      stats.funnel7d.resultsViews,
-                      stats.funnel7d.searches,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={Bell}
-                    label="Reminder offered"
-                    value={stats.funnel7d.reminderViews}
-                    conversionPct={pct(
-                      stats.funnel7d.reminderViews,
-                      stats.funnel7d.resultsViews,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={TrendingUp}
-                    label="Reminder signups"
-                    value={stats.funnel7d.reminderSignups}
-                    conversionPct={pct(
-                      stats.funnel7d.reminderSignups,
-                      stats.funnel7d.reminderViews,
-                    )}
-                  />
-                </div>
-              </Section>
-            )}
-
-            {/* ── REAL-TIME EVENTS FEED ── */}
-            {recentEvents && (
-              <Section
-                title="Real-time activity"
-                hint={`Last ${recentEvents.events.length} events · excludes page_view noise`}
-              >
-                <RecentEventsFeed events={recentEvents.events} />
-              </Section>
-            )}
-
-            {/* ── CAPTURE TRIGGER PERFORMANCE ── */}
-            {stats && (
-              <Section
-                title="Capture trigger performance"
-                hint={`Reminder signups by trigger · last 7d`}
-              >
-                <BarList
-                  items={stats.captureByTriggerLast7d.map((t) => ({
-                    label: prettifyTriggerVariant(t.trigger_variant),
-                    count: t.count,
-                  }))}
-                  emptyMessage="No reminder signups in the last 7 days yet — data starts populating with new traffic."
-                />
-              </Section>
-            )}
-
-            {/* ── PARTNER CLICKS ── */}
-            {stats && (
-              <Section
-                title="Partner clicks today"
-                hint={`${stats.partnerClicks.last7d.toLocaleString()} last 7d · total ${stats.partnerClicks.today.toLocaleString()}`}
-              >
-                <BarList
-                  items={stats.partnerClicks.byContextToday.map((c) => ({
-                    label: c.context,
-                    count: c.count,
-                    mono: true,
-                  }))}
-                  emptyMessage="No partner clicks yet today."
-                />
-              </Section>
-            )}
-
-            {/* ── SECTION REACH ── */}
-            {stats && (
-              <Section
-                title="Section reach today"
-                hint={
-                  stats.sectionReachToday.resultsViews > 0
-                    ? `% of ${stats.sectionReachToday.resultsViews} result views`
-                    : "Awaiting result views"
-                }
-              >
-                <BarList
-                  items={stats.sectionReachToday.sections.map((s) => ({
-                    label: prettifySectionId(s.section_id),
-                    count: s.count,
-                    suffix: `${s.pct}%`,
-                  }))}
-                  emptyMessage="No section visibility events yet today."
-                />
-              </Section>
-            )}
-
-            {/* ── REMINDER FORM DROP-OFF ── */}
-            {stats && (
-              <Section title="Reminder form funnel today" hint="Views → attempts → successes">
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  <FunnelStep
-                    icon={Eye}
-                    label="Form views"
-                    value={stats.reminderFormToday.views}
-                  />
-                  <FunnelStep
-                    icon={MousePointerClick}
-                    label="Submit attempts"
-                    value={stats.reminderFormToday.attempts}
-                    conversionPct={pct(
-                      stats.reminderFormToday.attempts,
-                      stats.reminderFormToday.views,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={TrendingUp}
-                    label="Successes"
-                    value={stats.reminderFormToday.successes}
-                    conversionPct={pct(
-                      stats.reminderFormToday.successes,
-                      stats.reminderFormToday.attempts,
-                    )}
-                  />
-                  <FunnelStep
-                    icon={Filter}
-                    label="Validation errors"
-                    value={stats.reminderFormToday.validationErrors}
-                  />
-                </div>
-
-                {(stats.reminderFormToday.submitErrors.duplicate > 0 ||
-                  stats.reminderFormToday.submitErrors.server > 0 ||
-                  stats.reminderFormToday.submitErrors.network > 0) && (
-                  <div className="mt-3 rounded-xl border border-amber-800/40 bg-amber-950/20 p-3.5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-300">
-                        Submit errors today
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
-                          Duplicate
-                        </p>
-                        <p className="text-sm font-bold text-white tabular-nums">
-                          {stats.reminderFormToday.submitErrors.duplicate}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
-                          Server
-                        </p>
-                        <p className="text-sm font-bold text-white tabular-nums">
-                          {stats.reminderFormToday.submitErrors.server}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider">
-                          Network
-                        </p>
-                        <p className="text-sm font-bold text-white tabular-nums">
-                          {stats.reminderFormToday.submitErrors.network}
-                        </p>
-                      </div>
-                    </div>
+                {stats.trafficSources.length === 0 ? (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
+                    <p className="text-xs text-slate-500">
+                      No external traffic recorded yet — populates as new visits land with a
+                      referrer or utm_source.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    {(() => {
+                      const max = Math.max(...stats.trafficSources.map((s) => s.visits7d));
+                      return stats.trafficSources.map((s, i) => {
+                        const w = max > 0 ? (s.visits7d / max) * 100 : 0;
+                        return (
+                          <div
+                            key={s.source}
+                            className={`relative px-4 py-2.5 flex items-center justify-between gap-3 ${
+                              i < stats.trafficSources.length - 1
+                                ? "border-b border-slate-800/60"
+                                : ""
+                            }`}
+                          >
+                            <div
+                              className="absolute inset-y-0 left-0 bg-cyan-500/5 pointer-events-none"
+                              style={{ width: `${w}%` }}
+                            />
+                            <div className="relative flex items-center gap-2.5 min-w-0">
+                              <Globe className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
+                              <span className="text-sm font-medium text-slate-200 truncate">
+                                {s.source}
+                              </span>
+                            </div>
+                            <span className="relative flex items-baseline gap-3 flex-shrink-0 tabular-nums">
+                              <span className="text-[11px] text-cyan-300">
+                                {s.visits24h} <span className="text-slate-600">24h</span>
+                              </span>
+                              <span className="text-sm text-slate-300">
+                                {s.visits7d} <span className="text-slate-600 text-[11px]">7d</span>
+                              </span>
+                            </span>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 )}
               </Section>
             )}
 
-            {/* ── BOOKING WIZARD FUNNEL (last 7d) ── */}
+            {/* ── TOP PAGES (7d) ── */}
             {stats && (
-              <Section
-                title="Booking wizard funnel"
-                hint={`Last 7d · Step 1 = wizard starts (${stats.bookingWizardLast7d.starts.toLocaleString()})`}
-              >
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
-                  <FunnelStep
-                    icon={Wand2}
-                    label="Wizard starts"
-                    value={stats.bookingWizardLast7d.starts}
-                  />
-                  {[2, 3, 4].map((stepNum) => {
-                    const step = stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === stepNum);
-                    const prevStep = stepNum === 2
-                      ? stats.bookingWizardLast7d.starts
-                      : (stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === stepNum - 1)?.count ?? 0);
-                    return (
-                      <FunnelStep
-                        key={stepNum}
-                        icon={CheckCircle2}
-                        label={`Step ${stepNum} reached`}
-                        value={step?.count ?? 0}
-                        conversionPct={pct(step?.count ?? 0, prevStep)}
-                      />
-                    );
-                  })}
-                  <FunnelStep
-                    icon={ExternalLink}
-                    label="BMG handoffs"
-                    value={stats.bookingWizardLast7d.handoffs}
-                    conversionPct={pct(
-                      stats.bookingWizardLast7d.handoffs,
-                      stats.bookingWizardLast7d.stepCompletes.find((s) => s.step === 4)?.count ?? 0,
-                    )}
-                  />
-                </div>
-              </Section>
-            )}
-
-            {/* ── BOOKING WIZARD SOURCES ── */}
-            {stats && (
-              <Section
-                title="Booking wizard sources"
-                hint="Which CTAs drove wizard starts · last 7d"
-              >
+              <Section title="Top pages" hint="By page views · last 7d">
                 <BarList
-                  items={stats.bookingWizardLast7d.sources.map((s) => ({
-                    label: s.source,
-                    count: s.count,
+                  items={stats.topPages.map((p) => ({
+                    label: p.path,
+                    count: p.views,
                     mono: true,
+                    highlight: p.path === "/stats/how-many-left",
                   }))}
-                  emptyMessage="No wizard entries yet — first user clicks land here once the new CTAs see traffic."
+                  emptyMessage="No page views in the last 7 days yet."
                 />
               </Section>
             )}
 
-            {/* ── PARTNER CLICKS LAST 7D ── */}
+            {/* ── ERRORS & JOBS ── */}
+            {stats && (
+              <Section title="Errors & jobs" hint="PDF errors + CI · last 7d">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  <MiniStat
+                    label="PDF downloads"
+                    value={stats.newEventsLast7d.pdfDownloads}
+                    icon={Download}
+                  />
+                  <MiniStat
+                    label="PDF errors"
+                    value={stats.newEventsLast7d.pdfErrors}
+                  />
+                  <MiniStat
+                    label="Stale-chunk"
+                    value={stats.newEventsLast7d.pdfChunkErrors}
+                    sub="benign"
+                  />
+                  <MiniStat
+                    label="Real PDF faults"
+                    value={Math.max(
+                      0,
+                      stats.newEventsLast7d.pdfErrors - stats.newEventsLast7d.pdfChunkErrors,
+                    )}
+                    sub="needs attention"
+                  />
+                </div>
+                {/* Live CI status — GitHub Actions badge auto-updates green/red. */}
+                <a
+                  href="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2.5 inline-flex items-center gap-2.5 rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 hover:border-slate-700 transition-colors"
+                >
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                    Continuous Integration
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- external GH badge SVG, not a local asset */}
+                  <img
+                    src="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml/badge.svg"
+                    alt="CI status"
+                    className="h-[18px]"
+                  />
+                  <ExternalLink className="h-3 w-3 text-slate-500" />
+                </a>
+              </Section>
+            )}
+
+            {/* ── PARTNER CLICKS (today + 7d) ── */}
             {stats && (
               <Section
-                title="Partner clicks last 7 days"
-                hint={`${stats.partnerClicks.last7d.toLocaleString()} total · per-CTA attribution`}
+                title="Partner clicks"
+                hint={`${stats.partnerClicks.today.toLocaleString()} today · ${stats.partnerClicks.last7d.toLocaleString()} last 7d`}
               >
                 <BarList
                   items={stats.partnerClicks.byContextLast7d.map((c) => ({
@@ -1228,77 +810,6 @@ export default function DataHealthPage() {
                   }))}
                   emptyMessage="No partner clicks in the last 7 days yet."
                 />
-              </Section>
-            )}
-
-            {/* ── NEW EVENTS TRACKED ── */}
-            {stats && (
-              <Section
-                title="New events tracked"
-                hint="Shipped May 2026 · last 7d"
-              >
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
-                  <FunnelStep
-                    icon={Download}
-                    label="PDF downloads"
-                    value={stats.newEventsLast7d.pdfDownloads}
-                  />
-                  <FunnelStep
-                    icon={Eye}
-                    label="MOT history opened"
-                    value={stats.newEventsLast7d.motHistoryExpands}
-                  />
-                  <FunnelStep
-                    icon={Bookmark}
-                    label="Vehicles saved"
-                    value={stats.newEventsLast7d.vehiclesSaved}
-                  />
-                  <FunnelStep
-                    icon={ExternalLink}
-                    label="Outbound clicks"
-                    value={stats.newEventsLast7d.outboundClicks}
-                  />
-                  <FunnelStep
-                    icon={Sparkles}
-                    label="PDF errors"
-                    value={stats.newEventsLast7d.pdfErrors}
-                  />
-                </div>
-                {stats.newEventsLast7d.pdfErrors > 0 && (
-                  <p className="mt-2 text-[11px] text-slate-500 leading-relaxed">
-                    Of {stats.newEventsLast7d.pdfErrors} PDF error
-                    {stats.newEventsLast7d.pdfErrors !== 1 ? "s" : ""},{" "}
-                    <span className="text-slate-400">{stats.newEventsLast7d.pdfChunkErrors}</span>{" "}
-                    {stats.newEventsLast7d.pdfChunkErrors === 1 ? "was" : "were"} stale-chunk
-                    (benign — auto-recovers on reload);{" "}
-                    <span className="text-slate-400">
-                      {stats.newEventsLast7d.pdfErrors - stats.newEventsLast7d.pdfChunkErrors}
-                    </span>{" "}
-                    real. Untagged errors predate the 2026-06-08 fix.
-                  </p>
-                )}
-                {stats.newEventsLast7d.scrollDepth.length > 0 && (
-                  <div className="mt-3.5 rounded-xl border border-slate-800 bg-slate-900/40 p-3.5">
-                    <p className="text-[11px] font-medium text-slate-400 mb-2">
-                      Scroll depth on results page (% of users reaching each threshold)
-                    </p>
-                    <div className="grid grid-cols-4 gap-2">
-                      {stats.newEventsLast7d.scrollDepth.map((b) => (
-                        <div
-                          key={b.threshold_pct}
-                          className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-center"
-                        >
-                          <p className="text-[10px] uppercase tracking-wider text-slate-500">
-                            {b.threshold_pct}%
-                          </p>
-                          <p className="text-sm font-mono font-semibold text-cyan-300 tabular-nums mt-0.5">
-                            {b.count.toLocaleString()}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </Section>
             )}
 
@@ -1600,26 +1111,6 @@ export default function DataHealthPage() {
                     icon={Database}
                   />
                 </div>
-
-                {/* Live CI status — the GitHub Actions badge auto-updates
-                    green/red; clicking opens the workflow runs. */}
-                <a
-                  href="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2.5 inline-flex items-center gap-2.5 rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 hover:border-slate-700 transition-colors"
-                >
-                  <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                    Continuous Integration
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- external GH badge SVG, not a local asset */}
-                  <img
-                    src="https://github.com/chzwscqpcw-commits/car-snapshot/actions/workflows/ci.yml/badge.svg"
-                    alt="CI status"
-                    className="h-[18px]"
-                  />
-                  <ExternalLink className="h-3 w-3 text-slate-500" />
-                </a>
               </Section>
             )}
 
