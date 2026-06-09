@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Loader2, ArrowRight, Share2, RotateCcw, Check } from "lucide-react";
-import { lookupRarity, type RarityResult } from "@/lib/how-many-left";
+import Link from "next/link";
+import { Loader2, ArrowRight, Share2, RotateCcw, Check, Search } from "lucide-react";
+import { lookupRarity, suggestModels, type RarityResult } from "@/lib/how-many-left";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -10,6 +11,15 @@ function cleanReg(raw: string): string {
 function isValidReg(reg: string): boolean {
   const c = cleanReg(reg);
   return c.length >= 2 && c.length <= 8;
+}
+function titleCase(s: string): string {
+  return s
+    .split(" ")
+    .map((t) => (/\d/.test(t) || t.length <= 3 ? t : t[0] + t.slice(1).toLowerCase()))
+    .join(" ");
+}
+function modelLabel(make: string, model: string): string {
+  return `${titleCase(make)} ${titleCase(model)}`;
 }
 
 // Animated count-up (requestAnimationFrame, cubic ease-out).
@@ -51,7 +61,18 @@ export default function HowManyLeftExplorer() {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [rarity, setRarity] = useState<RarityResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [mode, setMode] = useState<"reg" | "model">("reg");
+  const [modelQuery, setModelQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<{ make: string; model: string }[]>([]);
   const meterRef = useRef<HTMLDivElement>(null);
+
+  function pickModel(s: { make: string; model: string }) {
+    setVehicle({ reg: "", make: s.make, model: s.model });
+    setRarity(lookupRarity(s.make, s.model));
+    setSuggestions([]);
+    setModelQuery("");
+    setError("");
+  }
 
   const count = useCountUp(rarity?.licensed ?? 0, 1600, !!rarity);
   const sornCount = useCountUp(rarity?.sorn ?? 0, 1600, !!rarity);
@@ -157,7 +178,7 @@ export default function HowManyLeftExplorer() {
               {name || vehicle.reg}
             </span>
             <button onClick={reset} className="inline-flex items-center gap-1 text-xs text-slate-400 transition-colors hover:text-white">
-              <RotateCcw className="h-3.5 w-3.5" /> Another reg
+              <RotateCcw className="h-3.5 w-3.5" /> {vehicle.reg ? "Another reg" : "Another car"}
             </button>
           </div>
 
@@ -202,12 +223,21 @@ export default function HowManyLeftExplorer() {
 
           {/* upsell + share */}
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={`/?vrm=${vehicle.reg}`}
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
-            >
-              See the full check on this car <ArrowRight className="h-4 w-4" />
-            </a>
+            {vehicle.reg ? (
+              <a
+                href={`/?vrm=${vehicle.reg}`}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
+              >
+                See the full check on this car <ArrowRight className="h-4 w-4" />
+              </a>
+            ) : (
+              <Link
+                href="/"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
+              >
+                Got one? Check it by reg <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
             <button
               onClick={share}
               className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800/50 px-5 py-3 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800"
@@ -231,43 +261,97 @@ export default function HowManyLeftExplorer() {
       <div className="relative text-center">
         <h2 className="text-2xl font-bold text-white sm:text-3xl">How many of your car are left?</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
-          Pop in your reg and we&apos;ll tell you how many are still on Britain&apos;s
-          roads — and whether yours is a rarity.
+          {mode === "reg"
+            ? "Pop in your reg and we'll tell you how many are still on Britain's roads — and whether yours is a rarity."
+            : "Search any make and model — perfect for a nostalgic look at a car you used to own."}
         </p>
 
-        {/* UK plate-styled input */}
-        <div className="mx-auto mt-6 flex max-w-md overflow-hidden rounded-xl shadow-xl ring-1 ring-black/40">
-          <span className="flex items-center bg-[#0a3bb0] px-2.5 font-[family-name:var(--font-geist-mono)] text-xs font-bold text-white sm:text-sm">
-            GB
-          </span>
-          <input
-            type="text"
-            value={reg}
-            onChange={(e) => {
-              setReg(e.target.value.toUpperCase());
-              setError("");
-            }}
-            onKeyDown={(e) => e.key === "Enter" && handleLookup()}
-            placeholder="YOUR REG"
-            maxLength={10}
-            disabled={submitting}
-            aria-label="Enter your registration"
-            className="min-w-0 flex-1 bg-[#f7d40a] px-3 py-3.5 text-center font-[family-name:var(--font-geist-mono)] text-xl font-bold uppercase tracking-[0.2em] text-black placeholder:text-black/40 placeholder:tracking-[0.15em] focus:outline-none sm:text-2xl"
-          />
-        </div>
+        {mode === "reg" ? (
+          <>
+            {/* UK plate-styled input */}
+            <div className="mx-auto mt-6 flex max-w-md overflow-hidden rounded-xl shadow-xl ring-1 ring-black/40">
+              <span className="flex items-center bg-[#0a3bb0] px-2.5 font-[family-name:var(--font-geist-mono)] text-xs font-bold text-white sm:text-sm">
+                GB
+              </span>
+              <input
+                type="text"
+                value={reg}
+                onChange={(e) => {
+                  setReg(e.target.value.toUpperCase());
+                  setError("");
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleLookup()}
+                placeholder="YOUR REG"
+                maxLength={10}
+                disabled={submitting}
+                aria-label="Enter your registration"
+                className="min-w-0 flex-1 bg-[#f7d40a] px-3 py-3.5 text-center font-[family-name:var(--font-geist-mono)] text-xl font-bold uppercase tracking-[0.2em] text-black placeholder:text-black/40 placeholder:tracking-[0.15em] focus:outline-none sm:text-2xl"
+              />
+            </div>
+            <button
+              onClick={handleLookup}
+              disabled={submitting}
+              className="mx-auto mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02] disabled:opacity-60"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Checking the records&hellip;
+                </>
+              ) : (
+                <>How many are left? <ArrowRight className="h-4 w-4" /></>
+              )}
+            </button>
+          </>
+        ) : (
+          <div className="relative mx-auto mt-6 max-w-md text-left">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 focus-within:ring-2 focus-within:ring-cyan-500/50">
+              <Search className="h-4 w-4 shrink-0 text-slate-500" />
+              <input
+                type="text"
+                value={modelQuery}
+                onChange={(e) => {
+                  setModelQuery(e.target.value);
+                  setSuggestions(suggestModels(e.target.value));
+                  setError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && suggestions[0]) pickModel(suggestions[0]);
+                }}
+                placeholder="e.g. Ford Sierra, Austin Allegro…"
+                aria-label="Search by make and model"
+                className="h-12 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none"
+              />
+            </div>
+            {suggestions.length > 0 && (
+              <ul className="absolute z-20 mt-1.5 w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
+                {suggestions.map((s) => (
+                  <li key={`${s.make}|${s.model}`}>
+                    <button
+                      type="button"
+                      onClick={() => pickModel(s)}
+                      className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-slate-200 transition-colors hover:bg-slate-800"
+                    >
+                      {modelLabel(s.make, s.model)}
+                      <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
         <button
-          onClick={handleLookup}
-          disabled={submitting}
-          className="mx-auto mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02] disabled:opacity-60"
+          type="button"
+          onClick={() => {
+            setMode(mode === "reg" ? "model" : "reg");
+            setError("");
+            setSuggestions([]);
+            setModelQuery("");
+          }}
+          className="mx-auto mt-4 block text-xs font-medium text-cyan-400 transition-colors hover:text-cyan-300"
         >
-          {submitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Checking the records&hellip;
-            </>
-          ) : (
-            <>How many are left? <ArrowRight className="h-4 w-4" /></>
-          )}
+          {mode === "reg" ? "No reg? Look up by make & model →" : "← Look up by reg plate instead"}
         </button>
 
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}

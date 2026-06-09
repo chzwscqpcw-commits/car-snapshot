@@ -74,3 +74,24 @@ export function lookupRarity(make?: string, model?: string): RarityResult | null
 
   return null;
 }
+
+type Entry = { make: string; model: string; total: number };
+const ENTRIES: Entry[] = Object.entries(data).map(([k, v]) => {
+  const [make, model] = k.split("|");
+  return { make, model, total: v[0] + v[1] };
+});
+
+/**
+ * Free-text suggestions over make + model, for the no-reg "nostalgia" lookup.
+ * Sorted by total count so recognisable models surface first.
+ */
+export function suggestModels(query: string, limit = 6): { make: string; model: string }[] {
+  const q = normalize(query);
+  if (q.length < 2) return [];
+  return ENTRIES.filter(
+    (e) => !e.model.includes("MODEL MISSING") && `${e.make} ${e.model}`.includes(q)
+  )
+    .sort((a, b) => b.total - a.total)
+    .slice(0, limit)
+    .map((e) => ({ make: e.make, model: e.model }));
+}

@@ -6,6 +6,7 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
 import HowManyLeftExplorer from "@/components/stats/HowManyLeftExplorer";
+import ShareButton from "@/components/stats/ShareButton";
 import {
   MostCommonChart,
   EndangeredList,
@@ -189,6 +190,15 @@ export default function HowManyLeftPage() {
       <div className="mx-auto max-w-3xl px-4 py-10">
         {/* The star — reg-driven explorer */}
         <HowManyLeftExplorer />
+
+        {/* Always-visible share affordance */}
+        <div className="mt-5 flex justify-center">
+          <ShareButton
+            text="How many of your car are left on UK roads? Check yours:"
+            url="https://www.freeplatecheck.co.uk/stats/how-many-left"
+            label="Share with a friend"
+          />
+        </div>
 
         {/* Callouts */}
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
