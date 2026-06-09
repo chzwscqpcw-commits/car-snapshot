@@ -339,41 +339,56 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
   const apiKey = DVLA_API_KEY;
   if (!apiKey) return null;
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  // DVLA's VES API occasionally returns a 5xx or times out transiently. Retry
+  // once (after a short backoff) on those, so a momentary blip doesn't surface
+  // as an error. Never retry 404 (not found) or 429 (rate limit) — a retry
+  // won't help and would make 429 worse.
+  const MAX_ATTEMPTS = 2;
+  let transient: { error: string; status: number } = {
+    error: "DVLA service error. Try again.",
+    status: 503,
+  };
 
-  try {
-    const resp = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-      },
-      body: JSON.stringify({ registrationNumber }),
-      signal: controller.signal,
-    });
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-    clearTimeout(timeout);
-    const data = (await resp.json()) as VehicleData;
+    try {
+      const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+        },
+        body: JSON.stringify({ registrationNumber }),
+        signal: controller.signal,
+      });
 
-    if (!resp.ok) {
-      const message =
-        resp.status === 404
-          ? "Vehicle not found."
-          : resp.status === 429
-            ? "Too many requests. Try again later."
-            : "DVLA service error. Try again.";
-      return { error: message, status: resp.status };
+      clearTimeout(timeout);
+      const data = (await resp.json()) as VehicleData;
+
+      if (resp.ok) return data;
+
+      // Non-transient outcomes: return immediately, no retry.
+      if (resp.status === 404) return { error: "Vehicle not found.", status: 404 };
+      if (resp.status === 429) return { error: "Too many requests. Try again later.", status: 429 };
+
+      // Transient (5xx / other): remember it and retry if attempts remain.
+      transient = { error: "DVLA service error. Try again.", status: resp.status };
+    } catch (err: unknown) {
+      clearTimeout(timeout);
+      transient =
+        (err as Error).name === "AbortError"
+          ? { error: "DVLA request timed out. Please try again.", status: 504 }
+          : { error: "Network error contacting DVLA. Please try again.", status: 503 };
     }
 
-    return data;
-  } catch (err: unknown) {
-    clearTimeout(timeout);
-    if ((err as Error).name === "AbortError") {
-      return { error: "DVLA request timed out. Please try again.", status: 504 };
+    if (attempt < MAX_ATTEMPTS) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
     }
-    return { error: "Network error contacting DVLA. Please try again.", status: 503 };
   }
+
+  return transient;
 }
 
 function combineVehicleData(dvlaData: VehicleData, motData: MOTHistoryData | null): VehicleData {
