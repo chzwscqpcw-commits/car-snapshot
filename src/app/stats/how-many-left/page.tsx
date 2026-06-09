@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
@@ -160,6 +159,15 @@ export default function HowManyLeftPage() {
           __html: JSON.stringify([
             {
               "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.freeplatecheck.co.uk" },
+                { "@type": "ListItem", position: 2, name: "Statistics", item: "https://www.freeplatecheck.co.uk/stats" },
+                { "@type": "ListItem", position: 3, name: "How Many Left", item: "https://www.freeplatecheck.co.uk/stats/how-many-left" },
+              ],
+            },
+            {
+              "@context": "https://schema.org",
               "@type": "Dataset",
               name: "How Many Cars Are Left on UK Roads",
               description:
@@ -181,13 +189,30 @@ export default function HowManyLeftPage() {
           ]),
         }}
       />
-      <StatsHeroSection
-        title="How Many Are Left?"
-        subtitle="From 1.3 million Ford Fiestas to models down to a handful — find out how many of your car survive on Britain's roads, and whether yours is a rarity."
-        breadcrumb="How Many Left"
-      />
+      {/* Bold custom hero — straight to the headline + search, no extra pills */}
+      <header className="border-b border-slate-800/60">
+        <div className="mx-auto max-w-3xl px-4 pb-7 pt-8">
+          <nav className="mb-5 text-sm text-slate-500">
+            <Link href="/" className="transition-colors hover:text-slate-300">Home</Link>
+            <span className="mx-2">/</span>
+            <Link href="/stats" className="transition-colors hover:text-slate-300">Statistics</Link>
+            <span className="mx-2">/</span>
+            <span className="text-slate-400">How Many Left</span>
+          </nav>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">
+            UK car survivors
+          </p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            How Many Are Left?
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            From 1.3 million Ford Fiestas to models down to a handful — find out how many
+            of your car survive on Britain&apos;s roads, and whether yours is a rarity.
+          </p>
+        </div>
+      </header>
 
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mx-auto max-w-3xl px-4 pb-10 pt-7">
         {/* The star — reg-driven explorer */}
         <HowManyLeftExplorer />
 

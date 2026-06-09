@@ -281,20 +281,13 @@ export default function HowManyLeftExplorer() {
 
   // ── FORM ──
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-6 sm:p-8">
+    <div className="relative overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-5 sm:p-7">
       <div className="pointer-events-none absolute -top-16 right-0 h-56 w-56 rounded-full bg-cyan-500/20 blur-3xl" aria-hidden />
       <div className="relative text-center">
-        <h2 className="text-2xl font-bold text-white sm:text-3xl">How many of your car are left?</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
-          {mode === "reg"
-            ? "Pop in your reg and we'll tell you how many are still on Britain's roads — and whether yours is a rarity."
-            : "Search any make and model — perfect for a nostalgic look at a car you used to own."}
-        </p>
-
         {mode === "reg" ? (
           <>
             {/* UK plate-styled input */}
-            <div className="mx-auto mt-6 flex max-w-md overflow-hidden rounded-xl shadow-xl ring-1 ring-black/40">
+            <div className="mx-auto flex max-w-md overflow-hidden rounded-xl shadow-xl ring-1 ring-black/40">
               <span className="flex items-center bg-[#0a3bb0] px-2.5 font-[family-name:var(--font-geist-mono)] text-xs font-bold text-white sm:text-sm">
                 GB
               </span>
@@ -328,8 +321,8 @@ export default function HowManyLeftExplorer() {
             </button>
           </>
         ) : (
-          <div className="relative mx-auto mt-6 max-w-md text-left">
-            <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 focus-within:ring-2 focus-within:ring-cyan-500/50">
+          <div className="relative mx-auto max-w-md text-left">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 transition-colors focus-within:border-cyan-500/70">
               <Search className="h-4 w-4 shrink-0 text-slate-500" />
               <input
                 type="text"
