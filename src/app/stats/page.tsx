@@ -208,6 +208,17 @@ export default function StatsIndex() {
             ]}
             delay={700}
           />
+          <StatsHubPreviewCard
+            href="/stats/how-many-left"
+            icon="📉"
+            title="How Many Are Left?"
+            description="Enter your reg to find how many of your car survive on UK roads — from 1.3M Fiestas to near-extinct classics."
+            stats={[
+              { value: "1.3M", label: "Ford Fiestas", colour: "emerald" },
+              { value: "45", label: "MG Maestros left", colour: "amber" },
+            ]}
+            delay={750}
+          />
         </StatsHubCategoryGroup>
 
         {/* ── Group 3: Market & Safety ── */}

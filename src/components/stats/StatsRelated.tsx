@@ -21,6 +21,7 @@ const allStats: StatsPage[] = [
   { slug: "road-safety", title: "Road Safety", description: "Fatalities & casualties since 1970" },
   { slug: "popular-cars", title: "Most Popular Cars", description: "Top makes & models on UK roads" },
   { slug: "car-colours", title: "Car Colours", description: "Most popular new car colours in the UK" },
+  { slug: "how-many-left", title: "How Many Are Left?", description: "UK car survivors & near-extinct models by reg" },
 ];
 
 export default function StatsRelated({ exclude }: { exclude: string }) {

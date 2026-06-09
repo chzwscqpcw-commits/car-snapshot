@@ -258,6 +258,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/stats/how-many-left",
+      lastModified: new Date("2026-06-09"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/stats/fuel-type-comparison",
       lastModified: new Date("2026-03-07"),
       changeFrequency: "monthly",
