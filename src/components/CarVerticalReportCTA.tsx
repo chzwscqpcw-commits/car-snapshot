@@ -99,21 +99,30 @@ export default function CarVerticalReportCTA({
             <div className="bg-[#1b54ff]/15 px-1 py-2 text-center">
               <CarVerticalLogo className="text-[10px]" />
             </div>
-            {ROWS.map((r, i) => (
-              <Fragment key={r.label}>
-                <div className={`px-3 py-1.5 text-slate-300 ${i % 2 ? "bg-slate-900/40" : ""}`}>{r.label}</div>
-                <div className={`px-1 py-1.5 text-center ${i % 2 ? "bg-slate-900/40" : ""}`}>
-                  {r.free ? (
-                    <Check className="inline h-3.5 w-3.5 text-emerald-400" aria-label="included" />
-                  ) : (
-                    <Minus className="inline h-3.5 w-3.5 text-slate-600" aria-label="not included" />
+            {ROWS.map((r, i) => {
+              const firstExtra = !r.free && (ROWS[i - 1]?.free ?? false);
+              const rowBg = r.free ? (i % 2 ? "bg-slate-900/40" : "") : "bg-[#1b54ff]/[0.07]";
+              return (
+                <Fragment key={r.label}>
+                  {firstExtra && (
+                    <div className="col-span-3 border-t border-[#1b54ff]/25 bg-[#1b54ff]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#7da2ff]">
+                      Only in the full report
+                    </div>
                   )}
-                </div>
-                <div className="bg-[#1b54ff]/10 px-1 py-1.5 text-center">
-                  <Check className="inline h-3.5 w-3.5 text-[#7da2ff]" aria-label="included" />
-                </div>
-              </Fragment>
-            ))}
+                  <div className={`px-3 py-1.5 ${r.free ? "text-slate-400" : "font-medium text-slate-100"} ${rowBg}`}>{r.label}</div>
+                  <div className={`px-1 py-1.5 text-center ${rowBg}`}>
+                    {r.free ? (
+                      <Check className="inline h-3.5 w-3.5 text-emerald-400" aria-label="included" />
+                    ) : (
+                      <Minus className="inline h-3.5 w-3.5 text-slate-600" aria-label="not included" />
+                    )}
+                  </div>
+                  <div className="bg-[#1b54ff]/10 px-1 py-1.5 text-center">
+                    <Check className="inline h-3.5 w-3.5 text-[#7da2ff]" aria-label="included" />
+                  </div>
+                </Fragment>
+              );
+            })}
           </div>
         </div>
       )}
