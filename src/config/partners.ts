@@ -199,6 +199,13 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // with HPI directly, so no data liability sits with us. NOTE: Webgains, NOT
   // Awin. Staged 2026-06-08 — apply on Webgains, then fill both IDs from the
   // Webgains dashboard and flip pending:false on approval.
+  //
+  // ⛔ DO NOT ACTIVATE while the carVertical agreement is in force (signed
+  // 2026-06-09). carVertical's exclusivity clause (Section 5) bars promoting
+  // ANY competing vehicle-history-report provider worldwide — HPI is a direct
+  // competitor. Activating this would breach that agreement. To use HPI instead,
+  // terminate carVertical first (30 days' notice). Also blocked separately by
+  // the Webgains ~10k-unique-visitor gate.
   hpiCheck: {
     url: "https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=https%3A%2F%2Fwww.hpi.co.uk%2F",
     name: "HPI Check",
