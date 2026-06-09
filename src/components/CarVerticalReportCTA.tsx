@@ -70,9 +70,9 @@ const VARIANTS: Record<
     Icon: Gauge,
     heading: "Worried this car's been clocked?",
     value:
-      "Your free check lists every MOT mileage reading since 2005. A carVertical report cross-checks the National Mileage Register and European import records — flagging rollbacks between tests or before the car was imported.",
-    cta: "Run a carVertical mileage check",
-    open: "What carVertical adds",
+      "Your free check lists every MOT mileage reading since 2005. carVertical's full history report goes further — cross-checking the National Mileage Register and European import records to flag rollbacks between tests or before import, alongside finance, write-off and theft checks.",
+    cta: "Get the full carVertical report",
+    open: "What else it covers",
     close: "Hide details",
   },
 };
