@@ -11,6 +11,12 @@ export type SectionReach = { section_id: string; count: number; pct: number };
 export type BookingStepCount = { step: number; count: number };
 export type BookingSource = { source: string; count: number };
 export type ScrollThreshold = { threshold_pct: number; count: number };
+export type ReminderTriggerFunnel = {
+  trigger: string;
+  views: number;
+  attempts: number;
+  signups: number;
+};
 export type TopPage = { path: string; views: number };
 export type TrafficSource = { source: string; visits24h: number; visits7d: number };
 
@@ -61,6 +67,11 @@ export type StatsResponse = {
     reminderSignups: number;
   };
   captureByTriggerLast7d: CaptureTrigger[];
+  // Reminder funnel split by placement (trigger_variant) over the last 7 days.
+  // Lets the owner see which placement actually converts (e.g. the high-intent
+  // action-banner) vs which just collects passive impressions (homepage chip,
+  // blog footer). Sorted by views desc.
+  reminderByTrigger: ReminderTriggerFunnel[];
   partnerClicks: {
     today: number;
     last7d: number;
@@ -342,6 +353,35 @@ async function groupByMetadataField(
   return counts;
 }
 
+/**
+ * Like groupByMetadataField but bins null/empty/non-string field values into a
+ * "(none)" bucket instead of dropping them — so the reminder-by-placement
+ * funnel attributes untagged events rather than silently losing them.
+ */
+async function groupByMetadataFieldWithNone(
+  sb: ReturnType<typeof supabaseServer>,
+  eventType: string,
+  field: string,
+  since: Date,
+  limit = 5000,
+): Promise<Map<string, number>> {
+  const { data, error } = await sb
+    .from("site_events")
+    .select("metadata")
+    .eq("event_type", eventType)
+    .gte("created_at", since.toISOString())
+    .limit(limit);
+  if (error || !data) return new Map();
+
+  const counts = new Map<string, number>();
+  for (const row of data) {
+    const value = (row.metadata as Record<string, unknown> | null)?.[field];
+    const key = typeof value === "string" && value.length > 0 ? value : "(none)";
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return counts;
+}
+
 async function topMakesSince(
   sb: ReturnType<typeof supabaseServer>,
   since: Date,
@@ -516,6 +556,12 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     motHistoryExpands7d,
     pdfChunkErrors7d,
     pageViewAggregates,
+    // Per-placement reminder funnel (7d): views, submit-attempts, signups
+    // grouped by metadata.trigger_variant. Three bounded fetches, aggregated
+    // in JS below — no new RPC/migration.
+    reminderViewsByTrigger7d,
+    reminderAttemptsByTrigger7d,
+    reminderSignupsByTrigger7d,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -578,11 +624,31 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     countEventsWithMetaEq(sb, "pdf_download_error", "metadata->>chunk_error", "true", sevenDaysAgo),
     // Top pages + traffic sources (single page_view scan, JS-aggregated).
     pageViewAnalytics(sb, sevenDaysAgo, oneDayAgo),
+    groupByMetadataFieldWithNone(sb, "mot_reminder_view", "trigger_variant", sevenDaysAgo),
+    groupByMetadataFieldWithNone(sb, "mot_reminder_submit_attempt", "trigger_variant", sevenDaysAgo),
+    groupByMetadataFieldWithNone(sb, "mot_reminder", "trigger_variant", sevenDaysAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
     .map(([trigger_variant, count]) => ({ trigger_variant, count }))
     .sort((a, b) => b.count - a.count);
+
+  // Per-placement reminder funnel — merge the keys across the three event maps
+  // so a placement that has views but no signups (or vice-versa) still appears.
+  // groupByMetadataFieldWithNone bins untagged events into "(none)".
+  const reminderTriggerKeys = new Set<string>([
+    ...reminderViewsByTrigger7d.keys(),
+    ...reminderAttemptsByTrigger7d.keys(),
+    ...reminderSignupsByTrigger7d.keys(),
+  ]);
+  const reminderByTrigger: ReminderTriggerFunnel[] = Array.from(reminderTriggerKeys)
+    .map((trigger) => ({
+      trigger,
+      views: reminderViewsByTrigger7d.get(trigger) ?? 0,
+      attempts: reminderAttemptsByTrigger7d.get(trigger) ?? 0,
+      signups: reminderSignupsByTrigger7d.get(trigger) ?? 0,
+    }))
+    .sort((a, b) => b.views - a.views);
 
   const partnerContextByCount: PartnerContextCount[] = Array.from(partnerContextCountsToday.entries())
     .map(([context, count]) => ({ context, count }))
@@ -671,6 +737,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       reminderSignups: motReminderEvents7d,
     },
     captureByTriggerLast7d,
+    reminderByTrigger,
     partnerClicks: {
       today: partnerClicksToday,
       last7d: partnerClicks7d,

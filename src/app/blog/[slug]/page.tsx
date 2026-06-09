@@ -6,7 +6,7 @@ import BlogTagPill from "@/components/BlogTagPill";
 import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
-import MOTReminderSignup from "@/components/MOTReminderSignup";
+import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import AdUnit from "@/components/ads/AdUnit";
 import MotBookingInline from "@/components/MotBookingInline";
 
@@ -343,7 +343,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* MOT reminder signup — blog footer */}
       <div className="max-w-3xl mx-auto px-4 mt-12">
-        <MOTReminderSignup context="generic" triggerVariant="blog_footer" />
+        <MOTReminderCollapsible context="generic" triggerVariant="blog_footer" />
       </div>
 
       {/* Related posts */}

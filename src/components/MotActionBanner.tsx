@@ -81,7 +81,24 @@ export default function MotActionBanner({
 
   const ref = useRef<HTMLDivElement | null>(null);
   const lastViewedUrgency = useRef<Urgency | null>(null);
-  const [reminderOpen, setReminderOpen] = useState(false);
+  // For "far" (MOT valid, >60 days away) the reminder IS the natural primary
+  // action — these users aren't booking a test today — so open the inline form
+  // by default, pre-filled with the reg, rather than gating it behind a tap on
+  // the secondary CTA. "expired"/"due-soon" deliberately stay closed: BMG
+  // booking is the primary CTA there (the revenue driver) and the reminder
+  // stays a secondary, tap-to-open option so it doesn't cannibalise bookings.
+  const [reminderOpen, setReminderOpen] = useState(urgency === "far");
+  // Re-apply the per-urgency default when the user looks up a different car
+  // (e.g. "far" → "expired"): force-open only for "far", force-closed
+  // otherwise, so a stale open form doesn't carry across into a booking-first
+  // banner. React's "adjust state when a prop changes" pattern — compare the
+  // previous urgency held in state and setState during render, so an unrelated
+  // re-render doesn't clobber a manual toggle.
+  const [lastDefaultedUrgency, setLastDefaultedUrgency] = useState<Urgency | null>(urgency);
+  if (lastDefaultedUrgency !== urgency) {
+    setLastDefaultedUrgency(urgency);
+    setReminderOpen(urgency === "far");
+  }
 
   // Banner-view event. Previously used IntersectionObserver with a 50%
   // threshold, but the banner is wrapped in DataReveal (opacity-0 →

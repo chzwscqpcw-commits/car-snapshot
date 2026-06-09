@@ -205,6 +205,7 @@ import newPricesData from "@/data/new-prices.json";
 import { latestWeek as latestFuelWeek } from "@/lib/stats-data/fuel-prices";
 import DidYouKnow from "@/components/DidYouKnow";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
+import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
@@ -3838,12 +3839,13 @@ END:VEVENT
             </div>
           )}
 
-          {/* Generic MOT reminder signup — shown on homepage when no lookup active */}
+          {/* Generic MOT reminder — light chip on the homepage (low-intent
+              placement). The chip carries its own headline, so the heavy
+              "Never miss your MOT again" block above it was removed to keep the
+              homepage lighter. Expands to the full form on tap. */}
           {!data && !loading && (
             <div className="mt-8 mb-4">
-              <h2 className="text-lg font-bold text-slate-100 mb-1">Never miss your MOT again</h2>
-              <p className="text-sm text-slate-400 mb-4">Driving with an expired MOT is illegal and carries a fine of up to &pound;1,000. We&apos;ll remind you &mdash; for free.</p>
-              <MOTReminderSignup context="generic" triggerVariant="homepage" />
+              <MOTReminderCollapsible context="generic" triggerVariant="homepage" />
             </div>
           )}
         </div>

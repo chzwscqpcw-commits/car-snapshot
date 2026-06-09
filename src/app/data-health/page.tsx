@@ -41,6 +41,12 @@ type TopMake = { make: string; count: number };
 type PartnerContextCount = { context: string; count: number };
 type TopPage = { path: string; views: number };
 type TrafficSource = { source: string; visits24h: number; visits7d: number };
+type ReminderTriggerFunnel = {
+  trigger: string;
+  views: number;
+  attempts: number;
+  signups: number;
+};
 
 type StatsData = {
   lookups: {
@@ -83,6 +89,7 @@ type StatsData = {
   };
   topPages: TopPage[];
   trafficSources: TrafficSource[];
+  reminderByTrigger: ReminderTriggerFunnel[];
 };
 
 type DataFileEntry = {
@@ -928,6 +935,66 @@ export default function DataHealthPage() {
                   }))}
                   emptyMessage="No partner clicks in the last 7 days yet."
                 />
+              </Section>
+            )}
+
+            {/* ── REMINDER FUNNEL BY PLACEMENT ── */}
+            {stats && (
+              <Section
+                title="Reminder funnel by placement"
+                hint="views · attempts · signups · rate · last 7d"
+              >
+                {!stats.reminderByTrigger || stats.reminderByTrigger.length === 0 ? (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
+                    <p className="text-xs text-slate-500">
+                      No reminder-form events in the last 7 days yet.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-3 px-4 py-2 border-b border-slate-800/60 text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                      <span>Placement</span>
+                      <span className="text-right tabular-nums w-12">Views</span>
+                      <span className="text-right tabular-nums w-12">Attempt</span>
+                      <span className="text-right tabular-nums w-12">Signup</span>
+                      <span className="text-right tabular-nums w-12">Rate</span>
+                    </div>
+                    {stats.reminderByTrigger.map((r, i) => {
+                      const rate = r.views > 0 ? (r.signups / r.views) * 100 : 0;
+                      const rateLabel = r.views > 0 ? `${rate.toFixed(1)}%` : "—";
+                      return (
+                        <div
+                          key={r.trigger}
+                          className={`grid grid-cols-[1fr_auto_auto_auto_auto] gap-3 px-4 py-2.5 items-center ${
+                            i < stats.reminderByTrigger.length - 1
+                              ? "border-b border-slate-800/60"
+                              : ""
+                          }`}
+                        >
+                          <span className="font-mono text-xs text-slate-200 truncate">
+                            {r.trigger}
+                          </span>
+                          <span className="text-right text-sm text-slate-300 tabular-nums w-12">
+                            {r.views}
+                          </span>
+                          <span className="text-right text-sm text-slate-400 tabular-nums w-12">
+                            {r.attempts}
+                          </span>
+                          <span className="text-right text-sm text-slate-200 tabular-nums w-12">
+                            {r.signups}
+                          </span>
+                          <span
+                            className={`text-right text-xs tabular-nums w-12 ${
+                              r.signups > 0 ? "text-emerald-300" : "text-slate-500"
+                            }`}
+                          >
+                            {rateLabel}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </Section>
             )}
 
