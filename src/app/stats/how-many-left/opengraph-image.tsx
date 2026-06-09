@@ -21,6 +21,18 @@ export default function OGImage() {
           <div
             style={{
               display: "flex",
+              fontSize: 22,
+              fontWeight: 600,
+              color: "#22d3ee",
+              letterSpacing: "0.16em",
+              marginBottom: 16,
+            }}
+          >
+            UK CAR SURVIVORS
+          </div>
+          <div
+            style={{
+              display: "flex",
               fontSize: 72,
               fontWeight: 700,
               color: "#f1f5f9",
@@ -36,11 +48,11 @@ export default function OGImage() {
               fontSize: 28,
               color: "#94a3b8",
               marginTop: 18,
-              maxWidth: 860,
+              maxWidth: 880,
               lineHeight: 1.4,
             }}
           >
-            How many of your car survive on Britain&apos;s roads? Find out by reg.
+            From 1.3M Ford Fiestas to models down to a handful — is yours a rarity?
           </div>
           <div style={{ display: "flex", gap: 14, marginTop: 36 }}>
             {PILLS.map((p) => (
