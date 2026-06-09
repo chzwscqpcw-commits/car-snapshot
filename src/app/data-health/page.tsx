@@ -549,7 +549,7 @@ function ActivitySummaryCard({
 
       {!showInitialSpinner && insights?.status === "no_key" && (
         <p className="text-xs text-slate-500 leading-relaxed">
-          Add <code className="font-mono text-slate-400">ANTHROPIC_API_KEY</code> in Vercel to
+          Add a free <code className="font-mono text-slate-400">GROQ_API_KEY</code> in Vercel to
           enable AI summaries.
         </p>
       )}

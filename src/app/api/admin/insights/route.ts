@@ -277,9 +277,53 @@ function buildPrompt(d: Digest): string {
   ].join("\n");
 }
 
-// ── Anthropic call (direct fetch, no SDK) ───────────────────────────────────
+// ── LLM call (free-first: Groq if its key is set, else Anthropic) ────────────
+// Both via direct fetch, no SDK. Groq's API is OpenAI-compatible and free (no
+// card) — the default. Anthropic is an optional paid fallback if its key is set.
 
 async function generateSummary(prompt: string): Promise<string | null> {
+  if (process.env.GROQ_API_KEY) return generateViaGroq(prompt);
+  if (process.env.ANTHROPIC_API_KEY) return generateViaAnthropic(prompt);
+  return null;
+}
+
+// Groq — free, OpenAI-compatible chat completions. Llama 3.3 70B is plenty for
+// a short plain-English summary.
+async function generateViaGroq(prompt: string): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        max_tokens: 500,
+        temperature: 0.5,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+    if (!res.ok) {
+      console.error("[insights] Groq API non-OK:", res.status);
+      return null;
+    }
+    const json = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+    const text = json.choices?.[0]?.message?.content;
+    if (typeof text !== "string" || text.trim().length === 0) return null;
+    return text.trim();
+  } catch (err) {
+    console.error(
+      "[insights] Groq call failed:",
+      err instanceof Error ? err.message : String(err),
+    );
+    return null;
+  }
+}
+
+async function generateViaAnthropic(prompt: string): Promise<string | null> {
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -317,13 +361,13 @@ async function generateSummary(prompt: string): Promise<string | null> {
 
 export async function GET(req: Request): Promise<NextResponse<InsightsResponse>> {
   try {
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!process.env.GROQ_API_KEY && !process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ status: "no_key", summary: null });
     }
 
     const force = new URL(req.url).searchParams.get("force") === "1";
 
-    // Serve from cache unless forced. Bounds Anthropic cost to ~1 call/15 min.
+    // Serve from cache unless forced. Bounds LLM usage to ~1 call/15 min.
     if (!force) {
       const cached = await readCachedSummary();
       if (cached) {
