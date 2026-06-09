@@ -83,10 +83,10 @@ export default function CarVerticalReportCTA({
           type="button"
           onClick={() => setShowCompare((v) => !v)}
           aria-expanded={showCompare}
-          className="inline-flex items-center justify-center gap-1 text-xs font-medium text-slate-400 transition-colors hover:text-slate-200"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-600/70 bg-slate-800/40 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/80 hover:text-white sm:w-auto"
         >
-          Free vs full check
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showCompare ? "rotate-180" : ""}`} />
+          {showCompare ? "Hide comparison" : "Compare with free"}
+          <ChevronDown className={`h-4 w-4 transition-transform ${showCompare ? "rotate-180" : ""}`} />
         </button>
       </div>
 
