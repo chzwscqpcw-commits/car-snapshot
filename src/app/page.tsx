@@ -208,6 +208,7 @@ import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import Reveal from "@/components/Reveal";
 import PdfPromoBanner from "@/components/PdfPromoBanner";
 
@@ -5255,6 +5256,17 @@ END:VEVENT
                     <ActionPrompt key={idx} {...prompt} delay={idx * 50} />
                   ))}
                   <p className="text-xs text-slate-400">Some links are affiliate links — we may earn a small commission at no extra cost to you.</p>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* CARVERTICAL FULL-HISTORY REPORT — buyer-intent paid history check
+                (renders null until carVertical is live; see partners.ts +
+                CarVerticalReportCTA). Preview at /preview/carvertical. */}
+            {data && (
+              <DataReveal delay={740}>
+                <div className="mb-8">
+                  <CarVerticalReportCTA regNumber={data.registrationNumber} context="report-carvertical-nextsteps" />
                 </div>
               </DataReveal>
             )}
