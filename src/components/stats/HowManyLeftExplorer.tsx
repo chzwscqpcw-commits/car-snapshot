@@ -322,7 +322,7 @@ export default function HowManyLeftExplorer() {
           </>
         ) : (
           <div className="relative mx-auto max-w-md text-left">
-            <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 transition-colors focus-within:border-cyan-500/70">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 transition-colors focus-within:border-cyan-400">
               <Search className="h-4 w-4 shrink-0 text-slate-500" />
               <input
                 type="text"
@@ -337,7 +337,7 @@ export default function HowManyLeftExplorer() {
                 }}
                 placeholder={`e.g. ${PLACEHOLDERS[phIdx]}`}
                 aria-label="Search by make and model"
-                className="h-12 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none"
+                className="fpc-focus-none h-12 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none"
               />
             </div>
             {suggestions.length > 0 && (

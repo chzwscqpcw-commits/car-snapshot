@@ -96,6 +96,13 @@ a {
   border-radius: 3px;
 }
 
+/* Opt-out for custom inputs that surface focus via a wrapper border (e.g. the
+   How-Many-Left search box). Without this, the blanket ring draws a second,
+   ill-fitting box on the inner <input> that doesn't follow the wrapper shape. */
+.fpc-focus-none:focus-visible {
+  outline: none;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
