@@ -232,20 +232,20 @@ export default function HowManyLeftPage() {
           {RAREST && <StatCallout value={RAREST.licensed.toLocaleString()} label={`${RAREST.name} left (near-extinct)`} color="amber" />}
         </div>
 
-        {/* Most common */}
+        {/* Endangered — lead with the evocative photos (the share/nostalgia hook) */}
         <section className="mt-12">
-          <h2 className="text-xl font-bold text-gray-100">Britain&apos;s most common cars</h2>
-          <p className="mt-1 mb-5 text-sm text-slate-400">By number currently licensed and on UK roads.</p>
-          <MostCommonChart rows={MOST_COMMON} />
-        </section>
-
-        {/* Endangered */}
-        <section className="mt-14">
           <h2 className="text-xl font-bold text-gray-100">Endangered: Britain&apos;s vanishing cars</h2>
           <p className="mt-1 mb-5 text-sm text-slate-400">
             Once a common sight, now clinging on. Survivors still licensed for the road.
           </p>
           <EndangeredList rows={ENDANGERED} />
+        </section>
+
+        {/* Most common */}
+        <section className="mt-14">
+          <h2 className="text-xl font-bold text-gray-100">Britain&apos;s most common cars</h2>
+          <p className="mt-1 mb-5 text-sm text-slate-400">By number currently licensed and on UK roads.</p>
+          <MostCommonChart rows={MOST_COMMON} />
         </section>
 
         {/* Mothballed */}
