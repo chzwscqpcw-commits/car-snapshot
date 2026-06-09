@@ -36,14 +36,22 @@ const ROWS: { label: string; free: boolean }[] = [
   { label: "Import / export history", free: false },
 ];
 
-/** Mileage variant: carVertical extras most relevant to odometer/clocking intent.
- *  Honest framing — our free check already lists MOT mileage; these are the
- *  cross-checks the MOT timeline alone can't make. */
-const MILEAGE_FEATURES: string[] = [
+/** Mileage variant detail. Lead with the mileage/odometer items (highlighted —
+ *  what the MOT timeline alone can't cross-check), then list the rest of the
+ *  report so it's clear this is a full history check, not a mileage-only tool.
+ *  Keep factual (agreement 3.1). */
+const MILEAGE_HIGHLIGHT: string[] = [
   "Odometer rollback & anomaly detection",
   "National Mileage Register cross-check",
   "Mileage from European import records",
-  "Damage, write-off & finance history",
+];
+const MILEAGE_ALSO: string[] = [
+  "Damage & accident history",
+  "Outstanding finance",
+  "Insurance write-off category",
+  "Stolen / cloned check",
+  "Ownership & keeper history",
+  "Market value estimate",
 ];
 
 const VARIANTS: Record<
@@ -175,18 +183,35 @@ export default function CarVerticalReportCTA({
       )}
 
       {expanded && variant === "mileage" && (
-        <div className="mt-3 rounded-lg border border-slate-700/50 bg-[#1b54ff]/[0.06] p-3">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[#7da2ff]">
-            Beyond the MOT mileage timeline
-          </p>
-          <ul className="space-y-1.5">
-            {MILEAGE_FEATURES.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-xs text-slate-200">
-                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#7da2ff]" aria-hidden />
-                {f}
-              </li>
-            ))}
-          </ul>
+        <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
+          {/* Highlighted — the mileage/odometer cross-checks */}
+          <div className="bg-[#1b54ff]/[0.10] p-3">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-[#7da2ff]">
+              Mileage &amp; odometer
+            </p>
+            <ul className="space-y-1.5">
+              {MILEAGE_HIGHLIGHT.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-xs font-medium text-slate-100">
+                  <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#7da2ff]" aria-hidden />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* The rest of the report */}
+          <div className="border-t border-slate-700/50 bg-slate-900/30 p-3">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              Plus everything else in the report
+            </p>
+            <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+              {MILEAGE_ALSO.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
+                  <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
