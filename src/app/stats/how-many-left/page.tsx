@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import StatCallout from "@/components/stats/StatCallout";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
@@ -289,19 +290,13 @@ export default function HowManyLeftPage() {
 
         <FaqAccordion items={faqItems} />
 
-        {/* Inline CTA back to the tool */}
-        <div className="my-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 text-center">
-          <h2 className="text-lg font-bold text-white">Check any car by reg</h2>
-          <p className="mx-auto mt-1 max-w-md text-sm text-slate-400">
-            MOT history, tax, mileage, valuation, recalls and rarity — free, no signup.
-          </p>
-          <Link
-            href="/"
-            className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20"
-          >
-            Run a free car check
-          </Link>
-        </div>
+        {/* Conversion: vehicle check + MOT reminder. Also provides the
+            #mot-reminder target the sticky stats banner scrolls to (every other
+            stats page has this via ConversionWidget; this page was the exception). */}
+        <ConversionWidget
+          headline="Check any car by reg"
+          subtext="MOT history, tax, mileage, valuation, recalls and rarity — free, no signup."
+        />
 
         <StatsRelated exclude="how-many-left" />
       </div>

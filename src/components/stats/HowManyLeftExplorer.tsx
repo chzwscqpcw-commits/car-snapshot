@@ -341,7 +341,7 @@ export default function HowManyLeftExplorer() {
               />
             </div>
             {suggestions.length > 0 && (
-              <ul className="absolute z-20 mt-1.5 w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
+              <ul className="mt-1.5 w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
                 {suggestions.map((s) => (
                   <li key={`${s.make}|${s.model}`}>
                     <button
