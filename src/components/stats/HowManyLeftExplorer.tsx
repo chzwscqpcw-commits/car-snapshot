@@ -22,6 +22,23 @@ function modelLabel(make: string, model: string): string {
   return `${titleCase(make)} ${titleCase(model)}`;
 }
 
+// Verified classics (present in the dataset) cycled through the search
+// placeholder to jog memories and seed searches.
+const PLACEHOLDERS = [
+  "Ford Sierra",
+  "Vauxhall Cavalier",
+  "Austin Metro",
+  "Morris Marina",
+  "Fiat Uno",
+  "Ford Cortina",
+  "Nissan Sunny",
+  "Renault 5",
+  "Triumph Acclaim",
+  "Peugeot 205",
+  "MG Maestro",
+  "Vauxhall Nova",
+];
+
 // Animated count-up (requestAnimationFrame, cubic ease-out).
 function useCountUp(target: number, durationMs: number, run: boolean): number {
   const [val, setVal] = useState(0);
@@ -64,6 +81,7 @@ export default function HowManyLeftExplorer() {
   const [mode, setMode] = useState<"reg" | "model">("model");
   const [modelQuery, setModelQuery] = useState("");
   const [suggestions, setSuggestions] = useState<{ make: string; model: string }[]>([]);
+  const [phIdx, setPhIdx] = useState(0);
   const meterRef = useRef<HTMLDivElement>(null);
 
   function pickModel(s: { make: string; model: string }) {
@@ -88,6 +106,13 @@ export default function HowManyLeftExplorer() {
       return () => cancelAnimationFrame(id);
     }
   }, [rarity]);
+
+  // cycle the search placeholder through classic models (model mode only)
+  useEffect(() => {
+    if (mode !== "model") return;
+    const id = setInterval(() => setPhIdx((i) => (i + 1) % PLACEHOLDERS.length), 2400);
+    return () => clearInterval(id);
+  }, [mode]);
 
   async function handleLookup() {
     if (!isValidReg(reg)) {
@@ -317,7 +342,7 @@ export default function HowManyLeftExplorer() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && suggestions[0]) pickModel(suggestions[0]);
                 }}
-                placeholder="e.g. Ford Sierra, Austin Allegro…"
+                placeholder={`e.g. ${PLACEHOLDERS[phIdx]}`}
                 aria-label="Search by make and model"
                 className="h-12 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none"
               />
