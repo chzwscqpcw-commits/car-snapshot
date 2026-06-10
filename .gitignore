@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# Confidential / personal documents — never commit root-level PDFs
+# (signed agreements, contracts, reports with personal data). The existing
+# sample report stays tracked because it's already in history.
+/*.pdf
+
 # debug
 npm-debug.log*
 yarn-debug.log*
