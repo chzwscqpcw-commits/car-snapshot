@@ -37,14 +37,14 @@ That said, free checks can still flag warning signs:
 
 ### Paid finance checks
 
-For a definitive answer, you need a paid vehicle history check that queries finance databases. The main providers are:
+For a definitive answer, you need a paid vehicle history report that queries the finance databases. A full report will check for:
 
-- **HPI Check** (part of Cap HPI) — The most well-known. Checks for outstanding finance, insurance write-offs, stolen vehicle markers, and mileage discrepancies. Costs around £20.
-- **AA Vehicle Check** — Similar coverage to HPI, powered by Experian data. Around £10–£20.
-- **RAC Vehicle History Check** — Comparable to AA, includes finance and write-off data.
-- **Experian AutoCheck** — Direct from the credit data provider.
+- **Outstanding finance** — active hire purchase, PCP or loan agreements registered against the car
+- **Insurance write-offs** — write-off category and date
+- **Stolen markers** — a check against the Police National Computer
+- **Mileage discrepancies** — recorded across finance and insurance records
 
-These services query the main UK finance databases (HPI and Experian) where finance companies register their interest in vehicles. If a car has an active finance agreement, it should appear in these records.
+These reports query the main UK finance databases, where finance companies register their interest in vehicles. If a car has an active finance agreement, it should appear in these records. A full report typically costs £10–£20.
 
 ### Ask the seller directly
 
@@ -88,6 +88,6 @@ If you discover you've bought a car with outstanding finance:
 
 ## The bottom line
 
-Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, spend £10–£20 on a paid HPI or AA check. It's the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
+Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, spend £10–£20 on a paid vehicle history report. It's the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
 
 Start with a [free car check](/car-check) to cover everything else — vehicle details, MOT history, tax status, mileage, ULEZ compliance, and recalls. Then add a paid finance check for complete peace of mind.

@@ -31,11 +31,7 @@ What you can do for free is use a [free car check](/car-check) to look for warni
 
 ## How to check the PNC for stolen vehicles
 
-To query the PNC directly, you need a paid vehicle history check:
-
-- **HPI Check** — Includes a stolen vehicle check against the PNC. Costs around £20.
-- **AA Vehicle Check** — Also queries the PNC for stolen markers.
-- **RAC Vehicle History Check** — Comparable coverage.
+To query the PNC directly, you need a paid vehicle history report. A full report includes a stolen-vehicle check against the PNC — alongside outstanding finance, write-off status and mileage data — and typically costs around £20.
 
 These services will tell you whether the vehicle has been reported stolen and whether there are any other markers (such as outstanding finance or insurance write-off history).
 
@@ -103,6 +99,6 @@ This is different from the rules around outstanding finance, where an innocent b
 
 ## The bottom line
 
-A stolen vehicle check is one of the few things a free car check can't fully cover, because the PNC database isn't publicly accessible. For peace of mind on any significant purchase, add a £20 paid check from HPI, AA, or RAC.
+A stolen vehicle check is one of the few things a free car check can't fully cover, because the PNC database isn't publicly accessible. For peace of mind on any significant purchase, add a £20 paid vehicle history report.
 
 But always start with a [free car check](/car-check) — it covers vehicle details, [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [safety recalls](/recall-check), and [valuation](/car-valuation). That's a comprehensive first screen that costs nothing and takes 30 seconds.

@@ -25,7 +25,7 @@ howToSteps:
   - name: "Look under the bonnet"
     text: "Check oil level and condition, coolant level, battery terminals, belts and hoses for cracks, and general engine bay cleanliness."
   - name: "Get a pre-purchase inspection"
-    text: "For cars over a couple of thousand pounds, pay for an independent inspection from the AA, RAC, or an independent inspector."
+    text: "For cars over a couple of thousand pounds, pay for an independent inspection from a qualified mechanic or inspection service."
 ---
 
 Buying a used car is one of the biggest purchases most people make outside of property. Get it right and you'll have reliable transport for years. Get it wrong and you could be looking at expensive repairs, hidden finance, or worse — a car that isn't legally yours.
@@ -64,7 +64,7 @@ Our guide to the [V5C logbook](/blog/what-is-a-v5c-logbook) explains everything 
 
 A surprisingly common problem. If the previous owner bought the car on finance and hasn't finished paying, the finance company technically owns it. If you buy it, they can legally repossess it from you — and you lose both the car and your money.
 
-A basic [HPI or finance check](/blog/what-is-hpi-check) will flag this. Our guide on [how to check if a car has finance](/blog/how-to-check-if-car-has-finance) covers the process in detail. It's one of the few paid checks worth doing, especially on higher-value vehicles.
+A basic [vehicle history check](/blog/what-is-hpi-check) will flag this. Our guide on [how to check if a car has finance](/blog/how-to-check-if-car-has-finance) covers the process in detail. It's one of the few paid checks worth doing, especially on higher-value vehicles.
 
 ## 5. Inspect the bodywork carefully
 
@@ -122,7 +122,7 @@ You don't need to be a mechanic. Just check the obvious:
 
 ## 10. Get a pre-purchase inspection
 
-If you're spending more than a couple of thousand pounds, consider paying for an independent inspection. The AA, RAC, and various independent inspectors will examine the car thoroughly and give you a written report.
+If you're spending more than a couple of thousand pounds, consider paying for an independent inspection. A qualified mechanic or inspection service will examine the car thoroughly and give you a written report.
 
 It typically costs £100–£200, but it could save you thousands. If the seller refuses to let you have the car inspected, that tells you something.
 

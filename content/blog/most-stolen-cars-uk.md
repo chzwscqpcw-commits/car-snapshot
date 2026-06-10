@@ -10,7 +10,7 @@ faqItems:
   - question: "How do thieves steal keyless cars?"
     answer: "Relay theft uses two devices — one held near your front door to pick up the key fob signal, and another near the car to relay that signal and unlock it. The whole process can take under 30 seconds. Keeping your keys in a Faraday pouch or metal tin blocks the signal entirely."
   - question: "Can I check if a car has been stolen before I buy it?"
-    answer: "A free car check at freeplatecheck.co.uk can reveal warning signs like mismatched details or suspicious MOT gaps. For a definitive stolen vehicle check against the Police National Computer, you'll need a paid HPI or similar vehicle history check."
+    answer: "A free car check at freeplatecheck.co.uk can reveal warning signs like mismatched details or suspicious MOT gaps. For a definitive stolen vehicle check against the Police National Computer, you'll need a paid vehicle history report."
   - question: "Which cars are most targeted for catalytic converter theft?"
     answer: "Hybrid vehicles like the Toyota Prius, Honda Jazz, and Toyota Auris are prime targets because their catalytic converters contain higher concentrations of precious metals (rhodium, palladium, platinum) due to lower overall usage."
   - question: "Does car insurance cover theft?"
@@ -82,7 +82,7 @@ If you're buying a used car, it's worth checking for signs that the vehicle may 
 - **Mileage inconsistencies** — Check the [mileage history](/mileage-check) for jumps or drops that could indicate the car's identity has been tampered with.
 - **VIN discrepancies** — The Vehicle Identification Number on the windscreen, door frame, and engine should all match.
 
-For a definitive stolen vehicle check against the Police National Computer, you'll need a paid HPI or vehicle history check. But a free check can surface the red flags that tell you to dig deeper. Read our full guide on [how to check if a car is stolen](/blog/how-to-check-if-car-is-stolen).
+For a definitive stolen vehicle check against the Police National Computer, you'll need a paid vehicle history report. But a free check can surface the red flags that tell you to dig deeper. Read our full guide on [how to check if a car is stolen](/blog/how-to-check-if-car-is-stolen).
 
 ## How to protect your car from theft
 

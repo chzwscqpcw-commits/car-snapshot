@@ -44,7 +44,7 @@ The key gaps in a free check are the things that require access to private datab
 
 ### Outstanding finance
 
-This is the biggest gap. Finance data is held by finance companies and shared through services like HPI and Experian. There is no free way to check this. Around 90% of new cars are bought on finance, so a significant proportion of used cars on the market may still have money owed.
+This is the biggest gap. Finance data is held by finance companies in specialist finance databases, not in any public government feed. There is no free way to check this. Around 90% of new cars are bought on finance, so a significant proportion of used cars on the market may still have money owed.
 
 **Why it matters:** If you buy a car with outstanding finance, the finance company — not the seller — legally owns it. They can repossess it, and you lose both the car and your money.
 
@@ -77,20 +77,21 @@ The most cost-effective strategy is to use a free check as your first filter and
 
 **Step 1:** Run a [free car check](/car-check) on every vehicle you're considering. This costs nothing and immediately reveals MOT issues, mileage discrepancies, tax problems, and recall history. If something looks wrong here, you can walk away without spending a penny.
 
-**Step 2:** Once you've narrowed down to a car you're seriously interested in, pay for a full HPI or equivalent check before committing. This fills in the gaps around finance, write-off status, and stolen markers.
+**Step 2:** Once you've narrowed down to a car you're seriously interested in, pay for a full vehicle history report before committing. This fills in the gaps around finance, write-off status, and stolen markers.
 
 This approach means you only pay for a check on the car you actually intend to buy, rather than spending £15–£20 on every vehicle you browse.
 
-## Alternatives to HPI
+## Paid history reports: what to look for
 
-HPI is the best-known brand, but other services provide equivalent checks:
+"HPI" has become shorthand for the whole category — like Hoover for vacuum cleaners — but a full vehicle history report is offered by several providers. Rather than the name on the box, focus on what the report actually covers. A thorough one should include:
 
-- **AA Vehicle Check** — Similar coverage to HPI, often bundled with AA membership offers
-- **RAC Vehicle History Check** — Comparable product from the RAC
-- **Experian AutoCheck** — Powered by one of the major credit agencies
-- **Total Car Check** — Budget option with similar data sources
+- **Outstanding finance** — whether money is still owed against the car
+- **Write-off history** — insurance write-off category and date
+- **Stolen markers** — a check against the Police National Computer
+- **Mileage anomalies** — cross-referenced from finance and insurance records, not just MOT data
+- **Identity and plate changes** — previous registrations and any cloning red flags
 
-All query broadly the same databases. The core information (finance, write-off, stolen status) should be identical regardless of provider. Differences tend to be in presentation, additional features, and price.
+The core data (finance, write-off, stolen status) should be broadly consistent between providers — differences tend to be in depth, presentation, and price. A full report typically costs £10–£20, so check the coverage before you buy.
 
 ## What no check can tell you
 
@@ -101,10 +102,10 @@ No vehicle history check — free or paid — can tell you about:
 - **How the car was driven** — Hard driving, track use, or neglectful ownership
 - **Future reliability** — Past history is a guide, not a guarantee
 
-For these, you need a physical inspection. Consider an independent vehicle inspection from the AA or RAC (around £100–£200) for any significant purchase. Our [complete used car buying checklist](/blog/used-car-checks-before-buying) covers everything to verify before handing over money.
+For these, you need a physical inspection. Consider an independent vehicle inspection (around £100–£200) for any significant purchase. Our [complete used car buying checklist](/blog/used-car-checks-before-buying) covers everything to verify before handing over money.
 
 ## The bottom line
 
 A free car check gives you an impressive amount of information at no cost — [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [recall checks](/recall-check), and [valuation](/car-valuation). Use it as your first step on every car you consider.
 
-For any purchase over a few thousand pounds, add a paid HPI or equivalent check to cover finance, write-off, and stolen status. The combination of free and paid checks gives you the most complete picture of a vehicle's history.
+For any purchase over a few thousand pounds, add a paid vehicle history report to cover finance, write-off, and stolen status. The combination of free and paid checks gives you the most complete picture of a vehicle's history.

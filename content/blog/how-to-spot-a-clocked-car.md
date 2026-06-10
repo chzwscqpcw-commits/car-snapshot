@@ -70,9 +70,9 @@ High-mileage cars pick up stone chips on the bonnet and front bumper from motorw
 
 If you can safely look underneath, check for wear on suspension components, exhaust corrosion, and general grime. A genuinely low-mileage car will usually have less wear and buildup than a high-mileage one.
 
-## 7. Get an HPI or provenance check
+## 7. Get a paid history check
 
-A paid vehicle history check from providers like HPI, AA, or RAC can flag mileage discrepancies from multiple sources — including finance company records, insurance records, and previous MOT data. These checks cross-reference data that isn't always visible in a basic MOT history lookup.
+A paid vehicle history report can flag mileage discrepancies from multiple sources — finance company records, insurance records, previous MOT data, and dedicated odometer / mileage-anomaly databases. These reports cross-reference data that isn't always visible in a basic MOT history lookup, which is exactly where clocking tends to show up.
 
 They'll also tell you if the car has [outstanding finance](/blog/how-to-check-if-car-has-finance), has been [written off](/blog/what-does-cat-n-s-mean), or has been [reported stolen](/blog/how-to-check-if-car-is-stolen) — all useful things to know before handing over money.
 

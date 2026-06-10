@@ -84,11 +84,11 @@ Start with a [free car check](/car-check) to verify the vehicle details, [MOT hi
 
 ### 2. Get a paid history check
 
-A paid [HPI or AA check](/blog/what-is-hpi-check) will confirm the write-off category and date. Free checks cannot access insurance write-off data, so this is essential for any car where you suspect or know about a write-off history.
+A paid [vehicle history report](/blog/what-is-hpi-check) will confirm the write-off category and date. Free checks cannot access insurance write-off data, so this is essential for any car where you suspect or know about a write-off history.
 
 ### 3. Get an independent inspection
 
-For Cat S vehicles especially, pay for an independent vehicle inspection from the AA, RAC, or an independent engineer. They will check the structural integrity, alignment, panel gaps, and overall repair quality. This typically costs £100–£200 and is well worth the investment.
+For Cat S vehicles especially, pay for an independent vehicle inspection from a qualified mechanic or engineer. They will check the structural integrity, alignment, panel gaps, and overall repair quality. This typically costs £100–£200 and is well worth the investment.
 
 ### 4. Ask for repair documentation
 
