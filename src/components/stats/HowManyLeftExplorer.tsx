@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { Loader2, ArrowRight, Share2, RotateCcw, Check, Search } from "lucide-react";
 import { lookupRarity, suggestModels, type RarityResult } from "@/lib/how-many-left";
@@ -97,6 +97,13 @@ export default function HowManyLeftExplorer() {
   const count = useCountUp(rarity?.licensed ?? 0, 1600, !!rarity);
   const sornCount = useCountUp(rarity?.sorn ?? 0, 1600, !!rarity);
 
+  // Curated-only fun fact, memoised so the count-up re-renders above don't hand
+  // ModelFact a new array every frame (which made it re-shuffle + re-animate).
+  const modelFacts = useMemo(
+    () => (vehicle ? buildModelFacts({ make: vehicle.make, model: vehicle.model }) : { vehicleName: "", facts: [] as string[] }),
+    [vehicle],
+  );
+
   // animate the rarity meter fill after a result lands
   useEffect(() => {
     if (rarity && meterRef.current) {
@@ -192,9 +199,6 @@ export default function HowManyLeftExplorer() {
   if (vehicle) {
     const r = rarity ? RARITY[rarity.category] : null;
     const name = `${vehicle.year ?? ""} ${vehicle.make} ${vehicle.model}`.trim();
-    // Curated-only fun fact (no derived rarity fact — the survivor count above
-    // already IS the rarity stat). Falls back to a make-level fact.
-    const modelFacts = buildModelFacts({ make: vehicle.make, model: vehicle.model });
     return (
       <div className="relative overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-6 sm:p-8">
         <div
