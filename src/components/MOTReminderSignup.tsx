@@ -418,6 +418,9 @@ export default function MOTReminderSignup({
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
         </p>
+        <p className="mt-1 text-xs text-slate-500">
+          Reminder emails include a link to compare MOT prices from local garages.
+        </p>
       </form>
     );
   }
@@ -574,6 +577,9 @@ export default function MOTReminderSignup({
         <p className="text-xs text-slate-500">
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          Reminder emails include a link to compare MOT prices from local garages.
         </p>
         {(context === "expired" || context === "due-soon") && (
           <p className="mt-1.5 text-xs text-amber-500/80">
