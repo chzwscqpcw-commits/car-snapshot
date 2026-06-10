@@ -175,6 +175,8 @@ import { getMakeLogoPath } from "@/lib/make-logo";
 import { parseModel, expandBaseModelForLookup, type ParsedModel } from "@/lib/model-parser";
 import { lookupBodyType } from "@/lib/body-type";
 import { lookupRarity } from "@/lib/how-many-left";
+import { buildModelFacts } from "@/lib/model-facts";
+import ModelFact from "@/components/ModelFact";
 import { lookupColourPopularity } from "@/lib/colour-popularity";
 import { calculateHealthScore, type HealthScoreResult } from "@/lib/health-score";
 import { calculateEcoScore, type EcoScoreResult } from "@/lib/eco-score";
@@ -1480,6 +1482,21 @@ export default function Home() {
     if (!data?.make) return null;
     return lookupTheftRisk(data.make, lookupModel ?? data.model);
   }, [data?.make, data?.model, lookupModel]);
+
+  // Model-specific "Did you know?" facts — curated trivia + facts derived from
+  // the rarity / NCAP / MOT / theft data already computed above.
+  const modelFacts = useMemo(() => {
+    if (!data) return { vehicleName: "your car", facts: [] as string[] };
+    return buildModelFacts({
+      make: data.make,
+      model: data.model,
+      lookupModel: lookupModel ?? undefined,
+      rarity: rarityResult,
+      ncap: ncapRating,
+      motPassRate,
+      theftRisk,
+    });
+  }, [data, lookupModel, rarityResult, ncapRating, motPassRate, theftRisk]);
 
   // EV specs (only for electric/hybrid vehicles)
   const evSpecs = useMemo((): EvSpecsResult | null => {
@@ -4904,6 +4921,14 @@ END:VEVENT
 
             {/* ═══ GROUP 4: KEY FACTS ═══ */}
             <SectionGroup icon={<Lightbulb className="w-4 h-4" />} label="Key Insights" id="section-facts">
+
+            {/* MODEL "DID YOU KNOW?" — curated trivia + derived facts for the
+                searched make/model. Varies each visit. */}
+            {modelFacts.facts.length > 0 && (
+              <DataReveal delay={505}>
+                <ModelFact vehicleName={modelFacts.vehicleName} facts={modelFacts.facts} />
+              </DataReveal>
+            )}
 
             {/* EV SPECS CARD */}
             {evSpecs && (
