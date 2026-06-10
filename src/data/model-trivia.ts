@@ -188,13 +188,13 @@ export const modelTrivia: Record<string, string[]> = {
 };
 
 export const makeTrivia: Record<string, string[]> = {
-  "FORD": ["Ford is the UK's most popular car brand, with over 4 million cars on British roads."],
-  "VAUXHALL": ["Vauxhall is one of Britain's oldest carmakers, with roots going back to a London engineering firm founded in 1857."],
+  "FORD": ["At its 1920s peak, the Ford Model T made up more than half of all the cars on Earth."],
+  "VAUXHALL": ["Vauxhall's griffin badge — and its very name — come from a 13th-century knight, Fulk le Bréauté, whose London manor was known as 'Fulk's Hall'."],
   "VOLKSWAGEN": ["'Volkswagen' means 'people's car' in German."],
   "BMW": ["BMW started out building aircraft engines in 1916."],
   "AUDI": ["The name 'Audi' is a Latin translation of founder August Horch's surname — it means 'listen'."],
   "MERCEDES BENZ": ["Mercedes-Benz traces its roots to Karl Benz, who built the first petrol-powered car in 1886."],
-  "TOYOTA": ["Toyota is the world's largest carmaker by volume."],
+  "TOYOTA": ["Toyota started out making weaving looms; the founding family's name 'Toyoda' was changed to 'Toyota' because it takes a luckier eight brush strokes to write."],
   "HONDA": ["Honda is the world's largest manufacturer of engines — it makes far more than just cars."],
   "NISSAN": ["Nissan's Sunderland plant is one of the largest car factories in the UK."],
   "FIAT": ["'Fiat' stands for Fabbrica Italiana Automobili Torino."],
