@@ -174,6 +174,7 @@ export default function HowManyLeftPage() {
               description:
                 "UK car survivor counts by make and model — how many of each are still licensed (on the road) versus declared off-road (SORN), based on DVLA vehicle-licensing data.",
               url: "https://www.freeplatecheck.co.uk/stats/how-many-left",
+              license: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
               creator: { "@type": "Organization", name: "Free Plate Check", url: "https://www.freeplatecheck.co.uk" },
               spatialCoverage: "United Kingdom",
               variableMeasured: "Number of vehicles licensed and SORN by make and model",

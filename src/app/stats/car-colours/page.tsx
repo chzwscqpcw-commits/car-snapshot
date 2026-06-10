@@ -67,6 +67,7 @@ export default function CarColoursPage() {
               description:
                 "UK new car colours ranked by share of 2025 registrations, based on SMMT data. Grey, black and blue lead the market.",
               url: "https://www.freeplatecheck.co.uk/stats/car-colours",
+              license: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
               creator: {
                 "@type": "Organization",
                 name: "Free Plate Check",
