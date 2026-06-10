@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Loader2, ArrowRight, Share2, RotateCcw, Check, Search } from "lucide-react";
 import { lookupRarity, suggestModels, type RarityResult } from "@/lib/how-many-left";
+import { buildModelFacts } from "@/lib/model-facts";
+import ModelFact from "@/components/ModelFact";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -190,6 +192,9 @@ export default function HowManyLeftExplorer() {
   if (vehicle) {
     const r = rarity ? RARITY[rarity.category] : null;
     const name = `${vehicle.year ?? ""} ${vehicle.make} ${vehicle.model}`.trim();
+    // Curated-only fun fact (no derived rarity fact — the survivor count above
+    // already IS the rarity stat). Falls back to a make-level fact.
+    const modelFacts = buildModelFacts({ make: vehicle.make, model: vehicle.model });
     return (
       <div className="relative overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-6 sm:p-8">
         <div
@@ -244,6 +249,13 @@ export default function HowManyLeftExplorer() {
               figures for this exact model yet. The full report still has everything
               else on it.
             </p>
+          )}
+
+          {/* fun fact about the make/model — accompanies the survivor count */}
+          {modelFacts.facts.length > 0 && (
+            <div className="mt-6">
+              <ModelFact vehicleName={modelFacts.vehicleName} facts={modelFacts.facts} />
+            </div>
           )}
 
           {/* upsell + share */}
