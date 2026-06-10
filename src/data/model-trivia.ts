@@ -106,6 +106,85 @@ export const modelTrivia: Record<string, string[]> = {
     "The Porsche 911 has been in continuous production since 1963.",
     "Its rear-engine layout has stayed a constant for over 60 years.",
   ],
+  "VOLKSWAGEN|BEETLE": [
+    "The original VW Beetle was produced for over 65 years, with more than 21 million built — one of the best-selling cars of all time.",
+    "Its design traces back to Ferdinand Porsche in the 1930s.",
+  ],
+  "VOLKSWAGEN|TIGUAN": [
+    "The Tiguan is one of Volkswagen's best-selling models worldwide.",
+    "Its name blends the German words for 'tiger' and 'iguana'.",
+  ],
+  "FORD|MONDEO": [
+    "'Mondeo Man' became 1990s shorthand for the average British voter.",
+    "The Mondeo replaced the Sierra in 1993; UK sales ended in 2022.",
+  ],
+  "FORD|MUSTANG": [
+    "The Ford Mustang, launched in 1964, created the 'pony car' class and is one of the best-selling sports cars ever.",
+  ],
+  "NISSAN|LEAF": [
+    "The Nissan Leaf, launched in 2010, was the first mass-market electric car — and was built in Sunderland for Europe.",
+  ],
+  "NISSAN|MICRA": [
+    "The Nissan Micra won European Car of the Year in 1993 — the first Japanese car to take the title.",
+  ],
+  "NISSAN|JUKE": [
+    "The Nissan Juke's bold, divisive styling made it a surprise hit and helped spark the small-crossover craze.",
+  ],
+  "LAND ROVER|RANGE ROVER": [
+    "The Range Rover, launched in 1970, effectively created the luxury SUV.",
+    "An early Range Rover was once exhibited at the Louvre as an example of industrial design.",
+  ],
+  "LAND ROVER|DISCOVERY": [
+    "The Land Rover Discovery arrived in 1989 to sit between the rugged Defender and the luxury Range Rover.",
+  ],
+  "BMW|5 SERIES": [
+    "The BMW 5 Series, launched in 1972, was the first BMW to use the now-familiar 'Series' naming.",
+  ],
+  "BMW|X5": [
+    "The BMW X5, launched in 1999, was the brand's very first SUV.",
+  ],
+  "MERCEDES BENZ|A CLASS": [
+    "The first Mercedes A-Class (1997) famously tipped over in the Swedish 'moose test', prompting a swift redesign.",
+  ],
+  "AUDI|TT": [
+    "The Audi TT's distinctive rounded design made it an instant icon when it launched in 1998.",
+  ],
+  "TOYOTA|RAV4": [
+    "The Toyota RAV4 (1994) helped create the compact-SUV class — its name stands for 'Recreational Active Vehicle with 4-wheel drive'.",
+  ],
+  "HONDA|JAZZ": [
+    "The Honda Jazz is loved for its clever folding 'Magic Seats' and strong reliability record.",
+  ],
+  "HONDA|CR-V": [
+    "The Honda CR-V is one of the best-selling SUVs in the world.",
+  ],
+  "PEUGEOT|205": [
+    "The Peugeot 205 (1983) is often credited with saving the company — and the 205 GTI is a hot-hatch legend.",
+  ],
+  "PEUGEOT|3008": [
+    "The Peugeot 3008 was named European Car of the Year in 2017.",
+  ],
+  "CITROEN|2CV": [
+    "The Citroën 2CV was designed to carry farmers across fields without breaking the eggs — and stayed in production for 42 years.",
+  ],
+  "FIAT|PANDA": [
+    "The Fiat Panda has been a European city-car staple since 1980.",
+  ],
+  "RENAULT|MEGANE": [
+    "The Renault Mégane's 'shake that ass' advert became a 2000s pop-culture moment in Britain.",
+  ],
+  "RENAULT|ZOE": [
+    "The Renault Zoe was one of Europe's best-selling electric cars throughout the 2010s.",
+  ],
+  "SUZUKI|JIMNY": [
+    "The tiny Suzuki Jimny has a cult following as a genuinely capable off-roader.",
+  ],
+  "TESLA|MODEL S": [
+    "The Tesla Model S (2012) was the car that proved an electric car could be genuinely desirable and fast.",
+  ],
+  "MINI|COOPER": [
+    "The Mini Cooper name honours John Cooper, whose tuned Minis won the Monte Carlo Rally in the 1960s.",
+  ],
 };
 
 export const makeTrivia: Record<string, string[]> = {
@@ -128,4 +207,22 @@ export const makeTrivia: Record<string, string[]> = {
   "TESLA": ["Tesla is named after the inventor and electrical engineer Nikola Tesla."],
   "JAGUAR": ["Jaguar began in 1922 making motorcycle sidecars, as the Swallow Sidecar Company."],
   "VOLVO": ["Volvo invented the modern three-point seatbelt in 1959 — and gave the patent away to save lives."],
+  "HYUNDAI": ["Hyundai is South Korea's largest carmaker; the name means 'modernity' in Korean."],
+  "CITROEN": ["Citroën's double-chevron badge represents the helical gear teeth its founder, André Citroën, first manufactured."],
+  "SEAT": ["SEAT was founded in Spain in 1950 and has been part of the Volkswagen Group since the late 1980s."],
+  "SUZUKI": ["Suzuki began by building weaving looms, and today makes motorcycles and outboard motors as well as cars."],
+  "DACIA": ["Dacia is a Romanian brand owned by Renault, known for value — its cars are among the cheapest new cars on sale."],
+  "LEXUS": ["Lexus is Toyota's luxury brand, launched in 1989 to take on the established German marques."],
+  "SUBARU": ["Subaru is famous for its 'boxer' engines and all-wheel drive — and its parent company started out building aircraft."],
+  "MITSUBISHI": ["Mitsubishi's three-diamond emblem dates back to the 1870s, long before it built cars."],
+  "ALFA ROMEO": ["Alfa Romeo was founded in Milan in 1910; its badge carries a cross and a crowned serpent from the city's heraldry."],
+  "ABARTH": ["Abarth, Fiat's performance arm, wears a scorpion badge — the zodiac sign of founder Carlo Abarth."],
+  "PORSCHE": ["Porsche's first production car, the 356, arrived in 1948 — and Ferdinand Porsche had earlier designed the original VW Beetle."],
+  "LAND ROVER": ["The first Land Rover was unveiled in 1948, inspired by the wartime Jeep."],
+  "BENTLEY": ["Bentley was founded in 1919, won Le Mans five times in the 1920s, and is now part of the Volkswagen Group."],
+  "ASTON MARTIN": ["Aston Martin was founded in 1913 and is famous the world over as James Bond's car of choice."],
+  "MASERATI": ["Maserati, founded in 1914, takes its trident badge from a statue of Neptune in its home city of Bologna."],
+  "SMART": ["The Smart city car was a joint project between Mercedes-Benz and watchmaker Swatch — hence the name 'S-M-A-R-T'."],
+  "DS": ["DS became a standalone premium brand in 2014, reviving a name from Citroën's iconic 1955 DS."],
+  "BYD": ["BYD — now one of the world's biggest electric-car makers — started out making rechargeable batteries."],
 };
