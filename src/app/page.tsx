@@ -204,14 +204,12 @@ import {
 import newPricesData from "@/data/new-prices.json";
 import { latestWeek as latestFuelWeek } from "@/lib/stats-data/fuel-prices";
 import DidYouKnow from "@/components/DidYouKnow";
-import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import Reveal from "@/components/Reveal";
-import PdfPromoBanner from "@/components/PdfPromoBanner";
 
 type VehicleData = {
   registrationNumber: string;
@@ -922,7 +920,6 @@ export default function Home() {
 
   // MOT reminder state
   const [showPdfReminderPrompt, setShowPdfReminderPrompt] = useState(false);
-  const [showPdfPromo, setShowPdfPromo] = useState(false);
 
   // Fetch live fuel prices once on mount
   useEffect(() => {
@@ -3023,17 +3020,11 @@ END:VEVENT
         has_mot_history: Array.isArray(data.motTests) && data.motTests.length > 0,
       });
 
-      // Trigger E — show MOT reminder prompt after PDF download
+      // Trigger E — show MOT reminder prompt after PDF download. One calm,
+      // closed chip is the only post-PDF ask (the BMG promo earned ~0 clicks
+      // and duplicated the top status banner, so it was removed).
       if (isOver3Years && data.motExpiryDate) {
         setShowPdfReminderPrompt(true);
-      }
-
-      // Post-PDF cheap-MOT promo. PDF downloaders are highly engaged, so this
-      // is a prime moment to surface the booking offer. Shown for MOT-relevant
-      // (3+ year) vehicles regardless of whether an expiry date is on record
-      // (covers the "no MOT history" case too).
-      if (isOver3Years) {
-        setShowPdfPromo(true);
       }
     } catch (error) {
       console.error("PDF generation failed:", error);
@@ -4918,14 +4909,27 @@ END:VEVENT
             {/* CLICKMECHANIC PRE-PURCHASE INSPECTION — sits right after the
                 Negotiation Helper, at peak buying intent (a buyer has just seen
                 the valuation + how to negotiate). Renders null until the partner
-                is approved; see partners.ts. */}
-            {data && (
-              <DataReveal delay={480}>
-                <div className="mb-8">
-                  <InspectionCTA context="buyer-after-negotiation" regNumber={data.registrationNumber} />
-                </div>
-              </DataReveal>
-            )}
+                is approved; see partners.ts.
+
+                Don't pitch "Buying this car?" to owners checking their own
+                vehicle: only show when the visitor is a buyer, or the car
+                genuinely warrants an inspection (open MOT advisories or a FAIL
+                in its history). */}
+            {(() => {
+              if (!data) return null;
+              const carWarrantsInspection =
+                checklistRole === "buyer" ||
+                (!!motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0) ||
+                (data.motTests?.some((t) => t.testResult === "FAILED") ?? false);
+              if (!carWarrantsInspection) return null;
+              return (
+                <DataReveal delay={480}>
+                  <div className="mb-8">
+                    <InspectionCTA context="buyer-after-negotiation" regNumber={data.registrationNumber} />
+                  </div>
+                </DataReveal>
+              );
+            })()}
 
             </SectionGroup>
 
@@ -5061,15 +5065,6 @@ END:VEVENT
                             </p>
                             <p className="text-xs text-slate-300 mt-1">
                               {motInsights.daysUntilExpiry < 0 ? "MOT expired" : motInsights.daysUntilExpiry < 30 ? "Due soon" : ""}
-                              <a
-                                href={PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber, "mot-insights-next-due") ?? PARTNER_LINKS.bookMyGarage.url}
-                                target="_blank"
-                                rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-                                onClick={() => trackPartnerClick("bookMyGarage", "mot-insights-next-due")}
-                                className="text-emerald-400 text-sm hover:underline ml-2"
-                              >
-                                Compare prices &#8599;
-                              </a>
                             </p>
                           </div>
                         </div>
@@ -5284,21 +5279,12 @@ END:VEVENT
               </div>
             </DataReveal>
 
-            {/* Post-PDF cheap-MOT promo banner — booking intent (revenue),
-                shown above the reminder (email capture). */}
-            {showPdfPromo && isOver3Years && (
-              <div className="mb-8">
-                <PdfPromoBanner
-                  regNumber={data?.registrationNumber}
-                  makeModel={data ? `${data.make} ${data.model}` : undefined}
-                />
-              </div>
-            )}
-
-            {/* Trigger E — Post-PDF download MOT reminder prompt */}
+            {/* Trigger E — Post-PDF download MOT reminder. A single, calm,
+                closed chip (context="post-lookup" stays collapsed) — no stacked
+                upsells. */}
             {showPdfReminderPrompt && (
               <div className="mb-8">
-                <MOTReminderSignup
+                <MOTReminderCollapsible
                   context="post-lookup"
                   triggerVariant="post_pdf"
                   regNumber={data?.registrationNumber}
