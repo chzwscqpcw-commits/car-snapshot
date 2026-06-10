@@ -693,7 +693,6 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
   const sections = [
     { id: "section-health", label: "Health" },
     { id: "section-money", label: "Money" },
-    { id: "section-facts", label: "Insights" },
     { id: "section-mot", label: "MOT" },
     { id: "section-next", label: "Next" },
   ];
@@ -1658,7 +1657,6 @@ export default function Home() {
     const prompts: ActionPromptConfig[] = [];
 
     const motExpired = isOver3Years && motDaysUntilExpiry < 0;
-    const motExpiringSoon = isOver3Years && !motExpired && motDaysUntilExpiry >= 0 && motDaysUntilExpiry <= 30;
     const isSornOrUntaxed = data.taxStatus === "SORN" || data.taxStatus === "Not Taxed";
     const hasAdvisories = isOver3Years && !motExpired && latestAdvisoryCount > 0;
     // Build a fresh BMG link per ActionPrompt so each variant carries its
@@ -1667,41 +1665,12 @@ export default function Home() {
       PARTNER_LINKS.bookMyGarage.buildLink?.(data.registrationNumber, clickref) ??
       PARTNER_LINKS.bookMyGarage.url;
 
-    // 1. MOT expired
-    if (motExpired) {
-      prompts.push({
-        variant: "urgent",
-        icon: <AlertTriangle className="w-5 h-5 text-red-400" />,
-        title: "MOT expired — this vehicle cannot legally be driven",
-        description: "Book an MOT test as soon as possible. Driving without a valid MOT risks a fine of up to £1,000.",
-        linkText: "Book MOT — BookMyGarage",
-        linkHref: buildBmg("action-mot-expired"),
-        partnerId: "bookMyGarage",
-        trackingContext: "action-mot-expired",
-        secondaryLink: {
-          text: "Find MOT centres on GOV.UK",
-          href: PARTNER_LINKS.govMotCentres.url,
-          partnerId: "govMotCentres",
-          trackingContext: "action-mot-expired-gov",
-        },
-      });
-    }
+    // NOTE: MOT-expired and MOT-expiring action prompts intentionally omitted —
+    // the status-aware MotActionBanner at the top of the results owns that exact
+    // moment (same BMG booking CTA). Repeating it here was duplicate noise (M3
+    // dedup, 2026-06). These prompts cover the moments the banner does NOT.
 
-    // 2. MOT expiring soon
-    if (motExpiringSoon) {
-      prompts.push({
-        variant: "warning",
-        icon: <AlertCircle className="w-5 h-5 text-amber-400" />,
-        title: `MOT expires in ${motDaysUntilExpiry} day${motDaysUntilExpiry !== 1 ? "s" : ""}`,
-        description: "Book up to 28 days early without losing your current expiry date.",
-        linkText: "Compare MOT prices near me — BookMyGarage",
-        linkHref: buildBmg("action-mot-expiring"),
-        partnerId: "bookMyGarage",
-        trackingContext: "action-mot-expiring",
-      });
-    }
-
-    // 3. Tax SORN/Untaxed
+    // 1. Tax SORN/Untaxed
     if (isSornOrUntaxed) {
       prompts.push({
         variant: "warning",
@@ -1715,7 +1684,7 @@ export default function Home() {
       });
     }
 
-    // 4. Has advisories (only if MOT not expired)
+    // 2. Has advisories (only if MOT not expired)
     if (hasAdvisories) {
       prompts.push({
         variant: "info",
@@ -1729,7 +1698,7 @@ export default function Home() {
       });
     }
 
-    // 5. Car insurance comparison (low priority — only if space). Gated on
+    // 3. Car insurance comparison (low priority — only if space). Gated on
     //    isPartnerConfigured so it appears only once Confused.com (Awin) is
     //    approved — replaces the old non-affiliate Parkers insurance-group leak.
     if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.goCompare)) {
@@ -5172,6 +5141,8 @@ END:VEVENT
                         {test.rfrAndComments && test.rfrAndComments.length > 0 && (
                           <div className="border-t border-slate-700/50 pt-3">
                             <button
+                              type="button"
+                              aria-expanded={expandedMotTests.has(idx)}
                               onClick={() => {
                                 const newSet = new Set(expandedMotTests);
                                 if (newSet.has(idx)) {
@@ -5183,8 +5154,8 @@ END:VEVENT
                               }}
                               className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
                             >
-                              <span>{expandedMotTests.has(idx) ? "−" : "+"}</span>
-                              <span>Click to view details</span>
+                              {expandedMotTests.has(idx) ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                              <span>{expandedMotTests.has(idx) ? "Hide details" : "View details"}</span>
                             </button>
                             {expandedMotTests.has(idx) && (
                               <div className="mt-3 space-y-2">
