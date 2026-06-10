@@ -14,14 +14,19 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 /**
- * Model-specific "Did you know?" card for the results page. Picks a random fact
- * on mount (so it varies each visit), auto-rotates, and lets the user tap for
- * another. Renders nothing if there are no facts.
+ * Model-specific "Did you know?" card. Picks a random fact on mount (so it
+ * varies each visit); the user taps ↻ for another — no auto-rotate, so there's
+ * always time to read. Each fact "materialises" in via the .fact-enter
+ * animation, re-keyed on `tick` so it replays on every change. Renders nothing
+ * if there are no facts.
  */
 export default function ModelFact({ vehicleName, facts }: { vehicleName: string; facts: string[] }) {
   const [queue, setQueue] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
-  const [visible, setVisible] = useState(false);
+  // Bumped on every fact change; used as the <p> key to replay the entrance.
+  const [tick, setTick] = useState(0);
+  // Spin the ↻ icon briefly on each tap.
+  const [spinning, setSpinning] = useState(false);
 
   // Shuffle on mount / when facts change (deferred to effect for SSR safety).
   useEffect(() => {
@@ -29,30 +34,22 @@ export default function ModelFact({ vehicleName, facts }: { vehicleName: string;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setQueue(shuffle(facts));
     setIndex(0);
-    setVisible(true);
+    setTick((t) => t + 1);
   }, [facts]);
 
   const advance = useCallback(() => {
-    setVisible(false);
-    setTimeout(() => {
-      setIndex((prev) => {
-        const next = prev + 1;
-        if (next >= queue.length) {
-          setQueue(shuffle(facts));
-          return 0;
-        }
-        return next;
-      });
-      setVisible(true);
-    }, 350);
+    setIndex((prev) => {
+      const next = prev + 1;
+      if (next >= queue.length) {
+        setQueue(shuffle(facts));
+        return 0;
+      }
+      return next;
+    });
+    setTick((t) => t + 1);
+    setSpinning(true);
+    setTimeout(() => setSpinning(false), 500);
   }, [queue.length, facts]);
-
-  // Gentle auto-rotate when there's more than one fact.
-  useEffect(() => {
-    if (queue.length <= 1) return;
-    const timer = setInterval(advance, 14_000);
-    return () => clearInterval(timer);
-  }, [advance, queue.length]);
 
   if (facts.length === 0 || queue.length === 0) return null;
 
@@ -69,8 +66,8 @@ export default function ModelFact({ vehicleName, facts }: { vehicleName: string;
             Did you know about your {vehicleName}?
           </p>
           <p
-            className="text-sm text-slate-200 transition-opacity duration-300 min-h-[2.5rem]"
-            style={{ opacity: visible ? 1 : 0 }}
+            key={tick}
+            className="fact-enter text-sm text-slate-200 min-h-[2.5rem]"
             aria-live="polite"
           >
             {fact}
@@ -81,7 +78,7 @@ export default function ModelFact({ vehicleName, facts }: { vehicleName: string;
               onClick={advance}
               className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-amber-300 transition-colors"
             >
-              <RefreshCw className="w-3 h-3" />
+              <RefreshCw className={`w-3 h-3 transition-transform duration-500 ${spinning ? "rotate-180" : ""}`} />
               Another fact
             </button>
           )}

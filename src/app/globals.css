@@ -313,3 +313,33 @@ a {
     background: rgba(34, 211, 238, 0.04);
   }
 }
+
+/* Model "Did you know?" fact entrance — the fact "materialises": rises a little,
+   sharpens from a soft blur, and fades in. Re-keyed on each fact so it replays
+   when the user taps for another. Reduce-motion users get an instant fade. */
+@keyframes factEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    filter: blur(7px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.fact-enter {
+  animation: factEnter 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fact-enter {
+    animation: none;
+    opacity: 1;
+  }
+}
