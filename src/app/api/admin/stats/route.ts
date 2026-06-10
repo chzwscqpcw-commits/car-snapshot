@@ -179,6 +179,15 @@ function classifySource(metadata: Record<string, unknown> | null): string {
   if (host.includes("google.")) return "Google";
   if (host.includes("bing.")) return "Bing";
   if (host.includes("duckduckgo")) return "DuckDuckGo";
+  // Alternative / privacy / eco search engines (mostly Bing- or Google-powered).
+  // Label them by name so they group as search rather than show as a bare
+  // hostname (e.g. oceanhero.today — Bing-backed, removes ocean plastic).
+  if (host.includes("ecosia.")) return "Ecosia";
+  if (host.includes("oceanhero")) return "OceanHero";
+  if (host.includes("startpage")) return "Startpage";
+  if (host.includes("qwant")) return "Qwant";
+  if (host.includes("brave")) return "Brave Search";
+  if (host.includes("yahoo.")) return "Yahoo";
   if (host.includes("linkedin") || host.includes("lnkd.in")) return "LinkedIn";
   if (host.includes("facebook") || host.includes("fb.")) return "Facebook";
   if (host === "t.co" || host.includes("twitter") || host.includes("x.com")) return "X/Twitter";
