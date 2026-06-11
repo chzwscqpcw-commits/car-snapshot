@@ -18,9 +18,40 @@ declare global {
  * Safari versions return false from sendBeacon for CORS reasons even on
  * same-origin POSTs — the fetch keeps us covered).
  */
+// ── Owner self-exclusion ─────────────────────────────────────────────────────
+// A device-local flag (localStorage) the owner sets to stop their OWN testing
+// from polluting the dashboard + experiments. When on, every mirrored event
+// carries `internal: true`, which the admin stats route (and any experiment
+// SQL) filters out. Toggle via the `?internal=1` / `?internal=0` URL param
+// (handled in RouteAnalytics) or the toggle on /data-health.
+const INTERNAL_TRAFFIC_KEY = "fpc:internal_traffic";
+
+export function isInternalTraffic(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem(INTERNAL_TRAFFIC_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function setInternalTraffic(on: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (on) localStorage.setItem(INTERNAL_TRAFFIC_KEY, "1");
+    else localStorage.removeItem(INTERNAL_TRAFFIC_KEY);
+  } catch {
+    /* localStorage unavailable — nothing to persist */
+  }
+}
+
 function mirrorToServer(eventName: string, payload?: Record<string, unknown>): void {
   if (typeof window === "undefined") return;
-  const body = JSON.stringify({ type: eventName, payload: payload ?? {} });
+  // Tag the owner's own traffic so the dashboard can exclude it.
+  const enriched = isInternalTraffic()
+    ? { ...(payload ?? {}), internal: true }
+    : payload ?? {};
+  const body = JSON.stringify({ type: eventName, payload: enriched });
 
   // sendBeacon path: browser-queued, survives unload, no response handling.
   if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {

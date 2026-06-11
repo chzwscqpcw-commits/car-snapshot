@@ -202,6 +202,12 @@ function classifySource(metadata: Record<string, unknown> | null): string {
   return host.replace(/^www\./, "");
 }
 
+// Owner self-exclusion: rows the owner flagged from their own device carry
+// metadata.internal:true (see src/lib/tracking.ts). Exclude them from every
+// site_events aggregation. A plain `not eq true` would also drop rows where the
+// field is absent (NULL), so we OR the null case back in to keep real traffic.
+const NOT_INTERNAL_OR = "metadata->>internal.is.null,metadata->>internal.neq.true";
+
 async function countEvents(
   sb: ReturnType<typeof supabaseServer>,
   eventType: string,
@@ -212,6 +218,7 @@ async function countEvents(
     .from("site_events")
     .select("*", { count: "exact", head: true })
     .eq("event_type", eventType)
+    .or(NOT_INTERNAL_OR)
     .gte("created_at", since.toISOString());
   if (until) query = query.lt("created_at", until.toISOString());
 
@@ -238,6 +245,7 @@ async function countEventsWithMetaEq(
     .select("*", { count: "exact", head: true })
     .eq("event_type", eventType)
     .filter(jsonPath, "eq", value)
+    .or(NOT_INTERNAL_OR)
     .gte("created_at", since.toISOString());
   if (error) {
     console.error(`[STATS] Error counting ${eventType} ${jsonPath}=${value}:`, error.message);
@@ -275,6 +283,7 @@ async function countUniqueVisitorsBetween(
     .from("site_events")
     .select("ip_hash")
     .eq("event_type", "page_view")
+    .or(NOT_INTERNAL_OR)
     .gte("created_at", since.toISOString())
     .lt("created_at", until.toISOString())
     .not("ip_hash", "is", null)
@@ -359,7 +368,9 @@ async function groupByMetadataField(
 
   const counts = new Map<string, number>();
   for (const row of data) {
-    const value = (row.metadata as Record<string, unknown> | null)?.[field];
+    const md = row.metadata as Record<string, unknown> | null;
+    if (md?.internal === true) continue; // owner self-exclusion
+    const value = md?.[field];
     if (typeof value !== "string" || value.length === 0) continue;
     counts.set(value, (counts.get(value) ?? 0) + 1);
   }
@@ -412,6 +423,7 @@ async function affiliateClickBreakdown(
   if (!error && data) {
     for (const row of data) {
       const md = row.metadata as Record<string, unknown> | null;
+      if (md?.internal === true) continue; // owner self-exclusion
       const raw = typeof md?.partner_id === "string" ? md.partner_id : "";
       const pid = raw.toLowerCase();
       const isToday = typeof row.created_at === "string" && new Date(row.created_at) >= todayStart;
@@ -473,7 +485,9 @@ async function groupByMetadataFieldWithNone(
 
   const counts = new Map<string, number>();
   for (const row of data) {
-    const value = (row.metadata as Record<string, unknown> | null)?.[field];
+    const md = row.metadata as Record<string, unknown> | null;
+    if (md?.internal === true) continue; // owner self-exclusion
+    const value = md?.[field];
     const key = typeof value === "string" && value.length > 0 ? value : "(none)";
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
@@ -499,7 +513,9 @@ async function topMakesSince(
 
   const counts = new Map<string, number>();
   for (const row of data) {
-    const m = (row.metadata as Record<string, unknown> | null)?.make;
+    const md = row.metadata as Record<string, unknown> | null;
+    if (md?.internal === true) continue; // owner self-exclusion
+    const m = md?.make;
     if (typeof m !== "string" || m.length === 0) continue;
     counts.set(m, (counts.get(m) ?? 0) + 1);
   }
@@ -544,6 +560,9 @@ async function pageViewAnalytics(
 
   for (const row of data) {
     const metadata = (row.metadata as Record<string, unknown> | null) ?? null;
+
+    // Owner self-exclusion flag (device-set) — drop before any aggregation.
+    if (metadata?.internal === true) continue;
 
     const path = metadata?.path;
     // Exclude internal/admin pages (owner's own visits) from BOTH topPages

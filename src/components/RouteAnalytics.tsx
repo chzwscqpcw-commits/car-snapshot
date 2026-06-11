@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { isInternalTraffic, setInternalTraffic } from "@/lib/tracking";
 
 /**
  * Global first-party page-view tracker. Fires a `page_view` to /api/event on
@@ -38,6 +39,12 @@ function sendPageView(): void {
   let utmSource: string | undefined;
   try {
     const params = new URLSearchParams(window.location.search);
+    // Owner self-exclusion toggle: ?internal=1 sets the flag, ?internal=0
+    // clears it. Processed before building the payload so this very page_view
+    // is tagged correctly on the hit that flips it on.
+    const internalParam = params.get("internal");
+    if (internalParam === "1") setInternalTraffic(true);
+    else if (internalParam === "0") setInternalTraffic(false);
     utmSource = params.get("utm_source") || undefined;
   } catch {
     utmSource = undefined;
@@ -48,6 +55,7 @@ function sendPageView(): void {
     referrer: typeof document !== "undefined" ? document.referrer || "" : "",
   };
   if (utmSource) payload.utm_source = utmSource;
+  if (isInternalTraffic()) payload.internal = true;
 
   const body = JSON.stringify({ type: "page_view", payload });
 

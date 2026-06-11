@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import InternalTrafficToggle from "@/components/InternalTrafficToggle";
 import {
   Activity,
   Bell,
@@ -728,6 +729,8 @@ export default function DataHealthPage() {
             </button>
           </div>
         </header>
+
+        <InternalTrafficToggle />
 
         {loading && (
           <div className="space-y-3">
