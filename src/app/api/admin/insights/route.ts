@@ -74,6 +74,8 @@ type Digest = {
   partnerClicksToday: number;
   partnerClicks7d: number;
   partnerByContext7d: { context: string; count: number }[];
+  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic).
+  partnerByAffiliate7d: { name: string; count: number }[];
   reminderViews7d: number;
   reminderSignups7d: number;
 };
@@ -196,11 +198,23 @@ async function gatherDigest(): Promise<Digest> {
   }
 
   const partnerCtx = new Map<string, number>();
+  const AFFILIATES = [
+    { name: "carVertical", match: (p: string) => p.startsWith("carvertical") },
+    { name: "BookMyGarage", match: (p: string) => p.startsWith("bookmygarage") },
+    { name: "ClickMechanic", match: (p: string) => p.startsWith("clickmechanic") },
+  ];
+  const affCounts = new Map<string, number>(AFFILIATES.map((a) => [a.name, 0]));
   for (const row of partnerRows.data ?? []) {
-    const ctx = (row.metadata as Record<string, unknown> | null)?.click_context;
-    if (typeof ctx !== "string" || ctx.length === 0) continue;
-    partnerCtx.set(ctx, (partnerCtx.get(ctx) ?? 0) + 1);
+    const md = row.metadata as Record<string, unknown> | null;
+    const ctx = md?.click_context;
+    if (typeof ctx === "string" && ctx.length > 0) {
+      partnerCtx.set(ctx, (partnerCtx.get(ctx) ?? 0) + 1);
+    }
+    const pid = typeof md?.partner_id === "string" ? md.partner_id.toLowerCase() : "";
+    const aff = AFFILIATES.find((a) => a.match(pid));
+    if (aff) affCounts.set(aff.name, (affCounts.get(aff.name) ?? 0) + 1);
   }
+  const partnerByAffiliate7d = AFFILIATES.map((a) => ({ name: a.name, count: affCounts.get(a.name) ?? 0 }));
 
   const topPages = Array.from(pathCounts.entries())
     .map(([path, views]) => ({ path, views }))
@@ -226,6 +240,7 @@ async function gatherDigest(): Promise<Digest> {
     partnerClicksToday,
     partnerClicks7d,
     partnerByContext7d,
+    partnerByAffiliate7d,
     reminderViews7d,
     reminderSignups7d,
   };
@@ -248,28 +263,25 @@ function buildPrompt(d: Digest): string {
       ? d.trafficSources.map((s) => `  - ${s.source}: ${s.visits24h} in 24h, ${s.visits7d} in 7 days`)
       : ["  - (no external sources recorded yet)"]),
     "",
-    `Partner-link clicks (these earn affiliate revenue) — today: ${d.partnerClicksToday}, last 7 days: ${d.partnerClicks7d}`,
-    "Partner clicks by placement (last 7 days):",
-    ...(d.partnerByContext7d.length
-      ? d.partnerByContext7d.map((c) => `  - ${c.context}: ${c.count}`)
-      : ["  - (no partner clicks recorded yet)"]),
+    `Affiliate partner clicks (these earn money) — last 7 days, by partner:`,
+    ...d.partnerByAffiliate7d.map((a) => `  - ${a.name}: ${a.count}`),
+    `  (all partner-link clicks — today: ${d.partnerClicksToday}, last 7 days: ${d.partnerClicks7d})`,
     "",
     `MOT-reminder form — views (last 7 days): ${d.reminderViews7d}, sign-ups (last 7 days): ${d.reminderSignups7d}`,
   ].join("\n");
 
   return [
-    "You are a friendly analytics assistant explaining a website's recent activity to its owner.",
-    "The owner is a new developer with NO technical or analytics background, so write in plain, warm,",
-    "everyday English. NO jargon (avoid words like 'conversion', 'CTR', 'sessions', 'metrics', 'funnel').",
-    "Use the concrete numbers from the data below — do NOT invent any numbers that aren't there.",
+    "You are a sharp, friendly analytics assistant giving a website owner a QUICK morning-glance snapshot.",
+    "The owner is non-technical, so write in plain, warm English with NO jargon (avoid 'conversion', 'CTR',",
+    "'sessions', 'metrics', 'funnel'). Use ONLY the numbers below — never invent any.",
     "",
-    "Write about 3 short paragraphs covering, in this order:",
-    "1. How many people visited (frame the 24-hour and 7-day numbers simply).",
-    "2. What visitors focused on — describe the top pages in human terms (e.g. 'the MOT history page').",
-    "3. How they arrived — call out things like LinkedIn, Google search, or coming directly.",
-    "4. How they engaged with the money-making parts — partner-link clicks and the MOT-reminder",
-    "   sign-up form, mentioning the specific counts.",
-    "Then finish with ONE simple, encouraging insight or gentle suggestion.",
+    "BE SUPER CONCISE: 3–4 short sentences total, no headings, no preamble, no bullet points. Cover, briefly:",
+    "  • visitors today vs last 7 days, in one line;",
+    "  • the single most notable thing about where people came from or what they looked at;",
+    "  • PARTNER PERFORMANCE — lead with the affiliate-link clicks by partner (carVertical, BookMyGarage,",
+    "    ClickMechanic), since these earn money, plus the MOT-reminder sign-ups;",
+    "  • end with the ONE standout insight or gentle suggestion.",
+    "If a partner has zero clicks, it's fine to skip it. Think 'quick snapshot', not a report.",
     "",
     "Here is the data:",
     "",
@@ -299,7 +311,7 @@ async function generateViaGroq(prompt: string): Promise<string | null> {
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
-        max_tokens: 500,
+        max_tokens: 220,
         temperature: 0.5,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -334,7 +346,7 @@ async function generateViaAnthropic(prompt: string): Promise<string | null> {
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5",
-        max_tokens: 500,
+        max_tokens: 220,
         messages: [{ role: "user", content: prompt }],
       }),
     });
