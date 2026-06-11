@@ -8,6 +8,7 @@ import ServicingCTA from "@/components/ServicingCTA";
 import MileageResult from "@/components/tools/MileageResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -235,6 +236,10 @@ export default async function MileageCheckPage({
             { value: "Since 2005", label: "MOT mileage on record" },
           ]}
         />
+
+        <div className="mt-8">
+          <CarVerticalReportCTA variant="mileage" context="mileage-carvertical" />
+        </div>
 
         <div className="space-y-8 text-slate-300">
           <section>

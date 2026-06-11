@@ -182,16 +182,26 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // direct; on approval carVertical issues its OWN tracking link (Post Affiliate
   // Pro), so replace the whole url/buildLink below with their link format (and
   // its sub-id/clickref param name), then flip pending:false.
+  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6). Tracking link =
+  // carVertical's branded deal domain; affiliate+offer are encoded in the path
+  // (NCRBZ8/6JHXF), so the €6 attribution is independent of any extra params.
+  // PLACEMENT TAG → `sub2` (NOT sub1: carVertical's landing-page template maps
+  // {sub1}→voucher, so a sub1 value would show as a bogus voucher to the user;
+  // sub2 is tracked in Everflow reporting but not forwarded to the page).
+  // NO reg pre-fill: their precheck template only forwards sub1/source_id/
+  // affiliate_id, so a `vin` param wouldn't reach the page (ask carVertical if
+  // they can enable a plate pre-fill later). Logo still a placeholder wordmark
+  // pending carVertical's official asset.
   carVertical: {
-    url: "https://www.carvertical.com/gb?ref=PENDING_CARVERTICAL_REF",
+    url: "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF",
     name: "carVertical",
     isAffiliate: true,
-    pending: true,
+    pending: false,
     description: "Full vehicle history check — finance, stolen, write-off & mileage records",
     shortDescription: "History check",
     buildLink: (_reg: string, clickref?: string) => {
-      const base = "https://www.carvertical.com/gb?ref=PENDING_CARVERTICAL_REF";
-      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
+      const base = "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF";
+      return clickref ? `${base}&sub2=${encodeURIComponent(clickref)}` : base;
     },
   },
   // HPI Check — the brand-name UK history check (the phrase consumers actually
