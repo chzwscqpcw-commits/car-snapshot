@@ -19,6 +19,7 @@ import {
   type LookupVehicle,
 } from "@/components/tools/shared";
 import SellCarCTA from "@/components/SellCarCTA";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -269,6 +270,12 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
       <SellCarCTA context="valuation-result" regNumber={vrm} />
+      {/* Buyer slice: someone valuing a car they're considering buying is the
+          ideal full-history-report lead. Sits between the seller CTA (WBAC) and
+          the owner CTA (BMG MOT) so each journey has its natural next step. */}
+      <div className="mt-4">
+        <CarVerticalReportCTA variant="report" context="valuation-result-carvertical" regNumber={vrm} />
+      </div>
       <BmgHook vrm={vrm} />
       <Disclaimer />
     </ToolResultLayout>
