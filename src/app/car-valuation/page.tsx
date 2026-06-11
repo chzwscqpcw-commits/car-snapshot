@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
-import ConversionWidget from "@/components/stats/ConversionWidget";
+import ValuationConversionWidget from "@/components/ValuationConversionWidget";
 import ValuationHeroReg from "@/components/ValuationHeroReg";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -290,7 +290,7 @@ export default async function CarValuationPage({
 
       {/* --- MAIN: Reg lookup + reminder bridge --- */}
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-10 sm:py-10">
-        <ConversionWidget
+        <ValuationConversionWidget
           headline="Get your free valuation now"
           subtext="Enter any UK registration number to see an estimated value range, plus full vehicle history, MOT records and more — no signup."
           reminderHeadline="Already own this car? Protect its value with a free MOT reminder"

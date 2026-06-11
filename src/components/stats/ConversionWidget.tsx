@@ -13,6 +13,13 @@ interface ConversionWidgetProps {
   subtext?: string;
   /** Show MOT reminder signup below the reg lookup */
   showReminder?: boolean;
+  /**
+   * Show the reg-lookup box. Defaults true. Set false to render only the MOT
+   * reminder — used by the valuation_hero_reg_v1 A/B test, where variant "b"
+   * moves the reg box into the page hero, so a second one here would be a
+   * redundant duplicate.
+   */
+  showLookup?: boolean;
   /** Reminder headline override */
   reminderHeadline?: string;
   /**
@@ -40,6 +47,7 @@ export default function ConversionWidget({
   headline = "Check Your Own Vehicle",
   subtext = "Enter any UK reg plate for a free instant check — MOT history, tax status, mileage, valuations and more.",
   showReminder = true,
+  showLookup = true,
   reminderHeadline = "Never miss your MOT",
   targetPath = "/",
 }: ConversionWidgetProps) {
@@ -212,6 +220,7 @@ export default function ConversionWidget({
   return (
     <div className="my-10 space-y-6">
       {/* --- Reg lookup section --- */}
+      {showLookup && (
       <div id="check-vehicle" className="scroll-mt-24 rounded-xl border border-blue-800/40 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 p-6 sm:p-8">
         <h3 className="text-xl font-bold text-gray-100">{headline}</h3>
         <p className="mx-auto mt-2 max-w-lg text-sm text-gray-400">
@@ -263,6 +272,7 @@ export default function ConversionWidget({
           Free &amp; instant &mdash; no signup required
         </p>
       </div>
+      )}
 
       {/* --- MOT Reminder section --- */}
       {showReminder && !reminderSuccess && (
