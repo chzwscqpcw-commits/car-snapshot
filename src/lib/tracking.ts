@@ -66,6 +66,13 @@ export const EXPERIMENTS: Record<string, string> = {
   // Conversion = pdf_download (auto-attributed via trackEvent for exposed
   // sessions). Note: at current traffic this needs weeks to reach significance.
   PDF_CTA: "pdf_cta_copy_v1",
+  // Hero reg-box test on /car-valuation (the #1 organic entry page). Variant
+  // "a" = control (today's layout: hero pitches, MobileSearchCue points down to
+  // the reg box in the section below). Variant "b" = a reg box placed in the
+  // hero itself, above the fold. Conversion = reg_search (auto-attributed via
+  // trackConversion for exposed sessions). Measures whether an above-the-fold
+  // search input lifts the share of exposed sessions that start a valuation.
+  VALUATION_HERO_REG: "valuation_hero_reg_v1",
 };
 
 // ── A/B attribution model (three tiers) ─────────────────────────────────────

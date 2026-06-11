@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import MobileSearchCue from "@/components/MobileSearchCue";
+import ValuationHeroReg from "@/components/ValuationHeroReg";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import ServicingCTA from "@/components/ServicingCTA";
@@ -281,8 +281,10 @@ export default async function CarValuationPage({
             </div>
           </div>
 
-          {/* Mobile-only A/B/C test affordance pointing to the search input below */}
-          <MobileSearchCue />
+          {/* A/B test valuation_hero_reg_v1: control renders the mobile search
+              cue (points down to the reg box below); treatment renders a reg box
+              in the hero itself. */}
+          <ValuationHeroReg targetPath="/car-valuation" />
         </div>
       </div>
 
