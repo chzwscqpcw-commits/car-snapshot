@@ -36,6 +36,10 @@ Here are ten checks you should do before handing over any money.
 
 Before you even go to see the car, look up the registration number. You can check the basics for free — [MOT history](/mot-check), [tax status](/tax-check), [mileage records](/mileage-check), and vehicle details — using a [free car check](/car-check).
 
+For the paid layer — finance, theft, damage and mileage-rollback checks — we recommend a **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** (from £16.79 a report with our 20% discount). Pair it with a physical inspection and you've covered both the paperwork and the metal.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 This alone will tell you if the car's MOT is current, whether the mileage adds up across past tests, and whether the car matches what's being advertised. If the advert says "2019 Ford Focus, 40,000 miles" but the records show 70,000 miles at its last MOT, you've saved yourself a wasted trip.
 
 ## 2. Check the MOT history in detail

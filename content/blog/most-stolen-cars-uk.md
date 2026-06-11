@@ -82,7 +82,7 @@ If you're buying a used car, it's worth checking for signs that the vehicle may 
 - **Mileage inconsistencies** — Check the [mileage history](/mileage-check) for jumps or drops that could indicate the car's identity has been tampered with.
 - **VIN discrepancies** — The Vehicle Identification Number on the windscreen, door frame, and engine should all match.
 
-For a definitive stolen vehicle check against the Police National Computer, you'll need a paid vehicle history report. But a free check can surface the red flags that tell you to dig deeper. Read our full guide on [how to check if a car is stolen](/blog/how-to-check-if-car-is-stolen).
+For a definitive theft check, you'll need a paid vehicle history report such as a **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** *(20% off with our link; we may earn a commission)*. But a free check can surface the red flags that tell you to dig deeper. Read our full guide on [how to check if a car is stolen](/blog/how-to-check-if-car-is-stolen).
 
 ## How to protect your car from theft
 

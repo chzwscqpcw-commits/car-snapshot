@@ -37,6 +37,10 @@ You can check this timeline instantly by entering the registration number on our
 
 ## Other ways to verify mileage
 
+### A full history check
+
+A **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** checks for mileage rollbacks across over 1,000 data sources in 45+ countries — catching a car clocked between MOTs or before it was imported, which a basic MOT lookup can miss. Free Plate Check readers get 20% off. *(carVertical provides and sells the report; we may earn a commission.)*
+
 ### Service history
 
 If the seller has a service history — whether a stamped book or a folder of invoices — check the mileage recorded at each service against the MOT records. They should broadly match. If the service book shows 60,000 miles at a service date but the MOT closest to that date shows 40,000, something doesn't add up.

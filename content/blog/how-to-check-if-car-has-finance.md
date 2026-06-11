@@ -44,7 +44,9 @@ For a definitive answer, you need a paid vehicle history report that queries the
 - **Stolen markers** — a check against the Police National Computer
 - **Mileage discrepancies** — recorded across finance and insurance records
 
-These reports query the main UK finance databases, where finance companies register their interest in vehicles. If a car has an active finance agreement, it should appear in these records. A full report typically costs £10–£20.
+These reports query the main UK finance databases, where finance companies register their interest in vehicles. If a car has an active finance agreement, it should appear in these records. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** for the paid layer — its report flags outstanding finance (financial restrictions) alongside mileage rollbacks, theft records and damage history, from around £16.79 a report with our 20% discount.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
 ### Ask the seller directly
 
@@ -88,6 +90,6 @@ If you discover you've bought a car with outstanding finance:
 
 ## The bottom line
 
-Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, spend £10–£20 on a paid vehicle history report. It's the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
+Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** — is the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
 
 Start with a [free car check](/car-check) to cover everything else — vehicle details, MOT history, tax status, mileage, ULEZ compliance, and recalls. Then add a paid finance check for complete peace of mind.

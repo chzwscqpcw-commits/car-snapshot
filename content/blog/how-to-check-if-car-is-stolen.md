@@ -31,7 +31,9 @@ What you can do for free is use a [free car check](/car-check) to look for warni
 
 ## How to check the PNC for stolen vehicles
 
-To query the PNC directly, you need a paid vehicle history report. A full report includes a stolen-vehicle check against the PNC — alongside outstanding finance, write-off status and mileage data — and typically costs around £20.
+To check this properly, you need a paid vehicle history report. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)**, whose report checks theft records (drawing on police and insurance data) alongside outstanding finance, damage history and mileage rollbacks — from around £16.79 a report with our 20% discount.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
 These services will tell you whether the vehicle has been reported stolen and whether there are any other markers (such as outstanding finance or insurance write-off history).
 
@@ -99,6 +101,6 @@ This is different from the rules around outstanding finance, where an innocent b
 
 ## The bottom line
 
-A stolen vehicle check is one of the few things a free car check can't fully cover, because the PNC database isn't publicly accessible. For peace of mind on any significant purchase, add a £20 paid vehicle history report.
+A stolen vehicle check is one of the few things a free car check can't fully cover, because the PNC database isn't publicly accessible. For peace of mind on any significant purchase, add a paid vehicle history report such as a **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** (20% off with our link).
 
 But always start with a [free car check](/car-check) — it covers vehicle details, [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [safety recalls](/recall-check), and [valuation](/car-valuation). That's a comprehensive first screen that costs nothing and takes 30 seconds.
