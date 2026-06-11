@@ -146,6 +146,15 @@ export default async function MileageCheckPage({
       {hasResult ? (
         <>
           <MileageResult vrm={cleanedVrm!} />
+          {/* High-intent: they've just seen the mileage records — offer the full
+              history check (clocking/rollback) right here. */}
+          <div className="mx-auto max-w-3xl px-4 -mt-2 pb-10">
+            <CarVerticalReportCTA
+              variant="mileage"
+              context="mileage-result-carvertical"
+              regNumber={cleanedVrm!}
+            />
+          </div>
           <MotReminderBanner />
         </>
       ) : (
@@ -229,6 +238,10 @@ export default async function MileageCheckPage({
           targetPath="/mileage-check"
         />
 
+        <div className="mt-8 mb-10">
+          <CarVerticalReportCTA variant="mileage" context="mileage-carvertical" />
+        </div>
+
         <StatCallouts
           stats={[
             { value: "1 in 16", label: "cars are clocked", tone: "warn" },
@@ -237,11 +250,7 @@ export default async function MileageCheckPage({
           ]}
         />
 
-        <div className="mt-8">
-          <CarVerticalReportCTA variant="mileage" context="mileage-carvertical" />
-        </div>
-
-        <div className="space-y-8 text-slate-300">
+        <div className="mt-12 space-y-8 text-slate-300">
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">What is a mileage check?</h2>
             <p className="leading-relaxed mb-3">

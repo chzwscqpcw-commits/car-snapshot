@@ -182,29 +182,34 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // direct; on approval carVertical issues its OWN tracking link (Post Affiliate
   // Pro), so replace the whole url/buildLink below with their link format (and
   // its sub-id/clickref param name), then flip pending:false.
-  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6). Tracking link =
-  // carVertical's branded deal domain; affiliate+offer are encoded in the path
-  // (NCRBZ8/6JHXF), so the €6 attribution is independent of any extra params.
-  // DISCOUNT: `sub1=freeplatecheck` → maps to `voucher=freeplatecheck` on the
-  // landing page = our 20% partner discount (Dominyka, 2026-06-11). Verified live:
-  // the .deal link forwards it as voucher=freeplatecheck and still mints a FRESH
-  // _ef_transaction_id per click (reliable tracking) + utm_source=427 (us).
-  // PLACEMENT TAG → `sub2` (recorded in Everflow reporting, not forwarded to LP).
-  // NOTE we use this carvertical.deal tracking link rather than Dominyka's
-  // recommended DIRECT precheck links, because those carry a FIXED
-  // _ef_transaction_id (same for every visitor → would mis-count clicks). Pending
-  // her confirmation; reg pre-fill (vin) + the precheck LP would come via the
-  // direct links, so revisit if she confirms the fixed id is fine.
+  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6). Links CONFIRMED by
+  // Dominyka (carVertical account manager): use her DIRECT destination links —
+  // correctly generated (the fixed _ef_transaction_id is intentional, their
+  // system handles it) and the only way to get the VIN/reg PRE-FILL + the
+  // precheck landing page. We substitute the searched plate into the `&vin=XXXX`
+  // placeholder. All carry voucher=freeplatecheck (our 20% discount) +
+  // utm_source=427 (us). Three variants by placement (distinct transaction_id
+  // each → carVertical can tell report vs mileage vs blog); our OWN per-placement
+  // detail still comes from the partner_click `context`, independent of the link.
   carVertical: {
-    url: "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck",
+    url: "https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427",
     name: "carVertical",
     isAffiliate: true,
     pending: false,
     description: "Full vehicle history check — finance, stolen, write-off & mileage records",
     shortDescription: "History check",
-    buildLink: (_reg: string, clickref?: string) => {
-      const base = "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck";
-      return clickref ? `${base}&sub2=${encodeURIComponent(clickref)}` : base;
+    buildLink: (reg: string, clickref?: string) => {
+      const ctx = (clickref ?? "").toLowerCase();
+      const REPORT =
+        "https://www.carvertical.com/gb/precheck?_ef_transaction_id=beccc9083e45445496b0863f80b81f05&voucher=freeplatecheck&utm_medium=AFF&utm_source=427&vin=XXXXXXXXXXXXXXXXX";
+      const MILEAGE =
+        "https://www.carvertical.com/gb/precheck?_ef_transaction_id=f395ff89e75c4a0983fc8ba8797c35e0&voucher=freeplatecheck&utm_medium=AFF&utm_source=427&vin=XXXXXXXXXXXXXXXXX";
+      const BLOG =
+        "https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427";
+      if (ctx.includes("blog")) return BLOG;
+      const base = ctx.includes("mileage") ? MILEAGE : REPORT;
+      const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
+      return base.replace("XXXXXXXXXXXXXXXXX", encodeURIComponent(plate));
     },
   },
   // HPI Check — the brand-name UK history check (the phrase consumers actually
