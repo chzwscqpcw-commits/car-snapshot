@@ -5248,19 +5248,9 @@ END:VEVENT
               </DataReveal>
             )}
 
-            {/* CARVERTICAL FULL-HISTORY REPORT — buyer-intent paid history check
-                (renders null until carVertical is live; see partners.ts +
-                CarVerticalReportCTA). Preview at /preview/carvertical. */}
-            {data && (
-              <DataReveal delay={740}>
-                <div className="mb-8">
-                  <CarVerticalReportCTA regNumber={data.registrationNumber} context="report-carvertical-nextsteps" />
-                </div>
-              </DataReveal>
-            )}
-
-            {/* PDF REPORT CTA */}
-            <DataReveal delay={750}>
+            {/* PDF REPORT CTA — free product first, so the paid carVertical
+                upsell below never reads as "the report costs money". */}
+            <DataReveal delay={740}>
               <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-slate-200">Save this report</p>
@@ -5288,6 +5278,19 @@ END:VEVENT
                   makeModel={data ? `${data.make} ${data.model}` : undefined}
                 />
               </div>
+            )}
+
+            {/* CARVERTICAL FULL-HISTORY REPORT — the optional paid "go further"
+                step, placed AFTER the free PDF so it reads as an upsell, not as
+                a paywall on the report. Buyer-intent only; renders null until
+                carVertical is live (see partners.ts). Preview at
+                /preview/carvertical. */}
+            {data && (
+              <DataReveal delay={770}>
+                <div className="mb-8">
+                  <CarVerticalReportCTA regNumber={data.registrationNumber} context="report-carvertical-nextsteps" />
+                </div>
+              </DataReveal>
             )}
 
             {/* BUYING CHECKLIST */}
