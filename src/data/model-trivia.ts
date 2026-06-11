@@ -1,14 +1,20 @@
 // Curated make/model "Did you know?" trivia.
 //
-// Keys are NORMALISED "MAKE|MODEL" (models) or "MAKE" (makes), matched against the
-// expanded lookupModel with MERCEDES->MERCEDES BENZ / VW->VOLKSWAGEN / LANDROVER->LAND
-// ROVER aliases applied in model-facts.ts. makeTrivia is the make-level fallback.
+// Keys are NORMALISED "MAKE|MODEL" (models) or "MAKE" (makes) — uppercase, with
+// -/_ collapsed to spaces, matched against model-facts.ts getCuratedFacts (which
+// normalises the searched make/model the same way; MERCEDES->MERCEDES BENZ etc.).
 //
-// Facts are web-researched + independently fact-checked (fun-facts-research workflow,
-// 2026-06) plus hand-curated. Quality bar: surprising "tell your mate" facts, NOT dry
-// sales stats. Before adding more at volume, route through the verify workflow.
+// Facts are web-researched + independently fact-checked (fun-facts-research
+// workflow, 2026-06) plus hand-curated. Bar: surprising "tell your mate" facts,
+// NOT dry sales stats. Add more at volume only via the verify workflow.
 
 export const modelTrivia: Record<string, string[]> = {
+  "AC|COBRA": [
+    "In June 1964 an AC Cobra Coupé hit 185mph on the public M1 motorway at dawn, sparking debate that helped bring Britain's 70mph limit.",
+    "Carroll Shelby said the \"Cobra\" name came to him in a dream, and he scribbled it on a notepad by his bed in the middle of the night.",
+    "Shelby launched the whole project by bluffing — telling AC he had a Ford engine deal, then telling Ford he had a finished British chassis, when neither was true.",
+    "The Cobra had no speedometer for its M1 record run; the team worked out 185mph using the rev-counter and a slide rule.",
+  ],
   "AUDI|A1": [
     "Audi hadn't built a supermini since the late-1970s Audi 50, making the 2010 A1 a comeback to a class it abandoned for over 30 years.",
     "The hot A1 quattro was capped at just 333 cars to honour the 1981 Sport Quattro — and all 333 were left-hand drive only.",
@@ -35,6 +41,52 @@ export const modelTrivia: Record<string, string[]> = {
   "AUDI|TT": [
     "The Audi TT's distinctive rounded design made it an instant icon when it launched in 1998.",
   ],
+  "AUSTIN|ALLEGRO": [
+    "The Allegro's \"quartic\" square steering wheel was a UK motoring first, but ridicule saw it quietly dropped after just 18 months.",
+    "It was reportedly banned from London's Blackwall Tunnel over fears that towing a stricken Allegro could pop its rear window clean out.",
+    "Designer Harris Mann sketched a sleek wedge, but management's borrowed Maxi engine and Marina heater forced the bonnet up into its famous podgy shape.",
+    "The posh Vanden Plas 1500 grafted a tiny Rolls-Royce-style chrome grille, walnut dash and leather seats onto the humble Allegro.",
+  ],
+  "AUSTIN|HEALEY 3000": [
+    "In 1960, Pat Moss and Ann Wisdom drove a 3000 to win the gruelling Liège-Rome-Liège rally — the first all-female crew ever to win an international rally.",
+    "That 96-hour, 2,200-mile marathon was so brutal only 13 of 90 cars finished — and the top three were all Austin-Healeys.",
+    "Donald Healey, the marque's founder, once hit over 200mph at Bonneville salt flats alongside a young Carroll Shelby.",
+    "It's nicknamed the \"Big Healey\" purely by contrast with its tiny sibling, the Frogeye Sprite.",
+    "The 3000 was killed off in 1968 because the firm couldn't afford to make it meet America's strict new safety and emissions rules.",
+  ],
+  "AUSTIN|MAESTRO": [
+    "Early MG and Vanden Plas Maestros had a \"talking dashboard\" — a synthesised voice that nagged you about your seatbelt, in 36 different warning phrases.",
+    "That nagging voice belonged to New Zealand actress Nicolette McKenzie, but it proved so unreliable that some cars simply wouldn't shut up.",
+    "Billed as Britain's first \"computer-age car,\" the Maestro's body shape was defined by computer and largely assembled by robots at Cowley.",
+    "The 152bhp MG Maestro Turbo hit 60mph in 6.7 seconds — quicker off the line than an entry-level Ferrari Mondial of the day.",
+    "Only 505 Tickford-built MG Maestro Turbos were made, each hand-finished with a five-piece body kit at Tickford's Bedworth plant.",
+  ],
+  "AUSTIN|MAXI": [
+    "The Maxi was the last car designed by Sir Alec Issigonis, the engineer behind the Mini and Morris Minor.",
+    "Its doors were lifted straight from the Austin 1800 \"Landcrab\" to save tooling costs, stretching its odd, lengthy wheelbase.",
+    "Fold both rows of seats flat and the Maxi turned into a double bed for two.",
+    "Launched in 1969, it was Britain's first car with \"all the fives\" — five doors, five gears and five seats.",
+  ],
+  "AUSTIN|METRO": [
+    "British Leyland launched the Metro to dealers aboard a chartered cruise liner, the Vistafjord, sailing to the Isle of Man — and rough seas left some guests too seasick to test-drive it.",
+    "Prince Charles bought 19-year-old Lady Diana her red \"courting car\" Metro, which now sits in Coventry Transport Museum.",
+    "The mid-engined, four-wheel-drive MG Metro 6R4 rally car shared barely anything but its name with the shopping Metro you'd see in Tesco's car park.",
+    "Staff picked the name \"Metro\" by ballot over \"Match\" and \"Maestro\", but a bus-and-train firm objected, forcing BL to advertise it only as the \"Mini Metro\".",
+  ],
+  "AUSTIN|MONTEGO": [
+    "The talking dashboard's warning voice belonged to New Zealand actress Nicolette McKenzie, chosen to sound warm rather than bossy.",
+    "That synthesised voice had just a 32-word vocabulary, yet BL recorded it in 15 languages for export markets.",
+    "Drivers found the talking dash so irritating and fault-prone that BL quietly dropped it within a couple of years.",
+    "The Montego was the very last new car ever launched under the historic Austin marque.",
+    "Pre-production cars were secretly tested wearing \"Rover\" badges, badged 413i, 416i and 420 as a planned Rover 400.",
+  ],
+  "AUSTIN|PRINCESS": [
+    "The Princess shared its designer, Harris Mann, and its dramatic \"wedge\" shape with the Triumph TR7 sports car.",
+    "Within six months of launch it ditched the Austin, Morris and Wolseley badges to become \"Princess\" — a marque with no carmaker's name on it.",
+    "Harris Mann designed it as a practical five-door hatchback, but bosses killed the tailgate to avoid clashing with other British Leyland models.",
+    "Its raised rear roofline wasn't just styling — it cut aerodynamic lift at speed, an idea borrowed from Grand Prix cars.",
+    "It rode on BL's clever Hydragas suspension, chasing the magic-carpet smoothness of the Citroën CX.",
+  ],
   "BMW|1 SERIES": [
     "The whole first-generation BMW 1 Series was rear-wheel drive — virtually unheard of for a hatchback, making it uniquely sporty among family runabouts.",
     "BMW deliberately named the hot version the \"1 Series M Coupe\", reversing its usual badging so it wouldn't clash with the legendary 1978 M1 supercar.",
@@ -47,16 +99,40 @@ export const modelTrivia: Record<string, string[]> = {
     "The E30 M3 shared barely any body panels with the regular 3 Series — just the bonnet, roof and sunroof, with 12 unique aerodynamic panels added.",
     "The E30 M3 is the most successful touring car in history, racking up over 1,400 race wins worldwide.",
     "In its debut 1987 season the M3 swept touring car titles across Europe, Italy, Australia and Japan all at once.",
-    "The BMW 3 Series has been the brand's best-selling model since it launched in 1975.",
   ],
   "BMW|5 SERIES": [
     "The BMW 5 Series, launched in 1972, was the first BMW to use the now-familiar 'Series' naming.",
+  ],
+  "BMW|X1": [
+    "The first BMW X1 was secretly the only rear-wheel-drive X1 ever made — built on the 3 Series platform before later versions switched to front-wheel drive.",
+    "Since 2015 the X1 has shared its underpinnings with the MINI Countryman, so your BMW SUV is mechanically cousins with a MINI.",
+    "BMW rushed the X1 to market so urgently as fuel prices climbed that it slashed development and pre-production time by a remarkable 40 percent.",
+    "A blue-light BMW X1 built for emergency services was unveiled in 2013, kitted out with night-vision, a head-up display and live traffic navigation.",
+  ],
+  "BMW|X3": [
+    "The first-generation BMW X3 wasn't actually built by BMW — every one was assembled by contractor Magna Steyr in Graz, Austria.",
+    "Since 2010, all X3s sold in Britain have been built in South Carolina, USA — then shipped across the Atlantic.",
+    "BMW refuses to call the X3 an SUV, insisting on its own coined term \"Sports Activity Vehicle\" instead.",
+    "BMW's Spartanburg plant, where today's X3 is made, was the fastest factory start-up in automotive history and BMW's first full plant outside Germany.",
   ],
   "BMW|X5": [
     "The BMW X5, launched in 1999, was the brand's very first SUV.",
   ],
   "CITROEN|2CV": [
     "The Citroën 2CV was designed to carry farmers across fields without breaking the eggs — and stayed in production for 42 years.",
+  ],
+  "CITROEN|BERLINGO": [
+    "The 1996 Berlingo Coupe de Plage concept was a roofless beach buggy with two built-in deckchairs bolted into the back.",
+    "Citroën's stylists didn't actually design the Berlingo — it arrived from PSA's advanced studios, then became both the Berlingo and the Peugeot Partner.",
+    "The Berlingo's \"Modutop\" roof packed translucent overhead lockers so passengers could spot their stuff stashed up in the ceiling.",
+    "The Berlingo is the spiritual heir to the 2CV Fourgonnette van — the workhorse built so French farmers could cross fields without breaking the eggs.",
+  ],
+  "CITROEN|C1": [
+    "The C1 was built alongside its near-identical twins, the Peugeot 107 and Toyota Aygo, on one shared production line in Kolin, Czech Republic.",
+    "To cut cost and weight, five-door C1s skipped wind-down rear windows entirely, giving back-seat passengers only a small pop-out hinged pane.",
+    "The C1's boot has no metal tailgate, just a \"glassback\" rear window that hinges up on its own to keep the car light and cheap.",
+    "Stripped-out C1s are hugely popular in budget endurance racing, even tackling 24-hour races at Silverstone and Spa-Francorchamps.",
+    "A C1 endurance round once set a record-breaking grid of 99 cars lined up at Silverstone, one of the largest ever there.",
   ],
   "CITROEN|C3": [
     "The C3 Picasso's name was licensed from Pablo Picasso's estate, which struck a multi-million-dollar deal with Citroën and still takes royalties on every car sold.",
@@ -65,6 +141,35 @@ export const modelTrivia: Record<string, string[]> = {
     "Pablo Picasso's granddaughter publicly slammed the deal, saying she couldn't tolerate her grandfather's name being used to sell something as banal as a car.",
     "Top Gear magazine ranked the wacky-roofed C3 Pluriel among the 13 worst cars of the previous 20 years.",
   ],
+  "CITROEN|C4": [
+    "The original Citroen C4's fixed-hub steering wheel kept the centre stationary while the rim turned, enabling a uniquely shaped, load-spreading driver airbag.",
+    "First-gen C4s came with a built-in cabin perfume dispenser in the centre vent, scenting the air through the ventilation system.",
+    "The C4's famous 2005 \"dancing robot\" TV ad arrived a full two years before the first Transformers film hit cinemas.",
+    "The C4's ad robot boogied to \"Jacques Your Body\", choreographed by Marty Kudelka, Justin Timberlake's own dance choreographer.",
+    "In Sebastien Loeb's hands the C4 rally car was unbeatable on tarmac, winning every single asphalt rally it entered over four seasons.",
+  ],
+  "CITROEN|DS": [
+    "Its name is a pun: \"DS\" sounds like \"déesse,\" French for goddess, and philosopher Roland Barthes compared the car to a Gothic cathedral.",
+    "When 12 gunmen riddled De Gaulle's DS with bullets in 1962, its self-levelling suspension shrugged off the shot-out tyres and sped him to safety.",
+    "The DS was the first mass-production car with disc brakes, and later versions had headlights that swivelled up to 80° to follow the steering.",
+    "At its 1955 Paris debut it took 743 orders in the first 15 minutes and 80,000 by the show's end.",
+  ],
+  "CITROEN|PICASSO": [
+    "The car is named after Pablo Picasso — Citroën paid his estate for the right, with his son signing off the licensing deal.",
+    "Picasso's granddaughter Marina sued over the deal, fuming she couldn't tolerate the family name selling something as banal as a car.",
+    "Its famous TV adverts starred rebellious factory robots that secretly turned a car into a giant Picasso-style sculpture overnight.",
+  ],
+  "DACIA|DUSTER": [
+    "For Pikes Peak in 2011, Dacia built an 850bhp Duster \"No Limit\" powered by a tuned Nissan GT-R V6 engine.",
+    "Dacia is named after the ancient Roman region that's now Romania, where the brand began as a state-owned firm in 1966.",
+    "In January 2026 a Dacia, the Sandrider off-roader, won the gruelling Dakar Rally outright with Nasser Al-Attiyah driving.",
+  ],
+  "DACIA|SANDERO": [
+    "The Sandero name has Greek roots meaning \"warrior\" — a fitting badge for a budget car that fights hard on price.",
+    "On Top Gear, James May turned the Sandero into a running gag, announcing \"Good news!\" facts about it for Jeremy Clarkson to ignore.",
+    "It was the first-ever Renault model to launch outside Europe, debuting in Brazil in December 2007 before reaching UK showrooms.",
+    "Though sold as a Romanian Dacia, the Sandero was actually designed at Renault's Technocentre near Paris with help from engineers in Brazil.",
+  ],
   "FIAT|500": [
     "The original Fiat 500 — the 'Cinquecento' — launched in 1957; the modern 500 arrived in 2007 to mark its 50th anniversary.",
     "The all-electric Fiat 500e is built in Turin, Italy.",
@@ -72,13 +177,44 @@ export const modelTrivia: Record<string, string[]> = {
   "FIAT|PANDA": [
     "The Fiat Panda has been a European city-car staple since 1980.",
   ],
+  "FIAT|PUNTO": [
+    "The name \"Punto\" simply means \"point\" in Italian — Fiat wanted a fresh start after the Uno, so they began from a new point.",
+    "Designed by the legendary Giorgetto Giugiaro, the Punto won the Compasso d'Oro — Italy's most prestigious industrial design prize, usually given to furniture and gadgets.",
+    "The Punto was crowned 1995 European Car of the Year, comfortably beating the Volkswagen Polo by 370 points to 292.",
+    "A four-wheel-drive Grande Punto Abarth S2000 rally car packed 280bhp and racked up multiple European Rally Championship titles between 2006 and 2011.",
+  ],
+  "FORD|ANGLIA": [
+    "The Anglia's quirky backward-slanting rear window kept itself rain-free and was inspired by a feature on the luxury Lincoln Continental.",
+    "Its 105E \"Kent\" engine founded an engine family that powered Formula Ford racers for decades.",
+    "It was the first small British Ford to offer a four-speed gearbox.",
+    "Real 1962 Anglias played Harry Potter's flying car, with some sawn in half so cameras could film inside.",
+  ],
+  "FORD|CAPRI": [
+    "The Capri was meant to be called the \"Colt\", but Mitsubishi already owned the name, so Ford reached for the Italian island instead.",
+    "Its shape and the Mustang's iconic galloping-horse badge were both penned by the same man, Ford designer Phil Clark.",
+    "In ITV's Minder, Dennis Waterman's wheeler-dealer Terry McCann famously drove a Ford Capri through the show's early series.",
+    "To homologate it for racing, Ford built the right-hand-drive RS3100 at its Halewood plant on Merseyside, giving Britain its own Rallye Sport Capri.",
+  ],
+  "FORD|CORTINA": [
+    "The Cortina is named after Cortina d'Ampezzo, the Italian ski resort that hosted the 1956 Winter Olympics.",
+    "To launch it, Ford sent Cortinas hurtling down the resort's actual Olympic bobsled run in a stunt called \"Cortina Auto-Bobbing\".",
+    "It was styled by Roy Brown Jr, the very designer behind Ford's infamous flop, the Edsel.",
+    "Jim Clark's Lotus Cortina cornered so hard it famously cocked an inside front wheel clean off the ground.",
+    "Colin Chapman's radical Lotus rear suspension worked the bodywork so hard that early cars rippled around the roof and rear wings.",
+  ],
+  "FORD|ESCORT": [
+    "Pope John Paul II owned a humble 1976 Ford Escort 1.1 GL with no radio or air-con, loving the anonymity it gave him in Rome.",
+    "Prince Charles gave Princess Diana a Ford Escort Ghia as an engagement gift, complete with a silver frog mascot nodding to The Frog Prince fairytale.",
+    "The Escort RS Cosworth's iconic \"whale-tail\" wing was almost a wild triple-decker spoiler inspired by the Red Baron's Fokker triplane, but Ford axed it as too costly.",
+    "The 1980 front-wheel-drive Escort was nearly named \"Erika\" until Ford got cold feet, partly over the name's link to a notorious WWII German military march.",
+    "The RS Cosworth was the first mass-production car engineered to generate downforce at both the front and rear.",
+  ],
   "FORD|FIESTA": [
     "Ford's bosses voted for the name \"Bravo,\" but Henry Ford II personally overruled them and christened the supermini \"Fiesta\" for its alliteration with Ford.",
     "The \"Fiesta\" name actually belonged to rival General Motors, which had used it on a 1950s Oldsmobile and let Ford borrow it.",
     "To save time and money, Ford secretly tested the Fiesta's engine inside disguised Fiat 127 \"mule\" cars during development.",
     "A noise-emission flaw in the hot XR2's exhaust was fixed using heat-shielding tech borrowed from the Space Shuttle's re-entry body.",
     "Ford chose the Spanish word \"Fiesta\" partly to celebrate its brand-new factory in Valencia, where the car was built.",
-    "The Ford Fiesta was Britain's best-selling car for over a decade before production ended in 2023.",
   ],
   "FORD|FOCUS": [
     "Ford nearly couldn't call it the Focus in Germany — a 1998 court case from a magazine publisher forced a settlement before launch.",
@@ -86,7 +222,12 @@ export const modelTrivia: Record<string, string[]> = {
     "Colin McRae won the brutal 1999 Safari Rally in a brand-new Focus, a feat thought impossible with an untested car.",
     "On its very first outing at Monte Carlo, the rally Focus was setting fastest times but got disqualified for an illegal water pump.",
     "The road Focus is front-wheel drive, but its rally-winning RS WRC sibling was four-wheel drive with a 300bhp turbo engine.",
-    "The Ford Focus replaced the long-running Escort in 1998 and quickly became a UK best-seller.",
+  ],
+  "FORD|GRANADA": [
+    "Lower-spec early Granadas were badged \"Consul\" after a legal clash with TV-firm Granada Group — the Consul name was dropped in 1975.",
+    "The Granada's plush \"Ghia\" trim took its name from a Turin coachbuilder Ford bought in 1970 simply because it liked the name.",
+    "The Sweeney's tyre-screeching cop car started as a brighter-painted Consul, swapped to a Granada 3.0S only after Ford axed the Consul range.",
+    "Mk1 Granadas were built side-by-side in Dagenham, Essex, and Cologne, Germany, until 1976 when production moved entirely to Germany.",
   ],
   "FORD|KUGA": [
     "Kuga means plague in Croatian, Serbian, Bosnian and Slovenian, reportedly denting the SUV's sales across the Balkans.",
@@ -99,7 +240,7 @@ export const modelTrivia: Record<string, string[]> = {
     "The Mondeo replaced the Sierra in 1993; UK sales ended in 2022.",
   ],
   "FORD|MUSTANG": [
-    "The Ford Mustang, launched in 1964, created the 'pony car' class and is one of the best-selling sports cars ever.",
+
   ],
   "FORD|PUMA": [
     "The 1997 launch advert digitally resurrected Steve McQueen, splicing fresh footage with his 1968 Bullitt chase to put him behind a Puma's wheel.",
@@ -108,6 +249,13 @@ export const modelTrivia: Record<string, string[]> = {
     "The name came after Ford rejected \"Bobcat\" — picking a bigger cat that, handily, doesn't have a docked tail.",
     "Just 500 wide-arched Ford Racing Pumas were hand-built by Tickford in Daventry, making them one of the rarest Fords ever sold.",
     "The modern Ford Puma revived a name first used on a sporty 1990s coupe.",
+  ],
+  "FORD|SIERRA": [
+    "The Sierra's curvy shape earned it the nickname \"the jellymould\" — and its fleet popularity got it dubbed \"the salesman's spaceship\".",
+    "London's Victoria and Albert Museum staged a whole exhibition on how the Sierra was designed, complete with a demonstration model.",
+    "Early Sierras were so twitchy in crosswinds that Ford added small aero strakes behind the rear windows in 1985 to calm them down.",
+    "The race-bred Sierra RS500 Cosworth had eight fuel injectors, but four were left unconnected on road cars — switched on, they unlocked huge power for the track.",
+    "The RS500 was so dominant it won an astonishing 84.6% of races it entered, helping kill off the Group A racing format.",
   ],
   "FORD|TRANSIT": [
     "Scotland Yard reportedly said Ford Transits were used in 95% of UK bank raids in the early 1970s, dubbing it Britain's most wanted van.",
@@ -122,6 +270,20 @@ export const modelTrivia: Record<string, string[]> = {
     "You can buy a rally-honed Transit Custom MS-RT, developed by Ford's M-Sport WRC team with a 280-odd-bhp tune, wide arches and a rear diffuser.",
     "Nearly every Transit Custom is built in Kocaeli, Turkey, at a futuristic Ford plant with photovoltaic glass walls and AI-driven \"digital twin\" production.",
   ],
+  "HILLMAN|AVENGER": [
+    "The humble Avenger wore seven different badges in its lifetime, ending its days being built in Argentina.",
+    "In the US it was sold as the Plymouth Cricket, a flop that lasted just two model years before dealers gave up.",
+    "The hot Avenger Tiger borrowed its name from the earlier Sunbeam Tiger, hoping to inherit some performance glamour.",
+    "Tiger buyers could pick lurid \"Sundance Yellow\" or \"Wardance Red\" paint, finished with black stripes and a boot spoiler.",
+    "Early Avengers had distinctive J-shaped \"hockey stick\" tail lights, ditched for a plain light-bar in the 1976 facelift.",
+  ],
+  "HILLMAN|IMP": [
+    "The Imp's all-aluminium engine was derived from a Coventry Climax portable fire-pump unit, itself inspired by a Sunbeam motorcycle engine.",
+    "Co-designer Mike Parkes later became a Ferrari Formula 1 driver, racing alongside the likes of John Surtees.",
+    "Its opening rear window made the Imp effectively a hatchback years before the term caught on in Britain.",
+    "Like the Mini, the Imp was conceived as a frugal answer to the petrol shortages of the 1956 Suez Crisis.",
+    "Bill McGovern's privateer Imp won the British Saloon Car Championship three years straight, in 1970, 1971 and 1972.",
+  ],
   "HONDA|CIVIC": [
     "To prove a doubting GM wrong, Honda fitted its clean CVCC system to a Chevy V8 Impala — and it passed US emissions tests.",
     "The Civic's CVCC engine met America's strict 1975 Clean Air Act rules without needing a catalytic converter, beating Detroit's giants at their own game.",
@@ -130,8 +292,15 @@ export const modelTrivia: Record<string, string[]> = {
     "The Honda Civic has been in production since 1972.",
     "The Civic Type R is regarded as one of the great hot hatchbacks.",
   ],
-  "HONDA|CR-V": [
-    "The Honda CR-V is one of the best-selling SUVs in the world.",
+  "HONDA|CR V": [
+
+  ],
+  "HONDA|HR V": [
+    "HR-V actually stands for \"Hi-rider Revolutionary Vehicle\" — Honda reckoned it had invented an entirely new genre of car.",
+    "It began life as the playfully-named \"J-WJ\" (Joyful J) concept at the 1997 Tokyo Motor Show.",
+    "In Britain the three-door was sold as the \"Joy Machine,\" with print adverts of naked twenty-somethings cannonballing off a pier.",
+    "It shared its underpinnings not with a rugged 4x4 but with the humble Honda Logo supermini.",
+    "Its Real Time 4WD used a clever dual-pump rear diff that only kicked in once the front wheels started slipping.",
   ],
   "HONDA|JAZZ": [
     "Honda originally planned to call the Jazz the \"Fitta\" until someone realised it's crude slang for female genitalia across Scandinavia, forcing a last-minute rename.",
@@ -141,12 +310,51 @@ export const modelTrivia: Record<string, string[]> = {
     "In Europe the name \"Jazz\" was reused from an earlier Honda, because Opel already owned the rights to that car's original name, \"City\".",
     "The Honda Jazz is loved for its clever folding 'Magic Seats' and strong reliability record.",
   ],
+  "HONDA|NSX": [
+    "Ayrton Senna tested an NSX prototype at Suzuka, called it \"a little fragile,\" and Honda responded by making the chassis 50% stiffer.",
+    "The NSX was the world's first mass-produced car with an all-aluminium body, inspired partly by Japan's Shinkansen bullet trains.",
+    "Its cabin visibility was modelled on an F-16 fighter jet's 360-degree glass cockpit, which is why it has barely any blind spots.",
+    "It was the first production car with titanium connecting rods, helping its engine spin to a screaming 8,000rpm redline.",
+    "Engine heat made condensation pool in the rear light clusters, so owners often drilled tiny drain holes to let the water out.",
+  ],
+  "HONDA|S2000": [
+    "Honda built the S2000 to celebrate the firm's 50th birthday in 1999, reviving its 1960s S500/S600/S800 roadster line.",
+    "Its 2.0-litre F20C revved to a screaming 9,000rpm and held the production-car record for power-per-litre for 11 years, until Ferrari's 458.",
+    "The S2000's arc-shaped digital tachometer was inspired by the dashboard of Honda's Ayrton Senna-era McLaren Formula One cars.",
+    "It traces back to the 1995 SSM concept, itself inspired by Honda's first 1960s F1 car and the British Caterham Seven.",
+  ],
   "HYUNDAI|I10": [
     "The first Hyundai i10 was launched in New Delhi and built in Chennai, India, then shipped to British buyers half a world away.",
     "The second-generation i10 was Hyundai's first ever A-segment car designed, developed and built entirely in Europe, penned in Rüsselsheim, Germany.",
     "European i10 production was uprooted from India to a plant in İzmit, Turkey, to bring the little car closer to its buyers.",
     "Engineers used the rival Kia Picanto as a test mule for individual i10 parts during the second-generation car's development.",
     "Despite its tiny footprint, the i10's sporty N Line gets a turbocharged 99bhp engine, making it a pocket-sized near-hot-hatch.",
+  ],
+  "HYUNDAI|I20": [
+    "The \"N\" in the hot Hyundai i20 N stands for both Namyang, Hyundai's Korean R&D centre, and Germany's legendary Nürburgring race track.",
+    "The i20 sold in the UK is built in Turkey, at Hyundai's longest-running overseas factory near Izmit, running since 1997.",
+    "The i20 N was engineered to weigh roughly the same as a World Rally Car, hitting the FIA's minimum WRC weight on purpose.",
+    "Hyundai built its entire WRC rally team, the i20 race car and a brand-new motorsport HQ from scratch in just 12 months.",
+    "The rally i20 ended Hyundai's decade away from the World Rally Championship and went on to win back-to-back manufacturers' titles in 2019 and 2020.",
+  ],
+  "HYUNDAI|I30": [
+    "The \"N\" badge is shaped like a chicane — the tight S-bend road corner — nodding to Hyundai's Namyang R&D centre and the Nürburgring.",
+    "Hyundai poached Albert Biermann, the engineer behind legendary BMW M cars like the E46 M3, to lead its N division and tune the i30 N.",
+    "Two pre-production i30 Ns were thrashed through the gruelling Nürburgring 24-hour endurance race to prove their durability before launch.",
+    "The i30 N's sportiest mode deliberately adds crackling \"after-fire\" pops from the exhaust, a sound Hyundai's engineers tuned on purpose.",
+    "There's a sleek five-door coupe version, the i30 Fastback N, unveiled at the 2018 Paris Motor Show.",
+  ],
+  "HYUNDAI|KONA": [
+    "In Portugal the Kona is sold as the \"Kauai\" because \"Kona\" sounds too much like a rude Portuguese slang word.",
+    "The Kona is named after the western district of Hawaii's Big Island, evoking adventure and the aroma of Kona coffee.",
+    "Unusually, the second-generation Kona was designed as an EV first, then adapted to take a petrol engine — the reverse of the norm.",
+    "Because it was engineered around a battery, the Kona's rear gets an almost flat floor that's rare in a petrol-or-electric model.",
+  ],
+  "HYUNDAI|SANTA FE": [
+    "The Santa Fe was Hyundai's first-ever SUV, penned at its California design centre and named after the artsy New Mexico desert city.",
+    "It quirkily wears its own \"sun\" emblem and model script on the tailgate — a bespoke badge most other Hyundais never got.",
+    "Early buyers grumbled the bonnet used an old-fashioned prop rod instead of gas struts, and the glovebox had no light.",
+    "A first-gen paint shade called Pine Green proved so unloved that owners nicknamed it \"Yucky Green\" before Hyundai axed it in 2003.",
   ],
   "HYUNDAI|TUCSON": [
     "In the UK and Europe the second-generation Tucson was sold as the \"ix35\" before Hyundai reverted to the Tucson name in 2015.",
@@ -155,11 +363,81 @@ export const modelTrivia: Record<string, string[]> = {
     "Hyundai designed the Tucson's bodywork using geometric \"parametric\" algorithms rather than traditional pencil sketches.",
     "The production Tucson looks almost identical to Hyundai's wild Vision T concept car, a rare faithful concept-to-showroom translation.",
   ],
+  "JAGUAR|E TYPE": [
+    "The Jaguar E-type is one of only a handful of cars in New York's Museum of Modern Art permanent design collection — a blue 1963 roadster.",
+    "When demand for test drives at the 1961 Geneva launch overwhelmed Jaguar, engineer Norman Dewis drove a second E-type 600 miles overnight from Coventry, arriving in 11 hours.",
+    "George Harrison's E-type, a 21st-birthday gift, was modified with a record player fitted into the dashboard.",
+    "Enzo Ferrari reportedly called the E-type \"the most beautiful car ever made\" — high praise from a rival who built his own legends.",
+    "The car that stole the Geneva show, gunmetal coupe \"9600 HP,\" was driven flat-out from Coventry through the night, reaching the stand with just 20 minutes to spare.",
+  ],
+  "JAGUAR|F TYPE": [
+    "The orange Jaguar driven by the villain in the 2015 Bond film Spectre was built around an F-Type V8 by Williams Advanced Engineering, not a real C-X75.",
+    "An F-Type project was killed off in 2002 under Ford ownership and only revived after Tata, and enthusiast Ratan Tata, took over Jaguar.",
+    "The F-Type's deployable rear spoiler automatically rises at speed to add downforce, then folds away again, and can be triggered by a console button.",
+    "The car's debut as the C-X16 concept unexpectedly won car of the 2011 Frankfurt show, despite secretly being the near-finished production F-Type.",
+  ],
+  "JAGUAR|MARK 2": [
+    "In Colin Dexter's novels Inspector Morse drove a Lancia, but John Thaw insisted on a British car, so Dexter rewrote later reprints to feature the Jaguar Mk2.",
+    "The 3.8-litre Mk2 was so quick that British police bought their own to chase the very bank robbers who favoured it as a getaway car.",
+    "A genuine 125mph and 0-60 in 8.5 seconds made the Mk2 arguably the world's first \"super-saloon\" and the fastest four-door of its day.",
+    "Great Train Robbery getaway driver Roy \"The Weasel\" James shunned the famous 3.8 Mk2, preferring the lighter-feeling 3.4-litre version.",
+  ],
+  "JAGUAR|XJ": [
+    "When the XJ12 arrived in 1972, it was the world's only mass-produced 12-cylinder four-door car and the fastest full four-seater money could buy.",
+    "The original XJ6 was the last car personally shaped by Jaguar founder Sir William Lyons, who designed by instructing tinsmiths rather than ever drawing a sketch.",
+    "Sir William Lyons refused to carry loose change, fearing the coins would spoil the line of his tailor-made suits — the same obsessive eye he brought to the XJ.",
+    "A black Jaguar XJ ferries M and James Bond through London in 2015's Spectre.",
+  ],
+  "JAGUAR|XJS": [
+    "The XJS was styled by Malcolm Sayer, an ex-aircraft engineer who insisted he was an aerodynamicist, not a hairdresser.",
+    "Jaguar once snubbed The Saint over the E-Type, so they made sure their XJS starred in 1978's Return of the Saint with the plate ST 1.",
+    "Sayer, who also shaped the D-type and E-type, died in 1970 before the XJS was finished — his team completed it.",
+    "A V12 XJS won Jaguar its first 24-hour race since 1957, with Tom Walkinshaw's TWR team taking the 1984 Spa 24 Hours and the European Touring Car Championship.",
+    "The XJS's controversial \"flying buttress\" rear pillars survived a 1991 redesign because Jaguar decided they were part of the car's character.",
+  ],
+  "JENSEN|INTERCEPTOR": [
+    "The Jensen FF beat the Audi Quattro to four-wheel drive by 14 years, becoming the first non-off-road production car with permanent 4WD.",
+    "That same FF also pioneered anti-lock brakes on a road car, using Dunlop's Maxaret system borrowed straight from aircraft and lorries.",
+    "The \"FF\" stands for Ferguson Formula, a four-wheel-drive system originally devised for a Formula 1 racing car.",
+    "Though built in West Bromwich, the Interceptor's sleek body was styled by Italy's Carrozzeria Touring and first hand-built near Turin by Vignale.",
+    "Led Zeppelin drummer John Bonham owned several Interceptors and FFs, joining Frank Sinatra, Cher and Cliff Richard as celebrity buyers.",
+  ],
+  "KIA|CEED": [
+    "The \"Cee'd\" was the only car ever sold with an apostrophe in its name, a quirk Jeremy Clarkson loved to mock on Top Gear.",
+    "The name stands for Community of Europe with European Design — it was the first Kia engineered entirely in Europe, for Europe.",
+    "As Top Gear's \"reasonably priced car\" from 2010-2013, stars like Tom Cruise, Cameron Diaz and Matt LeBlanc thrashed a humble Cee'd round the track.",
+    "Kia ditched the original \"Ceeed\" because three E's looked daft, swapping the final E for that famous apostrophe.",
+  ],
+  "KIA|EV6": [
+    "A Kia EV6 holds a Guinness World Record for crossing the USA spending just 7 hours 10 minutes plugged in — beating Tesla by over five hours.",
+    "The EV6 was the first Kia ever crowned European Car of the Year, taking the 2022 title.",
+    "In a quarter-mile drag race the EV6 GT out-sprinted a Lamborghini Urus, Ferrari California, Porsche 911 and Mercedes-AMG GT.",
+    "The EV6 GT hits 62mph in 3.5 seconds, making this family crossover quicker off the line than many supercars.",
+    "The EV6's \"tiger nose\" grille is hidden in plain sight — it only lights up and appears when the headlights come on.",
+  ],
+  "KIA|NIRO": [
+    "The Niro's name is a contraction of \"Near Zero\" — a nod to its near-zero emissions ambitions.",
+    "A Kia Niro holds a Guinness World Record, crossing the USA from LA to New York at 76.6 mpg on just 4.1 tanks of fuel.",
+    "Unusually for a hybrid, the Niro uses a six-speed dual-clutch gearbox instead of the droning CVT most rivals fit, for a sportier drive.",
+  ],
   "KIA|PICANTO": [
     "To advertise the Picanto, Kia made the world's first nail-art animation, hand-painting tiny frames onto 900 fake fingernails using 1,200 bottles of polish.",
     "The name \"Picanto\" comes from picante, meaning \"spicy\" — though in its native South Korea the same car is sold as the Kia Morning.",
     "The Picanto's face was shaped by Peter Schreyer, the German designer who also penned the iconic Audi TT before defecting to Kia.",
     "There's a rally-bred racing Picanto, used in one-make cup series across Poland and Portugal as a cut-price route into motorsport.",
+  ],
+  "KIA|RIO": [
+    "The Rio's ancestor, the Kia Pride, was the same car as the Mazda 121 and Ford Festiva — Mazda designed it, Kia built it, Ford badged it.",
+    "Rio is Spanish and Portuguese for river, chosen to evoke the way the car's bodylines were meant to flow.",
+    "In Korea the Rio is still sold under its old name, the Kia Pride — the badge it wore across Europe in the 1990s.",
+    "Ex-WRC star Gigi Galli built a 600bhp Kia Rio Supercar to go privateer racing in the World Rallycross Championship.",
+    "When it launched in 2000, the Rio was the cheapest mass-produced car you could buy new in the United States.",
+  ],
+  "KIA|SOUL": [
+    "The Kia Soul's boxy shape was inspired by a wild boar wearing a backpack, sketched after a designer watched a Korean wildlife documentary.",
+    "In 2014 Pope Francis ditched the limos and toured South Korea in a tiny unarmoured Kia Soul, reportedly asking for the smallest Korean car available.",
+    "The Soul starred in a viral run of adverts featuring hip-hop hamsters in hoodies, rapping their way out of the hamster wheel of conformity.",
+    "Some Souls came with speakers ringed by mood lights that pulse and change colour in time with your music.",
   ],
   "KIA|SPORTAGE": [
     "The 1997 Sportage was the world's first production car fitted with a knee airbag, a safety feature that's now commonplace.",
@@ -191,9 +469,73 @@ export const modelTrivia: Record<string, string[]> = {
     "The Beckham edition was the first-ever Land Rover finished in hand-applied matt paint, giving it a deliberate dark-grey \"stealth\" look.",
     "The Evoque's name was coined to sound like \"evoke\" — chosen to suggest it stirs up luxury you wouldn't expect from a car that size.",
   ],
-  "MAZDA|MX-5": [
-    "The Mazda MX-5 is the best-selling two-seat sports car in history, with over a million built.",
-    "It holds a Guinness World Record as the best-selling roadster.",
+  "LEXUS|IS": [
+    "Those clear \"Altezza lights\" that swept early-2000s tuner culture got their name from this very car — the Toyota Altezza, sold here as the Lexus IS.",
+    "The first IS was engineered by Nobuaki Katayama, the man behind the cult Toyota AE86 drift hero, who'd also run Toyota's rally and Le Mans programmes.",
+    "In Japan it wasn't a Lexus at all but the Toyota Altezza — Altezza being Italian for height or nobility.",
+    "The hot Japanese-market RS200 version had its 3S-GE engine specially tuned by Yamaha to rev to 7,600rpm.",
+  ],
+  "LEXUS|RX": [
+    "The RX badge stands for \"Radiant Crossover\" — and the 1998 RX was the first vehicle ever to use the word \"crossover\" officially.",
+    "The 2005 RX 400h was the world's first luxury hybrid SUV, beating many V8 rivals to 60mph despite its eco credentials.",
+    "Eco-minded A-listers like Steven Spielberg, Halle Berry and Reese Witherspoon were early adopters of the hybrid RX 400h.",
+    "The original RX 300's V6 was the first production V6 engine to feature Toyota's continuously variable valve timing (VVT-i).",
+    "The whole RX concept was reportedly dreamed up over a 1993 lunch by Toyota executives in Nagoya, Japan.",
+  ],
+  "LOTUS|ELAN": [
+    "The Lotus Elan's pop-up headlights — a first for a production car — were sucked open by engine vacuum, popping up when the system sprang a leak.",
+    "Emma Peel's powder-blue Elan in The Avengers made the car a 1960s icon, and Diana Rigg was gifted the car after filming wrapped.",
+    "Colin Chapman sketched the Elan's lightweight steel backbone chassis over a single weekend as a stopgap test rig — then kept it for production.",
+    "The Mazda MX-5, the world's best-loved roadster, was directly inspired by the Elan, copying its pop-up lights and flowing lines decades later.",
+    "The whole Elan weighed roughly 1,500lb, and its clever backbone chassis tipped the scales at just 75lb.",
+  ],
+  "LOTUS|ELISE": [
+    "The Elise is named after Elisa Artioli, granddaughter of then-Lotus owner Romano Artioli, who unveiled it aged two-and-a-half saying I am Elise!",
+    "Elisa Artioli later bought the very last Elise built at Hethel, completing the story decades after she launched the original.",
+    "The Elise pioneered a bonded, glued-together aluminium chassis that weighed just 67kg, helping the whole car tip the scales at only 723kg.",
+    "The first Tesla Roadster was built on the Lotus Elise's chassis, though Tesla reworked it so heavily the two shared only around 7% of parts.",
+  ],
+  "LOTUS|ESPRIT": [
+    "Ferrari and Porsche refused to appear in Pretty Woman fearing a prostitution link, so the Lotus Esprit got the role instead.",
+    "Elon Musk paid £550,000 for the Bond Esprit submarine \"Wet Nellie\" in 2013, then wanted to make it actually drive underwater.",
+    "That Bond sub was nicknamed \"Wet Nellie\" after Little Nellie the autogyro, itself named after music-hall comedian Nellie Wallace.",
+    "Giugiaro's \"folded paper\" wedge for the Esprit was built on a stretched Lotus Europa chassis and inspired by his Maserati Boomerang concept.",
+    "The Esprit's underwater Bond car was a real working \"wet\" submarine, requiring its occupants to wear scuba gear inside.",
+  ],
+  "MAZDA|2": [
+    "Today's UK Mazda 2 Hybrid is actually a rebadged Toyota Yaris, sold alongside the completely unrelated \"real\" Mazda 2 in showrooms.",
+    "The favour ran both ways — in North America the Mazda 2 was sold as a Toyota, badged the Scion iA and later the Toyota Yaris.",
+    "Its Japanese name Demio comes from the Spanish-flavoured de mio, roughly meaning it's mine.",
+    "The little Mazda 2 beat far pricier rivals to be crowned 2008 World Car of the Year, voted by 47 judges worldwide.",
+    "For the original Demio's 1996 launch in Japan, NBA legend Scottie Pippen starred in the TV adverts.",
+  ],
+  "MAZDA|3": [
+    "In Japan the Mazda 3 was sold as the Axela — a name blending accelerate and excellent.",
+    "The Mazda 3 replaced the much-loved Mazda 323/Protegé when it launched back in 2003.",
+    "The Mazda 3 won 2020 World Car Design of the Year, only the brand's second after the MX-5.",
+    "Its sleek looks come from Mazda's \"Kodo\" design philosophy, which strips away clutter for a \"less is more\" Japanese aesthetic.",
+  ],
+  "MAZDA|6": [
+    "In the UK, the Mazda 6's ancestor was sold as the \"Mazda Montrose\" — yet nobody at Mazda can find any record of a Montrose dealership it was supposedly named after.",
+    "The model line traces its name to the Capella, the sixth-brightest star in the night sky, in the constellation Auriga.",
+    "The rare 2006 Mazda 6 MPS hid a 256bhp turbo engine and all-wheel drive, cracking 0-60mph in around 5.5 seconds.",
+  ],
+  "MAZDA|CX 5": [
+    "The CX-5 was the first Mazda built entirely with SkyActiv tech and the first to wear its \"Kodo – Soul of Motion\" design language.",
+    "Kodo design was inspired by watching cheetahs coil their whole body like a spring before pouncing.",
+    "The CX-5's diesel ran a 14:1 compression ratio — the lowest of any production diesel in the world at launch.",
+    "Mazda's robots are programmed to mimic master craftsmen painting concept cars by hand, a technique called Takuminuri.",
+    "Soul Red Crystal's reflective layer hides light-absorbing flakes, giving 50% more visual depth than the old Soul Red.",
+  ],
+  "MAZDA|MX 5": [
+
+  ],
+  "MAZDA|RX 8": [
+    "The RX-8's rotary RENESIS is the only pistonless engine ever to win the outright International Engine of the Year title, in 2003.",
+    "Its rear \"freestyle\" doors are rear-hinged and have no central pillar, so they only open once the front doors are open.",
+    "A 1.3-litre rotary, it revs to a screaming 9,000 rpm redline yet makes around 230bhp from that tiny displacement.",
+    "Mazda built a dual-fuel RX-8 Hydrogen RE and, in 2006, became the first firm to commercially lease hydrogen rotary cars.",
+    "It was the last production car ever sold with a rotary engine, ending its run in 2012.",
   ],
   "MERCEDES BENZ|A CLASS": [
     "A Swedish magazine flipped the brand-new A-Class during a 1997 \"moose test\", forcing Mercedes to halt sales and fit stability control as standard.",
@@ -209,7 +551,6 @@ export const modelTrivia: Record<string, string[]> = {
     "In 1983, three barely-modified Mercedes 190Es ran flat-out at Nardò for nearly nine days straight, smashing three world endurance records.",
     "The Mercedes 190E and its C-Class successors became the most successful cars in DTM touring-car history, racking up dozens of wins.",
     "The Mercedes C-Class replaced the 190 — the original 'Baby Benz' — in 1993.",
-    "It's one of Mercedes-Benz's best-selling models worldwide.",
   ],
   "MERCEDES BENZ|SPRINTER": [
     "The Sprinter was the first Mercedes to wear the three-pointed star yet carry a name instead of the usual numbers and letters.",
@@ -218,6 +559,39 @@ export const modelTrivia: Record<string, string[]> = {
     "The same van has been badged as a Dodge, a Freightliner and even a Volkswagen Crafter, depending on country and era.",
     "When it launched in 1995 it was named International Van of the Year and gave its name to an entire class of vehicle.",
   ],
+  "MG|MG3": [
+    "The last MG ever assembled in Britain was a black MG3 that rolled off the Longbridge line in July 2016, bolted together from Chinese kits.",
+    "With 192bhp on tap, the MG3 Hybrid+ is the quickest car of its type, hitting 0-62mph in 8 seconds — proper hot-hatch territory for a supermini.",
+    "Unusually, the MG3 Hybrid's electric motor is the headline act, doing most of the driving while the petrol engine plays backup — so it feels like an EV around town.",
+    "The reborn MG3 was previewed as the futuristic \"MG Zero\" concept back in 2010 before reaching UK showrooms.",
+  ],
+  "MG|MGB": [
+    "The MGB GT's elegant fastback roofline was shaped by Italy's Pininfarina, earning it the nickname the poor man's Aston Martin.",
+    "The MGB's unibody was so over-engineered it later swallowed a 3.5-litre Rover V8 with no body strengthening at all.",
+    "The roadster ditched the MGA's separate chassis for monocoque construction, making it shorter outside yet roomier inside.",
+    "The MGB GT V8 hit 125mph and 60mph in 7.7 seconds, yet MG never sold the V8 as an open-top roadster.",
+    "The GT's styling was deliberately modelled on MG's EX181 record-breaker, the \"Roaring Raindrop\" Stirling Moss drove past 245mph.",
+  ],
+  "MG|MGF": [
+    "The MGF was the first all-new MG in 32 years when it launched at the 1995 Geneva Motor Show.",
+    "Its clever mid-engine layout reused the front subframe from the humble Rover 100, a budget-saving trick.",
+    "The MGF rode on Hydragas — the same fluid suspension fitted to the Austin Metro and Allegro.",
+    "It was the very last car ever built using Alex Moulton's Hydragas suspension, dropped for the cheaper MG TF.",
+    "The pricier VVC model had a clever variable valve timing mechanism, rare tech for a 1990s British roadster.",
+  ],
+  "MG|MIDGET": [
+    "The final MG Midget shared its engine with its arch-rival, the Triumph Spitfire, both stablemates under British Leyland.",
+    "Early Midgets had no exterior door handles or locks — you slid open the Perspex window and worked the catch from inside.",
+    "The Midget name dates to 1929, revived in 1961 to fill the gap left by MG's old T-type sports cars.",
+    "Its Frogeye Sprite ancestor was meant to have retracting \"sleeping\" headlamps facing skyward, but BMC cut the mechanism to save money.",
+    "The rubber-bumper 1500 was the fastest Midget ever, finally cracking a genuine 100mph.",
+  ],
+  "MG|ZS": [
+    "The MG ZS traces its underpinnings back to the Honda Domani, via the Rover 400 it was rebodied from — Japanese DNA under a British badge.",
+    "The hot ZS 180 was hurriedly built from the Rover 45, a car no one called a driver's car, by dropping in a 2.5-litre KV6 V6.",
+    "MG raced the ZS in the British Touring Car Championship from 2001, run by West Surrey Racing — the team behind today's BMW BTCC successes.",
+    "The ZS name was resurrected for a Chinese-built electric SUV, among the first Chinese-brand cars exported to Europe in real volume in 2019.",
+  ],
   "MINI|COOPER": [
     "The original Mini's door pockets were sized to fit the bottles for designer Alec Issigonis's favourite tipple — a dry martini.",
     "The very first Mini had no radio, so a huge ashtray filled the space — Issigonis was a devoted chain-smoker.",
@@ -225,6 +599,60 @@ export const modelTrivia: Record<string, string[]> = {
     "The Mini was born from the 1956 Suez fuel crisis, when petrol rationing demanded a tiny, frugal British car.",
     "Early Minis wore their seams and door hinges on the outside of the body to save space and simplify the production line.",
     "The Mini Cooper name honours John Cooper, whose tuned Minis won the Monte Carlo Rally in the 1960s.",
+  ],
+  "MITSUBISHI|ASX": [
+    "ASX stands for \"Active Sports Crossover\" — while in Japan, South Korea and Canada the very same car wears the older \"RVR\" badge instead.",
+    "A reversal of fortunes: today's ASX is a rebadged Renault Captur, yet the original ASX was itself sold by French rivals Peugeot and Citroen as the 4008 and C4 Aircross.",
+    "The ASX's shape was previewed by Mitsubishi's Concept-cX, unveiled at the 2007 Frankfurt Motor Show two years before the production car arrived.",
+    "In the US the ASX is badged \"Outlander Sport,\" and Puerto Rico bizarrely sold both ASX- and Outlander Sport-badged versions side by side.",
+    "Its RVR name harks back to 1991's \"Recreation Vehicle Runner,\" a people-carrier launched during Japan's bubble-economy boom.",
+  ],
+  "MITSUBISHI|OUTLANDER": [
+    "In Japan the Outlander was originally sold as the \"Airtrek\" — a name fusing \"air\" and \"trek\" for free-as-a-bird, footloose motoring.",
+    "Mitsubishi lent the Outlander's platform to France, where it was rebadged with a new nose as the Peugeot 4007 and Citroen C-Crosser.",
+    "The 2013 Outlander PHEV was the world's first plug-in hybrid SUV, hiding its battery in the cabin floor to keep boot space.",
+    "In Japan the Outlander PHEV can power an entire home for a day from its battery — or ten days on a full tank — during a blackout.",
+  ],
+  "MITSUBISHI|SHOGUN": [
+    "Britain knows it as the Shogun, but elsewhere it's the Pajero — renamed because \"pajero\" is crude Spanish slang for a wanker.",
+    "The Pajero name comes from the Pampas cat (Leopardus pajeros), a wildcat prowling the plains of southern Argentina.",
+    "In Spanish-speaking markets it became the Montero (\"mountain hunter\") to dodge the embarrassing original name entirely.",
+    "The Shogun holds the Guinness record for most Dakar Rally wins by a manufacturer — 12 victories, including seven in a row.",
+    "At its 1985 debut win it scored a 1-2 finish, making Mitsubishi the first Japanese carmaker to conquer the Paris-Dakar.",
+  ],
+  "MORGAN|PLUS 4": [
+    "Morgan's frames are still hand-cut from ash wood — the Plus 4's coach-built body sits on a timber tub, just as it did in the 1950s.",
+    "A road-legal Plus 4 (reg TOK 258) won its class at the 1962 Le Mans 24 Hours, beating far better-funded rivals.",
+    "The Triumph engine sat so snugly under the Plus 4's bonnet there was no room for a proper air filter — owners improvised their own.",
+    "Morgan's swoopy fibreglass Plus 4 Plus coupe flopped so badly that just 26 were ever built between 1964 and 1967.",
+  ],
+  "MORRIS|MARINA": [
+    "Top Gear made a running gag of crushing Morris Marinas with falling pianos — one viewer even complained the dropped piano was a rare, valuable model.",
+    "The Marina's successor, the Morris Ital, was named after Italian design house ItalDesign — which actually never styled it; Brit Harris Mann did.",
+    "Some Marinas had a \"three-speed\" gearbox that was really a four-speed with first gear blanked off, deemed unnecessary for the torquey engine.",
+    "The Marina inherited its front suspension straight from the 1948 Morris Minor, lever-arm dampers and all — already ancient when the car launched in 1971.",
+    "British Leyland handed press-fleet Marinas to journalists with the front suspension set up wrong, giving reviewers alarming understeer from day one.",
+  ],
+  "MORRIS|MINOR": [
+    "To make it \"look right,\" Issigonis had a prototype sawn lengthways and widened by 4 inches just before production.",
+    "Because the bumpers were already made, the earliest cars used cut-in-half bumpers with a 4-inch plate bolted in the middle.",
+    "The car was developed in wartime secrecy under the codename \"Mosquito,\" hidden even from company founder Lord Nuffield.",
+    "Lord Nuffield loathed the prototype, sneering that it looked like a poached egg.",
+    "Issigonis is famous for the Mini, but he was actually proudest of the Morris Minor.",
+  ],
+  "MORRIS|OXFORD": [
+    "The Morris Oxford lived on as India's Hindustan Ambassador, built almost unchanged from the 1950s design until 2014 — nearly six decades.",
+    "William Morris named the car after Oxford, the \"city of dreaming spires\" where he'd built and raced bicycles from his mum's shed as a teenager.",
+    "The early Oxford earned its Bullnose nickname purely from its distinctive round-topped radiator, first dubbed the bullet nose.",
+    "Reborn as the Ambassador, the old Morris Oxford was crowned the world's best taxi by Top Gear.",
+    "The very first car built at the famous Oxford plant — birthplace of millions of Minis — was a Bullnose Morris Oxford in March 1913.",
+  ],
+  "NISSAN|370Z": [
+    "The Z's Japanese name \"Fairlady\" came from a Nissan chairman who saw the Broadway musical \"My Fair Lady\" in America and fell for it.",
+    "The 370Z was the world's first production car with automatic rev-matching, blipping the throttle for you on every downshift.",
+    "Its 3.7-litre V6 was Nissan's first engine with VVEL variable valve lift, and the Z was the last naturally-aspirated high-revving V6 sold with a manual.",
+    "US bosses thought Americans wouldn't buy a car called \"Fairlady\", so they badged it the Datsun 240Z instead.",
+    "The 2010 40th Anniversary edition was capped at just 1,000 cars in special \"40th Quartz\" paint with red leather and red brake calipers.",
   ],
   "NISSAN|JUKE": [
     "Nissan engineers secretly built the Juke-R in their spare time, dropping the GT-R supercar's 545bhp engine into a Juke to create the world's fastest crossover.",
@@ -243,13 +671,36 @@ export const modelTrivia: Record<string, string[]> = {
     "In 2002 Nissan built the Micra 350SR: a mid-engined, rear-wheel-drive Micra packing a 300bhp V6 from a 350Z and Murano.",
     "The Nissan Micra won European Car of the Year in 1993 — the first Japanese car to take the title.",
   ],
+  "NISSAN|NOTE": [
+    "The Nissan Note's e-POWER system is a hybrid that never plugs in — its petrol engine only ever generates electricity, while an electric motor alone drives the wheels.",
+    "There's a genuine hot-hatch Note — the Note e-POWER NISMO S — tuned by Nissan's motorsport arm for sharper handling and extra punch.",
+    "e-POWER debuted on the Note in 2016, letting you drive almost entirely on one pedal, easing off to slow down without touching the brake.",
+    "European Notes were built right here in Britain at Nissan's Sunderland plant, which churned them out from 2006 until 2017 to make room for the Qashqai.",
+  ],
   "NISSAN|QASHQAI": [
     "The Qashqai is named after a nomadic Iranian tribe, evoking an \"urban nomad\" spirit — the word reputedly means a horse with a white star on its forehead.",
     "In Australia and Japan the early Qashqai was sold as the \"Dualis\" because Nissan feared \"Qashqai\" would be misread as \"cash cow\".",
     "The Sunderland-built Qashqai basically invented the modern crossover, spawning over 20 copycat rivals after its 2007 launch.",
     "The Qashqai only exists because Nissan scrapped a planned conventional Almera replacement, gambling instead on a then-unproven \"mini-Murano\" hatch-meets-SUV.",
     "The Nissan Qashqai is built in Sunderland and helped kick-start the UK's crossover boom when it launched in 2007.",
-    "It's one of the best-selling cars ever made in Britain.",
+  ],
+  "NISSAN|X TRAIL": [
+    "The first X-Trail put its instruments in the centre of the dashboard, not behind the wheel — drivers hated it, so Nissan moved them back.",
+    "Its boot floor was made of washable, hose-down plastic so muddy boots and wet dogs wouldn't ruin the carpet.",
+    "A Japan-only \"X-Trail GT\" hid a 280 PS turbo engine — the world's first to combine a turbo with variable valve lift.",
+    "The \"X\" stood for extreme sports, as Nissan pitched this family SUV at outdoorsy 20-somethings who liked mud and adventure.",
+  ],
+  "PEUGEOT|106": [
+    "To sneak the Rallye into rallying's 1.3-litre class, Peugeot shortened its 1.4 engine's stroke to land at exactly 1294cc.",
+    "The near-identical Citroën Saxo was effectively a rebodied 106, sharing its platform, running gear and engines under different panels.",
+    "Peugeot sold a battery-powered 106 Électrique from 1995, with most snapped up by the French government rather than the public.",
+    "The 106 raced the gruelling Nürburgring 24 Hours every single year from 1993 to 2003.",
+  ],
+  "PEUGEOT|2008": [
+    "Peugeot won the brutal Dakar Rally with a car called the 2008 DKR that shared nothing but its name with the little family crossover.",
+    "That Dakar-winning 2008 was rear-wheel drive only, ditching four-wheel drive so it could run lighter with bigger wheels than its 4x4 rivals.",
+    "SUVs like the 2008 broke Peugeot's decades-old rule of always putting a \"0\" in the middle of its three-digit model names.",
+    "The 2008's vertical light signatures are deliberately styled to look like a lion's fangs and claws, nodding to the brand's lion badge.",
   ],
   "PEUGEOT|205": [
     "The Peugeot 205 (1983) is often credited with saving the company — and the 205 GTI is a hot-hatch legend.",
@@ -261,23 +712,122 @@ export const modelTrivia: Record<string, string[]> = {
   "PEUGEOT|3008": [
     "The Peugeot 3008 was named European Car of the Year in 2017.",
   ],
+  "PEUGEOT|308": [
+    "A standard 308 diesel driven by a British couple round the UK averaged 126.8mpg on one trip — a Guinness fuel-economy world record.",
+    "In Peugeot's naming code the middle \"0\" once held a model name, and the 303 is the only number in the line never used.",
+    "The 308's i-Cockpit gives you a tiny steering wheel you look over, not through, reading the dials above its rim.",
+    "A 308 HDi also set Guinness records lapping Australia's coast, once covering 1,192 miles on a single 60-litre tank.",
+    "The 308 was crowned 2014 European Car of the Year, thumping the BMW i3 by 84 points.",
+  ],
   "PORSCHE|911": [
     "The Porsche 911 has been in continuous production since 1963.",
     "Its rear-engine layout has stayed a constant for over 60 years.",
+  ],
+  "RELIANT|ROBIN": [
+    "Because a motorcycle licence couldn't legally cover a reverse gear, early Reliant Robins were deliberately built without one.",
+    "Its sub-500kg fibreglass body let you drive a Reliant Robin on just a motorbike licence — no car test required, until the law changed in 2000.",
+    "Top Gear actually built and launched a Reliant Robin \"space shuttle\" on real rockets — it flew before the booster failed to separate and it crashed.",
+    "Reliant turned out Robin bodies by hand from fibreglass moulds at a rate of roughly one every two minutes.",
+  ],
+  "RELIANT|SCIMITAR": [
+    "Princess Anne owned eight-plus Scimitars over 50 years, and was banned from driving in 1990 after being caught speeding in one on consecutive days.",
+    "The Scimitar GTE was the world's first series-production \"sports estate\", inventing the genre years before Volvo and Lancia copied it.",
+    "Designer Tom Karen, who shaped the Scimitar, also created the Raleigh Chopper bike and the three-wheeled Bond Bug.",
+    "Reliant built the Scimitar's body from fibreglass yet bolted in a Ford Essex V6, giving it surprisingly serious performance for the era.",
+    "Karen's controversial upswept rear side windows, mocked at launch, became the car's signature and a styling cliché copied for decades.",
+  ],
+  "RENAULT|5": [
+    "The Renault 5 was sketched by Michel Boué on a photo of a Renault 4 in his spare time, but he died of cancer before its launch.",
+    "It was sold in America as \"Le Car,\" because Renault feared US buyers wouldn't know what a \"Renault 5\" was.",
+    "The mad mid-engined, rear-drive Renault 5 Turbo borrowed its rear suspension from the Alpine A310 and its gearbox from the big Renault 30.",
+    "Jean Ragnotti drove that wild Turbo to victory on the 1981 Monte Carlo Rally on its very first outing.",
+    "The Renault 5 Alpine hot hatch beat the VW Golf GTI to market by about two months in 1976.",
+  ],
+  "RENAULT|CAPTUR": [
+    "The Captur's optional zip-off seat covers can be unclipped and machine-washed at 40C — handy if the kids or dog have made a mess.",
+    "For its two-tone paint, every Captur is sprayed one colour, then hand-masked and sent through the paint shop a second time for the contrasting roof.",
+    "The 2011 Captur concept that previewed it was a carbon-framed convertible with butterfly doors and 22-inch wheels — nothing like the family crossover it became.",
+    "In Russia the name was respelled \"Kaptur\" because locals found the original \"Captur\" spelling tricky to pronounce.",
   ],
   "RENAULT|CLIO": [
     "The Clio is named after Clio, the ancient Greek Muse of History — one of the nine Muses of mythology.",
     "Thierry Henry's Clio ads pushed \"Va Va Voom\" into the Oxford English Dictionary in 2004 as a real word.",
     "The Clio Williams was named after the F1 team, but Williams had nothing to do with building it — it was pure Renault Sport.",
     "The famous 1998 Papa and Nicole finale, starring Vic Reeves and Bob Mortimer, drew a UK audience of 23 million.",
-    "The Renault Clio has been a European best-seller since 1990 and was twice European Car of the Year.",
     "Its 1990s 'Papa and Nicole' adverts became a British TV phenomenon.",
   ],
   "RENAULT|MEGANE": [
     "The Renault Mégane's 'shake that ass' advert became a 2000s pop-culture moment in Britain.",
   ],
+  "RENAULT|SCENIC": [
+    "Scenic is actually an acronym — it stands for Safety Concept Embodied in a New Innovative Car, taken from a 1991 Renault concept.",
+    "Renault invented the compact MPV with the Scenic, designing it from the inside out — cabin first, bodywork afterwards.",
+    "When designing the first Scenic's cabin, Renault asked employees' children what gadgets and hidden cubbyholes they wanted inside.",
+    "The Scenic was crowned 1997 European Car of the Year, the first MPV ever to win the title.",
+    "Its concept was shaped by Anne Asensio, later named Automotive News's \"Woman of the Year\" for the work.",
+  ],
   "RENAULT|ZOE": [
-    "The Renault Zoe was one of Europe's best-selling electric cars throughout the 2010s.",
+
+  ],
+  "RILEY|ELF": [
+    "Riley wanted to call it the \"Imp\" but Hillman had already bagged the name, so they revived \"Elf\" from a 1930s Riley sports car.",
+    "It was a posh Mini with a proper three-box boot, but Mini designer Alec Issigonis hated the 8.5 inches grafted onto his packaging masterpiece.",
+    "Despite the dinky Mini underneath, the Elf got tail fins, a top-hinged boot lid and a burr walnut dashboard.",
+    "BMC built it hoping wives, sons and daughters would buy \"a Riley like Dad had\" — badge engineering aimed squarely at multi-car households.",
+    "When the Elf was axed in 1969, it took the entire Riley marque with it — there was never another Riley after it.",
+  ],
+  "ROVER|75": [
+    "The hot Rover 75 V8 was converted to rear-wheel drive and powered by a 4.6-litre engine lifted straight from the Ford Mustang GT.",
+    "BMW boss Bernd Pischetsrieder hijacked the 75's 1998 launch with a tirade about Longbridge's future, so the papers ran the threat, not the car.",
+    "The 75 lived on in China for nearly two decades, rebadged as the MG7 and Roewe 750, built until 2016.",
+    "Rover's engineers shoehorned a longitudinal V8 into a car designed for a transverse engine, with much of the rear-drive conversion done by Prodrive.",
+  ],
+  "ROVER|METRO": [
+    "A teenage Lady Diana Spencer drove a red Metro during her courtship with Prince Charles, handing British Leyland its greatest-ever PR coup.",
+    "BL employees picked the name \"Metro\" by ballot, choosing it over \"Maestro\" and \"Match\" from a longlist of reputedly over 8,000 suggestions.",
+    "The Metro was unveiled at the 1980 Motor Show with Margaret Thatcher in attendance, after a launch staged aboard a cruise ship sailing to the Isle of Man.",
+    "Its infamous \"British car to beat the world\" advert showed foreign rivals as invading landing craft retreating from Dover's white cliffs to \"Rule Britannia\".",
+    "The wild mid-engined MG Metro 6R4 rally car shared barely anything but its name, designed using Formula 1 know-how by Williams' Patrick Head.",
+  ],
+  "ROVER|P6": [
+    "Princess Grace of Monaco (the actress Grace Kelly) died in 1982 when she crashed her Rover P6 down a mountainside near Monte Carlo.",
+    "The P6 was the very first car to win the European Car of the Year award, back in 1964.",
+    "Its outer panels simply bolt onto a strong steel skeleton, so rusty wings can be unbolted and replaced rather than welded.",
+    "Rover's iconic V8 came from a Buick engine an executive spotted while pitching a gas turbine to a boat firm in America.",
+    "On boot-mounted-spare cars, Rover used an upside-down door handle as the bootlid grab handle.",
+  ],
+  "ROVER|SD1": [
+    "Designer David Bache shaped the SD1's sleek fastback after the Ferrari Daytona, earning it the nickname the poor man's Ferrari.",
+    "The SD1 won the 1977 European Car of the Year award, beating the Audi 100 and Ford Fiesta.",
+    "SD1 stands for Specialist Division 1 — the first car designed by British Leyland's in-house Specialist Division team.",
+    "A Tom Walkinshaw Racing SD1 Vitesse won six rounds of the 1985 European Touring Car Championship.",
+    "The SD1 was the patrol car of choice in 1980s cop shows including The Bill, Juliet Bravo and Dempsey and Makepeace.",
+  ],
+  "SEAT|ARONA": [
+    "The Arona is named after a Guanche town in Tenerife, and SEAT's deputy chairman visited its mayor before the car's reveal.",
+    "Built entirely in Barcelona, the Arona was designed, developed and produced at SEAT's Martorell plant from start to finish.",
+    "It shares its underpinnings with the VW Polo, VW T-Cross and Skoda Kamiq, all spun from the same Volkswagen Group platform.",
+    "You can pair the Arona's body with a contrasting roof, mixing colours like Candy White or Asphalt Blue against Midnight Black.",
+  ],
+  "SEAT|ATECA": [
+    "The Ateca is named after a small chocolate-making town near Zaragoza, keeping Seat's tradition of badging cars after Spanish places.",
+    "Despite being a Spanish brand's first-ever SUV, the Ateca isn't built in Spain at all — it rolls off a Skoda factory line in the Czech Republic.",
+    "The hot Cupra Ateca was the very first car launched by Cupra as a standalone brand in 2018, spun off from Seat's performance division.",
+    "That 296bhp Cupra Ateca borrows the Golf R's drivetrain to crack 0-62mph in just 5.4 seconds — a genuinely rapid family SUV.",
+  ],
+  "SEAT|IBIZA": [
+    "SEAT paid Porsche a royalty of seven Deutschmarks per car just for the right to stamp \"System Porsche\" on the original Ibiza's engine.",
+    "The first Ibiza was a true international mashup — body styled by Italy's Giugiaro, engineering by Germany's Karmann, and engines by Porsche.",
+    "The Ibiza Kit Car won the FIA 2-Litre World Rally Cup three years running (1996-98), taking the title on its very debut season.",
+    "The Ibiza is named after the Spanish party island, following SEAT's habit of naming cars after Spanish places like Málaga and Marbella.",
+    "The fifth-gen Ibiza pioneered Volkswagen Group's MQB-A0 platform, beating even the VW Polo and Audi A1 to it.",
+  ],
+  "SEAT|LEON": [
+    "Leon actually traces back to the Roman 7th Legion's garrison city — the lion meaning is a happy linguistic accident, not the original sense.",
+    "The first-generation Leon hid its rear door handles up in the C-pillar to masquerade as a sporty three-door coupe.",
+    "In 2014 a Leon Cupra 280 estate lapped the Nürburgring in 7:58.4, briefly the fastest front-wheel-drive car round the circuit.",
+    "Under the skin the Leon shares its MQB platform, engines and gearboxes with the VW Golf, Audi A3 and Skoda Octavia.",
+    "Seat was the first manufacturer to back the TCR racing concept in 2015, and the Leon won TCR Model of the Year in its debut season.",
   ],
   "SKODA|FABIA": [
     "The Fabia's name traces to the Latin \"faba\" (bean) and the ancient Roman Fabia family of bean-growers.",
@@ -286,23 +836,87 @@ export const modelTrivia: Record<string, string[]> = {
     "A rally Fabia won 16 of the 18 stages at the 2023 Monte Carlo Rally, including every pass on the legendary Col de Turini.",
     "The third-generation Fabia formed the basis of the most successful rally car on Earth, with over 1,250 victories.",
   ],
+  "SKODA|KAROQ": [
+    "The Karoq's name comes from the language of the Alutiiq, an Alaskan island tribe — fusing their words for \"car\" (KAA'RAQ) and \"arrow\" (RUQ).",
+    "Its VarioFlex rear seats aren't just foldable — all three can be lifted clean out, turning the family SUV into a near-van with 1,810 litres of space.",
+    "The ice scraper clips inside the locking fuel filler cap and cleverly doubles as a tyre tread-depth gauge.",
+    "The Karoq quietly replaced Skoda's much-loved boxy Yeti, ending that quirky model's run.",
+  ],
+  "SKODA|KODIAQ": [
+    "The Kodiaq is named after the Kodiak bear, and Skoda renamed an actual Alaskan town \"Kodiaq\" for a single day to launch it.",
+    "The \"Q\" ending honours the Alutiiq language of Kodiak Island, where a final \"q\" traditionally marks the names of animals.",
+    "Racing legend Sabine Schmitz lapped the Nurburgring in a Kodiaq vRS in 9:29.84, setting the record for a seven-seat SUV — in a diesel.",
+    "Open a Kodiaq's door and a spring-loaded plastic protector flips out at 11 degrees to stop you dinging the car parked next to you.",
+    "The Kodiaq's ice scraper hides inside the locking fuel cap and doubles as a tyre tread-depth gauge.",
+  ],
   "SKODA|OCTAVIA": [
     "The Octavia is named from the Latin for \"eighth\" — it was Skoda's eighth post-war model and eighth with all-wheel independent suspension.",
     "New Zealand's very first home-built car, the 1966 Trekka, was based on a shortened Skoda Octavia chassis shipped from communist Czechoslovakia.",
     "The original Octavia won its class at the Monte Carlo Rally three years running from 1961 to 1963, once finishing an astonishing sixth overall.",
     "Skoda's only-ever World Rally Championship podium came from the Octavia WRC, third on the brutal 2001 Safari Rally in Kenya.",
   ],
+  "SKODA|SUPERB": [
+    "The Skoda Superb name beat the alternative \"Regent\" — a senior manager first jotted it down in his diary in October 1934.",
+    "The Superb's built-in door umbrella debuted in 2001, beating Rolls-Royce's famous Phantom brolly to the idea by a year.",
+    "The 1939 Superb 4000 was Skoda's first ever V8 production car — and just twelve were built.",
+    "The clever Mk2 Superb had a \"TwinDoor\" boot that opened either as a normal saloon lid or a full hatchback at the flick of a switch.",
+  ],
+  "SKODA|YETI": [
+    "Top Gear's Jeremy Clarkson became an unlikely Skoda Yeti superfan, repeatedly praising it on air despite its decidedly unglamorous name.",
+    "The Yeti's name was inspired by its 2005 concept reveal, where the designer took the stage in mountaineering boots fit for a Himalayan expedition.",
+    "Its clever VarioFlex rear seats came as three separate chairs you could slide, fold or lift out entirely, turning the cabin into a van.",
+    "The 2005 concept had a single windscreen wiper hidden in the right-hand pillar and a tailgate that folded down into a bench seat.",
+    "Skoda built a never-released Yeti pickup prototype, borrowing the rear axle and suspension from the Volkswagen Caddy Maxi van.",
+  ],
+  "SUBARU|FORESTER": [
+    "The Forester debuted as the 1995 \"Streega\" concept — Subaru only swapped in the outdoorsy \"Forester\" name when it reached showrooms.",
+    "Early Foresters were the rare SUV exempt from the US rollover-warning visor sticker, because their flat-four engine sits so low they handle like a car.",
+    "Japan got a Forester STI in 2004 — essentially a boxier WRX STI with Brembo brakes and a turbo flat-four, never officially sold in the UK.",
+  ],
+  "SUBARU|IMPREZA": [
+    "The Impreza 22B's name nods to sponsor State Express 555 — \"22B\" is the number 555 written in hexadecimal.",
+    "That iconic Subaru rumble comes from unequal-length exhaust headers, not the boxer engine layout itself.",
+    "When the legendary 22B sold out instantly, Subaru secretly built extra unnumbered cars — only 16 of them reached the UK.",
+    "Colin McRae's own 22B carries a \"000/400\" plaque, marking it as one of just three original prototypes.",
+    "The name \"Impreza\" is a coined word from the Italian \"impresa,\" meaning a heraldic badge or motto.",
+  ],
+  "SUNBEAM|ALPINE": [
+    "Grace Kelly raced a Sunbeam Alpine through the French Riviera in \"To Catch a Thief\" — on the very road where she'd die 27 years later.",
+    "The Sunbeam Alpine was the first car James Bond ever drove on screen, in 1962's \"Dr. No\" — borrowed from a local resident.",
+    "In 1953 Stirling Moss and Sheila Van Damm took a stripped-down Alpine to Belgium and clocked 120mph, setting a class speed record.",
+    "The Alpine got its name after Sunbeam-Talbot saloons triumphed in the gruelling Alpine Rally of the early 1950s.",
+    "A Harrington-bodied Alpine famously beat the works Porsches to win Le Mans' coveted Index of Thermal Efficiency in 1961.",
+  ],
+  "SUNBEAM|TIGER": [
+    "The Tiger died in 1967 when Chrysler bought Rootes and refused to keep building a car powered by rival Ford's V8.",
+    "To fit a V8, Sunbeam's team measured the engine bay with a wooden yardstick, then went dealership-hopping to find an engine that squeezed in.",
+    "Future Le Mans legend Ken Miles built a running V8 prototype in about a week on an $800 budget, racing Carroll Shelby's rival version.",
+    "In Get Smart, Maxwell Smart's gadget-laden \"Tiger\" was usually a four-cylinder Alpine in disguise, as the real V8 left no room for the spy gear.",
+    "The Tiger name was a hand-me-down from a supercharged 1920s Sunbeam V12 that set a 152mph land speed record on Southport Sands.",
+  ],
   "SUZUKI|JIMNY": [
     "The tiny Suzuki Jimny has a cult following as a genuinely capable off-roader.",
   ],
+  "SUZUKI|SWIFT": [
+    "Suzuki sold the same Swift under at least 15 different badges, including Holden Barina, Pontiac Firefly, Geo Metro, Chevrolet Sprint and Subaru Justy.",
+    "A teenage Cristiano Ronaldo, then a rising Manchester United star, fronted Suzuki's 2005 European launch ads for the Swift before his luxury-car era.",
+    "In Japan the Swift is called the Cultus, a Latin word meaning \"adoration\" or \"worship\".",
+    "A rally-bred Swift S1600 won the FIA Junior World Rally Championship title in 2007, with a sister car finishing runner-up.",
+  ],
+  "SUZUKI|VITARA": [
+    "A monster 1,000bhp Suzuki Vitara (badged Escudo) won the Pikes Peak hill-climb in 1995, then became a cult legend in the Gran Turismo video games.",
+    "To dodge EU quotas on Japanese imports, some Vitaras were built in Spain and even sold under the local Santana 300/350 badge.",
+    "In Japan the Vitara is called the \"Escudo\" — named after the escudo, Portugal's currency before the euro.",
+    "Vitara comes from the Latin vita, the same root as vitality.",
+  ],
   "TESLA|MODEL 3": [
-    "The Tesla Model 3 is one of the best-selling electric cars of all time.",
+
   ],
   "TESLA|MODEL S": [
     "The Tesla Model S (2012) was the car that proved an electric car could be genuinely desirable and fast.",
   ],
   "TESLA|MODEL Y": [
-    "The Tesla Model Y was the world's best-selling car of any kind in 2023.",
+
   ],
   "TOYOTA|AYGO": [
     "In 2008 Toyota built a one-off \"Aygo Crazy\" with a turbocharged MR2 engine making 197bhp, hitting 0-62mph in 5.75 seconds.",
@@ -311,14 +925,45 @@ export const modelTrivia: Record<string, string[]> = {
     "The 2014 Aygo's bold front \"X\" graphic was inspired by Japanese manga culture and the cartoon robot Astro Boy.",
     "The Aygo Crazy concept stripped out power steering, ABS and all driver aids in the spirit of Group B rallying.",
   ],
+  "TOYOTA|C HR": [
+    "The C-HR's rear doors look like a coupe's because the handles are hidden high up in the C-pillar, not on the door.",
+    "Toyota built the C-HR's entire look around a cut-diamond theme — the door trim, speaker grilles and even the dial needles echo the gemstone shape.",
+    "This Japanese crossover was actually styled on the French Riviera, at Toyota's design studio near Nice.",
+    "A race-spec C-HR tackled the brutal 24 Hours of Nürburgring in 2016, finishing third in its class.",
+    "When designers pitched options, Toyota's bosses deliberately picked the craziest wild-card sketch — surprising even the team that drew it.",
+  ],
   "TOYOTA|COROLLA": [
-    "The Toyota Corolla is the best-selling car nameplate in history, with over 50 million sold since 1966.",
+
+  ],
+  "TOYOTA|HILUX": [
+    "A modified Hilux became the first vehicle ever driven to the Magnetic North Pole, in Top Gear's 2007 polar challenge.",
+    "The name \"Hilux\" is a portmanteau of \"High Luxury\" — odd for a truck now famed as a rugged workhorse.",
+    "After Top Gear failed to destroy one by drowning, burning and dropping it off a demolished tower block, Toyota launched an \"Invincible\" trim.",
+    "To reach Antarctica in record time, Hilux expedition trucks ran their diesel engines on jet fuel to survive the cold.",
+  ],
+  "TOYOTA|LAND CRUISER": [
+    "Toyota's prototype was originally called the Jeep, but a trademark threat forced a rename in 1954 — to Land Cruiser.",
+    "The name was chosen so it wouldn't sound less dignified than its British rival, the Land Rover.",
+    "During 1951 testing, the original Land Cruiser became the first vehicle to climb to Mt. Fuji's sixth station.",
+    "The Land Cruiser is Toyota's longest-running nameplate, in continuous production since the 1950s.",
+  ],
+  "TOYOTA|MR2": [
+    "In France the MR2 was sold simply as the MR because MR2 said aloud sounds like the French word merde.",
+    "The MR2 was Japan's first mass-produced mid-engined car, despite borrowing its engine and gearbox from the humble Corolla.",
+    "It started life not as a sports car but as a fuel-efficient two-seat commuter, only pivoting to performance mid-project.",
+    "The second-generation MR2 earned the nickname \"poor man's Ferrari\" for styling that echoed the Ferrari 308 and 348.",
   ],
   "TOYOTA|PRIUS": [
     "The Toyota Prius was the world's first mass-produced hybrid car, launched in Japan in 1997.",
   ],
   "TOYOTA|RAV4": [
     "The Toyota RAV4 (1994) helped create the compact-SUV class — its name stands for 'Recreational Active Vehicle with 4-wheel drive'.",
+  ],
+  "TOYOTA|SUPRA": [
+    "Supra comes from the Latin for above or to surpass — and in Japan the early cars were sold as the Celica XX instead.",
+    "The Mk4's legendary 2JZ engine used an old-school cast-iron block, which is why tuners have pushed it past 2,000bhp.",
+    "That same 2JZ debuted not in the Supra but in the Toyota Aristo, a Japanese luxury saloon sold here as the Lexus GS300.",
+    "Paul Walker's orange Supra from the first Fast & Furious sold at auction for $550,000, a record for the model.",
   ],
   "TOYOTA|YARIS": [
     "The Yaris name fuses \"Charis\", the Greek goddess of beauty, with the German word \"ja\" (yes) to suggest Europeans saying yes to its looks.",
@@ -328,6 +973,48 @@ export const modelTrivia: Record<string, string[]> = {
     "Toyota's rally Yaris swept every available title in its final 2021 WRC season, winning nine of the twelve rounds.",
     "The Toyota Yaris was European Car of the Year in 2000 and again in 2021.",
   ],
+  "TRIUMPH|DOLOMITE": [
+    "The Dolomite Sprint was the world's first mass-produced car with a 16-valve engine — its clever single-camshaft head won a 1974 British Design Council award.",
+    "It was the first British production car to come with alloy wheels fitted as standard.",
+    "The Sprint's ingenious 16-valve head used one camshaft, with eight long rockers reaching across to work the exhaust valves.",
+    "Triumph dominated the British Touring Car Championship in Sprints, taking the manufacturers' title in 1974 and the drivers' crown for Andy Rouse in 1975.",
+    "The Dolomite name dates to a 1934 straight-eight Triumph sports car, christened after the Italian mountains beloved of pre-war rally drivers.",
+  ],
+  "TRIUMPH|HERALD": [
+    "Italian stylist Giovanni Michelotti reportedly sketched the Herald's shape in just 20 minutes.",
+    "It was named \"Herald\" after the boat owned by Standard-Triumph managing director Alick Dick.",
+    "Its tight turning circle rivalled a London black cab, making it a favourite of UK driving schools.",
+    "The whole front bonnet and wings tilt forward as one unit for unbeatable engine access.",
+    "Triumph bolted body panels onto a separate chassis because rival BMC had snapped up their bodywork supplier.",
+  ],
+  "TRIUMPH|SPITFIRE": [
+    "The Spitfire's prototype was found abandoned under a dust sheet in a factory corner, only saved when Leyland took over and approved it.",
+    "During development the little roadster carried the unlikely codename \"Bomb\" before being named after the famous WWII fighter plane.",
+    "Its whole bonnet, wings and front end tilt forward in one piece, opening up the engine like a crocodile's jaw.",
+    "In 1965 works Spitfires won their class at the Le Mans 24 Hours after every rival French Alpine broke down.",
+    "The Spitfire's fastback racing body led directly to a new model, the six-cylinder Triumph GT6.",
+  ],
+  "TRIUMPH|STAG": [
+    "The Stag is the only Triumph where the internal project code-name stuck — \"Stag\" was just a four-letter dev codename that everyone preferred to the alternatives.",
+    "Sean Connery's Bond drove a yellow Stag in Diamonds Are Forever, plucked straight from British Leyland's press fleet — it was only the 14th ever built.",
+    "Its iconic T-bar roll hoop existed because Britain feared America was about to ban open-top convertibles outright on safety grounds.",
+    "Triumph built the Stag's troublesome V8 by effectively bolting two Dolomite four-cylinder engines together at a 45-degree angle.",
+    "Saab tested the Stag's V8 in its 99, building around 48 experimental units before walking away.",
+  ],
+  "TRIUMPH|TR6": [
+    "Triumph's usual designer Michelotti was too busy, so the TR6's body was restyled by Karmann of Germany, makers of the VW Karmann-Ghia.",
+    "The macho TR6 was really a clever facelift, sharing its chassis, doors, windscreen and engine with the earlier TR5.",
+    "UK buyers got 150bhp Lucas fuel injection, while American TR6s were detuned to carburettors thanks to US emissions rules.",
+    "The TR6's truncated rear panel was painted black regardless of body colour, to hide the road grime its aerodynamic tail collected.",
+    "The fuel-injected TR6 hit 60mph in around 8.2 seconds, genuinely quick for a 1969 British sports car.",
+  ],
+  "TVR|CHIMAERA": [
+    "TVR boss Peter Wheeler's German Pointer, Ned, bit a chunk out of the clay model — and that fang-shaped dent became the Chimaera's front indicator recesses.",
+    "There are no external door handles — you twist a single knob on the centre console to pop either door, sharing it with your passenger.",
+    "The Chimaera is named after a fire-breathing Greek mythological monster with a lion's body, goat's head and a serpent's tail.",
+    "Its rumbling Rover V8 actually traces back to a 1960s American Buick aluminium engine that Detroit gave up on but Britain perfected.",
+    "Like all proper TVRs, it has no airbags, no ABS and no traction control — power steering wasn't even offered until 1995.",
+  ],
   "VAUXHALL|ASTRA": [
     "The hot Astra GTE 16v's \"Red Top\" engine wore a cylinder head designed and cast by Cosworth — the same firm behind F1 engines.",
     "For its first two generations the Astra was simply a rebadged, UK-built Opel Kadett, sold here alongside its German twin.",
@@ -336,19 +1023,52 @@ export const modelTrivia: Record<string, string[]> = {
     "Vauxhall planned a droop-snoot nose and a saloon Astra, but GM axed both, locking the car into being a near-pure rebadged Opel.",
     "The Astra was built at Vauxhall's Ellesmere Port plant in Cheshire for decades.",
   ],
+  "VAUXHALL|CAVALIER": [
+    "The Cavalier \"saved\" Vauxhall in Britain — and its Mk1 was originally built not in Luton but in Antwerp, Belgium, before UK production began in 1977.",
+    "Its distinctive sloped \"droop snoot\" nose was grafted on from the Opel Manta by American designer Wayne Cherry, the only thing setting it apart from Opel's Ascona.",
+    "In a wet 1998 BTCC race, John Cleland's Cavalier famously overtook 1992 Formula One world champion Nigel Mansell's Ford in the dying moments.",
+    "A 1992 final-race crash with BMW's Steve Soper cost Cleland the title and birthed his immortal TV outburst: the man's an animal!",
+    "The Cavalier bowed out as a champion — John Cleland won the 1995 British Touring Car Championship the same year production ended.",
+  ],
+  "VAUXHALL|CHEVETTE": [
+    "The Chevette's pretty \"shovel nose\" was styled by Wayne Cherry, borrowed from the Firenza \"droopsnoot\" and loosely inspired by the Pontiac Firebird.",
+    "The hot Chevette HS was a homologation fudge — Vauxhall claimed 400 cars were built when fewer than 200 actually existed.",
+    "The fibreglass-bodied HSR evolution earned the nickname \"Plastic Fantastic\" for its plastic wings, bonnet, spoiler and tailgate.",
+    "Pentti Airikkala drove the Chevette to the 1979 British Open Rally Championship, beating the Escort and Sunbeam Lotus.",
+    "It was GM's \"world car,\" sold globally as the Opel Kadett, Isuzu Gemini, Holden Gemini and US Pontiac T1000 — all the same T-platform car.",
+  ],
   "VAUXHALL|CORSA": [
     "UK buyers got the first Corsa badged as the \"Nova\" because Vauxhall feared \"Corsa\" sounded too much like \"coarser\".",
     "That \"Nova doesn't go in Spanish\" rumour is a myth — the car was always sold as a Corsa in Spain anyway.",
     "The hardcore Corsa VXR Nürburgring Edition was the first Vauxhall fitted with a mechanical limited-slip differential since the big Omega.",
     "Before its 2017 sale to Peugeot's parent, the Corsa was also rebadged and sold as a Chevrolet, a Holden and a Buick around the world.",
     "The Corsa was sold as the Vauxhall Nova in the UK until 1993.",
-    "It was Britain's best-selling new car in both 2021 and 2022.",
+  ],
+  "VAUXHALL|INSIGNIA": [
+    "The Insignia won 2009 European Car of the Year by a single point, pipping the Ford Fiesta 321 to 320.",
+    "It was the first Vauxhall to ditch the signature \"V\" grille badge the brand had worn since 1994.",
+    "The Insignia replaced two cars at once — the Vectra and the Signum — folding both into one nameplate.",
+    "The 170mph Insignia VXR SuperSport was pitched as the fastest car you could buy in the UK for under £30,000.",
+    "Its fastback hatchback shape was so slippery it achieved a 0.27 drag coefficient, sleeker than many sports cars.",
   ],
   "VAUXHALL|MOKKA": [
     "The Mokka is named after the small, round Mokka coffee beans of the Coffea Arabica variety — Vauxhall says 80% of its buyers drink coffee.",
     "Vauxhall built a one-off Mokka Coffee-E with two coffee machines, a grinder, steamer wand and mini fridge packed into the boot.",
     "The first Mokka was built in South Korea and sold around the world wearing different badges — as the Buick Encore and Chevrolet Trax.",
     "The 2021 Mokka was the first car to wear Vauxhall's flat new griffin logo and \"Vizor\" face, now used across the whole range.",
+  ],
+  "VAUXHALL|NOVA": [
+    "The Nova was sold as the Opel Corsa everywhere else — the UK ditched \"Corsa\" because bosses thought it sounded too much like \"coarser\".",
+    "Despite the legend, the \"Nova means no go in Spanish\" story is a myth — it was a Corsa in Spain from day one.",
+    "Angry Luton workers, furious it was built in Spain, delayed the Nova's UK launch by a full seven months through union disputes.",
+    "The hot Nova GTE could out-accelerate Ford's Fiesta XR2 and matched the legendary Peugeot 205 GTi, hitting 60mph in 8.7 seconds.",
+  ],
+  "VAUXHALL|VIVA": [
+    "A \"Brabham\" hot Viva tuned with double F1 champion Jack Brabham's input was sold, but barely 10–25 were built and just two survive today.",
+    "The Viva's van version became the Bedford HA, those bright-yellow British Telecom vans staying in production until 1983 — long after the saloon died.",
+    "Vauxhall finished the Viva in acrylic \"Magic Mirror\" paint and claimed, cheekily, that it never needed polishing.",
+    "The HA van outlived two whole new Viva generations, keeping its 1964 bodyshell while quietly inheriting later engines and gearboxes.",
+    "The Viva shared its floorpan and engine design with the Opel Kadett, but Vauxhall built theirs in imperial inches while Opel used metric.",
   ],
   "VAUXHALL|VIVARO": [
     "Despite wearing a British Vauxhall badge, the Vivaro was designed by Renault near Paris and is essentially a rebadged French Trafic.",
@@ -357,8 +1077,14 @@ export const modelTrivia: Record<string, string[]> = {
     "The very last Vivaro rolled off the line at 12:18pm in March 2025, ending 120 years of Vauxhall production at Luton.",
     "It won 2002 International Van of the Year despite the \"Vauxhall\" being a French design assembled in Bedfordshire.",
   ],
+  "VAUXHALL|ZAFIRA": [
+    "The 237bhp Zafira VXR was Britain's fastest production MPV, a seven-seat people-carrier that hit 144mph using the Astra VXR's turbo engine.",
+    "Opel's Performance Centre engineers literally tore a normal Zafira apart and rebuilt it to create the VXR, the fastest van in Europe at its 2001 launch.",
+    "The Zafira's clever Flex7 seats folded flat into recesses stamped into the steel floor, turning a seven-seater into a two-seat van in about 15 seconds.",
+    "The name \"Zafira\" comes from an Arabic word meaning \"to succeed\" or \"victorious\".",
+    "Top Gear's Stig lapped the family-friendly Zafira VXR faster than a Ford S-MAX, though James May moaned it torque-steered horribly.",
+  ],
   "VOLKSWAGEN|BEETLE": [
-    "The original VW Beetle was produced for over 65 years, with more than 21 million built — one of the best-selling cars of all time.",
     "Its design traces back to Ferdinand Porsche in the 1930s.",
   ],
   "VOLKSWAGEN|GOLF": [
@@ -382,7 +1108,6 @@ export const modelTrivia: Record<string, string[]> = {
     "Volkswagen let the public name it via an Auto Bild contest, where it beat rivals Namib, Rockton, Samun and Nanuk.",
     "The off-road \"Track & Field\" Tiguan had a completely different front end giving a 28-degree approach angle versus the standard car's 18.",
     "At a 2007 Shanghai event VW showed a Tiguan HyMotion running on a hydrogen fuel cell instead of petrol or diesel.",
-    "The Tiguan is one of Volkswagen's best-selling models worldwide.",
     "Its name blends the German words for 'tiger' and 'iguana'.",
   ],
   "VOLKSWAGEN|TRANSPORTER": [
@@ -391,6 +1116,31 @@ export const modelTrivia: Record<string, string[]> = {
     "The original van was designed around a humble factory parts-trolley Pon spotted that couldn't legally drive on public roads.",
     "The classic T2 stayed in production in Brazil until 2013, making it one of the longest continuously built vehicles ever.",
     "Volkswagen built a battery-powered Elektro-Transporter back in the 1970s, but its 25-mile range and 43mph top speed killed it.",
+  ],
+  "VOLVO|240": [
+    "US regulators bought a fleet of Volvo 240s and crash-tested them to help set the safety standards modern cars are still judged against.",
+    "Volvo's racing 240 Turbo, nicknamed the \"Flying Brick,\" beat the V8 Rovers to win the 1985 European Touring Car Championship.",
+    "The boxy 240 moonlights as a film star, racking up over 2,000 screen appearances including Aunt May's ride in Spider-Man: Homecoming.",
+    "Volvo offered a 240 with a driver airbag back in 1987, more than a decade before they became legally required.",
+  ],
+  "VOLVO|XC60": [
+    "The original XC60 was the first car ever to get Volvo's City Safety, which automatically brakes for you to prevent low-speed shunts.",
+    "US insurers found the XC60 so safe its automatic braking cut bodily-injury liability claims by 51% versus rival luxury SUVs.",
+    "Between 2018 and 2021 the XC60 racked up an extraordinary zero driver deaths per million registered vehicles in US data.",
+    "It scored 98% for adult occupant protection in Euro NCAP, beating its nearest big-SUV rival by a full 20 percentage points.",
+    "The XC60 first appeared as a bronze-coloured part-coupe concept at the 2007 Detroit show, penned by Volvo design chief Steve Mattin.",
+  ],
+  "VOLVO|XC90": [
+    "The second-generation XC90 was the first car in the world to brake automatically if you turned across the path of an oncoming vehicle at a junction.",
+    "The original 2002 XC90 was the first SUV fitted with Roll Stability Control, designed to counter the rollover risk that plagued early SUVs.",
+    "Peter Horbury used the XC90 to drag Volvo out of its famously boxy era, before later defecting to design cars for Chinese owner Geely.",
+  ],
+  "WOLSELEY|HORNET": [
+    "The 1930 Hornet's overhead-cam six was twin-cylinders bolted onto the Minor's engine, and that family of engines became the basis of MG's early six-cylinder sports cars.",
+    "The boot-tailed 1960s Hornet was a posh Mini, but designer Alec Issigonis hated the 8.5 inches tacked onto his perfectly packaged original.",
+    "The 1966 Hornet Mk III got wind-up windows and concealed door hinges two years before the ordinary Mini ever did.",
+    "Land speed king Sir Malcolm Campbell road-tested the 1930s Hornet \"Daytona Special,\" a tuned twin-carb version good for around 75mph.",
+    "A team of three Hornet Specials won the 1932 LCC Relay Race at Brooklands, averaging 77.5mph over 270 miles.",
   ],
 };
 
@@ -660,7 +1410,7 @@ export const makeTrivia: Record<string, string[]> = {
   ],
   "LAGONDA": [
     "Lagonda was founded near London by American opera singer Wilbur Gunn, who named it after a creek in his Ohio hometown.",
-    "Lagonda's early Torpedo car won the 1910 Moscow–St Petersburg trial, sparking a booming export trade to Tsarist Russia.",
+    "Lagonda's early Torpedo car won the 1910 Moscow–St Petersburg trial, sparking a booming trade to Tsarist Russia.",
     "A Lagonda won the 1935 Le Mans 24 Hours outright, making it only the second British marque after Bentley to do so.",
     "After being ousted by Rolls-Royce, Bentley founder W.O. Bentley joined Lagonda and designed its acclaimed V12 engine.",
     "The 1976 Lagonda's electronics cost four times the budget for the entire car, yet its glitchy dashboards became infamous.",
@@ -974,7 +1724,6 @@ export const makeTrivia: Record<string, string[]> = {
     "Volvo's logo is the ancient alchemical symbol for iron, a nod to Swedish steel — its resemblance to the male gender symbol is pure coincidence.",
     "Volvo invented the modern three-point seatbelt in 1959, then gave the patent away for free so every carmaker could use it.",
     "American teacher Irv Gordon drove his 1966 Volvo P1800 over 3.2 million miles, earning a Guinness World Record before his death in 2018.",
-    "Volvo invented the modern three-point seatbelt in 1959 — and gave the patent away to save lives.",
   ],
   "WOLSELEY": [
     "Wolseley's very first car, built in 1895, was designed by Herbert Austin — who later quit to found rival Austin Motors.",
