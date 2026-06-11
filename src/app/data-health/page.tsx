@@ -39,6 +39,13 @@ type HealthData = {
 
 type TopMake = { make: string; count: number };
 type PartnerContextCount = { context: string; count: number };
+type AffiliateStat = {
+  key: string;
+  name: string;
+  today: number;
+  last7d: number;
+  topContexts: PartnerContextCount[];
+};
 type TopPage = { path: string; views: number };
 type TrafficSource = { source: string; visits24h: number; visits7d: number };
 type ReminderTriggerFunnel = {
@@ -78,6 +85,7 @@ type StatsData = {
     byContextToday: PartnerContextCount[];
     byContextLast7d: PartnerContextCount[];
   };
+  affiliates: AffiliateStat[];
   newEventsLast7d: {
     pdfDownloads: number;
     pdfErrors: number;
@@ -918,6 +926,38 @@ export default function DataHealthPage() {
                   />
                   <ExternalLink className="h-3 w-3 text-slate-500" />
                 </a>
+              </Section>
+            )}
+
+            {/* ── AFFILIATE PARTNERS (carVertical / BMG / ClickMechanic) ── */}
+            {stats && stats.affiliates && (
+              <Section
+                title="Affiliate partners"
+                hint="clicks · today / last 7d · by placement"
+              >
+                <div className="space-y-3">
+                  {stats.affiliates.map((a) => (
+                    <div
+                      key={a.key}
+                      className="rounded-lg border border-slate-800 bg-slate-900/40 p-3"
+                    >
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <span className="font-semibold text-slate-200">{a.name}</span>
+                        <span className="text-xs text-slate-400 tabular-nums">
+                          {a.today.toLocaleString()} today · {a.last7d.toLocaleString()} last 7d
+                        </span>
+                      </div>
+                      <BarList
+                        items={a.topContexts.slice(0, 6).map((c) => ({
+                          label: c.context,
+                          count: c.count,
+                          mono: true,
+                        }))}
+                        emptyMessage="No clicks in the last 7 days."
+                      />
+                    </div>
+                  ))}
+                </div>
               </Section>
             )}
 

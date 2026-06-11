@@ -81,6 +81,8 @@ export type StatsResponse = {
     // mot_cta placements). 7d gives a meaningful per-CTA picture.
     byContextLast7d: PartnerContextCount[];
   };
+  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic).
+  affiliates: AffiliateStat[];
   sectionReachToday: {
     resultsViews: number;
     sections: SectionReach[];
@@ -360,6 +362,68 @@ async function groupByMetadataField(
     counts.set(value, (counts.get(value) ?? 0) + 1);
   }
   return counts;
+}
+
+// ── Affiliate roll-up ────────────────────────────────────────────────────────
+// Group partner_click events by AFFILIATE (carVertical / BookMyGarage /
+// ClickMechanic), not just by placement context. BMG fires under three ids
+// (bookMyGarage / bookMyGarageService / bookMyGarageRepair) so we prefix-match.
+export type AffiliateStat = {
+  key: string;
+  name: string;
+  today: number;
+  last7d: number;
+  topContexts: PartnerContextCount[];
+};
+
+const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boolean }[] = [
+  { key: "carVertical", name: "carVertical", match: (p) => p.startsWith("carvertical") },
+  { key: "bookMyGarage", name: "BookMyGarage", match: (p) => p.startsWith("bookmygarage") },
+  { key: "clickMechanic", name: "ClickMechanic", match: (p) => p.startsWith("clickmechanic") },
+];
+
+/** Per-affiliate click totals (today + 7d) and placement breakdown, from one fetch. */
+async function affiliateClickBreakdown(
+  sb: ReturnType<typeof supabaseServer>,
+  sevenDaysAgo: Date,
+  todayStart: Date,
+): Promise<AffiliateStat[]> {
+  const { data, error } = await sb
+    .from("site_events")
+    .select("metadata, created_at")
+    .eq("event_type", "partner_click")
+    .gte("created_at", sevenDaysAgo.toISOString())
+    .limit(20000);
+
+  const acc = new Map<string, { today: number; last7d: number; contexts: Map<string, number> }>();
+  for (const g of AFFILIATE_GROUPS) acc.set(g.key, { today: 0, last7d: 0, contexts: new Map() });
+
+  if (!error && data) {
+    for (const row of data) {
+      const md = row.metadata as Record<string, unknown> | null;
+      const pid = typeof md?.partner_id === "string" ? md.partner_id.toLowerCase() : "";
+      const group = AFFILIATE_GROUPS.find((g) => g.match(pid));
+      if (!group) continue;
+      const a = acc.get(group.key)!;
+      a.last7d += 1;
+      if (typeof row.created_at === "string" && new Date(row.created_at) >= todayStart) a.today += 1;
+      const ctx = typeof md?.click_context === "string" && md.click_context.length > 0 ? md.click_context : "(none)";
+      a.contexts.set(ctx, (a.contexts.get(ctx) ?? 0) + 1);
+    }
+  }
+
+  return AFFILIATE_GROUPS.map((g) => {
+    const a = acc.get(g.key)!;
+    return {
+      key: g.key,
+      name: g.name,
+      today: a.today,
+      last7d: a.last7d,
+      topContexts: Array.from(a.contexts.entries())
+        .map(([context, count]) => ({ context, count }))
+        .sort((x, y) => y.count - x.count),
+    };
+  });
 }
 
 /**
@@ -667,6 +731,9 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     .map(([context, count]) => ({ context, count }))
     .sort((a, b) => b.count - a.count);
 
+  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic).
+  const affiliates = await affiliateClickBreakdown(sb, sevenDaysAgo, todayStart);
+
   // Booking step completes: numeric step values converted from string keys
   const bookingStepCounts: BookingStepCount[] = Array.from(bookingStepCompletes7d.entries())
     .map(([stepStr, count]) => ({ step: Number(stepStr), count }))
@@ -753,6 +820,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       byContextToday: partnerContextByCount,
       byContextLast7d: partnerContextByCountLast7d,
     },
+    affiliates,
     sectionReachToday: {
       resultsViews: resultsViewsToday,
       sections: sectionReachSections,
