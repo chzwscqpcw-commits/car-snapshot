@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
@@ -122,6 +122,13 @@ export default function CarVerticalReportCTA({
 
       {/* One-line value */}
       <p className="mt-1.5 text-xs leading-relaxed text-slate-400 sm:text-sm">{cfg.value}</p>
+
+      {/* Discount badge — the freeplatecheck voucher (20% off) is baked into the
+          tracking link, so it's applied automatically at carVertical's checkout. */}
+      <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+        <Tag className="h-3 w-3" aria-hidden />
+        20% off with our link — applied automatically
+      </p>
 
       {/* CTA + toggle */}
       <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
