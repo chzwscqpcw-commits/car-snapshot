@@ -46,6 +46,15 @@ type AffiliateStat = {
   last7d: number;
   topContexts: PartnerContextCount[];
 };
+type OtherPartnerStat = { partner: string; today: number; last7d: number };
+
+/** camelCase partner_id → readable label, e.g. "weBuyAnyCar" → "We Buy Any Car". */
+function formatPartnerName(p: string): string {
+  return p
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (c) => c.toUpperCase())
+    .trim();
+}
 type TopPage = { path: string; views: number };
 type TrafficSource = { source: string; visits24h: number; visits7d: number };
 type ReminderTriggerFunnel = {
@@ -86,6 +95,7 @@ type StatsData = {
     byContextLast7d: PartnerContextCount[];
   };
   affiliates: AffiliateStat[];
+  otherPartners: OtherPartnerStat[];
   newEventsLast7d: {
     pdfDownloads: number;
     pdfErrors: number;
@@ -961,20 +971,31 @@ export default function DataHealthPage() {
               </Section>
             )}
 
-            {/* ── PARTNER CLICKS (today + 7d) ── */}
-            {stats && (
+            {/* ── OTHER PARTNER LINKS (non-affiliate long tail) ── */}
+            {stats && stats.otherPartners && (
               <Section
-                title="Partner clicks"
-                hint={`${stats.partnerClicks.today.toLocaleString()} today · ${stats.partnerClicks.last7d.toLocaleString()} last 7d`}
+                title="Other partner links"
+                hint="non-affiliate · today / last 7d"
               >
-                <BarList
-                  items={stats.partnerClicks.byContextLast7d.map((c) => ({
-                    label: c.context,
-                    count: c.count,
-                    mono: true,
-                  }))}
-                  emptyMessage="No partner clicks in the last 7 days yet."
-                />
+                {stats.otherPartners.length > 0 ? (
+                  <div className="space-y-1.5">
+                    {stats.otherPartners.map((o) => (
+                      <div
+                        key={o.partner}
+                        className="flex items-center justify-between gap-2 text-sm"
+                      >
+                        <span className="text-slate-300">{formatPartnerName(o.partner)}</span>
+                        <span className="text-xs text-slate-400 tabular-nums">
+                          {o.today.toLocaleString()} today · {o.last7d.toLocaleString()} last 7d
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-500">
+                    No non-affiliate partner clicks in the last 7 days.
+                  </p>
+                )}
               </Section>
             )}
 

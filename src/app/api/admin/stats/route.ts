@@ -83,6 +83,8 @@ export type StatsResponse = {
   };
   // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic).
   affiliates: AffiliateStat[];
+  // Non-affiliate partner clicks (the long tail not in the three cards).
+  otherPartners: OtherPartnerStat[];
   sectionReachToday: {
     resultsViews: number;
     sections: SectionReach[];
@@ -376,18 +378,26 @@ export type AffiliateStat = {
   topContexts: PartnerContextCount[];
 };
 
+// Non-affiliate partner clicks (We Buy Any Car, Warrantywise, Cuvva, …) — the
+// long tail not covered by the three affiliate cards.
+export type OtherPartnerStat = { partner: string; today: number; last7d: number };
+
 const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boolean }[] = [
   { key: "carVertical", name: "carVertical", match: (p) => p.startsWith("carvertical") },
   { key: "bookMyGarage", name: "BookMyGarage", match: (p) => p.startsWith("bookmygarage") },
   { key: "clickMechanic", name: "ClickMechanic", match: (p) => p.startsWith("clickmechanic") },
 ];
 
-/** Per-affiliate click totals (today + 7d) and placement breakdown, from one fetch. */
+/**
+ * Per-affiliate click totals (today + 7d) and placement breakdown, plus the
+ * non-affiliate long tail — all from one fetch. Returns the three affiliate
+ * cards and an "other partners" list (by partner_id, excluding the affiliates).
+ */
 async function affiliateClickBreakdown(
   sb: ReturnType<typeof supabaseServer>,
   sevenDaysAgo: Date,
   todayStart: Date,
-): Promise<AffiliateStat[]> {
+): Promise<{ affiliates: AffiliateStat[]; other: OtherPartnerStat[] }> {
   const { data, error } = await sb
     .from("site_events")
     .select("metadata, created_at")
@@ -397,22 +407,31 @@ async function affiliateClickBreakdown(
 
   const acc = new Map<string, { today: number; last7d: number; contexts: Map<string, number> }>();
   for (const g of AFFILIATE_GROUPS) acc.set(g.key, { today: 0, last7d: 0, contexts: new Map() });
+  const other = new Map<string, { today: number; last7d: number }>();
 
   if (!error && data) {
     for (const row of data) {
       const md = row.metadata as Record<string, unknown> | null;
-      const pid = typeof md?.partner_id === "string" ? md.partner_id.toLowerCase() : "";
+      const raw = typeof md?.partner_id === "string" ? md.partner_id : "";
+      const pid = raw.toLowerCase();
+      const isToday = typeof row.created_at === "string" && new Date(row.created_at) >= todayStart;
       const group = AFFILIATE_GROUPS.find((g) => g.match(pid));
-      if (!group) continue;
-      const a = acc.get(group.key)!;
-      a.last7d += 1;
-      if (typeof row.created_at === "string" && new Date(row.created_at) >= todayStart) a.today += 1;
-      const ctx = typeof md?.click_context === "string" && md.click_context.length > 0 ? md.click_context : "(none)";
-      a.contexts.set(ctx, (a.contexts.get(ctx) ?? 0) + 1);
+      if (group) {
+        const a = acc.get(group.key)!;
+        a.last7d += 1;
+        if (isToday) a.today += 1;
+        const ctx = typeof md?.click_context === "string" && md.click_context.length > 0 ? md.click_context : "(none)";
+        a.contexts.set(ctx, (a.contexts.get(ctx) ?? 0) + 1);
+      } else if (raw) {
+        const o = other.get(raw) ?? { today: 0, last7d: 0 };
+        o.last7d += 1;
+        if (isToday) o.today += 1;
+        other.set(raw, o);
+      }
     }
   }
 
-  return AFFILIATE_GROUPS.map((g) => {
+  const affiliates = AFFILIATE_GROUPS.map((g) => {
     const a = acc.get(g.key)!;
     return {
       key: g.key,
@@ -424,6 +443,12 @@ async function affiliateClickBreakdown(
         .sort((x, y) => y.count - x.count),
     };
   });
+
+  const otherList: OtherPartnerStat[] = Array.from(other.entries())
+    .map(([partner, v]) => ({ partner, today: v.today, last7d: v.last7d }))
+    .sort((x, y) => y.last7d - x.last7d);
+
+  return { affiliates, other: otherList };
 }
 
 /**
@@ -731,8 +756,9 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
     .map(([context, count]) => ({ context, count }))
     .sort((a, b) => b.count - a.count);
 
-  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic).
-  const affiliates = await affiliateClickBreakdown(sb, sevenDaysAgo, todayStart);
+  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic) + the
+  // non-affiliate long tail (We Buy Any Car, Warrantywise, Cuvva, …).
+  const { affiliates, other: otherPartners } = await affiliateClickBreakdown(sb, sevenDaysAgo, todayStart);
 
   // Booking step completes: numeric step values converted from string keys
   const bookingStepCounts: BookingStepCount[] = Array.from(bookingStepCompletes7d.entries())
@@ -821,6 +847,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
       byContextLast7d: partnerContextByCountLast7d,
     },
     affiliates,
+    otherPartners,
     sectionReachToday: {
       resultsViews: resultsViewsToday,
       sections: sectionReachSections,
