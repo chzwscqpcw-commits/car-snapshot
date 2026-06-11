@@ -1,16 +1,18 @@
+import Image from "next/image";
+
 /**
- * Text wordmark approximation of the carVertical logo, used in the dormant
- * report CTA + the mock-up. On go-live, swap for carVertical's OFFICIAL logo
- * asset from their affiliate dashboard — their brand guidelines (agreement
- * clauses 1.3 / 3.8) govern real trademark usage.
+ * carVertical's official wordmark (white variant, for dark backgrounds) —
+ * supplied by carVertical 2026-06-11. Used in the report/mileage CTAs. Usage is
+ * governed by carVertical's Brand Asset Usage Rules (agreement clauses 1.3/3.8).
  */
 export default function CarVerticalLogo({ className = "" }: { className?: string }) {
   return (
-    <span
-      className={`font-extrabold tracking-tight text-[#1b54ff] ${className}`}
-      aria-label="carVertical"
-    >
-      carVertical
-    </span>
+    <Image
+      src="/carvertical/carvertical-logo-white.png"
+      alt="carVertical"
+      width={507}
+      height={73}
+      className={`h-4 w-auto ${className}`}
+    />
   );
 }
