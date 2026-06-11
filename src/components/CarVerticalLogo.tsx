@@ -12,7 +12,10 @@ export default function CarVerticalLogo({ className = "" }: { className?: string
       alt="carVertical"
       width={507}
       height={73}
-      className={`h-4 w-auto ${className}`}
+      // object-contain keeps the ~7:1 wordmark's aspect ratio even where a
+      // narrow container (e.g. the comparison-table column) clamps its width via
+      // preflight's max-width:100% — without it the logo squashes horizontally.
+      className={`h-4 w-auto max-w-full object-contain ${className}`}
     />
   );
 }

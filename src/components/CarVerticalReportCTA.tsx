@@ -155,7 +155,7 @@ export default function CarVerticalReportCTA({
       {/* Expandable detail */}
       {expanded && variant === "report" && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
-          <div className="grid grid-cols-[1fr_3.5rem_5rem] text-xs">
+          <div className="grid grid-cols-[1fr_3.5rem_6rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>
             <div className="bg-slate-800/70 px-1 py-2 text-center font-medium text-slate-400">Free</div>
             <div className="bg-[#1b54ff]/15 px-1 py-2 text-center">
