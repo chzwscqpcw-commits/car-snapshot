@@ -84,7 +84,7 @@ Start with a [free car check](/car-check) to verify the vehicle details, [MOT hi
 
 ### 2. Get a paid history check
 
-A full [vehicle history report](/blog/what-is-hpi-check) — we recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** — will surface recorded damage and total-loss history that a free check can't access, so it's worth running on any car where you suspect or know about a write-off. *(carVertical provides and sells the report; we may earn a commission — 20% off with our link.)*
+A full [vehicle history report](/blog/what-is-hpi-check) — we recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** — will surface recorded damage and total-loss history that a free check can't access, so it's worth running on any car where you suspect or know about a write-off. *(carVertical provides and sells the report; we may earn a commission — 20% off with our link, or code `freeplatecheck`.)*
 
 ### 3. Get an independent inspection
 

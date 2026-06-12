@@ -10,7 +10,7 @@ faqItems:
   - question: "Do I need a paid history check if I've done a free car check?"
     answer: "They cover different things. A free car check confirms the DVLA details, MOT history, mileage at each MOT, tax status and recalls — enough to spot many problems before you view a car. A paid report adds the records that sit in private databases: finance owed, damage and write-off history, theft records and cross-referenced mileage. The smart approach is free first to filter, then a paid report on the car you're serious about."
   - question: "How much does a full car history report cost?"
-    answer: "A carVertical report starts from around £16.79 per report with the Free Plate Check reader discount (20% off). Either way it's a tiny fraction of a used car's price — a single undisclosed finance agreement or a hidden write-off can cost you thousands, or the car itself."
+    answer: "A carVertical report starts from around £16.79 per report with the Free Plate Check reader discount (20% off with code freeplatecheck). Either way it's a tiny fraction of a used car's price — a single undisclosed finance agreement or a hidden write-off can cost you thousands, or the car itself."
   - question: "What can't a history check tell you?"
     answer: "No history check — free or paid — can assess mechanical condition, unclaimed accident damage that was repaired privately, or how the car was driven. For those you need a physical inspection by a qualified mechanic. A history report covers the paperwork; an inspection covers the metal."
 ---
@@ -57,7 +57,7 @@ The most cost-effective approach is layered: run a [free check](/car-check) on e
 
 ## How to run a full history check
 
-Once you've used the free check to narrow down to a serious contender, a full report is the next step. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** for the paid layer — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history, previous owners and more, summed up in an overall "carVertical Score". Free Plate Check readers get **20% off** (from around £16.79 a report).
+Once you've used the free check to narrow down to a serious contender, a full report is the next step. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** for the paid layer — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history, previous owners and more, summed up in an overall "carVertical Score". Free Plate Check readers get **20% off** with code `freeplatecheck` (from around £16.79 a report).
 
 *carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 

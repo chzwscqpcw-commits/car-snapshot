@@ -72,7 +72,7 @@ If you can safely look underneath, check for wear on suspension components, exha
 
 ## 7. Get a paid history check
 
-A paid vehicle history report can flag mileage discrepancies from multiple sources — finance company records, insurance records, previous MOT data, and dedicated odometer / mileage-anomaly databases. These reports cross-reference data that isn't always visible in a basic MOT history lookup, which is exactly where clocking tends to show up. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)**, which checks for mileage rollbacks across over 1,000 data sources in 45+ countries — especially useful for catching a car that was clocked before being imported. Free Plate Check readers get **20% off**.
+A paid vehicle history report can flag mileage discrepancies from multiple sources — finance company records, insurance records, previous MOT data, and dedicated odometer / mileage-anomaly databases. These reports cross-reference data that isn't always visible in a basic MOT history lookup, which is exactly where clocking tends to show up. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)**, which checks for mileage rollbacks across over 1,000 data sources in 45+ countries — especially useful for catching a car that was clocked before being imported. Free Plate Check readers get **20% off** with code `freeplatecheck`.
 
 *carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
