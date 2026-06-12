@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
   BarChart,
   Bar,
@@ -312,9 +311,6 @@ export default function ReliabilityCharts() {
                 >
                   Pass Rate{sortIndicator("passRate")}
                 </th>
-                <th className="px-4 py-3 sm:px-6 text-right">
-                  <span className="sr-only">Action</span>
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2a2a2a]">
@@ -336,14 +332,6 @@ export default function ReliabilityCharts() {
                     <span style={{ color: tierColor(entry.passRate) }}>
                       {entry.passRate.toFixed(1)}%
                     </span>
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-right">
-                    <Link
-                      href={`/?reg=${entry.make}+${entry.model}`}
-                      className="text-emerald-400 hover:text-emerald-300 transition-colors text-xs font-medium"
-                    >
-                      Check &rarr;
-                    </Link>
                   </td>
                 </tr>
               ))}
