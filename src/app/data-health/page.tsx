@@ -160,29 +160,45 @@ type InsightsData =
 
 // ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
-const PIN = "4533";
-const SESSION_KEY = "fpc_admin_pin";
+const STORAGE_KEY = "fpc_admin_pin";
 
-// The /api/admin/* endpoints now require the PIN as an `x-admin-pin` header
-// (see src/lib/admin-auth.ts). We store the entered PIN in sessionStorage and
-// attach it to admin fetches.
+// The /api/admin/* endpoints validate the PIN server-side via an `x-admin-pin`
+// header (see src/lib/admin-auth.ts). The PIN is the ADMIN_PIN secret in the
+// Vercel env — it is NEVER hardcoded here, so it can't leak through the client
+// bundle. We keep the entered PIN in localStorage so it persists per-device
+// (paste once, then the dashboard just opens) and attach it to every admin fetch.
+function getStoredPin(): string {
+  return typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) ?? "" : "";
+}
 function adminFetch(url: string) {
-  const pin = typeof window !== "undefined" ? sessionStorage.getItem(SESSION_KEY) ?? "" : "";
-  return fetch(url, { headers: { "x-admin-pin": pin } });
+  return fetch(url, { headers: { "x-admin-pin": getStoredPin() } });
 }
 
 function PinGate({ onAuth }: { onAuth: () => void }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
+  const [checking, setChecking] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (pin === PIN) {
-      sessionStorage.setItem(SESSION_KEY, pin);
-      onAuth();
-    } else {
+    if (!pin || checking) return;
+    setChecking(true);
+    setError(false);
+    try {
+      // The server is the arbiter — we never compare against a baked-in value.
+      // A 200 means the PIN matches ADMIN_PIN; anything else is "wrong PIN".
+      const res = await fetch("/api/admin/health", { headers: { "x-admin-pin": pin } });
+      if (res.ok) {
+        localStorage.setItem(STORAGE_KEY, pin);
+        onAuth();
+      } else {
+        setError(true);
+        setPin("");
+      }
+    } catch {
       setError(true);
-      setPin("");
+    } finally {
+      setChecking(false);
     }
   }
 
@@ -199,14 +215,13 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
         <form onSubmit={handleSubmit}>
           <input
             type="password"
-            inputMode="numeric"
-            maxLength={4}
+            maxLength={24}
             value={pin}
             onChange={(e) => {
               setError(false);
-              setPin(e.target.value.replace(/\D/g, ""));
+              setPin(e.target.value);
             }}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-center text-2xl font-mono text-white tracking-[0.5em] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-600 placeholder:tracking-normal placeholder:text-base"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-center text-2xl font-mono text-white tracking-[0.25em] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 placeholder:text-slate-600 placeholder:tracking-normal placeholder:text-base"
             placeholder="PIN"
             autoFocus
           />
@@ -215,9 +230,10 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
           )}
           <button
             type="submit"
-            className="w-full mt-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2.5 rounded-lg transition-colors"
+            disabled={checking}
+            className="w-full mt-4 bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors"
           >
-            Unlock
+            {checking ? "Checking…" : "Unlock"}
           </button>
         </form>
       </div>
@@ -628,7 +644,20 @@ export default function DataHealthPage() {
   const [insightsLoading, setInsightsLoading] = useState(true);
 
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY)) setAuthed(true);
+    if (!getStoredPin()) return;
+    // Validate the stored PIN against the server; only authenticate on 200 so a
+    // stale/changed PIN drops back to the gate instead of showing an empty board.
+    let active = true;
+    fetch("/api/admin/health", { headers: { "x-admin-pin": getStoredPin() } })
+      .then((r) => {
+        if (!active) return;
+        if (r.ok) setAuthed(true);
+        else localStorage.removeItem(STORAGE_KEY);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
   // AI activity summary — fetched once on mount; refresh button passes force=1.
