@@ -30,6 +30,50 @@ export function loadGoogleServiceKey(): GoogleServiceKey | null {
   }
 }
 
+/**
+ * OAuth refresh-token auth — for accessing your OWN Google data (e.g. the
+ * Search Console property your account owns) without a downloadable service-
+ * account key. Set GSC_OAUTH_CLIENT_ID, GSC_OAUTH_CLIENT_SECRET and
+ * GSC_OAUTH_REFRESH_TOKEN (obtained once via the consent flow). The scope is
+ * baked into the refresh token at grant time, so it isn't passed here.
+ */
+export function hasGscOAuth(): boolean {
+  return Boolean(
+    process.env.GSC_OAUTH_CLIENT_ID &&
+      process.env.GSC_OAUTH_CLIENT_SECRET &&
+      process.env.GSC_OAUTH_REFRESH_TOKEN,
+  );
+}
+
+/** Mint a short-lived access token from the stored OAuth refresh token. */
+export async function getOAuthAccessToken(): Promise<string> {
+  const clientId = process.env.GSC_OAUTH_CLIENT_ID;
+  const clientSecret = process.env.GSC_OAUTH_CLIENT_SECRET;
+  const refreshToken = process.env.GSC_OAUTH_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error("GSC OAuth env vars not set");
+  }
+
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: "refresh_token",
+    }).toString(),
+  });
+
+  const data = await res.json();
+  if (!data.access_token) {
+    throw new Error(
+      `OAuth token refresh failed: ${data.error_description || data.error || "no access_token returned"}`,
+    );
+  }
+  return data.access_token as string;
+}
+
 /** Exchange a service-account key for an access token scoped to `scope`. */
 export async function getGoogleAccessToken(
   key: GoogleServiceKey,

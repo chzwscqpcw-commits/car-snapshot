@@ -1,4 +1,9 @@
-import { getGoogleAccessToken, loadGoogleServiceKey } from "@/lib/google-auth";
+import {
+  getGoogleAccessToken,
+  getOAuthAccessToken,
+  hasGscOAuth,
+  loadGoogleServiceKey,
+} from "@/lib/google-auth";
 import { supabaseServerRole } from "@/lib/supabaseServer";
 
 /**
@@ -74,14 +79,23 @@ interface GscRow {
  * dashboard degrade cleanly when creds/permission aren't set up.
  */
 export async function fetchKeyQueryPositions(): Promise<GscResult> {
-  const key = loadGoogleServiceKey();
-  if (!key) {
-    return { status: "not_configured", reason: "GOOGLE_INDEXING_KEY not set" };
+  // Prefer OAuth (your own account, owns the property — no key, no add-user).
+  // Fall back to a service-account key if that's how it's wired instead.
+  const serviceKey = hasGscOAuth() ? null : loadGoogleServiceKey();
+  if (!hasGscOAuth() && !serviceKey) {
+    return {
+      status: "not_configured",
+      reason: "No GSC auth configured — set GSC_OAUTH_* env vars (or GOOGLE_INDEXING_KEY)",
+    };
   }
 
   let token: string;
   try {
-    token = await getGoogleAccessToken(key, SCOPE);
+    if (serviceKey) {
+      token = await getGoogleAccessToken(serviceKey, SCOPE);
+    } else {
+      token = await getOAuthAccessToken();
+    }
   } catch (err) {
     return { status: "error", reason: err instanceof Error ? err.message : String(err) };
   }
