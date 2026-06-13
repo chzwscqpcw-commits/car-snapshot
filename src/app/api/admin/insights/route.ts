@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { adminGate } from "@/lib/admin-auth";
 import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
 
 // ── Response shape ──────────────────────────────────────────────────────────
@@ -372,6 +373,7 @@ async function generateViaAnthropic(prompt: string): Promise<string | null> {
 // ── GET handler ─────────────────────────────────────────────────────────────
 
 export async function GET(req: Request): Promise<NextResponse<InsightsResponse>> {
+  const denied = adminGate(req); if (denied) return denied as NextResponse<InsightsResponse>;
   try {
     if (!process.env.GROQ_API_KEY && !process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ status: "no_key", summary: null });

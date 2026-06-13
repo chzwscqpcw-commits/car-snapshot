@@ -163,6 +163,14 @@ type InsightsData =
 const PIN = "4533";
 const SESSION_KEY = "fpc_admin_pin";
 
+// The /api/admin/* endpoints now require the PIN as an `x-admin-pin` header
+// (see src/lib/admin-auth.ts). We store the entered PIN in sessionStorage and
+// attach it to admin fetches.
+function adminFetch(url: string) {
+  const pin = typeof window !== "undefined" ? sessionStorage.getItem(SESSION_KEY) ?? "" : "";
+  return fetch(url, { headers: { "x-admin-pin": pin } });
+}
+
 function PinGate({ onAuth }: { onAuth: () => void }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
@@ -170,7 +178,7 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (pin === PIN) {
-      sessionStorage.setItem(SESSION_KEY, "1");
+      sessionStorage.setItem(SESSION_KEY, pin);
       onAuth();
     } else {
       setError(true);
@@ -620,14 +628,14 @@ export default function DataHealthPage() {
   const [insightsLoading, setInsightsLoading] = useState(true);
 
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY) === "1") setAuthed(true);
+    if (sessionStorage.getItem(SESSION_KEY)) setAuthed(true);
   }, []);
 
   // AI activity summary — fetched once on mount; refresh button passes force=1.
   const fetchInsights = useCallback(async (force = false) => {
     setInsightsLoading(true);
     try {
-      const res = await fetch(`/api/admin/insights${force ? "?force=1" : ""}`)
+      const res = await adminFetch(`/api/admin/insights${force ? "?force=1" : ""}`)
         .then((r) => r.json())
         .catch(() => null);
       if (res) setInsights(res as InsightsData);
@@ -640,8 +648,8 @@ export default function DataHealthPage() {
   const fetchDashboardData = useCallback(async () => {
     try {
       const [healthRes, statsRes, dataRes, fuelRes] = await Promise.all([
-        fetch("/api/admin/health").then((r) => r.json()).catch(() => null),
-        fetch("/api/admin/stats").then((r) => r.json()).catch(() => null),
+        adminFetch("/api/admin/health").then((r) => r.json()).catch(() => null),
+        adminFetch("/api/admin/stats").then((r) => r.json()).catch(() => null),
         fetch("/api/data-health").then((r) => r.json()).catch(() => null),
         fetch("/api/fuel-prices").then((r) => r.json()).catch(() => null),
       ]);

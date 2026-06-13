@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { adminGate } from "@/lib/admin-auth";
 import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
 
 export type TopMake = { make: string; count: number };
@@ -594,7 +595,8 @@ async function pageViewAnalytics(
   return { topPages, trafficSources };
 }
 
-export async function GET(): Promise<NextResponse<StatsResponse>> {
+export async function GET(req: Request): Promise<NextResponse> {
+  const denied = adminGate(req); if (denied) return denied;
   const sb = supabaseServer();
   // contact_messages has RLS enabled — the anon client returns empty result
   // sets silently, with no error. Use the service-role client for any count

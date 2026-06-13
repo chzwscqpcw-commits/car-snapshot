@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { adminGate } from "@/lib/admin-auth";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type ServiceStatus = {
@@ -218,7 +219,8 @@ async function checkFuelPrices(): Promise<ServiceStatus> {
   }
 }
 
-export async function GET(): Promise<NextResponse<HealthResponse>> {
+export async function GET(req: Request): Promise<NextResponse> {
+  const denied = adminGate(req); if (denied) return denied;
   const services = await Promise.all([
     checkSupabase(),
     checkDvla(),
