@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free Plate Check — How Many Left? №01 Austin Metro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate950:#020617; --slate900:#0f172a; --slate800:#1e293b; --slate700:#334155;
+    --slate100:#f1f5f9; --slate300:#cbd5e1; --slate400:#94a3b8; --slate500:#64748b;
+    --cyan:#22d3ee; --blue:#3b82f6; --cyan100:#cffafe; --emerald:#34d399; --amber:#fbbf24;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+    --sans:"Inter",Arial,Helvetica,sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#04060c;overflow:hidden;font-family:var(--sans);
+    -webkit-font-smoothing:antialiased}
+  .page{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+
+  /* ---- The 1080x1920 recording stage (record ONLY this) ---- */
+  .stage{
+    position:relative;width:1080px;height:1920px;flex:none;
+    background:var(--slate950);overflow:hidden;
+    transform-origin:center center;
+  }
+  /* soft cyan brand glow, top-centre */
+  .glow{position:absolute;inset:0;pointer-events:none;animation:breathe 9s ease-in-out infinite;
+    background:radial-gradient(ellipse 1120px 900px at 50% 11%, rgba(34,211,238,.18), rgba(34,211,238,.055) 34%, transparent 64%),
+               radial-gradient(ellipse 1260px 940px at 50% 119%, rgba(59,130,246,.10), transparent 60%)}
+  /* fine grain — kills gradient banding + adds premium filmic texture */
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:soft-light;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size:140px 140px}
+  .vignette{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 1100px 1520px at 50% 50%, transparent 58%, rgba(0,0,0,.5))}
+
+  /* ---- persistent top label ---- */
+  /* diagnostic-HUD: one integrated instrument strip + corner frame.
+     Powers DOWN (.down) just before the brand reveal — the machine switches
+     off so Free Plate Check resolves in clean, calm space. */
+  .hud{position:absolute;inset:0;pointer-events:none;font-family:var(--mono);transition:opacity .55s var(--ease)}
+  .hud.down{opacity:0}
+  .hud-c{position:absolute;width:44px;height:44px;border:2px solid rgba(34,211,238,.18)}
+  .hud .tl{top:54px;left:54px;border-right:none;border-bottom:none}
+  .hud .tr{top:54px;right:54px;border-left:none;border-bottom:none}
+  .hud .bl{bottom:54px;left:54px;border-right:none;border-top:none}
+  .hud .br{bottom:54px;right:54px;border-left:none;border-top:none}
+  .hud-bar{position:absolute;top:250px;left:160px;right:160px;display:flex;align-items:center;gap:18px;font-size:21px;letter-spacing:.16em;color:rgba(148,163,184,.85)}
+  .hud-bar .dot{width:11px;height:11px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d399;animation:blink 1.6s ease-in-out infinite;flex:none}
+  .hud-bar .lbl{flex:none;white-space:nowrap}
+  .hud-bar .track{flex:1;height:3px;background:rgba(148,163,184,.14);border-radius:2px;overflow:hidden}
+  .hud-bar .track span{display:block;height:100%;width:0;background:linear-gradient(90deg,#22d3ee,#3b82f6);box-shadow:0 0 10px rgba(34,211,238,.5)}
+  .hud-ind{flex:none;width:60px;display:flex;opacity:0;transition:opacity .12s linear}
+  .hud-ind.show{opacity:1}
+  .hud-ind svg{width:100%;height:auto;fill:#22c55e;opacity:.16}
+  .hud-ind.on svg{opacity:1;filter:drop-shadow(0 0 14px rgba(34,197,94,.8))}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .topbar{position:absolute;top:372px;left:0;right:0;text-align:center;opacity:0}
+  .topbar.show{opacity:1;transition:opacity .5s var(--ease)}
+  .topbar .k{font-size:28px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate500);font-weight:600}
+  .topbar .car{margin-top:14px;font-family:var(--mono);font-weight:700;font-size:40px;
+    letter-spacing:.04em;color:var(--cyan100)}
+
+  /* ---- centre focal band (safe: 220–1500) ---- */
+  .centre{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .beat{position:absolute;width:980px;left:50px;text-align:center;
+    top:50%;transform:translateY(-50%);opacity:0;pointer-events:none}
+  .beat.in{animation:materialise .56s var(--ease) both}
+  /* ignition crank: text distorts/flickers while the engine turns over, then snaps clear */
+  .beat.crank{animation:crankGlitch 1.0s var(--ease) both}
+  /* the extinct line arrives clean, then gets whipped away by the passing car
+     (accelerates off-left, motion-blurs, dissolves — "extinct" = it vanishes) */
+  .beat.sweep{animation:sweepOut .5s cubic-bezier(.55,0,.85,.2) both}
+  .beat.on{opacity:1}
+  .beat.out{animation:dematerialise .4s var(--ease) both} /* defined last → wins over in/crank/dust */
+
+  .kick{font-size:34px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate500);font-weight:600;margin-bottom:30px}
+  .title{font-family:var(--sans);font-weight:800;font-size:108px;line-height:1.02;color:var(--slate100);letter-spacing:-.01em}
+  .line{font-size:50px;line-height:1.25;color:var(--slate300);font-weight:500;max-width:860px;margin:0 auto 44px}
+  .bignum{font-family:var(--mono);font-weight:700;color:var(--slate100);line-height:1;
+    font-size:144px;letter-spacing:-.02em;white-space:nowrap;padding:0 24px}
+  /* "1,000,000+" pulses on each indicator tick */
+  #bignumA{transition:color .1s ease, text-shadow .1s ease, transform .1s ease}
+  #bignumA.flash{color:#eafdff;text-shadow:0 0 38px rgba(34,211,238,.75),0 0 12px rgba(34,211,238,.55);transform:scale(1.015)}
+  .numlabel{margin-top:18px;font-size:30px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate500);font-weight:600}
+  .reveal{position:relative}
+  .reveal.locked{color:#e0fbff;text-shadow:0 0 42px rgba(34,211,238,.72),0 0 16px rgba(34,211,238,.55);
+    animation:lockPulse .7s var(--ease) both}
+  /* light bloom igniting behind the number as it locks */
+  .reveal.locked::after{content:"";position:absolute;left:50%;top:50%;width:720px;height:720px;
+    transform:translate(-50%,-50%);z-index:-1;pointer-events:none;filter:blur(24px);
+    background:radial-gradient(circle,rgba(34,211,238,.26),transparent 60%);animation:bloom .9s var(--ease) both}
+  .foot{margin-top:40px;font-size:32px;color:var(--slate400);font-weight:400}
+  .foot .m{font-family:var(--mono);color:var(--slate300)}
+  .emph{font-weight:800;font-size:78px;line-height:1.1;color:var(--slate100);max-width:900px;margin:0 auto}
+  .sub{margin-top:34px;font-size:50px;color:var(--slate300);font-weight:500}
+  /* the pivot to the viewer — deliberate, prominent, "your" in brand cyan */
+  .ask{font-weight:700;font-size:66px;line-height:1.18;color:var(--slate100);letter-spacing:-.01em}
+  .ask .you{color:var(--cyan);font-weight:800;text-shadow:0 0 26px rgba(34,211,238,.35)}
+
+  /* ---- scan beam ---- */
+  .scanbeam{position:absolute;left:0;width:1080px;height:4px;top:-60px;opacity:0;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(34,211,238,.12) 12%,#a5f3fc 50%,rgba(34,211,238,.12) 88%,transparent);
+    box-shadow:0 0 46px 9px rgba(34,211,238,.5),0 0 140px 36px rgba(34,211,238,.22)}
+  /* soft bloom body so the beam reads as real light, not a hard line */
+  .scanbeam::before{content:"";position:absolute;left:0;right:0;top:-78px;height:156px;
+    background:linear-gradient(180deg,transparent,rgba(34,211,238,.11),transparent);filter:blur(11px)}
+  .scanbeam.sweep{animation:scan 2.5s cubic-bezier(.4,0,.5,1) both} /* slow descent, settles as 261 locks */
+
+  /* ---- end card ---- */
+  .endcard{position:absolute;width:980px;left:50px;text-align:center;top:50%;transform:translateY(-50%);opacity:0}
+  .endcard.in{animation:materialise .56s var(--ease) both}
+  /* soft light bloom behind the brand as it resolves — the premium "glow on" */
+  .endcard::before{content:"";position:absolute;left:50%;top:40%;width:920px;height:920px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;filter:blur(30px);background:radial-gradient(circle,rgba(34,211,238,.16),transparent 62%);opacity:0}
+  .endcard.in::before{animation:bloom 1.2s var(--ease) both;animation-delay:.15s}
+  .lockup{display:inline-flex;align-items:center;gap:26px}
+  .bolt{display:inline-flex;transform-origin:center center}
+  .bolt svg{height:118px;width:auto;display:block;filter:drop-shadow(0 0 14px rgba(34,211,238,.45))}
+  /* bolt drives in LARGE on the pneumatic-screwer, then settles to brand position on the logo */
+  .endcard.screw .bolt{transform:scale(3.4) rotate(-28deg);filter:drop-shadow(0 0 38px rgba(34,211,238,.65))}
+  .endcard.settle .bolt{transform:scale(1) rotate(0);transition:transform .6s var(--ease), filter .6s var(--ease)}
+  .lockup .wm{font-family:var(--sans);font-weight:800;font-size:74px;color:var(--slate100);letter-spacing:-.01em;opacity:0;transform:translateX(-14px);transition:opacity .5s var(--ease) .12s, transform .5s var(--ease) .12s}
+  .endcard.settle .wm{opacity:1;transform:translateX(0)}
+  .cta{margin-top:54px;font-size:48px;line-height:1.35;color:var(--slate300);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto}
+  .cta b{color:var(--slate100);font-weight:800}
+  .cta .free{color:var(--emerald);font-weight:800}
+
+  @keyframes materialise{0%{opacity:0;transform:translateY(calc(-50% + 14px)) scale(.97);filter:blur(8px)}
+    60%{filter:blur(0)}100%{opacity:1;transform:translateY(-50%) scale(1);filter:blur(0)}}
+  @keyframes dematerialise{0%{opacity:1;transform:translateY(-50%)}100%{opacity:0;transform:translateY(calc(-50% - 12px));filter:blur(4px)}}
+  @keyframes scan{0%{transform:translateY(0);opacity:0}8%{opacity:1}92%{opacity:1}100%{transform:translateY(2000px);opacity:0}}
+  @keyframes wordmark{0%{clip-path:inset(0 100% 0 0);filter:drop-shadow(0 0 0 rgba(34,211,238,0))}
+    60%{clip-path:inset(0 0 0 0);filter:drop-shadow(0 0 12px rgba(34,211,238,.55))}
+    100%{clip-path:inset(0 0 0 0);filter:drop-shadow(0 0 0 rgba(34,211,238,0))}}
+  @keyframes lockPulse{0%{transform:scale(1.08)}100%{transform:scale(1)}}
+  @keyframes breathe{0%,100%{opacity:.82;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+  @keyframes bloom{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}45%{opacity:1}100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}}
+  @keyframes crankGlitch{0%{filter:blur(2px);opacity:.5;transform:translateY(-50%) translateX(-4px)}20%{opacity:.85;transform:translateY(-50%) translateX(3px)}35%{filter:blur(3.5px);opacity:.4;transform:translateY(-50%) translateX(-3px)}50%{opacity:.92;transform:translateY(-50%) translateX(2px)}68%{filter:blur(2px);opacity:.5;transform:translateY(-50%) translateX(-1px)}100%{filter:blur(0);opacity:1;transform:translateY(-50%) translateX(0)}}
+  /* whipped off to the RIGHT (car passes left→right), accelerating + motion-blurring */
+  @keyframes sweepOut{0%{opacity:1;transform:translateY(-50%) translateX(0);filter:blur(0)}55%{opacity:1;filter:blur(2px)}100%{opacity:0;transform:translateY(-50%) translateX(760px);filter:blur(18px)}}
+
+  /* ---- controls (OUTSIDE the stage — not part of the recording) ---- */
+  .controls{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;gap:10px;align-items:center;
+    background:rgba(15,23,42,.85);border:1px solid #334155;border-radius:999px;padding:8px 12px;
+    font-family:var(--sans);font-size:14px;color:#cbd5e1;backdrop-filter:blur(8px)}
+  .controls button{font:inherit;color:#cbd5e1;background:#1e293b;border:1px solid #334155;border-radius:999px;
+    padding:6px 14px;cursor:pointer}
+  .controls button:hover{background:#334155;color:#fff}
+  .controls .hint{opacity:.7;max-width:240px;line-height:1.3}
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="stage" id="stage">
+      <div class="glow"></div>
+      <div class="grain"></div>
+      <div class="hud" id="hud" aria-hidden="true">
+        <span class="hud-c tl"></span><span class="hud-c tr"></span><span class="hud-c bl"></span><span class="hud-c br"></span>
+        <div class="hud-bar">
+          <span class="dot"></span><span class="lbl">DVLA &middot; LIVE</span>
+          <span class="track"><span id="prog"></span></span>
+        </div>
+      </div>
+      <div class="scanbeam" id="scanbeam"></div>
+
+      <div class="topbar" id="topbar">
+        <div class="k">How many left?</div>
+        <div class="car">THE AUSTIN METRO</div>
+      </div>
+
+      <div class="centre">
+        <!-- HOOK -->
+        <div class="beat" id="hook">
+          <div class="kick">How many left?</div>
+          <div class="title">The Austin&nbsp;Metro</div>
+        </div>
+
+        <!-- TENSION -->
+        <div class="beat" id="beatA">
+          <div class="line">In the 80s, they were on every street.</div>
+          <div class="bignum" id="bignumA">1,000,000+</div>
+          <div class="numlabel">Built</div>
+        </div>
+
+        <!-- REVEAL -->
+        <div class="beat" id="beatC">
+          <div class="line">Still on the road today?</div>
+          <div class="bignum reveal" id="counter">1,000,000</div>
+          <div class="foot">Just <span class="m">261</span> licensed &middot; <span class="m">~1,340</span> more SORN&rsquo;d off the road</div>
+        </div>
+
+        <!-- EMOTION -->
+        <div class="beat" id="beatD1">
+          <div class="emph">Your nan&rsquo;s Metro is nearly extinct.</div>
+        </div>
+        <div class="beat" id="beatD2">
+          <div class="ask">What about <span class="you">your</span> first car?</div>
+        </div>
+      </div>
+
+      <!-- END CARD -->
+      <div class="endcard" id="endcard">
+        <div class="lockup" id="lockup">
+          <span class="bolt"><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs><linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient></defs>
+            <path d="M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z" fill="url(#bolt)"/>
+          </svg></span>
+          <span class="wm">Free Plate Check</span>
+        </div>
+        <div class="cta">See how many of <b>your</b> car are left — link in bio. <span class="free">Free.</span></div>
+      </div>
+
+      <div class="vignette"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="replay">&#8635; Replay</button>
+    <button id="scaleBtn">Fit</button>
+    <span class="hint">Record just the dark frame (1080&times;1920). These controls sit outside it.</span>
+  </div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const stage=$('stage'), topbar=$('topbar'), hook=$('hook'), beatA=$('beatA'),
+        beatC=$('beatC'), beatD1=$('beatD1'), beatD2=$('beatD2'), endcard=$('endcard'),
+        scanbeam=$('scanbeam'), counter=$('counter'), lockup=$('lockup'), prog=$('prog'), hud=$('hud'), bignumA=$('bignumA');
+  let timers=[], raf=null, mode='fit';
+
+  function showBeat(el){ el.classList.remove('out'); el.classList.add('in'); }
+  function hideBeat(el){ el.classList.remove('in'); el.classList.add('out'); }
+
+  function countDown(from,to,ms){
+    const start=performance.now();
+    counter.classList.remove('locked');
+    function step(now){
+      let t=Math.min(1,(now-start)/ms);
+      const e=1-Math.pow(1-t,3);            // easeOutCubic
+      const v=Math.round(from+(to-from)*e);
+      counter.textContent=v.toLocaleString('en-GB');
+      if(t<1){ raf=requestAnimationFrame(step); }
+      else { counter.textContent=to.toLocaleString('en-GB'); counter.classList.add('locked'); }
+    }
+    raf=requestAnimationFrame(step);
+  }
+
+  function at(ms,fn){ timers.push(setTimeout(fn,ms)); }
+
+  function play(){
+    // reset
+    timers.forEach(clearTimeout); timers=[]; if(raf) cancelAnimationFrame(raf);
+    [hook,beatA,beatC,beatD1,beatD2,endcard].forEach(b=>{b.className=b.id==='endcard'?'endcard':'beat';});
+    topbar.classList.remove('show'); hud.classList.remove('down');
+    scanbeam.className='scanbeam'; lockup.className='lockup';
+    counter.textContent='1,000,000'; counter.classList.remove('locked'); bignumA.classList.remove('flash');
+    prog.style.transition='none'; prog.style.width='0'; void prog.offsetWidth;
+    prog.style.transition='width 14.2s linear'; prog.style.width='100%';
+
+    // flash the 1,000,000+ on each indicator tick — both START at 2.2s, AFTER the
+    // figure is already on screen (2.0s). Cadence matches the audio indicator bed.
+    for(let t=2.2; t<4.5; t+=0.62){ at(t*1000,()=>bignumA.classList.add('flash')); at((t+0.16)*1000,()=>bignumA.classList.remove('flash')); }
+
+    // timeline (ms)
+    at(150,  ()=>hook.classList.add('crank'));             // ignition turns over — text distorts…
+    at(1150, ()=>{ hook.classList.remove('crank'); hook.classList.add('on'); }); // …catches, snaps clear
+    at(1850, ()=>hideBeat(hook));
+    at(2000, ()=>showBeat(beatA));                         // the figure appears first…
+    at(2100, ()=>topbar.classList.add('show'));            // …then ticking + flashing begin at 2.2
+    at(4600, ()=>{ hideBeat(beatA); scanbeam.classList.add('sweep'); }); // slow 2.5s beam begins
+    at(4900, ()=>showBeat(beatC));
+    at(5000, ()=>countDown(1000000,261,2000));             // count settles ~7.0 as the beam arrives
+    at(7150, ()=>scanbeam.classList.remove('sweep'));
+    at(8500, ()=>hideBeat(beatC));
+    at(8700, ()=>showBeat(beatD1));                          // "…nearly extinct" arrives cleanly
+    at(10000,()=>beatD1.classList.add('sweep'));             // …whipped away by the passing car (L→R)
+    at(10400,()=>showBeat(beatD2));                          // "…YOUR first car?" — now held & deliberate (1.3s)
+    at(11700,()=>{ hud.classList.add('down'); hideBeat(beatD2); }); // it lands, machine powers down
+    at(11950,()=>endcard.classList.add('in','screw'));      // bolt drives in LARGE (pneumatic screwer)
+    at(12450,()=>endcard.classList.add('settle'));          // bolt settles to brand position (logo)
+    at(14200,()=>play());
+  }
+
+  // fit-to-screen scaling (preview). 100% = true 1080x1920 for max-quality capture.
+  function rescale(){
+    if(mode==='fit'){
+      const s=Math.min(window.innerWidth/1080, window.innerHeight/1920)*0.97;
+      stage.style.transform='scale('+s+')';
+      document.querySelector('.page').style.overflow='hidden';
+    } else {
+      stage.style.transform='scale(1)';
+      document.querySelector('.page').style.alignItems='flex-start';
+      document.querySelector('.page').style.overflow='auto';
+    }
+  }
+  $('replay').onclick=play;
+  $('scaleBtn').onclick=function(){ mode=mode==='fit'?'full':'fit'; this.textContent=mode==='fit'?'Fit':'100%';
+    document.querySelector('.page').style.alignItems=mode==='fit'?'center':'flex-start'; rescale(); };
+  window.addEventListener('resize',rescale);
+  rescale(); play();
+})();
+</script>
+</body>
+</html>

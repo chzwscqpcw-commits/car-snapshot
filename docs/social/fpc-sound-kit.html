@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Free Plate Check — Sound Kit v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--slate950:#020617;--slate900:#0f172a;--slate800:#1e293b;--slate700:#334155;
+    --slate100:#f1f5f9;--slate300:#cbd5e1;--slate400:#94a3b8;--slate500:#64748b;
+    --cyan:#22d3ee;--blue:#3b82f6;--emerald:#34d399;--ease:cubic-bezier(0.16,1,0.3,1);
+    --sans:"Inter",Arial,Helvetica,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,Consolas,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--slate950);color:var(--slate300);font-family:var(--sans);min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(ellipse 720px 500px at 50% -8%,rgba(34,211,238,.12),rgba(34,211,238,.04) 34%,transparent 64%)}
+  .wrap{max-width:760px;margin:0 auto;padding:56px 24px 80px}
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .brand svg{height:40px;filter:drop-shadow(0 0 12px rgba(34,211,238,.45))}
+  .brand .wm{font-weight:800;font-size:30px;color:var(--slate100);letter-spacing:-.01em}
+  h1{font-size:40px;font-weight:800;color:var(--slate100);letter-spacing:-.02em;margin:26px 0 8px}
+  .lede{font-size:16px;line-height:1.6;color:var(--slate400);max-width:630px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate500);font-weight:600}
+  .bar{display:flex;gap:12px;align-items:center;margin:28px 0 22px;flex-wrap:wrap}
+  .btn{font:inherit;font-weight:700;font-size:14px;border-radius:999px;padding:11px 20px;cursor:pointer;border:1px solid transparent;transition:.15s var(--ease)}
+  .btn.grad{color:#04121a;background:linear-gradient(120deg,var(--cyan),var(--blue));border:none}
+  .btn.grad:hover{filter:brightness(1.08)}
+  .btn.ghost{color:var(--slate300);background:var(--slate800);border-color:var(--slate700)}
+  .btn.ghost:hover{background:var(--slate700);color:#fff}
+  .grid{display:flex;flex-direction:column;gap:14px}
+  .card{display:flex;align-items:center;gap:18px;background:rgba(15,23,42,.6);border:1px solid var(--slate700);border-radius:18px;padding:18px 20px}
+  .card .meta{flex:1;min-width:0}
+  .card .name{font-weight:700;color:var(--slate100);font-size:17px}
+  .card .name .tag{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid rgba(34,211,238,.35);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .card .desc{font-size:13.5px;color:var(--slate400);margin-top:3px;line-height:1.45}
+  .viz{width:120px;height:42px;flex:none;background:#0b1220;border:1px solid var(--slate800);border-radius:8px;overflow:hidden}
+  .viz canvas{width:100%;height:100%;display:block}
+  .actions{display:flex;gap:8px;flex:none}
+  .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--slate700);background:var(--slate800);color:#e2e8f0;transition:.15s var(--ease)}
+  .icon:hover{background:var(--slate700);color:#fff}
+  .icon.play{background:linear-gradient(120deg,rgba(34,211,238,.18),rgba(59,130,246,.18));border-color:rgba(34,211,238,.4);color:var(--cyan)}
+  .icon svg{width:18px;height:18px}
+  .note{margin-top:30px;font-size:13.5px;line-height:1.7;color:var(--slate400);border-left:2px solid rgba(34,211,238,.4);padding:4px 0 4px 16px}
+  .note b{color:#e2e8f0}
+  a{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
+      <path d="M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z" fill="url(#b)"/>
+    </svg>
+    <span class="wm">Free Plate Check</span>
+  </div>
+  <p class="kicker">Sonic identity &middot; v2 &middot; electric + mechanical</p>
+  <h1>Sound Kit</h1>
+  <p class="lede">Five original, owned sounds in one tonal family (built around C). Clean electric data textures with a subtle <b>mechanical</b> accent &mdash; a relay click under the lock and at the pivot of the audio logo &mdash; because we&rsquo;re a digital tool about physical cars. Now with real space (reverb), detuned warmth and saturation, so they feel designed, not synthetic. Preview, then export.</p>
+
+  <div class="bar">
+    <button class="btn grad" id="track">&#8623;&nbsp; Reel soundtrack &#10022; 14.2s</button>
+    <button class="btn ghost" id="trackPlay">&#9654;</button>
+    <button class="btn grad" id="cartrack">&#8623;&nbsp; Car-foley soundtrack &middot; 14.2s</button>
+    <button class="btn ghost" id="carPlay">&#9654;</button>
+    <button class="btn ghost" id="all">Single hits</button>
+    <button class="btn ghost" id="seq">Audition all</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="note">
+    <b>Final Cut workflow:</b> pick a soundtrack &mdash; <b>Electric</b> (tick/scan/lock/whoosh/logo) or <b>Car-foley</b> (ignition on the hook &rarr; indicator-tick rhythm under the count &rarr; lock &rarr; drive-away &rarr; logo). Each renders one WAV the exact length of the reel with everything pre-placed. Drop the video and your chosen WAV both at <b>frame 1</b> (the hook) and it lines up. Add a licensed, era-style music bed (Epidemic Sound / Artlist / Uppbeat) on a third track underneath &mdash; never the actual classics (a brand account gets them muted).
+    <br><br>
+    The <b>audio logo</b> belongs under the bolt end-card on <b>every post</b> &mdash; that 1-second stamp is the recognition. Tell me what to tune (warmer / sharper / longer / different resolve notes) and I&rsquo;ll re-synthesise.
+  </div>
+</div>
+
+<script>
+const SOUNDS=[
+  {id:'tick',  name:'Tick',       tag:'~0.14s',dur:0.14, desc:'Electric blip + a soft mechanical thock — the "we’re starting" cue.'},
+  {id:'scan',  name:'Scan sweep', tag:'~0.86s',dur:0.86, desc:'Detuned electric sweep + air, synced to the cyan scan-beam.'},
+  {id:'lock',  name:'Lock chime', tag:'~0.86s',dur:0.86, desc:'Electric C-bell + a mechanical relay click — the "verified" stamp.'},
+  {id:'whoosh',name:'Whoosh',     tag:'~0.56s',dur:0.56, desc:'Smooth L→R air pass for the wordmark sweep / transitions.'},
+  {id:'logo',  name:'Audio logo', tag:'~2.2s', dur:2.2,  desc:'Deep C1+C2 sub → warm low C(add9) chord blooming. THE premium payoff. Every post.'},
+  {id:'indicator',name:'Indicator tick',tag:'~2.5s',dur:2.5, desc:'The nostalgic tk-tok rhythm — loop it under the count. The FPC sonic tic.'},
+  {id:'ignition', name:'Engine ignition',tag:'~1.8s',dur:1.8, desc:'Key turn → starter crank → catch → idle. Opens the series. (Stylised synth.)'},
+  {id:'driveaway',name:'Drive-away',     tag:'~2.6s',dur:2.6, desc:'Rev + accelerate into the distance — the "nearly extinct" close. (Stylised synth.)'},
+  {id:'window',   name:'Electric window',tag:'~0.95s',dur:0.95,desc:'Smooth expensive "ssshhh" swoosh — the beam sweep. Premium, airy, not buzzy.'},
+  {id:'door',     name:'Car door close', tag:'~0.55s',dur:0.55,desc:'Solid premium "thunk" + latch + cabin seal. The brand-reveal impact.'},
+];
+
+const SR=44100;
+let audio=null; const cache={};
+function ac(){ if(!audio) audio=new (window.AudioContext||window.webkitAudioContext)(); if(audio.state==='suspended') audio.resume(); return audio; }
+
+// ---- helpers ----
+function noise(ctx,dur){ const b=ctx.createBuffer(1,Math.max(1,Math.ceil(ctx.sampleRate*dur)),ctx.sampleRate);
+  const d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; const s=ctx.createBufferSource(); s.buffer=b; return s; }
+function makeIR(ctx,dur,decay){ const len=Math.ceil(ctx.sampleRate*dur), b=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let c=0;c<2;c++){ const d=b.getChannelData(c); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay); } return b; }
+function shaper(ctx,amt){ const ws=ctx.createWaveShaper(), n=1024, c=new Float32Array(n);
+  for(let i=0;i<n;i++){ const x=i/(n-1)*2-1; c[i]=Math.tanh(x*amt)/Math.tanh(amt); } ws.curve=c; ws.oversample='2x'; return ws; }
+function eg(ctx,t,a,peak,d){ const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(peak,t+a); g.gain.exponentialRampToValueAtTime(0.0001,t+a+d); return g; }
+function busNode(ctx,out,rev,amt){ const b=ctx.createGain(); b.connect(out); const s=ctx.createGain(); s.gain.value=amt; b.connect(s); s.connect(rev); return b; }
+function stack(ctx,freq,type,dets,target,t,stop){ dets.forEach(d=>{ const o=ctx.createOscillator(); o.type=type; o.frequency.value=freq; o.detune.value=d; o.connect(target); o.start(t); o.stop(stop); }); }
+function relay(ctx,B,t,level){ level=level||0.6;
+  const n=noise(ctx,0.03), hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1700;
+  const gn=eg(ctx,t,0.001,0.4*level,0.03); n.connect(hp).connect(gn).connect(B); n.start(t); n.stop(t+0.03);
+  const o=ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(72,t+0.06);
+  const g=eg(ctx,t,0.002,0.5*level,0.075); o.connect(g).connect(B); o.start(t); o.stop(t+0.1); }
+// a single indicator click (the relay "tk") — shared by the indicator sound and the soundtrack
+function clickGraph(ctx,B,t,freq,amp){
+  const n=noise(ctx,0.012), bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=freq*1.6; bp.Q.value=2;
+  const gn=eg(ctx,t,0.0008,amp*0.5,0.012); n.connect(bp).connect(gn).connect(B); n.start(t); n.stop(t+0.012);
+  const o=ctx.createOscillator(); o.type='square'; o.frequency.value=freq;
+  const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=freq*3; lp.Q.value=1;
+  const g=eg(ctx,t,0.001,amp,0.03); o.connect(lp).connect(g).connect(B); o.start(t); o.stop(t+0.05);
+  const lo=ctx.createOscillator(); lo.type='sine'; lo.frequency.setValueAtTime(220,t); lo.frequency.exponentialRampToValueAtTime(110,t+0.03);
+  const lg=eg(ctx,t,0.001,amp*0.5,0.035); lo.connect(lg).connect(B); lo.start(t); lo.stop(t+0.06);
+}
+
+const REV={tick:0.04, scan:0.16, lock:0.22, whoosh:0.13, logo:0.44, indicator:0.06, ignition:0.10, driveaway:0.20, window:0.18, door:0.12};
+
+// ---- synthesis (electric + mechanical, tuned around C) ----
+const BUILD={
+  tick(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.tick);
+    const g=eg(ctx,0,0.002,0.42,0.085); g.connect(B); stack(ctx,1700,'triangle',[-7,7],g,0,0.11);
+    const n=noise(ctx,0.018), hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=2600;
+    const gn=eg(ctx,0,0.001,0.18,0.025); n.connect(hp).connect(gn).connect(B); n.start(0); n.stop(0.02);
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(150,0); o.frequency.exponentialRampToValueAtTime(80,0.05);
+    const og=eg(ctx,0,0.002,0.22,0.06); o.connect(og).connect(B); o.start(0); o.stop(0.09);
+  },
+  scan(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.scan); const dur=0.84;
+    const filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.Q.value=1.0;
+    filt.frequency.setValueAtTime(350,0); filt.frequency.exponentialRampToValueAtTime(4400,0.5); filt.frequency.exponentialRampToValueAtTime(900,dur);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,0); g.gain.linearRampToValueAtTime(0.15,0.09); g.gain.setValueAtTime(0.15,dur-0.26); g.gain.exponentialRampToValueAtTime(0.0001,dur);
+    filt.connect(g).connect(B); stack(ctx,420,'sawtooth',[-9,9],filt,0,dur);
+    const n=noise(ctx,dur), bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.2;
+    bp.frequency.setValueAtTime(500,0); bp.frequency.exponentialRampToValueAtTime(4200,0.5); bp.frequency.exponentialRampToValueAtTime(1000,dur);
+    const ng=ctx.createGain(); ng.gain.setValueAtTime(0.0001,0); ng.gain.linearRampToValueAtTime(0.11,0.1); ng.gain.exponentialRampToValueAtTime(0.0001,dur);
+    n.connect(bp).connect(ng).connect(B); n.start(0); n.stop(dur);
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(220,0); o.frequency.exponentialRampToValueAtTime(960,0.55);
+    const og=ctx.createGain(); og.gain.setValueAtTime(0.0001,0); og.gain.linearRampToValueAtTime(0.09,0.1); og.gain.exponentialRampToValueAtTime(0.0001,dur);
+    o.connect(og).connect(B); o.start(0); o.stop(dur);
+  },
+  lock(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.lock);
+    [[1046,0.22,0.58],[1568,0.13,0.40],[2349,0.07,0.26]].forEach(([f,a,dec])=>{
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g=eg(ctx,0,0.004,a,dec); o.connect(g).connect(B); o.start(0); o.stop(0.004+dec+0.06);
+    });
+    const n=noise(ctx,0.025), hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3400;
+    const gn=eg(ctx,0,0.001,0.13,0.03); n.connect(hp).connect(gn).connect(B); n.start(0); n.stop(0.025);
+    relay(ctx,B,0.0,0.7);
+  },
+  whoosh(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.whoosh); const dur=0.54;
+    const n=noise(ctx,dur), bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=0.7;
+    bp.frequency.setValueAtTime(300,0); bp.frequency.exponentialRampToValueAtTime(2600,0.28); bp.frequency.exponentialRampToValueAtTime(560,dur);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,0); g.gain.linearRampToValueAtTime(0.28,0.15); g.gain.exponentialRampToValueAtTime(0.0001,dur);
+    const pan=ctx.createStereoPanner(); pan.pan.setValueAtTime(-0.85,0); pan.pan.linearRampToValueAtTime(0.85,dur);
+    n.connect(bp).connect(g).connect(pan).connect(B); n.start(0); n.stop(dur);
+  },
+  logo(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.logo);
+    // 1) subtle spark (kept low so WARMTH dominates, not brightness)
+    const sp=ctx.createOscillator(); sp.type='sine'; sp.frequency.setValueAtTime(320,0); sp.frequency.exponentialRampToValueAtTime(1150,0.26);
+    const spg=eg(ctx,0,0.12,0.06,0.20); sp.connect(spg).connect(B); sp.start(0); sp.stop(0.34);
+    const air=noise(ctx,0.32), abp=ctx.createBiquadFilter(); abp.type='bandpass'; abp.Q.value=1.2; abp.frequency.setValueAtTime(800,0); abp.frequency.exponentialRampToValueAtTime(5000,0.26);
+    const ag=eg(ctx,0,0.10,0.035,0.20); air.connect(abp).connect(ag).connect(B); air.start(0); air.stop(0.32);
+    // 2) warm engage — soft low transient + DEEP sub thump (weight, not click)
+    const en=ctx.createOscillator(); en.type='sine'; en.frequency.value=1046.5; const eng=eg(ctx,0.30,0.003,0.08,0.20); en.connect(eng).connect(B); en.start(0.30); en.stop(0.56);
+    const subT=ctx.createOscillator(); subT.type='sine'; subT.frequency.setValueAtTime(110,0.30); subT.frequency.exponentialRampToValueAtTime(52,0.46); const sgT=eg(ctx,0.30,0.004,0.24,0.22); subT.connect(sgT).connect(B); subT.start(0.30); subT.stop(0.6);
+    // 3) THE BLOOM — deep, warm C(add9), full LOW voicing, unfolds & sustains
+    const t0=0.34;
+    function voice(freq,delay,amp){ const g=ctx.createGain(); const t=t0+delay;
+      g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(amp,t+0.26); g.gain.setValueAtTime(amp,t+0.6); g.gain.exponentialRampToValueAtTime(0.0001,t+1.5);
+      g.connect(B); stack(ctx,freq,'triangle',[-5,5],g,t,t+1.6); }
+    // deep foundation: C1 + C2 layered sub (the "deep/warm")
+    const s1=ctx.createOscillator(); s1.type='sine'; s1.frequency.value=32.70; const s1g=eg(ctx,t0,0.06,0.26,1.5); s1.connect(s1g).connect(B); s1.start(t0); s1.stop(t0+1.7); // C1
+    const s2=ctx.createOscillator(); s2.type='sine'; s2.frequency.value=65.41; const s2g=eg(ctx,t0,0.05,0.20,1.5); s2.connect(s2g).connect(B); s2.start(t0); s2.stop(t0+1.7); // C2
+    voice(130.81,0.00,0.15); // C3
+    voice(196.00,0.05,0.12); // G3
+    voice(261.63,0.10,0.13); // C4
+    voice(329.63,0.16,0.10); // E4
+    voice(392.00,0.22,0.09); // G4
+    voice(587.33,0.30,0.06); // D5 — the soft add9 colour
+    // restrained shimmer (warmth > sparkle)
+    const sh=ctx.createOscillator(); sh.type='sine'; sh.frequency.value=1046.5; const shg=eg(ctx,t0+0.30,0.30,0.03,1.1); sh.connect(shg).connect(B); sh.start(t0+0.30); sh.stop(t0+1.6);
+  },
+  // ---- car foley (stylised, license-free) ----
+  indicator(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.indicator);
+    for(let i=0;i<4;i++){ const base=i*0.62; clickGraph(ctx,B,base,1250,0.5); clickGraph(ctx,B,base+0.31,950,0.42); }
+  },
+  ignition(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.ignition);
+    const st=ctx.createOscillator(); st.type='sawtooth'; st.frequency.setValueAtTime(180,0); st.frequency.linearRampToValueAtTime(240,0.7);
+    const stf=ctx.createBiquadFilter(); stf.type='bandpass'; stf.frequency.value=1400; stf.Q.value=2;
+    const stg=ctx.createGain(); stg.gain.setValueAtTime(0.0001,0); stg.gain.linearRampToValueAtTime(0.10,0.05); stg.gain.setValueAtTime(0.10,0.62); stg.gain.exponentialRampToValueAtTime(0.0001,0.72);
+    const lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=11; const lfg=ctx.createGain(); lfg.gain.value=0.05; lfo.connect(lfg).connect(stg.gain); lfo.start(0); lfo.stop(0.72);
+    st.connect(stf).connect(stg).connect(B); st.start(0); st.stop(0.72);
+    function chug(t,amp){ const o=ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(75,t); o.frequency.exponentialRampToValueAtTime(45,t+0.08);
+      const g=eg(ctx,t,0.005,amp,0.1); o.connect(g).connect(B); o.start(t); o.stop(t+0.14);
+      const n=noise(ctx,0.05), bp=ctx.createBiquadFilter(); bp.type='lowpass'; bp.frequency.value=600; const gn=eg(ctx,t,0.004,amp*0.6,0.06); n.connect(bp).connect(gn).connect(B); n.start(t); n.stop(t+0.05); }
+    chug(0.05,0.4); chug(0.27,0.42); chug(0.49,0.44);
+    const eng=ctx.createOscillator(); eng.type='sawtooth'; eng.frequency.setValueAtTime(62,0.68);
+    const eng2=ctx.createOscillator(); eng2.type='sawtooth'; eng2.detune.value=-12; eng2.frequency.setValueAtTime(62,0.68);
+    const elp=ctx.createBiquadFilter(); elp.type='lowpass'; elp.frequency.setValueAtTime(900,0.68); elp.frequency.exponentialRampToValueAtTime(420,1.1); elp.Q.value=2;
+    const egn=ctx.createGain(); egn.gain.setValueAtTime(0.0001,0.68); egn.gain.linearRampToValueAtTime(0.22,0.78); egn.gain.setValueAtTime(0.20,1.4); egn.gain.exponentialRampToValueAtTime(0.0001,1.75);
+    const wob=ctx.createOscillator(); wob.type='sine'; wob.frequency.value=7; const wobg=ctx.createGain(); wobg.gain.value=60; wob.connect(wobg).connect(elp.frequency); wob.start(0.68); wob.stop(1.75);
+    eng.connect(elp); eng2.connect(elp); elp.connect(egn).connect(B); eng.start(0.68); eng.stop(1.75); eng2.start(0.68); eng2.stop(1.75);
+    const cn=noise(ctx,1.05), cbp=ctx.createBiquadFilter(); cbp.type='bandpass'; cbp.frequency.value=300; cbp.Q.value=0.8; const cng=ctx.createGain(); cng.gain.setValueAtTime(0.0001,0.7); cng.gain.linearRampToValueAtTime(0.05,0.85); cng.gain.exponentialRampToValueAtTime(0.0001,1.7); cn.connect(cbp).connect(cng).connect(B); cn.start(0.7); cn.stop(1.75);
+  },
+  driveaway(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.driveaway); const dur=2.5;
+    const e1=ctx.createOscillator(); e1.type='sawtooth'; const e2=ctx.createOscillator(); e2.type='sawtooth'; e2.detune.value=-14;
+    [e1,e2].forEach(o=>{ o.frequency.setValueAtTime(60,0); o.frequency.exponentialRampToValueAtTime(160,1.0); o.frequency.exponentialRampToValueAtTime(120,dur); });
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.Q.value=1.5; lp.frequency.setValueAtTime(700,0); lp.frequency.exponentialRampToValueAtTime(2600,1.0); lp.frequency.exponentialRampToValueAtTime(260,dur);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,0); g.gain.linearRampToValueAtTime(0.22,0.2); g.gain.setValueAtTime(0.26,1.0); g.gain.exponentialRampToValueAtTime(0.0001,dur);
+    const pan=ctx.createStereoPanner(); pan.pan.setValueAtTime(0,0); pan.pan.linearRampToValueAtTime(0.6,dur);
+    e1.connect(lp); e2.connect(lp); lp.connect(g).connect(pan).connect(B); e1.start(0); e1.stop(dur); e2.start(0); e2.stop(dur);
+    const n=noise(ctx,dur), bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=0.8; bp.frequency.setValueAtTime(300,0); bp.frequency.exponentialRampToValueAtTime(900,1.0); bp.frequency.exponentialRampToValueAtTime(180,dur);
+    const ng=ctx.createGain(); ng.gain.setValueAtTime(0.0001,0); ng.gain.linearRampToValueAtTime(0.07,0.2); ng.gain.exponentialRampToValueAtTime(0.0001,dur);
+    n.connect(bp).connect(ng).connect(pan); n.start(0); n.stop(dur);
+  },
+  window(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.window); const dur=0.84;
+    // the "ssshhh" swoosh — filtered noise is the DOMINANT element (expensive, airy)
+    const n=noise(ctx,dur), bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=0.85;
+    bp.frequency.setValueAtTime(650,0); bp.frequency.exponentialRampToValueAtTime(2500,0.42); bp.frequency.exponentialRampToValueAtTime(850,dur);
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=300;
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,0); g.gain.linearRampToValueAtTime(0.27,0.17); g.gain.setValueAtTime(0.25,dur-0.2); g.gain.exponentialRampToValueAtTime(0.0001,dur);
+    const pan=ctx.createStereoPanner(); pan.pan.setValueAtTime(-0.22,0); pan.pan.linearRampToValueAtTime(0.22,dur);
+    n.connect(bp).connect(hp).connect(g).connect(pan).connect(B); n.start(0); n.stop(dur);
+    // a faint SMOOTH low hum under it (triangle, heavily lowpassed — body, not buzz)
+    const o=ctx.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(118,0); o.frequency.linearRampToValueAtTime(104,dur);
+    const olp=ctx.createBiquadFilter(); olp.type='lowpass'; olp.frequency.value=320;
+    const og=ctx.createGain(); og.gain.setValueAtTime(0.0001,0); og.gain.linearRampToValueAtTime(0.045,0.17); og.gain.exponentialRampToValueAtTime(0.0001,dur);
+    o.connect(olp).connect(og).connect(B); o.start(0); o.stop(dur);
+    // soft premium settle (gentle, not a hard thunk)
+    const th=ctx.createOscillator(); th.type='sine'; th.frequency.setValueAtTime(90,dur-0.06); th.frequency.exponentialRampToValueAtTime(55,dur+0.02); const thg=eg(ctx,dur-0.06,0.006,0.11,0.09); th.connect(thg).connect(B); th.start(dur-0.06); th.stop(dur+0.08);
+  },
+  door(ctx,out,rev){ const B=busNode(ctx,out,rev,REV.door);
+    const lo=ctx.createOscillator(); lo.type='sine'; lo.frequency.setValueAtTime(95,0); lo.frequency.exponentialRampToValueAtTime(42,0.12); const lg=eg(ctx,0,0.004,0.55,0.16); lo.connect(lg).connect(B); lo.start(0); lo.stop(0.24);
+    const n=noise(ctx,0.08), lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=520; lp.Q.value=3; const ng=eg(ctx,0,0.002,0.42,0.09); n.connect(lp).connect(ng).connect(B); n.start(0); n.stop(0.08);
+    const c=noise(ctx,0.015), hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3500; const cg=eg(ctx,0.006,0.001,0.22,0.02); c.connect(hp).connect(cg).connect(B); c.start(0.006); c.stop(0.02);
+    const r=ctx.createOscillator(); r.type='sine'; r.frequency.value=68; const rg=eg(ctx,0.02,0.012,0.18,0.42); r.connect(rg).connect(B); r.start(0.02); r.stop(0.5);
+  }
+};
+
+async function render(id){
+  const dur=SOUNDS.find(s=>s.id===id).dur;
+  const ctx=new OfflineAudioContext(2, Math.ceil(SR*dur), SR);
+  const master=ctx.createGain(); master.gain.value=0.9; master.connect(ctx.destination);
+  const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-10; comp.ratio.value=3; comp.attack.value=0.003; comp.release.value=0.18; comp.connect(master);
+  const sat=shaper(ctx,1.6); sat.connect(comp);
+  const conv=ctx.createConvolver(); conv.buffer=makeIR(ctx,0.85,3.0); const wet=ctx.createGain(); wet.gain.value=0.9; conv.connect(wet).connect(comp);
+  BUILD[id](ctx, sat, conv);
+  return await ctx.startRendering();
+}
+async function buf(id){ if(!cache[id]) cache[id]=await render(id); return cache[id]; }
+async function play(id){ const b=await buf(id); const c=ac(); const s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(); drawViz(id,b); }
+
+function bufferToWav(b){
+  const nc=b.numberOfChannels,len=b.length,sr=b.sampleRate,bps=2,ba=nc*bps,ds=len*ba;
+  const ab=new ArrayBuffer(44+ds),v=new DataView(ab);let p=0;
+  const ws=s=>{for(let i=0;i<s.length;i++)v.setUint8(p++,s.charCodeAt(i))};
+  const u32=x=>{v.setUint32(p,x,true);p+=4};const u16=x=>{v.setUint16(p,x,true);p+=2};
+  ws('RIFF');u32(36+ds);ws('WAVE');ws('fmt ');u32(16);u16(1);u16(nc);u32(sr);u32(sr*ba);u16(ba);u16(16);ws('data');u32(ds);
+  const ch=[];for(let c=0;c<nc;c++)ch.push(b.getChannelData(c));
+  for(let i=0;i<len;i++)for(let c=0;c<nc;c++){let s=Math.max(-1,Math.min(1,ch[c][i]));v.setInt16(p,s<0?s*0x8000:s*0x7FFF,true);p+=2;}
+  return new Blob([ab],{type:'audio/wav'});
+}
+async function download(id){ const b=await buf(id); const url=URL.createObjectURL(bufferToWav(b));
+  const a=document.createElement('a'); a.href=url; a.download='fpc-'+id+'.wav'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
+
+function drawViz(id,b){ const cv=document.querySelector('#viz-'+id); if(!cv)return; const ctx=cv.getContext('2d');
+  const w=cv.width=cv.clientWidth*2, h=cv.height=cv.clientHeight*2; ctx.clearRect(0,0,w,h);
+  const d=b.getChannelData(0), step=Math.ceil(d.length/w);
+  ctx.strokeStyle='#22d3ee'; ctx.lineWidth=2; ctx.beginPath();
+  for(let x=0;x<w;x++){ let mx=0; for(let j=0;j<step;j++){const s=Math.abs(d[x*step+j]||0); if(s>mx)mx=s;} const y=h/2-(mx*h*0.46); ctx.moveTo(x,y); ctx.lineTo(x,h-y);}
+  ctx.stroke();
+}
+
+// ---- synced reel soundtracks (electric + car-foley variants) ----
+const REEL={ total:14.2 };
+const FX_EVENTS =[['tick',0.15],['scan',4.80],['lock',7.15],['whoosh',11.55],['logo',11.90]];
+// car-foley: ignition on the hook → indicator tick as rhythm under the count (×2)
+// → lock on 261 → drive-away into the turn → audio-logo stamp on the end-card.
+const CAR_EVENTS=[['ignition',0.15],['indicator',2.60],['indicator',5.10],['lock',7.15],['driveaway',9.50],['logo',11.70]];
+async function renderTrack(events){
+  const ctx=new OfflineAudioContext(2, Math.ceil(SR*REEL.total), SR);
+  const master=ctx.createGain(); master.gain.value=0.95; master.connect(ctx.destination);
+  for(const [id,t] of events){ const b=await buf(id); const s=ctx.createBufferSource(); s.buffer=b; s.connect(master); s.start(t); }
+  return await ctx.startRendering();
+}
+// shared indicator cadence (MUST match the reel's visual blink): cycle from
+// 2.0s to 7.1s, period 0.62s; "tick" (lamp ON) at cycle start, "tock" (lamp OFF)
+// at +0.31s. The dashboard arrow in the reel blinks on these exact times.
+const TICK_START=2.0, TICK_END=7.1, TICK_P=0.62;
+// the agreed mapping: hook tick · indicator-tick bed under the count · ELECTRIC
+// WINDOW where the beam sweeps · lock on 261 · CAR DOOR close as the brand lands
+// · premium audio-logo bloom.
+const MAIN_EVENTS=[['tick',0.15],['window',4.80],['lock',7.15],['door',11.45],['logo',11.70]];
+async function renderElectricTicks(){
+  const ctx=new OfflineAudioContext(2, Math.ceil(SR*REEL.total), SR);
+  const master=ctx.createGain(); master.gain.value=0.95; master.connect(ctx.destination);
+  const conv=ctx.createConvolver(); conv.buffer=makeIR(ctx,0.5,3); const wet=ctx.createGain(); wet.gain.value=0.5; conv.connect(wet).connect(master);
+  const B=ctx.createGain(); B.connect(master); const send=ctx.createGain(); send.gain.value=0.07; B.connect(send); send.connect(conv);
+  for(const [id,t] of MAIN_EVENTS){ const b=await buf(id); const s=ctx.createBufferSource(); s.buffer=b; s.connect(master); s.start(t); }
+  for(let t=TICK_START; t<TICK_END; t+=TICK_P){ clickGraph(ctx,B,t,1250,0.42); clickGraph(ctx,B,t+TICK_P*0.5,950,0.36); }
+  return await ctx.startRendering();
+}
+
+// ---- UI ----
+const grid=document.getElementById('grid');
+SOUNDS.forEach(s=>{ const el=document.createElement('div'); el.className='card';
+  el.innerHTML=`<div class="viz"><canvas id="viz-${s.id}"></canvas></div>
+    <div class="meta"><div class="name">${s.name}<span class="tag">${s.tag}</span></div><div class="desc">${s.desc}</div></div>
+    <div class="actions">
+      <div class="icon play" title="Play" data-play="${s.id}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="icon" title="Download WAV" data-dl="${s.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg></div>
+    </div>`;
+  grid.appendChild(el); buf(s.id).then(b=>drawViz(s.id,b));
+});
+grid.addEventListener('click',e=>{ const p=e.target.closest('[data-play]'); const d=e.target.closest('[data-dl]'); if(p) play(p.dataset.play); if(d) download(d.dataset.dl); });
+function dlTrack(blob,name){ const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
+async function playTrack(events){ const b=await renderTrack(events); const c=ac(); const s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(); }
+document.getElementById('track').onclick=async()=>{ dlTrack(bufferToWav(await renderElectricTicks()),'fpc-reel-soundtrack-electric-indicator-14s.wav'); };
+document.getElementById('trackPlay').onclick=async()=>{ const b=await renderElectricTicks(); const c=ac(); const s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(); };
+document.getElementById('cartrack').onclick=async()=>{ dlTrack(bufferToWav(await renderTrack(CAR_EVENTS)),'fpc-reel-soundtrack-carfoley-14s.wav'); };
+document.getElementById('carPlay').onclick=()=>playTrack(CAR_EVENTS);
+document.getElementById('all').onclick=async()=>{ for(const s of SOUNDS){ await download(s.id); await new Promise(r=>setTimeout(r,250)); } };
+document.getElementById('seq').onclick=async()=>{ const order=['tick','scan','lock','whoosh','logo']; const gaps=[450,300,1200,450,500]; ac(); let t=0;
+  for(let i=0;i<order.length;i++){ setTimeout(()=>play(order[i]),t); t+=gaps[i]+SOUNDS.find(x=>x.id===order[i]).dur*1000; } };
+</script>
+</body>
+</html>
