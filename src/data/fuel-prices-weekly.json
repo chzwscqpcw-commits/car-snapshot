@@ -1,5 +1,5 @@
 {
-  "lastFetched": "2026-05-29T18:53:46.831Z",
+  "lastFetched": "2026-06-11T15:20:33.716Z",
   "source": "https://www.gov.uk/government/statistics/weekly-road-fuel-prices",
   "weekly": [
     {
@@ -5996,6 +5996,16 @@
       "date": "2026-05-25",
       "petrol": 158.78,
       "diesel": 185.07
+    },
+    {
+      "date": "2026-06-01",
+      "petrol": 158.74,
+      "diesel": 184.11
+    },
+    {
+      "date": "2026-06-08",
+      "petrol": 157.95,
+      "diesel": 181.79
     }
   ]
 }
