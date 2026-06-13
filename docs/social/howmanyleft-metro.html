@@ -26,15 +26,19 @@
     position:relative;width:1080px;height:1920px;flex:none;
     background:var(--slate950);overflow:hidden;
     transform-origin:center center;
+    /* crisp compositing — text/SVG stay vector-sharp when the stage is scaled */
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;
   }
-  /* soft cyan brand glow, top-centre */
+  /* soft cyan brand glow, top-centre — extra colour stops so the "mist" ramps
+     smoothly and never bands into blocky steps at recording resolution */
   .glow{position:absolute;inset:0;pointer-events:none;animation:breathe 9s ease-in-out infinite;
-    background:radial-gradient(ellipse 1120px 900px at 50% 11%, rgba(34,211,238,.18), rgba(34,211,238,.055) 34%, transparent 64%),
-               radial-gradient(ellipse 1260px 940px at 50% 119%, rgba(59,130,246,.10), transparent 60%)}
-  /* fine grain — kills gradient banding + adds premium filmic texture */
-  .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:soft-light;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    background-size:140px 140px}
+    background:radial-gradient(ellipse 1120px 900px at 50% 11%, rgba(34,211,238,.18), rgba(34,211,238,.13) 16%, rgba(34,211,238,.085) 26%, rgba(34,211,238,.055) 34%, rgba(34,211,238,.028) 46%, rgba(34,211,238,.012) 56%, transparent 64%),
+               radial-gradient(ellipse 1260px 940px at 50% 119%, rgba(59,130,246,.10), rgba(59,130,246,.06) 26%, rgba(59,130,246,.025) 44%, transparent 60%)}
+  /* fine grain — dithers the gradient mist so it never bands/blocks + adds
+     premium filmic texture. Slightly stronger + finer than a single octave. */
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.062;mix-blend-mode:soft-light;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size:180px 180px}
   .vignette{position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(ellipse 1100px 1520px at 50% 50%, transparent 58%, rgba(0,0,0,.5))}
 
@@ -70,22 +74,67 @@
   .beat{position:absolute;width:980px;left:50px;text-align:center;
     top:50%;transform:translateY(-50%);opacity:0;pointer-events:none}
   .beat.in{animation:materialise .56s var(--ease) both}
-  /* ignition crank: text distorts/flickers while the engine turns over, then snaps clear */
-  .beat.crank{animation:crankGlitch 1.0s var(--ease) both}
+  /* ignition crank: the hook shudders/flickers while the engine turns over (in
+     B&W), then snaps clear as it catches and the colour floods in */
+  .beat.crank{animation:crankGlitch 0.7s var(--ease) both}
   /* the extinct line arrives clean, then gets whipped away by the passing car
      (accelerates off-left, motion-blurs, dissolves — "extinct" = it vanishes) */
   .beat.sweep{animation:sweepOut .5s cubic-bezier(.55,0,.85,.2) both}
   .beat.on{opacity:1}
   .beat.out{animation:dematerialise .4s var(--ease) both} /* defined last → wins over in/crank/dust */
 
-  .kick{font-size:34px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate500);font-weight:600;margin-bottom:30px}
-  .title{font-family:var(--sans);font-weight:800;font-size:108px;line-height:1.02;color:var(--slate100);letter-spacing:-.01em}
+  /* start "HOW MANY LEFT?" — same treatment as the end-card feature headline
+     (Inter 800, uppercase, brand cyan + glow) so the open and close bookend */
+  .kick{font-family:var(--sans);font-size:44px;letter-spacing:-.005em;line-height:1;text-transform:uppercase;
+    color:var(--cyan100);font-weight:800;text-shadow:0 0 32px rgba(34,211,238,.5),0 0 11px rgba(34,211,238,.35);margin-bottom:46px}
+  /* 94px (was 104) keeps "The Austin Metro" on one line within the safe band,
+     clear of TikTok/IG's right button rail (~rightmost 140px) */
+  .title{font-family:var(--sans);font-weight:800;font-size:94px;line-height:1.02;color:var(--slate100);letter-spacing:-.01em;margin-top:8px}
+
+  /* ---- hero car: the visual hook (transparent cutout) ----
+     On screen from frame 1 in B&W so scrollers see it instantly, then floods to
+     full colour on ignition with a brief saturation pop so the change really lands. */
+  .hero{position:relative;width:910px;max-width:910px;margin:0 auto 60px}
+  .hero img{display:block;width:100%;height:auto;
+    /* bright B&W resting state + soft shadow so the cutout sits on the stage, not pasted */
+    filter:grayscale(1) brightness(.96) contrast(1.05) drop-shadow(0 26px 36px rgba(0,0,0,.6))}
+  /* ignition → the Metro comes alive: colour floods in with an overshoot, car gives a tiny pulse */
+  .hook.lit .hero img{animation:flood .62s var(--ease) both}
+  .hook.lit .hero{animation:carpulse .62s var(--ease) both}
+  @keyframes flood{
+    0%{filter:grayscale(1) brightness(.96) contrast(1.05) drop-shadow(0 26px 36px rgba(0,0,0,.6))}
+    55%{filter:grayscale(0) saturate(1.3) brightness(1.07) contrast(1.03) drop-shadow(0 26px 36px rgba(0,0,0,.6))}
+    100%{filter:grayscale(0) saturate(1) brightness(1.02) contrast(1.02) drop-shadow(0 26px 36px rgba(0,0,0,.6))}}
+  @keyframes carpulse{0%{transform:scale(.985)}55%{transform:scale(1.014)}100%{transform:scale(1)}}
+  /* ignition crank — ONLY the car judders & flickers (in B&W) as the engine
+     turns over; the "HOW MANY LEFT?" kick and the title stay perfectly still */
+  .hero.crank{animation:crankShake .7s var(--ease) both}
+  @keyframes crankShake{
+    0%{transform:translateX(-5px);opacity:.5;filter:blur(2px)}
+    16%{transform:translateX(5px);opacity:.9;filter:blur(.5px)}
+    32%{transform:translateX(-4px);opacity:.42;filter:blur(3px)}
+    50%{transform:translateX(4px);opacity:.93;filter:blur(.5px)}
+    68%{transform:translateX(-2px);opacity:.6;filter:blur(2px)}
+    84%{transform:translateX(2px);opacity:.96;filter:blur(.4px)}
+    100%{transform:translateX(0);opacity:1;filter:blur(0)}}
+  /* soft cyan ground glow so the car sits inside the brand light, not floating flat */
+  .hero::after{content:"";position:absolute;left:50%;bottom:6%;width:62%;height:62px;transform:translateX(-50%);
+    z-index:-1;filter:blur(13px);
+    background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(34,211,238,.2), transparent 70%)}
   .line{font-size:50px;line-height:1.25;color:var(--slate300);font-weight:500;max-width:860px;margin:0 auto 44px}
   .bignum{font-family:var(--mono);font-weight:700;color:var(--slate100);line-height:1;
     font-size:144px;letter-spacing:-.02em;white-space:nowrap;padding:0 24px}
-  /* "1,000,000+" pulses on each indicator tick */
-  #bignumA{transition:color .1s ease, text-shadow .1s ease, transform .1s ease}
-  #bignumA.flash{color:#eafdff;text-shadow:0 0 38px rgba(34,211,238,.75),0 0 12px rgba(34,211,238,.55);transform:scale(1.015)}
+  /* persistent figure — ONE number that lives across Built → Reveal so it never
+     disappears between phases; it just sheds the "+" and starts counting down. */
+  .figure{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .55s var(--ease)}
+  .figure.on{opacity:1}
+  /* "1,000,000" pulses on each indicator tick; inline-block so the box hugs the
+     digits and the "+" sits right after them without shifting the centred digits. */
+  #counter{display:inline-block;position:relative;transition:color .1s ease, text-shadow .1s ease, transform .1s ease}
+  #counter.flash{color:#eafdff;text-shadow:0 0 38px rgba(34,211,238,.75),0 0 12px rgba(34,211,238,.55);transform:scale(1.015)}
+  #counter .plus{position:absolute;left:100%;top:-.04em;font-size:.6em;margin-left:-.12em;transition:opacity .4s var(--ease)}
+  .figure.noplus #counter .plus{opacity:0}
   .numlabel{margin-top:18px;font-size:30px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate500);font-weight:600}
   .reveal{position:relative}
   .reveal.locked{color:#e0fbff;text-shadow:0 0 42px rgba(34,211,238,.72),0 0 16px rgba(34,211,238,.55);
@@ -96,10 +145,36 @@
     background:radial-gradient(circle,rgba(34,211,238,.26),transparent 60%);animation:bloom .9s var(--ease) both}
   .foot{margin-top:40px;font-size:32px;color:var(--slate400);font-weight:400}
   .foot .m{font-family:var(--mono);color:var(--slate300)}
-  .emph{font-weight:800;font-size:78px;line-height:1.1;color:var(--slate100);max-width:900px;margin:0 auto}
+  /* year timeline — as the count falls, time runs from the year built to today.
+     A marker travels 1980 → 2026 in lock-step with the number, so the drop reads
+     as decades passing. */
+  .yearbar{display:flex;align-items:center;gap:24px;width:740px;margin:60px auto 0;
+    font-family:var(--mono);font-size:32px;font-weight:700;color:var(--slate400)}
+  .yearbar .yb-end{flex:none;position:relative;letter-spacing:.02em}
+  .yearbar .yb-end small{position:absolute;left:0;right:0;top:-25px;text-align:center;
+    font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--slate500)}
+  .yearbar .yb-now{color:var(--cyan100)}
+  .yearbar .yb-track{flex:1;position:relative;height:6px;border-radius:3px;background:rgba(148,163,184,.16)}
+  .yearbar .yb-track i{position:absolute;left:0;top:0;height:100%;width:0;border-radius:3px;
+    background:linear-gradient(90deg,#22d3ee,#3b82f6);box-shadow:0 0 12px rgba(34,211,238,.55)}
+  .yearbar .yb-track b{position:absolute;top:50%;left:0;width:18px;height:18px;border-radius:50%;
+    transform:translate(-50%,-50%);background:#a5f3fc;box-shadow:0 0 18px 4px rgba(34,211,238,.7)}
+
+  /* ---- caption layers around the persistent figure ----
+     Built/Reveal text sit at fixed positions above & below the figure and
+     cross-fade independently; the figure itself never moves or fades between. */
+  .cap{position:absolute;left:50px;right:50px;text-align:center;opacity:0;pointer-events:none;
+    transition:opacity .5s var(--ease)}
+  .cap.on{opacity:1}
+  #lineA,#lineC{bottom:calc(50% + 88px);margin:0 auto;max-width:860px}
+  #lblA,#footC{top:calc(50% + 96px)}
+  #yearbar{top:calc(50% + 176px);left:50%;right:auto;transform:translateX(-50%)}
+  .emph{font-weight:800;font-size:78px;line-height:1.1;color:var(--slate100);max-width:760px;margin:0 auto}
   .sub{margin-top:34px;font-size:50px;color:var(--slate300);font-weight:500}
   /* the pivot to the viewer — deliberate, prominent, "your" in brand cyan */
-  .ask{font-weight:700;font-size:66px;line-height:1.18;color:var(--slate100);letter-spacing:-.01em}
+  /* max-width wraps "What about your first car?" to two lines so it never runs
+     under the right button rail (it was being clipped to "…first ca") */
+  .ask{font-weight:700;font-size:66px;line-height:1.18;color:var(--slate100);letter-spacing:-.01em;max-width:720px;margin:0 auto}
   .ask .you{color:var(--cyan);font-weight:800;text-shadow:0 0 26px rgba(34,211,238,.35)}
 
   /* ---- scan beam ---- */
@@ -128,6 +203,25 @@
   .cta{margin-top:54px;font-size:48px;line-height:1.35;color:var(--slate300);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto}
   .cta b{color:var(--slate100);font-weight:800}
   .cta .free{color:var(--emerald);font-weight:800}
+
+  /* feature headline — "How many left?" is the product this video showcases, so
+     it leads the end card; the brand lockup settles beneath it as the signature. */
+  .feature{font-family:var(--sans);font-weight:800;font-size:70px;letter-spacing:-.005em;line-height:1;
+    text-transform:uppercase;color:var(--cyan100);margin-bottom:36px;
+    text-shadow:0 0 32px rgba(34,211,238,.5),0 0 11px rgba(34,211,238,.35)}
+  /* rare-survivors teaser — same curated models + live counts as the website's
+     "How Many Left?" list. Text-only (no photos) to keep the reel licence-clean. */
+  .rares{width:680px;margin:46px auto 0}
+  .rares .rh{font-family:var(--sans);font-size:25px;font-weight:600;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--slate500);text-align:center;margin-bottom:20px}
+  .rares .rrow{display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+    padding:13px 6px;border-bottom:1px solid rgba(148,163,184,.13)}
+  .rares .rrow .rn{font-family:var(--sans);font-size:37px;font-weight:600;color:var(--slate100)}
+  .rares .rrow .rc{font-family:var(--mono);font-size:37px;font-weight:700;color:var(--cyan);white-space:nowrap}
+  .rares .rrow .rc small{font-family:var(--sans);font-size:22px;font-weight:500;color:var(--slate400);margin-left:9px;letter-spacing:.04em}
+  /* rares fade in just after the brand settles, so the logo moment stays uncluttered */
+  .endcard .rares{opacity:0;transform:translateY(12px)}
+  .endcard.settle .rares{opacity:1;transform:none;transition:opacity .55s var(--ease) .45s, transform .55s var(--ease) .45s}
 
   @keyframes materialise{0%{opacity:0;transform:translateY(calc(-50% + 14px)) scale(.97);filter:blur(8px)}
     60%{filter:blur(0)}100%{opacity:1;transform:translateY(-50%) scale(1);filter:blur(0)}}
@@ -176,21 +270,26 @@
         <!-- HOOK -->
         <div class="beat" id="hook">
           <div class="kick">How many left?</div>
+          <div class="hero" id="hero"><img id="metroImg" src="assets/austin-metro-1983-hero.png?v=6" alt="1983 Austin Metro" fetchpriority="high" /></div>
           <div class="title">The Austin&nbsp;Metro</div>
         </div>
 
-        <!-- TENSION -->
-        <div class="beat" id="beatA">
-          <div class="line">In the 80s, they were on every street.</div>
-          <div class="bignum" id="bignumA">1,000,000+</div>
-          <div class="numlabel">Built</div>
+        <!-- PERSISTENT FIGURE — lives across Built → Reveal; never fades between -->
+        <div class="figure" id="figure">
+          <span class="bignum reveal" id="counter"><span id="num">1,000,000</span><span class="plus" id="plus">+</span></span>
         </div>
 
-        <!-- REVEAL -->
-        <div class="beat" id="beatC">
-          <div class="line">Still on the road today?</div>
-          <div class="bignum reveal" id="counter">1,000,000</div>
-          <div class="foot">Just <span class="m">261</span> licensed &middot; <span class="m">~1,340</span> more SORN&rsquo;d off the road</div>
+        <!-- BUILT context -->
+        <div class="cap line" id="lineA">In the 80s, they were on every street.</div>
+        <div class="cap numlabel" id="lblA">Built</div>
+
+        <!-- REVEAL context -->
+        <div class="cap line" id="lineC">Still on the road today?</div>
+        <div class="cap foot" id="footC">Just <span class="m">261</span> licensed &middot; <span class="m">~1,340</span> more SORN&rsquo;d off the road</div>
+        <div class="cap yearbar" id="yearbar">
+          <span class="yb-end"><small>Built</small>1980</span>
+          <span class="yb-track"><i id="ybFill"></i><b id="ybDot"></b></span>
+          <span class="yb-end yb-now"><small>Today</small>2026</span>
         </div>
 
         <!-- EMOTION -->
@@ -204,6 +303,7 @@
 
       <!-- END CARD -->
       <div class="endcard" id="endcard">
+        <div class="feature">How many left?</div>
         <div class="lockup" id="lockup">
           <span class="bolt"><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs><linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
@@ -213,7 +313,14 @@
           </svg></span>
           <span class="wm">Free Plate Check</span>
         </div>
-        <div class="cta">See how many of <b>your</b> car are left — link in bio. <span class="free">Free.</span></div>
+        <div class="rares" id="rares">
+          <div class="rh">Rarer still</div>
+          <div class="rrow"><span class="rn">MG Maestro</span><span class="rc">45<small>left</small></span></div>
+          <div class="rrow"><span class="rn">Fiat Uno</span><span class="rc">126<small>left</small></span></div>
+          <div class="rrow"><span class="rn">Triumph Acclaim</span><span class="rc">165<small>left</small></span></div>
+          <div class="rrow"><span class="rn">Citro&euml;n AX</span><span class="rc">204<small>left</small></span></div>
+        </div>
+        <div class="cta">Find <b>your</b> car — link in bio. <span class="free">Free.</span></div>
       </div>
 
       <div class="vignette"></div>
@@ -223,15 +330,19 @@
   <div class="controls">
     <button id="replay">&#8635; Replay</button>
     <button id="scaleBtn">Fit</button>
-    <span class="hint">Record just the dark frame (1080&times;1920). These controls sit outside it.</span>
+    <button id="rec805">Rec 805</button>
+    <span class="hint">For capture: click <b>Rec 805</b> &rarr; the frame pins to the top-left at exactly 805&times;1432. Frame your recorder on it. (Downscaled from 1080&times;1920, so it stays crisp.)</span>
   </div>
 
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const stage=$('stage'), topbar=$('topbar'), hook=$('hook'), beatA=$('beatA'),
-        beatC=$('beatC'), beatD1=$('beatD1'), beatD2=$('beatD2'), endcard=$('endcard'),
-        scanbeam=$('scanbeam'), counter=$('counter'), lockup=$('lockup'), prog=$('prog'), hud=$('hud'), bignumA=$('bignumA');
+  const stage=$('stage'), topbar=$('topbar'), hook=$('hook'), hero=$('hero'),
+        figure=$('figure'), num=$('num'), counter=$('counter'),
+        lineA=$('lineA'), lblA=$('lblA'), lineC=$('lineC'), footC=$('footC'), yearbar=$('yearbar'),
+        beatD1=$('beatD1'), beatD2=$('beatD2'), endcard=$('endcard'),
+        scanbeam=$('scanbeam'), lockup=$('lockup'), prog=$('prog'), hud=$('hud'),
+        ybFill=$('ybFill'), ybDot=$('ybDot');
   let timers=[], raf=null, mode='fit';
 
   function showBeat(el){ el.classList.remove('out'); el.classList.add('in'); }
@@ -244,9 +355,11 @@
       let t=Math.min(1,(now-start)/ms);
       const e=1-Math.pow(1-t,3);            // easeOutCubic
       const v=Math.round(from+(to-from)*e);
-      counter.textContent=v.toLocaleString('en-GB');
+      num.textContent=v.toLocaleString('en-GB');
+      ybFill.style.width=(e*100)+'%'; ybDot.style.left=(e*100)+'%';   // year marker tracks the count
       if(t<1){ raf=requestAnimationFrame(step); }
-      else { counter.textContent=to.toLocaleString('en-GB'); counter.classList.add('locked'); }
+      else { num.textContent=to.toLocaleString('en-GB'); counter.classList.add('locked');
+             ybFill.style.width='100%'; ybDot.style.left='100%'; }
     }
     raf=requestAnimationFrame(step);
   }
@@ -256,52 +369,71 @@
   function play(){
     // reset
     timers.forEach(clearTimeout); timers=[]; if(raf) cancelAnimationFrame(raf);
-    [hook,beatA,beatC,beatD1,beatD2,endcard].forEach(b=>{b.className=b.id==='endcard'?'endcard':'beat';});
+    [hook,beatD1,beatD2,endcard].forEach(b=>{b.className=b.id==='endcard'?'endcard':'beat';});
+    hook.classList.add('on'); hero.classList.remove('crank'); // car + hook visible from frame 1 (B&W)
+    figure.classList.remove('on','noplus');                // persistent figure reset (with "+")
+    [lineA,lblA,lineC,footC,yearbar].forEach(c=>c.classList.remove('on'));
     topbar.classList.remove('show'); hud.classList.remove('down');
     scanbeam.className='scanbeam'; lockup.className='lockup';
-    counter.textContent='1,000,000'; counter.classList.remove('locked'); bignumA.classList.remove('flash');
+    num.textContent='1,000,000'; counter.classList.remove('locked','flash');
+    ybFill.style.width='0'; ybDot.style.left='0';
     prog.style.transition='none'; prog.style.width='0'; void prog.offsetWidth;
     prog.style.transition='width 14.2s linear'; prog.style.width='100%';
 
-    // flash the 1,000,000+ on each indicator tick — both START at 2.2s, AFTER the
-    // figure is already on screen (2.0s). Cadence matches the audio indicator bed.
-    for(let t=2.2; t<4.5; t+=0.62){ at(t*1000,()=>bignumA.classList.add('flash')); at((t+0.16)*1000,()=>bignumA.classList.remove('flash')); }
+    // flash the 1,000,000 on each indicator tick — START at 2.2s, AFTER the figure
+    // is already on screen (2.0s). Cadence matches the audio indicator bed.
+    for(let t=2.2; t<4.5; t+=0.62){ at(t*1000,()=>counter.classList.add('flash')); at((t+0.16)*1000,()=>counter.classList.remove('flash')); }
 
     // timeline (ms)
-    at(150,  ()=>hook.classList.add('crank'));             // ignition turns over — text distorts…
-    at(1150, ()=>{ hook.classList.remove('crank'); hook.classList.add('on'); }); // …catches, snaps clear
+    // frame 1: car in B&W; ignition cranks (stutter) then catches → floods to colour
+    at(150, ()=>hero.classList.add('crank'));                // engine turns over — ONLY the car judders/flickers
+    at(850, ()=>{ hero.classList.remove('crank'); hook.classList.add('lit'); }); // …catches → colour floods in
     at(1850, ()=>hideBeat(hook));
-    at(2000, ()=>showBeat(beatA));                         // the figure appears first…
+    // BUILT: the figure appears (1,000,000+) and stays put for the whole sequence
+    at(2000, ()=>{ figure.classList.add('on'); lineA.classList.add('on'); lblA.classList.add('on'); });
     at(2100, ()=>topbar.classList.add('show'));            // …then ticking + flashing begin at 2.2
-    at(4600, ()=>{ hideBeat(beatA); scanbeam.classList.add('sweep'); }); // slow 2.5s beam begins
-    at(4900, ()=>showBeat(beatC));
-    at(5000, ()=>countDown(1000000,261,2000));             // count settles ~7.0 as the beam arrives
+    at(4600, ()=>{ lineA.classList.remove('on'); lblA.classList.remove('on'); scanbeam.classList.add('sweep'); }); // Built text out; FIGURE STAYS
+    at(4700, ()=>figure.classList.add('noplus'));          // the "+" quietly drops away
+    at(4900, ()=>{ lineC.classList.add('on'); footC.classList.add('on'); yearbar.classList.add('on'); }); // Reveal text in
+    at(5000, ()=>countDown(1000000,261,2000));             // same figure now counts down — seamless
     at(7150, ()=>scanbeam.classList.remove('sweep'));
-    at(8500, ()=>hideBeat(beatC));
+    at(8500, ()=>{ figure.classList.remove('on'); lineC.classList.remove('on'); footC.classList.remove('on'); yearbar.classList.remove('on'); });
     at(8700, ()=>showBeat(beatD1));                          // "…nearly extinct" arrives cleanly
     at(10000,()=>beatD1.classList.add('sweep'));             // …whipped away by the passing car (L→R)
     at(10400,()=>showBeat(beatD2));                          // "…YOUR first car?" — now held & deliberate (1.3s)
-    at(11700,()=>{ hud.classList.add('down'); hideBeat(beatD2); }); // it lands, machine powers down
+    at(11700,()=>{ hud.classList.add('down'); topbar.classList.remove('show'); hideBeat(beatD2); }); // powers down; Metro label clears for the brand
     at(11950,()=>endcard.classList.add('in','screw'));      // bolt drives in LARGE (pneumatic screwer)
     at(12450,()=>endcard.classList.add('settle'));          // bolt settles to brand position (logo)
-    at(14200,()=>play());
+    // brand fully resolves ~13.0s — hold it long so viewers read & absorb "Free Plate Check"
+    at(17600,()=>play());                                   // ~4.6s on the finished brand before loop
   }
 
-  // fit-to-screen scaling (preview). 100% = true 1080x1920 for max-quality capture.
+  // REC width — your screen-recorder target. 1080 stage → 805 = clean supersample.
+  const REC_W=805;
+  // fit-to-screen scaling (preview). 100% = true 1080x1920. 'rec' = pixel-exact 805 box.
   function rescale(){
+    const page=document.querySelector('.page');
     if(mode==='fit'){
       const s=Math.min(window.innerWidth/1080, window.innerHeight/1920)*0.97;
+      stage.style.transformOrigin='center center';
       stage.style.transform='scale('+s+')';
-      document.querySelector('.page').style.overflow='hidden';
-    } else {
+      page.style.alignItems='center'; page.style.justifyContent='center'; page.style.overflow='hidden';
+    } else if(mode==='rec'){
+      // pin to top-left, scaled so the stage renders at exactly 805x1432 device-independent px
+      stage.style.transformOrigin='top left';
+      stage.style.transform='scale('+(REC_W/1080)+')';
+      page.style.alignItems='flex-start'; page.style.justifyContent='flex-start'; page.style.overflow='hidden';
+    } else { // full / 100%
+      stage.style.transformOrigin='top left';
       stage.style.transform='scale(1)';
-      document.querySelector('.page').style.alignItems='flex-start';
-      document.querySelector('.page').style.overflow='auto';
+      page.style.alignItems='flex-start'; page.style.justifyContent='flex-start'; page.style.overflow='auto';
     }
   }
   $('replay').onclick=play;
   $('scaleBtn').onclick=function(){ mode=mode==='fit'?'full':'fit'; this.textContent=mode==='fit'?'Fit':'100%';
-    document.querySelector('.page').style.alignItems=mode==='fit'?'center':'flex-start'; rescale(); };
+    $('rec805').textContent='Rec 805'; rescale(); };
+  $('rec805').onclick=function(){ mode='rec'; this.textContent='805 ✓';
+    $('scaleBtn').textContent='Fit'; rescale(); };
   window.addEventListener('resize',rescale);
   rescale(); play();
 })();

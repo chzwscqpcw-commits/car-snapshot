@@ -1,0 +1,60 @@
+FREE PLATE CHECK — TikTok account setup
+=======================================
+(Bio limit assumed 160 characters. A shorter <80-char fallback is included in
+case your app caps the bio lower.)
+
+ACCOUNT TYPE
+  Business Account  (Settings > Account > Switch to Business Account)
+  - Gives a clickable website link in bio + analytics.
+  - Note: Business accounts use TikTok's royalty-free Commercial Music Library
+    only — fine for us, since reels are scored with our own audio.
+  Category:  Automotive
+
+PROFILE PHOTO
+  docs/social/assets/tiktok-profile.png   (the brand bolt, 1080x1080)
+
+USERNAME (handle)
+  freeplatecheck
+  backups if taken:  freeplatecheckuk   |   freeplatecheck.uk
+
+DISPLAY NAME
+  Free Plate Check
+
+WEBSITE
+  https://freeplatecheck.co.uk
+
+
+BIO  — URL in the text (no clickable link until Business-verified or 1k
+followers). Pick one — all under 160 characters.
+------------------------------------------------------------------------
+[A] (140 chars) — recommended
+Free UK vehicle checks — enter a number plate, get the truth. MOT, tax, mileage, ULEZ, recalls. No signup, no email. 👉 freeplatecheck.co.uk
+
+[B] (139 chars)
+Free. Instant. Honest. Know any UK car from its number plate — MOT, tax, mileage, ULEZ & more. No email, no signup. 👉 freeplatecheck.co.uk
+
+[C] (111 chars)
+Free UK car checks from just a number plate — MOT, tax, mileage, ULEZ & more. No email. 👉 freeplatecheck.co.uk
+
+NOTE: URL is plain text (people type it). It becomes a tappable link once the
+account is Business-verified, or at 1,000 followers on a Creator account.
+
+
+FIRST POST — the Austin Metro reel
+----------------------------------
+Caption:
+  A million Austin Metros once filled Britain's streets. Guess how many are
+  still on the road today? 👀 Check how many of your car survive — free, link
+  in bio.
+
+Hashtags:
+  #howmanyleft #austinmetro #classiccarsuk #britishcars #carsoftiktok #dvla
+
+(No affiliate disclosure needed for this reel. When a reel mentions a paid
+partner e.g. carVertical, add on-screen + caption: "We may earn a commission,
+at no extra cost to you.")
+
+
+BRAND VOICE REMINDER (for all copy)
+  Free. Instant. Honest. Plain British English (colour, tyre, number plate, £).
+  Intriguing, never clickbait. No hype emojis as filler — one tasteful emoji max.

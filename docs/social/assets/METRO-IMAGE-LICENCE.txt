@@ -1,0 +1,20 @@
+Austin Metro hero image — provenance & licence
+------------------------------------------------
+Subject:  1983 Austin Metro HLE, 3/4 front, classic car show
+Source:   Wikimedia Commons
+Page:     https://commons.wikimedia.org/wiki/File:1983_Austin_Metro_HLE_2.jpg
+File URL: https://upload.wikimedia.org/wikipedia/commons/7/74/1983_Austin_Metro_HLE_2.jpg
+Author:   Calreyn88 (Wikimedia username)
+Licence:  CC0 1.0 Universal (Public Domain Dedication)
+          https://creativecommons.org/publicdomain/zero/1.0/
+Rights:   Commercial use, modification & redistribution all permitted.
+          No attribution required (CC0). Sourced 2026-06-13.
+
+Files:
+  austin-metro-1983-hle-cc0.jpg  — original CC0 master (7815x5566), unmodified
+  metro.png                      — background removed + number plate blanked
+                                   (manual edit) so no real reg/owner is shown
+  austin-metro-1983-hero.png     — optimised for the reel (2200px), derived from metro.png
+
+Edit (2026-06-13): background removed and the front number plate blanked by hand
+so the real registration is not shown. Original CC0 photo retained for provenance.
