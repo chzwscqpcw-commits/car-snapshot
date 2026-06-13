@@ -30,6 +30,12 @@ const SITE_LINKS = [
   { href: "/terms", label: "Terms" },
 ];
 
+// Social handles — keep in sync with the actual @freeplatecheck accounts.
+const SOCIAL_LINKS = [
+  { href: "https://www.instagram.com/freeplatecheck", label: "Instagram" },
+  { href: "https://www.tiktok.com/@freeplatecheck", label: "TikTok" },
+];
+
 /**
  * Site-wide footer rendered by app/layout.tsx so every route gets it
  * (replacing the per-page inline footers that had drifted out of sync).
@@ -47,6 +53,20 @@ export default function SiteFooter() {
             <p className="mt-1 max-w-md text-sm leading-snug text-slate-400">
               Everything DVLA knows about any UK car — instant, free, no signup. MOT, tax, valuation, ULEZ, recalls and more.
             </p>
+            <div className="mt-4 flex items-center gap-4">
+              {SOCIAL_LINKS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Free Plate Check on ${s.label}`}
+                  className="text-slate-400 transition-colors hover:text-cyan-300"
+                >
+                  <SocialIcon name={s.label} />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -91,6 +111,33 @@ export default function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function SocialIcon({ name }: { name: string }) {
+  if (name === "Instagram") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-5 w-5"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    );
+  }
+  // TikTok brand mark (monochrome, currentColor)
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+      <path d="M16.5 0h-3.1v15.7a2.6 2.6 0 1 1-2.6-2.6c.27 0 .53.04.78.12V9.95a5.7 5.7 0 0 0-.78-.05A5.7 5.7 0 1 0 16.5 15.6V7.4a7.1 7.1 0 0 0 4.3 1.45V5.65a4.3 4.3 0 0 1-4.3-4.3V0z" />
+    </svg>
   );
 }
 
