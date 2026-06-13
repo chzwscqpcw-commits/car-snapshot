@@ -190,6 +190,31 @@ This is where the brand comes alive — and we have a defined motion language. *
 - Movement is **purposeful and smooth**, never frantic. We're confident, not hyperactive.
 - Numbers can count up; plates can "lock in"; facts materialise. Data should feel *revealed*, not decorated.
 
+### Audio — the sonic signature
+Most people watch muted, so audio **enhances, never carries** the message (always
+burn in on-screen text). But sound is part of the brand — treat it in **two layers**:
+
+1. **Shared brand layer — identical on *every* reel.** This is the sonic logo that
+   makes a post recognisably Free Plate Check:
+   - **Scan whoosh** — an electric sweep + low hum under the scan-beam motion.
+   - **End-sting** — a clean electric *"zap → soft chime"* as the bolt drives in and
+     "Free Plate Check" resolves. Use the **same** sting on every post (it scales to
+     non-car content far better than any one diegetic sound).
+   - **Ambient bed** — a low, calm musical/atmospheric pad.
+2. **Per-reel diegetic layer — fits the concept.** Swap freely:
+   - *Car-led reels* (e.g. "How Many Left?") → mechanical: ignition, engine catch,
+     odometer roll, drive-by whoosh.
+   - *Product/tool demos* (e.g. "Scan reveal") → digital/UI: soft key clicks, data
+     blips (rising pitch as rows populate), a confirm chime.
+
+**Tonal palette:** electric and synthy, clean and confident — mirror the motion rule
+(*purposeful, never frantic*). Cyan = bright tones; data should *sound* revealed.
+
+**Practical:** royalty-free or our own SFX only (Business social accounts are limited
+to the platform Commercial Music Library, so we score with our own audio anyway). Make
+each track exactly the **video's loop length** for a seamless loop. Keep per-reel cue
+sheets alongside the reel (e.g. `scan-reveal-audio-cue-sheet.md`).
+
 ---
 
 ## 9. Tone of voice & copy
