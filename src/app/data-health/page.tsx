@@ -241,6 +241,164 @@ function PinGate({ onAuth }: { onAuth: () => void }) {
   );
 }
 
+// ── Search rankings (GSC key-query positions) ────────────────────────────────
+
+type GscQueryPosition = {
+  query: string;
+  position: number;
+  clicks: number;
+  impressions: number;
+  ctr: number;
+};
+type GscSnapshot = {
+  date: string;
+  startDate: string;
+  endDate: string;
+  queries: GscQueryPosition[];
+  totals: { clicks: number; impressions: number; position: number };
+};
+type GscData = {
+  status: "ok" | "not_configured" | "error" | "empty";
+  latest?: GscSnapshot | null;
+  history?: GscSnapshot[];
+  updatedAt?: string;
+  reason?: string;
+};
+
+function SearchRankingsCard({
+  data,
+  refreshing,
+  onRefresh,
+}: {
+  data: GscData | null;
+  refreshing: boolean;
+  onRefresh: () => void;
+}) {
+  if (!data) return null;
+
+  const refreshBtn = (
+    <button
+      type="button"
+      onClick={onRefresh}
+      disabled={refreshing}
+      className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-300 disabled:opacity-50 transition-colors"
+      title="Pull a fresh snapshot from Search Console"
+    >
+      <RefreshCw className={`h-3 w-3 ${refreshing ? "animate-spin" : ""}`} />
+      {refreshing ? "Pulling…" : "Refresh"}
+    </button>
+  );
+
+  const snap = data.latest ?? null;
+
+  if (!snap) {
+    const msg =
+      data.status === "not_configured"
+        ? "Search Console isn't connected yet — add the service account as a user on the GSC property and set GOOGLE_INDEXING_KEY, then hit Refresh."
+        : data.status === "error"
+          ? `Couldn't reach Search Console: ${data.reason ?? "unknown error"}`
+          : "No snapshot yet — hit Refresh, or wait for the Monday 04:00 job.";
+    return (
+      <section className="mt-7">
+        <div className="flex items-baseline justify-between mb-3 gap-3">
+          <h2 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            Search rankings
+          </h2>
+          {refreshBtn}
+        </div>
+        <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-6 text-center">
+          <p className="text-xs text-slate-500 leading-relaxed">{msg}</p>
+        </div>
+      </section>
+    );
+  }
+
+  const history = data.history ?? [];
+  const prev = history.length >= 2 ? history[history.length - 2] : null;
+  const prevPos = new Map<string, number>();
+  if (prev) for (const q of prev.queries) prevPos.set(q.query, q.position);
+
+  const rows = [...snap.queries].sort((a, b) => (a.position || 999) - (b.position || 999));
+
+  const fmtRange = (s: string) =>
+    new Date(s).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  const range = `${fmtRange(snap.startDate)}–${fmtRange(snap.endDate)}`;
+
+  return (
+    <section className="mt-7">
+      <div className="flex items-baseline justify-between mb-3 gap-3">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          Search rankings
+        </h2>
+        <div className="flex items-baseline gap-3">
+          <p className="text-[11px] text-slate-600">
+            GSC {range} · {snap.totals.clicks.toLocaleString()} clicks
+          </p>
+          {refreshBtn}
+        </div>
+      </div>
+      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        {rows.map((q, i) => {
+          const before = prevPos.get(q.query);
+          const delta =
+            before != null && before > 0 && q.position > 0 ? before - q.position : null;
+          return (
+            <div
+              key={q.query}
+              className={`px-4 py-2.5 flex items-center justify-between gap-3 ${
+                i < rows.length - 1 ? "border-b border-slate-800/60" : ""
+              }`}
+            >
+              <div className="min-w-0">
+                <p className="text-sm text-slate-200 truncate">{q.query}</p>
+                <p className="text-[11px] text-slate-500 mt-0.5 font-mono">
+                  {q.impressions.toLocaleString()} impr · {q.clicks} clicks ·{" "}
+                  {(q.ctr * 100).toFixed(1)}% CTR
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {delta != null && Math.abs(delta) >= 0.1 && (
+                  <span
+                    className={`inline-flex items-center gap-0.5 text-[11px] ${
+                      delta > 0 ? "text-emerald-400" : "text-red-400"
+                    }`}
+                    title="position change vs previous snapshot"
+                  >
+                    {delta > 0 ? (
+                      <TrendingUp className="h-3 w-3" />
+                    ) : (
+                      <TrendingDown className="h-3 w-3" />
+                    )}
+                    {Math.abs(delta).toFixed(1)}
+                  </span>
+                )}
+                <span
+                  className={`font-mono font-bold text-lg tabular-nums ${
+                    q.position === 0
+                      ? "text-slate-600"
+                      : q.position <= 3
+                        ? "text-emerald-300"
+                        : q.position <= 10
+                          ? "text-cyan-300"
+                          : "text-amber-300"
+                  }`}
+                >
+                  {q.position > 0 ? q.position.toFixed(1) : "—"}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-[11px] text-slate-600 mt-2 px-1 leading-relaxed">
+        28-day avg position per query. Green ≤3, cyan ≤10, amber deeper. Δ vs last week&apos;s
+        snapshot (▲ = moved up). Site-wide average is deliberately not the headline — these
+        conversion queries are.
+      </p>
+    </section>
+  );
+}
+
 // ── Small reusable bits ───────────────────────────────────────────────────────
 
 function StatusDot({ status }: { status: "ok" | "warning" | "error" }) {
@@ -642,6 +800,8 @@ export default function DataHealthPage() {
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
   const [insights, setInsights] = useState<InsightsData | null>(null);
   const [insightsLoading, setInsightsLoading] = useState(true);
+  const [gsc, setGsc] = useState<GscData | null>(null);
+  const [gscRefreshing, setGscRefreshing] = useState(false);
 
   useEffect(() => {
     if (!getStoredPin()) return;
@@ -676,19 +836,36 @@ export default function DataHealthPage() {
 
   const fetchDashboardData = useCallback(async () => {
     try {
-      const [healthRes, statsRes, dataRes, fuelRes] = await Promise.all([
+      const [healthRes, statsRes, dataRes, fuelRes, gscRes] = await Promise.all([
         adminFetch("/api/admin/health").then((r) => r.json()).catch(() => null),
         adminFetch("/api/admin/stats").then((r) => r.json()).catch(() => null),
         fetch("/api/data-health").then((r) => r.json()).catch(() => null),
         fetch("/api/fuel-prices").then((r) => r.json()).catch(() => null),
+        adminFetch("/api/admin/gsc").then((r) => r.json()).catch(() => null),
       ]);
       if (healthRes) setHealth(healthRes);
       if (statsRes) setStats(statsRes);
       if (dataRes) setDataHealth(dataRes);
       if (fuelRes) setFuelPrices(fuelRes);
+      if (gscRes) setGsc(gscRes as GscData);
       setLastRefreshed(new Date());
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  const refreshGsc = useCallback(async () => {
+    setGscRefreshing(true);
+    try {
+      const res = await fetch("/api/admin/gsc", {
+        method: "POST",
+        headers: { "x-admin-pin": getStoredPin() },
+      })
+        .then((r) => r.json())
+        .catch(() => null);
+      if (res) setGsc(res as GscData);
+    } finally {
+      setGscRefreshing(false);
     }
   }, []);
 
@@ -860,6 +1037,9 @@ export default function DataHealthPage() {
                 />
               </div>
             )}
+
+            {/* ── SEARCH RANKINGS (GSC key queries) ── */}
+            <SearchRankingsCard data={gsc} refreshing={gscRefreshing} onRefresh={refreshGsc} />
 
             {/* ── HOW PEOPLE GOT HERE ── */}
             {stats && (

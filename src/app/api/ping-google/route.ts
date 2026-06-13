@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getGoogleAccessToken, loadGoogleServiceKey } from "@/lib/google-auth";
 
 const SITE_URL = "https://www.freeplatecheck.co.uk";
 
@@ -47,11 +48,13 @@ export async function POST(req: NextRequest) {
   const url = `${SITE_URL}${resolvedPath}`;
 
   // Try Google Indexing API if credentials are available
-  const indexingKey = process.env.GOOGLE_INDEXING_KEY;
-  if (indexingKey) {
+  const serviceKey = loadGoogleServiceKey();
+  if (serviceKey) {
     try {
-      const keyJson = JSON.parse(Buffer.from(indexingKey, "base64").toString());
-      const token = await getGoogleAccessToken(keyJson);
+      const token = await getGoogleAccessToken(
+        serviceKey,
+        "https://www.googleapis.com/auth/indexing",
+      );
 
       const res = await fetch("https://indexing.googleapis.com/v3/urlNotifications:publish", {
         method: "POST",
@@ -109,59 +112,4 @@ function isSafeRelativePath(path: string): boolean {
 
 function isSafeSlug(slug: string): boolean {
   return /^[a-z0-9][a-z0-9-]{0,200}$/i.test(slug);
-}
-
-/**
- * Minimal Google OAuth2 token exchange using service account JWT.
- */
-async function getGoogleAccessToken(key: { client_email: string; private_key: string }): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
-  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const claim = btoa(
-    JSON.stringify({
-      iss: key.client_email,
-      scope: "https://www.googleapis.com/auth/indexing",
-      aud: "https://oauth2.googleapis.com/token",
-      iat: now,
-      exp: now + 3600,
-    })
-  );
-
-  // Sign with Web Crypto API
-  const encoder = new TextEncoder();
-  const pemBody = key.private_key
-    .replace(/-----BEGIN PRIVATE KEY-----/g, "")
-    .replace(/-----END PRIVATE KEY-----/g, "")
-    .replace(/\s/g, "");
-  const binaryKey = Uint8Array.from(atob(pemBody), (c) => c.charCodeAt(0));
-
-  const cryptoKey = await crypto.subtle.importKey(
-    "pkcs8",
-    binaryKey,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-
-  const signatureBuffer = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
-    cryptoKey,
-    encoder.encode(`${header}.${claim}`)
-  );
-
-  const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-
-  const jwt = `${header}.${claim}.${signature}`;
-
-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
-  });
-
-  const tokenData = await tokenRes.json();
-  return tokenData.access_token;
 }
