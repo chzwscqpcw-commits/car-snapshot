@@ -26,15 +26,19 @@
     position:relative;width:1080px;height:1920px;flex:none;
     background:var(--slate950);overflow:hidden;
     transform-origin:center center;
+    /* crisp compositing — text/SVG stay vector-sharp when the stage is scaled */
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;
   }
-  /* soft cyan brand glow, top-centre */
+  /* soft cyan brand glow, top-centre — extra colour stops so the "mist" ramps
+     smoothly and never bands into blocky steps at recording resolution */
   .glow{position:absolute;inset:0;pointer-events:none;animation:breathe 9s ease-in-out infinite;
-    background:radial-gradient(ellipse 1120px 900px at 50% 11%, rgba(34,211,238,.18), rgba(34,211,238,.055) 34%, transparent 64%),
-               radial-gradient(ellipse 1260px 940px at 50% 119%, rgba(59,130,246,.10), transparent 60%)}
-  /* fine grain — kills gradient banding + adds premium filmic texture */
-  .grain{position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:soft-light;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    background-size:140px 140px}
+    background:radial-gradient(ellipse 1120px 900px at 50% 11%, rgba(34,211,238,.18), rgba(34,211,238,.13) 16%, rgba(34,211,238,.085) 26%, rgba(34,211,238,.055) 34%, rgba(34,211,238,.028) 46%, rgba(34,211,238,.012) 56%, transparent 64%),
+               radial-gradient(ellipse 1260px 940px at 50% 119%, rgba(59,130,246,.10), rgba(59,130,246,.06) 26%, rgba(59,130,246,.025) 44%, transparent 60%)}
+  /* fine grain — dithers the gradient mist so it never bands/blocks + adds
+     premium filmic texture. Slightly stronger + finer than a single octave. */
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.062;mix-blend-mode:soft-light;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size:180px 180px}
   .vignette{position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(ellipse 1100px 1520px at 50% 50%, transparent 58%, rgba(0,0,0,.5))}
 
@@ -223,7 +227,8 @@
   <div class="controls">
     <button id="replay">&#8635; Replay</button>
     <button id="scaleBtn">Fit</button>
-    <span class="hint">Record just the dark frame (1080&times;1920). These controls sit outside it.</span>
+    <button id="rec805">Rec 805</button>
+    <span class="hint">For capture: click <b>Rec 805</b> &rarr; the frame pins to the top-left at exactly 805&times;1432. Frame your recorder on it. (Downscaled from 1080&times;1920, so it stays crisp.)</span>
   </div>
 
 <script>
@@ -284,24 +289,36 @@
     at(11700,()=>{ hud.classList.add('down'); hideBeat(beatD2); }); // it lands, machine powers down
     at(11950,()=>endcard.classList.add('in','screw'));      // bolt drives in LARGE (pneumatic screwer)
     at(12450,()=>endcard.classList.add('settle'));          // bolt settles to brand position (logo)
-    at(14200,()=>play());
+    // brand fully resolves ~13.0s — hold it long so viewers read & absorb "Free Plate Check"
+    at(17600,()=>play());                                   // ~4.6s on the finished brand before loop
   }
 
-  // fit-to-screen scaling (preview). 100% = true 1080x1920 for max-quality capture.
+  // REC width — your screen-recorder target. 1080 stage → 805 = clean supersample.
+  const REC_W=805;
+  // fit-to-screen scaling (preview). 100% = true 1080x1920. 'rec' = pixel-exact 805 box.
   function rescale(){
+    const page=document.querySelector('.page');
     if(mode==='fit'){
       const s=Math.min(window.innerWidth/1080, window.innerHeight/1920)*0.97;
+      stage.style.transformOrigin='center center';
       stage.style.transform='scale('+s+')';
-      document.querySelector('.page').style.overflow='hidden';
-    } else {
+      page.style.alignItems='center'; page.style.justifyContent='center'; page.style.overflow='hidden';
+    } else if(mode==='rec'){
+      // pin to top-left, scaled so the stage renders at exactly 805x1432 device-independent px
+      stage.style.transformOrigin='top left';
+      stage.style.transform='scale('+(REC_W/1080)+')';
+      page.style.alignItems='flex-start'; page.style.justifyContent='flex-start'; page.style.overflow='hidden';
+    } else { // full / 100%
+      stage.style.transformOrigin='top left';
       stage.style.transform='scale(1)';
-      document.querySelector('.page').style.alignItems='flex-start';
-      document.querySelector('.page').style.overflow='auto';
+      page.style.alignItems='flex-start'; page.style.justifyContent='flex-start'; page.style.overflow='auto';
     }
   }
   $('replay').onclick=play;
   $('scaleBtn').onclick=function(){ mode=mode==='fit'?'full':'fit'; this.textContent=mode==='fit'?'Fit':'100%';
-    document.querySelector('.page').style.alignItems=mode==='fit'?'center':'flex-start'; rescale(); };
+    $('rec805').textContent='Rec 805'; rescale(); };
+  $('rec805').onclick=function(){ mode='rec'; this.textContent='805 ✓';
+    $('scaleBtn').textContent='Fit'; rescale(); };
   window.addEventListener('resize',rescale);
   rescale(); play();
 })();
