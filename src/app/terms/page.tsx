@@ -113,8 +113,7 @@ export default function TermsPage() {
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">What we send</h3>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>A confirmation email when you sign up</li>
-              <li>A reminder approximately 28 days before your MOT expires</li>
-              <li>A final reminder approximately 7 days before your MOT expires</li>
+              <li>Reminder emails before your MOT expiry date, at the times you choose (by default around 5 weeks and 1 week before)</li>
             </ul>
             <p className="mt-3">
               That&#39;s a maximum of 3 emails per vehicle per year. We do not send marketing emails, newsletters, or promotional content.

@@ -21,7 +21,7 @@ const CORE_TOOLS: Array<[string, string, string]> = [
   ["Free Car Valuation", "/car-valuation", "Get a free estimated valuation for any UK vehicle based on age, mileage and live market data. No signup required."],
   ["Running Costs Calculator", "/running-costs", "Find out how much it costs to run any UK car. Free breakdown of fuel, tax, depreciation, MOT and servicing costs."],
   ["Car Servicing Quotes", "/servicing", "Compare car service prices from local garages. Interim and full service quotes in seconds, no booking fees."],
-  ["MOT Reminder", "/mot-reminder", "Set up a free MOT reminder for any UK vehicle. Get notified 28 days and 7 days before your MOT expires."],
+  ["MOT Reminder", "/mot-reminder", "Set up a free MOT reminder for any UK vehicle. You choose when you're notified before your MOT expires (5 weeks and 1 week before by default)."],
   ["Vehicle Comparison", "/compare", "Compare two UK vehicles side by side — MOT history, tax status, mileage, specifications and valuations."],
   ["Clean Air Zones", "/clean-air-zones", "Complete guide to UK Clean Air Zones. See which cities charge, daily rates, affected vehicles and compliance by registration."],
   ["Car Guides", "/cars", "Free buyer's guides for the UK's most popular cars. MOT pass rates, NCAP safety ratings, running costs and reliability data."],

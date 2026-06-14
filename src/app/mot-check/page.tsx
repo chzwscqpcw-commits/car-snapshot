@@ -211,7 +211,7 @@ export default async function MotCheckPage({
               </li>
               <li className="flex items-start gap-2">
                 <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                Free email reminders 28 + 7 days before next MOT
+                Free MOT reminders — timed how you like
               </li>
             </ul>
           </div>
@@ -249,7 +249,7 @@ export default async function MotCheckPage({
                 </li>
                 <li className="flex items-start gap-2">
                   <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                  Free email reminders 28 + 7 days before your next MOT is due
+                  Free MOT reminders — you choose when, before it&apos;s due
                 </li>
               </ul>
             </div>

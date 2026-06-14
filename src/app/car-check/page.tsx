@@ -141,7 +141,7 @@ export default function CarCheckPage() {
         bullets={[
           "Official DVLA, DVSA and MOT data — never third-party scrapes",
           "Verify make, model, mileage and history before you buy",
-          "Free email reminders 28 + 7 days before your next MOT",
+          "Free MOT reminders — timed how you like, before it's due",
         ]}
         exampleCard={
           <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">

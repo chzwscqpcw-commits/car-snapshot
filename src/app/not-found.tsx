@@ -157,7 +157,7 @@ export default function NotFound() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-white">Free MOT reminder</p>
                 <p className="mt-0.5 text-xs text-slate-500">
-                  Email alerts 28 &amp; 7 days before expiry
+                  Email alerts before it&apos;s due — you choose when
                 </p>
               </div>
               <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-slate-400 transition-colors mt-0.5 shrink-0" />

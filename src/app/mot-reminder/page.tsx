@@ -44,9 +44,9 @@ const FAQ_ITEMS: FaqItem[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Free MOT Reminders by Email — 28 & 7 Days Before Expiry | Free Plate Check",
+  title: "Free MOT Reminders by Email — Choose When You're Reminded | Free Plate Check",
   description:
-    "Set a free MOT reminder by email — sent 28 and 7 days before your MOT expires. No signup, no spam, no upsells. Add up to 5 vehicles in one go.",
+    "Set a free MOT reminder by email — you choose when (5 weeks + 1 week before by default). Book early, keep your renewal date, compare prices. No signup, no spam. Add up to 5 vehicles.",
   keywords: [
     "MOT reminder",
     "MOT reminders",
@@ -61,9 +61,9 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/mot-reminder",
   },
   openGraph: {
-    title: "Free MOT Reminders by Email — 28 & 7 Days Before Expiry",
+    title: "Free MOT Reminders by Email — Choose When You're Reminded",
     description:
-      "Set a free MOT reminder by email — sent 28 and 7 days before your MOT expires. Add up to 5 vehicles in one go.",
+      "Set a free MOT reminder by email — you choose when. Book early and keep your renewal date. Add up to 5 vehicles in one go.",
     url: "https://www.freeplatecheck.co.uk/mot-reminder",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -71,9 +71,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free MOT Reminders by Email — 28 & 7 Days Before Expiry",
+    title: "Free MOT Reminders by Email — Choose When You're Reminded",
     description:
-      "Set a free MOT reminder by email — sent 28 and 7 days before your MOT expires. Add up to 5 vehicles in one go.",
+      "Set a free MOT reminder by email — you choose when. Book early and keep your renewal date. Add up to 5 vehicles in one go.",
   },
 };
 
@@ -120,7 +120,7 @@ export default function MotReminderPage() {
       priceCurrency: "GBP",
     },
     description:
-      "Set up a free MOT reminder for any UK vehicle. Get email alerts 28 days and 7 days before your MOT expires.",
+      "Set up a free MOT reminder for any UK vehicle. Choose when you're reminded — 5 weeks and 1 week before expiry by default.",
   };
 
   const serviceJsonLd = {
@@ -128,7 +128,7 @@ export default function MotReminderPage() {
     "@type": "Service",
     name: "Free MOT Reminder Service",
     description:
-      "Free email reminder service that alerts you 28 days and 7 days before your MOT expires. No account required, no marketing emails — just timely reminders to keep your vehicle legal.",
+      "Free email reminder service — choose when you're reminded before your MOT expires (5 weeks and 1 week before by default). No account required, no marketing emails — just timely reminders to keep your vehicle legal.",
     provider: {
       "@type": "Organization",
       name: "Free Plate Check",

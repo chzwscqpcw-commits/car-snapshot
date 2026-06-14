@@ -605,7 +605,7 @@ export default function ServicingPage() {
           </a>
           <a href="/mot-reminder" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free MOT Reminder</p>
-            <p className="text-xs text-slate-500 mt-2">Get an email 28 days and 7 days before your MOT expires.</p>
+            <p className="text-xs text-slate-500 mt-2">Get a free reminder before your MOT&apos;s due — you choose when.</p>
           </a>
           <a href="/running-costs" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Running Costs Calculator</p>

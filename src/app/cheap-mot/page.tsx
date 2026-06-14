@@ -331,7 +331,7 @@ export default function CheapMotPage() {
             <p className="leading-relaxed">
               Not sure when yours is due? Set a free{" "}
               <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">MOT reminder</a>{" "}
-              and we&apos;ll email you 28 and 7 days before it expires.
+              and we&apos;ll email you in good time before it expires — you choose when.
             </p>
           </section>
 

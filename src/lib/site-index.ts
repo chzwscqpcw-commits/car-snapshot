@@ -122,7 +122,7 @@ export const SITE_ITEMS: SiteItem[] = [
   },
   {
     title: "Free MOT reminder",
-    subtitle: "We email you 28 & 7 days before",
+    subtitle: "We email you before it's due — you choose when",
     href: "/mot-reminder",
     category: "action",
     keywords: ["reminder", "mot reminder", "alert", "email", "notify"],

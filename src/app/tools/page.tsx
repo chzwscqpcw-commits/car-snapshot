@@ -98,7 +98,7 @@ const UTILITIES: Tool[] = [
   },
   {
     title: "Free MOT reminder",
-    blurb: "We email you 28 and 7 days before expiry. No signup, no spam.",
+    blurb: "We email you in good time before expiry — you choose when. No signup, no spam.",
     href: "/mot-reminder",
     icon: Bell,
   },

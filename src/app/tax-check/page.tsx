@@ -165,7 +165,7 @@ export default async function TaxCheckPage({
         bullets={[
           "Real-time DVLA status — taxed, SORN or untaxed",
           "Annual VED rate based on CO₂ band and registration year",
-          "Free email reminders 28 + 7 days before your next MOT",
+          "Free MOT reminders — timed how you like, before it's due",
         ]}
         exampleCard={
           <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">

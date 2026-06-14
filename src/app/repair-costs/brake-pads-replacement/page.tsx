@@ -556,7 +556,7 @@ export default function BrakePadsPage() {
             </Link>
             <Link href="/mot-reminder" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
               <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Set a free MOT reminder</p>
-              <p className="text-xs text-slate-500 mt-2">Never get caught out — email reminders 28 and 7 days before expiry.</p>
+              <p className="text-xs text-slate-500 mt-2">Never get caught out — free email reminders before your MOT&apos;s due.</p>
             </Link>
           </div>
         </section>
