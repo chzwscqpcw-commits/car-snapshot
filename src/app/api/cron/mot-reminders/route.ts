@@ -5,8 +5,8 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
 import { PARTNER_LINKS } from "@/config/partners";
-import MOTReminder28d from "@/emails/mot-reminder-28d";
-import MOTReminder7d from "@/emails/mot-reminder-7d";
+import MOTReminderDue from "@/emails/mot-reminder-due";
+import { DEFAULT_OFFSETS, MAX_OFFSET_DAYS, reminderSubject } from "@/lib/mot-reminders";
 
 const MAX_EMAILS_PER_RUN = 80;
 
@@ -16,8 +16,8 @@ interface MotReminder {
   vrm: string;
   make_model: string | null;
   mot_expiry: string;
-  reminder_28d_sent: boolean;
-  reminder_7d_sent: boolean;
+  reminder_offsets: number[] | null;
+  sent_offsets: number[] | null;
   unsubscribe_token: string;
 }
 
@@ -34,6 +34,10 @@ function parseMakeModel(makeModel: string): { make: string; model: string } {
   return { make: parts[0] || "Your", model: parts.slice(1).join(" ") || "vehicle" };
 }
 
+function uniqueSorted(nums: number[]): number[] {
+  return Array.from(new Set(nums)).sort((a, b) => b - a);
+}
+
 export async function GET(req: Request) {
   // Verify cron secret
   const authHeader = req.headers.get("authorization");
@@ -48,124 +52,75 @@ export async function GET(req: Request) {
   let sent = 0;
   let errors = 0;
 
-  // --- 28-day reminders ---
-  const date28from = new Date(now);
-  date28from.setDate(date28from.getDate() + 27);
-  const date28to = new Date(now);
-  date28to.setDate(date28to.getDate() + 29);
+  // Pull every active reminder whose MOT expires within the longest possible
+  // lead time, then decide per-row which (if any) of its chosen offsets is due.
+  const windowEnd = new Date(now);
+  windowEnd.setDate(windowEnd.getDate() + MAX_OFFSET_DAYS + 2);
 
-  const { data: reminders28, error: err28 } = await sb
+  const { data: rows, error } = await sb
     .from("mot_reminders")
-    .select("id, email, vrm, make_model, mot_expiry, reminder_28d_sent, reminder_7d_sent, unsubscribe_token")
+    .select(
+      "id, email, vrm, make_model, mot_expiry, reminder_offsets, sent_offsets, unsubscribe_token",
+    )
     .eq("active", true)
-    .eq("reminder_28d_sent", false)
-    .gte("mot_expiry", date28from.toISOString().split("T")[0])
-    .lte("mot_expiry", date28to.toISOString().split("T")[0])
-    .limit(MAX_EMAILS_PER_RUN);
+    .gte("mot_expiry", now.toISOString().split("T")[0])
+    .lte("mot_expiry", windowEnd.toISOString().split("T")[0])
+    .order("mot_expiry", { ascending: true })
+    .limit(500);
 
-  if (err28) {
-    console.error("cron_28d_query_error:", err28);
+  if (error) {
+    console.error("cron_query_error:", error);
+    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
   }
 
-  if (reminders28) {
-    for (const reminder of reminders28 as MotReminder[]) {
-      if (sent >= MAX_EMAILS_PER_RUN) break;
+  for (const reminder of (rows ?? []) as MotReminder[]) {
+    if (sent >= MAX_EMAILS_PER_RUN) break;
 
-      const daysRemaining = Math.ceil(
-        (new Date(reminder.mot_expiry).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-      );
+    const daysRemaining = Math.ceil(
+      (new Date(reminder.mot_expiry).getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    if (daysRemaining < 0) continue;
 
-      const { make, model } = parseMakeModel(reminder.make_model || "");
-      const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
-      const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm);
+    const offsets = reminder.reminder_offsets?.length ? reminder.reminder_offsets : DEFAULT_OFFSETS;
+    const alreadySent = reminder.sent_offsets ?? [];
 
-      const result = await sendEmail({
-        to: reminder.email,
-        subject: `MOT due in ${daysRemaining} days — ${reminder.vrm} (${make} ${model})`,
-        react: MOTReminder28d({
-          make,
-          model,
-          regNumber: reminder.vrm,
-          expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
-          daysRemaining,
-          bmgAffiliateUrl: bmgUrl,
-          unsubscribeUrl,
-        }),
+    // Windows that have been reached (expiry is within them) and not yet sent.
+    const dueNow = offsets.filter((o) => o >= daysRemaining && !alreadySent.includes(o));
+    if (dueNow.length === 0) continue;
+
+    const { make, model } = parseMakeModel(reminder.make_model || "");
+    const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
+    const clickref = daysRemaining <= 7 ? "email-mot-reminder-7d" : "email-mot-reminder-early";
+    const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm, clickref);
+
+    const result = await sendEmail({
+      to: reminder.email,
+      subject: reminderSubject(daysRemaining, reminder.vrm, make, model),
+      react: MOTReminderDue({
+        make,
+        model,
+        regNumber: reminder.vrm,
+        expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
+        daysRemaining,
+        bmgAffiliateUrl: bmgUrl,
         unsubscribeUrl,
-      });
+      }),
+      unsubscribeUrl,
+    });
 
-      if (result.ok) {
-        await sb
-          .from("mot_reminders")
-          .update({ reminder_28d_sent: true, updated_at: new Date().toISOString() })
-          .eq("id", reminder.id);
-        sent++;
-      } else {
-        console.error("cron_28d_send_error:", reminder.id, result.error);
-        errors++;
-      }
-    }
-  }
-
-  // --- 7-day reminders (use remaining budget) ---
-  const remaining = MAX_EMAILS_PER_RUN - sent;
-  if (remaining > 0) {
-    const date7from = new Date(now);
-    date7from.setDate(date7from.getDate() + 6);
-    const date7to = new Date(now);
-    date7to.setDate(date7to.getDate() + 8);
-
-    const { data: reminders7, error: err7 } = await sb
-      .from("mot_reminders")
-      .select("id, email, vrm, make_model, mot_expiry, reminder_28d_sent, reminder_7d_sent, unsubscribe_token")
-      .eq("active", true)
-      .eq("reminder_7d_sent", false)
-      .gte("mot_expiry", date7from.toISOString().split("T")[0])
-      .lte("mot_expiry", date7to.toISOString().split("T")[0])
-      .limit(remaining);
-
-    if (err7) {
-      console.error("cron_7d_query_error:", err7);
-    }
-
-    if (reminders7) {
-      for (const reminder of reminders7 as MotReminder[]) {
-        if (sent >= MAX_EMAILS_PER_RUN) break;
-
-        const daysRemaining = Math.ceil(
-          (new Date(reminder.mot_expiry).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        const { make, model } = parseMakeModel(reminder.make_model || "");
-        const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
-        const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm, "email-mot-reminder-7d");
-
-        const result = await sendEmail({
-          to: reminder.email,
-          subject: `⚠️ MOT expires in ${daysRemaining} day${daysRemaining !== 1 ? "s" : ""} — ${reminder.vrm}`,
-          react: MOTReminder7d({
-            make,
-            model,
-            regNumber: reminder.vrm,
-            expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
-            daysRemaining,
-            bmgAffiliateUrl: bmgUrl,
-            unsubscribeUrl,
-          }),
-          unsubscribeUrl,
-        });
-
-        if (result.ok) {
-          await sb
-            .from("mot_reminders")
-            .update({ reminder_7d_sent: true, updated_at: new Date().toISOString() })
-            .eq("id", reminder.id);
-          sent++;
-        } else {
-          console.error("cron_7d_send_error:", reminder.id, result.error);
-          errors++;
-        }
-      }
+    if (result.ok) {
+      // Mark every reached window as sent — including any earlier window the
+      // user skipped past (e.g. signed up inside the 5-week mark) so we never
+      // back-fill a stale reminder later.
+      const newSent = uniqueSorted([...alreadySent, ...offsets.filter((o) => o >= daysRemaining)]);
+      await sb
+        .from("mot_reminders")
+        .update({ sent_offsets: newSent, updated_at: new Date().toISOString() })
+        .eq("id", reminder.id);
+      sent++;
+    } else {
+      console.error("cron_send_error:", reminder.id, result.error);
+      errors++;
     }
   }
 

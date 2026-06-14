@@ -9,12 +9,17 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How do I get an MOT reminder?",
     answer:
-      "Enter your reg and email in the form above. We'll look up your MOT expiry from DVLA records and email you 28 and 7 days before it expires.",
+      "Enter your reg and email in the form above. We'll look up your MOT expiry from DVLA records and email you in good time before it's due — 5 weeks and 1 week before by default, or choose your own timing.",
+  },
+  {
+    question: "When will you remind me?",
+    answer:
+      "By default we email you 5 weeks before expiry and again 1 week before. You can change this to any combination of 5 weeks, 1 month, 2 weeks or 1 week. The early reminder matters: you can have an MOT done up to a month before it expires and keep the same renewal date, so booking early can save you money without losing any days.",
   },
   {
     question: "Is this service free?",
     answer:
-      "Yes — no charges, no premium tiers, no upsells. Two reminder emails per MOT, that's it.",
+      "Yes — no charges, no premium tiers, no upsells. Just timely reminders, each with a link to compare and book a local MOT (often below the £54.85 cap).",
   },
   {
     question: "How do I unsubscribe?",
@@ -176,11 +181,11 @@ export default function MotReminderPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary signup form */}
-        <MOTReminderSignup context="generic" triggerVariant="reminder_page" />
+        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker />
 
         <StatCallouts
           stats={[
-            { value: "28 + 7", label: "Days' notice before expiry" },
+            { value: "You choose", label: "When we remind you" },
             { value: "£1,000", label: "Max fine for no MOT", tone: "danger" },
             { value: "£0", label: "Always free", tone: "good" },
           ]}
@@ -207,8 +212,8 @@ export default function MotReminderPage() {
               <div className="flex gap-4 items-start">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">3</span>
                 <div>
-                  <p className="font-semibold text-slate-100">Two emails: 28 days, then 7 days before</p>
-                  <p className="text-sm mt-1">Plenty of time to shop around without the last-minute rush.</p>
+                  <p className="font-semibold text-slate-100">Reminders when you want them</p>
+                  <p className="text-sm mt-1">5 weeks and 1 week before by default — or pick your own timing. The early nudge means you can test up to a month early and keep your renewal date.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
@@ -230,7 +235,7 @@ export default function MotReminderPage() {
               <li><strong className="text-slate-100">Up to £1,000 fine</strong> — driving without a valid MOT is a criminal offence.</li>
               <li><strong className="text-slate-100">Insurance may be void</strong> — most policies require a valid MOT. Crash without one and you may be personally liable.</li>
               <li><strong className="text-slate-100">ANPR cameras flag it automatically</strong> — no need for police to stop you to be caught.</li>
-              <li><strong className="text-slate-100">Convenience</strong> — 28 days&apos; notice lets you compare prices and book at a sensible time.</li>
+              <li><strong className="text-slate-100">Save money</strong> — an early reminder lets you test up to a month before, keep your renewal date, and compare local garage prices instead of paying the chain rate.</li>
             </ul>
             <p className="leading-relaxed">
               More in our <Link href="/blog/what-happens-driving-without-mot" className="text-blue-400 hover:text-blue-300">guide to driving without an MOT</Link>.

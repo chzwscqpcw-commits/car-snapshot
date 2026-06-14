@@ -284,8 +284,8 @@ export default function ConversionWidget({
                 {reminderHeadline}
               </h4>
               <p className="mt-1 text-sm text-slate-400">
-                Get a free email reminder 28 days and 7 days before your MOT
-                expires.
+                Get a free email reminder in good time before your MOT is due —
+                with help to book, often below the £54.85 cap.
               </p>
 
               <form

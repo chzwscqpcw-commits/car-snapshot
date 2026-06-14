@@ -12,6 +12,7 @@ import { Footer } from "./components/Footer";
 import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
 import { CTAButton } from "./components/CTAButton";
 import { EmailRegPlate } from "./components/RegPlate";
+import { DEFAULT_OFFSETS, offsetLabel } from "@/lib/mot-reminders";
 
 const body: React.CSSProperties = {
   backgroundColor: "#0a0a0a",
@@ -62,6 +63,7 @@ interface MOTReminderSetProps {
   model: string;
   regNumber: string;
   expiryDate: string;
+  offsets?: number[];
   unsubscribeUrl: string;
 }
 
@@ -70,9 +72,11 @@ export default function MOTReminderSet({
   model = "FOCUS",
   regNumber = "AB12CDE",
   expiryDate = "15/04/2026",
+  offsets = DEFAULT_OFFSETS,
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
 }: MOTReminderSetProps) {
   const reportUrl = `https://freeplatecheck.co.uk/?vrm=${encodeURIComponent(regNumber)}`;
+  const sorted = [...offsets].sort((a, b) => b - a);
 
   return (
     <Html lang="en">
@@ -85,14 +89,22 @@ export default function MOTReminderSet({
             <EmailRegPlate reg={regNumber} />
             <Text style={heading}>MOT reminder set</Text>
             <Text style={subtext}>
-              You&apos;ll receive two email reminders for your {make} {model} before the MOT runs out.
+              You&apos;re all set for your {make} {model}. We&apos;ll email you before the MOT runs
+              out — and each reminder includes a one-tap link to compare local garage prices and
+              book, often well below the &pound;54.85 legal maximum.
             </Text>
             <InfoCard>
               <Text style={labelStyle}>MOT Expiry Date</Text>
               <Text style={valueStyle}>{expiryDate}</Text>
-              <Text style={{ ...labelStyle, marginBottom: "8px" }}>Reminders</Text>
-              <Text style={bulletText}>&bull; 28 days before expiry</Text>
-              <Text style={{ ...bulletText, margin: "0" }}>&bull; 7 days before expiry</Text>
+              <Text style={{ ...labelStyle, marginBottom: "8px" }}>You&apos;ll be reminded</Text>
+              {sorted.map((d, i) => (
+                <Text
+                  key={d}
+                  style={i === sorted.length - 1 ? { ...bulletText, margin: "0" } : bulletText}
+                >
+                  &bull; {offsetLabel(d)} before expiry
+                </Text>
+              ))}
             </InfoCard>
             <CTAButton href={reportUrl}>View full vehicle report</CTAButton>
           </Section>

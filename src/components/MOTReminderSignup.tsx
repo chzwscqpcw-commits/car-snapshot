@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Bell, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
+import { DEFAULT_OFFSETS, OFFSET_OPTIONS } from "@/lib/mot-reminders";
 
 interface MOTReminderSignupProps {
   context: "generic" | "due-soon" | "expired" | "post-lookup";
@@ -17,6 +18,14 @@ interface MOTReminderSignupProps {
   motExpiryDate?: string;
   makeModel?: string;
   compact?: boolean;
+  /**
+   * One-field ask: the vehicle is already known (e.g. on the results page), so
+   * hide the reg input entirely and just collect an email. Removes the biggest
+   * friction point — re-typing a reg the user just searched.
+   */
+  hideReg?: boolean;
+  /** Show the optional "change when I'm reminded" timing picker. */
+  allowTimingPicker?: boolean;
 }
 
 const CONTEXT_COPY: Record<
@@ -31,7 +40,7 @@ const CONTEXT_COPY: Record<
   "due-soon": {
     heading: "Your MOT is due soon \u2014 set a reminder",
     subtext: () =>
-      "We\u2019ll email you 28 days and 7 days before it expires.",
+      "We\u2019ll email you in good time before it\u2019s due \u2014 and help you book.",
   },
   expired: {
     heading: "MOT expired \u2014 don\u2019t forget next time",
@@ -97,9 +106,13 @@ export default function MOTReminderSignup({
   motExpiryDate,
   makeModel,
   compact = false,
+  hideReg = false,
+  allowTimingPicker = false,
 }: MOTReminderSignupProps) {
   const [regs, setRegs] = useState<string[]>([regNumber?.toUpperCase() || ""]);
   const [email, setEmail] = useState("");
+  const [offsets, setOffsets] = useState<number[]>(DEFAULT_OFFSETS);
+  const [showTiming, setShowTiming] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -174,18 +187,30 @@ export default function MOTReminderSignup({
     });
   }, []);
 
+  const toggleOffset = useCallback((days: number) => {
+    setOffsets((prev) =>
+      prev.includes(days)
+        ? prev.filter((d) => d !== days)
+        : [...prev, days].sort((a, b) => b - a),
+    );
+  }, []);
+
   const validate = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
 
-    regs.forEach((reg, i) => {
-      const cleaned = cleanReg(reg);
-      if (!cleaned) {
-        newErrors[`reg-${i}`] = "Please enter your vehicle registration";
-      } else if (!isValidReg(reg)) {
-        newErrors[`reg-${i}`] =
-          "That doesn\u2019t look like a valid UK registration";
-      }
-    });
+    // When the vehicle is already known we hide the reg field and trust the
+    // regNumber prop, so there's nothing to validate there.
+    if (!hideReg) {
+      regs.forEach((reg, i) => {
+        const cleaned = cleanReg(reg);
+        if (!cleaned) {
+          newErrors[`reg-${i}`] = "Please enter your vehicle registration";
+        } else if (!isValidReg(reg)) {
+          newErrors[`reg-${i}`] =
+            "That doesn\u2019t look like a valid UK registration";
+        }
+      });
+    }
 
     if (!email.trim()) {
       newErrors.email = "Please enter your email address";
@@ -195,7 +220,7 @@ export default function MOTReminderSignup({
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [regs, email]);
+  }, [regs, email, hideReg]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -211,9 +236,13 @@ export default function MOTReminderSignup({
 
       try {
         const trimmedEmail = email.trim().toLowerCase();
+        // When hideReg, the vehicle is known from props — use it directly.
+        const effectiveRegs =
+          hideReg && regNumber ? [regNumber] : regs;
+        const sendOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
 
-        for (let i = 0; i < regs.length; i++) {
-          const vrm = cleanReg(regs[i]);
+        for (let i = 0; i < effectiveRegs.length; i++) {
+          const vrm = cleanReg(effectiveRegs[i]);
 
           // Only trust the props if the first reg still matches the looked-up
           // vehicle. If the user has edited the reg field, the props are stale
@@ -254,6 +283,7 @@ export default function MOTReminderSignup({
               vrm,
               makeModel: vehicleMakeModel,
               motExpiry: expiry,
+              offsets: sendOffsets,
             }),
           });
 
@@ -283,11 +313,16 @@ export default function MOTReminderSignup({
           }
         }
 
-        setSuccessReg(regs.map((r) => cleanReg(r)).join(", "));
+        setSuccessReg(effectiveRegs.map((r) => cleanReg(r)).join(", "));
         setSuccessEmail(trimmedEmail);
         setSuccessExpiry(motExpiryDate || "");
         setSuccess(true);
-        trackConversion("mot_reminder", { context, trigger_variant: triggerVariant ?? null, vrm_count: regs.length });
+        trackConversion("mot_reminder", {
+          context,
+          trigger_variant: triggerVariant ?? null,
+          vrm_count: effectiveRegs.length,
+          offsets: sendOffsets.join(","),
+        });
       } catch {
         trackEvent("mot_reminder_submit_error", { context, trigger_variant: triggerVariant ?? null, error_type: "network" });
         setErrors({
@@ -297,7 +332,7 @@ export default function MOTReminderSignup({
         setSubmitting(false);
       }
     },
-    [regs, email, motExpiryDate, makeModel, validate, context, triggerVariant, regNumber]
+    [regs, email, offsets, hideReg, motExpiryDate, makeModel, validate, context, triggerVariant, regNumber]
   );
 
   // --- Success state ---
@@ -359,6 +394,50 @@ export default function MOTReminderSignup({
     );
   }
 
+  // Optional "change when I'm reminded" picker, shared by both variants.
+  const timingPicker = allowTimingPicker ? (
+    <div className="text-xs">
+      {!showTiming ? (
+        <button
+          type="button"
+          onClick={() => setShowTiming(true)}
+          className="text-cyan-400 underline-offset-2 hover:text-cyan-300 hover:underline"
+        >
+          Change when I&rsquo;m reminded
+        </button>
+      ) : (
+        <div className="rounded-md border border-slate-700 bg-slate-800/50 p-3">
+          <p className="mb-2 text-slate-400">Email me before expiry:</p>
+          <div className="flex flex-wrap gap-2">
+            {OFFSET_OPTIONS.map((o) => {
+              const on = offsets.includes(o.days);
+              return (
+                <button
+                  key={o.days}
+                  type="button"
+                  onClick={() => toggleOffset(o.days)}
+                  aria-pressed={on}
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                    on
+                      ? "border-cyan-500 bg-cyan-500/15 text-cyan-200"
+                      : "border-slate-600 bg-slate-800 text-slate-400 hover:border-slate-500"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+          {offsets.length === 0 && (
+            <p className="mt-2 text-amber-400">
+              Pick at least one &mdash; we&rsquo;ll use 5 weeks + 1 week otherwise.
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  ) : null;
+
   // --- Compact variant ---
   if (compact) {
     return (
@@ -369,14 +448,16 @@ export default function MOTReminderSignup({
         noValidate
       >
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
-          <input
-            type="text"
-            value={regs[0]}
-            onChange={(e) => updateReg(0, e.target.value)}
-            placeholder="e.g. AB12 CDE"
-            maxLength={8}
-            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
+          {!hideReg && (
+            <input
+              type="text"
+              value={regs[0]}
+              onChange={(e) => updateReg(0, e.target.value)}
+              placeholder="e.g. AB12 CDE"
+              maxLength={8}
+              className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+          )}
           <input
             type="email"
             value={email}
@@ -414,12 +495,15 @@ export default function MOTReminderSignup({
           </p>
         )}
 
+        {timingPicker}
+
         <p className="text-xs text-slate-500">
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
         </p>
         <p className="mt-1 text-xs text-slate-500">
-          Reminder emails include a link to compare MOT prices from local garages.
+          Each reminder helps you book &mdash; and compares local garage prices, often below the
+          &pound;54.85 cap.
         </p>
       </form>
     );
@@ -573,13 +657,16 @@ export default function MOTReminderSignup({
           )}
         </button>
 
+        {timingPicker}
+
         {/* Trust signals */}
         <p className="text-xs text-slate-500">
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
         </p>
         <p className="mt-1 text-xs text-slate-500">
-          Reminder emails include a link to compare MOT prices from local garages.
+          Each reminder helps you book &mdash; and compares local garage prices, often below the
+          &pound;54.85 cap.
         </p>
         {(context === "expired" || context === "due-soon") && (
           <p className="mt-1.5 text-xs text-amber-500/80">

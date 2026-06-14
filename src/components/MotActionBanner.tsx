@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -44,31 +44,22 @@ function formatExpiryDisplay(iso?: string): string {
 }
 
 /**
- * Status-aware action banner shown immediately under the vehicle header on
- * the results page. Adapts to MOT urgency:
+ * Status-aware action banner shown immediately under the vehicle header on the
+ * results page. Adapts to MOT urgency, and — critically — shows the reminder
+ * email field INLINE (no tap-to-expand). The vehicle is already known, so the
+ * ask is a single email box.
  *
- *   - expired   → red, headline "MOT EXPIRED", primary "Book MOT now" → BMG,
- *                 secondary "Set reminder for next year" → opens inline form
- *   - due-soon  → amber, headline "MOT due in X days", primary
- *                 "Compare MOT prices" → BMG, secondary "Also set reminder"
- *   - far       → blue/slate, headline "Next MOT: {date}", single CTA
- *                 "Set MOT reminder" → opens inline form
+ * The old click-to-expand gate was the conversion killer: dashboard funnel
+ * showed ~940 reminder-prompt impressions/week but only ~6 expands (0.6%). The
+ * reg is already searched, so hideReg drops the only other field. For
+ * expired/due-soon the "book now" CTA stays primary with the reminder field
+ * directly beneath it; for far/no-record the reminder ask is the main action.
  *
- * Replaces two older sub-surfaces:
- *   - The MOT expired/expiring banner (BMG-only, no reminder)
- *   - The MOTReminderCollapsible chip (reminder-only, no BMG)
- *
- * Designed for 100% visibility (above the fold, above the SectionGroups)
- * given dashboard data showed only ~4% of users reached the Next Steps
- * section and ~22% reached Health & Safety — the strongest CTAs were
- * positioned in dead zones.
- *
- * Fires distinct tracking events:
- *   - mot_action_banner_view on first 50% visibility
- *   - mot_action_banner_reminder_open when the reminder CTA is tapped
- *   - partner_click with click_context=`mot-action-banner-{urgency}`
- *   - (The inline MOTReminderSignup keeps its own existing lifecycle events
- *     once expanded, tagged with triggerVariant=`action_banner_{urgency}`)
+ * Fires:
+ *   - mot_action_banner_view on first render per urgency
+ *   - the inline MOTReminderSignup keeps its own lifecycle events
+ *     (mot_reminder_view / _submit_attempt / mot_reminder), tagged with
+ *     triggerVariant=`action_banner_{urgency}`
  */
 export default function MotActionBanner({
   motStatus,
@@ -81,35 +72,11 @@ export default function MotActionBanner({
 
   const ref = useRef<HTMLDivElement | null>(null);
   const lastViewedUrgency = useRef<Urgency | null>(null);
-  // The reminder form is CLOSED by default in ALL cases — the user taps the
-  // "Set MOT reminder" CTA to open it. (Auto-opening it for valid-but-far MOTs
-  // was tried but read as contradictory: an open form sitting beneath a pill
-  // that implies it's collapsed. Closed-by-default is the correct strategy.)
-  const [reminderOpen, setReminderOpen] = useState(false);
-  // Close the form again when the user looks up a different car (urgency
-  // changes), so a manually-opened form doesn't carry into the next vehicle's
-  // banner. React's "adjust state when a prop changes" pattern — compare the
-  // previous urgency held in state and setState during render.
-  const [lastUrgency, setLastUrgency] = useState<Urgency | null>(urgency);
-  if (lastUrgency !== urgency) {
-    setLastUrgency(urgency);
-    setReminderOpen(false);
-  }
 
-  // Banner-view event. Previously used IntersectionObserver with a 50%
-  // threshold, but the banner is wrapped in DataReveal (opacity-0 →
-  // animate-fadeInUp) and the two observers' setup/teardown timing was
-  // racing — the banner's observer often disconnected before producing
-  // an intersection entry. Result: events stopped firing in production
-  // around 18:16 UTC on 2026-05-28 with no user-visible symptom.
-  //
-  // Since the banner only renders when MOT urgency is meaningful (the
-  // !urgency early return below covers the rest), if it renders we
-  // want to count it. Mount-firing — gated by per-urgency dedup so a
-  // re-render due to other state changes doesn't double-count, but a
-  // genuine urgency change (e.g. user looks up a different car) fires
-  // a fresh event — is simpler and more honest. Hook order stays
-  // stable across the null-urgency case so React doesn't complain.
+  // Banner-view event. Mount-firing — gated by per-urgency dedup so a re-render
+  // due to other state changes doesn't double-count, but a genuine urgency
+  // change (user looks up a different car) fires a fresh event. Hook order
+  // stays stable across the null-urgency case so React doesn't complain.
   useEffect(() => {
     if (!urgency) {
       lastViewedUrgency.current = null;
@@ -140,8 +107,8 @@ export default function MotActionBanner({
       : urgency === "no-record"
         ? "DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). Set a free reminder so it never catches you out."
         : urgency === "due-soon"
-          ? "Book up to 28 days early without losing any days. Garages near you can be £20+ cheaper than chain centres."
-          : "Set a free email reminder so you never get caught out. Two emails, 28 & 7 days before expiry. No spam.";
+          ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Set a free reminder so you don't miss the window."
+          : "Set a free email reminder so you never get caught out — we'll nudge you in time to test early and keep your renewal date.";
 
   const Icon =
     urgency === "expired" ? AlertTriangle : urgency === "due-soon" ? Clock : Calendar;
@@ -154,8 +121,6 @@ export default function MotActionBanner({
           headline: "text-red-100",
           primary:
             "bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-900/30",
-          secondary:
-            "bg-slate-900/60 hover:bg-slate-800/80 border border-red-700/50 text-red-100",
         }
       : urgency === "due-soon"
         ? {
@@ -165,8 +130,6 @@ export default function MotActionBanner({
             headline: "text-amber-100",
             primary:
               "bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-lg shadow-amber-900/30",
-            secondary:
-              "bg-slate-900/60 hover:bg-slate-800/80 border border-amber-700/50 text-amber-100",
           }
         : {
             container:
@@ -175,26 +138,14 @@ export default function MotActionBanner({
             headline: "text-slate-100",
             primary:
               "bg-cyan-500 hover:bg-cyan-400 text-slate-900 shadow-lg shadow-cyan-900/30",
-            secondary:
-              "bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 text-slate-100",
           };
 
   const showBmg = urgency === "expired" || urgency === "due-soon";
   const bmgLabel = urgency === "expired" ? "Book MOT now" : "Compare MOT prices";
-  const reminderLabel =
-    urgency === "expired"
-      ? "Set reminder for next year"
-      : urgency === "due-soon"
-        ? "Also set reminder"
-        : "Set MOT reminder";
 
-  // Route to the internal /booking wizard rather than directly to BMG so
-  // we can qualify intent (postcode, flexibility, recommended service) and
-  // surface our own price context before hand-off. The wizard fires
-  // booking_wizard_start with source=action_banner_{urgency} and the
-  // final partner_click happens at Step 4 with click_context=
-  // "booking-flow-mot". This is the A/B test: action banner → wizard vs
-  // every other BMG CTA still goes direct.
+  // Route to the internal /booking wizard rather than directly to BMG so we can
+  // qualify intent (postcode, flexibility, recommended service) and surface our
+  // own price context before hand-off.
   const bookingHref = `/booking?vrm=${encodeURIComponent(registrationNumber)}&type=mot&source=action_banner_${urgency}`;
 
   const reminderContext =
@@ -212,6 +163,15 @@ export default function MotActionBanner({
           ? "action_banner_due_soon"
           : "action_banner_far";
 
+  const reminderLeadIn =
+    urgency === "expired"
+      ? "Set a free reminder so you're ready well before next year's MOT:"
+      : urgency === "no-record"
+        ? "Set a free reminder for when its first MOT falls due:"
+        : urgency === "due-soon"
+          ? "Get a free reminder — we'll help you book in time:"
+          : `We'll email you free before it expires on ${formatExpiryDisplay(motExpiryDate)}:`;
+
   return (
     <div ref={ref} className={`mb-6 rounded-xl border p-4 sm:p-5 ${palette.container}`}>
       <div className="flex items-start gap-3">
@@ -224,47 +184,36 @@ export default function MotActionBanner({
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        {showBmg && (
+      {showBmg && (
+        <div className="mt-4">
           <a
             href={bookingHref}
-            onClick={() =>
-              trackEvent("action_banner_booking_click", { urgency })
-            }
-            className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-initial ${palette.primary}`}
+            onClick={() => trackEvent("action_banner_booking_click", { urgency })}
+            className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:w-auto ${palette.primary}`}
           >
             {bmgLabel}
             <ChevronRight className="h-3.5 w-3.5" />
           </a>
-        )}
-        <button
-          type="button"
-          onClick={() => {
-            if (!reminderOpen) {
-              trackEvent("mot_action_banner_reminder_open", { urgency });
-            }
-            setReminderOpen((v) => !v);
-          }}
-          aria-expanded={reminderOpen}
-          className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-initial ${palette.secondary}`}
-        >
-          <Bell className="h-3.5 w-3.5" />
-          {reminderLabel}
-        </button>
-      </div>
-
-      {reminderOpen && (
-        <div className="mt-4 border-t border-slate-700/40 pt-4">
-          <MOTReminderSignup
-            context={reminderContext}
-            triggerVariant={reminderTriggerVariant}
-            regNumber={registrationNumber}
-            motExpiryDate={motExpiryDate}
-            makeModel={makeModel}
-            compact
-          />
         </div>
       )}
+
+      {/* Always-visible one-field reminder ask — the reg is already known. */}
+      <div className={`mt-4 ${showBmg ? "border-t border-slate-700/40 pt-4" : ""}`}>
+        <div className="mb-2 flex items-center gap-2">
+          <Bell className={`h-3.5 w-3.5 shrink-0 ${palette.icon}`} aria-hidden="true" />
+          <p className="text-sm font-medium text-slate-200">{reminderLeadIn}</p>
+        </div>
+        <MOTReminderSignup
+          context={reminderContext}
+          triggerVariant={reminderTriggerVariant}
+          regNumber={registrationNumber}
+          motExpiryDate={motExpiryDate}
+          makeModel={makeModel}
+          compact
+          hideReg
+          allowTimingPicker
+        />
+      </div>
     </div>
   );
 }
