@@ -17,6 +17,8 @@ const TOOL_LINKS = [
 const GUIDE_LINKS = [
   { href: "/blog", label: "All guides" },
   { href: "/cars", label: "Cars by make" },
+  { href: "/compare", label: "Compare cars" },
+  { href: "/stats", label: "Car stats & data" },
   { href: "/clean-air-zones", label: "Clean Air Zones" },
   { href: "/repair-costs", label: "Repair costs" },
   { href: "/servicing", label: "Servicing" },
@@ -26,6 +28,7 @@ const SITE_LINKS = [
   { href: "/", label: "Home" },
   { href: "/tools", label: "All tools" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
 ];
@@ -44,8 +47,8 @@ const SOCIAL_LINKS = [
  */
 export default function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-slate-800/60 bg-slate-950/60">
-      <div className="mx-auto max-w-5xl px-5 py-10 sm:px-7 sm:py-12">
+    <footer className="border-t border-slate-800/60 bg-slate-950/60">
+      <div className="mx-auto max-w-5xl px-5 pt-14 pb-10 sm:px-7 sm:pt-16 sm:pb-12">
         {/* Brand row */}
         <div className="mb-8 flex items-start gap-3">
           <BoltMark className="h-9 w-7 shrink-0 mt-1" glow />
