@@ -62,6 +62,7 @@
     <select id="reelSel">
       <option value="metro">How Many Left? — Austin Metro (14.2s)</option>
       <option value="scan">Scan Reveal — flagship (10.5s)</option>
+      <option value="platform">Platform Tour — VO walkthrough (31s)</option>
     </select>
   </div>
 
@@ -146,7 +147,69 @@ async function renderDataBlips(){ const dur=2.4,ctx=new OfflineAudioContext(2,Ma
   [1046.5,1568].forEach((f,i)=>{ const t=1.65+i*0.04; const o=ctx.createOscillator();o.type='sine';o.frequency.value=f; const g=eg(ctx,t,0.005,0.14,0.55);o.connect(g).connect(B);o.start(t);o.stop(t+0.75); });
   return ctx.startRendering(); }
 
-const SYNTHS={ logo:renderLogo, indbed:renderIndicatorBed, keys:renderTypeKeys, data:renderDataBlips };
+// platform-tour: a single soft UI blip at a given pitch (sine + octave shimmer)
+function makeBlip(freq,amp){ return async function(){ const dur=0.5,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.95;master.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(ctx,0.5,3);const wet=ctx.createGain();wet.gain.value=0.25;conv.connect(wet).connect(master);
+  const B=ctx.createGain();B.connect(master);const send=ctx.createGain();send.gain.value=0.07;B.connect(send);send.connect(conv);
+  const t=0.01;
+  const o=ctx.createOscillator();o.type='sine';o.frequency.value=freq; const g=eg(ctx,t,0.004,amp,0.16);o.connect(g).connect(B);o.start(t);o.stop(t+0.3);
+  const o2=ctx.createOscillator();o2.type='triangle';o2.frequency.value=freq*2; const g2=eg(ctx,t,0.003,amp*0.3,0.1);o2.connect(g2).connect(B);o2.start(t);o2.stop(t+0.16);
+  return ctx.startRendering(); }; }
+// platform-tour: low, matter-of-fact warn tick for the "possible clocking" flag (inform, don't alarm)
+async function renderWarn(){ const dur=0.6,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.95;master.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(ctx,0.5,3);const wet=ctx.createGain();wet.gain.value=0.22;conv.connect(wet).connect(master);
+  const B=ctx.createGain();B.connect(master);const send=ctx.createGain();send.gain.value=0.06;B.connect(send);send.connect(conv);
+  const t=0.01;
+  const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(124,t+0.18); const g=eg(ctx,t,0.005,0.2,0.3);o.connect(g).connect(B);o.start(t);o.stop(t+0.4);
+  const o2=ctx.createOscillator();o2.type='triangle';o2.frequency.value=330; const g2=eg(ctx,t,0.004,0.06,0.12);o2.connect(g2).connect(B);o2.start(t);o2.stop(t+0.18);
+  return ctx.startRendering(); }
+// platform-tour: soft positive two-note up-chime for the "free" close
+async function renderAccent(){ const dur=1.0,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.95;master.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(ctx,0.7,3);const wet=ctx.createGain();wet.gain.value=0.32;conv.connect(wet).connect(master);
+  const B=ctx.createGain();B.connect(master);const send=ctx.createGain();send.gain.value=0.08;B.connect(send);send.connect(conv);
+  [[784,0.0],[1046.5,0.12]].forEach(([f,d])=>{ const t=0.01+d;
+    const o=ctx.createOscillator();o.type='sine';o.frequency.value=f; const g=eg(ctx,t,0.005,0.15,0.5);o.connect(g).connect(B);o.start(t);o.stop(t+0.7);
+    const o2=ctx.createOscillator();o2.type='triangle';o2.frequency.value=f*2; const g2=eg(ctx,t,0.004,0.04,0.2);o2.connect(g2).connect(B);o2.start(t);o2.stop(t+0.3);
+  });
+  return ctx.startRendering(); }
+
+// platform-tour beds (31s, in C major to sit with the blips/end-sting) — dial each to taste
+// 1) calm breathing pad: detuned saws through a slow-LFO lowpass, long swell in/out
+async function renderPad(){ const dur=31.0,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(ctx,2.2,2.4);const wet=ctx.createGain();wet.gain.value=0.5;conv.connect(wet).connect(master);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=620;lp.Q.value=0.6;lp.connect(master);
+  const send=ctx.createGain();send.gain.value=0.28;lp.connect(send);send.connect(conv);
+  const lfo=ctx.createOscillator();lfo.type='sine';lfo.frequency.value=0.07;const lfg=ctx.createGain();lfg.gain.value=240;lfo.connect(lfg);lfg.connect(lp.frequency);lfo.start(0);lfo.stop(dur);
+  const env=ctx.createGain();env.connect(lp);
+  env.gain.setValueAtTime(0.0001,0);env.gain.linearRampToValueAtTime(0.2,2.2);env.gain.setValueAtTime(0.2,dur-3.0);env.gain.exponentialRampToValueAtTime(0.0001,dur);
+  [65.41,98.0,130.81,164.81,196.0].forEach(f=>stack(ctx,f,'sawtooth',[-7,7],env,0,dur));
+  return ctx.startRendering(); }
+// 2) soft sub-pulse heartbeat (~84bpm, lub-dub) for quiet forward motion
+function subHit(ctx,B,t,f,amp){ const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(f*1.5,t);o.frequency.exponentialRampToValueAtTime(f,t+0.08); const g=eg(ctx,t,0.005,amp,0.16);o.connect(g).connect(B);o.start(t);o.stop(t+0.24); }
+async function renderPulse(){ const dur=31.0,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=160;lp.connect(master);
+  const B=ctx.createGain();B.connect(lp); const beat=60/84;
+  for(let t=0;t<dur-0.4;t+=beat){ subHit(ctx,B,t,58,0.5); subHit(ctx,B,t+0.17,46,0.26); }
+  return ctx.startRendering(); }
+// 3) gentle arp motif (C–E–G–C), soft triangle plucks with reverb shimmer
+function pluck(ctx,B,t,f,amp){ const o=ctx.createOscillator();o.type='triangle';o.frequency.value=f; const g=eg(ctx,t,0.004,amp,0.22);o.connect(g).connect(B);o.start(t);o.stop(t+0.32);
+  const o2=ctx.createOscillator();o2.type='sine';o2.frequency.value=f*2; const g2=eg(ctx,t,0.003,amp*0.25,0.1);o2.connect(g2).connect(B);o2.start(t);o2.stop(t+0.14); }
+async function renderArp(){ const dur=31.0,ctx=new OfflineAudioContext(2,Math.ceil(SR*dur),SR);
+  const master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(ctx,1.4,3);const wet=ctx.createGain();wet.gain.value=0.45;conv.connect(wet).connect(master);
+  const B=ctx.createGain();B.connect(master);const send=ctx.createGain();send.gain.value=0.3;B.connect(send);send.connect(conv);
+  const notes=[523.25,659.25,783.99,1046.5,783.99,659.25]; const step=60/84/2;
+  for(let t=0,i=0;t<dur-0.4;t+=step,i++){ pluck(ctx,B,t,notes[i%notes.length],0.085); }
+  return ctx.startRendering(); }
+
+const SYNTHS={ logo:renderLogo, indbed:renderIndicatorBed, keys:renderTypeKeys, data:renderDataBlips,
+  warn:renderWarn, accent:renderAccent, pad:renderPad, pulse:renderPulse, arp:renderArp,
+  blipMot:makeBlip(660,0.17), blipMile:makeBlip(740,0.17), blipUlez:makeBlip(831,0.17) };
 const synthCache={};
 async function getSynth(key){ if(!synthCache[key]) synthCache[key]=await SYNTHS[key](); return synthCache[key]; }
 
@@ -162,6 +225,11 @@ function detectMetro(n){ n=n.toLowerCase();
   return'other'; }
 function detectScan(n){ n=n.toLowerCase();
   if(/urban|ambience|traffic|passing/.test(n))return'ambience';
+  if(/swoosh|scan|speeding|whoosh|beam/.test(n))return'scan';
+  return'other'; }
+function detectPlatform(n){ n=n.toLowerCase();
+  if(/\bvo\b|voice|narrat|vocal|read|take/.test(n))return'vo';
+  if(/urban|ambience|traffic|passing|pad|bed/.test(n))return'ambience';
   if(/swoosh|scan|speeding|whoosh|beam/.test(n))return'scan';
   return'other'; }
 
@@ -205,6 +273,33 @@ const PRESETS={
       {name:'Audio logo (premium)',role:'logo',at:6.95,dur:2.2,gain:0.98,synth:'logo'},
     ],
     note:'<b>Default placements</b> (scan reveal): keys 1.0s · scan-whoosh 1.7s · data blips 2.3–3.3s · chime 3.7s · logo 6.95s · ambience under everything (low, faded). Drop the <b>scan-whoosh</b> (e.g. mixkit-speeding-swoosh) and an <b>ambience</b> bed; keys, blips and chime are synthesised in-page. The audio-logo end-sting is shared with every reel.'
+  },
+  platform:{
+    label:'Platform Tour — VO walkthrough', total:31.0,
+    wav:'fpc-platform-tour-soundtrack-31s.wav',
+    dropHint:'scan-whoosh (speeding-swoosh) · (optional) your VO take — pad/pulse/arp beds, keys, blips, warn, accent & logo are all synthesised',
+    roles:['vo','ambience','scan','other'],
+    detect:detectPlatform,
+    def:{
+      vo:{at:0,offset:0,dur:31.0,gain:1.0},
+      ambience:{at:0,offset:0,dur:31.0,gain:0.11,fade:true},
+      scan:{at:4.3,offset:0,dur:2.3,gain:0.55},
+      other:{at:0,offset:0,dur:2.0,gain:0}
+    },
+    synths:[
+      {name:'Ambient pad bed',role:'pad',at:0,dur:31.0,gain:0.6,synth:'pad'},
+      {name:'Sub-pulse 84bpm — try it',role:'pulse',at:0,dur:31.0,gain:0,synth:'pulse'},
+      {name:'Arp motif — try it',role:'arp',at:0,dur:31.0,gain:0,synth:'arp'},
+      {name:'Type-in keys',role:'keys',at:0.9,dur:0.6,gain:0.42,synth:'keys'},
+      {name:'MOT data blip',role:'blip',at:7.4,dur:0.5,gain:0.4,synth:'blipMot'},
+      {name:'Mileage data blip',role:'blip',at:11.1,dur:0.5,gain:0.4,synth:'blipMile'},
+      {name:'Clocking warn tick',role:'warn',at:12.4,dur:0.6,gain:0.42,synth:'warn'},
+      {name:'ULEZ data blip',role:'blip',at:14.9,dur:0.5,gain:0.4,synth:'blipUlez'},
+      {name:'Valuation count-up + chime',role:'data',at:18.7,dur:2.4,gain:0.5,synth:'data'},
+      {name:'Free-close accent',role:'accent',at:22.5,dur:1.0,gain:0.4,synth:'accent'},
+      {name:'Audio logo (end-sting)',role:'logo',at:27.0,dur:2.2,gain:0.98,synth:'logo'},
+    ],
+    note:'<b>VO-led reel</b> — the narration is the lead; everything here sits <i>under</i> it. <b>Bed options (top three rows, audition by ear):</b> the <b>pad</b> is on by default (calm, breathing, in key); the <b>sub-pulse</b> (gentle 84bpm motion) and <b>arp motif</b> load at gain 0 — raise either to taste, or stack all three for a fuller bed. <b>Spot placements</b> follow the cue sheet: type-keys 0.9s · scan-whoosh 4.3s · MOT blip 7.4s · mileage blip 11.1s · clocking warn 12.4s · ULEZ blip 14.9s · valuation count-up+chime 18.7s · free-close accent 22.5s · end-sting logo 27.0s. <b>Two ways to finish it:</b> (1) drop your recorded <b>VO</b> take (filename containing "vo"/"voice") to render one complete mixed WAV — nudge the bed/SFX gains down so the voice stays clear; or (2) leave the VO out to export just the <b>bed + SFX stem</b> and lay your voice over it in your editor. Everything except the scan-whoosh is synthesised in-page (a dropped ambience field-recording is optional if you want one over the synth pad).'
   }
 };
 let preset=PRESETS.metro;
