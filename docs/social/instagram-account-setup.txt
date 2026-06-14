@@ -66,3 +66,37 @@ FORMAT NOTES
 BRAND VOICE REMINDER
   Free. Instant. Honest. Plain British English (colour, tyre, number plate, £).
   Intriguing, never clickbait. One tasteful emoji max — no hype spam.
+
+
+CROSS-POSTING TO THE FACEBOOK PAGE (post once → both update)
+-----------------------------------------------------------
+LINK ONCE (permanent, account-level):
+  Instagram app > Profile > ☰ > Settings and activity > Accounts Center >
+  Add accounts > Add Facebook account > pick the Free Plate Check PAGE.
+  (Works the same starting from the FB Page > Settings > Accounts Center.)
+  - Instagram must be a Professional account (it is).
+  - Link the Facebook PAGE, not a personal profile.
+
+MAKE IT AUTOMATIC:
+  Accounts Center > Connected experiences > "Sharing across profiles" >
+  set IG reels/posts to share to the Facebook Page by default.
+
+THE "SHARE TO FACEBOOK" TOGGLE — where it is / why it vanishes:
+  - It ONLY appears on the FINAL SHARE SCREEN when you FIRST publish a Reel.
+  - It does NOT appear on the "Edit info" screen of an ALREADY-POSTED reel —
+    editing only changes caption/location/collaborators/accessibility.
+  - The instagram.com WEB flow often hides the toggle. It's reliable in the
+    MOBILE APP or in Meta Business Suite. Post from those to get it.
+
+BEST TOOL FOR BOTH (desktop + scheduling):
+  Meta Business Suite (business.facebook.com) — publish one Reel to the FB
+  Page AND Instagram at once, schedule ahead (great for batching the calendar),
+  and manage both inboxes in one place.
+
+GET AN ALREADY-LIVE IG REEL ONTO FACEBOOK (retro-fit):
+  - Meta Business Suite > create a Page post/Reel > upload the same video; OR
+  - IG mobile app > open your reel > ⋯ > "Share to Facebook" (if offered); OR
+  - Facebook app > create a Reel on the Page > pull from linked Instagram.
+
+NOTE: a cross-posted FB reel reuses the IG caption. Fine as-is; if you ever
+want FB-specific wording, post it separately via Business Suite.

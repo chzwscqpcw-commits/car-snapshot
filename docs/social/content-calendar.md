@@ -9,6 +9,19 @@ uses a brand reel template (guide §11), and conforms to the brand + audio specs
   Paid*, *Read your MOT*.
 - Avoid plain single images (lowest reach).
 - "How Many Left?" stays **~1-in-6** so the channel doesn't drift into car-requests-only.
+- **TikTok-native = VO-led.** The cinematic mute-first reels (scan-reveal, How Many
+  Left) suit IG; for TikTok we also run **voice-over walkthroughs** (calm, knowledgeable
+  guide reading over a screen tour). First one: `platform-tour.html` (see template 7).
+
+## Pinned / channel intro (post first, pin on TikTok)
+
+**Platform tour (VO walkthrough)** — *the "what is this site" overview*
+- Hook: "Every car in the UK has a record — and most of it, you can read for free."
+- Beat: one plate → instant scan → fast hero tour of MOT history, mileage/clocking,
+  ULEZ, valuation → "no signup, no email."
+- CTA: "Check any UK car free — link in bio." · Reel (VO-led, ~31s).
+- Files: `platform-tour.html` · `platform-tour-vo-script.md` · `platform-tour-audio-cue-sheet.md`
+- A/B the first 1s (three hook variants in the VO script). Pin it as the profile intro.
 
 ## Recurring playbook
 - Each post ends on the brand end-card + a clear free CTA → link in bio.

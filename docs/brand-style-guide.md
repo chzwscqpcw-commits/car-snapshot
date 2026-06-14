@@ -265,6 +265,9 @@ Build a library so output stays on-model:
 4. **"Spot the clocking"** — a mileage timeline with one number that drops — the red flag. Teaches + shows the tool.
 5. **"Read your MOT"** — explainer breaking down an advisory in plain English.
 6. **"Stat drop"** — one big mono number counts up (theft rates, average mileage, how-many-left), one line of context.
+7. **"Platform tour"** *(VO-led, TikTok-native)* — a **voice-over walkthrough** of the site read in the calm "knowledgeable guide" voice: one plate → instant scan → a fast hero tour of the tools (MOT history, mileage, ULEZ, valuation) → "no signup, no email." Each spoken line is also burnt in on-screen (same words). Use when the goal is "what *is* this site" rather than one tool. Reference build: `docs/social/platform-tour.html`.
+
+> **VO reels vs mute-first reels:** templates 1–6 are mute-first cinematic (text carries the message; audio enhances). Template 7 is **voice-led** — write the words first (a timed VO script), then animate the screen to the narration. Both still wear the shared sonic signature (scan whoosh + end-sting + bed) so every post sounds like one brand.
 
 ---
 

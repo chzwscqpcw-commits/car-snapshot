@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free Plate Check — Cover Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--slate950:#020617;--slate900:#0f172a;--slate800:#1e293b;--slate700:#334155;
+    --slate100:#f1f5f9;--slate300:#cbd5e1;--slate400:#94a3b8;--slate500:#64748b;
+    --cyan:#22d3ee;--blue:#3b82f6;--emerald:#34d399;--ease:cubic-bezier(0.16,1,0.3,1);
+    --sans:"Inter",Arial,Helvetica,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--slate950);color:var(--slate300);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(ellipse 720px 500px at 50% -8%,rgba(34,211,238,.12),rgba(34,211,238,.04) 34%,transparent 64%)}
+  .top{display:flex;align-items:center;gap:12px;padding:22px 28px}
+  .top svg{height:34px;filter:drop-shadow(0 0 12px rgba(34,211,238,.45))}
+  .top .wm{font-weight:800;font-size:24px;color:var(--slate100)}
+  .top .kick{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate500);font-weight:700;margin-left:6px}
+  .layout{display:flex;gap:28px;padding:6px 28px 60px;align-items:flex-start}
+  .controls{flex:none;width:380px;display:flex;flex-direction:column;gap:16px}
+  .stagewrap{flex:1;display:flex;justify-content:center}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate500);font-weight:700}
+  input[type=text],textarea,select{font:inherit;font-size:14px;background:var(--slate800);border:1px solid var(--slate700);color:var(--slate100);border-radius:9px;padding:9px 11px;width:100%}
+  textarea{resize:vertical;min-height:60px;line-height:1.4}
+  .hint{font-size:12px;color:var(--slate500);line-height:1.5}
+  .hint code{font-family:var(--mono);color:var(--cyan);font-size:11px}
+  .row{display:flex;gap:10px;align-items:center}
+  .row .field{flex:1}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate300)}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .btn{font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:10px 18px;cursor:pointer;border:1px solid transparent;transition:.15s var(--ease)}
+  .btn.grad{color:#04121a;background:linear-gradient(120deg,var(--cyan),var(--blue));border:none}
+  .btn.grad:hover{filter:brightness(1.08)}
+  .btn.ghost{color:var(--slate300);background:var(--slate800);border-color:var(--slate700)} .btn.ghost:hover{background:var(--slate700);color:#fff}
+  .status{font-size:12.5px;color:var(--slate400);min-height:18px}
+  .canvasBox{position:relative;display:inline-block;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  #cv{display:block;height:78vh;width:auto;background:#04060c}
+  body.fbmode #cv{height:auto;width:min(90vw,1040px)}
+  /* crop guides (% of the canvas box → scale-proof). Never baked into the PNG. */
+  .guides{position:absolute;inset:0;pointer-events:none;display:none}
+  body.showguides .guides{display:block}
+  body.fbmode .reelg{display:none}
+  body:not(.fbmode) .fbg{display:none}
+  .g{position:absolute;left:0;right:0;border-top:2px dashed rgba(239,68,68,.6)}
+  .g.iat{top:14.84%}.g.iab{top:85.16%}        /* Instagram grid crop (4:5 centred) */
+  .glab{position:absolute;right:8px;font-size:10px;font-family:var(--mono);color:rgba(239,68,68,.85);background:rgba(2,6,23,.6);padding:1px 5px;border-radius:4px;transform:translateY(-50%)}
+  .safe{position:absolute;left:11%;right:11%;top:18%;bottom:18%;border:2px dashed rgba(34,211,238,.45);border-radius:10px}
+  .fbsafe{position:absolute;left:24%;right:24%;top:13%;bottom:13%;border:2px dashed rgba(34,211,238,.5);border-radius:8px}
+  .slab{position:absolute;left:6px;top:4px;font-size:10px;font-family:var(--mono);color:rgba(34,211,238,.9)}
+  .note{font-size:12.5px;line-height:1.6;color:var(--slate400);border-left:2px solid rgba(34,211,238,.4);padding:2px 0 2px 14px}
+  .note b{color:#e2e8f0}
+</style>
+</head>
+<body>
+  <div class="top">
+    <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><path d="M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z" fill="url(#b)"/></svg>
+    <span class="wm">Free Plate Check</span><span class="kick">Cover Maker · reels + Facebook</span>
+  </div>
+
+  <div class="layout">
+    <div class="controls">
+      <div class="field">
+        <label for="format">Format</label>
+        <select id="format">
+          <option value="reel">Reel cover — 1080×1920 (TikTok + Instagram)</option>
+          <option value="fb">Facebook Page cover — 1640×624</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="preset">Preset</label>
+        <select id="preset"></select>
+      </div>
+      <div class="field">
+        <label for="kicker">Kicker (small cyan label — reel only)</label>
+        <input type="text" id="kicker">
+      </div>
+      <div class="row">
+        <div class="field"><label for="reg">Plate reg</label><input type="text" id="reg"></div>
+        <label class="chk"><input type="checkbox" id="hasplate"> show plate</label>
+      </div>
+      <div class="field">
+        <label for="headline">Headline / tagline — *asterisks* = green accent</label>
+        <textarea id="headline"></textarea>
+      </div>
+      <div class="field">
+        <label for="sub">Sub-line / keyword strip — *asterisks* = white emphasis</label>
+        <input type="text" id="sub">
+      </div>
+      <div class="field">
+        <label for="fname">PNG filename</label>
+        <input type="text" id="fname">
+      </div>
+
+      <div class="bar">
+        <button class="btn grad" id="exportBtn">&#8623; Export PNG</button>
+        <button class="btn ghost" id="exportAll">&#8623; Export all presets</button>
+      </div>
+      <div class="bar">
+        <button class="btn ghost" id="folderBtn">&#128193; Choose folder…</button>
+        <button class="btn ghost" id="guideBtn">Crop guides</button>
+      </div>
+      <div class="status" id="status">Ready.</div>
+      <div class="note">Pixel-exact PNG — no screenshot, so platforms won't zoom/clip it. Keep key text inside the cyan <b>safe box</b> (toggle <b>Crop guides</b>). <b>Reel</b> covers also show the red Instagram grid crop; <b>Facebook</b> covers show the desktop+mobile safe zone (FB crops the cover differently on each, and overlays your profile picture bottom-left). <b>Choose folder</b> saves into <code>assets/covers/</code> (Chromium/Brave); otherwise it downloads. Upload via TikTok/IG &ldquo;cover&rdquo; or Facebook &ldquo;Edit cover photo&rdquo;.</div>
+    </div>
+
+    <div class="stagewrap">
+      <div class="canvasBox">
+        <canvas id="cv" width="1080" height="1920"></canvas>
+        <div class="guides">
+          <div class="reelg">
+            <div class="g iat"></div><div class="glab" style="top:14.84%">IG grid crop</div>
+            <div class="g iab"></div><div class="glab" style="top:85.16%">IG grid crop</div>
+            <div class="safe"><span class="slab">SAFE — keep text inside (both platforms)</span></div>
+          </div>
+          <div class="fbg">
+            <div class="fbsafe"><span class="slab">SAFE — desktop + mobile</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const cv=$('cv'), ctx=cv.getContext('2d'); const status=m=>$('status').textContent=m;
+  let dirHandle=null, format='reel';
+
+  const PRESETS={
+    'platform-tour':{kicker:'One number plate', reg:'VN23 BCD', plate:true, headline:"Everything a car's hiding — *free*", sub:'MOT · mileage · ULEZ · value · *no email*', file:'cover-platform-tour.png'},
+    'scan-reveal':  {kicker:'Scan any plate',   reg:'VN23 BCD', plate:true, headline:'Check any UK car in *seconds*',       sub:'MOT · tax · mileage · ULEZ · *free*',   file:'cover-scan-reveal.png'},
+    'mileage':      {kicker:'Mileage check',    reg:'VN23 BCD', plate:true, headline:'Has it been *clocked*?',             sub:'Spot the red flag · *free*',            file:'cover-mileage.png'},
+    'ulez':         {kicker:'Clean-air zones',  reg:'VN23 BCD', plate:true, headline:'ULEZ — or *£12.50* a day?',          sub:'Check your reg · *free*',               file:'cover-ulez.png'},
+    'valuation':    {kicker:'Instant valuation',reg:'VN23 BCD', plate:true, headline:"What's your car *worth*?",           sub:'Free valuation · *with your reg*',      file:'cover-valuation.png'},
+    'mot-history':  {kicker:'MOT history',      reg:'VN23 BCD', plate:true, headline:'Read its *whole* MOT history',       sub:'Every advisory, every fail · *free*',   file:'cover-mot-history.png'},
+    'how-many-left':{kicker:'How many left?',   reg:'',         plate:false,headline:'How many still *survive*?',          sub:'UK survivors · *DVLA data*',            file:'cover-how-many-left.png'},
+  };
+  // Facebook Page cover banners (landscape). kicker/plate unused; headline=tagline, sub=keyword strip.
+  const FB_PRESETS={
+    'fb-cover':    {kicker:'', reg:'', plate:false, headline:'Free UK vehicle checks — *honest*, instant, no signup', sub:'MOT · Tax · Mileage · ULEZ · Value · Recalls', file:'cover-facebook.png'},
+    'fb-cover-alt':{kicker:'', reg:'', plate:false, headline:'Know any UK car from its *number plate*',               sub:'Free · No email · freeplatecheck.co.uk',      file:'cover-facebook-alt.png'},
+  };
+  const state={kicker:'',reg:'',plate:true,headline:'',sub:'',file:''};
+  const activePresets=()=>format==='fb'?FB_PRESETS:PRESETS;
+
+  // ---- drawing primitives ----
+  function radialGlow(cx,cy,r,rgb,a0){ const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+    g.addColorStop(0,'rgba('+rgb+','+a0+')'); g.addColorStop(0.45,'rgba('+rgb+','+(a0*0.4)+')'); g.addColorStop(1,'rgba('+rgb+',0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height); }
+  function vignette(cx,cy,r0,r1){ const g=ctx.createRadialGradient(cx,cy,r0,cx,cy,r1);
+    g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.55)'); ctx.fillStyle=g; ctx.fillRect(0,0,cv.width,cv.height); }
+  function setLS(v){ try{ ctx.letterSpacing=v; }catch(e){} }
+
+  function toWords(str){ const segs=String(str).split('*'); const words=[];
+    segs.forEach((seg,i)=>{ const acc=(i%2)===1; seg.split(/\s+/).filter(Boolean).forEach(w=>words.push({word:w,accent:acc})); });
+    return words; }
+  function wrap(words,maxW){ const sp=ctx.measureText(' ').width; const lines=[]; let line=[],lw=0;
+    for(const tk of words){ const w=ctx.measureText(tk.word).width;
+      if(line.length && lw+sp+w>maxW){ lines.push(line); line=[tk]; lw=w; }
+      else { if(line.length) lw+=sp; line.push(tk); lw+=w; } }
+    if(line.length) lines.push(line); return lines; }
+  function drawLines(lines,cx,baseY,lh,base,accent){ const sp=ctx.measureText(' ').width;
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+    lines.forEach((line,i)=>{ const y=baseY+i*lh; let lw=0;
+      line.forEach((tk,j)=>{ if(j) lw+=sp; lw+=ctx.measureText(tk.word).width; });
+      let x=cx-lw/2;
+      line.forEach((tk,j)=>{ if(j) x+=sp; ctx.fillStyle=tk.accent?accent:base; ctx.fillText(tk.word,x,y); x+=ctx.measureText(tk.word).width; });
+    }); }
+
+  function drawWordmark(cx,cy,nameSize,boltH){ nameSize=nameSize||44; boltH=boltH||64; const name='Free Plate Check';
+    ctx.font='800 '+nameSize+'px Inter'; setLS('0px'); const tw=ctx.measureText(name).width;
+    const boltW=boltH*0.75, gap=nameSize*0.45, total=boltW+gap+tw; let x=cx-total/2;
+    ctx.save(); ctx.translate(x,cy-boltH/2); ctx.scale(boltH/32,boltH/32);
+    const g=ctx.createLinearGradient(0,0,24,32); g.addColorStop(0,'#22d3ee'); g.addColorStop(1,'#3b82f6');
+    ctx.fillStyle=g; ctx.shadowColor='rgba(34,211,238,0.45)'; ctx.shadowBlur=14;
+    ctx.fill(new Path2D('M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z')); ctx.restore();
+    ctx.shadowBlur=0; ctx.fillStyle='#f1f5f9'; ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText(name, x+boltW+gap, cy); }
+
+  function drawPlate(cx,cy){ const reg=state.reg;
+    ctx.font='700 92px "Geist Mono"'; setLS('10px'); const tw=ctx.measureText(reg).width;
+    const padX=54,padY=27; const bw=tw+padX*2, bh=92+padY*2; const x=cx-bw/2, yTop=cy-bh/2;
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,bw*0.7);
+    g.addColorStop(0,'rgba(34,211,238,0.30)'); g.addColorStop(0.6,'rgba(34,211,238,0.05)'); g.addColorStop(1,'rgba(34,211,238,0)');
+    ctx.fillStyle=g; ctx.fillRect(x-180,yTop-130,bw+360,bh+260);
+    ctx.beginPath(); ctx.roundRect(x,yTop,bw,bh,24); ctx.fillStyle='rgba(15,23,42,0.6)'; ctx.fill();
+    ctx.lineWidth=3; ctx.strokeStyle='rgba(34,211,238,0.55)'; ctx.stroke();
+    ctx.fillStyle='#cffafe'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(34,211,238,0.6)'; ctx.shadowBlur=40; ctx.fillText(reg,cx,cy+2);
+    ctx.shadowBlur=0; setLS('0px'); }
+
+  // ---- reel cover (1080×1920) ----
+  function drawReel(){
+    ctx.clearRect(0,0,1080,1920);
+    ctx.fillStyle='#04060c'; ctx.fillRect(0,0,1080,1920);
+    radialGlow(540,280,800,'34,211,238',0.20);
+    radialGlow(540,1880,880,'59,130,246',0.14);
+    vignette(540,960,520,1120);
+    drawWordmark(540,300);
+
+    const hasPlate=state.plate && state.reg.trim();
+    ctx.font='900 92px Inter'; setLS('0px'); const hLines=wrap(toWords(state.headline),820); const hLH=100; const hH=hLines.length*hLH;
+    ctx.font='500 34px "Geist Mono"'; setLS('1px'); const sLines=wrap(toWords(state.sub),860); const sLH=44; const sH=sLines.length*sLH; setLS('0px');
+
+    const kickerH=42,gap1=46,plateH=hasPlate?168:0,gap2=hasPlate?60:6,gap3=50;
+    const total=kickerH+gap1+plateH+gap2+hH+gap3+sH;
+    let y=1055-total/2;
+
+    ctx.font='700 30px Inter'; setLS('6px'); ctx.fillStyle='#22d3ee'; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    ctx.shadowColor='rgba(34,211,238,0.4)'; ctx.shadowBlur=18; ctx.fillText(state.kicker.toUpperCase(),540,y+30); ctx.shadowBlur=0; setLS('0px');
+    y+=kickerH+gap1;
+    if(hasPlate){ drawPlate(540,y+plateH/2); y+=plateH+gap2; }
+    ctx.font='900 92px Inter'; ctx.shadowColor='rgba(0,0,0,0.6)'; ctx.shadowBlur=24; ctx.shadowOffsetY=4;
+    drawLines(hLines,540,y+78,hLH,'#f1f5f9','#34d399'); ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+    y+=hH+gap3;
+    ctx.font='500 34px "Geist Mono"'; setLS('1px');
+    drawLines(sLines,540,y+30,sLH,'#94a3b8','#f1f5f9'); setLS('0px');
+  }
+
+  // ---- Facebook Page cover (1640×624, landscape) ----
+  function drawFB(){
+    const W=1640,H=624;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#04060c'; ctx.fillRect(0,0,W,H);
+    radialGlow(820,120,1000,'34,211,238',0.20);
+    radialGlow(820,760,1100,'59,130,246',0.12);
+    vignette(820,312,440,980);
+    drawWordmark(820,200,62,90);
+
+    ctx.font='700 46px Inter'; setLS('0px'); const tLines=wrap(toWords(state.headline),1060); const tLH=56; const tBase=336;
+    ctx.shadowColor='rgba(0,0,0,0.55)'; ctx.shadowBlur=18; ctx.shadowOffsetY=3;
+    drawLines(tLines,820,tBase,tLH,'#cbd5e1','#34d399'); ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+
+    const ky=tBase+(tLines.length-1)*tLH+70;
+    ctx.font='700 28px "Geist Mono"'; setLS('5px'); ctx.fillStyle='#22d3ee'; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    ctx.shadowColor='rgba(34,211,238,0.35)'; ctx.shadowBlur=14; ctx.fillText(state.sub.toUpperCase(),820,ky); ctx.shadowBlur=0; setLS('0px');
+  }
+
+  function draw(){ if(format==='fb') drawFB(); else drawReel(); }
+
+  // ---- fonts (must be ready before drawing to canvas) ----
+  async function fontsReady(){
+    try{ await Promise.all([
+      document.fonts.load('900 92px Inter'), document.fonts.load('800 62px Inter'), document.fonts.load('700 46px Inter'), document.fonts.load('700 30px Inter'),
+      document.fonts.load('700 92px "Geist Mono"'), document.fonts.load('500 34px "Geist Mono"')
+    ]); await document.fonts.ready; }catch(e){}
+  }
+
+  // ---- export ----
+  function blobName(){ let n=$('fname').value.trim()||'cover.png'; if(!/\.png$/i.test(n)) n+='.png'; return n; }
+  function toBlob(){ return new Promise(res=>cv.toBlob(res,'image/png')); }
+  async function saveBlob(blob,name){
+    if(dirHandle){ try{ const fh=await dirHandle.getFileHandle(name,{create:true}); const w=await fh.createWritable(); await w.write(blob); await w.close(); return 'folder'; }catch(e){} }
+    const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(u),1000); return 'download';
+  }
+
+  // ---- wiring ----
+  function syncFromInputs(){ state.kicker=$('kicker').value; state.reg=$('reg').value; state.plate=$('hasplate').checked;
+    state.headline=$('headline').value; state.sub=$('sub').value; draw(); }
+  ['kicker','reg','headline','sub'].forEach(id=>$(id).addEventListener('input',syncFromInputs));
+  $('hasplate').addEventListener('change',syncFromInputs);
+
+  function loadPreset(key){ const p=activePresets()[key]; if(!p) return;
+    $('kicker').value=p.kicker; $('reg').value=p.reg; $('hasplate').checked=p.plate;
+    $('headline').value=p.headline; $('sub').value=p.sub; $('fname').value=p.file; syncFromInputs(); }
+
+  const sel=$('preset');
+  sel.addEventListener('change',e=>loadPreset(e.target.value));
+
+  function setFormat(fmt){ format=fmt; document.body.classList.toggle('fbmode',fmt==='fb');
+    cv.width=fmt==='fb'?1640:1080; cv.height=fmt==='fb'?624:1920;
+    const ps=activePresets(); sel.innerHTML='';
+    Object.keys(ps).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
+    loadPreset(Object.keys(ps)[0]);
+  }
+  $('format').addEventListener('change',e=>setFormat(e.target.value));
+
+  $('exportBtn').onclick=async()=>{ await fontsReady(); draw(); const where=await saveBlob(await toBlob(),blobName());
+    status(where==='folder'?('Saved '+blobName()+' to folder ✓'):('Downloaded '+blobName()+' ✓')); };
+  $('exportAll').onclick=async()=>{ await fontsReady(); const ps=activePresets(); const keys=Object.keys(ps); let n=0;
+    for(const key of keys){ loadPreset(key); draw(); const w=await saveBlob(await toBlob(),ps[key].file); n++;
+      status((w==='folder'?'Saved ':'Downloaded ')+ps[key].file+'  ('+n+'/'+keys.length+')'); await new Promise(r=>setTimeout(r,150)); }
+    status('Exported all '+n+' covers ✓'); };
+  $('folderBtn').onclick=async()=>{ if(!window.showDirectoryPicker){ status('This browser has no folder picker — exports will download instead.'); return; }
+    try{ dirHandle=await window.showDirectoryPicker(); status('Folder chosen — exports save there. (Pick assets/covers/)'); }catch(e){ status('Folder pick cancelled.'); } };
+  $('guideBtn').onclick=function(){ document.body.classList.toggle('showguides'); this.textContent=document.body.classList.contains('showguides')?'Crop guides ✓':'Crop guides'; };
+
+  // boot
+  fontsReady().then(()=>{ setFormat('reel'); });
+})();
+</script>
+</body>
+</html>
