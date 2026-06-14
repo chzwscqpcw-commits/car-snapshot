@@ -301,7 +301,7 @@ function SearchRankingsCard({
   if (!snap) {
     const msg =
       data.status === "not_configured"
-        ? "Search Console isn't connected yet — add the service account as a user on the GSC property and set GOOGLE_INDEXING_KEY, then hit Refresh."
+        ? `Search Console not connected — set the GSC_OAUTH_CLIENT_ID / _SECRET / _REFRESH_TOKEN env vars (plus GSC_SITE_URL for a domain property), redeploy, then hit Refresh.${data.reason ? ` (${data.reason})` : ""}`
         : data.status === "error"
           ? `Couldn't reach Search Console: ${data.reason ?? "unknown error"}`
           : "No snapshot yet — hit Refresh, or wait for the Monday 04:00 job.";
