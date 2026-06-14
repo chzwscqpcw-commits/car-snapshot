@@ -64,6 +64,7 @@ export type StatsResponse = {
     // low-volume mornings where today's numbers haven't accumulated yet.
     searches: number;
     resultsViews: number;
+    promptViews: number;
     reminderViews: number;
     reminderSignups: number;
   };
@@ -681,6 +682,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     reminderViewsByTrigger7d,
     reminderAttemptsByTrigger7d,
     reminderSignupsByTrigger7d,
+    reminderPromptViews7d,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -746,6 +748,10 @@ export async function GET(req: Request): Promise<NextResponse> {
     groupByMetadataFieldWithNone(sb, "mot_reminder_view", "trigger_variant", sevenDaysAgo),
     groupByMetadataFieldWithNone(sb, "mot_reminder_submit_attempt", "trigger_variant", sevenDaysAgo),
     groupByMetadataFieldWithNone(sb, "mot_reminder", "trigger_variant", sevenDaysAgo),
+    // Top-of-funnel: reminder prompt impressions (the action banner). Pairs with
+    // mot_reminder_view (form actually seen) to show the prompt→form-reveal rate
+    // the June 2026 inline-ask upgrade was built to fix (was ~0.6%).
+    countEvents(sb, "mot_action_banner_view", sevenDaysAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
@@ -856,6 +862,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     funnel7d: {
       searches: searches7d,
       resultsViews: resultsViews7d,
+      promptViews: reminderPromptViews7d,
       reminderViews: reminderViews7d,
       reminderSignups: motReminderEvents7d,
     },

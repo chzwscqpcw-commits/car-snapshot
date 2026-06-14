@@ -88,6 +88,13 @@ type StatsData = {
   valuations: number;
   motReminders: number;
   motRemindersLast7d: number;
+  funnel7d: {
+    searches: number;
+    resultsViews: number;
+    promptViews: number;
+    reminderViews: number;
+    reminderSignups: number;
+  };
   topMakesToday: TopMake[];
   partnerClicks: {
     today: number;
@@ -396,6 +403,50 @@ function SearchRankingsCard({
         conversion queries are.
       </p>
     </section>
+  );
+}
+
+// ── Reminder funnel (prompt → form → signup, 7d) ─────────────────────────────
+
+function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
+  if (!stats?.funnel7d) return null;
+  const f = stats.funnel7d;
+  const pct = (num: number, den: number) =>
+    den > 0 ? `${((num / den) * 100).toFixed(1)}%` : "—";
+
+  const stages: { label: string; value: number; sub: string; rate: string | null }[] = [
+    { label: "Prompt shown", value: f.promptViews, sub: "banner impressions", rate: null },
+    { label: "Form seen", value: f.reminderViews, sub: "of prompts", rate: pct(f.reminderViews, f.promptViews) },
+    { label: "Signups", value: f.reminderSignups, sub: "of forms seen", rate: pct(f.reminderSignups, f.reminderViews) },
+  ];
+
+  return (
+    <Section
+      title="Reminder funnel"
+      hint={`Last 7d · ${pct(f.reminderSignups, f.promptViews)} prompt→signup`}
+    >
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          {stages.map((s) => (
+            <div key={s.label}>
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">{s.label}</p>
+              <p className="mt-1 font-mono text-2xl font-bold tabular-nums text-white">
+                {s.value.toLocaleString()}
+              </p>
+              <p className="mt-0.5 text-[11px] text-slate-500">
+                {s.rate && <span className="text-cyan-300">{s.rate} </span>}
+                {s.sub}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 border-t border-slate-800 pt-2 text-[11px] leading-relaxed text-slate-600">
+          Prompt-to-form was ~0.6% before the inline-ask upgrade (14 Jun) — watch it climb.
+          Signups counts the mot_reminder event (includes reactivations), so it can exceed new
+          subscriber rows.
+        </p>
+      </div>
+    </Section>
   );
 }
 
@@ -1040,6 +1091,9 @@ export default function DataHealthPage() {
 
             {/* ── SEARCH RANKINGS (GSC key queries) ── */}
             <SearchRankingsCard data={gsc} refreshing={gscRefreshing} onRefresh={refreshGsc} />
+
+            {/* ── REMINDER FUNNEL (prompt → form → signup, 7d) ── */}
+            <ReminderFunnelCard stats={stats} />
 
             {/* ── HOW PEOPLE GOT HERE ── */}
             {stats && (
