@@ -17,6 +17,8 @@ const TOOL_LINKS = [
 const GUIDE_LINKS = [
   { href: "/blog", label: "All guides" },
   { href: "/cars", label: "Cars by make" },
+  { href: "/compare", label: "Compare cars" },
+  { href: "/stats", label: "Car stats & data" },
   { href: "/clean-air-zones", label: "Clean Air Zones" },
   { href: "/repair-costs", label: "Repair costs" },
   { href: "/servicing", label: "Servicing" },
@@ -26,6 +28,7 @@ const SITE_LINKS = [
   { href: "/", label: "Home" },
   { href: "/tools", label: "All tools" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
 ];
@@ -34,6 +37,7 @@ const SITE_LINKS = [
 const SOCIAL_LINKS = [
   { href: "https://www.instagram.com/freeplatecheck", label: "Instagram" },
   { href: "https://www.tiktok.com/@freeplatecheck", label: "TikTok" },
+  { href: "https://www.facebook.com/freeplatecheck", label: "Facebook" },
 ];
 
 /**
@@ -43,8 +47,8 @@ const SOCIAL_LINKS = [
  */
 export default function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-slate-800/60 bg-slate-950/60">
-      <div className="mx-auto max-w-5xl px-5 py-10 sm:px-7 sm:py-12">
+    <footer className="border-t border-slate-800/60 bg-slate-950/60">
+      <div className="mx-auto max-w-5xl px-5 pt-14 pb-10 sm:px-7 sm:pt-16 sm:pb-12">
         {/* Brand row */}
         <div className="mb-8 flex items-start gap-3">
           <BoltMark className="h-9 w-7 shrink-0 mt-1" glow />
@@ -130,6 +134,13 @@ function SocialIcon({ name }: { name: string }) {
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
         <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    );
+  }
+  if (name === "Facebook") {
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+        <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07c0 6.02 4.39 11.01 10.13 11.93v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.08 24 18.09 24 12.07z" />
       </svg>
     );
   }
