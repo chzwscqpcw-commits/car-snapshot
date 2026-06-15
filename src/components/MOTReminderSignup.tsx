@@ -479,10 +479,10 @@ export default function MOTReminderSignup({
           className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/20"
         >
           <CalendarPlus className="h-4 w-4" />
-          Add to calendar \u2014 no email
+          Add to calendar &mdash; no email
         </button>
         <p className="mt-1 text-[11px] text-slate-500">
-          Free \u00b7 no email \u00b7 alerts {describeSchedule(calOffsets)} expiry \u00b7{" "}
+          Free &middot; no email &middot; alerts {describeSchedule(calOffsets)} before expiry &middot;{" "}
           <a
             href={googleCalendarUrl(calReg, motExpiryDate)}
             target="_blank"
