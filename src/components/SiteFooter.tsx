@@ -93,9 +93,6 @@ export default function SiteFooter() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-3">
             <p>&copy; 2026 Free Plate Check. All rights reserved.</p>
-            <p className="text-slate-600">
-              Data: DVLA · DVSA · VCA · Euro NCAP · DfT · DESNZ
-            </p>
             <a
               href="https://www.saashub.com/free-plate-check?utm_source=badge&utm_campaign=badge&utm_content=free-plate-check&badge_variant=color&badge_kind=approved"
               target="_blank"
