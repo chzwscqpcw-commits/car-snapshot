@@ -67,6 +67,7 @@ export type StatsResponse = {
     promptViews: number;
     reminderViews: number;
     reminderSignups: number;
+    calendarAdds: number;
   };
   captureByTriggerLast7d: CaptureTrigger[];
   // Reminder funnel split by placement (trigger_variant) over the last 7 days.
@@ -683,6 +684,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     reminderAttemptsByTrigger7d,
     reminderSignupsByTrigger7d,
     reminderPromptViews7d,
+    reminderCalendarAdds7d,
   ] = await Promise.all([
     countEvents(sb, "lookup", oneHourAgo),
     countEvents(sb, "lookup", oneDayAgo),
@@ -752,6 +754,9 @@ export async function GET(req: Request): Promise<NextResponse> {
     // mot_reminder_view (form actually seen) to show the prompt→form-reveal rate
     // the June 2026 inline-ask upgrade was built to fix (was ~0.6%).
     countEvents(sb, "mot_action_banner_view", sevenDaysAgo),
+    // No-email "Add to calendar" reminders — the alternative conversion for the
+    // email-averse majority.
+    countEvents(sb, "mot_reminder_calendar_add", sevenDaysAgo),
   ]);
 
   const captureByTriggerLast7d: CaptureTrigger[] = Array.from(triggerCountsLast7d.entries())
@@ -865,6 +870,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       promptViews: reminderPromptViews7d,
       reminderViews: reminderViews7d,
       reminderSignups: motReminderEvents7d,
+      calendarAdds: reminderCalendarAdds7d,
     },
     captureByTriggerLast7d,
     reminderByTrigger,

@@ -94,6 +94,7 @@ type StatsData = {
     promptViews: number;
     reminderViews: number;
     reminderSignups: number;
+    calendarAdds: number;
   };
   topMakesToday: TopMake[];
   partnerClicks: {
@@ -418,6 +419,7 @@ function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
     { label: "Prompt shown", value: f.promptViews, sub: "banner impressions", rate: null },
     { label: "Form seen", value: f.reminderViews, sub: "of prompts", rate: pct(f.reminderViews, f.promptViews) },
     { label: "Signups", value: f.reminderSignups, sub: "of forms seen", rate: pct(f.reminderSignups, f.reminderViews) },
+    { label: "Calendar adds", value: f.calendarAdds ?? 0, sub: "no-email reminders", rate: null },
   ];
 
   return (
@@ -426,7 +428,7 @@ function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
       hint={`Last 7d · ${pct(f.reminderSignups, f.promptViews)} prompt→signup`}
     >
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-        <div className="grid grid-cols-3 gap-2 text-center">
+        <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
           {stages.map((s) => (
             <div key={s.label}>
               <p className="text-[11px] uppercase tracking-wider text-slate-500">{s.label}</p>

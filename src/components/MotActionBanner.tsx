@@ -170,7 +170,7 @@ export default function MotActionBanner({
         ? "Set a free reminder for when its first MOT falls due:"
         : urgency === "due-soon"
           ? "Get a free reminder — we'll help you book in time:"
-          : `We'll email you free before it expires on ${formatExpiryDisplay(motExpiryDate)}:`;
+          : `Get a free reminder before it expires on ${formatExpiryDisplay(motExpiryDate)}:`;
 
   return (
     <div ref={ref} className={`mb-6 rounded-xl border p-4 sm:p-5 ${palette.container}`}>
@@ -212,6 +212,8 @@ export default function MotActionBanner({
           compact
           hideReg
           allowTimingPicker
+          showCalendar={urgency === "far" || urgency === "due-soon"}
+          calendarFirst={urgency === "far"}
         />
       </div>
     </div>

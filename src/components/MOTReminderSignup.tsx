@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Bell, CheckCircle2, X, Loader2 } from "lucide-react";
+import { Bell, CalendarPlus, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
-import { DEFAULT_OFFSETS, OFFSET_OPTIONS } from "@/lib/mot-reminders";
+import { DEFAULT_OFFSETS, OFFSET_OPTIONS, describeSchedule } from "@/lib/mot-reminders";
+import { canAddToCalendar, downloadIcs, googleCalendarUrl } from "@/lib/mot-calendar";
 
 interface MOTReminderSignupProps {
   context: "generic" | "due-soon" | "expired" | "post-lookup";
@@ -26,6 +27,14 @@ interface MOTReminderSignupProps {
   hideReg?: boolean;
   /** Show the optional "change when I'm reminded" timing picker. */
   allowTimingPicker?: boolean;
+  /**
+   * Offer a no-email "Add to calendar" option (needs a known future expiry).
+   * Our audience self-selects for "no email", so this captures the majority who
+   * skip the email field.
+   */
+  showCalendar?: boolean;
+  /** Lead with the calendar button above the email form (low-urgency surfaces). */
+  calendarFirst?: boolean;
 }
 
 const CONTEXT_COPY: Record<
@@ -108,6 +117,8 @@ export default function MOTReminderSignup({
   compact = false,
   hideReg = false,
   allowTimingPicker = false,
+  showCalendar = false,
+  calendarFirst = false,
 }: MOTReminderSignupProps) {
   const [regs, setRegs] = useState<string[]>([regNumber?.toUpperCase() || ""]);
   const [email, setEmail] = useState("");
@@ -194,6 +205,24 @@ export default function MOTReminderSignup({
         : [...prev, days].sort((a, b) => b - a),
     );
   }, []);
+
+  const fireCalendarEvent = useCallback(
+    (method: "ics" | "google") => {
+      trackEvent("mot_reminder_calendar_add", {
+        method,
+        context,
+        trigger_variant: triggerVariant ?? null,
+      });
+    },
+    [context, triggerVariant],
+  );
+
+  const handleIcsAdd = useCallback(() => {
+    if (!motExpiryDate) return;
+    const reg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
+    fireCalendarEvent("ics");
+    downloadIcs(reg, motExpiryDate, offsets.length ? offsets : DEFAULT_OFFSETS);
+  }, [motExpiryDate, regNumber, regs, offsets, fireCalendarEvent]);
 
   const validate = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -438,15 +467,47 @@ export default function MOTReminderSignup({
     </div>
   ) : null;
 
+  // No-email "Add to calendar" option (only where a future expiry is known).
+  const calOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
+  const calReg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
+  const calendarBlock =
+    showCalendar && canAddToCalendar(motExpiryDate) && motExpiryDate ? (
+      <div>
+        <button
+          type="button"
+          onClick={handleIcsAdd}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/20"
+        >
+          <CalendarPlus className="h-4 w-4" />
+          Add to calendar \u2014 no email
+        </button>
+        <p className="mt-1 text-[11px] text-slate-500">
+          Free \u00b7 no email \u00b7 alerts {describeSchedule(calOffsets)} expiry \u00b7{" "}
+          <a
+            href={googleCalendarUrl(calReg, motExpiryDate)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => fireCalendarEvent("google")}
+            className="text-cyan-400 underline-offset-2 hover:text-cyan-300 hover:underline"
+          >
+            Google Calendar
+          </a>
+        </p>
+      </div>
+    ) : null;
+
+  const orDivider = (label: string) => (
+    <div className="flex items-center gap-2 py-0.5">
+      <span className="h-px flex-1 bg-slate-700/70" />
+      <span className="text-[11px] text-slate-500">{label}</span>
+      <span className="h-px flex-1 bg-slate-700/70" />
+    </div>
+  );
+
   // --- Compact variant ---
   if (compact) {
-    return (
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="space-y-2"
-        noValidate
-      >
+    const emailFields = (
+      <>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
           {!hideReg && (
             <input
@@ -493,6 +554,31 @@ export default function MOTReminderSignup({
           <p className="text-xs text-red-400">
             {errors["reg-0"] || errors.email || errors.general}
           </p>
+        )}
+      </>
+    );
+
+    return (
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="space-y-2"
+        noValidate
+      >
+        {calendarBlock && calendarFirst && (
+          <>
+            {calendarBlock}
+            {orDivider("or get email reminders")}
+          </>
+        )}
+
+        {emailFields}
+
+        {calendarBlock && !calendarFirst && (
+          <>
+            {orDivider("prefer not to share your email?")}
+            {calendarBlock}
+          </>
         )}
 
         {timingPicker}
