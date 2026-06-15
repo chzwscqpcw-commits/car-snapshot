@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BoltMark from "@/components/BoltMark";
+import TrustBar from "@/components/TrustBar";
 
 const TOOL_LINKS = [
   { href: "/mot-check", label: "MOT history check" },
@@ -83,6 +84,7 @@ export default function SiteFooter() {
 
         {/* Disclaimers + trust signals */}
         <div className="mt-10 border-t border-slate-800/60 pt-6 space-y-3 text-xs text-slate-500">
+          <TrustBar className="pb-3" />
           <p>
             Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
           </p>

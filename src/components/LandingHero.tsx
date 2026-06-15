@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import MobileSearchCue from "./MobileSearchCue";
+import TrustBar from "./TrustBar";
 
 interface LandingHeroProps {
   h1: string;
@@ -113,6 +114,8 @@ export default function LandingHero({
             <div className="card-zoom-wrapper mx-auto lg:mx-0">{exampleCard}</div>
           )}
         </div>
+
+        <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
 
         {/* Mobile-only A/B/C affordance pointing to the search input below */}
         <MobileSearchCue />

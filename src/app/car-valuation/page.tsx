@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import ValuationConversionWidget from "@/components/ValuationConversionWidget";
 import ValuationHeroReg from "@/components/ValuationHeroReg";
+import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import ServicingCTA from "@/components/ServicingCTA";
@@ -285,6 +286,7 @@ export default async function CarValuationPage({
               cue (points down to the reg box below); treatment renders a reg box
               in the hero itself. */}
           <ValuationHeroReg targetPath="/car-valuation" />
+          <TrustBar className="mt-6" />
         </div>
       </div>
 

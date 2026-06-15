@@ -4,6 +4,7 @@ import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import MobileSearchCue from "@/components/MobileSearchCue";
+import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MotResult from "@/components/tools/MotResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
@@ -267,6 +268,8 @@ export default async function MotCheckPage({
               </span>
             </div>
           </div>
+
+          <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
 
           {/* Mobile-only A/B/C test affordance pointing to the search input */}
           <MobileSearchCue />

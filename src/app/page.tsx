@@ -3288,7 +3288,7 @@ END:VEVENT
                   </>
                 )}
                 <span className="text-slate-600" aria-hidden="true">·</span>
-                <span className="font-medium text-emerald-300/90">No signup, no email, no catch</span>
+                <span className="font-medium text-emerald-300/90">No signup, no email &mdash; we never sell your data</span>
               </div>
               {/* Secondary entry into the booking wizard. Quiet by design —
                   the primary action on this page is always the reg input
