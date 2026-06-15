@@ -138,6 +138,11 @@ export default function MOTReminderSignup({
   const [pulsing, setPulsing] = useState(context === "due-soon");
   const [fadeIn, setFadeIn] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  // For the cold "/mot-reminder" page: look the reg up as it's typed so the
+  // no-email calendar option (which needs the expiry date) can appear. The
+  // results banner already has the expiry via props, so it skips this.
+  const [lookupExpiry, setLookupExpiry] = useState("");
+  const lookupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Stop pulse after 3 seconds
   useEffect(() => {
@@ -189,19 +194,52 @@ export default function MOTReminderSignup({
     setRegs((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const updateReg = useCallback((index: number, value: string) => {
-    setRegs((prev) => {
-      const next = [...prev];
-      next[index] = value.toUpperCase();
-      return next;
-    });
-    setErrors((prev) => {
-      const next = { ...prev };
-      delete next[`reg-${index}`];
-      delete next.general;
-      return next;
-    });
-  }, []);
+  // Debounced reg lookup → fetch the MOT expiry so the calendar option can
+  // appear on the cold form. Only runs where calendar is wanted and the expiry
+  // isn't already supplied by props (i.e. the /mot-reminder page, not the banner).
+  const runRegLookup = useCallback(
+    (rawReg: string) => {
+      if (!showCalendar || hideReg || motExpiryDate) return;
+      if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+      if (!isValidReg(rawReg)) {
+        setLookupExpiry("");
+        return;
+      }
+      const vrm = cleanReg(rawReg);
+      lookupTimerRef.current = setTimeout(async () => {
+        try {
+          const res = await fetch("/api/lookup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ vrm }),
+          });
+          const data = res.ok ? (await res.json())?.data : null;
+          setLookupExpiry(data?.motExpiryDate || "");
+        } catch {
+          setLookupExpiry("");
+        }
+      }, 600);
+    },
+    [showCalendar, hideReg, motExpiryDate],
+  );
+
+  const updateReg = useCallback(
+    (index: number, value: string) => {
+      setRegs((prev) => {
+        const next = [...prev];
+        next[index] = value.toUpperCase();
+        return next;
+      });
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[`reg-${index}`];
+        delete next.general;
+        return next;
+      });
+      if (index === 0) runRegLookup(value);
+    },
+    [runRegLookup],
+  );
 
   const toggleOffset = useCallback((days: number) => {
     setOffsets((prev) =>
@@ -223,11 +261,12 @@ export default function MOTReminderSignup({
   );
 
   const handleIcsAdd = useCallback(() => {
-    if (!motExpiryDate) return;
+    const exp = motExpiryDate || lookupExpiry;
+    if (!exp) return;
     const reg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
     fireCalendarEvent("ics");
-    downloadIcs(reg, motExpiryDate, offsets.length ? offsets : DEFAULT_OFFSETS);
-  }, [motExpiryDate, regNumber, regs, offsets, fireCalendarEvent]);
+    downloadIcs(reg, exp, offsets.length ? offsets : DEFAULT_OFFSETS);
+  }, [motExpiryDate, lookupExpiry, regNumber, regs, offsets, fireCalendarEvent]);
 
   const validate = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -472,13 +511,16 @@ export default function MOTReminderSignup({
     </div>
   ) : null;
 
-  // No-email "Add to calendar" option (only where a future expiry is known).
+  // No-email "Add to calendar" option (only where a single car's future expiry
+  // is known — via props on the banner, or the typed-reg lookup on the page).
   const calOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
   const calReg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
+  const effectiveExpiry = motExpiryDate || lookupExpiry;
+  const calendarSingle = hideReg || regs.length === 1;
   const calProviderClass =
     "rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20";
   const calendarBlock =
-    showCalendar && canAddToCalendar(motExpiryDate) && motExpiryDate ? (
+    showCalendar && calendarSingle && canAddToCalendar(effectiveExpiry) && effectiveExpiry ? (
       <div>
         <p className="flex items-center gap-1.5 text-sm font-semibold text-cyan-100">
           <CalendarPlus className="h-4 w-4 flex-shrink-0" />
@@ -486,7 +528,7 @@ export default function MOTReminderSignup({
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           <a
-            href={googleCalendarUrl(calReg, motExpiryDate)}
+            href={googleCalendarUrl(calReg, effectiveExpiry)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => fireCalendarEvent("google")}
@@ -495,7 +537,7 @@ export default function MOTReminderSignup({
             Google
           </a>
           <a
-            href={outlookCalendarUrl(calReg, motExpiryDate)}
+            href={outlookCalendarUrl(calReg, effectiveExpiry)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => fireCalendarEvent("outlook")}
@@ -760,6 +802,13 @@ export default function MOTReminderSignup({
             "Set my MOT reminder \u2192"
           )}
         </button>
+
+        {calendarBlock && (
+          <>
+            {orDivider("or set it without an email")}
+            {calendarBlock}
+          </>
+        )}
 
         {timingPicker}
 

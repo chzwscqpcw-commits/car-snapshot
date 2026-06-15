@@ -181,7 +181,7 @@ export default function MotReminderPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary signup form */}
-        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker />
+        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar />
 
         <StatCallouts
           stats={[
