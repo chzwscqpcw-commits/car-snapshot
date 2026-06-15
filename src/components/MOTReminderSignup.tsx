@@ -528,7 +528,7 @@ export default function MOTReminderSignup({
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           <a
-            href={googleCalendarUrl(calReg, effectiveExpiry)}
+            href={googleCalendarUrl(calReg, effectiveExpiry, calOffsets)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => fireCalendarEvent("google")}
@@ -537,7 +537,7 @@ export default function MOTReminderSignup({
             Google
           </a>
           <a
-            href={outlookCalendarUrl(calReg, effectiveExpiry)}
+            href={outlookCalendarUrl(calReg, effectiveExpiry, calOffsets)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => fireCalendarEvent("outlook")}
@@ -550,7 +550,7 @@ export default function MOTReminderSignup({
           </button>
         </div>
         <p className="mt-1.5 text-[11px] text-slate-500">
-          Free &middot; no email &middot; alerts {describeSchedule(calOffsets)} before expiry &middot;
+          Free &middot; no email &middot; reminders {describeSchedule(calOffsets)} expiry &middot;
           one tap to book when it&apos;s due
         </p>
       </div>

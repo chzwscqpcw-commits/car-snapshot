@@ -1,23 +1,27 @@
 /**
- * No-email MOT reminder: build a calendar event for the expiry date so people
- * can set a reminder WITHOUT handing over an email. Free Plate Check's audience
- * self-selects for "no email" (the #1 query is "free car valuation without
- * email"), so a calendar option captures the majority who skip the email form.
+ * No-email MOT reminder: add "Book your MOT" events to the user's calendar so
+ * they can set a reminder WITHOUT handing over an email. Free Plate Check's
+ * audience self-selects for "no email" (the #1 query is "free car valuation
+ * without email"), so a calendar option captures the majority who skip the form.
  *
- * The chosen reminder offsets (days before expiry) become VALARM triggers in the
- * .ics, so the same timing picker drives both the email schedule and the
- * calendar alerts. The event links to the booking page pre-loaded for MOT —
- * so the reminder, firing weeks later at peak intent, drives a booking (and is
- * attributable via source=calendar_reminder). Three add paths are offered:
- * Google + Outlook web (one click, no file) and a universal .ics download
- * (Apple Calendar / desktop Outlook, which need the file handoff).
+ * KEY DESIGN: the events are placed ON the reminder dates (e.g. 5 weeks + 1 week
+ * before expiry), NOT on the expiry date with notification offsets. Google's and
+ * Outlook's "add event" links can't carry a custom reminder time — they'd just
+ * use the user's default — so an event-on-expiry-with-alarm silently loses the
+ * 5-week nudge. Placing the event on the reminder date itself works identically
+ * across Google, Outlook and Apple. The picker's offsets drive which dates.
+ *
+ * The events link to the booking page pre-loaded for MOT, so the reminder fires
+ * at peak intent and drives a booking (attributable via source=calendar_reminder).
+ * Three add paths: Google + Outlook web (one click, no file) and a universal
+ * .ics download (Apple / desktop Outlook) — which carries one event per offset.
  */
 
 function pad(n: number): string {
   return String(n).padStart(2, "0");
 }
 
-/** All-day date stamp, YYYYMMDD (local calendar date of the expiry). */
+/** All-day date stamp, YYYYMMDD (local calendar date). */
 function icsDate(d: Date): string {
   return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
 }
@@ -34,6 +38,22 @@ function icsStamp(d: Date): string {
   )}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
 }
 
+/** Readable expiry, e.g. "30 Nov 2026". */
+function expiryLabel(expiryISO: string): string {
+  return new Date(expiryISO).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+/** The date a reminder should land: `offsetDays` before expiry. */
+function reminderDate(expiryISO: string, offsetDays: number): Date {
+  const d = new Date(expiryISO);
+  d.setDate(d.getDate() - offsetDays);
+  return d;
+}
+
 /** iCalendar line folding: wrap lines >75 octets with CRLF + space. */
 function fold(line: string): string {
   if (line.length <= 74) return line;
@@ -46,7 +66,7 @@ function fold(line: string): string {
   return parts.join("\r\n");
 }
 
-/** Is the expiry a usable future date? (No point adding a past/empty date.) */
+/** Is the expiry a usable future date? (No point reminding for a past date.) */
 export function canAddToCalendar(expiryISO?: string): boolean {
   if (!expiryISO) return false;
   const d = new Date(expiryISO);
@@ -60,32 +80,47 @@ export function motBookingUrl(reg: string): string {
   )}&type=mot&source=calendar_reminder`;
 }
 
-function summary(reg: string): string {
-  return `MOT due: ${reg}`;
+function summary(reg: string, expiryISO: string): string {
+  return `Book MOT: ${reg} (due ${expiryLabel(expiryISO)})`;
 }
 
-function description(reg: string): string {
-  return `Time to book ${reg}'s MOT. You can test up to a month early and keep this renewal date. Compare local prices and book: ${motBookingUrl(reg)}`;
+function description(reg: string, expiryISO: string): string {
+  return `Your MOT for ${reg} is due ${expiryLabel(expiryISO)}. Book now - you can test up to a month early and keep this renewal date. Compare local prices and book: ${motBookingUrl(reg)}`;
 }
 
-/** Build a universal .ics for the MOT expiry, with an alarm per chosen offset. */
+/** Only reminders whose date is still in the future (skip past ones). */
+function futureOffsets(expiryISO: string, offsets: number[]): number[] {
+  const now = Date.now();
+  const future = offsets.filter((o) => reminderDate(expiryISO, o).getTime() > now);
+  // If every offset is already past (expiry very near), fall back to "today".
+  return future.length ? future.sort((a, b) => b - a) : [0];
+}
+
+/** Build a universal .ics with one all-day "Book MOT" event per reminder date. */
 export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): string {
-  const start = new Date(expiryISO);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1); // all-day DTEND is exclusive
-
-  const alarms = [...offsets]
-    .sort((a, b) => b - a)
-    .map((days) =>
-      [
-        "BEGIN:VALARM",
-        "ACTION:DISPLAY",
-        fold(`DESCRIPTION:MOT for ${reg} due in ${days} days - book early to keep your renewal date`),
-        `TRIGGER:-P${days}D`,
-        "END:VALARM",
-      ].join("\r\n"),
-    )
-    .join("\r\n");
+  const stamp = icsStamp(new Date());
+  const events = futureOffsets(expiryISO, offsets).map((days) => {
+    const start = reminderDate(expiryISO, days);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+    return [
+      "BEGIN:VEVENT",
+      `UID:mot-${reg}-${icsDate(new Date(expiryISO))}-${days}@freeplatecheck.co.uk`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${icsDate(start)}`,
+      `DTEND;VALUE=DATE:${icsDate(end)}`,
+      fold(`SUMMARY:${summary(reg, expiryISO)}`),
+      fold(`DESCRIPTION:${description(reg, expiryISO)}`),
+      fold(`URL:${motBookingUrl(reg)}`),
+      "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      fold(`DESCRIPTION:Time to book ${reg}'s MOT - test early to keep your renewal date`),
+      "TRIGGER:PT9H",
+      "END:VALARM",
+      "END:VEVENT",
+    ].join("\r\n");
+  });
 
   return [
     "BEGIN:VCALENDAR",
@@ -93,21 +128,9 @@ export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): 
     "PRODID:-//Free Plate Check//MOT Reminder//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    `UID:mot-${reg}-${icsDate(start)}@freeplatecheck.co.uk`,
-    `DTSTAMP:${icsStamp(new Date())}`,
-    `DTSTART;VALUE=DATE:${icsDate(start)}`,
-    `DTEND;VALUE=DATE:${icsDate(end)}`,
-    fold(`SUMMARY:${summary(reg)}`),
-    fold(`DESCRIPTION:${description(reg)}`),
-    fold(`URL:${motBookingUrl(reg)}`),
-    "TRANSP:TRANSPARENT",
-    alarms,
-    "END:VEVENT",
+    ...events,
     "END:VCALENDAR",
-  ]
-    .filter(Boolean)
-    .join("\r\n");
+  ].join("\r\n");
 }
 
 /** Trigger a browser download of the .ics (Apple Calendar / desktop Outlook). */
@@ -124,30 +147,32 @@ export function downloadIcs(reg: string, expiryISO: string, offsets: number[]): 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Google Calendar template URL (opens pre-filled; uses the user's default alarm). */
-export function googleCalendarUrl(reg: string, expiryISO: string): string {
-  const start = new Date(expiryISO);
+/** Google Calendar template URL — single event on the earliest reminder date. */
+export function googleCalendarUrl(reg: string, expiryISO: string, offsets: number[]): string {
+  const earliest = Math.max(...futureOffsets(expiryISO, offsets));
+  const start = reminderDate(expiryISO, earliest);
   const end = new Date(start);
   end.setDate(end.getDate() + 1);
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: summary(reg),
+    text: summary(reg, expiryISO),
     dates: `${icsDate(start)}/${icsDate(end)}`,
-    details: description(reg),
+    details: description(reg, expiryISO),
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-/** Outlook.com / Office 365 web deeplink (opens pre-filled; no file). */
-export function outlookCalendarUrl(reg: string, expiryISO: string): string {
-  const start = new Date(expiryISO);
+/** Outlook.com / Office 365 web deeplink — single event on the earliest reminder date. */
+export function outlookCalendarUrl(reg: string, expiryISO: string, offsets: number[]): string {
+  const earliest = Math.max(...futureOffsets(expiryISO, offsets));
+  const start = reminderDate(expiryISO, earliest);
   const end = new Date(start);
   end.setDate(end.getDate() + 1);
   const params = new URLSearchParams({
     path: "/calendar/action/compose",
     rru: "addevent",
-    subject: summary(reg),
-    body: description(reg),
+    subject: summary(reg, expiryISO),
+    body: description(reg, expiryISO),
     startdt: ymd(start),
     enddt: ymd(end),
     allday: "true",
