@@ -213,7 +213,6 @@ export default function MotActionBanner({
           hideReg
           allowTimingPicker
           showCalendar={urgency === "far" || urgency === "due-soon"}
-          calendarFirst={urgency === "far"}
         />
       </div>
     </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Bell, CalendarPlus, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
-import { DEFAULT_OFFSETS, OFFSET_OPTIONS, describeSchedule } from "@/lib/mot-reminders";
+import { DEFAULT_OFFSETS, OFFSET_OPTIONS } from "@/lib/mot-reminders";
 import {
   canAddToCalendar,
   downloadIcs,
@@ -550,8 +550,7 @@ export default function MOTReminderSignup({
           </button>
         </div>
         <p className="mt-1.5 text-[11px] text-slate-500">
-          Free &middot; no email &middot; reminders {describeSchedule(calOffsets)} expiry &middot;
-          one tap to book when it&apos;s due
+          Free &middot; no email &middot; a reminder in good time to book &middot; one tap when it&apos;s due
         </p>
       </div>
     ) : null;
@@ -636,7 +635,7 @@ export default function MOTReminderSignup({
 
         {calendarBlock && !calendarFirst && (
           <>
-            {orDivider("prefer not to share your email?")}
+            {orDivider("no email? we can still remind you")}
             {calendarBlock}
           </>
         )}
@@ -805,7 +804,7 @@ export default function MOTReminderSignup({
 
         {calendarBlock && (
           <>
-            {orDivider("or set it without an email")}
+            {orDivider("no email? we can still remind you")}
             {calendarBlock}
           </>
         )}

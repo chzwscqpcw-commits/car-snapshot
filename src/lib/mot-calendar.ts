@@ -96,31 +96,17 @@ function futureOffsets(expiryISO: string, offsets: number[]): number[] {
   return future.length ? future.sort((a, b) => b - a) : [0];
 }
 
-/** Build a universal .ics with one all-day "Book MOT" event per reminder date. */
+/**
+ * Build a universal .ics with ONE all-day "Book MOT" event on the earliest
+ * chosen reminder date — kept to a single event so every method (Google,
+ * Outlook web, .ics) is identical (web links can only create one event each).
+ * A 9am VALARM pings native (Apple/Outlook) calendars on the day.
+ */
 export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): string {
-  const stamp = icsStamp(new Date());
-  const events = futureOffsets(expiryISO, offsets).map((days) => {
-    const start = reminderDate(expiryISO, days);
-    const end = new Date(start);
-    end.setDate(end.getDate() + 1);
-    return [
-      "BEGIN:VEVENT",
-      `UID:mot-${reg}-${icsDate(new Date(expiryISO))}-${days}@freeplatecheck.co.uk`,
-      `DTSTAMP:${stamp}`,
-      `DTSTART;VALUE=DATE:${icsDate(start)}`,
-      `DTEND;VALUE=DATE:${icsDate(end)}`,
-      fold(`SUMMARY:${summary(reg, expiryISO)}`),
-      fold(`DESCRIPTION:${description(reg, expiryISO)}`),
-      fold(`URL:${motBookingUrl(reg)}`),
-      "TRANSP:TRANSPARENT",
-      "BEGIN:VALARM",
-      "ACTION:DISPLAY",
-      fold(`DESCRIPTION:Time to book ${reg}'s MOT - test early to keep your renewal date`),
-      "TRIGGER:PT9H",
-      "END:VALARM",
-      "END:VEVENT",
-    ].join("\r\n");
-  });
+  const days = Math.max(...futureOffsets(expiryISO, offsets));
+  const start = reminderDate(expiryISO, days);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
 
   return [
     "BEGIN:VCALENDAR",
@@ -128,7 +114,21 @@ export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): 
     "PRODID:-//Free Plate Check//MOT Reminder//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    ...events,
+    "BEGIN:VEVENT",
+    `UID:mot-${reg}-${icsDate(new Date(expiryISO))}@freeplatecheck.co.uk`,
+    `DTSTAMP:${icsStamp(new Date())}`,
+    `DTSTART;VALUE=DATE:${icsDate(start)}`,
+    `DTEND;VALUE=DATE:${icsDate(end)}`,
+    fold(`SUMMARY:${summary(reg, expiryISO)}`),
+    fold(`DESCRIPTION:${description(reg, expiryISO)}`),
+    fold(`URL:${motBookingUrl(reg)}`),
+    "TRANSP:TRANSPARENT",
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    fold(`DESCRIPTION:Time to book ${reg}'s MOT - test early to keep your renewal date`),
+    "TRIGGER:PT9H",
+    "END:VALARM",
+    "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
 }
