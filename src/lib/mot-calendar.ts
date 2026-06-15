@@ -6,8 +6,11 @@
  *
  * The chosen reminder offsets (days before expiry) become VALARM triggers in the
  * .ics, so the same timing picker drives both the email schedule and the
- * calendar alerts. (Google Calendar's URL template can't carry custom alarms, so
- * that fallback uses the user's default notification.)
+ * calendar alerts. The event links to the booking page pre-loaded for MOT —
+ * so the reminder, firing weeks later at peak intent, drives a booking (and is
+ * attributable via source=calendar_reminder). Three add paths are offered:
+ * Google + Outlook web (one click, no file) and a universal .ics download
+ * (Apple Calendar / desktop Outlook, which need the file handoff).
  */
 
 function pad(n: number): string {
@@ -19,11 +22,28 @@ function icsDate(d: Date): string {
   return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
 }
 
+/** ISO date, YYYY-MM-DD (for the Outlook deeplink). */
+function ymd(d: Date): string {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 /** UTC timestamp for DTSTAMP. */
 function icsStamp(d: Date): string {
   return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(
     d.getUTCHours(),
   )}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+}
+
+/** iCalendar line folding: wrap lines >75 octets with CRLF + space. */
+function fold(line: string): string {
+  if (line.length <= 74) return line;
+  const parts: string[] = [line.slice(0, 74)];
+  let rest = line.slice(74);
+  while (rest.length > 0) {
+    parts.push(" " + rest.slice(0, 73));
+    rest = rest.slice(73);
+  }
+  return parts.join("\r\n");
 }
 
 /** Is the expiry a usable future date? (No point adding a past/empty date.) */
@@ -33,8 +53,20 @@ export function canAddToCalendar(expiryISO?: string): boolean {
   return !Number.isNaN(d.getTime()) && d.getTime() > Date.now();
 }
 
-const DESC =
-  "Your MOT is due. You can test up to a month early and keep this renewal date. Check the history and compare prices free at https://www.freeplatecheck.co.uk";
+/** Booking page pre-loaded for MOT — the action link the reminder points at. */
+export function motBookingUrl(reg: string): string {
+  return `https://www.freeplatecheck.co.uk/booking?vrm=${encodeURIComponent(
+    reg,
+  )}&type=mot&source=calendar_reminder`;
+}
+
+function summary(reg: string): string {
+  return `MOT due: ${reg}`;
+}
+
+function description(reg: string): string {
+  return `Time to book ${reg}'s MOT. You can test up to a month early and keep this renewal date. Compare local prices and book: ${motBookingUrl(reg)}`;
+}
 
 /** Build a universal .ics for the MOT expiry, with an alarm per chosen offset. */
 export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): string {
@@ -44,9 +76,14 @@ export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): 
 
   const alarms = [...offsets]
     .sort((a, b) => b - a)
-    .map(
-      (days) =>
-        `BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:MOT for ${reg} due in ${days} days — book early to keep your renewal date\r\nTRIGGER:-P${days}D\r\nEND:VALARM`,
+    .map((days) =>
+      [
+        "BEGIN:VALARM",
+        "ACTION:DISPLAY",
+        fold(`DESCRIPTION:MOT for ${reg} due in ${days} days - book early to keep your renewal date`),
+        `TRIGGER:-P${days}D`,
+        "END:VALARM",
+      ].join("\r\n"),
     )
     .join("\r\n");
 
@@ -61,8 +98,9 @@ export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): 
     `DTSTAMP:${icsStamp(new Date())}`,
     `DTSTART;VALUE=DATE:${icsDate(start)}`,
     `DTEND;VALUE=DATE:${icsDate(end)}`,
-    `SUMMARY:MOT due — ${reg}`,
-    `DESCRIPTION:${DESC}`,
+    fold(`SUMMARY:${summary(reg)}`),
+    fold(`DESCRIPTION:${description(reg)}`),
+    fold(`URL:${motBookingUrl(reg)}`),
     "TRANSP:TRANSPARENT",
     alarms,
     "END:VEVENT",
@@ -72,7 +110,7 @@ export function buildMotIcs(reg: string, expiryISO: string, offsets: number[]): 
     .join("\r\n");
 }
 
-/** Trigger a browser download of the .ics (Apple Calendar / Outlook / most). */
+/** Trigger a browser download of the .ics (Apple Calendar / desktop Outlook). */
 export function downloadIcs(reg: string, expiryISO: string, offsets: number[]): void {
   const ics = buildMotIcs(reg, expiryISO, offsets);
   const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
@@ -93,9 +131,26 @@ export function googleCalendarUrl(reg: string, expiryISO: string): string {
   end.setDate(end.getDate() + 1);
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: `MOT due — ${reg}`,
+    text: summary(reg),
     dates: `${icsDate(start)}/${icsDate(end)}`,
-    details: DESC,
+    details: description(reg),
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+/** Outlook.com / Office 365 web deeplink (opens pre-filled; no file). */
+export function outlookCalendarUrl(reg: string, expiryISO: string): string {
+  const start = new Date(expiryISO);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  const params = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: summary(reg),
+    body: description(reg),
+    startdt: ymd(start),
+    enddt: ymd(end),
+    allday: "true",
+  });
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
 }

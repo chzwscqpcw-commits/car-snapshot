@@ -418,14 +418,15 @@ function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
   const stages: { label: string; value: number; sub: string; rate: string | null }[] = [
     { label: "Prompt shown", value: f.promptViews, sub: "banner impressions", rate: null },
     { label: "Form seen", value: f.reminderViews, sub: "of prompts", rate: pct(f.reminderViews, f.promptViews) },
-    { label: "Signups", value: f.reminderSignups, sub: "of forms seen", rate: pct(f.reminderSignups, f.reminderViews) },
-    { label: "Calendar adds", value: f.calendarAdds ?? 0, sub: "no-email reminders", rate: null },
+    { label: "Email signups", value: f.reminderSignups, sub: "of forms seen", rate: pct(f.reminderSignups, f.reminderViews) },
+    { label: "Calendar adds", value: f.calendarAdds ?? 0, sub: "no-email", rate: null },
   ];
+  const totalReminders = f.reminderSignups + (f.calendarAdds ?? 0);
 
   return (
     <Section
       title="Reminder funnel"
-      hint={`Last 7d · ${pct(f.reminderSignups, f.promptViews)} prompt→signup`}
+      hint={`Last 7d · ${totalReminders} reminders set (${f.reminderSignups} email + ${f.calendarAdds ?? 0} calendar)`}
     >
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
         <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
@@ -444,8 +445,8 @@ function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
         </div>
         <p className="mt-3 border-t border-slate-800 pt-2 text-[11px] leading-relaxed text-slate-600">
           Prompt-to-form was ~0.6% before the inline-ask upgrade (14 Jun) — watch it climb.
-          Signups counts the mot_reminder event (includes reactivations), so it can exceed new
-          subscriber rows.
+          Email signups = mot_reminder events (incl. reactivations, so can exceed new subscriber
+          rows). Calendar adds = no-email mot_reminder_calendar_add (Google/Outlook/.ics).
         </p>
       </div>
     </Section>

@@ -5,7 +5,12 @@ import { Bell, CalendarPlus, CheckCircle2, X, Loader2 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 import { DEFAULT_OFFSETS, OFFSET_OPTIONS, describeSchedule } from "@/lib/mot-reminders";
-import { canAddToCalendar, downloadIcs, googleCalendarUrl } from "@/lib/mot-calendar";
+import {
+  canAddToCalendar,
+  downloadIcs,
+  googleCalendarUrl,
+  outlookCalendarUrl,
+} from "@/lib/mot-calendar";
 
 interface MOTReminderSignupProps {
   context: "generic" | "due-soon" | "expired" | "post-lookup";
@@ -207,7 +212,7 @@ export default function MOTReminderSignup({
   }, []);
 
   const fireCalendarEvent = useCallback(
-    (method: "ics" | "google") => {
+    (method: "ics" | "google" | "outlook") => {
       trackEvent("mot_reminder_calendar_add", {
         method,
         context,
@@ -470,28 +475,41 @@ export default function MOTReminderSignup({
   // No-email "Add to calendar" option (only where a future expiry is known).
   const calOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
   const calReg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
+  const calProviderClass =
+    "rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20";
   const calendarBlock =
     showCalendar && canAddToCalendar(motExpiryDate) && motExpiryDate ? (
       <div>
-        <button
-          type="button"
-          onClick={handleIcsAdd}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/20"
-        >
-          <CalendarPlus className="h-4 w-4" />
+        <p className="flex items-center gap-1.5 text-sm font-semibold text-cyan-100">
+          <CalendarPlus className="h-4 w-4 flex-shrink-0" />
           Add to calendar &mdash; no email
-        </button>
-        <p className="mt-1 text-[11px] text-slate-500">
-          Free &middot; no email &middot; alerts {describeSchedule(calOffsets)} before expiry &middot;{" "}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
           <a
             href={googleCalendarUrl(calReg, motExpiryDate)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => fireCalendarEvent("google")}
-            className="text-cyan-400 underline-offset-2 hover:text-cyan-300 hover:underline"
+            className={calProviderClass}
           >
-            Google Calendar
+            Google
           </a>
+          <a
+            href={outlookCalendarUrl(calReg, motExpiryDate)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => fireCalendarEvent("outlook")}
+            className={calProviderClass}
+          >
+            Outlook
+          </a>
+          <button type="button" onClick={handleIcsAdd} className={calProviderClass}>
+            Apple / download
+          </button>
+        </div>
+        <p className="mt-1.5 text-[11px] text-slate-500">
+          Free &middot; no email &middot; alerts {describeSchedule(calOffsets)} before expiry &middot;
+          one tap to book when it&apos;s due
         </p>
       </div>
     ) : null;
