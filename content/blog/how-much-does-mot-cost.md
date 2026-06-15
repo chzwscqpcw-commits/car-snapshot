@@ -107,7 +107,7 @@ The golden rule is to book within the one-month early window. If your MOT expire
 
 Booking early gives you a safety net. If the car fails, you've still got your current valid MOT to drive on while you arrange repairs and a retest. If you leave it until the last day and it fails, you could be left without a driveable car.
 
-To make sure you never miss your MOT window, sign up for our [free MOT reminder](/mot-reminder). We'll email you 28 days and 7 days before your MOT expires, giving you plenty of time to book at a price that suits you.
+To make sure you never miss your MOT window, sign up for our [free MOT reminder](/mot-reminder). We'll email you in good time before your MOT is due — 5 weeks and 1 week before by default, or pick your own timing — or add it straight to your calendar, no email needed. It's free, no signup, and we only ever use your email to send the reminder — never marketing, never shared. Either way you'll have plenty of time to book at a price that suits you.
 
 ## What the MOT doesn't cover
 

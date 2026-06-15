@@ -61,9 +61,9 @@ ANPR also enforces emissions zones — ULEZ (London), Birmingham, Bristol, Bath,
 
 ## The "I didn't know" defence rarely works
 
-The most common excuse in court is "I didn't realise it had expired." Magistrates routinely reject it — the registered keeper's duty of care includes knowing when MOT, tax, and insurance lapse. The DVLA does send reminder letters and emails (if you've registered), but they are not legally required, and reliance on them is not a defence.
+The most common excuse in court is "I didn't realise it had expired." Magistrates routinely reject it — the registered keeper's duty of care includes knowing when MOT, tax, and insurance lapse. The DVLA does not remind you automatically — there's a separate free GOV.UK opt-in MOT-reminder service (email or text), but most drivers aren't signed up, and even where reminders are sent they aren't legally required, so reliance on them is not a defence.
 
-This is why proactively setting up reminders is the most cost-effective thing you can do — it takes 10 seconds and costs nothing. [Set a free MOT reminder](/mot-reminder) and we'll email you 28 days and 7 days before your MOT is due, with no signup, no spam, and no charge.
+This is why proactively setting up reminders is the most cost-effective thing you can do — it takes 10 seconds and costs nothing. [Set a free MOT reminder](/mot-reminder) and we'll email you in good time before your MOT is due (5 weeks and 1 week before by default, or pick your own timing) — or add it straight to your calendar, no email needed. No signup, no charge, and we only ever use your email to send the reminder — never marketing, never shared.
 
 ## The realistic scenarios where ANPR catches good drivers
 
@@ -81,7 +81,7 @@ If any of these sound like you, doing a quick free check before you drive is the
 
 1. **MOT check** — enter your reg on [Free Plate Check](/mot-check) to see the exact expiry date and full MOT history.
 2. **Tax check** — same site, [tax status page](/tax-check) shows whether it's currently taxed or SORN.
-3. **Set up free reminders** — [our reminder service](/mot-reminder) emails you 28 and 7 days before MOT expiry. We never share your email or registration.
+3. **Set up free reminders** — [our reminder service](/mot-reminder) emails you in good time before MOT expiry (5 weeks and 1 week before, or your own timing). We only ever use your email to send the reminder — never marketing, never shared.
 
 ## If your MOT is due — book through a price comparator
 

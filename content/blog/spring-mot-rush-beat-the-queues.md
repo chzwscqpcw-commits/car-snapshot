@@ -13,7 +13,7 @@ faqItems:
   - question: "What happens if I cannot get an MOT appointment before my current one expires?"
     answer: "If your MOT expires before you can get an appointment, you must not drive the car on public roads (except directly to a pre-booked MOT appointment). Driving without a valid MOT can result in a fine of up to GBP 1,000 and your car insurance may be invalidated."
   - question: "Can I check when my MOT is due online?"
-    answer: "Yes. You can check your MOT due date for free by entering your registration number on Free Plate Check or on the GOV.UK MOT checker. Setting up a reminder ensures you never forget — the DVLA also sends email reminders if you have signed up."
+    answer: "Yes. You can check your MOT due date for free by entering your registration number on Free Plate Check or on the GOV.UK MOT checker. Setting up a reminder ensures you never forget — the DVLA doesn't remind you automatically, though there's a separate free GOV.UK opt-in MOT-reminder service (email or text) you can sign up for. Most drivers aren't signed up, so it's safest to set your own reminder."
 ---
 
 If you have ever tried to book an MOT in April and found yourself waiting two weeks for an available slot, you are not imagining things. Spring is comfortably the busiest period for MOT testing in the UK, and every year catches thousands of drivers off guard.
@@ -80,7 +80,7 @@ Even if your appointment is weeks away, there are things worth doing now.
 
 ## Set up a reminder so you never get caught out
 
-The easiest way to avoid the spring rush entirely is to know your MOT date well in advance. Set up a [free MOT reminder](/mot-reminder) and you will receive a notification before your test is due, giving you plenty of time to book an appointment before slots fill up.
+The easiest way to avoid the spring rush entirely is to know your MOT date well in advance. Set up a [free MOT reminder](/mot-reminder) and you will receive a notification in good time before your test is due — 5 weeks and 1 week before by default, or pick your own timing — or add it straight to your calendar, no email needed. Either way it's free, with no signup, and we only ever use your email to send the reminder — never marketing, never shared. That gives you plenty of time to book an appointment before slots fill up.
 
 ## What if your MOT has already expired?
 

@@ -43,7 +43,7 @@ export default function TermsPage() {
             ← Back to Free Plate Check
           </Link>
           <h1 className="text-3xl font-bold text-slate-100">Terms of Service</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: March 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: June 2026</p>
         </div>
       </div>
 
@@ -107,7 +107,9 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">6. Email Communications & MOT Reminders</h2>
             <p className="mb-4">
-              If you sign up for MOT reminders, you agree to receive email communications related to your vehicle&#39;s MOT status.
+              If you sign up for MOT reminders by email, you agree to receive email communications related to your vehicle&#39;s MOT status.
+              We only use your email address to send these reminders &mdash; never for marketing, and we never share it with third parties.
+              You can instead add the reminder to your own calendar (Google, Outlook or Apple), in which case we collect and store nothing.
             </p>
 
             <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">What we send</h3>

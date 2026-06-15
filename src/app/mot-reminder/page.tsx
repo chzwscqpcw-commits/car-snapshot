@@ -174,7 +174,9 @@ export default function MotReminderPage() {
             Free MOT Reminder Service
           </h1>
           <p className="text-sm text-slate-400 mt-2">
-            Get email reminders before your MOT expires — completely free, no account needed.
+            Never get caught out before your MOT&apos;s due. Free, no account — and you don&apos;t have to part
+            with any personal details unless you want to: get it by email, or add it straight to your
+            calendar with no email at all.
           </p>
         </div>
       </div>
@@ -182,6 +184,12 @@ export default function MotReminderPage() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary signup form */}
         <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar />
+
+        <p className="mt-3 text-center text-xs text-slate-500">
+          No personal details required. If you give an email, it&apos;s only ever used to send your
+          reminder — never marketing, never shared, unsubscribe any time. Prefer not to? Add it to
+          your calendar instead and we store nothing.
+        </p>
 
         <StatCallouts
           stats={[
@@ -198,8 +206,8 @@ export default function MotReminderPage() {
               <div className="flex gap-4 items-start">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sm font-bold text-blue-400">1</span>
                 <div>
-                  <p className="font-semibold text-slate-100">Enter your reg and email</p>
-                  <p className="text-sm mt-1">Up to 5 vehicles at once.</p>
+                  <p className="font-semibold text-slate-100">Enter your reg (and email, if you like)</p>
+                  <p className="text-sm mt-1">Up to 5 vehicles at once. Rather not share an email? Add the reminder to your calendar instead — no email needed.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">

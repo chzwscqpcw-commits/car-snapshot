@@ -338,6 +338,10 @@ export default function ConversionWidget({
                 &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp;
                 &#10003; Unsubscribe any time
               </p>
+              <p className="mt-1 text-xs text-slate-500">
+                We only ever use your email to send your MOT reminder &mdash; never marketing,
+                never shared.
+              </p>
               <p className="mt-2 text-xs text-amber-500/80">
                 Driving without a valid MOT can mean a fine of up to &pound;1,000.
               </p>

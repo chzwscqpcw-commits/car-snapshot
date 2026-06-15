@@ -101,7 +101,7 @@ That said, if your EV does fail and needs repairs, you may want a garage with EV
 
 Electric cars are so quiet and undemanding in daily use that it's easy to forget about the MOT entirely. There are no rattling exhaust noises or rough-running engines to remind you that maintenance is due.
 
-Set up a [free MOT reminder](/mot-reminder) and you'll get an email alert before your MOT expires. It takes 30 seconds and means you'll never be caught out.
+Set up a [free MOT reminder](/mot-reminder) and you'll get an alert in good time before your MOT is due (5 weeks and 1 week before by default, or pick your own timing) — or add it straight to your calendar, no email needed. It takes 30 seconds, there's no signup, and we only ever use your email to send the reminder — never marketing, never shared. You'll never be caught out.
 
 ## The bottom line
 

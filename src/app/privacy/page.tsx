@@ -103,6 +103,14 @@ export default function PrivacyPage() {
               <li><strong>MOT expiry date:</strong> To time your reminders correctly</li>
               <li><strong>Unsubscribe token:</strong> A random identifier (UUID) used to manage your subscription — not linked to your identity</li>
             </ul>
+            <p className="mt-3">
+              We use your email address solely to send these reminders. We do not use it for marketing, newsletters or
+              promotional content, and we never share it with third parties.
+            </p>
+            <p className="mt-3">
+              <strong>No-email option:</strong> If you instead choose &ldquo;Add to calendar&rdquo;, we collect and store
+              <strong> nothing at all</strong> — the reminder is created directly in your own calendar on your device.
+            </p>
             <p className="mt-3 bg-slate-900 border-l-4 border-amber-500 p-4 rounded">
               <strong>Important distinction:</strong> The MOT reminder service is separate from the vehicle lookup.
               When you look up a vehicle, we do NOT store the registration number.

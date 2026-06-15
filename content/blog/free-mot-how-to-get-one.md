@@ -61,7 +61,7 @@ Yes. Whether the test is free, £20, or the full £54.85, it follows the same DV
 - **Compare first.** Even when chasing "free," compare local options — sometimes a £25 paid MOT with a trusted garage and a low labour rate beats a "free" one with strings. [Compare local MOT prices here](/cheap-mot).
 - **Time it with your service.** If a service is due, bundling is the easiest genuine free MOT there is.
 - **Know your retest rights** so a fail doesn't cost you a second test.
-- **Never get caught out on timing.** Set a free [MOT reminder](/mot-reminder) — 28 and 7 days before expiry — so you can wait for the right offer instead of booking in a panic.
+- **Never get caught out on timing.** Set a free [MOT reminder](/mot-reminder) — sent in good time before it's due (5 weeks and 1 week before, or your own timing), or add it straight to your calendar — so you can wait for the right offer instead of booking in a panic. No signup, and we only ever use your email to send the reminder — never marketing, never shared.
 
 ## The bottom line
 

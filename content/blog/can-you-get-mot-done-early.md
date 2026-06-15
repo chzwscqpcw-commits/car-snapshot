@@ -88,7 +88,7 @@ Once your MOT expires, you can only drive to a **pre-booked** MOT appointment, a
 
 ## Setting up a reminder
 
-The DVLA doesn't send MOT reminder letters. It's entirely your responsibility to remember when the test is due. The easiest way to make sure you never miss the window is to sign up for our [free MOT reminder service](/mot-reminder). We'll email you 28 days and 7 days before your MOT expires — perfectly timed to book within the one-month window.
+The DVLA doesn't remind you automatically. There's a separate free GOV.UK opt-in MOT-reminder service (email or text), but most drivers aren't signed up, so it's safest to set your own reminder. The easiest way to make sure you never miss the window is to sign up for our [free MOT reminder service](/mot-reminder). We'll email you in good time before your MOT is due — 5 weeks and 1 week before by default, or pick your own timing — perfect for booking within the one-month window. No signup, and we only ever use your email to send the reminder — never marketing, never shared.
 
 You can also set a calendar reminder on your phone, but an automated email is one less thing to think about.
 

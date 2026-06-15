@@ -640,6 +640,9 @@ export default function MOTReminderSignup({
           Unsubscribe any time
         </p>
         <p className="mt-1 text-xs text-slate-500">
+          We only ever use your email to send your MOT reminder &mdash; never marketing, never shared.
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
           Each reminder helps you book &mdash; and compares local garage prices, often below the
           &pound;54.85 cap.
         </p>
@@ -809,6 +812,9 @@ export default function MOTReminderSignup({
         <p className="text-xs text-slate-500">
           &#10003; Free &nbsp;&nbsp; &#10003; No spam &nbsp;&nbsp; &#10003;
           Unsubscribe any time
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          We only ever use your email to send your MOT reminder &mdash; never marketing, never shared.
         </p>
         <p className="mt-1 text-xs text-slate-500">
           Each reminder helps you book &mdash; and compares local garage prices, often below the

@@ -181,7 +181,7 @@ This won't guarantee a pass, but it will eliminate the most common — and most 
 
 Before the test, it's worth checking your vehicle's [MOT history](/mot-check) to see what came up at previous tests. [Advisories](/blog/what-does-mot-advisory-mean) from last year often become failures this year if they haven't been addressed. Recurring issues — like a suspension advisory that's appeared three years running — are a strong sign that the component is close to failing.
 
-To make sure you always test within the optimal window, set up a [free MOT reminder](/mot-reminder) and you'll get an email alert 28 days and 7 days before your MOT expires.
+To make sure you always test within the optimal window, set up a [free MOT reminder](/mot-reminder) and you'll get an alert in good time before your MOT is due — 5 weeks and 1 week before by default, or pick your own timing — or add it straight to your calendar, no email needed. It's free, no signup, and we only ever use your email to send the reminder — never marketing, never shared.
 
 And if your car does need work before the test, [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to find competitive garages in your area.
 

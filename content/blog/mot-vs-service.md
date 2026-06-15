@@ -103,7 +103,7 @@ For most drivers, the cheapest and most convenient option is a combined MOT-and-
 
 ## Set a free MOT reminder so you never get caught out
 
-The most common cause of an unexpected MOT panic is missing the renewal date and having to rush a last-minute test (often more expensive, and you have less time to fix problems). [Set a free MOT reminder](/mot-reminder) — we'll email you 28 and 7 days before your MOT is due, no signup required.
+The most common cause of an unexpected MOT panic is missing the renewal date and having to rush a last-minute test (often more expensive, and you have less time to fix problems). [Set a free MOT reminder](/mot-reminder) — we'll email you in good time before your MOT is due (5 weeks and 1 week before by default, or pick your own timing) — or add it straight to your calendar, no email needed. No signup, and we only ever use your email to send the reminder — never marketing, never shared.
 
 ## Related guides
 

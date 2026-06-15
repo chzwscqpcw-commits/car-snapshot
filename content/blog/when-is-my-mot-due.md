@@ -78,7 +78,7 @@ The simplest approach. Check your [MOT expiry date](/mot-check), then set a remi
 
 ### Use our free MOT reminder
 
-We offer a [free MOT reminder service](/mot-reminder) that emails you 28 days and 7 days before your MOT expires. Just look up your vehicle on our [MOT check](/mot-check) and enter your email — no account needed, no spam. It's the easiest way to make sure you never miss your MOT.
+We offer a [free MOT reminder service](/mot-reminder) that emails you in good time before your MOT is due — 5 weeks and 1 week before by default, or pick your own timing. Just look up your vehicle on our [MOT check](/mot-check) and enter your email — no account needed, and we only ever use your email to send the reminder, never marketing, never shared. Prefer no email at all? You can add the reminder straight to your calendar instead. It's the easiest way to make sure you never miss your MOT.
 
 ### Link it to another annual event
 

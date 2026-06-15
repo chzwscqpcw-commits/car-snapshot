@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, type MouseEvent } from "react";
+import { useState, useEffect } from "react";
 import { Bell, X } from "lucide-react";
 
 /**
  * Slim, dismissible bottom banner that slides up after 25% scroll.
- * Scrolls to #mot-reminder when that target exists on the page (the stats
- * sub-pages, via ConversionWidget); on pages without it (e.g. the /stats hub)
- * it falls back to the dedicated /mot-reminder page so the CTA always works.
- * Dismissal stored in sessionStorage.
+ * Always routes to the dedicated /mot-reminder page in ONE click (the richest
+ * reminder experience — email + no-email calendar). Previously it scrolled to
+ * an in-page #mot-reminder widget where one existed, which read as needing two
+ * clicks to actually reach the reminder page. Dismissal stored in sessionStorage.
  */
 export default function MotReminderBanner() {
   const [visible, setVisible] = useState(false);
@@ -40,17 +40,6 @@ export default function MotReminderBanner() {
     sessionStorage.setItem("mot-banner-dismissed", "1");
   }
 
-  // Scroll to the in-page reminder form if it exists; otherwise route to the
-  // dedicated /mot-reminder page (the bare #mot-reminder anchor would do nothing
-  // on pages without the target, e.g. the /stats hub).
-  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
-    handleDismiss();
-    if (typeof document !== "undefined" && !document.getElementById("mot-reminder")) {
-      e.preventDefault();
-      window.location.href = "/mot-reminder";
-    }
-  }
-
   if (dismissed) return null;
 
   return (
@@ -66,8 +55,8 @@ export default function MotReminderBanner() {
             <p className="text-sm text-slate-300">
               <span className="hidden sm:inline">Your MOT could be due soon &mdash; </span>
               <a
-                href="#mot-reminder"
-                onClick={handleClick}
+                href="/mot-reminder"
+                onClick={handleDismiss}
                 className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 Set a free reminder

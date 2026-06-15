@@ -70,4 +70,4 @@ Saving money is good, but remember the MOT is only a minimum safety and emission
 
 The test is the same everywhere, so the only question is who'll do it for less. Compare a few local garages, bundle with a service if one's due, fix the easy stuff yourself, and know your retest rights. Do that and you'll routinely pay £25–£40 for something the maximum says could cost £54.85.
 
-Never want to scramble for a last-minute booking again? Set a free [MOT reminder](/mot-reminder) and we'll email you 28 and 7 days before yours expires — plenty of time to shop around. When you're ready, [compare local MOT prices](/cheap-mot) and book at the best rate.
+Never want to scramble for a last-minute booking again? Set a free [MOT reminder](/mot-reminder) and we'll email you in good time before yours is due (5 weeks and 1 week before by default, or pick your own timing) — or add it straight to your calendar, no email needed. It's free, no signup, and we only ever use your email to send the reminder — never marketing, never shared. Either way you'll have plenty of time to shop around. When you're ready, [compare local MOT prices](/cheap-mot) and book at the best rate.

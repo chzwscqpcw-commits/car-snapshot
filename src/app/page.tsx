@@ -3109,7 +3109,7 @@ END:VEVENT
               "name": "Can I get a free MOT reminder?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. After looking up a vehicle, you can enter your email to set up a free MOT reminder. We'll email you in good time before the MOT is due — 5 weeks and 1 week before by default, or choose your own timing — so you can book early, keep your renewal date and compare prices. It's completely free, there's no account to create, and you can unsubscribe at any time."
+                "text": "Yes. After looking up a vehicle, set a free MOT reminder by email — or add it straight to your calendar with no email at all. By email, we'll nudge you in good time before it's due (5 weeks and 1 week before by default, or choose your own timing) so you can book early, keep your renewal date and compare prices. It's completely free with no account, we only ever use your email to send the reminder (never marketing, never shared), and you can unsubscribe any time."
               }
             },
             {
@@ -5591,7 +5591,7 @@ END:VEVENT
             </div>
             <div>
               <h3 className="font-semibold text-slate-100">Can I get a free MOT reminder?</h3>
-              <p className="text-sm text-slate-400 mt-1">Yes. After looking up a vehicle, you can enter your email to set up a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a>. We&apos;ll email you in good time before the MOT is due — 5 weeks and 1 week before by default, or choose your own timing — so you can book early, keep your renewal date and compare prices. It&apos;s completely free, there&apos;s no account to create, and you can unsubscribe at any time.</p>
+              <p className="text-sm text-slate-400 mt-1">Yes. After looking up a vehicle, set a <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">free MOT reminder</a> by email — or add it straight to your calendar with no email at all. By email, we&apos;ll nudge you in good time before it&apos;s due (5 weeks and 1 week before by default, or choose your own timing) so you can book early, keep your renewal date and compare prices. It&apos;s completely free with no account, we only ever use your email to send the reminder (never marketing, never shared), and you can unsubscribe any time.</p>
             </div>
             <div>
               <h3 className="font-semibold text-slate-100">Do you store my registration number?</h3>
