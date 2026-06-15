@@ -633,13 +633,6 @@ export default function MOTReminderSignup({
 
         {emailFields}
 
-        {calendarBlock && !calendarFirst && (
-          <>
-            {orDivider("no email? we can still remind you")}
-            {calendarBlock}
-          </>
-        )}
-
         {timingPicker}
 
         <p className="text-xs text-slate-500">
@@ -650,6 +643,14 @@ export default function MOTReminderSignup({
           Each reminder helps you book &mdash; and compares local garage prices, often below the
           &pound;54.85 cap.
         </p>
+
+        {/* No-email calendar backup — last, clearly separated from the email block */}
+        {calendarBlock && !calendarFirst && (
+          <>
+            {orDivider("no email? we can still remind you")}
+            {calendarBlock}
+          </>
+        )}
       </form>
     );
   }
@@ -802,13 +803,6 @@ export default function MOTReminderSignup({
           )}
         </button>
 
-        {calendarBlock && (
-          <>
-            {orDivider("no email? we can still remind you")}
-            {calendarBlock}
-          </>
-        )}
-
         {timingPicker}
 
         {/* Trust signals */}
@@ -824,6 +818,14 @@ export default function MOTReminderSignup({
           <p className="mt-1.5 text-xs text-amber-500/80">
             Driving without a valid MOT can mean a fine of up to &pound;1,000.
           </p>
+        )}
+
+        {/* No-email calendar backup — last, clearly separated from the email block */}
+        {calendarBlock && (
+          <>
+            {orDivider("no email? we can still remind you")}
+            {calendarBlock}
+          </>
         )}
       </form>
     </div>
