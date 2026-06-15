@@ -13,10 +13,17 @@ const TRUST_POINTS = [
   "Official DVLA & DVSA data",
 ];
 
-export default function TrustBar({ className = "" }: { className?: string }) {
+export default function TrustBar({
+  className = "",
+  align = "center",
+}: {
+  className?: string;
+  align?: "center" | "start";
+}) {
+  const justify = align === "start" ? "justify-start" : "justify-center";
   return (
     <div
-      className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-slate-400 ${className}`}
+      className={`flex flex-wrap items-center ${justify} gap-x-4 gap-y-1.5 text-xs text-slate-400 ${className}`}
     >
       {TRUST_POINTS.map((point) => (
         <span key={point} className="inline-flex items-center gap-1.5">

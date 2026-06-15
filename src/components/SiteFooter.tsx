@@ -84,9 +84,9 @@ export default function SiteFooter() {
 
         {/* Disclaimers + trust signals */}
         <div className="mt-10 border-t border-slate-800/60 pt-6 space-y-3 text-xs text-slate-500">
-          <TrustBar className="pb-3" />
+          <TrustBar className="pb-3" align="start" />
           <p>
-            Built with official DVLA and MOT data. Always verify details with the seller and official documents before making any decisions.
+            Always verify details with the seller and official documents before making any decisions.
           </p>
           <p className="text-slate-600">
             Free Plate Check may earn a commission from partner links. This doesn&apos;t affect our recommendations or the data we show.
