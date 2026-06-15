@@ -77,7 +77,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MotReminderPage() {
+export default async function MotReminderPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string }>;
+}) {
+  // Pre-fill the reg when arriving from a results page (e.g. the bottom banner
+  // links here as /mot-reminder?vrm=AB12CDE) so the user doesn't retype it.
+  const { vrm } = await searchParams;
+  const presetReg =
+    typeof vrm === "string"
+      ? vrm.replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 8)
+      : undefined;
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -183,7 +195,7 @@ export default function MotReminderPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary signup form */}
-        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar />
+        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar regNumber={presetReg} />
 
         <p className="mt-3 text-center text-xs text-slate-500">
           No personal details required. If you give an email, it&apos;s only ever used to send your

@@ -223,6 +223,13 @@ export default function MOTReminderSignup({
     [showCalendar, hideReg, motExpiryDate],
   );
 
+  // Pre-filled reg (e.g. /mot-reminder?vrm=…) → look it up on mount so the
+  // no-email calendar option enables without the user retyping the reg.
+  useEffect(() => {
+    if (regNumber) runRegLookup(regNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const updateReg = useCallback(
     (index: number, value: string) => {
       setRegs((prev) => {
@@ -511,46 +518,69 @@ export default function MOTReminderSignup({
     </div>
   ) : null;
 
-  // No-email "Add to calendar" option (only where a single car's future expiry
-  // is known — via props on the banner, or the typed-reg lookup on the page).
+  // No-email "Add to calendar" option. Shown for any single-car reminder; the
+  // provider buttons stay GREYED until we know the car's future expiry (via
+  // props on the banner, or the typed/pre-filled-reg lookup on the page) — so
+  // the no-email option is always visible up front, not hidden until a reg.
   const calOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
   const calReg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
   const effectiveExpiry = motExpiryDate || lookupExpiry;
   const calendarSingle = hideReg || regs.length === 1;
+  const calendarReady = !!effectiveExpiry && canAddToCalendar(effectiveExpiry);
   const calProviderClass =
     "rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20";
+  const calDisabledClass =
+    "rounded-md border border-slate-700 bg-slate-800/40 px-3 py-2 text-sm font-medium text-slate-500 cursor-not-allowed";
   const calendarBlock =
-    showCalendar && calendarSingle && canAddToCalendar(effectiveExpiry) && effectiveExpiry ? (
+    showCalendar && calendarSingle ? (
       <div>
         <p className="flex items-center gap-1.5 text-sm font-semibold text-cyan-100">
           <CalendarPlus className="h-4 w-4 flex-shrink-0" />
           Add to calendar &mdash; no email
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
-          <a
-            href={googleCalendarUrl(calReg, effectiveExpiry, calOffsets)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => fireCalendarEvent("google")}
-            className={calProviderClass}
-          >
-            Google
-          </a>
-          <a
-            href={outlookCalendarUrl(calReg, effectiveExpiry, calOffsets)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => fireCalendarEvent("outlook")}
-            className={calProviderClass}
-          >
-            Outlook
-          </a>
-          <button type="button" onClick={handleIcsAdd} className={calProviderClass}>
-            Apple / download
-          </button>
+          {calendarReady ? (
+            <>
+              <a
+                href={googleCalendarUrl(calReg, effectiveExpiry, calOffsets)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => fireCalendarEvent("google")}
+                className={calProviderClass}
+              >
+                Google
+              </a>
+              <a
+                href={outlookCalendarUrl(calReg, effectiveExpiry, calOffsets)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => fireCalendarEvent("outlook")}
+                className={calProviderClass}
+              >
+                Outlook
+              </a>
+              <button type="button" onClick={handleIcsAdd} className={calProviderClass}>
+                Apple / download
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" disabled className={calDisabledClass}>
+                Google
+              </button>
+              <button type="button" disabled className={calDisabledClass}>
+                Outlook
+              </button>
+              <button type="button" disabled className={calDisabledClass}>
+                Apple / download
+              </button>
+            </>
+          )}
         </div>
         <p className="mt-1.5 text-[11px] text-slate-500">
-          Free &middot; no email &middot; a reminder in good time to book &middot; one tap when it&apos;s due
+          {calendarReady
+            ? "Free · no email · a reminder in good time to book · one tap when it’s due"
+            : "Enter your reg above and we’ll switch on a no-email calendar reminder."}
         </p>
       </div>
     ) : null;

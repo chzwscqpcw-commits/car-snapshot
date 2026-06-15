@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
 import { Bell, X } from "lucide-react";
 
 /**
@@ -40,6 +40,21 @@ export default function MotReminderBanner() {
     sessionStorage.setItem("mot-banner-dismissed", "1");
   }
 
+  // Carry the last-looked-up reg through (read at click time) so /mot-reminder
+  // pre-fills it — saves the user retyping a reg they just searched.
+  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+    handleDismiss();
+    let reg: string | null = null;
+    try {
+      const arr = JSON.parse(localStorage.getItem("fpcRecent") || "null");
+      if (Array.isArray(arr) && typeof arr[0] === "string" && arr[0]) reg = arr[0];
+    } catch {
+      /* ignore */
+    }
+    e.preventDefault();
+    window.location.href = reg ? `/mot-reminder?vrm=${encodeURIComponent(reg)}` : "/mot-reminder";
+  }
+
   if (dismissed) return null;
 
   return (
@@ -56,7 +71,7 @@ export default function MotReminderBanner() {
               <span className="hidden sm:inline">Your MOT could be due soon &mdash; </span>
               <a
                 href="/mot-reminder"
-                onClick={handleDismiss}
+                onClick={handleClick}
                 className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 Set a free reminder
