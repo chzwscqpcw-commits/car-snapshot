@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free Plate Check — How Many Left? cover (Austin Metro)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate950:#020617;--slate900:#0f172a;--slate800:#1e293b;--slate700:#334155;
+    --slate100:#f1f5f9;--slate200:#e2e8f0;--slate300:#cbd5e1;--slate400:#94a3b8;--slate500:#64748b;
+    --cyan:#22d3ee;--blue:#3b82f6;--emerald:#34d399;--amber:#fbbf24;
+    --sans:"Inter",Arial,Helvetica,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#05070d;color:var(--slate300);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:18px;padding:26px 16px 60px}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;color:var(--slate400);font-size:13px}
+  .toolbar b{color:var(--slate200)}
+  .btn{font:inherit;font-weight:700;font-size:12.5px;border-radius:999px;padding:8px 16px;cursor:pointer;border:1px solid var(--slate700);background:var(--slate800);color:var(--slate300)}
+  .btn:hover{background:var(--slate700);color:#fff}
+
+  /* scale the fixed 1080×1920 stage to fit the screen height */
+  .scaler{transform-origin:top center}
+  #stage{
+    position:relative;width:1080px;height:1920px;overflow:hidden;border-radius:8px;
+    background:
+      radial-gradient(ellipse 760px 560px at 50% 8%, rgba(34,211,238,.16), rgba(34,211,238,.04) 38%, transparent 66%),
+      radial-gradient(ellipse 900px 600px at 50% 104%, rgba(59,130,246,.14), transparent 60%),
+      linear-gradient(180deg,#0a1020 0%, #05080f 55%, #04060c 100%);
+    box-shadow:0 30px 120px rgba(0,0,0,.7);
+    isolation:isolate;
+  }
+  /* subtle film grain so the gradients don't band */
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+  /* ── top brand row ── */
+  .brand{position:absolute;top:74px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:22px}
+  .lockup{display:flex;align-items:center;gap:16px}
+  .lockup svg{height:46px;filter:drop-shadow(0 0 16px rgba(34,211,238,.5))}
+  .lockup .wm{font-weight:800;font-size:40px;color:var(--slate100);letter-spacing:-.01em}
+  .series{display:inline-flex;align-items:center;gap:12px;border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.08);
+    border-radius:999px;padding:9px 22px;color:var(--cyan);font-weight:700;font-size:23px;letter-spacing:.22em;text-transform:uppercase}
+  .series .no{font-family:var(--mono);color:var(--slate400);letter-spacing:.05em}
+
+  /* ── subject ── */
+  .subject{position:absolute;top:300px;left:0;right:0;text-align:center}
+  .subject h1{font-weight:800;font-size:78px;line-height:1;color:var(--slate100);letter-spacing:.01em}
+  .subject .era{margin-top:16px;font-family:var(--mono);font-size:26px;letter-spacing:.28em;text-transform:uppercase;color:var(--slate500)}
+
+  /* ── hero car on a glow pedestal ── */
+  .hero{position:absolute;top:470px;left:0;right:0;height:560px;display:flex;align-items:center;justify-content:center}
+  .hero .pedestal{position:absolute;width:820px;height:300px;top:120px;
+    background:radial-gradient(ellipse at 50% 50%, rgba(34,211,238,.30), rgba(34,211,238,.07) 45%, transparent 70%);filter:blur(2px)}
+  .hero .shadow{position:absolute;bottom:54px;width:560px;height:46px;border-radius:50%;
+    background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.55), transparent 72%)}
+  .hero img{position:relative;width:760px;height:auto;filter:drop-shadow(0 26px 30px rgba(0,0,0,.55))}
+
+  /* ── the survivor stat ── */
+  .stat{position:absolute;top:1070px;left:0;right:0;text-align:center}
+  .stat .cap{font-family:var(--mono);font-size:28px;letter-spacing:.30em;text-transform:uppercase;color:var(--slate400)}
+  .stat .num{margin-top:6px;font-family:var(--mono);font-weight:700;font-size:300px;line-height:.92;
+    color:#eafdff;text-shadow:0 0 60px rgba(34,211,238,.55),0 0 18px rgba(34,211,238,.6)}
+  .stat .label{margin-top:4px;font-weight:800;font-size:46px;color:var(--slate100)}
+  .stat .sub{margin-top:22px;font-family:var(--mono);font-size:27px;letter-spacing:.02em;color:var(--slate400)}
+  .stat .sub b{color:var(--slate200);font-weight:700}
+
+  /* ── hook ── */
+  .hook{position:absolute;top:1640px;left:80px;right:80px;text-align:center;
+    font-weight:700;font-size:50px;line-height:1.18;color:var(--slate200)}
+  .hook em{font-style:normal;color:var(--emerald)}
+
+  /* ── footer ── */
+  .foot{position:absolute;bottom:70px;left:0;right:0;text-align:center;font-size:25px;color:var(--slate500)}
+  .foot b{color:var(--cyan);font-weight:700}
+
+  /* TikTok grid-crop safe guide (toggle; never screenshot with it on) */
+  .safe{position:absolute;left:11%;right:11%;top:9%;bottom:9%;border:2px dashed rgba(34,211,238,.45);border-radius:14px;display:none;pointer-events:none}
+  body.guide .safe{display:block}
+  .safe span{position:absolute;left:8px;top:6px;font-family:var(--mono);font-size:13px;color:rgba(34,211,238,.9)}
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="toolbar">
+      <span>TikTok / IG Reels cover &middot; <b>1080×1920</b>. Screenshot the frame (or right-click &rarr; capture node at full size).</span>
+      <button class="btn" id="guideBtn">Show crop guide</button>
+    </div>
+
+    <div class="scaler" id="scaler">
+      <div id="stage">
+        <div class="brand">
+          <div class="lockup">
+            <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><path d="M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z" fill="url(#b)"/></svg>
+            <span class="wm">Free Plate Check</span>
+          </div>
+          <div class="series">How many left? <span class="no">&#8470;01</span></div>
+        </div>
+
+        <div class="subject">
+          <h1>THE AUSTIN METRO</h1>
+          <div class="era">Britain&rsquo;s best-seller &middot; 1980&ndash;1998</div>
+        </div>
+
+        <div class="hero">
+          <div class="pedestal"></div>
+          <div class="shadow"></div>
+          <img src="assets/austin-metro-1983-hero.png" alt="Austin Metro" />
+        </div>
+
+        <div class="stat">
+          <div class="cap">Still licensed in the UK</div>
+          <div class="num">261</div>
+          <div class="label">that&rsquo;s it.</div>
+          <div class="sub">261 taxed &middot; <b>1,343</b> SORN&rsquo;d off the road &middot; <b>1,604</b> left in total</div>
+        </div>
+
+        <div class="hook">Your nan&rsquo;s Metro is <em>nearly&nbsp;extinct</em>.</div>
+
+        <div class="foot">Check any UK car free &middot; <b>freeplatecheck.co.uk</b></div>
+
+        <div class="safe"><span>SAFE — keep key text inside (TikTok grid crops the edges)</span></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Scale the 1080×1920 stage to fit the viewport height for previewing.
+  function fit(){
+    const s=document.getElementById('scaler');
+    const avail=window.innerHeight-150;
+    const k=Math.min(1, avail/1920, (window.innerWidth-40)/1080);
+    s.style.transform='scale('+k+')';
+    s.style.height=(1920*k)+'px';
+  }
+  window.addEventListener('resize',fit); fit();
+  document.getElementById('guideBtn').onclick=function(){
+    document.body.classList.toggle('guide');
+    this.textContent=document.body.classList.contains('guide')?'Hide crop guide':'Show crop guide';
+  };
+</script>
+</body>
+</html>
