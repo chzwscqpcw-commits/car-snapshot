@@ -182,17 +182,22 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // direct; on approval carVertical issues its OWN tracking link (Post Affiliate
   // Pro), so replace the whole url/buildLink below with their link format (and
   // its sub-id/clickref param name), then flip pending:false.
-  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6). Links CONFIRMED by
-  // Dominyka (carVertical account manager): use her DIRECT destination links —
-  // correctly generated (the fixed _ef_transaction_id is intentional, their
-  // system handles it) and the only way to get the VIN/reg PRE-FILL + the
-  // precheck landing page. We substitute the searched plate into the `&vin=XXXX`
-  // placeholder. All carry voucher=freeplatecheck (our 20% discount) +
-  // utm_source=427 (us). Three variants by placement (distinct transaction_id
-  // each → carVertical can tell report vs mileage vs blog); our OWN per-placement
-  // detail still comes from the partner_click `context`, independent of the link.
+  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6).
+  // UPDATED 2026-06-16 — switched from carVertical's direct destination URLs
+  // (hardcoded _ef_transaction_id) to Dominyka's proper EVERFLOW TRACKING LINKS
+  // on carvertical.deal. The old links pinned every click to one fixed
+  // _ef_transaction_id, so Everflow collapsed all clicks under a single click ID
+  // and the dashboard read 0 clicks (vs our own analytics). The tracker links
+  // below mint a UNIQUE transaction id per click (server-side redirect) while
+  // still pre-filling the reg and applying the coupon. Param mapping (Dominyka):
+  //   sub1 = coupon applied at checkout (freeplatecheck — our 20% discount)
+  //   sub2 = placement tag we segment on in the dashboard (ccheck / mcheck / blog)
+  //   sub3 = dynamic reg/VIN pre-filled on the precheck landing page
+  //   source_id=AFF + the NCRBZ8/6JHXF path identify us as the affiliate.
+  // Report + mileage carry uid=5 + sub3; blog has neither (no reg to pre-fill).
+  // Our OWN per-placement detail still comes from the partner_click `context`.
   carVertical: {
-    url: "https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427",
+    url: "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog",
     name: "carVertical",
     isAffiliate: true,
     pending: false,
@@ -200,16 +205,16 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     shortDescription: "History check",
     buildLink: (reg: string, clickref?: string) => {
       const ctx = (clickref ?? "").toLowerCase();
-      const REPORT =
-        "https://www.carvertical.com/gb/precheck?_ef_transaction_id=beccc9083e45445496b0863f80b81f05&voucher=freeplatecheck&utm_medium=AFF&utm_source=427&vin=XXXXXXXXXXXXXXXXX";
-      const MILEAGE =
-        "https://www.carvertical.com/gb/precheck?_ef_transaction_id=f395ff89e75c4a0983fc8ba8797c35e0&voucher=freeplatecheck&utm_medium=AFF&utm_source=427&vin=XXXXXXXXXXXXXXXXX";
-      const BLOG =
-        "https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427";
-      if (ctx.includes("blog")) return BLOG;
-      const base = ctx.includes("mileage") ? MILEAGE : REPORT;
+      const TRACKER = "https://www.carvertical.deal/NCRBZ8/6JHXF/";
+      // Blog placement: no reg to pre-fill, no uid (matches Dominyka's blog link).
+      if (ctx.includes("blog")) {
+        return `${TRACKER}?source_id=AFF&sub1=freeplatecheck&sub2=blog`;
+      }
+      // sub2 segments the placement in carVertical's dashboard:
+      // mcheck = mileage-check page, ccheck = report / car-check.
+      const sub2 = ctx.includes("mileage") ? "mcheck" : "ccheck";
       const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
-      return base.replace("XXXXXXXXXXXXXXXXX", encodeURIComponent(plate));
+      return `${TRACKER}?uid=5&source_id=AFF&sub1=freeplatecheck&sub2=${sub2}&sub3=${encodeURIComponent(plate)}`;
     },
   },
   // HPI Check — the brand-name UK history check (the phrase consumers actually

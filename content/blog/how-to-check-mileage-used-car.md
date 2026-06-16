@@ -39,7 +39,7 @@ You can check this timeline instantly by entering the registration number on our
 
 ### A full history check
 
-A **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** checks for mileage rollbacks across over 1,000 data sources in 45+ countries — catching a car clocked between MOTs or before it was imported, which a basic MOT lookup can miss. Free Plate Check readers get 20% off with code `freeplatecheck`. *(carVertical provides and sells the report; we may earn a commission.)*
+A **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** checks for mileage rollbacks across over 1,000 data sources in 45+ countries — catching a car clocked between MOTs or before it was imported, which a basic MOT lookup can miss. Free Plate Check readers get 20% off with code `freeplatecheck`. *(carVertical provides and sells the report; we may earn a commission.)*
 
 ### Service history
 

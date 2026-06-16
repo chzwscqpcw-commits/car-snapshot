@@ -24,7 +24,7 @@ HPI Check is a paid vehicle history report that queries multiple databases. A st
 
 An HPI check typically costs £10–£20 depending on the level of detail and any promotional offers.
 
-> **The short version:** for a full paid history report we use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history and more, summed up in a clear "carVertical Score". Free Plate Check readers get **20% off** with code `freeplatecheck` (from £16.79 a report). The rest of this guide explains free vs paid checks and when each is worth it.
+> **The short version:** for a full paid history report we use and recommend **[carVertical](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history and more, summed up in a clear "carVertical Score". Free Plate Check readers get **20% off** with code `freeplatecheck` (from £16.79 a report). The rest of this guide explains free vs paid checks and when each is worth it.
 >
 > *carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
@@ -112,4 +112,4 @@ For these, you need a physical inspection. Consider an independent vehicle inspe
 
 A free car check gives you an impressive amount of information at no cost — [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [recall checks](/recall-check), and [valuation](/car-valuation). Use it as your first step on every car you consider.
 
-For any purchase over a few thousand pounds, add a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** (20% off with our link, or code `freeplatecheck`) — to cover finance, damage and stolen status. The combination of free and paid checks gives you the most complete picture of a vehicle's history.
+For any purchase over a few thousand pounds, add a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** (20% off with our link, or code `freeplatecheck`) — to cover finance, damage and stolen status. The combination of free and paid checks gives you the most complete picture of a vehicle's history.
