@@ -57,7 +57,7 @@ The most cost-effective approach is layered: run a [free check](/car-check) on e
 
 ## How to run a full history check
 
-Once you've used the free check to narrow down to a serious contender, a full report is the next step. We use and recommend **[carVertical](https://www.carvertical.com/gb/landing/v3?_ef_transaction_id=2dfb41a4e6eb4d44a58049138b33b20c&voucher=freeplatecheck&utm_medium=AFF&utm_source=427)** for the paid layer — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history, previous owners and more, summed up in an overall "carVertical Score". Free Plate Check readers get **20% off** with code `freeplatecheck` (from around £16.79 a report).
+Once you've used the free check to narrow down to a serious contender, a full report is the next step. We use and recommend **[carVertical](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** for the paid layer — it cross-checks over 1,000 data sources across 45+ countries for mileage rollbacks, outstanding finance, theft records, damage and total-loss history, previous owners and more, summed up in an overall "carVertical Score". Free Plate Check readers get **20% off** with code `freeplatecheck` (from around £16.79 a report).
 
 *carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
