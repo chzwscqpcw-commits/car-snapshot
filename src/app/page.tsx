@@ -211,6 +211,7 @@ import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
+import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import Reveal from "@/components/Reveal";
 
@@ -4923,6 +4924,15 @@ END:VEVENT
                 </DataReveal>
               );
             })()}
+
+            {/* Electric or hybrid → home EV-charger nudge (links to our EV page). */}
+            {data && /electric|hybrid/i.test(data.fuelType ?? "") && (
+              <DataReveal delay={520}>
+                <div className="mb-8">
+                  <EvChargerPromptWidget source="car-check-results" />
+                </div>
+              </DataReveal>
+            )}
 
             </SectionGroup>
 
