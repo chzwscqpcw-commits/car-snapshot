@@ -117,32 +117,42 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // ClickMechanic — pre-purchase inspections + EV-charger installation (Awin
   // merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
   // Standard commission 2.5% (Scott offered to revisit once volume builds).
-  // 2026-06-17: Scott (scott@clickmechanic.com) signed off our mock-ups, cleared
-  // us to use ClickMechanic's logo + brand blue, and sent two bespoke Awin deep
-  // links as tidd.ly shortlinks. Those shortlinks resolve to (verified):
-  //   www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=<deep page>
-  // i.e. proper Awin tracking on OUR publisher id (2729598) for merchant 67328.
-  // BUT the tidd.ly hop SILENTLY DROPS an appended ?clickref, so per-placement
-  // attribution was lost in Awin. So we use the canonical awin1.com link the
-  // shortlink resolves to — same IDs + destination, one fewer hop, and &clickref
-  // is preserved (same format as our BookMyGarage links). buildLink routes by
-  // placement context: "ev"/"charger" → EV-charger install, else → inspection.
-  // Controlling the `ued` destination also means reg PRE-FILL is a one-liner once
-  // Scott confirms ClickMechanic's reg/VRM query param (Stephen's open Q4).
+  // We use the canonical awin1.com/cread.php tracking link (awinmid=67328,
+  // awinaffid=2729598, ued=<destination>) — same format as our BookMyGarage
+  // links, so &clickref survives for per-placement attribution. (Scott first
+  // sent tidd.ly shortlinks; those silently dropped the clickref, so we use the
+  // awin1.com link they resolve to — confirmed equivalent, and Scott OK'd it.)
+  //
+  // Reg PRE-FILL (Scott, 2026-06-17): the INSPECTION flow uses a co-branded
+  // partner landing page (our logo) that accepts ?vrm=&postcode= (caps). We pass
+  // the searched reg as ?vrm= (the user enters their postcode on CM's side); the
+  // partner page itself is the graceful fallback if pre-fill ever fails. EVCI has
+  // NO pass-through (CM doesn't use vrm/postcode to quote an install) → it lands
+  // on the EV-charger page. buildLink routes by context: "ev"/"charger" → EV,
+  // else → inspection partner page. (ued query separators are double-encoded by
+  // encodeURIComponent, exactly as Awin requires — same as BookMyGarage.)
   clickMechanic: {
-    url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2Fpre-purchase-inspection",
+    url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2Fpartners%2Ffreeplatecheck",
     name: "ClickMechanic",
     isAffiliate: true,
     pending: false,
     description: "Book a pre-purchase inspection or repair with a vetted mobile mechanic",
     shortDescription: "Mechanic quotes",
-    buildLink: (_reg: string, clickref?: string) => {
+    buildLink: (reg: string, clickref?: string) => {
       const ctx = (clickref ?? "").toLowerCase();
       // Match "ev" only as a standalone token (not inside "preview"/"review"/etc.)
       const isEv = /(^|[^a-z])ev([^a-z]|$)/.test(ctx) || ctx.includes("charger");
-      const dest = isEv
-        ? "https://www.clickmechanic.com/ev-charger-installation"
-        : "https://www.clickmechanic.com/pre-purchase-inspection";
+      let dest: string;
+      if (isEv) {
+        dest = "https://www.clickmechanic.com/ev-charger-installation";
+      } else {
+        // Co-branded partner landing page; pre-fill the reg via ?vrm= when we
+        // have it (postcode is entered on ClickMechanic's side).
+        const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
+        dest = plate
+          ? `https://www.clickmechanic.com/partners/freeplatecheck?vrm=${plate}`
+          : "https://www.clickmechanic.com/partners/freeplatecheck";
+      }
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
         clickref,
