@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Search, MousePointerClick, ArrowRight, PoundSterling } from "lucide-react";
+import { Zap, Search, MousePointerClick, Code2, ArrowRight, PoundSterling } from "lucide-react";
 import PreviewGate from "@/components/preview/PreviewGate";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 
@@ -31,6 +31,14 @@ const PAGES = [
     title: "“Buying this car?” reveal",
     desc: "How the inspection offer sits inside a real results page — a one-tap question that reveals the ClickMechanic offer only for buyers, never owners.",
     cta: "Try the widget",
+  },
+  {
+    href: "/preview/clickmechanic/partner-widget",
+    Icon: Code2,
+    tag: "Widget for ClickMechanic's site",
+    title: "Co-branded checker widget",
+    desc: "A free vehicle-check widget Scott embeds on clickmechanic.com — results show in the widget, CTAs go to his own bookings (MOT due → book MOT; advisory → inspection). Keeps his visitors on-page; brand awareness + a backlink for us.",
+    cta: "View the widget concept",
   },
 ];
 
