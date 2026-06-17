@@ -19,6 +19,20 @@ const nextConfig: NextConfig = {
    * index.
    */
   redirects: async () => [
+    // Short, memorable social/marketing links → the EV-charger page. TikTok
+    // captions aren't clickable and we've no bio link, so "freeplatecheck.co.uk/ev"
+    // is a URL people can actually type. Not permanent: it's a campaign alias we
+    // may want to repoint later.
+    {
+      source: "/ev",
+      destination: `https://${CANONICAL_HOST}/ev-charger-installation`,
+      permanent: false,
+    },
+    {
+      source: "/ev-charger",
+      destination: `https://${CANONICAL_HOST}/ev-charger-installation`,
+      permanent: false,
+    },
     {
       source: "/:path*",
       has: [{ type: "host", value: "freeplatecheck.com" }],
