@@ -339,6 +339,13 @@ export default function EvChargerInstallationPage() {
           <div className="mt-5">
             <FaqAccordion items={FAQ_ITEMS} />
           </div>
+          <p className="mt-4 text-sm text-slate-400">
+            Want the full picture first? Read our guide to{" "}
+            <Link href="/blog/home-ev-charger-installation-cost-uk" className="text-slate-300 underline hover:text-white">
+              home EV charger installation costs
+            </Link>{" "}
+            — price, the process, grants and the per-mile savings.
+          </p>
         </section>
 
         {/* FINAL CTA */}
