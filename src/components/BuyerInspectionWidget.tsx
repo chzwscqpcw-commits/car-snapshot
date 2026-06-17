@@ -33,9 +33,15 @@ export default function BuyerInspectionWidget({
   preview?: boolean;
 }) {
   const [answer, setAnswer] = useState<null | "buyer" | "owner">(null);
+  const [postcode, setPostcode] = useState("");
   if (!preview && !isPartnerConfigured(partner)) return null;
 
-  const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
+  // ClickMechanic skips data entry only when it has BOTH reg + postcode; the
+  // postcode field is optional, so without it the user just lands on the entry
+  // form (no worse off). Recomputed each render as the postcode is typed.
+  const href = partner.buildLink
+    ? partner.buildLink(regNumber ?? "", context, postcode.trim() || undefined)
+    : partner.url;
   const open = answer === "buyer";
 
   return (
@@ -129,6 +135,25 @@ export default function BuyerInspectionWidget({
                 </li>
               ))}
             </ul>
+
+            {/* Optional location postcode — when supplied, ClickMechanic skips
+                data entry and lands the user straight on inspection options.
+                Left blank, they just land on the entry form (no worse off). */}
+            <div className="mt-4">
+              <label htmlFor="cm-postcode" className="mb-1.5 block text-xs text-slate-400">
+                Postcode where the car is{" "}
+                <span className="text-slate-500">(optional — speeds up your quote)</span>
+              </label>
+              <input
+                id="cm-postcode"
+                type="text"
+                autoComplete="postal-code"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                placeholder="e.g. GU2 4JT"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950/50 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-[#3c93f7] focus:outline-none sm:max-w-xs"
+              />
+            </div>
 
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
               <a
