@@ -177,6 +177,22 @@ export const SITE_ITEMS: SiteItem[] = [
     icon: "wrench",
   },
   {
+    title: "EV charger installation",
+    subtitle: "7kW home charger fitted from £752",
+    href: "/ev-charger-installation",
+    category: "tool",
+    keywords: ["ev", "charger", "electric", "home charger", "install", "ohme", "zappi", "7kw"],
+    icon: "zap",
+  },
+  {
+    title: "Pre-purchase car inspection",
+    subtitle: "A mechanic checks the car from £79",
+    href: "/pre-purchase-inspection",
+    category: "tool",
+    keywords: ["inspection", "pre-purchase", "mechanic", "before buying", "used car inspection", "check over"],
+    icon: "wrench",
+  },
+  {
     title: "Repair cost calculators",
     subtitle: "Estimate common repair prices",
     href: "/repair-costs",
