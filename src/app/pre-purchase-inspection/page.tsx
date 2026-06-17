@@ -120,7 +120,7 @@ export default function PrePurchaseInspectionPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
         {/* HERO */}
         <section className="relative grid items-center gap-8 sm:grid-cols-2">
           <div
@@ -133,7 +133,7 @@ export default function PrePurchaseInspectionPage() {
               <Search className="h-3.5 w-3.5" style={{ color: CM }} /> Pre-purchase
               inspection · by <ClickMechanicLogo className="text-xs" />
             </div>
-            <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Don&apos;t buy a used car{" "}
               <span className="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                 blind.
@@ -181,7 +181,7 @@ export default function PrePurchaseInspectionPage() {
         </section>
 
         {/* THE PAIRING — history + inspection */}
-        <section className="mt-12 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <section className="mt-10 sm:mt-12 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
           <Eyebrow>The complete buyer&apos;s check</Eyebrow>
           <h2 className="mt-1 text-xl font-bold text-white">
             Paper history tells half the story. This is the other half.
@@ -211,10 +211,10 @@ export default function PrePurchaseInspectionPage() {
         </section>
 
         {/* WHAT THEY CHECK */}
-        <section className="mt-12">
+        <section className="mt-10 sm:mt-12">
           <Eyebrow>The inspection</Eyebrow>
           <h2 className="mt-1 text-xl font-bold text-white">What the mechanic checks</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {CHECKS.map(({ Icon, t, d }) => (
               <div key={t} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
                 <Icon className="h-5 w-5" style={{ color: CM }} />
@@ -226,10 +226,10 @@ export default function PrePurchaseInspectionPage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="mt-12">
+        <section className="mt-10 sm:mt-12">
           <Eyebrow>Start to finish</Eyebrow>
           <h2 className="mt-1 text-xl font-bold text-white">How it works</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {STEPS.map((s) => (
               <div key={s.n} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
                 <div
@@ -246,7 +246,7 @@ export default function PrePurchaseInspectionPage() {
         </section>
 
         {/* FAQ */}
-        <section className="mt-12">
+        <section className="mt-10 sm:mt-12">
           <Eyebrow>Good to know</Eyebrow>
           <h2 className="mt-1 text-xl font-bold text-white">Common questions</h2>
           <div className="mt-4">
@@ -255,7 +255,7 @@ export default function PrePurchaseInspectionPage() {
         </section>
 
         {/* FINAL CTA */}
-        <section className="mt-12 rounded-2xl border p-6 text-center" style={{ borderColor: `${CM}55`, backgroundColor: `${CM}14` }}>
+        <section className="mt-10 sm:mt-12 rounded-2xl border p-6 text-center" style={{ borderColor: `${CM}55`, backgroundColor: `${CM}14` }}>
           <h2 className="text-2xl font-bold text-white">A £79 check can save you thousands</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
             Before you buy your next used car, let a mechanic look it over first.
