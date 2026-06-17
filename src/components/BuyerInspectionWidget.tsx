@@ -150,7 +150,7 @@ export default function BuyerInspectionWidget({
                 autoComplete="postal-code"
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value)}
-                placeholder="e.g. GU2 4JT"
+                placeholder="e.g. GU4 2JT"
                 className="w-full rounded-lg border border-slate-700 bg-slate-950/50 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-[#3c93f7] focus:outline-none sm:max-w-xs"
               />
             </div>
