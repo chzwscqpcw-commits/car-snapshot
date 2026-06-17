@@ -88,6 +88,7 @@ type StatsData = {
   valuations: number;
   motReminders: number;
   motRemindersLast7d: number;
+  widgetSearches: { today: number; last7d: number };
   funnel7d: {
     searches: number;
     resultsViews: number;
@@ -1089,6 +1090,33 @@ export default function DataHealthPage() {
                   sub={`${stats.pageViews.last7d.toLocaleString()} last 7d`}
                   tone="amber"
                 />
+              </div>
+            )}
+
+            {/* ── PARTNER WIDGET USAGE (ClickMechanic) ── */}
+            {stats && (
+              <div className="mt-2.5 rounded-xl border border-slate-800 bg-slate-900 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-slate-400" />
+                    <span className="text-xs font-semibold text-slate-300">
+                      ClickMechanic widget searches
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-500">
+                    checks run via the embedded partner widget
+                  </span>
+                </div>
+                <div className="mt-2 flex items-baseline gap-5">
+                  <span>
+                    <span className="text-2xl font-bold text-white">{stats.widgetSearches.today}</span>
+                    <span className="ml-1.5 text-xs text-slate-500">today</span>
+                  </span>
+                  <span>
+                    <span className="text-2xl font-bold text-white">{stats.widgetSearches.last7d}</span>
+                    <span className="ml-1.5 text-xs text-slate-500">last 7d</span>
+                  </span>
+                </div>
               </div>
             )}
 

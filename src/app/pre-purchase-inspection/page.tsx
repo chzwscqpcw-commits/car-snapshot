@@ -131,7 +131,7 @@ export default function PrePurchaseInspectionPage() {
           <div className="relative">
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300">
               <Search className="h-3.5 w-3.5" style={{ color: CM }} /> Pre-purchase
-              inspection · by <ClickMechanicLogo className="text-xs" />
+              inspection · by <ClickMechanicLogo className="text-sm" />
             </div>
             <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Don&apos;t buy a used car{" "}
@@ -175,7 +175,7 @@ export default function PrePurchaseInspectionPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
             <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur">
-              Carried out by <ClickMechanicLogo className="text-xs" />
+              Carried out by <ClickMechanicLogo className="text-sm" />
             </div>
           </div>
         </section>

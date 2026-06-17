@@ -12,6 +12,7 @@ import {
   Loader2,
   ChevronDown,
 } from "lucide-react";
+import { trackEvent } from "@/lib/tracking";
 
 // WORKING co-branded vehicle-check widget ClickMechanic could embed on their
 // own (light) site. It calls our free-gov-data endpoint (/api/lookup → DVSA MOT
@@ -130,6 +131,9 @@ export default function PartnerCheckWidget() {
     e.preventDefault();
     const vrm = reg.replace(/\s+/g, "").toUpperCase();
     if (!vrm) return;
+    // Count widget searches so /data-health can show whether the partner is
+    // actually trying it out. Fire-and-forget; never blocks the lookup.
+    trackEvent("widget_search", { partner: "clickmechanic", source: "partner-widget" });
     setStatus("loading");
     setView(null);
     setErrMsg("");

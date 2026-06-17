@@ -48,6 +48,8 @@ export type StatsResponse = {
   contactMessages: { today: number; last7d: number; allTime: number };
   motRemindersLast7d: number;
   topMakesToday: TopMake[];
+  // Searches via the embeddable partner widget (ClickMechanic et al).
+  widgetSearches: { today: number; last7d: number };
   // Funnel + capture metrics, sourced from mirrored gtag events in site_events
   funnel: {
     // searchesToday counts reg_search events (one per user-initiated search).
@@ -827,6 +829,12 @@ export async function GET(req: Request): Promise<NextResponse> {
     network: submitErrorMetaToday.get("network") ?? 0,
   };
 
+  // Searches made via the embeddable partner widget (e.g. ClickMechanic) — lets
+  // us see whether the partner is actually trying it out. Two small counts done
+  // outside the big Promise.all above to avoid disturbing its aligned ordering.
+  const widgetSearchesToday = await countEvents(sb, "widget_search", todayStart);
+  const widgetSearchesLast7d = await countEvents(sb, "widget_search", sevenDaysAgo);
+
   return NextResponse.json({
     lookups: {
       last1h: lookups1h,
@@ -856,6 +864,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     },
     motRemindersLast7d,
     topMakesToday,
+    widgetSearches: { today: widgetSearchesToday, last7d: widgetSearchesLast7d },
     funnel: {
       searchesToday,
       resultsViewsToday,

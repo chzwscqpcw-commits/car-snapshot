@@ -146,7 +146,7 @@ export default function EvChargerInstallationPage() {
           <div className="relative">
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-300">
               <Zap className="h-3.5 w-3.5" style={{ color: CM }} /> Home EV charging ·
-              Installed by <ClickMechanicLogo className="text-xs" />
+              Installed by <ClickMechanicLogo className="text-sm" />
             </div>
             <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Charge at home,{" "}
@@ -199,7 +199,7 @@ export default function EvChargerInstallationPage() {
               From £752
             </div>
             <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur">
-              Installed by <ClickMechanicLogo className="text-xs" />
+              Installed by <ClickMechanicLogo className="text-sm" />
             </div>
           </div>
         </section>
