@@ -181,7 +181,7 @@ export const SITE_ITEMS: SiteItem[] = [
     subtitle: "7kW home charger fitted from £752",
     href: "/ev-charger-installation",
     category: "tool",
-    keywords: ["ev", "charger", "electric", "home charger", "install", "ohme", "zappi", "7kw"],
+    keywords: ["ev", "charger", "ev charger", "ev charging", "electric", "charge at home", "home charger", "charging point", "install", "charger cost", "ohme", "zappi", "7kw"],
     icon: "zap",
   },
   {
