@@ -23,7 +23,7 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 const CM = "#3c93f7";
 
 const partner = PARTNER_LINKS.clickMechanic;
-const href = partner.url;
+const href = partner.buildLink ? partner.buildLink("", "ev-charger-preview") : partner.url;
 
 // A selection of the chargers ClickMechanic installs — names only; CM owns the
 // pricing on their own pages (clickmechanic.com/ev-charger-installation).

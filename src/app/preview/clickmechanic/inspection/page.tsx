@@ -19,7 +19,7 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 
 const CM = "#3c93f7";
 const partner = PARTNER_LINKS.clickMechanic;
-const href = partner.url;
+const href = partner.buildLink ? partner.buildLink("", "inspection-preview") : partner.url;
 
 const CHECKS = [
   { Icon: Wrench, t: "Under the bonnet", d: "Engine, fluids, belts, leaks and signs of past trouble." },

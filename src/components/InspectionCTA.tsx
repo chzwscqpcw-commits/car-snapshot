@@ -3,6 +3,7 @@
 import { ClipboardCheck } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 
 interface InspectionCTAProps {
   /** Context used as click_context (tracking) and Awin clickref (attribution). */
@@ -32,7 +33,7 @@ export default function InspectionCTA({ context, regNumber }: InspectionCTAProps
       </div>
 
       <p className="text-sm text-slate-300 leading-relaxed mb-4 ml-8">
-        A check confirms the paperwork — an inspection confirms the car. <strong className="text-slate-100">ClickMechanic</strong> sends a vetted mobile mechanic to wherever the car is for a fixed-price pre-purchase inspection, so you know what you&apos;re buying before you commit.
+        A check confirms the paperwork — an inspection confirms the car. <ClickMechanicLogo className="text-sm" /> sends a vetted mobile mechanic to wherever the car is for a fixed-price pre-purchase inspection, so you know what you&apos;re buying before you commit.
       </p>
 
       <div className="ml-8 flex flex-col sm:flex-row sm:items-center gap-3">
@@ -43,7 +44,7 @@ export default function InspectionCTA({ context, regNumber }: InspectionCTAProps
           onClick={() => trackPartnerClick("clickMechanic", context)}
           className="inline-flex items-center justify-center px-5 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded-lg transition-colors"
         >
-          Book a pre-purchase inspection &mdash; ClickMechanic &#8599;
+          Book a pre-purchase inspection &#8599;
         </a>
         <span className="text-xs text-slate-500">
           Fixed price &middot; 1,000+ vetted mechanics

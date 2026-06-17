@@ -210,6 +210,7 @@ import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
+import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import Reveal from "@/components/Reveal";
 
@@ -4903,16 +4904,22 @@ END:VEVENT
                 in its history). */}
             {(() => {
               if (!data) return null;
-              const carWarrantsInspection =
-                checklistRole === "buyer" ||
+              const hasMotConcern =
                 (!!motReadiness && !motReadiness.isMotExempt && motReadiness.advisoryCount > 0) ||
                 (data.motTests?.some((t) => t.testResult === "FAILED") ?? false);
-              if (!carWarrantsInspection) return null;
+              // Known buyer → direct pitch. Unknown intent but the car warrants a
+              // look → the self-segmenting widget (owners dismiss it via "It's
+              // mine", so we never pester people checking their own car).
+              const el =
+                checklistRole === "buyer" ? (
+                  <InspectionCTA context="buyer-after-negotiation" regNumber={data.registrationNumber} />
+                ) : hasMotConcern ? (
+                  <BuyerInspectionWidget context="results-buyer-inspection" regNumber={data.registrationNumber} />
+                ) : null;
+              if (!el) return null;
               return (
                 <DataReveal delay={480}>
-                  <div className="mb-8">
-                    <InspectionCTA context="buyer-after-negotiation" regNumber={data.registrationNumber} />
-                  </div>
+                  <div className="mb-8">{el}</div>
                 </DataReveal>
               );
             })()}

@@ -114,25 +114,33 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
     },
   },
-  // ClickMechanic — pre-purchase inspections + mobile-mechanic servicing/repairs
-  // (Awin merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
-  // Standard commission 2.5%; scott@clickmechanic.com offered to discuss a
-  // higher rate + customer offers once volume builds — worth revisiting.
+  // ClickMechanic — pre-purchase inspections + EV-charger installation (Awin
+  // merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
+  // Standard commission 2.5% (Scott offered to revisit once volume builds).
+  // 2026-06-17: Scott (scott@clickmechanic.com) signed off our mock-ups and sent
+  // two BESPOKE Awin deep links — tidd.ly shortlinks that already encode our
+  // affiliate ID + the deep destination — and cleared us to use ClickMechanic's
+  // logo + brand blue as-is. buildLink routes by placement context:
+  //   …includes "ev"/"charger" → EV-charger installation
+  //   …everything else         → pre-purchase inspection (the primary product)
+  // clickref is appended for per-placement attribution; our own partner_click
+  // `context` segments placements independently of whether Awin forwards it on a
+  // shortlink. OPEN with Scott (Stephen's Q4): reg PRE-FILL isn't confirmed on
+  // these pages, so we don't append a vrm param (links hit the generic page).
   clickMechanic: {
-    url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2F",
+    url: "https://tidd.ly/4fPT863",
     name: "ClickMechanic",
     isAffiliate: true,
     pending: false,
     description: "Book a pre-purchase inspection or repair with a vetted mobile mechanic",
     shortDescription: "Mechanic quotes",
-    // On activation you may swap the ued destination for ClickMechanic's
-    // approved pre-purchase-inspection deep link from their Awin creative.
     buildLink: (_reg: string, clickref?: string) => {
-      const destination = encodeURIComponent("https://www.clickmechanic.com/");
-      return withClickref(
-        `https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=${destination}`,
-        clickref,
-      );
+      const ctx = (clickref ?? "").toLowerCase();
+      const EV = "https://tidd.ly/4vRdVe1"; // EV-charger installation
+      const INSPECTION = "https://tidd.ly/4fPT863"; // pre-purchase inspection
+      // Match "ev" only as a standalone token (not inside "preview"/"review"/etc.)
+      const isEv = /(^|[^a-z])ev([^a-z]|$)/.test(ctx) || ctx.includes("charger");
+      return withClickref(isEv ? EV : INSPECTION, clickref);
     },
   },
   // We Buy Any Car — sell-your-car instant offer. NOTE: Webgains, NOT Awin.

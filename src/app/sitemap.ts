@@ -312,6 +312,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/ev-charger-installation",
+      lastModified: new Date("2026-06-17"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/pre-purchase-inspection",
+      lastModified: new Date("2026-06-17"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/repair-costs",
       lastModified: new Date("2026-05-12"),
       changeFrequency: "monthly",
