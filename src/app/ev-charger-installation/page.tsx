@@ -135,7 +135,7 @@ export default function EvChargerInstallationPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <div className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
         {/* HERO */}
         <section className="relative grid items-center gap-8 sm:grid-cols-2">
           <div
@@ -148,7 +148,7 @@ export default function EvChargerInstallationPage() {
               <Zap className="h-3.5 w-3.5" style={{ color: CM }} /> Home EV charging ·
               Installed by <ClickMechanicLogo className="text-xs" />
             </div>
-            <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Charge at home,{" "}
               <span className="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                 wake up full.
@@ -182,7 +182,7 @@ export default function EvChargerInstallationPage() {
             </p>
           </div>
 
-          <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-3xl border border-slate-800 shadow-2xl ring-1 ring-white/5 sm:max-w-none">
+          <div className="relative mx-auto aspect-[5/4] w-full max-w-[260px] overflow-hidden rounded-3xl border border-slate-800 shadow-2xl ring-1 ring-white/5 sm:aspect-square sm:max-w-none">
             <Image
               src="/woman-charging-car.webp"
               alt="Driver charging an electric car on their home driveway"
@@ -205,7 +205,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* SAVINGS STRIP */}
-        <section className="mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-900/30 p-6 sm:p-7">
+        <section className="mt-10 sm:mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-900/30 p-5 sm:p-7">
           <div className="grid items-center gap-6 sm:grid-cols-3">
             <div className="sm:col-span-1">
               <Eyebrow>The home-charging difference</Eyebrow>
@@ -239,7 +239,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* WHY HOME CHARGING */}
-        <section className="mt-14">
+        <section className="mt-10 sm:mt-14">
           <Eyebrow>Why fit one</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">The case for a home charger</h2>
           <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -250,7 +250,7 @@ export default function EvChargerInstallationPage() {
             ].map(({ Icon, t, d }) => (
               <div
                 key={t}
-                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-slate-700"
+                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition-colors hover:border-slate-700"
               >
                 <span
                   className="flex h-10 w-10 items-center justify-center rounded-xl"
@@ -266,18 +266,18 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* CHARGERS WE INSTALL — no pricing */}
-        <section className="mt-14">
+        <section className="mt-10 sm:mt-14">
           <Eyebrow>The kit</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">Chargers we install</h2>
           <p className="mt-1 text-sm text-slate-400">
             A selection of 7kW smart chargers — tethered or untethered, app-controlled.
             You&apos;ll pick the right one when you get your quote.
           </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {CHARGERS.map((c) => (
               <div
                 key={`${c.brand}-${c.name}`}
-                className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-all hover:-translate-y-0.5 hover:border-slate-600"
+                className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition-all hover:-translate-y-0.5 hover:border-slate-600"
               >
                 <Plug className="h-5 w-5" style={{ color: CM }} />
                 <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">{c.brand}</p>
@@ -298,12 +298,12 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="mt-14">
+        <section className="mt-10 sm:mt-14">
           <Eyebrow>Start to finish</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">How it works</h2>
-          <div className="mt-5 grid gap-4 sm:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {STEPS.map((s) => (
-              <div key={s.n} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+              <div key={s.n} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white"
                   style={{ backgroundColor: CM }}
@@ -318,10 +318,10 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* INCLUDED */}
-        <section className="mt-14 overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-900/30 p-6 sm:p-8">
+        <section className="mt-10 sm:mt-14 overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-900/30 p-5 sm:p-8">
           <Eyebrow>Every install</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">What you get</h2>
-          <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-4">
             {INCLUDED.map(({ Icon, t, d }) => (
               <div key={t}>
                 <Icon className="h-6 w-6" style={{ color: CM }} />
@@ -333,7 +333,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* FAQ */}
-        <section className="mt-14">
+        <section className="mt-10 sm:mt-14">
           <Eyebrow>Good to know</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">Common questions</h2>
           <div className="mt-5">
@@ -342,7 +342,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* FINAL CTA */}
-        <section className="relative mt-14 overflow-hidden rounded-3xl border p-8 text-center" style={{ borderColor: `${CM}55` }}>
+        <section className="relative mt-10 sm:mt-14 overflow-hidden rounded-3xl border p-6 text-center sm:p-8" style={{ borderColor: `${CM}55` }}>
           <div
             className="pointer-events-none absolute inset-0 opacity-20"
             style={{ background: `radial-gradient(circle at 50% 0%, ${CM}, transparent 60%)` }}
