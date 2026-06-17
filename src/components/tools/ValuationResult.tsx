@@ -2,9 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PoundSterling,
   Sparkles,
-  ArrowRight,
   Info,
   CircleCheck,
   Loader2,
@@ -37,8 +35,6 @@ import {
 } from "@/lib/valuation";
 import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
-import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackPartnerClick, trackEvent } from "@/lib/tracking";
 
 interface ValuationResultProps {
   vrm: string;
@@ -276,22 +272,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       <ConditionPanel condition={condition} setCondition={setCondition} />
       <SellCarCTA context="valuation-result" regNumber={vrm} />
       {/* Buyer slice: someone valuing a car they're considering buying is the
-          ideal full-history-report lead. Sits between the seller CTA (WBAC) and
-          the owner CTA (BMG MOT) so each journey has its natural next step. */}
-      <div className="mt-4">
+          ideal full-history-report + inspection lead. Generously spaced so the
+          sells never bunch together. (BMG servicing intentionally NOT shown on
+          valuation — it was one sell too many here.) */}
+      <div className="mt-6">
         <CarVerticalReportCTA variant="report" context="valuation-result-carvertical" regNumber={vrm} />
       </div>
-      {/* Valuation pages are a top Google entry point — point buyers at a
-          pre-purchase inspection (self-segments owners via "It's mine"). */}
-      <div className="mt-4">
+      <div className="mt-6">
         <BuyerInspectionWidget regNumber={vrm} context="valuation-result-buyer-inspection" />
       </div>
       {evOrHybrid && (
-        <div className="mt-4">
+        <div className="mt-6">
           <EvChargerPromptWidget source="valuation-result" />
         </div>
       )}
-      <BmgHook vrm={vrm} />
       <Disclaimer />
     </ToolResultLayout>
   );
@@ -816,62 +810,7 @@ function ConditionField({
   );
 }
 
-/* ─── BMG + disclaimer ────────────────────────────────────────────────── */
-
-function BmgHook({ vrm }: { vrm: string }) {
-  const href =
-    PARTNER_LINKS.bookMyGarageService.buildLink?.(vrm, "valuation-result-bmg-hook") ??
-    PARTNER_LINKS.bookMyGarageService.url;
-  const rel = getPartnerRel(PARTNER_LINKS.bookMyGarageService);
-  return (
-    <section className="mt-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">
-      <div className="flex items-start gap-3">
-        <PoundSterling className="h-5 w-5 flex-shrink-0 text-cyan-300 mt-0.5" />
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-white">
-            Service before selling — boosts your asking price
-          </h3>
-          <p className="mt-1 text-xs text-slate-400 leading-relaxed">
-            A fresh service stamp and a current MOT typically add £150–£500 to a private
-            sale. Compare local servicing prices for {vrm} with your reg pre-loaded.
-          </p>
-          <a
-            href={href}
-            target="_blank"
-            rel={rel}
-            onClick={() =>
-              trackPartnerClick("bookMyGarageService", "valuation-result-bmg-hook")
-            }
-            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 text-xs font-semibold text-cyan-100 transition-colors"
-          >
-            Compare service prices for {vrm}
-            <ArrowRight className="h-3 w-3" />
-          </a>
-          {/* Secondary path: valuation visitors arrive via "what's my car
-              worth" intent, but most own a car that needs an annual MOT.
-              Bridge that audience into the MOT booking flow with the reg
-              pre-filled. source=valuation_result keeps attribution distinct
-              from the service hook above. */}
-          <p className="mt-3 text-xs text-slate-400">
-            Just need an MOT?{" "}
-            <a
-              href={`/booking?vrm=${encodeURIComponent(vrm)}&type=mot&source=valuation_result`}
-              onClick={() =>
-                trackEvent("cheap_mot_compare_click", {
-                  has_reg: true,
-                  source: "valuation_result",
-                })
-              }
-              className="font-semibold text-cyan-300 underline-offset-2 hover:underline"
-            >
-              Compare cheap MOT prices for {vrm} &rarr;
-            </a>
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
+/* ─── Disclaimer ──────────────────────────────────────────────────────── */
 
 function Disclaimer() {
   return (
