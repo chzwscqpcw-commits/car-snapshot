@@ -23,8 +23,11 @@ export interface PartnerLink {
    *   for that same callsite so the dashboard event and the Awin commission
    *   line up. Strongly recommended on every callsite — gives per-CTA
    *   conversion attribution within Awin's admin.
+   * @param postcode Optional location postcode to pre-fill on the merchant page
+   *   (currently only ClickMechanic's inspection flow — it needs BOTH vrm +
+   *   postcode to skip data entry; other partners ignore it).
    */
-  buildLink?: (reg: string, clickref?: string) => string;
+  buildLink?: (reg: string, clickref?: string, postcode?: string) => string;
 }
 
 /**
@@ -138,7 +141,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     pending: false,
     description: "Book a pre-purchase inspection or repair with a vetted mobile mechanic",
     shortDescription: "Mechanic quotes",
-    buildLink: (reg: string, clickref?: string) => {
+    buildLink: (reg: string, clickref?: string, postcode?: string) => {
       const ctx = (clickref ?? "").toLowerCase();
       // Match "ev" only as a standalone token (not inside "preview"/"review"/etc.)
       const isEv = /(^|[^a-z])ev([^a-z]|$)/.test(ctx) || ctx.includes("charger");
@@ -146,12 +149,18 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       if (isEv) {
         dest = "https://www.clickmechanic.com/ev-charger-installation";
       } else {
-        // Co-branded partner landing page; pre-fill the reg via ?vrm= when we
-        // have it (postcode is entered on ClickMechanic's side).
+        // Co-branded partner landing page. ClickMechanic needs BOTH vrm +
+        // postcode to skip data entry (verified: vrm alone leaves the form
+        // empty; vrm+postcode jumps straight to "select inspection"). We pass
+        // whatever we have — postcode is an optional field our side; without it
+        // the user just lands on the entry form (graceful fallback).
         const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
-        dest = plate
-          ? `https://www.clickmechanic.com/partners/freeplatecheck?vrm=${plate}`
-          : "https://www.clickmechanic.com/partners/freeplatecheck";
+        const pc = (postcode ?? "").trim().toUpperCase();
+        const qs = [
+          plate && `vrm=${plate}`,
+          pc && `postcode=${pc}`,
+        ].filter(Boolean).join("&");
+        dest = `https://www.clickmechanic.com/partners/freeplatecheck${qs ? `?${qs}` : ""}`;
       }
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
