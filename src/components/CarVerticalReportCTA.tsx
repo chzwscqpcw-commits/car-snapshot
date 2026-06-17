@@ -112,10 +112,10 @@ export default function CarVerticalReportCTA({
   return (
     <div className="rounded-xl border border-[#1b54ff]/30 bg-gradient-to-br from-[#1b54ff]/10 to-slate-900/20 p-4 sm:p-5">
       {/* Heading + logo */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          <Icon className="h-5 w-5 shrink-0 text-[#1b54ff]" />
-          <h3 className="truncate text-sm font-semibold text-white sm:text-base">{cfg.heading}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-2">
+          <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#1b54ff]" />
+          <h3 className="text-sm font-semibold text-white sm:text-base">{cfg.heading}</h3>
         </div>
         <CarVerticalLogo className="shrink-0 text-xs" />
       </div>
