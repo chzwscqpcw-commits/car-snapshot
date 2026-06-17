@@ -205,7 +205,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* SAVINGS STRIP */}
-        <section className="mt-10 sm:mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-900/30 p-6 sm:p-7">
+        <section className="mt-10 sm:mt-12 overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-900/30 p-5 sm:p-7">
           <div className="grid items-center gap-6 sm:grid-cols-3">
             <div className="sm:col-span-1">
               <Eyebrow>The home-charging difference</Eyebrow>
@@ -250,7 +250,7 @@ export default function EvChargerInstallationPage() {
             ].map(({ Icon, t, d }) => (
               <div
                 key={t}
-                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-slate-700"
+                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition-colors hover:border-slate-700"
               >
                 <span
                   className="flex h-10 w-10 items-center justify-center rounded-xl"
@@ -277,7 +277,7 @@ export default function EvChargerInstallationPage() {
             {CHARGERS.map((c) => (
               <div
                 key={`${c.brand}-${c.name}`}
-                className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-all hover:-translate-y-0.5 hover:border-slate-600"
+                className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition-all hover:-translate-y-0.5 hover:border-slate-600"
               >
                 <Plug className="h-5 w-5" style={{ color: CM }} />
                 <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">{c.brand}</p>
@@ -303,7 +303,7 @@ export default function EvChargerInstallationPage() {
           <h2 className="mt-1 text-2xl font-bold text-white">How it works</h2>
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {STEPS.map((s) => (
-              <div key={s.n} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+              <div key={s.n} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white"
                   style={{ backgroundColor: CM }}
@@ -318,7 +318,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* INCLUDED */}
-        <section className="mt-10 sm:mt-14 overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-900/30 p-6 sm:p-8">
+        <section className="mt-10 sm:mt-14 overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-900/30 p-5 sm:p-8">
           <Eyebrow>Every install</Eyebrow>
           <h2 className="mt-1 text-2xl font-bold text-white">What you get</h2>
           <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-4">
@@ -342,7 +342,7 @@ export default function EvChargerInstallationPage() {
         </section>
 
         {/* FINAL CTA */}
-        <section className="relative mt-10 sm:mt-14 overflow-hidden rounded-3xl border p-8 text-center" style={{ borderColor: `${CM}55` }}>
+        <section className="relative mt-10 sm:mt-14 overflow-hidden rounded-3xl border p-6 text-center sm:p-8" style={{ borderColor: `${CM}55` }}>
           <div
             className="pointer-events-none absolute inset-0 opacity-20"
             style={{ background: `radial-gradient(circle at 50% 0%, ${CM}, transparent 60%)` }}
