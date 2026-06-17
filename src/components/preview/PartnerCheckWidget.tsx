@@ -10,6 +10,7 @@ import {
   Wrench,
   CheckCircle2,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
 
 // WORKING co-branded vehicle-check widget ClickMechanic could embed on their
@@ -31,7 +32,7 @@ type LookupData = {
   motTests?: Array<{
     expiryDate?: string;
     testResult?: string;
-    odometerValue?: { value: number; unit?: string };
+    odometer?: { value: number; unit?: string };
     rfrAndComments?: Array<{ text: string; type: string }>;
   }>;
 };
@@ -50,6 +51,7 @@ type View = {
   tax: { value: string; tone: Tone };
   mileage: string;
   advisories: string;
+  advisoryList: string[];
   needsLook: boolean;
 };
 
@@ -72,17 +74,21 @@ function deriveView(data: LookupData): View {
     }
   }
   const taxed = (data.taxStatus || "").toLowerCase().includes("tax");
-  const odo = latest?.odometerValue;
+  const odo = latest?.odometer;
   const mileage = odo?.value != null ? odo.value.toLocaleString("en-GB") + (odo.unit === "KM" ? " km" : "") : "—";
-  const advisoryCount = (latest?.rfrAndComments || []).filter((c) => c.type === "ADVISORY").length;
+  const advisoryList = (latest?.rfrAndComments || [])
+    .filter((c) => c.type === "ADVISORY")
+    .map((c) => c.text)
+    .filter(Boolean);
   const failed = latest?.testResult === "FAILED";
   return {
     vehicle: `${titleCase(data.make)} ${titleCase(data.model)}${data.yearOfManufacture ? ` · ${data.yearOfManufacture}` : ""}`.trim(),
     mot,
     tax: { value: data.taxStatus ? titleCase(data.taxStatus) : "—", tone: taxed ? "ok" : "warn" },
     mileage,
-    advisories: advisoryCount > 0 ? `${advisoryCount} at last MOT` : failed ? "Last test: fail" : "None",
-    needsLook: advisoryCount > 0 || failed,
+    advisories: advisoryList.length > 0 ? `${advisoryList.length} at last MOT` : failed ? "Last test: fail" : "None",
+    advisoryList,
+    needsLook: advisoryList.length > 0 || failed,
   };
 }
 
@@ -118,6 +124,7 @@ export default function PartnerCheckWidget() {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [view, setView] = useState<View | null>(null);
   const [errMsg, setErrMsg] = useState("");
+  const [openAdv, setOpenAdv] = useState(false);
 
   async function check(e: React.FormEvent) {
     e.preventDefault();
@@ -126,6 +133,7 @@ export default function PartnerCheckWidget() {
     setStatus("loading");
     setView(null);
     setErrMsg("");
+    setOpenAdv(false);
     try {
       const res = await fetch("/api/lookup", {
         method: "POST",
@@ -194,8 +202,32 @@ export default function PartnerCheckWidget() {
               <Row Icon={Calendar} label="MOT" value={view.mot.value} sub={view.mot.sub} tone={view.mot.tone} />
               <Row Icon={Receipt} label="Tax" value={view.tax.value} tone={view.tax.tone} />
               <Row Icon={Gauge} label="Mileage" value={view.mileage} sub={view.mileage !== "—" ? "latest MOT" : undefined} tone="neutral" />
-              <Row Icon={AlertTriangle} label="Advisories" value={view.advisories} tone={view.needsLook ? "warn" : "ok"} />
+              {view.advisoryList.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setOpenAdv((o) => !o)}
+                  aria-expanded={openAdv}
+                  className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-slate-50"
+                >
+                  <AlertTriangle className="h-4 w-4 shrink-0" style={{ color: toneColor.warn }} />
+                  <span className="w-20 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-500">Advisories</span>
+                  <span className="flex-1 text-right text-sm font-semibold" style={{ color: toneColor.warn }}>{view.advisories}</span>
+                  <ChevronDown className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${openAdv ? "rotate-180" : ""}`} />
+                </button>
+              ) : (
+                <Row Icon={AlertTriangle} label="Advisories" value={view.advisories} tone="ok" />
+              )}
             </div>
+            {openAdv && view.advisoryList.length > 0 && (
+              <ul className="mt-2 space-y-1.5 rounded-xl border border-amber-200 bg-amber-50 p-3">
+                {view.advisoryList.map((a, i) => (
+                  <li key={i} className="flex gap-2 text-xs leading-snug text-slate-700">
+                    <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                    <span>{a}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {/* CTAs → ClickMechanic's OWN services */}
             <div className="mt-4 space-y-2">
@@ -226,6 +258,19 @@ export default function PartnerCheckWidget() {
             <p className="mt-3 flex items-center gap-1.5 text-[11px] text-slate-400">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
               Vehicle data from DVLA &amp; DVSA, via Free Plate Check.
+            </p>
+            {/* OGL v3.0 attribution — required wherever we display the gov data */}
+            <p className="mt-1 text-[10px] leading-snug text-slate-400">
+              Contains public sector information licensed under the{" "}
+              <a
+                href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-slate-600"
+              >
+                Open Government Licence v3.0
+              </a>
+              .
             </p>
           </div>
         )}
