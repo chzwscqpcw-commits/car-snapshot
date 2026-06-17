@@ -117,18 +117,20 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // ClickMechanic — pre-purchase inspections + EV-charger installation (Awin
   // merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
   // Standard commission 2.5% (Scott offered to revisit once volume builds).
-  // 2026-06-17: Scott (scott@clickmechanic.com) signed off our mock-ups and sent
-  // two BESPOKE Awin deep links — tidd.ly shortlinks that already encode our
-  // affiliate ID + the deep destination — and cleared us to use ClickMechanic's
-  // logo + brand blue as-is. buildLink routes by placement context:
-  //   …includes "ev"/"charger" → EV-charger installation
-  //   …everything else         → pre-purchase inspection (the primary product)
-  // clickref is appended for per-placement attribution; our own partner_click
-  // `context` segments placements independently of whether Awin forwards it on a
-  // shortlink. OPEN with Scott (Stephen's Q4): reg PRE-FILL isn't confirmed on
-  // these pages, so we don't append a vrm param (links hit the generic page).
+  // 2026-06-17: Scott (scott@clickmechanic.com) signed off our mock-ups, cleared
+  // us to use ClickMechanic's logo + brand blue, and sent two bespoke Awin deep
+  // links as tidd.ly shortlinks. Those shortlinks resolve to (verified):
+  //   www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=<deep page>
+  // i.e. proper Awin tracking on OUR publisher id (2729598) for merchant 67328.
+  // BUT the tidd.ly hop SILENTLY DROPS an appended ?clickref, so per-placement
+  // attribution was lost in Awin. So we use the canonical awin1.com link the
+  // shortlink resolves to — same IDs + destination, one fewer hop, and &clickref
+  // is preserved (same format as our BookMyGarage links). buildLink routes by
+  // placement context: "ev"/"charger" → EV-charger install, else → inspection.
+  // Controlling the `ued` destination also means reg PRE-FILL is a one-liner once
+  // Scott confirms ClickMechanic's reg/VRM query param (Stephen's open Q4).
   clickMechanic: {
-    url: "https://tidd.ly/4fPT863",
+    url: "https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=https%3A%2F%2Fwww.clickmechanic.com%2Fpre-purchase-inspection",
     name: "ClickMechanic",
     isAffiliate: true,
     pending: false,
@@ -136,11 +138,15 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     shortDescription: "Mechanic quotes",
     buildLink: (_reg: string, clickref?: string) => {
       const ctx = (clickref ?? "").toLowerCase();
-      const EV = "https://tidd.ly/4vRdVe1"; // EV-charger installation
-      const INSPECTION = "https://tidd.ly/4fPT863"; // pre-purchase inspection
       // Match "ev" only as a standalone token (not inside "preview"/"review"/etc.)
       const isEv = /(^|[^a-z])ev([^a-z]|$)/.test(ctx) || ctx.includes("charger");
-      return withClickref(isEv ? EV : INSPECTION, clickref);
+      const dest = isEv
+        ? "https://www.clickmechanic.com/ev-charger-installation"
+        : "https://www.clickmechanic.com/pre-purchase-inspection";
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=67328&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
+        clickref,
+      );
     },
   },
   // We Buy Any Car — sell-your-car instant offer. NOTE: Webgains, NOT Awin.
