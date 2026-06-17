@@ -20,6 +20,8 @@ import {
 } from "@/components/tools/shared";
 import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
+import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -86,6 +88,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     "loading"
   );
   const [condition, setCondition] = useState<ConditionInputs | null>(null);
+
+  // Electric or hybrid → show the home EV-charger nudge (inclusive on purpose).
+  const evOrHybrid = /electric|hybrid/i.test(vehicle.fuelType ?? "");
 
   // ── Derived inputs ─────────────────────────────────────────────────────
   const newPrice = useMemo(() => {
@@ -276,6 +281,16 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       <div className="mt-4">
         <CarVerticalReportCTA variant="report" context="valuation-result-carvertical" regNumber={vrm} />
       </div>
+      {/* Valuation pages are a top Google entry point — point buyers at a
+          pre-purchase inspection (self-segments owners via "It's mine"). */}
+      <div className="mt-4">
+        <BuyerInspectionWidget regNumber={vrm} context="valuation-result-buyer-inspection" />
+      </div>
+      {evOrHybrid && (
+        <div className="mt-4">
+          <EvChargerPromptWidget source="valuation-result" />
+        </div>
+      )}
       <BmgHook vrm={vrm} />
       <Disclaimer />
     </ToolResultLayout>
