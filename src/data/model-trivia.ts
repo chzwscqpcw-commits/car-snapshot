@@ -121,6 +121,11 @@ export const modelTrivia: Record<string, string[]> = {
   "CITROEN|2CV": [
     "The Citroën 2CV was designed to carry farmers across fields without breaking the eggs — and stayed in production for 42 years.",
   ],
+  "CITROEN|AX": [
+    "Citroën's launch advert famously sent an AX speeding along the Great Wall of China — a stunt that played on just how astonishingly light the car was, with some versions weighing little more than 600kg.",
+    "That featherweight build made the diesel AX one of the most frugal cars of its era, regularly returning well over 60mpg.",
+    "The pocket-sized AX GT and GTi turned the budget hatch into a giant-killing hot hatch that could embarrass far pricier machinery.",
+  ],
   "CITROEN|BERLINGO": [
     "The 1996 Berlingo Coupe de Plage concept was a roofless beach buggy with two built-in deckchairs bolted into the back.",
     "Citroën's stylists didn't actually design the Berlingo — it arrived from PSA's advanced studios, then became both the Berlingo and the Peugeot Partner.",
@@ -170,6 +175,10 @@ export const modelTrivia: Record<string, string[]> = {
     "It was the first-ever Renault model to launch outside Europe, debuting in Brazil in December 2007 before reaching UK showrooms.",
     "Though sold as a Romanian Dacia, the Sandero was actually designed at Renault's Technocentre near Paris with help from engineers in Brazil.",
   ],
+  "DAEWOO|MATIZ": [
+    "The Matiz started life as a city-car design by Giorgetto Giugiaro's Italdesign that had been turned down by Fiat before Daewoo snapped it up.",
+    "Daewoo shook up the British market by selling direct to buyers — fixed prices, no haggling and free servicing — cutting out traditional dealers altogether.",
+  ],
   "FIAT|500": [
     "The original Fiat 500 — the 'Cinquecento' — launched in 1957; the modern 500 arrived in 2007 to mark its 50th anniversary.",
     "The all-electric Fiat 500e is built in Turin, Italy.",
@@ -182,6 +191,11 @@ export const modelTrivia: Record<string, string[]> = {
     "Designed by the legendary Giorgetto Giugiaro, the Punto won the Compasso d'Oro — Italy's most prestigious industrial design prize, usually given to furniture and gadgets.",
     "The Punto was crowned 1995 European Car of the Year, comfortably beating the Volkswagen Polo by 370 points to 292.",
     "A four-wheel-drive Grande Punto Abarth S2000 rally car packed 280bhp and racked up multiple European Rally Championship titles between 2006 and 2011.",
+  ],
+  "FIAT|UNO": [
+    "Penned by Giorgetto Giugiaro, the Uno was crowned European Car of the Year in 1984 and went on to sell more than eight million worldwide.",
+    "Its tall, boxy \"one-box\" shape was a packaging masterclass that made it far roomier inside than its little footprint suggested, influencing superminis for a generation.",
+    "The hot Uno Turbo i.e. was Fiat's turbocharged answer to the Peugeot 205 GTI, complete with an intercooler and a boost gauge.",
   ],
   "FORD|ANGLIA": [
     "The Anglia's quirky backward-slanting rear window kept itself rain-free and was inspired by a feature on the luxury Lincoln Continental.",
@@ -559,6 +573,10 @@ export const modelTrivia: Record<string, string[]> = {
     "The same van has been badged as a Dodge, a Freightliner and even a Volkswagen Crafter, depending on country and era.",
     "When it launched in 1995 it was named International Van of the Year and gave its name to an entire class of vehicle.",
   ],
+  "MG|MAESTRO": [
+    "Early MG Maestros came with a \"talking dashboard\" — a synthesised voice that nagged you in dozens of different phrases about everything from low fuel to an open door, until drivers found it so irritating it was dropped.",
+    "The Tickford-built MG Maestro Turbo of 1989 could crack 0-60mph in under seven seconds, making the humble-looking hatch one of the fastest British cars of its day.",
+  ],
   "MG|MG3": [
     "The last MG ever assembled in Britain was a black MG3 that rolled off the Longbridge line in July 2016, bolted together from Chinese kits.",
     "With 192bhp on tap, the MG3 Hybrid+ is the quickest car of its type, hitting 0-62mph in 8 seconds — proper hot-hatch territory for a supermini.",
@@ -683,6 +701,10 @@ export const modelTrivia: Record<string, string[]> = {
     "The Sunderland-built Qashqai basically invented the modern crossover, spawning over 20 copycat rivals after its 2007 launch.",
     "The Qashqai only exists because Nissan scrapped a planned conventional Almera replacement, gambling instead on a then-unproven \"mini-Murano\" hatch-meets-SUV.",
     "The Nissan Qashqai is built in Sunderland and helped kick-start the UK's crossover boom when it launched in 2007.",
+  ],
+  "NISSAN|SUNNY": [
+    "The everyday Sunny was a byword for sensible, unburstable reliability — but Nissan also built a wild, turbocharged GTI-R version as a rally homologation special, with four-wheel drive and around 220bhp.",
+    "The GTI-R's huge power in such a compact shell earned it cult status, even though Nissan's World Rally campaign with it proved short-lived — it made a better road-going pocket rocket than a rally winner.",
   ],
   "NISSAN|X TRAIL": [
     "The first X-Trail put its instruments in the centre of the dashboard, not behind the wheel — drivers hated it, so Nissan moved them back.",
@@ -932,6 +954,10 @@ export const modelTrivia: Record<string, string[]> = {
     "A race-spec C-HR tackled the brutal 24 Hours of Nürburgring in 2016, finishing third in its class.",
     "When designers pitched options, Toyota's bosses deliberately picked the craziest wild-card sketch — surprising even the team that drew it.",
   ],
+  "TOYOTA|CARINA": [
+    "The Carina E was the first car Toyota ever built in Britain, rolling out of its new Burnaston plant in Derbyshire from 1992 — the \"E\" stood for Europe.",
+    "That Burnaston factory went on to build the Avensis, Corolla and Auris, growing into one of the UK's biggest car plants.",
+  ],
   "TOYOTA|COROLLA": [
 
   ],
@@ -972,6 +998,10 @@ export const modelTrivia: Record<string, string[]> = {
     "In 2000 the Yaris became the first ever Toyota to win European Car of the Year.",
     "Toyota's rally Yaris swept every available title in its final 2021 WRC season, winning nine of the twelve rounds.",
     "The Toyota Yaris was European Car of the Year in 2000 and again in 2021.",
+  ],
+  "TRIUMPH|ACCLAIM": [
+    "The Acclaim was the first fruit of British Leyland's tie-up with Honda — essentially a Honda Ballade built under licence at Cowley — and it turned out to be the very last car ever to wear the Triumph badge.",
+    "After years of British Leyland quality troubles, the Honda-engineered Acclaim won praise for a reliability the Triumph name hadn't enjoyed in years.",
   ],
   "TRIUMPH|DOLOMITE": [
     "The Dolomite Sprint was the world's first mass-produced car with a 16-valve engine — its clever single-camshaft head won a 1974 British Design Council award.",
