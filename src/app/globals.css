@@ -250,6 +250,22 @@ a {
   background: rgba(51, 65, 85, 0.2);
 }
 
+.blog-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* Photo-credit line — the italic paragraph directly after an image. */
+.blog-content p:has(> img) + p > em:only-child {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #64748b; /* slate-500 */
+}
+
 /* SiteNav wordmark reveal — sweeps in left-to-right with a cyan shimmer pass.
    Used when the homepage transitions from entry state (no wordmark) to result
    state (wordmark visible). Reduce-motion users get an instant fade. */
