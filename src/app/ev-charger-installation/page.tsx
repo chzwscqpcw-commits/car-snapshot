@@ -370,6 +370,16 @@ export default function EvChargerInstallationPage() {
             </p>
           </div>
         </section>
+
+        {/* Route back to the free core product — this page is otherwise a
+            monetisation dead-end for the wedge (free check + email capture). */}
+        <p className="mt-8 text-center text-sm text-slate-400">
+          Buying or running an EV?{" "}
+          <Link href="/car-check" className="text-slate-200 underline hover:text-white">
+            Check any UK car free
+          </Link>{" "}
+          — MOT history, tax, mileage, recalls and a valuation, no signup.
+        </p>
       </div>
     </main>
   );

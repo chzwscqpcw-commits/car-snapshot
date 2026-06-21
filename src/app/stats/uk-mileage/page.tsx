@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import CiteThisData from "@/components/stats/CiteThisData";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
@@ -210,6 +211,12 @@ export default function UkMileagePage() {
 
         {/* CTA */}
         <ConversionWidget headline="Check any vehicle's mileage history" subtext="Worried about clocking? Enter a reg plate to see full MOT mileage records and spot any red flags instantly." />
+
+        {/* Clocking-themed history check — the free MOT timeline can't cross-check
+            rollbacks between tests or before import; carVertical can. */}
+        <div className="my-10">
+          <CarVerticalReportCTA variant="mileage" context="stats-uk-mileage" />
+        </div>
 
         {/* Related stats */}
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}

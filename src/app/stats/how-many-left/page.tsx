@@ -3,6 +3,7 @@ import Link from "next/link";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
 import HowManyLeftExplorer from "@/components/stats/HowManyLeftExplorer";
@@ -298,6 +299,12 @@ export default function HowManyLeftPage() {
           headline="Check any car by reg"
           subtext="MOT history, tax, mileage, valuation, recalls and rarity — free, no signup."
         />
+
+        {/* Rarity readers are buyer/value-curious — offer the full history check
+            for anything changing hands. */}
+        <div className="my-10">
+          <CarVerticalReportCTA variant="report" context="stats-how-many-left" />
+        </div>
 
         <StatsRelated exclude="how-many-left" />
       </div>

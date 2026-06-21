@@ -3,6 +3,7 @@ import StatsHeroSection from "@/components/stats/StatsHeroSection";
 import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import CarTheftCharts from "@/components/stats/CarTheftCharts";
@@ -218,6 +219,12 @@ export default function CarTheftPage() {
 
         {/* CTA */}
         <ConversionWidget headline="Check your vehicle's theft risk" subtext="Enter a reg plate to see theft rates for your make and model, plus MOT history, tax status, and more." />
+
+        {/* Buying a used car? A stolen/cloned + write-off history check is the
+            most on-topic paid extra for a theft-stats reader. */}
+        <div className="my-10">
+          <CarVerticalReportCTA variant="report" context="stats-car-theft" />
+        </div>
 
         {/* Related stats */}
         <StatsRelated exclude="car-theft" />
