@@ -41,6 +41,7 @@ import {
   type OccupationBand,
 } from "@/lib/insurance-estimate";
 import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -236,6 +237,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         setInputs={setInsuranceInputs}
         insurance={insurance}
       />
+      {/* Running costs are a "should I buy this car?" signal — offer the full
+          history check (finance/write-off/stolen/mileage) at that buyer intent. */}
+      <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" />
       <Disclaimer />
     </ToolResultLayout>
   );

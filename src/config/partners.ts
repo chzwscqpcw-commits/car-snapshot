@@ -367,7 +367,7 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
     },
   },
   {
-    keywords: ["mot check", "mot history", "mot test", "mot expiry", "mot due", "mot reminder", "mot cost", "mot fail"],
+    keywords: ["mot check", "mot history", "mot test", "mot expiry", "mot due", "mot reminder", "mot cost", "mot fail", "mot camera", "driving without mot"],
     cta: {
       path: "/mot-reminder",
       label: "Set a free MOT reminder",

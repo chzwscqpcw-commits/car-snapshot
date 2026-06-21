@@ -24,8 +24,30 @@ const allStats: StatsPage[] = [
   { slug: "how-many-left", title: "How Many Are Left?", description: "UK car survivors & near-extinct models by reg" },
 ];
 
+// Topic-aware related sets — keyed by the current page's slug, in priority
+// order. Slugs not listed fall back to the first three other stats pages.
+// Keeps cross-linking topically relevant (helps both UX and internal-link SEO)
+// instead of always surfacing the same three.
+const RELATED: Record<string, string[]> = {
+  "car-theft": ["popular-cars", "how-many-left", "used-car-prices"],
+  "uk-mileage": ["used-car-prices", "cost-of-motoring", "most-reliable-cars"],
+  "how-many-left": ["popular-cars", "car-registrations", "used-car-prices"],
+  "most-reliable-cars": ["mot-pass-rates", "used-car-prices", "uk-mileage"],
+  "used-car-prices": ["most-reliable-cars", "cost-of-motoring", "how-many-left"],
+  "fuel-prices": ["cost-of-motoring", "fuel-type-comparison", "road-tax-history"],
+  "road-tax-history": ["cost-of-motoring", "fuel-prices", "ev-adoption"],
+};
+
+const bySlug = new Map(allStats.map((s) => [s.slug, s] as const));
+
 export default function StatsRelated({ exclude }: { exclude: string }) {
-  const cards = allStats.filter((s) => s.slug !== exclude).slice(0, 3);
+  const curated = RELATED[exclude]
+    ?.map((slug) => bySlug.get(slug))
+    .filter((s): s is StatsPage => Boolean(s) && s!.slug !== exclude);
+  const cards =
+    curated && curated.length > 0
+      ? curated.slice(0, 3)
+      : allStats.filter((s) => s.slug !== exclude).slice(0, 3);
   return (
     <div className="my-10">
       <h3 className="mb-4 text-lg font-semibold text-gray-100">
