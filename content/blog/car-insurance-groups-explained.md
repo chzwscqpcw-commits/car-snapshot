@@ -203,6 +203,10 @@ The legal principle is simple: anything fitted to the car that was not there whe
 
 When you are looking at a used car, do not take the seller's word that it is unmodified. Look for non-standard exhaust tips, aftermarket wheels, sunken stance, a glowing aftermarket head unit, or tell-tale wiring under the dashboard. Our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying) walks through what to inspect, and the broader [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) covers the items that catch most buyers out — insurance step-ups are one of the biggest.
 
+The other thing a visual inspection can't reveal is the car's recorded history — and some of it directly affects insurance. A previous write-off (a Cat S or Cat N marker) can make a car harder to insure and pricier to cover, even after a sound repair, and an outstanding finance agreement or a mileage discrepancy is worth knowing before you commit. Those records sit in private databases, not the free government feeds, so they only surface on a paid history report such as a [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`). It's one of the few paid checks worth doing on any car costing more than a few hundred pounds.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## How insurers actually use the group
 
 This is the part most guides skip. The group is one input, not the answer. Two drivers in identical group 15 cars can be quoted £450 and £1,800 — both correct quotes — because everything else around the car is different.
