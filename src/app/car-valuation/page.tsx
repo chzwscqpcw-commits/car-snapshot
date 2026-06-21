@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
-import ValuationConversionWidget from "@/components/ValuationConversionWidget";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import ValuationHeroReg from "@/components/ValuationHeroReg";
 import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
@@ -282,9 +282,8 @@ export default async function CarValuationPage({
             </div>
           </div>
 
-          {/* A/B test valuation_hero_reg_v1: control renders the mobile search
-              cue (points down to the reg box below); treatment renders a reg box
-              in the hero itself. */}
+          {/* Hero reg box (graduated winner of valuation_hero_reg_v1). The lower
+              ConversionWidget hides its own lookup so there's no duplicate. */}
           <ValuationHeroReg targetPath="/car-valuation" />
           <TrustBar className="mt-6" />
         </div>
@@ -292,11 +291,12 @@ export default async function CarValuationPage({
 
       {/* --- MAIN: Reg lookup + reminder bridge --- */}
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-10 sm:py-10">
-        <ValuationConversionWidget
+        <ConversionWidget
           headline="Get your free valuation now"
           subtext="Enter any UK registration number to see an estimated value range, plus full vehicle history, MOT records and more — no signup."
           reminderHeadline="Already own this car? Protect its value with a free MOT reminder"
           targetPath="/car-valuation"
+          showLookup={false}
         />
 
         <StatCallouts

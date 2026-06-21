@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import MobileSearchCue from "@/components/MobileSearchCue";
+import ValuationHeroReg from "@/components/ValuationHeroReg";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -207,7 +207,7 @@ export default async function ValueMyCarPage({
                   </div>
                 </div>
                 <p className="mt-4 text-base text-slate-300 leading-relaxed">
-                  Type your reg above. We pull live UK market data, your
+                  Enter your reg below. We pull live UK market data, your
                   actual MOT-recorded mileage, and a calibrated depreciation
                   model to estimate a real-world value range — instantly,
                   with nothing held back behind a signup wall.
@@ -260,7 +260,10 @@ export default async function ValueMyCarPage({
                 </div>
               </div>
 
-              <MobileSearchCue />
+              {/* Hero reg box — rolled out from the concluded valuation_hero_reg_v1
+                  test (which won on /car-valuation). Lower widget hides its
+                  duplicate lookup (showLookup={false}). */}
+              <ValuationHeroReg targetPath="/value-my-car" />
             </div>
           </div>
 
@@ -271,6 +274,7 @@ export default async function ValueMyCarPage({
               subtext="Enter any UK registration. We'll show the estimated value, full MOT history, tax status, recall record and more. No email needed."
               reminderHeadline="Own this car? Protect its value with a free MOT reminder"
               targetPath="/value-my-car"
+              showLookup={false}
             />
 
             <StatCallouts
