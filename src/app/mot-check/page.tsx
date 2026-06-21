@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import MobileSearchCue from "@/components/MobileSearchCue";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MotResult from "@/components/tools/MotResult";
@@ -269,10 +269,11 @@ export default async function MotCheckPage({
             </div>
           </div>
 
-          <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
+          {/* Hero reg box (graduated valuation_hero_reg_v1 winner). Lower widget
+              hides its duplicate lookup (showLookup={false}). */}
+          <HeroRegSearch targetPath="/mot-check" ctaLabel="Check MOT history" className="mt-6" />
 
-          {/* Mobile-only A/B/C test affordance pointing to the search input */}
-          <MobileSearchCue />
+          <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
         </div>
       </div>
 
@@ -282,6 +283,7 @@ export default async function MotCheckPage({
           subtext="Enter any UK reg plate to see every MOT result, advisory, and mileage reading since 2005 — free and instant."
           reminderHeadline="Never miss your MOT again"
           targetPath="/mot-check"
+          showLookup={false}
         />
 
         <StatCallouts

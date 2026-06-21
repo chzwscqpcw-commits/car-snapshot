@@ -157,6 +157,8 @@ export default async function UlezCheckPage({
         <>
       <LandingHero
         h1="Free ULEZ Compliance Check"
+        searchTargetPath="/ulez-check"
+        searchCtaLabel="Check ULEZ status"
         subtitle="Instantly check if your car meets London ULEZ and other UK Clean Air Zone standards — see if you'll pay the £12.50/day charge. Free, no signup."
         badgeText="Free · No signup · Real DVLA emissions data"
         previewImage="ulez-check.png"
@@ -234,6 +236,7 @@ export default async function UlezCheckPage({
           subtext="Enter a reg plate to see if your vehicle meets ULEZ standards — plus full MOT history, tax status, and more."
           reminderHeadline="Stay on top of your MOT"
           targetPath="/ulez-check"
+          showLookup={false}
         />
 
         <StatCallouts

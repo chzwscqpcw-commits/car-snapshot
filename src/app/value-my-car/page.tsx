@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import ValuationHeroReg from "@/components/ValuationHeroReg";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -263,7 +263,7 @@ export default async function ValueMyCarPage({
               {/* Hero reg box — rolled out from the concluded valuation_hero_reg_v1
                   test (which won on /car-valuation). Lower widget hides its
                   duplicate lookup (showLookup={false}). */}
-              <ValuationHeroReg targetPath="/value-my-car" />
+              <HeroRegSearch targetPath="/value-my-car" ctaLabel="Value my car free" />
             </div>
           </div>
 

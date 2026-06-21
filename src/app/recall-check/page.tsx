@@ -151,6 +151,8 @@ export default async function RecallCheckPage({
         <>
       <LandingHero
         h1="Free Car Recall Check"
+        searchTargetPath="/recall-check"
+        searchCtaLabel="Check for recalls"
         subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
         badgeText="Free · No signup · DVSA recall database"
         previewImage="recall-check.png"
@@ -227,6 +229,7 @@ export default async function RecallCheckPage({
           subtext="Enter a reg plate to see known recalls for your make and model, plus full MOT history and vehicle health data."
           reminderHeadline="Never miss your MOT"
           targetPath="/recall-check"
+          showLookup={false}
         />
 
         <StatCallouts

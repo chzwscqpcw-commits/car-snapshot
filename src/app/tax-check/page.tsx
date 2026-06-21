@@ -159,6 +159,8 @@ export default async function TaxCheckPage({
         <>
       <LandingHero
         h1="Free Car Tax Check"
+        searchTargetPath="/tax-check"
+        searchCtaLabel="Check tax status"
         subtitle="Real-time DVLA tax status for any UK vehicle — see if it's taxed, SORN, or due. Plus VED band and annual cost. Free, instant, no signup."
         badgeText="Free · No signup · Real-time DVLA tax data"
         previewImage="tax-check.png"
@@ -227,6 +229,7 @@ export default async function TaxCheckPage({
           subtext="Enter any UK reg plate to see current tax status, VED band, and MOT expiry — free and instant."
           reminderHeadline="Never miss your MOT or tax renewal"
           targetPath="/tax-check"
+          showLookup={false}
         />
 
         <StatCallouts
