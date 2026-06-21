@@ -100,7 +100,7 @@ export const EXPERIMENTS: Record<string, string> = {
   // valuation_hero_reg_v1 CONCLUDED 2026-06-21 — treatment "b" (reg box in the
   // hero, above the fold) beat control "a" decisively: reg_search conversion
   // 39.0% → 52.8% (+35% relative, z=4.74, n=1,181 exposures). Variant b was
-  // graduated to the permanent ValuationHeroReg layout on /car-valuation AND
+  // graduated to the permanent HeroRegSearch layout on /car-valuation AND
   // rolled out to /value-my-car. Historical events stay in Supabase.
 };
 

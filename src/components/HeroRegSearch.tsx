@@ -6,15 +6,26 @@ import { useRouter } from "next/navigation";
 import { trackConversion } from "@/lib/tracking";
 
 /**
- * Hero reg box for the valuation pages — places the reg lookup in the hero
- * itself (above the fold) rather than a scroll away.
+ * Hero reg box — places the reg lookup in the page hero (above the fold) rather
+ * than a scroll away. This is the graduated winner of the `valuation_hero_reg_v1`
+ * A/B test (reg_search conversion 39.0% → 52.8%, +35% relative, z=4.74), now the
+ * shared pattern across every tool landing page.
  *
- * This is the graduated winner of the concluded `valuation_hero_reg_v1` A/B
- * test: treatment "b" lifted reg_search conversion 39.0% → 52.8% (+35% relative,
- * z=4.74, n=1,181 exposures), so it shipped as the permanent layout. Used on
- * /car-valuation and /value-my-car; the lower ConversionWidget on those pages
- * passes `showLookup={false}` so there's no duplicate reg box.
+ * Pre-flights the DVLA lookup before navigating, so a bad reg shows an inline
+ * error instead of landing on a broken result page. On success it pushes to
+ * `targetPath?vrm=…` (the tool's own result view) and fires `reg_search` with
+ * `source:"hero"` so hero searches are distinguishable from the widget below.
  */
+
+interface HeroRegSearchProps {
+  /** Where a successful lookup navigates — the tool's own path (e.g. /tax-check)
+   *  so the result stays in that tool, or "/" for the full report. */
+  targetPath?: string;
+  /** Submit-button label — match the tool's intent (e.g. "Check tax status"). */
+  ctaLabel?: string;
+  /** Optional extra classes on the root (e.g. margin overrides). */
+  className?: string;
+}
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -24,11 +35,11 @@ function isValidReg(reg: string): boolean {
   return cleaned.length >= 2 && cleaned.length <= 8;
 }
 
-export default function ValuationHeroReg({
-  targetPath = "/car-valuation",
-}: {
-  targetPath?: string;
-}) {
+export default function HeroRegSearch({
+  targetPath = "/",
+  ctaLabel = "Check this car free",
+  className = "",
+}: HeroRegSearchProps) {
   const router = useRouter();
   const [reg, setReg] = useState("");
   const [error, setError] = useState("");
@@ -81,7 +92,9 @@ export default function ValuationHeroReg({
   }
 
   return (
-    <div className="mt-5 rounded-xl border border-blue-700/50 bg-slate-900/50 p-3 sm:p-4 sm:max-w-xl">
+    <div
+      className={`mt-5 rounded-xl border border-blue-700/50 bg-slate-900/50 p-3 sm:p-4 sm:max-w-xl ${className}`}
+    >
       <div className="flex flex-col gap-2.5 sm:flex-row sm:items-stretch">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -114,7 +127,7 @@ export default function ValuationHeroReg({
           ) : (
             <>
               <Search className="h-4 w-4" />
-              Value my car free
+              {ctaLabel}
             </>
           )}
         </button>

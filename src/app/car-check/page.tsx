@@ -136,6 +136,8 @@ export default function CarCheckPage() {
 
       <LandingHero
         h1="Free Car Check"
+        searchTargetPath="/"
+        searchCtaLabel="Check this car free"
         subtitle="Look up any UK vehicle by registration — DVLA spec, MOT history, tax, mileage, recalls and more. Free, instant, no signup required."
         badgeText="Free · No signup · Official DVLA data"
         bullets={[
@@ -201,6 +203,7 @@ export default function CarCheckPage() {
           headline="Check a vehicle now"
           subtext="Enter any UK registration number to see full vehicle details, MOT history, tax status, mileage, and more — instantly."
           reminderHeadline="Keep on top of your MOT"
+          showLookup={false}
         />
 
         <StatCallouts

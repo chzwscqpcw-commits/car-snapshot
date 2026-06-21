@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import MobileSearchCue from "@/components/MobileSearchCue";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -265,7 +265,9 @@ export default async function HowMuchIsMyCarWorthPage({
                 </div>
               </div>
 
-              <MobileSearchCue />
+              {/* Hero reg box (graduated valuation_hero_reg_v1 winner). Lower
+                  widget hides its duplicate lookup (showLookup={false}). */}
+              <HeroRegSearch targetPath="/how-much-is-my-car-worth" ctaLabel="Value my car free" />
             </div>
           </div>
 
@@ -276,6 +278,7 @@ export default async function HowMuchIsMyCarWorthPage({
               subtext="Enter any UK registration to see an estimated value range, plus full MOT history, tax status and more. No signup, no email."
               reminderHeadline="Own this car? Protect its value with a free MOT reminder"
               targetPath="/how-much-is-my-car-worth"
+              showLookup={false}
             />
 
             <StatCallouts

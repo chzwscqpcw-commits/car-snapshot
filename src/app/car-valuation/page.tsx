@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import ValuationHeroReg from "@/components/ValuationHeroReg";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -284,7 +284,7 @@ export default async function CarValuationPage({
 
           {/* Hero reg box (graduated winner of valuation_hero_reg_v1). The lower
               ConversionWidget hides its own lookup so there's no duplicate. */}
-          <ValuationHeroReg targetPath="/car-valuation" />
+          <HeroRegSearch targetPath="/car-valuation" ctaLabel="Value my car free" />
           <TrustBar className="mt-6" />
         </div>
       </div>

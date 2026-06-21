@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import MobileSearchCue from "@/components/MobileSearchCue";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -267,7 +267,9 @@ export default async function CarValuationNoSignupPage({
                 </div>
               </div>
 
-              <MobileSearchCue />
+              {/* Hero reg box (graduated valuation_hero_reg_v1 winner). Lower
+                  widget hides its duplicate lookup (showLookup={false}). */}
+              <HeroRegSearch targetPath="/car-valuation-no-signup" ctaLabel="Value my car free" />
             </div>
           </div>
 
@@ -278,6 +280,7 @@ export default async function CarValuationNoSignupPage({
               subtext="Enter any UK registration. You'll see the value, plus MOT history, tax status, ULEZ check and more. No form to fill, no email to give."
               reminderHeadline="Own this car? Free MOT reminder — opt in here only if you want it."
               targetPath="/car-valuation-no-signup"
+              showLookup={false}
             />
 
             <StatCallouts
