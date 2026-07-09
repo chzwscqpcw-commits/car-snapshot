@@ -289,7 +289,7 @@ export default async function TaxCheckPage({
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="tax-check" />
           </section>
 
           <section>

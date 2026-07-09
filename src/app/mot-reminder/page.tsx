@@ -275,7 +275,7 @@ export default async function MotReminderPage({
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="mot-reminder" />
           </section>
 
           <section>

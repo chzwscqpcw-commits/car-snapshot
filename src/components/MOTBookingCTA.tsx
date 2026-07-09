@@ -16,7 +16,18 @@ interface MOTBookingCTAProps {
    * measure which placement actually converts. Defaults to omitted so
    * existing call sites preserve their original click_context strings.
    */
-  placement?: 'specs' | 'health' | 'next-steps';
+  placement?:
+    | 'specs'
+    | 'health'
+    | 'next-steps'
+    | 'tax-check'
+    | 'mot-check'
+    | 'running-costs'
+    | 'cheap-mot-mid'
+    | 'cheap-mot-foot'
+    | 'car-check'
+    | 'mot-prices-town'
+    | 'mot-reminder';
 }
 
 const COPY: Record<

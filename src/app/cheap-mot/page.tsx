@@ -244,7 +244,7 @@ export default function CheapMotPage() {
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="cheap-mot-mid" />
           </section>
 
           <section>
@@ -336,7 +336,7 @@ export default function CheapMotPage() {
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="cheap-mot-foot" />
           </section>
 
           <section>
