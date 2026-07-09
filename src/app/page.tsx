@@ -4037,8 +4037,12 @@ END:VEVENT
                 replaced the old expired/expiring banner + the reminder
                 chip. Adapts to MOT urgency: BMG primary + reminder
                 secondary for expired/due-soon, reminder-only for far.
-                Lives above the SectionGroups for 100% visibility. */}
-            {isOver3Years && data && (
+                Lives above the SectionGroups for 100% visibility.
+                Shown for ALL cars (not just >3yr): under-3yr vehicles land on
+                the banner's "no-record" state → a first-MOT reminder ask, which
+                is exactly the cohort that most needs one. The old isOver3Years
+                gate hid the reminder from every new car (a signup leak). */}
+            {data && (
               <DataReveal delay={45}>
                 <MotActionBanner
                   motStatus={data.motStatus}
@@ -5244,6 +5248,20 @@ END:VEVENT
 
                   </Reveal>
                   )}
+
+                  {/* carVertical clocking/history CTA — placed beside the
+                      mileage history it verifies (audit principle: put the paid
+                      affiliate next to the data that motivates it). Far higher
+                      exposure here than the old Next-Steps slot (~4% reach).
+                      Sits AFTER the free MOT data, so it reads as "go deeper",
+                      not a paywall. Reg + 20%-off coupon pre-fill via buildLink. */}
+                  <div className="mt-6">
+                    <CarVerticalReportCTA
+                      regNumber={data.registrationNumber}
+                      context="mot-history-carvertical"
+                      variant="mileage"
+                    />
+                  </div>
                 </div>
               </DataReveal>
             )}
@@ -5297,18 +5315,9 @@ END:VEVENT
               </div>
             )}
 
-            {/* CARVERTICAL FULL-HISTORY REPORT — the optional paid "go further"
-                step, placed AFTER the free PDF so it reads as an upsell, not as
-                a paywall on the report. Buyer-intent only; renders null until
-                carVertical is live (see partners.ts). Preview at
-                /preview/carvertical. */}
-            {data && (
-              <DataReveal delay={770}>
-                <div className="mb-8">
-                  <CarVerticalReportCTA regNumber={data.registrationNumber} context="report-carvertical-nextsteps" />
-                </div>
-              </DataReveal>
-            )}
+            {/* carVertical full-history CTA MOVED up into the MOT History
+                section (beside the mileage data), where it gets far more than
+                the ~4% who reach Next Steps. It no longer renders here. */}
 
             {/* BUYING CHECKLIST */}
             <DataReveal delay={780}>
