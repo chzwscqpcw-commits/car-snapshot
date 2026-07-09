@@ -272,7 +272,7 @@ export default function CarCheckPage() {
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="car-check" />
           </section>
 
           <section>

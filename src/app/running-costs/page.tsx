@@ -275,7 +275,7 @@ export default async function RunningCostsPage({
 
           {/* MOT booking CTA */}
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="running-costs" />
           </section>
 
           <section>

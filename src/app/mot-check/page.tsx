@@ -376,7 +376,7 @@ export default async function MotCheckPage({
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="mot-check" />
             <p className="mt-3 text-sm text-slate-400">
               Shopping on price? See how to{" "}
               <a href="/cheap-mot" className="text-blue-400 hover:text-blue-300">find a cheap MOT near you</a>{" "}

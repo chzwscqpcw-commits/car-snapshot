@@ -232,7 +232,7 @@ export default async function MotPricesTownPage({ params }: Props) {
           </section>
 
           <section>
-            <MOTBookingCTA regNumber="" context="neutral" />
+            <MOTBookingCTA regNumber="" context="neutral" placement="mot-prices-town" />
           </section>
 
           <section>
