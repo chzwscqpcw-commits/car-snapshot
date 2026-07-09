@@ -8,6 +8,7 @@ import {
   ArrowRight,
   ChevronDown,
   History,
+  Bell,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -22,6 +23,7 @@ import {
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { odometerMiles } from "@/lib/valuation";
+import MOTReminderSignup from "@/components/MOTReminderSignup";
 
 interface MotResultProps {
   vrm: string;
@@ -73,6 +75,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       )}
       {tests.length >= 2 && <YearlyTrackRecord tests={tests} />}
       {tests.length > 0 && <FullHistory tests={tests} />}
+      <ReminderHook vrm={vrm} vehicle={vehicle} />
       <BmgHook vrm={vrm} stats={stats} />
     </ToolResultLayout>
   );
@@ -504,6 +507,47 @@ function AdvisoryPreview({
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+/**
+ * Free email MOT-reminder capture on the MOT-check result — the highest-intent
+ * moment (the user is looking at this car's MOT history + next-due date) but
+ * previously had no reminder ask, only the paid BmgHook. The reg is known, so
+ * this is an email-only (`hideReg`) one-tap ask, with a no-email "add to
+ * calendar" fallback (`showCalendar`). Placed BEFORE BmgHook so the free action
+ * leads and the paid booking follows. Fires mot_reminder tagged
+ * triggerVariant="mot_result" so this surface is measurable in Supabase.
+ */
+function ReminderHook({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+  const makeModel = vehicle.make
+    ? `${vehicle.make}${vehicle.model ? ` ${vehicle.model}` : ""}`
+    : undefined;
+  return (
+    <section className="mt-4 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">
+      <div className="flex items-start gap-3">
+        <Bell className="h-5 w-5 flex-shrink-0 text-emerald-300 mt-0.5" />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-semibold text-white">
+            Never miss {vrm}&apos;s next MOT
+          </h3>
+          <p className="mt-1 mb-3 text-xs text-slate-400 leading-relaxed">
+            Set a free email reminder — we&apos;ll nudge you in good time to test
+            early and keep the renewal date. No signup, unsubscribe any time.
+          </p>
+          <MOTReminderSignup
+            context="post-lookup"
+            triggerVariant="mot_result"
+            regNumber={vrm}
+            motExpiryDate={vehicle.motExpiryDate}
+            makeModel={makeModel}
+            compact
+            hideReg
+            showCalendar
+          />
+        </div>
+      </div>
     </section>
   );
 }
