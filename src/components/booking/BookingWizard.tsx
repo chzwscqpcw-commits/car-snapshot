@@ -104,6 +104,23 @@ export default function BookingWizard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Canonical booking-funnel metric. Fires whenever a step becomes visible —
+  // on initial mount (deep-links can enter at step 2 or 3) AND on every step
+  // change — so `booking_step_view {step: 1..4}` gives the true reach at each
+  // step regardless of entry point. Unlike `booking_step_complete` (which fires
+  // only on ADVANCE and whose `step` is the arrived-at step), this captures
+  // people who land mid-wizard and those who view a step but don't complete it.
+  // Pair with the Step 4 `partner_click` (BookMyGarage hand-off) as the final
+  // stage; drop-off between adjacent steps = the leak. `source` carries which
+  // CTA sent them (e.g. action_banner_expired, mot-booking-cta-health-*).
+  useEffect(() => {
+    trackEvent("booking_step_view", {
+      step: state.step,
+      source: searchParams.get("source") ?? "direct",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.step]);
+
   // Persist on every state change so refresh / back navigation lands the
   // user where they left off.
   useEffect(() => {
