@@ -56,6 +56,12 @@ Outstanding safety recalls are a serious issue. You can [check for recalls](/rec
 
 Before agreeing a price, check what similar cars are actually selling for. Our [free car valuation tool](/car-valuation) gives you an estimated market value based on the car's age, mileage, and condition. If the asking price is significantly above market value, you have negotiating room. If it's significantly below, ask yourself why.
 
+### Recorded history the free checks can't show
+
+When you're buying a car you can't physically inspect, the one thing the free feeds won't surface is the car's private history — outstanding finance, an insurance write-off, an import marker, or a stolen record. Those records sit in private databases, not the free government feeds, so they only appear on a paid history report such as a [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`). It's one of the few paid checks worth doing before you travel to view a car costing more than a few hundred pounds.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## Red flags in online listings
 
 Even before you run a plate check, the listing itself can reveal warning signs. Be wary of:

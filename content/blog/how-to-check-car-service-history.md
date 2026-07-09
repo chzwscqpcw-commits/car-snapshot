@@ -112,6 +112,10 @@ Service history has a direct impact on what a car is worth. Use our [free valuat
 
 **5. Look at the car itself.** A well-serviced car shows it. Clean oil on the dipstick, no warning lights on the dashboard, smooth engine idle, and good brake feel all suggest proper maintenance.
 
+Service records tell you how a car was maintained, but not whether it's been written off, still carries finance, or has had its mileage adjusted between services. Those records sit in private databases rather than the free feeds, so they only appear on a paid history report such as a [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`). It's a worthwhile companion to the service history on any car costing more than a few hundred pounds.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## The bottom line
 
 Service history is the single best indicator of how a car has been treated. Always ask to see it before committing to a purchase, and take the time to verify what you're shown.
