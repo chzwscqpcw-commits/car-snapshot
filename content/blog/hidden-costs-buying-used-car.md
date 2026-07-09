@@ -81,6 +81,10 @@ If you buy a car with outstanding finance, the finance company has the legal rig
 
 A basic vehicle check won't always reveal finance status — you need a specific finance check, which is part of a paid [HPI-style report](/blog/what-is-hpi-check). For any car costing more than a few hundred pounds, this is money well spent.
 
+A paid history report bundles that finance check together with write-off, mileage, and theft records in one go. A [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) covers all of them (from £16.79 with our 20% discount, code `freeplatecheck`) — a small, optional outlay set against the cost of losing the whole car to a finance repossession.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## Imminent MOT work
 
 This is one of the most commonly overlooked hidden costs, and one of the easiest to check in advance.

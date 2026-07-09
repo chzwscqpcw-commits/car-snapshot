@@ -101,6 +101,10 @@ Missing MOT records don't always mean something sinister — the car may have be
 
 We go into much more detail on this in our guide to [how to spot a clocked car](/blog/how-to-spot-a-clocked-car).
 
+The MOT history only captures the mileage logged at each annual test, so a rollback between tests — or on a car too new to have much MOT record — can slip through. A paid history report cross-checks the odometer against the National Mileage Register and other private sources the free feeds don't reach. A [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`) is a worthwhile extra step if the mileage looks too good for the car's age.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## What mileage means for running costs
 
 Higher mileage does affect some ownership costs:

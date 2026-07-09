@@ -120,6 +120,12 @@ Crouch down and look underneath for:
 - **Exhaust condition** — Check for holes, excessive rust, or hanging sections.
 - **Fluid leaks** — Fresh spots under the engine, gearbox, or differential areas.
 
+### What the drive can't show you
+
+Even a flawless test drive can't reveal the car's paper history — whether it's been written off, still carries outstanding finance, or has had its mileage wound back. Those records sit in private databases, not the free government feeds, so they only surface on a paid history report such as a [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`). It's one of the few paid checks worth doing on any car costing more than a few hundred pounds.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ## Walk-away warning signs
 
 These should stop the purchase unless reflected in a significantly reduced price:

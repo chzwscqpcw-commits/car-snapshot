@@ -50,6 +50,10 @@ Before you go to see any car, look up the registration number. A [free car check
 
 This takes two minutes and can save you from a wasted trip — or worse, buying a problem car.
 
+The free check covers the essentials, but it won't show whether a car has outstanding finance, has been written off, or was previously stolen — records that sit in private databases rather than the free feeds. On a first car it's worth knowing these are clear before you hand over your savings, and a paid history report such as a [carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog) (from £16.79 with our 20% discount, code `freeplatecheck`) covers them. It's optional, but a sensible step on any car costing more than a few hundred pounds.
+
+*carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
+
 ### 4. Check the MOT history carefully
 
 The [MOT history](/mot-check) is your best window into how a car has been treated. Look for:
