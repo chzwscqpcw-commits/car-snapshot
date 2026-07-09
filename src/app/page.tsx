@@ -4349,7 +4349,7 @@ END:VEVENT
                     </div>
                   )}
 
-                  <p className="text-[10px] text-slate-600 mt-3">{motReadiness.disclaimer}</p>
+                  <p className="text-xs text-slate-400 mt-3">{motReadiness.disclaimer}</p>
                 </div>
               </DataReveal>
             )}
@@ -4441,7 +4441,7 @@ END:VEVENT
                     </div>
                   )}
 
-                  <p className="text-[11px] text-slate-600 mt-3">
+                  <p className="text-xs text-slate-400 mt-3">
                     Recall data is matched by make, model, and year of manufacture. Individual vehicle recall status may differ — a recall may have already been completed on this specific vehicle. For vehicle-specific recall status, check at{" "}
                     <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
                     {" "}or contact your manufacturer&apos;s dealer. Recall repairs are always free.
@@ -4546,7 +4546,7 @@ END:VEVENT
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
-                      <p className="text-[11px] text-slate-600 mt-2">ULEZ compliance calculated using DVLA emission data and published TfL emission standards.</p>
+                      <p className="text-xs text-slate-400 mt-2">ULEZ compliance calculated using DVLA emission data and published TfL emission standards.</p>
                     </div>
                   </div>
                 </div>
@@ -4749,7 +4749,7 @@ END:VEVENT
                     </div>
                   )}
 
-                  <p className="text-[11px] text-slate-600 mt-3">{valuationResult.disclaimer}</p>
+                  <p className="text-xs text-slate-400 mt-3">{valuationResult.disclaimer}</p>
                 </div>
               </DataReveal>
             )}
@@ -4846,12 +4846,12 @@ END:VEVENT
                             ? "Exactly average for this segment"
                             : `£${Math.abs(diff).toLocaleString()} ${isBelow ? "less" : "more"} than typical (${pct}% ${isBelow ? "below" : "above"})`}
                         </p>
-                        <p className="text-[10px] text-slate-600 mt-1">Based on median of 140+ popular UK models</p>
+                        <p className="text-xs text-slate-400 mt-1">Based on median of 140+ popular UK models</p>
                       </div>
                     );
                   })()}
 
-                  <p className="text-[10px] text-slate-600 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
+                  <p className="text-xs text-slate-400 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
                 </div>
               </DataReveal>
             )}
@@ -4891,7 +4891,7 @@ END:VEVENT
                     ))}
                   </div>
 
-                  <p className="text-[10px] text-slate-600 mt-3">
+                  <p className="text-xs text-slate-400 mt-3">
                     This is an estimate based on MOT advisories and vehicle data. Actual negotiation outcomes depend on many factors including vehicle condition, local market, and seller motivation.
                   </p>
                 </div>
