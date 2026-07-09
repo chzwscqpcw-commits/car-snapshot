@@ -8,6 +8,7 @@ import {
   Loader2,
   TrendingDown,
   Gauge,
+  Bell,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -18,6 +19,7 @@ import {
 } from "@/components/tools/shared";
 import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import MOTReminderSignup from "@/components/MOTReminderSignup";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import {
@@ -270,6 +272,10 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         />
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
+      {/* Free owner action FIRST (free-first), ahead of the paid buyer sells
+          below. Matches the page's "protect its value" framing and captures the
+          MOT reminder inline instead of deflecting to the banner. */}
+      <ReminderHook vrm={vrm} vehicle={vehicle} />
       <SellCarCTA context="valuation-result" regNumber={vrm} />
       {/* Buyer slice: someone valuing a car they're considering buying is the
           ideal full-history-report + inspection lead. Generously spaced so the
@@ -807,6 +813,50 @@ function ConditionField({
       </div>
       <p className="mt-1 text-[10px] text-slate-500">{field.helper}</p>
     </div>
+  );
+}
+
+/* ─── Free MOT reminder capture ───────────────────────────────────────── */
+
+/**
+ * Free email MOT-reminder capture on the valuation result — /car-valuation is
+ * the #1 organic page and its landing hero already frames reminders as "protect
+ * its value", but the RESULT view previously offered no inline capture (only the
+ * deflecting MotReminderBanner). The reg is known, so this is an email-only
+ * (`hideReg`) one-tap ask with a no-email "add to calendar" fallback, placed as
+ * the free owner action ahead of the paid buyer sells. Fires mot_reminder tagged
+ * triggerVariant="valuation_result" so this surface is measurable in Supabase.
+ */
+function ReminderHook({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+  const makeModel = vehicle.make
+    ? `${vehicle.make}${vehicle.model ? ` ${vehicle.model}` : ""}`
+    : undefined;
+  return (
+    <section className="mt-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">
+      <div className="flex items-start gap-3">
+        <Bell className="h-5 w-5 flex-shrink-0 text-emerald-300 mt-0.5" />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-semibold text-white">
+            Own {vrm}? Protect its value — never miss its MOT
+          </h3>
+          <p className="mt-1 mb-3 text-xs text-slate-400 leading-relaxed">
+            A clean, unbroken MOT record helps hold a car&apos;s value. Get a free
+            email reminder in good time before it&apos;s due — no signup,
+            unsubscribe any time.
+          </p>
+          <MOTReminderSignup
+            context="post-lookup"
+            triggerVariant="valuation_result"
+            regNumber={vrm}
+            motExpiryDate={vehicle.motExpiryDate}
+            makeModel={makeModel}
+            compact
+            hideReg
+            showCalendar
+          />
+        </div>
+      </div>
+    </section>
   );
 }
 
