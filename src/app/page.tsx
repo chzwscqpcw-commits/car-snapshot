@@ -4947,15 +4947,6 @@ END:VEVENT
               );
             })()}
 
-            {/* Electric or hybrid → home EV-charger nudge (links to our EV page). */}
-            {data && /electric|hybrid/i.test(data.fuelType ?? "") && (
-              <DataReveal delay={520}>
-                <div className="mb-8">
-                  <EvChargerPromptWidget source="car-check-results" />
-                </div>
-              </DataReveal>
-            )}
-
             </SectionGroup>
 
             {/* ═══ GROUP 4: KEY FACTS ═══ */}
@@ -5015,6 +5006,20 @@ END:VEVENT
                       )}
                     </div>
                   )}
+                </div>
+              </DataReveal>
+            )}
+
+            {/* Electric or hybrid → home EV-charger nudge, placed right after the
+                EV specs so it reads "here's your range/charge time → charge it at
+                home from £752". Was previously buried at the tail of the Financial
+                section at 0 clicks (revenue audit 2026-07). Links to our EV page,
+                which owns the ClickMechanic handoff; shows for any electric/hybrid
+                even without a curated specs match above. */}
+            {data && /electric|hybrid/i.test(data.fuelType ?? "") && (
+              <DataReveal delay={525}>
+                <div className="mb-8">
+                  <EvChargerPromptWidget source="car-check-results" />
                 </div>
               </DataReveal>
             )}
