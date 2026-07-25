@@ -5,12 +5,13 @@ import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLab
 import BlogTagPill from "@/components/BlogTagPill";
 import Button from "@/components/Button";
 import { ArrowLeft, Clock } from "lucide-react";
-import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
+import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta, hasVehicleHistoryIntent } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
 import MotBookingInline from "@/components/MotBookingInline";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 
 /**
  * Split rendered post HTML just before the 2nd <h2> so an inline CTA can sit
@@ -256,16 +257,24 @@ export default async function BlogPostPage({ params }: PageProps) {
           // (content→tool bridge audit: blog bridges at ~16%). MOT posts get the
           // BookMyGarage booking prompt; other commercially-relevant posts get an
           // inline reg-check routed to their topic tool (excludes /mot-reminder,
-          // which is a signup, not a reg→results check).
+          // which is a signup, not a reg→results check). History-intent posts
+          // (HPI, finance, write-off, buying used) get carVertical instead —
+          // checked BEFORE the reg-check so an "HPI check" post doesn't fall
+          // through to the weaker free /car-check tool.
           const isMot = hasMotKeywords(post.keywords);
+          const isHistory = !isMot && hasVehicleHistoryIntent(post.keywords);
           const topicCta = getTopicCta(post.keywords);
           const regCheckPath =
-            !isMot && topicCta && topicCta.path !== "/mot-reminder"
+            !isMot && !isHistory && topicCta && topicCta.path !== "/mot-reminder"
               ? topicCta.path
               : null;
 
           const midInject = isMot ? (
             <MotBookingInline clickref="blog-mot-inline" />
+          ) : isHistory ? (
+            <div className="my-8">
+              <CarVerticalReportCTA context="blog-carvertical" />
+            </div>
           ) : regCheckPath && topicCta ? (
             <ConversionWidget
               showReminder={false}
