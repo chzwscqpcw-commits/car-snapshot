@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { odometerMiles } from "@/lib/valuation";
 import type { MotTest } from "@/components/tools/shared";
+import { useScrollReveal } from "@/components/tools/useScrollReveal";
 
 /**
  * MOT journey — replaces the old per-year bar chart (whose length encoded
@@ -82,50 +83,9 @@ function OutcomeLabel({ stop, className = "" }: { stop: Stop; className?: string
   );
 }
 
-function useReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let io: IntersectionObserver | null = null;
-    // Defer the first state write out of the synchronous effect body (React lint
-    // + avoids cascading renders); reveal happens in the rAF or observer callback.
-    const raf = requestAnimationFrame(() => {
-      if (mq.matches) {
-        setReduced(true);
-        setRevealed(true);
-        return;
-      }
-      const el = ref.current;
-      if (!el) {
-        setRevealed(true);
-        return;
-      }
-      io = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting) {
-            setRevealed(true);
-            io?.disconnect();
-          }
-        },
-        { threshold: 0.35 },
-      );
-      io.observe(el);
-    });
-    return () => {
-      cancelAnimationFrame(raf);
-      io?.disconnect();
-    };
-  }, []);
-
-  return { ref, revealed, reduced };
-}
-
 export default function MotJourneyTimeline({ tests }: { tests: MotTest[] }) {
   const stops = useMemo(() => buildStops(tests), [tests]);
-  const { ref, revealed, reduced } = useReveal();
+  const { ref, revealed, reduced } = useScrollReveal(0.35);
 
   const n = stops.length;
   const inset = `${50 / n}%`; // line spans first node-centre → last node-centre
