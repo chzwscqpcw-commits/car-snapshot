@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
   Calculator,
   Fuel,
@@ -975,6 +976,7 @@ function CostForecastCard({
   segment: VehicleSegment;
   insurance: InsuranceEstimate;
 }) {
+  const { ref, revealed, reduced } = useScrollReveal(); // before the early return (rules of hooks)
   if (!vehicle.yearOfManufacture) return null;
 
   const HORIZON = 5;
@@ -1021,6 +1023,22 @@ function CostForecastCard({
   const maxTotal = Math.max(...rows.map((r) => r.total), 1);
   const fiveYearTotal = rows.reduce((s, r) => s + r.total, 0);
 
+  // Anchor the forecast in today's actual cost (solid bar) so the projected
+  // years read as a trend from a real number, not free-floating guesses.
+  const todayOwn = calculateOwnershipCost({
+    vedAnnualRate: ved.estimatedAnnualRate,
+    fuelAnnualCost: scaledFuelCost,
+    newPrice,
+    vehicleAge: currentAge,
+    make: vehicle.make,
+    model: vehicle.model,
+    isOver3Years: currentAge > 3,
+    segment,
+  });
+  const todayTotal = (todayOwn?.totalAnnual ?? 0) + insurance.estimatedAnnual;
+  const maxAll = Math.max(todayTotal, maxTotal);
+  const delay = (i: number) => (reduced ? 0 : i * 60);
+
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-1">
@@ -1035,25 +1053,69 @@ function CostForecastCard({
         gently rises. Fuel and VED held constant at today&apos;s rates.
       </p>
 
-      <div className="space-y-2">
-        {rows.map((row) => {
-          const widthPct = Math.max(5, Math.round((row.total / maxTotal) * 100));
+      <div ref={ref} className="space-y-2">
+        {/* Today's actual cost — the solid anchor the projection extends from */}
+        <div className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3 py-1">
+          <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
+            {thisYear}
+          </span>
+          <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+            <div
+              className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-400 to-blue-400"
+              style={{
+                width: `${Math.max(5, Math.round((todayTotal / maxAll) * 100))}%`,
+                transformOrigin: "left",
+                transform: revealed ? "scaleX(1)" : "scaleX(0)",
+                transition: "transform 600ms cubic-bezier(0.22,1,0.36,1)",
+              }}
+            />
+            <span className="absolute top-1/2 -translate-y-1/2 right-2 text-[10px] font-semibold uppercase tracking-wider text-cyan-100">
+              Today
+            </span>
+          </div>
+          <span
+            className="font-mono text-xs sm:text-sm font-bold text-cyan-300 tabular-nums tracking-tight whitespace-nowrap"
+            style={{ opacity: revealed ? 1 : 0, transition: "opacity 400ms ease-out 120ms" }}
+          >
+            £{todayTotal.toLocaleString("en-GB")}
+          </span>
+        </div>
+
+        {/* Break so the forecast years never read as measured costs */}
+        <div className="flex items-center gap-2 pt-1.5 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+          <span className="h-px flex-1 bg-slate-800" />
+          Projected
+          <span className="h-px flex-1 bg-slate-800" />
+        </div>
+
+        {/* Forecast — dashed outline + "~", visibly a projection */}
+        {rows.map((row, j) => {
+          const widthPct = Math.max(5, Math.round((row.total / maxAll) * 100));
+          const gi = j + 1;
           return (
             <div
               key={row.year}
               className="grid grid-cols-[3rem_1fr_auto] items-center gap-2 sm:gap-3"
             >
-              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
+              <span className="font-mono text-xs sm:text-sm text-slate-500 tabular-nums">
                 {row.year}
               </span>
-              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/40 overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
-                  style={{ width: `${widthPct}%` }}
+                  className="absolute inset-y-0 left-0 rounded-md border border-dashed border-slate-500/60 bg-slate-600/15"
+                  style={{
+                    width: `${widthPct}%`,
+                    transformOrigin: "left",
+                    transform: revealed ? "scaleX(1)" : "scaleX(0)",
+                    transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${delay(gi)}ms`,
+                  }}
                 />
               </div>
-              <span className="font-mono text-xs sm:text-sm font-semibold text-slate-100 tabular-nums tracking-tight whitespace-nowrap">
-                £{row.total.toLocaleString("en-GB")}
+              <span
+                className="font-mono text-xs sm:text-sm font-medium text-slate-400 tabular-nums tracking-tight whitespace-nowrap"
+                style={{ opacity: revealed ? 1 : 0, transition: `opacity 400ms ease-out ${delay(gi) + 120}ms` }}
+              >
+                ~£{row.total.toLocaleString("en-GB")}
               </span>
             </div>
           );
@@ -1062,7 +1124,7 @@ function CostForecastCard({
 
       <div className="mt-4 pt-4 border-t border-slate-800/60 flex items-baseline justify-between gap-3">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-          {HORIZON}-year total
+          Projected {HORIZON}-year total
         </span>
         <span className="font-mono text-base sm:text-lg font-bold text-cyan-300 tabular-nums">
           £{fiveYearTotal.toLocaleString("en-GB")}
