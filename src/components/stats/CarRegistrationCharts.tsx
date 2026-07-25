@@ -197,6 +197,7 @@ export default function CarRegistrationCharts() {
                 name={FUEL_LABELS[key]}
                 stackId="fuel"
                 fill={color}
+                radius={[4, 4, 0, 0]}
               />
             ))}
           </BarChart>
