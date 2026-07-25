@@ -107,7 +107,7 @@ export default function MotActionBanner({
       : urgency === "no-record"
         ? "DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). Set a free reminder so it never catches you out."
         : urgency === "due-soon"
-          ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Set a free reminder so you don't miss the window."
+          ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Compare prices below and book before it lapses."
           : "Set a free email reminder so you never get caught out — we'll nudge you in time to test early and keep your renewal date.";
 
   const Icon =
@@ -197,24 +197,30 @@ export default function MotActionBanner({
         </div>
       )}
 
-      {/* Always-visible one-field reminder ask — the reg is already known. */}
-      <div className={`mt-4 ${showBmg ? "border-t border-slate-700/40 pt-4" : ""}`}>
-        <div className="mb-2 flex items-center gap-2">
-          <Bell className={`h-3.5 w-3.5 shrink-0 ${palette.icon}`} aria-hidden="true" />
-          <p className="text-sm font-medium text-slate-200">{reminderLeadIn}</p>
+      {/* Reminder ask ONLY for far / no-record — the states where a reminder is
+          actually the point. For expired / due-soon the user needs to BOOK now,
+          not be reminded: those placements drew 0 signups from 328 views (revenue
+          audit 2026-07), and the reminder field there just competed with the
+          booking CTA above. The reg is already known, so this stays one field. */}
+      {!showBmg && (
+        <div className="mt-4">
+          <div className="mb-2 flex items-center gap-2">
+            <Bell className={`h-3.5 w-3.5 shrink-0 ${palette.icon}`} aria-hidden="true" />
+            <p className="text-sm font-medium text-slate-200">{reminderLeadIn}</p>
+          </div>
+          <MOTReminderSignup
+            context={reminderContext}
+            triggerVariant={reminderTriggerVariant}
+            regNumber={registrationNumber}
+            motExpiryDate={motExpiryDate}
+            makeModel={makeModel}
+            compact
+            hideReg
+            allowTimingPicker
+            showCalendar={urgency === "far"}
+          />
         </div>
-        <MOTReminderSignup
-          context={reminderContext}
-          triggerVariant={reminderTriggerVariant}
-          regNumber={registrationNumber}
-          motExpiryDate={motExpiryDate}
-          makeModel={makeModel}
-          compact
-          hideReg
-          allowTimingPicker
-          showCalendar={urgency === "far" || urgency === "due-soon"}
-        />
-      </div>
+      )}
     </div>
   );
 }
