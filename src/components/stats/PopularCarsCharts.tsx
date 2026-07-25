@@ -26,7 +26,7 @@ import CustomTooltip from "@/components/stats/CustomTooltip";
 const COLOUR_HEX: Record<string, string> = {
   WHITE: "#e5e7eb",
   BLACK: "#334155",
-  GREY: "#6b7280",
+  GREY: "#64748b",
   BLUE: "#3b82f6",
   RED: "#ef4444",
   SILVER: "#94a3b8",
@@ -48,7 +48,7 @@ const colourChartData = Object.entries(
   .map(([name, d]) => ({
     colour: name.charAt(0) + name.slice(1).toLowerCase(),
     share: d.share,
-    fill: COLOUR_HEX[name] ?? "#6b7280",
+    fill: COLOUR_HEX[name] ?? "#64748b",
   }));
 
 /* ---------- makes bar chart data ---------- */
@@ -118,14 +118,14 @@ export default function PopularCarsCharts() {
               type="number"
               domain={[0, 5000]}
               tickFormatter={(v: number) => `${v.toLocaleString()}k`}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
             />
             <YAxis
               type="category"
               dataKey="make"
               width={120}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
               tick={{ fill: "#d1d5db" }}
               interval={0}
@@ -163,14 +163,14 @@ export default function PopularCarsCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
               tick={{ fill: "#9ca3af" }}
             />
             <YAxis
               domain={[0, 140]}
               tickFormatter={(v: number) => `${v}k`}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
               tick={{ fill: "#9ca3af" }}
             />
@@ -233,14 +233,14 @@ export default function PopularCarsCharts() {
               type="number"
               domain={[0, 30]}
               tickFormatter={(v: number) => `${v}%`}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
             />
             <YAxis
               type="category"
               dataKey="colour"
               width={80}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={11}
               tick={{ fill: "#d1d5db" }}
               interval={0}

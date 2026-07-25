@@ -159,14 +159,14 @@ export default function ReliabilityCharts() {
                 type="number"
                 domain={[70, 90]}
                 tickFormatter={(v: number) => `${v}%`}
-                stroke="#6b7280"
+                stroke="#64748b"
                 fontSize={12}
               />
               <YAxis
                 type="category"
                 dataKey="label"
                 width={140}
-                stroke="#6b7280"
+                stroke="#64748b"
                 fontSize={11}
                 tick={{ fill: "#d1d5db" }}
                 interval={0}
@@ -225,14 +225,14 @@ export default function ReliabilityCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="age"
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
               tick={{ fill: "#9ca3af" }}
             />
             <YAxis
               domain={[60, 100]}
               tickFormatter={(v: number) => `${v}%`}
-              stroke="#6b7280"
+              stroke="#64748b"
               fontSize={12}
               tick={{ fill: "#9ca3af" }}
             />

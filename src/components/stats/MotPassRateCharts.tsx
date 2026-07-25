@@ -278,8 +278,8 @@ export default function MotPassRateCharts() {
             <XAxis
               type="number"
               domain={[60, 90]}
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) => `${v}%`}
             />
@@ -287,7 +287,7 @@ export default function MotPassRateCharts() {
               type="category"
               dataKey="make"
               width={120}
-              stroke="#6b7280"
+              stroke="#64748b"
               tick={{ fill: "#9ca3af", fontSize: 11 }}
               tickLine={false}
               interval={0}

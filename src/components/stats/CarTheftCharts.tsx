@@ -143,13 +143,13 @@ export default function CarTheftCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) =>
                 v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`
@@ -158,7 +158,7 @@ export default function CarTheftCharts() {
                 value: "Thefts per year",
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
             />
@@ -217,20 +217,20 @@ export default function CarTheftCharts() {
             />
             <XAxis
               type="number"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               label={{
                 value: "Per 1,000 vehicles",
                 position: "insideBottom",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: -2,
               }}
             />
             <YAxis
               type="category"
               dataKey="name"
-              stroke="#6b7280"
+              stroke="#64748b"
               tick={{ fill: "#d1d5db", fontSize: 11 }}
               tickLine={false}
               width={160}

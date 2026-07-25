@@ -3,7 +3,7 @@ import colourData from "@/data/colour-popularity.json";
 /** Approximate display hex for each DVLA/SMMT colour so each bar renders in its
  *  own colour — the visual hook that makes this chart shareable. */
 const COLOUR_HEX: Record<string, string> = {
-  GREY: "#6b7280",
+  GREY: "#64748b",
   BLACK: "#1e293b",
   BLUE: "#2563eb",
   WHITE: "#f1f5f9",
