@@ -4,6 +4,7 @@ import { Wrench } from 'lucide-react';
 import { PARTNER_LINKS, getPartnerRel } from '@/config/partners';
 import { trackPartnerClick } from '@/lib/tracking';
 import PartnerTrust from '@/components/PartnerTrust';
+import Button from '@/components/Button';
 
 interface ServicingCTAProps {
   regNumber?: string;
@@ -51,17 +52,17 @@ export default function ServicingCTA({
       <p className="text-sm text-slate-300 mb-4 ml-8">{body}</p>
 
       <div className="ml-8">
-        <a
+        <Button
           href={href}
           target="_blank"
           rel={rel}
           onClick={() => trackPartnerClick('bookMyGarageService', `servicing-cta-${context}`)}
-          className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="w-full sm:w-auto"
         >
           {regNumber
             ? `Compare service prices for ${formattedReg} — BookMyGarage ↗`
             : 'Compare service prices — BookMyGarage ↗'}
-        </a>
+        </Button>
       </div>
 
       <PartnerTrust partner="bookMyGarage" className="mt-3 ml-8" />

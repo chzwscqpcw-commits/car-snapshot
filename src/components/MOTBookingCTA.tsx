@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PoundSterling, ChevronDown } from 'lucide-react';
 import { PARTNER_LINKS, getPartnerRel } from '@/config/partners';
 import { trackPartnerClick } from '@/lib/tracking';
+import Button from '@/components/Button';
 
 interface MOTBookingCTAProps {
   regNumber: string;
@@ -100,14 +101,14 @@ export default function MOTBookingCTA({
           the BMG hand-off (with clickref) happens at the end of the wizard
           via Step 4, so commission tracking is preserved end-to-end. */}
       <div className="ml-8">
-        <a
+        <Button
           href={href}
           rel={rel}
           onClick={() => trackPartnerClick('bookMyGarage', clickContext)}
-          className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20"
+          className="w-full sm:w-auto"
         >
           Compare prices near {formattedReg} →
-        </a>
+        </Button>
       </div>
 
       {/* Trust signals */}
