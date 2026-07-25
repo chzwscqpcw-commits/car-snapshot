@@ -66,8 +66,10 @@ export function calculateVed(vehicle: {
   engineCapacity?: number;
   fuelType?: string;
   monthOfFirstRegistration?: string;
+  /** Original model list price when new — drives the Expensive Car Supplement. */
+  estimatedListPrice?: number;
 }): VedResult {
-  const { co2Emissions, engineCapacity, fuelType, monthOfFirstRegistration } = vehicle;
+  const { co2Emissions, engineCapacity, fuelType, monthOfFirstRegistration, estimatedListPrice } = vehicle;
   const disclaimer = `Estimated rate based on GOV.UK data (last verified ${RATES_LAST_VERIFIED}). Actual rate may differ — check GOV.UK for your exact vehicle.`;
 
   // Determine registration date
@@ -79,13 +81,26 @@ export function calculateVed(vehicle: {
     }
   }
 
+  const ageYears = regDate ? (Date.now() - regDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000) : null;
   const postApril2017 = regDate && regDate >= new Date(2017, 3); // April 2017
   const preMarch2001 = regDate && regDate < new Date(2001, 2); // March 2001
 
   // ── Post-April 2017: flat rate for all fuel types ──
   if (postApril2017) {
     const rate = POST_2017_STANDARD;
-    const supplementNote = ` Vehicles with a list price over £40,000 may pay an additional £${PREMIUM_SUPPLEMENT}/year supplement for years 2–6.`;
+    // Expensive Car Supplement (£425/yr, years 2–6, cars listed over £40k new).
+    // Key off the model's original list price — the figure the supplement is
+    // actually based on — to give a specific, hedged answer instead of a blanket
+    // caveat: assert it only for clearly-liable cars still inside the 2–6 year
+    // window; say nothing for known sub-£40k or out-of-window cars; and fall back
+    // to the generic note only when the list price is unknown.
+    let supplementNote = ` Vehicles with a list price over £40,000 pay an extra £${PREMIUM_SUPPLEMENT}/year supplement for years 2–6.`;
+    if (estimatedListPrice != null && ageYears != null) {
+      supplementNote =
+        estimatedListPrice >= 40000 && ageYears >= 1 && ageYears <= 6
+          ? ` This model listed around £${estimatedListPrice.toLocaleString()} new, so in years 2–6 it likely pays the £${PREMIUM_SUPPLEMENT}/year Expensive Car Supplement — about £${rate + PREMIUM_SUPPLEMENT}/year total.`
+          : "";
+    }
 
     if (isElectric(fuelType)) {
       return {
