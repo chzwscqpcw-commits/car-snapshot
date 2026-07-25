@@ -130,16 +130,16 @@ function BarTooltip({
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-      <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+    <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+      <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
         {label}
       </div>
-      <div className="text-xs text-gray-200">
-        <span className="text-gray-400">Pass rate:</span>{" "}
+      <div className="text-xs text-slate-200">
+        <span className="text-slate-400">Pass rate:</span>{" "}
         <span className="font-medium">{d.weightedPassRate}%</span>
       </div>
-      <div className="text-xs text-gray-200">
-        <span className="text-gray-400">Tests:</span>{" "}
+      <div className="text-xs text-slate-200">
+        <span className="text-slate-400">Tests:</span>{" "}
         <span className="font-medium">
           {d.totalVehicles.toLocaleString()}
         </span>
@@ -162,16 +162,16 @@ function PieTooltip({
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-      <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+    <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+      <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
         {d.name}
       </div>
-      <div className="text-xs text-gray-200">
-        <span className="text-gray-400">Share:</span>{" "}
+      <div className="text-xs text-slate-200">
+        <span className="text-slate-400">Share:</span>{" "}
         <span className="font-medium">{d.percentage}%</span>
       </div>
-      <div className="text-xs text-gray-200">
-        <span className="text-gray-400">Mentions:</span>{" "}
+      <div className="text-xs text-slate-200">
+        <span className="text-slate-400">Mentions:</span>{" "}
         <span className="font-medium">{d.count.toLocaleString()}</span>
       </div>
     </div>
@@ -202,18 +202,18 @@ export default function MotPassRateCharts() {
   return (
     <div className="space-y-6">
       {/* Interactive make finder */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Find Your Car&apos;s Pass Rate
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Select a make to see its average MOT pass rate and top failure reasons.
         </p>
 
         <select
           value={selectedMake}
           onChange={(e) => setSelectedMake(e.target.value)}
-          className="w-full max-w-xs rounded-lg border border-[#374151] bg-[#232323] px-3 py-2 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500"
+          className="w-full max-w-xs rounded-lg border border-[#334155] bg-[#0f172a] px-3 py-2 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500"
         >
           <option value="">Choose a make...</option>
           {allMakes.map((m) => (
@@ -225,34 +225,34 @@ export default function MotPassRateCharts() {
 
         {selectedData && (
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4 text-center">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4 text-center">
               <div
                 className="text-2xl font-bold"
                 style={{ color: barColor(selectedData.weightedPassRate) }}
               >
                 {selectedData.weightedPassRate}%
               </div>
-              <div className="mt-1 text-xs text-gray-400">
+              <div className="mt-1 text-xs text-slate-400">
                 Average pass rate
               </div>
             </div>
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4 text-center">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4 text-center">
               <div className="text-2xl font-bold text-sky-400">
                 {selectedData.totalVehicles.toLocaleString()}
               </div>
-              <div className="mt-1 text-xs text-gray-400">Total MOT tests</div>
+              <div className="mt-1 text-xs text-slate-400">Total MOT tests</div>
             </div>
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4">
-              <div className="text-xs font-medium text-gray-300 mb-2">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4">
+              <div className="text-xs font-medium text-slate-300 mb-2">
                 Top failure reasons
               </div>
               <div className="space-y-1">
                 {selectedData.topFailures.map((reason, i) => (
                   <div
                     key={reason}
-                    className="flex items-center gap-2 text-xs text-gray-400"
+                    className="flex items-center gap-2 text-xs text-slate-400"
                   >
-                    <span className="text-gray-500">{i + 1}.</span>
+                    <span className="text-slate-500">{i + 1}.</span>
                     <span>{reason}</span>
                   </div>
                 ))}
@@ -274,7 +274,7 @@ export default function MotPassRateCharts() {
             layout="vertical"
             margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" horizontal={false} />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" horizontal={false} />
             <XAxis
               type="number"
               domain={[60, 90]}
@@ -316,16 +316,16 @@ export default function MotPassRateCharts() {
         </ResponsiveContainer>
       </ChartContainer>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source: DVSA MOT testing data (2024/25 test year)
       </p>
 
       {/* Mid-page CTA */}
       <div className="rounded-xl border border-emerald-800/40 bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-6 text-center">
-        <h3 className="text-lg font-bold text-gray-100">
+        <h3 className="text-lg font-bold text-slate-100">
           How does your car compare?
         </h3>
-        <p className="mx-auto mt-2 max-w-md text-sm text-gray-400">
+        <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">
           Enter your reg plate for a full MOT history, health score and
           personalised insights.
         </p>
@@ -374,41 +374,41 @@ export default function MotPassRateCharts() {
               className="h-2.5 w-2.5 rounded-sm flex-shrink-0"
               style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
             />
-            <span className="text-gray-400 truncate">{entry.name}</span>
-            <span className="ml-auto text-gray-300 font-medium tabular-nums">
+            <span className="text-slate-400 truncate">{entry.name}</span>
+            <span className="ml-auto text-slate-300 font-medium tabular-nums">
               {entry.percentage}%
             </span>
           </div>
         ))}
       </div>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source: DVSA MOT testing data (2024/25 test year)
       </p>
 
       {/* Failure reasons table */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Failure Reason Breakdown
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           How often each category appears as a failure reason across all tested
           models.
         </p>
         <div className="space-y-2">
           {failureCategories.map((cat, i) => (
             <div key={cat.name} className="flex items-center gap-3">
-              <span className="w-5 text-right text-xs text-gray-500">
+              <span className="w-5 text-right text-xs text-slate-500">
                 {i + 1}
               </span>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-200">{cat.name}</span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-sm text-slate-200">{cat.name}</span>
+                  <span className="text-xs text-slate-400">
                     {cat.percentage}%
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-[#232323]">
+                <div className="h-2 rounded-full bg-[#0f172a]">
                   <div
                     className="h-2 rounded-full transition-all"
                     style={{

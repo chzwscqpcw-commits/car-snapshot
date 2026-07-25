@@ -20,7 +20,7 @@ export default function StatsHubFeaturedCard({
   return (
     <Link
       href="/stats/fuel-prices"
-      className="stats-reveal sparkline-glow group block rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden mb-6"
+      className="stats-reveal sparkline-glow group block rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden mb-6"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="w-full h-[100px] bg-[#161616]">{sparkline}</div>

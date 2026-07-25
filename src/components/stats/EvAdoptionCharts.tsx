@@ -48,7 +48,7 @@ export default function EvAdoptionCharts() {
             data={evAdoptionData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -119,7 +119,7 @@ export default function EvAdoptionCharts() {
             data={salesData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -152,18 +152,18 @@ export default function EvAdoptionCharts() {
       </ChartContainer>
 
       {/* Interactive: Regional EV density */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           How Many EVs in Your Area?
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Select a region to see EV density compared to the national average.
         </p>
 
         <select
           value={selectedRegion}
           onChange={(e) => setSelectedRegion(e.target.value)}
-          className="w-full rounded-lg border border-[#374151] bg-[#232323] px-3 py-2.5 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500 sm:w-64"
+          className="w-full rounded-lg border border-[#334155] bg-[#0f172a] px-3 py-2.5 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500 sm:w-64"
         >
           <option value="">Choose a region...</option>
           {evRegionData.map((r) => (
@@ -177,20 +177,20 @@ export default function EvAdoptionCharts() {
           <div className="mt-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               {/* Region density */}
-              <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-4 text-center">
+              <div className="rounded-lg border border-[#1e293b] bg-[#141414] p-4 text-center">
                 <div className="text-2xl font-bold text-emerald-400">
                   {regionEntry.evPer1000.toFixed(1)}
                 </div>
-                <div className="mt-1 text-sm text-gray-400">
+                <div className="mt-1 text-sm text-slate-400">
                   EVs per 1,000 people in {regionEntry.region}
                 </div>
               </div>
               {/* National average */}
-              <div className="rounded-lg border border-[#2a2a2a] bg-[#141414] p-4 text-center">
-                <div className="text-2xl font-bold text-gray-300">
+              <div className="rounded-lg border border-[#1e293b] bg-[#141414] p-4 text-center">
+                <div className="text-2xl font-bold text-slate-300">
                   {NATIONAL_AVERAGE.toFixed(1)}
                 </div>
-                <div className="mt-1 text-sm text-gray-400">
+                <div className="mt-1 text-sm text-slate-400">
                   National average (EVs per 1,000)
                 </div>
               </div>
@@ -199,11 +199,11 @@ export default function EvAdoptionCharts() {
             {/* Comparison bars */}
             <div className="space-y-3">
               <div>
-                <div className="mb-1 flex items-center justify-between text-xs text-gray-400">
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
                   <span>{regionEntry.region}</span>
                   <span>{regionEntry.evPer1000.toFixed(1)} per 1,000</span>
                 </div>
-                <div className="h-3 w-full overflow-hidden rounded-full bg-[#232323]">
+                <div className="h-3 w-full overflow-hidden rounded-full bg-[#0f172a]">
                   <div
                     className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                     style={{
@@ -213,13 +213,13 @@ export default function EvAdoptionCharts() {
                 </div>
               </div>
               <div>
-                <div className="mb-1 flex items-center justify-between text-xs text-gray-400">
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
                   <span>National average</span>
                   <span>{NATIONAL_AVERAGE.toFixed(1)} per 1,000</span>
                 </div>
-                <div className="h-3 w-full overflow-hidden rounded-full bg-[#232323]">
+                <div className="h-3 w-full overflow-hidden rounded-full bg-[#0f172a]">
                   <div
-                    className="h-full rounded-full bg-gray-500 transition-all duration-500"
+                    className="h-full rounded-full bg-slate-500 transition-all duration-500"
                     style={{
                       width: `${Math.min((NATIONAL_AVERAGE / 30) * 100, 100)}%`,
                     }}
@@ -229,7 +229,7 @@ export default function EvAdoptionCharts() {
             </div>
 
             {regionEntry.evPer1000 > NATIONAL_AVERAGE ? (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 {regionEntry.region} has{" "}
                 <span className="font-medium text-emerald-400">
                   {((regionEntry.evPer1000 / NATIONAL_AVERAGE - 1) * 100).toFixed(0)}% more
@@ -237,7 +237,7 @@ export default function EvAdoptionCharts() {
                 EVs per capita than the national average.
               </p>
             ) : (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 {regionEntry.region} has{" "}
                 <span className="font-medium text-amber-400">
                   {((1 - regionEntry.evPer1000 / NATIONAL_AVERAGE) * 100).toFixed(0)}% fewer

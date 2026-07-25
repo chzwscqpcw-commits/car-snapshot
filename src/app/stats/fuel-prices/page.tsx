@@ -160,8 +160,8 @@ export default function FuelPricesPage() {
         <FuelPriceChart />
 
         {/* Insight copy */}
-        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Understanding UK Fuel Price Trends
           </h2>
           <p>
@@ -207,8 +207,8 @@ export default function FuelPricesPage() {
 
         {/* Mid-content CTA — capitalise on fuel price concern */}
         <div className="my-10 rounded-xl border border-amber-700/40 bg-gradient-to-r from-amber-900/20 to-orange-900/20 p-6">
-          <h3 className="text-lg font-bold text-gray-100">Worried about rising fuel costs?</h3>
-          <p className="mt-2 text-sm text-gray-400">
+          <h3 className="text-lg font-bold text-slate-100">Worried about rising fuel costs?</h3>
+          <p className="mt-2 text-sm text-slate-400">
             With petrol at {latestWeek.petrol}p and diesel at {latestWeek.diesel}p per litre,
             running costs matter more than ever. Check your car&apos;s real fuel economy and see
             how much it actually costs to run — or compare it against more efficient alternatives.
@@ -222,7 +222,7 @@ export default function FuelPricesPage() {
             </Link>
             <a
               href="/stats/fuel-type-comparison"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-5 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:border-slate-500 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-5 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
             >
               Compare fuel types
             </a>

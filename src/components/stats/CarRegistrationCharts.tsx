@@ -62,7 +62,7 @@ export default function CarRegistrationCharts() {
                 <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -91,13 +91,13 @@ export default function CarRegistrationCharts() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-200">
+                    <div className="flex items-center gap-2 text-xs text-slate-200">
                       <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-                      <span className="text-gray-400">Registrations:</span>
+                      <span className="text-slate-400">Registrations:</span>
                       <span className="font-medium">
                         {((payload[0].value as number) * 1000).toLocaleString()}
                       </span>
@@ -140,7 +140,7 @@ export default function CarRegistrationCharts() {
             stackOffset="expand"
             barCategoryGap="20%"
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -159,20 +159,20 @@ export default function CarRegistrationCharts() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
                     {payload.map((entry, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2 text-xs text-gray-200"
+                        className="flex items-center gap-2 text-xs text-slate-200"
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full"
                           style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-gray-400">{entry.name}:</span>
+                        <span className="text-slate-400">{entry.name}:</span>
                         <span className="font-medium">
                           {typeof entry.value === "number"
                             ? entry.value.toFixed(1)
@@ -203,13 +203,13 @@ export default function CarRegistrationCharts() {
         </ResponsiveContainer>
       </ChartContainer>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source:{" "}
         <a
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-gray-400 transition-colors"
+          className="underline hover:text-slate-400 transition-colors"
         >
           SMMT Vehicle Registration Data
         </a>

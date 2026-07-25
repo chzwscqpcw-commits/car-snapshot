@@ -184,8 +184,8 @@ export default function MotPassRatesPage() {
         <MotPassRateCharts />
 
         {/* Insight copy */}
-        <div className="my-10 space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Understanding UK MOT Pass Rates
           </h2>
           <p>

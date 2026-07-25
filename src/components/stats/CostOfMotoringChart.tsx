@@ -156,7 +156,7 @@ export default function CostOfMotoringChart() {
             data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -182,20 +182,20 @@ export default function CostOfMotoringChart() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
                     {payload.map((entry, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2 text-xs text-gray-200"
+                        className="flex items-center gap-2 text-xs text-slate-200"
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full"
                           style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-gray-400">
+                        <span className="text-slate-400">
                           {CATEGORY_LABELS[entry.dataKey as string] ??
                             entry.name}
                           :
@@ -279,7 +279,7 @@ export default function CostOfMotoringChart() {
         {(
           Object.entries(COLORS) as [keyof typeof COLORS, string][]
         ).map(([key, color]) => (
-          <div key={key} className="flex items-center gap-1.5 text-xs text-gray-400">
+          <div key={key} className="flex items-center gap-1.5 text-xs text-slate-400">
             <span
               className="inline-block h-2.5 w-2.5 rounded-sm"
               style={{
@@ -294,24 +294,24 @@ export default function CostOfMotoringChart() {
         ))}
       </div>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source:{" "}
         <a
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-gray-400 transition-colors"
+          className="underline hover:text-slate-400 transition-colors"
         >
           RAC Foundation Running Costs
         </a>
       </p>
 
       {/* Personalised Calculator */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Your Car Cost Calculator
         </h3>
-        <p className="mb-5 text-sm text-gray-400">
+        <p className="mb-5 text-sm text-slate-400">
           Adjust the inputs below to estimate your personalised annual motoring
           costs.
         </p>
@@ -319,7 +319,7 @@ export default function CostOfMotoringChart() {
         <div className="grid gap-5 sm:grid-cols-2">
           {/* Annual Mileage */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-slate-400 mb-1.5">
               Annual Mileage
             </label>
             <input
@@ -331,7 +331,7 @@ export default function CostOfMotoringChart() {
               onChange={(e) => setMileage(Number(e.target.value))}
               className="w-full accent-emerald-500"
             />
-            <div className="mt-1 flex justify-between text-xs text-gray-500">
+            <div className="mt-1 flex justify-between text-xs text-slate-500">
               <span>3,000</span>
               <span className="font-medium text-emerald-400">
                 {mileage.toLocaleString()} miles
@@ -342,7 +342,7 @@ export default function CostOfMotoringChart() {
 
           {/* Fuel Type */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-slate-400 mb-1.5">
               Fuel Type
             </label>
             <div className="grid grid-cols-4 gap-1.5">
@@ -354,7 +354,7 @@ export default function CostOfMotoringChart() {
                     className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                       fuelType === ft
                         ? "bg-emerald-600 text-white"
-                        : "bg-[#232323] text-gray-400 hover:text-gray-200"
+                        : "bg-[#0f172a] text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     {ft === "ev" ? "EV" : ft.charAt(0).toUpperCase() + ft.slice(1)}
@@ -366,7 +366,7 @@ export default function CostOfMotoringChart() {
 
           {/* Vehicle Value */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-slate-400 mb-1.5">
               Vehicle Value
             </label>
             <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
@@ -379,7 +379,7 @@ export default function CostOfMotoringChart() {
                   className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                     valueBand === vb
                       ? "bg-emerald-600 text-white"
-                      : "bg-[#232323] text-gray-400 hover:text-gray-200"
+                      : "bg-[#0f172a] text-slate-400 hover:text-slate-200"
                   }`}
                 >
                   {VALUE_BAND_LABELS[vb]}
@@ -390,7 +390,7 @@ export default function CostOfMotoringChart() {
 
           {/* Area */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-slate-400 mb-1.5">
               Area
             </label>
             <div className="grid grid-cols-3 gap-1.5">
@@ -401,7 +401,7 @@ export default function CostOfMotoringChart() {
                   className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                     area === a
                       ? "bg-emerald-600 text-white"
-                      : "bg-[#232323] text-gray-400 hover:text-gray-200"
+                      : "bg-[#0f172a] text-slate-400 hover:text-slate-200"
                   }`}
                 >
                   {a.charAt(0).toUpperCase() + a.slice(1)}
@@ -412,9 +412,9 @@ export default function CostOfMotoringChart() {
         </div>
 
         {/* Result breakdown */}
-        <div className="mt-6 rounded-lg border border-[#2a2a2a] bg-[#111111] p-4">
+        <div className="mt-6 rounded-lg border border-[#1e293b] bg-[#020617] p-4">
           <div className="mb-3 flex items-baseline justify-between">
-            <span className="text-sm font-medium text-gray-300">
+            <span className="text-sm font-medium text-slate-300">
               Estimated Annual Cost
             </span>
             <span className="text-2xl font-bold text-emerald-400">
@@ -433,7 +433,7 @@ export default function CostOfMotoringChart() {
               ] as const
             ).map(({ key, label, color }) => (
               <div key={key} className="flex items-center gap-3">
-                <span className="w-28 shrink-0 text-xs text-gray-400">
+                <span className="w-28 shrink-0 text-xs text-slate-400">
                   {label}
                 </span>
                 <div className="relative h-4 flex-1 overflow-hidden rounded-full bg-[#1f1f1f]">
@@ -446,14 +446,14 @@ export default function CostOfMotoringChart() {
                     }}
                   />
                 </div>
-                <span className="w-16 shrink-0 text-right text-xs font-medium text-gray-200">
+                <span className="w-16 shrink-0 text-right text-xs font-medium text-slate-200">
                   {"£"}
                   {personalCosts[key].toLocaleString()}
                 </span>
               </div>
             ))}
           </div>
-          <div className="mt-3 border-t border-[#2a2a2a] pt-2 text-xs text-gray-500">
+          <div className="mt-3 border-t border-[#1e293b] pt-2 text-xs text-slate-500">
             {"£"}
             {Math.round(personalCosts.total / 12).toLocaleString()} per month
             {" · £"}

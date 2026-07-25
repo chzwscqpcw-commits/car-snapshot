@@ -124,8 +124,8 @@ export default function CarColoursPage() {
         />
 
         {/* Insight copy */}
-        <div className="my-10 space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Britain&apos;s Love Affair with Grey
           </h2>
           <p>
@@ -148,7 +148,7 @@ export default function CarColoursPage() {
             buyers playing it safe with the biggest purchase after a home.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Colour and Your Wallet
           </h3>
           <p>
@@ -163,7 +163,7 @@ export default function CarColoursPage() {
             for the long haul, choose whatever you actually like.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Is Colour Getting Braver?
           </h3>
           <p>

@@ -222,8 +222,8 @@ export default function ConversionWidget({
       {/* --- Reg lookup section --- */}
       {showLookup && (
       <div id="check-vehicle" className="scroll-mt-24 rounded-xl border border-blue-800/40 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 p-6 sm:p-8">
-        <h3 className="text-xl font-bold text-gray-100">{headline}</h3>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-gray-400">
+        <h3 className="text-xl font-bold text-slate-100">{headline}</h3>
+        <p className="mx-auto mt-2 max-w-lg text-sm text-slate-400">
           {subtext}
         </p>
 
@@ -280,7 +280,7 @@ export default function ConversionWidget({
           <div className="flex items-start gap-3">
             <Bell className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
             <div className="min-w-0 flex-1">
-              <h4 className="text-base font-semibold text-gray-100">
+              <h4 className="text-base font-semibold text-slate-100">
                 {reminderHeadline}
               </h4>
               <p className="mt-1 text-sm text-slate-400">

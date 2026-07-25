@@ -30,7 +30,7 @@ export default function StatsHubCard({
   return (
     <Link
       href={href}
-      className="group block rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+      className="group block rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
     >
       <div className="w-full h-[88px] bg-[#161616]">{sparkline}</div>
       <div className="p-4">
@@ -39,11 +39,11 @@ export default function StatsHubCard({
             <span className="text-lg">{icon}</span>
             <h3 className="font-semibold text-white text-sm">{title}</h3>
           </div>
-          <span className="text-gray-600 group-hover:text-emerald-400 transition-colors text-sm">
+          <span className="text-slate-600 group-hover:text-emerald-400 transition-colors text-sm">
             &rarr;
           </span>
         </div>
-        <p className="text-gray-500 text-xs leading-relaxed mb-3">
+        <p className="text-slate-500 text-xs leading-relaxed mb-3">
           {description}
         </p>
         <span

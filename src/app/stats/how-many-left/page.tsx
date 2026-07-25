@@ -237,7 +237,7 @@ export default function HowManyLeftPage() {
 
         {/* Endangered — lead with the evocative photos (the share/nostalgia hook) */}
         <section className="mt-12">
-          <h2 className="text-xl font-bold text-gray-100">Endangered: Britain&apos;s vanishing cars</h2>
+          <h2 className="text-xl font-bold text-slate-100">Endangered: Britain&apos;s vanishing cars</h2>
           <p className="mt-1 mb-5 text-sm text-slate-400">
             Once a common sight, now clinging on. Survivors still licensed for the road.
           </p>
@@ -246,14 +246,14 @@ export default function HowManyLeftPage() {
 
         {/* Most common */}
         <section className="mt-14">
-          <h2 className="text-xl font-bold text-gray-100">Britain&apos;s most common cars</h2>
+          <h2 className="text-xl font-bold text-slate-100">Britain&apos;s most common cars</h2>
           <p className="mt-1 mb-5 text-sm text-slate-400">By number currently licensed and on UK roads.</p>
           <MostCommonChart rows={MOST_COMMON} />
         </section>
 
         {/* Mothballed */}
         <section className="mt-14">
-          <h2 className="text-xl font-bold text-gray-100">Mothballed Britain</h2>
+          <h2 className="text-xl font-bold text-slate-100">Mothballed Britain</h2>
           <p className="mt-1 mb-5 text-sm text-slate-400">
             The cars most likely to be sitting in a garage — share of survivors declared off-road (SORN).
           </p>
@@ -268,8 +268,8 @@ export default function HowManyLeftPage() {
         <CiteThisData title="How Many Cars Are Left on UK Roads" url="https://www.freeplatecheck.co.uk/stats/how-many-left" />
 
         {/* Insight copy */}
-        <div className="my-10 space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">Survivors and the vanishing</h2>
+        <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">Survivors and the vanishing</h2>
           <p>
             Britain&apos;s roads are dominated by a familiar few. The {TOP?.name ?? "Ford Fiesta"} alone
             accounts for over a million cars still licensed, with the Golf, Corsa and Focus close behind —

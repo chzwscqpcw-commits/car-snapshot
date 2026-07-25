@@ -36,30 +36,30 @@ export default function StatsHeroSection({
   };
 
   return (
-    <div className="border-b border-[#2a2a2a] bg-[#111111] pb-8 pt-10">
+    <div className="border-b border-[#1e293b] bg-[#020617] pb-8 pt-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="mx-auto max-w-3xl px-4">
-        <nav className="mb-4 text-sm text-gray-500">
-          <Link href="/" className="hover:text-gray-300 transition-colors">
+        <nav className="mb-4 text-sm text-slate-500">
+          <Link href="/" className="hover:text-slate-300 transition-colors">
             Home
           </Link>
           <span className="mx-2">/</span>
           <Link
             href="/stats"
-            className="hover:text-gray-300 transition-colors"
+            className="hover:text-slate-300 transition-colors"
           >
             Statistics
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-400">{breadcrumb}</span>
+          <span className="text-slate-400">{breadcrumb}</span>
         </nav>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-50 sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
           {title}
         </h1>
-        <p className="mt-3 text-base text-gray-400 max-w-2xl">{subtitle}</p>
+        <p className="mt-3 text-base text-slate-400 max-w-2xl">{subtitle}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <a
             href="#check-vehicle"

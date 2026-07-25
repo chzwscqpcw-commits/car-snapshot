@@ -21,7 +21,7 @@ export default function StatCallout({
 }: StatCalloutProps) {
   const parsed = parseDisplayValue(value);
   return (
-    <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-5 text-center">
+    <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-5 text-center">
       <div className={`text-2xl sm:text-3xl font-mono font-bold tracking-tight ${colorMap[color]}`}>
         {parsed.numeric !== null ? (
           <CountUp
@@ -34,7 +34,7 @@ export default function StatCallout({
           value
         )}
       </div>
-      <div className="mt-1 text-sm text-gray-400">{label}</div>
+      <div className="mt-1 text-sm text-slate-400">{label}</div>
     </div>
   );
 }

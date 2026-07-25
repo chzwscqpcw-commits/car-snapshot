@@ -29,7 +29,7 @@ export default function StatsHubCompactCard({
   return (
     <Link
       href={href}
-      className="stats-reveal group block rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] hover:border-emerald-500/30 hover:bg-[#1e1e1e] transition-all duration-300 hover:-translate-y-0.5 p-3 sm:p-4"
+      className="stats-reveal group block rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-emerald-500/30 hover:bg-[#1e1e1e] transition-all duration-300 hover:-translate-y-0.5 p-3 sm:p-4"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center gap-3">
@@ -42,11 +42,11 @@ export default function StatsHubCompactCard({
         >
           {keyStat}
         </span>
-        <span className="text-gray-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all text-sm shrink-0">
+        <span className="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all text-sm shrink-0">
           &rarr;
         </span>
       </div>
-      <p className="text-xs text-gray-500 truncate mt-1.5 pl-7">
+      <p className="text-xs text-slate-500 truncate mt-1.5 pl-7">
         {description}
       </p>
     </Link>

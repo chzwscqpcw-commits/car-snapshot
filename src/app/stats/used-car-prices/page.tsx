@@ -129,8 +129,8 @@ export default function UsedCarPricesPage() {
         <UsedCarPriceChart />
 
         {/* Insight Copy */}
-        <div className="my-10 space-y-5 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="my-10 space-y-5 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Understanding the UK Used Car Market
           </h2>
 
@@ -144,7 +144,7 @@ export default function UsedCarPricesPage() {
             give way to a shock nobody predicted.
           </p>
 
-          <h3 className="text-base font-semibold text-gray-200">
+          <h3 className="text-base font-semibold text-slate-200">
             The COVID Effect and Semiconductor Shortage
           </h3>
 
@@ -170,7 +170,7 @@ export default function UsedCarPricesPage() {
             price — an almost unheard-of phenomenon in the automotive world.
           </p>
 
-          <h3 className="text-base font-semibold text-gray-200">
+          <h3 className="text-base font-semibold text-slate-200">
             Peak Prices and the Correction
           </h3>
 
@@ -196,7 +196,7 @@ export default function UsedCarPricesPage() {
             used cars, which continues to support values in that age bracket.
           </p>
 
-          <h3 className="text-base font-semibold text-gray-200">
+          <h3 className="text-base font-semibold text-slate-200">
             What This Means for Buyers and Sellers
           </h3>
 

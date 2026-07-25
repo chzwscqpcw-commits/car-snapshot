@@ -133,8 +133,8 @@ export default function CarTheftPage() {
         />
 
         {/* Insight copy */}
-        <div className="my-10 space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Understanding Car Theft in the UK
           </h2>
 
@@ -163,7 +163,7 @@ export default function CarTheftPage() {
             country.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Keyless Entry: Convenience vs Security
           </h3>
 
@@ -179,7 +179,7 @@ export default function CarTheftPage() {
             overnight remains the simplest and most effective defence.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Catalytic Converter Theft
           </h3>
 
@@ -195,7 +195,7 @@ export default function CarTheftPage() {
             parking in enclosed spaces are the recommended countermeasures.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Prevention: What Actually Works
           </h3>
 

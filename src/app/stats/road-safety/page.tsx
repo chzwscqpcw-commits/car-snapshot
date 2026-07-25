@@ -131,8 +131,8 @@ export default function RoadSafetyPage() {
         <RoadSafetyCharts />
 
         {/* Insight copy */}
-        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Five Decades of Road Safety Progress
           </h2>
           <p>
