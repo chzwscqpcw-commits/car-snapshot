@@ -25,6 +25,7 @@ import { trackPartnerClick } from "@/lib/tracking";
 import { odometerMiles } from "@/lib/valuation";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import Button from "@/components/Button";
+import MotJourneyTimeline from "@/components/tools/MotJourneyTimeline";
 
 interface MotResultProps {
   vrm: string;
@@ -74,112 +75,11 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {stats.defectPreview.length > 0 && (
         <AdvisoryPreview items={stats.defectPreview} kind="defect" />
       )}
-      {tests.length >= 2 && <YearlyTrackRecord tests={tests} />}
+      {tests.length >= 2 && <MotJourneyTimeline tests={tests} />}
       {tests.length > 0 && <FullHistory tests={tests} />}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
       <BmgHook vrm={vrm} stats={stats} />
     </ToolResultLayout>
-  );
-}
-
-/**
- * Year-by-year track record — for cars with multiple MOTs, surface
- * the pattern. Each row is one calendar year of testing, showing
- * pass/fail outcome and advisory/defect counts. Worsening patterns
- * (e.g. 2 advisories in 2022, 5 in 2023, 8 in 2024) are exactly the
- * kind of signal buyers want surfaced before they look at the full
- * chronological history. Hidden when there's only one test — a
- * one-row "trend" is a non-statement.
- */
-function YearlyTrackRecord({ tests }: { tests: MotTest[] }) {
-  // tests are sorted newest-first by Loaded(). Reverse for chronological
-  // display so the visual reads left-to-right in time.
-  const ordered = [...tests].sort(
-    (a, b) =>
-      new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime(),
-  );
-  const rows = ordered.map((t) => {
-    const d = new Date(t.completedDate);
-    const advisories = t.rfrAndComments?.filter((r) => r.type === "ADVISORY").length ?? 0;
-    const defects = t.rfrAndComments?.filter((r) => r.type === "DEFECT").length ?? 0;
-    return {
-      key: t.motTestNumber ?? t.completedDate,
-      year: d.getFullYear(),
-      passed: t.testResult === "PASSED",
-      advisories,
-      defects,
-      noteCount: advisories + defects,
-    };
-  });
-  const maxNotes = Math.max(1, ...rows.map((r) => r.noteCount));
-
-  return (
-    <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
-      <div className="flex items-center justify-between gap-3 mb-1">
-        <h3 className="text-sm font-semibold text-slate-100">Track record by year</h3>
-        <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
-          {rows.length} test{rows.length === 1 ? "" : "s"}
-        </span>
-      </div>
-      <p className="text-xs text-slate-500 mb-4">
-        Outcome and issue count for each MOT. Trend reads left-to-right (oldest to newest).
-      </p>
-
-      <div className="space-y-2">
-        {rows.map((row) => {
-          const widthPct = Math.max(3, Math.round((row.noteCount / maxNotes) * 100));
-          return (
-            <div
-              key={row.key}
-              className="grid grid-cols-[3rem_5rem_1fr_auto] items-center gap-2 sm:gap-3"
-            >
-              <span className="font-mono text-xs sm:text-sm text-slate-400 tabular-nums">
-                {row.year}
-              </span>
-              <span
-                className={`inline-flex justify-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full border ${
-                  row.passed
-                    ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                    : "bg-rose-500/15 text-rose-300 border-rose-500/30"
-                }`}
-              >
-                {row.passed ? "Pass" : "Fail"}
-              </span>
-              <div className="relative h-5 sm:h-6 rounded-md bg-slate-800/60 overflow-hidden">
-                <div
-                  className={`absolute inset-y-0 left-0 rounded-md transition-all ${
-                    row.defects > 0
-                      ? "bg-gradient-to-r from-rose-500/70 to-amber-500/70"
-                      : row.advisories > 0
-                      ? "bg-gradient-to-r from-amber-500/60 to-amber-400/60"
-                      : "bg-emerald-500/40"
-                  }`}
-                  style={{ width: `${widthPct}%` }}
-                />
-              </div>
-              <span className="text-[11px] font-medium tabular-nums tracking-tight whitespace-nowrap text-slate-300">
-                {row.advisories > 0 && (
-                  <span className="text-amber-300">
-                    {row.advisories} adv
-                  </span>
-                )}
-                {row.advisories > 0 && row.defects > 0 && (
-                  <span className="text-slate-600 mx-1">·</span>
-                )}
-                {row.defects > 0 && (
-                  <span className="text-rose-300">
-                    {row.defects} def
-                  </span>
-                )}
-                {row.advisories === 0 && row.defects === 0 && (
-                  <span className="text-emerald-300">Clean</span>
-                )}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </section>
   );
 }
 
