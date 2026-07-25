@@ -605,7 +605,7 @@ export default function MOTReminderSignup({
               onChange={(e) => updateReg(0, e.target.value)}
               placeholder="e.g. AB12 CDE"
               maxLength={8}
-              className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-base tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           )}
           <input
@@ -621,7 +621,7 @@ export default function MOTReminderSignup({
               });
             }}
             placeholder="Your email address"
-            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
           <button
             type="submit"
@@ -729,7 +729,7 @@ export default function MOTReminderSignup({
                   onChange={(e) => updateReg(i, e.target.value)}
                   placeholder="e.g. AB12 CDE"
                   maxLength={8}
-                  className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 font-mono text-base tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
                 {errors[`reg-${i}`] && (
                   <p className="mt-1 text-xs text-red-400">
@@ -753,7 +753,7 @@ export default function MOTReminderSignup({
                       });
                     }}
                     placeholder="Your email address"
-                    className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                   {errors.email && (
                     <p className="mt-1 text-xs text-red-400">{errors.email}</p>
@@ -787,7 +787,7 @@ export default function MOTReminderSignup({
                 });
               }}
               placeholder="Your email address"
-              className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="h-10 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
             {errors.email && (
               <p className="mt-1 text-xs text-red-400">{errors.email}</p>

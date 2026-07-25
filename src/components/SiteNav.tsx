@@ -162,7 +162,7 @@ export default function SiteNav() {
           <button
             type="button"
             onClick={open}
-            className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
             aria-label="Open search"
           >
             <Search className="h-4 w-4" />
@@ -172,7 +172,7 @@ export default function SiteNav() {
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
             aria-label="Open menu"
             aria-expanded={drawerOpen}
           >
@@ -242,7 +242,7 @@ function MobileDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
+            className="inline-flex items-center justify-center h-11 w-11 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />

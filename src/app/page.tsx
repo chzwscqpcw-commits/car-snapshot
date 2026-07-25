@@ -708,7 +708,7 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
       <nav className="flex items-center gap-1 bg-slate-900/95 border border-slate-700/80 backdrop-blur-sm rounded-full px-2 py-1.5 shadow-lg shadow-black/30 overflow-x-auto max-w-[calc(100vw-2rem)]">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="shrink-0 p-2 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
+          className="shrink-0 p-2.5 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-colors"
           title="Back to top"
           aria-label="Back to top"
         >
@@ -727,7 +727,7 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
         <div className="w-px h-5 bg-slate-700/60 shrink-0 mx-0.5" />
         <button
           onClick={onDownloadPDF}
-          className="shrink-0 p-2 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
+          className="shrink-0 p-2.5 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
           title="Download PDF report"
           aria-label="Download PDF report"
         >
@@ -3592,7 +3592,7 @@ END:VEVENT
           );
 
           return (
-            <div className="mb-10 bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-hidden">
+            <div className="mb-10 bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-x-auto">
               <table className="w-full text-left">
                 {/* Column headers — vehicle names */}
                 <thead>
