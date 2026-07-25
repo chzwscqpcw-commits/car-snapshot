@@ -11,6 +11,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
+import Button from "@/components/Button";
 import { RegPlate } from "@/components/RegPlate";
 
 /* ---------- types ---------- */
@@ -322,10 +323,10 @@ export default function ComparePage() {
 
           {/* Compare button */}
           <div className="mt-4 flex justify-center">
-            <button
+            <Button
               onClick={handleCompare}
               disabled={loading}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              size="lg"
             >
               {loading ? (
                 <>
@@ -338,7 +339,7 @@ export default function ComparePage() {
                   Compare Vehicles
                 </>
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Error */}

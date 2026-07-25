@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import Link from "next/link";
 import { Loader2, ArrowRight, Share2, RotateCcw, Check, Search } from "lucide-react";
 import { lookupRarity, suggestModels, type RarityResult } from "@/lib/how-many-left";
 import { buildModelFacts } from "@/lib/model-facts";
 import ModelFact from "@/components/ModelFact";
+import Button from "@/components/Button";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -265,27 +265,18 @@ export default function HowManyLeftExplorer() {
           {/* upsell + share */}
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             {vehicle.reg ? (
-              <a
-                href={`/?vrm=${vehicle.reg}`}
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
-              >
+              <Button href={`/?vrm=${vehicle.reg}`} className="flex-1">
                 See the full check on this car <ArrowRight className="h-4 w-4" />
-              </a>
+              </Button>
             ) : (
-              <Link
-                href="/"
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
-              >
+              <Button href="/" className="flex-1">
                 Got one? Check it by reg <ArrowRight className="h-4 w-4" />
-              </Link>
+              </Button>
             )}
-            <button
-              onClick={share}
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800/50 px-5 py-3 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800"
-            >
+            <Button variant="secondary" onClick={share}>
               {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Share2 className="h-4 w-4" />}
               {copied ? "Copied!" : "Share"}
-            </button>
+            </Button>
           </div>
           <p className="mt-3 text-center text-xs text-slate-500">
             MOT history, tax, mileage, valuation, recalls &amp; more — free, no signup.
@@ -322,10 +313,10 @@ export default function HowManyLeftExplorer() {
                 className="min-w-0 flex-1 bg-[#f7d40a] px-3 py-3.5 text-center font-[family-name:var(--font-geist-mono)] text-xl font-bold uppercase tracking-[0.2em] text-black placeholder:text-black/40 placeholder:tracking-[0.15em] focus:outline-none sm:text-2xl"
               />
             </div>
-            <button
+            <Button
               onClick={handleLookup}
               disabled={submitting}
-              className="mx-auto mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02] disabled:opacity-60"
+              className="mx-auto mt-4"
             >
               {submitting ? (
                 <>
@@ -334,7 +325,7 @@ export default function HowManyLeftExplorer() {
               ) : (
                 <>How many are left? <ArrowRight className="h-4 w-4" /></>
               )}
-            </button>
+            </Button>
           </>
         ) : (
           <div className="relative mx-auto max-w-md text-left">

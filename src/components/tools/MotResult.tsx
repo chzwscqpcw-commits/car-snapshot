@@ -24,6 +24,7 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { odometerMiles } from "@/lib/valuation";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
+import Button from "@/components/Button";
 
 interface MotResultProps {
   vrm: string;
@@ -583,16 +584,17 @@ function BmgHook({ vrm, stats }: { vrm: string; stats: MotStats }) {
             BookMyGarage shows local prices and availability — your reg is pre-loaded,
             no booking fee, no obligation.
           </p>
-          <a
+          <Button
             href={href}
             target="_blank"
             rel={rel}
             onClick={() => trackPartnerClick("bookMyGarage", "mot-result-bmg-hook")}
-            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-4 py-2 text-xs font-semibold text-white transition-colors shadow-md shadow-cyan-500/20"
+            size="sm"
+            className="mt-3"
           >
             Compare quotes for {vrm}
             <ArrowRight className="h-3 w-3" />
-          </a>
+          </Button>
         </div>
       </div>
     </section>

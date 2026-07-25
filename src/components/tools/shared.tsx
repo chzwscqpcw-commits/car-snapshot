@@ -17,6 +17,7 @@ import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
 import { RegPlate } from "@/components/RegPlate";
 import { trackEvent } from "@/lib/tracking";
+import Button from "@/components/Button";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
 
@@ -348,11 +349,7 @@ export function LookupError({
               spellCheck={false}
               className="h-11 flex-1 rounded-lg border border-rose-500/30 bg-slate-950/60 px-3 font-[family-name:var(--font-geist-mono)] text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/30 disabled:opacity-60"
             />
-            <button
-              type="submit"
-              disabled={retrySubmitting}
-              className="h-11 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 text-sm font-semibold text-white shadow-md shadow-cyan-500/20 transition-all disabled:opacity-70 disabled:cursor-progress"
-            >
+            <Button type="submit" disabled={retrySubmitting}>
               {retrySubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -364,7 +361,7 @@ export function LookupError({
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
-            </button>
+            </Button>
           </div>
           {retryError && (
             <p className="mt-2 text-xs text-rose-300">{retryError}</p>

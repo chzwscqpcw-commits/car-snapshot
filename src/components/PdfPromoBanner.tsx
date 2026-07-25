@@ -1,6 +1,7 @@
 "use client";
 
 import { PoundSterling, ChevronRight, Wrench } from "lucide-react";
+import Button from "@/components/Button";
 import { trackEvent } from "@/lib/tracking";
 
 /**
@@ -50,26 +51,27 @@ export default function PdfPromoBanner({
           </p>
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <a
+            <Button
               href={bookingHref("mot")}
               onClick={() =>
                 trackEvent("pdf_promo_click", { service: "mot", has_reg: Boolean(reg) })
               }
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-900/30 transition-all hover:from-emerald-600 hover:to-cyan-600 active:scale-95 sm:flex-initial"
+              className="sm:flex-initial"
             >
               Compare MOT prices
               <ChevronRight className="h-3.5 w-3.5" />
-            </a>
-            <a
+            </Button>
+            <Button
               href={bookingHref("full")}
+              variant="secondary"
               onClick={() =>
                 trackEvent("pdf_promo_click", { service: "full", has_reg: Boolean(reg) })
               }
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-slate-600 hover:text-white sm:flex-initial"
+              className="sm:flex-initial"
             >
               <Wrench className="h-3.5 w-3.5" />
               Service prices too
-            </a>
+            </Button>
           </div>
 
           <p className="mt-3 text-[11px] text-slate-500">

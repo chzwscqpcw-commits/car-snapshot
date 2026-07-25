@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { MapPin, Calendar, ChevronRight } from "lucide-react";
+import Button from "@/components/Button";
 import {
   estimateGarageDensity,
   flexibilityLabel,
@@ -147,18 +148,18 @@ export default function Step3Location({
 
       {/* Continue */}
       <div className="space-y-2">
-        <button
+        <Button
           type="button"
           onClick={() =>
             postcodeValid
               ? onContinue(postcode, date, flexibility)
               : onSkipPostcode(date, flexibility)
           }
-          className="w-full flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-3 font-semibold text-white shadow-md shadow-cyan-500/20 transition-all hover:from-blue-600 hover:to-cyan-600"
+          className="w-full"
         >
           Review &amp; compare prices
           <ChevronRight className="h-4 w-4" />
-        </button>
+        </Button>
         <button
           type="button"
           onClick={onBack}

@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
+import Button from "@/components/Button";
 
 export const metadata: Metadata = {
   title: "Free UK Vehicle Tools — MOT, Tax, Valuation & More | Free Plate Check",
@@ -192,13 +193,13 @@ export default function ToolsPage() {
                 MOT · tax · mileage · ULEZ · recalls · valuation · running costs — one page.
               </p>
             </div>
-            <Link
+            <Button
               href="/"
-              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+              className="flex-shrink-0"
             >
               Run full check
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -242,13 +243,13 @@ export default function ToolsPage() {
                 Pre-fill the reg once, compare prices from local garages, hand off to BookMyGarage. No email needed.
               </p>
             </div>
-            <Link
+            <Button
               href="/booking?source=tools_page_footer"
-              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-all shadow-md shadow-emerald-500/20"
+              className="flex-shrink-0"
             >
               Book MOT or service
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Button from "@/components/Button";
 import {
   MODEL_REGISTRY,
   getModelsForMake,
@@ -117,12 +118,9 @@ export default async function MakeIndexPage({ params }: PageProps) {
             Enter a registration number to see the full MOT history, tax status,
             recalls and more for any {displayMake}.
           </p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
+          <Button href="/">
             Look up a vehicle
-          </Link>
+          </Button>
         </div>
 
         {/* ── Model cards ──────────────────────────────────────────────── */}

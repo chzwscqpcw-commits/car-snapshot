@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Clock } from "lucide-react";
 import { getAllTags, getAllPosts, getPostsByTag, getTagLabel, getPostTags } from "@/lib/blog";
 import BlogTagPill from "@/components/BlogTagPill";
+import Button from "@/components/Button";
 
 interface PageProps {
   params: Promise<{ tag: string }>;
@@ -170,12 +171,9 @@ export default async function TagPage({ params }: PageProps) {
             Enter a registration to see MOT history, tax status, mileage and
             more — no signup required.
           </p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
+          <Button href="/">
             Look up a vehicle
-          </Link>
+          </Button>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
+import Button from "@/components/Button";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -245,11 +246,7 @@ export default function ConversionWidget({
               className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 pl-9 pr-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
-          <button
-            onClick={handleLookup}
-            disabled={lookupSubmitting}
-            className="h-11 whitespace-nowrap rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600 active:scale-95 disabled:opacity-70 disabled:cursor-progress flex items-center justify-center gap-2"
-          >
+          <Button onClick={handleLookup} disabled={lookupSubmitting}>
             {lookupSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -261,7 +258,7 @@ export default function ConversionWidget({
                 Check vehicle free
               </>
             )}
-          </button>
+          </Button>
         </div>
 
         {regError && (
