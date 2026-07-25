@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { RacDemoProvider } from "@/components/RacDemoContext";
 import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
@@ -14,6 +14,15 @@ import RouteAnalytics from "@/components/RouteAnalytics";
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
+  display: "swap",
+});
+
+// Brand body typeface — pairs with the Geist Mono already used for plates/labels.
+// next/font self-hosts it at build time (no runtime CDN), replacing the previous
+// bare Arial fallback (site-audit Q3).
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
@@ -109,7 +118,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={geistMono.variable}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
