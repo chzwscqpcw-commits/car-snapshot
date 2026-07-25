@@ -1399,13 +1399,16 @@ export default function Home() {
   // VED road tax
   const vedResult = useMemo(() => {
     if (!data) return null;
+    // Original model list price feeds the Expensive Car Supplement check.
+    const listPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model) ?? undefined;
     return calculateVed({
       co2Emissions: data.co2Emissions,
       engineCapacity: data.engineCapacity,
       fuelType: data.fuelType,
       monthOfFirstRegistration: data.monthOfFirstRegistration,
+      estimatedListPrice: listPrice,
     });
-  }, [data]);
+  }, [data, lookupModel]);
 
   // NCAP rating
   const ncapRating = useMemo((): NcapRating | null => {
@@ -1883,6 +1886,9 @@ export default function Home() {
       const parts: string[] = [`Combined: ${fuelEconomy.combinedMpg.toFixed(1)} MPG`];
       if (fuelEconomy.urbanMpg) parts.push(`Urban: ${fuelEconomy.urbanMpg.toFixed(1)} MPG`);
       if (fuelEconomy.extraUrbanMpg) parts.push(`Extra-urban: ${fuelEconomy.extraUrbanMpg.toFixed(1)} MPG`);
+      // Official electric-only range (VCA) — fetched but previously unsurfaced;
+      // most useful for PHEVs/hybrids that have no curated EV-specs entry.
+      if (fuelEconomy.electricRange) parts.push(`Electric range: ${fuelEconomy.electricRange} mi`);
       parts.push(`~£${annualCost}/year fuel`);
       const priceNote = liveAnnualCost ? " Based on current UK fuel prices." : "";
       result.push({
@@ -4608,6 +4614,22 @@ END:VEVENT
                       {valuationResult.ebayMinPrice && valuationResult.ebayMaxPrice && valuationResult.marketSupply ? " asking · " : ""}
                       {valuationResult.marketSupply && `${valuationResult.marketSupply === "good" ? "good" : valuationResult.marketSupply === "moderate" ? "moderate" : "limited"} supply`}
                       {valuationResult.marketSupply && valuationResult.ebayTotalListings ? ` (${valuationResult.ebayTotalListings}+ listed)` : ""}
+                    </p>
+                  )}
+
+                  {/* Most-common spec + inter-quartile range — already computed
+                      from the eBay comparables (previously PDF-only); surfaced
+                      here per the 2026-07 data audit. */}
+                  {(valuationResult.ebayDominantTransmission || valuationResult.ebayDominantBodyType) && (
+                    <p className="text-xs text-slate-400 mb-1.5">
+                      <span className="font-semibold text-slate-300">Most listings:</span>{" "}
+                      {[valuationResult.ebayDominantTransmission, valuationResult.ebayDominantBodyType].filter(Boolean).join(" · ")}
+                    </p>
+                  )}
+                  {valuationResult.ebayQ1Price && valuationResult.ebayQ3Price && (
+                    <p className="text-xs text-slate-400 mb-4">
+                      <span className="font-semibold text-slate-300">Middle 50% of listings:</span>{" "}
+                      <span className="font-mono">£{valuationResult.ebayQ1Price.toLocaleString()}–£{valuationResult.ebayQ3Price.toLocaleString()}</span>
                     </p>
                   )}
 
