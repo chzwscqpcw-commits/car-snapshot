@@ -208,24 +208,28 @@ export default function RoadSafetyCharts() {
               name="Car Occupants"
               stackId="casualties"
               fill="#38bdf8"
+              radius={[4, 4, 0, 0]}
             />
             <Bar
               dataKey="pedestrians"
               name="Pedestrians"
               stackId="casualties"
               fill="#f59e0b"
+              radius={[4, 4, 0, 0]}
             />
             <Bar
               dataKey="cyclists"
               name="Cyclists"
               stackId="casualties"
               fill="#10b981"
+              radius={[4, 4, 0, 0]}
             />
             <Bar
               dataKey="motorcyclists"
               name="Motorcyclists"
               stackId="casualties"
               fill="#ef4444"
+              radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
