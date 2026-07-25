@@ -410,3 +410,38 @@ export function getTopicCta(keywords: string[]): TopicCta | null {
   }
   return null;
 }
+
+/**
+ * Vehicle-history / provenance intent (HPI, finance, write-off, stolen, buying
+ * a used car). These readers want a *paid history report* — so route them to
+ * carVertical rather than a free reg-check tool, which is the weakest possible
+ * match for the highest-intent history reader. Checked BEFORE getTopicCta on the
+ * blog so an "HPI check" post doesn't fall through to the free /car-check tool.
+ * Deliberately excludes plain mileage/clocking, which keeps its own /mileage-check
+ * route.
+ */
+const HISTORY_INTENT_KEYWORDS = [
+  "hpi",
+  "history check",
+  "vehicle history",
+  "car history",
+  "outstanding finance",
+  "finance check",
+  "write-off",
+  "write off",
+  "stolen",
+  "provenance",
+  "car data check",
+  "cat s",
+  "cat n",
+  "cat c",
+  "cat d",
+  "buying a used car",
+  "checks before buying",
+];
+
+export function hasVehicleHistoryIntent(keywords: string[]): boolean {
+  if (!keywords || keywords.length === 0) return false;
+  const lower = keywords.map((k) => k.toLowerCase());
+  return HISTORY_INTENT_KEYWORDS.some((h) => lower.some((k) => k.includes(h)));
+}
