@@ -3,6 +3,7 @@ import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import RunningCostsResult from "@/components/tools/RunningCostsResult";
 import ConversionWidget from "@/components/stats/ConversionWidget";
+import HeroRegSearch from "@/components/HeroRegSearch";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 
@@ -190,6 +191,10 @@ export default async function RunningCostsPage({
               </div>
             </div>
           </div>
+          {/* Hero reg box (graduated winner of valuation_hero_reg_v1) — above the
+              fold like the valuation/MOT pages; the lower ConversionWidget hides
+              its own lookup so there's no duplicate. */}
+          <HeroRegSearch targetPath="/running-costs" ctaLabel="Check running costs free" className="mt-5" />
         </div>
       </div>
 
@@ -199,6 +204,7 @@ export default async function RunningCostsPage({
           subtext="Enter any UK reg plate for a personalised breakdown of fuel, road tax, depreciation, MOT, servicing and insurance."
           reminderHeadline="While you're here — set a free MOT reminder"
           targetPath="/running-costs"
+          showLookup={false}
         />
 
         <StatCallouts
