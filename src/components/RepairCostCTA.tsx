@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, Wrench } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import PartnerTrust from "@/components/PartnerTrust";
 
 interface RepairCostCTAProps {
   /** What the user is reading about — used in CTA copy */
@@ -143,6 +144,8 @@ export default function RepairCostCTA({
             Compare quotes &mdash; BookMyGarage
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
           </a>
+
+          <PartnerTrust partner="bookMyGarage" className="mt-3" />
 
           <p className="mt-2 text-xs text-slate-500">
             Free comparison · Free Plate Check earns a small commission, at no

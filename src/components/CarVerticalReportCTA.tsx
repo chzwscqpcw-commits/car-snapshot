@@ -5,6 +5,7 @@ import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag } from
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
+import PartnerTrust from "@/components/PartnerTrust";
 
 type Variant = "report" | "mileage";
 
@@ -155,6 +156,8 @@ export default function CarVerticalReportCTA({
           <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
       </div>
+
+      <PartnerTrust partner="carVertical" className="mt-2.5" />
 
       {/* Expandable detail */}
       {expanded && variant === "report" && (
