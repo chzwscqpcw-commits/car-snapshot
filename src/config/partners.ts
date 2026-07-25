@@ -359,7 +359,17 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
     },
   },
   {
-    keywords: ["valuation", "car value", "car worth", "how much is my car"],
+    keywords: [
+      "valuation",
+      "car value",
+      "car worth",
+      "how much is my car",
+      "resale value",
+      "hold their value",
+      "holds its value",
+      "depreciat",
+      "trade-in value",
+    ],
     cta: {
       path: "/car-valuation",
       label: "Get a free valuation",
