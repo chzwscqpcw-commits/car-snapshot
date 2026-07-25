@@ -7,13 +7,16 @@
  * - /preview/     — internal screenshot/preview routes with fixture data,
  *                   explicitly tagged "not linked, robots-noindex" in code
  * - /demo/        — affiliate-partner demo previews behind a password
- * - /*?reg=       — homepage reg-lookup deep-links (e.g. /?reg=AB12CDE and the
- *                   SearchAction schema's literal /?reg={search_term_string}).
- *                   Thin, near-duplicate, effectively-infinite param URLs that
- *                   were piling up in "Crawled - currently not indexed" and
- *                   wasting crawl budget. Blocking them lets the crawler reach
- *                   real content sooner; every canonical page is param-free, so
- *                   nothing indexable is lost.
+ * - /*?vrm=       — plate-lookup deep-links (e.g. /car-valuation?vrm=AB12CDE).
+ *                   `vrm` is the LIVE search param the app reads/writes; keep
+ *                   this in lock-step with the router.push targets. These carry
+ *                   a number plate (personal data), so they must never be
+ *                   crawled or indexed — plus they're thin, near-duplicate,
+ *                   effectively-infinite param URLs that waste crawl budget.
+ * - /*?reg=       — legacy plate param + the old SearchAction template. Kept
+ *                   blocked for defence-in-depth even though the app no longer
+ *                   emits it. Every canonical page is param-free, so nothing
+ *                   indexable is lost by blocking either param.
  *
  * AI crawlers (GPTBot, ChatGPT-User, ClaudeBot, PerplexityBot etc.) are
  * explicitly welcomed at the top level so the site shows up in LLM
@@ -21,7 +24,7 @@
  * default to blocked.
  */
 
-const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/", "/*?reg="];
+const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/", "/*?vrm=", "/*?reg="];
 
 const AI_CRAWLERS = [
   "GPTBot",

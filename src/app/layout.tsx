@@ -96,15 +96,11 @@ const webSiteJsonLd = {
   "@type": "WebSite",
   name: "Free Plate Check",
   url: "https://www.freeplatecheck.co.uk",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate:
-        "https://www.freeplatecheck.co.uk/?reg={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
+  // No SearchAction/sitelinks-searchbox: its template pointed at the legacy
+  // ?reg= param (which the app no longer reads, so the box was already broken),
+  // and a plate-lookup search endpoint is exactly what we now robots-block for
+  // privacy. Removing it rather than repointing it to ?vrm= keeps us from
+  // advertising a crawl-blocked, plate-bearing search URL to Google.
 };
 
 export default function RootLayout({
@@ -151,7 +147,14 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LW3HZS1Z5H');`}
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());
+// Strip the number plate from anything GA4 receives. A UK reg is personal data
+// (UK GDPR) and our privacy policy promises anonymized analytics + "we don't
+// track which vehicles you look up" — but plates ride in the URL as ?vrm= (and
+// legacy ?reg=), which GA otherwise captures verbatim as page_location /
+// page_referrer on hard loads. Scrub both params before GA ever sees them; all
+// other params (utm_*, gclid, …) are preserved so campaign attribution is intact.
+(function(){function scrub(u){try{var x=new URL(u);x.searchParams.delete('vrm');x.searchParams.delete('reg');return x.toString();}catch(e){return u;}}gtag('config','G-LW3HZS1Z5H',{page_location:scrub(location.href),page_referrer:scrub(document.referrer||'')});})();`}
         </Script>
         <RouteAnalytics />
         <RacDemoProvider>
