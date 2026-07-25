@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Gauge, AlertTriangle, TrendingUp, TrendingDown, CircleDashed } from "lucide-react";
 import {
   useVehicleLookup,
@@ -11,6 +11,7 @@ import {
   type LookupVehicle,
   type MotTest,
 } from "@/components/tools/shared";
+import { useScrollReveal } from "@/components/tools/useScrollReveal";
 
 interface MileageResultProps {
   vrm: string;
@@ -284,45 +285,6 @@ function SparklineCard({ analysis }: { analysis: MileageAnalysis }) {
   );
 }
 
-/** Scroll-triggered reveal for the year-by-year bars (grow-in). State writes are
- *  deferred out of the synchronous effect body (rAF / observer callback). */
-function useMileageReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let io: IntersectionObserver | null = null;
-    const raf = requestAnimationFrame(() => {
-      if (mq.matches) {
-        setReduced(true);
-        setRevealed(true);
-        return;
-      }
-      const el = ref.current;
-      if (!el) {
-        setRevealed(true);
-        return;
-      }
-      io = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting) {
-            setRevealed(true);
-            io?.disconnect();
-          }
-        },
-        { threshold: 0.3 },
-      );
-      io.observe(el);
-    });
-    return () => {
-      cancelAnimationFrame(raf);
-      io?.disconnect();
-    };
-  }, []);
-  return { ref, revealed, reduced };
-}
-
 /**
  * Year-by-year mileage breakdown. For most cars with annual MOTs this
  * surfaces twelve+ rows showing exactly how many miles were driven each
@@ -349,7 +311,7 @@ function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
           perYear: estimated[0]!.miles,
         }
       : null;
-  const { ref, revealed, reduced } = useMileageReveal();
+  const { ref, revealed, reduced } = useScrollReveal(0.3);
 
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
