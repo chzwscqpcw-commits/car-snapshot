@@ -183,6 +183,10 @@ export default function DpfCleaningPage() {
           </div>
         </section>
 
+        {/* Partner CTA — moved up after the price section; reg entry lives in
+            the PersonalisedCostLookup above, hence hideRegLookup. */}
+        <RepairCostCTA jobName="DPF cleaning" partner="bookMyGarageRepair" hideRegLookup />
+
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-3">Signs your DPF needs attention</h2>
           <ul className="space-y-2 text-sm">
@@ -226,8 +230,6 @@ export default function DpfCleaningPage() {
             ))}
           </ul>
         </section>
-
-        <RepairCostCTA jobName="DPF cleaning" partner="bookMyGarageRepair" hideRegLookup />
 
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-4">FAQ</h2>

@@ -163,6 +163,10 @@ export default function CambeltReplacementPage() {
           </div>
         </section>
 
+        {/* Partner CTA — moved up after the price section; reg entry lives in
+            the PersonalisedCostLookup above, hence hideRegLookup. */}
+        <RepairCostCTA jobName="cambelt replacement" partner="bookMyGarageRepair" hideRegLookup />
+
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-3">When to change it</h2>
           <p className="leading-relaxed mb-4">
@@ -247,8 +251,6 @@ export default function CambeltReplacementPage() {
             </li>
           </ul>
         </section>
-
-        <RepairCostCTA jobName="cambelt replacement" partner="bookMyGarageRepair" hideRegLookup />
 
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-4">FAQ</h2>
