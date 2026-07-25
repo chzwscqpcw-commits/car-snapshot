@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search, Loader2, CheckCircle2 } from "lucide-react";
 import type { LookupVehicle } from "@/components/tools/shared";
+import Button from "@/components/Button";
 
 interface Props {
   initialVrm: string;
@@ -89,17 +90,17 @@ export default function Step1Vehicle({ initialVrm, onConfirm }: Props) {
           autoCorrect="off"
           spellCheck={false}
         />
-        <button
+        <Button
           type="submit"
           disabled={loading || !vrm.trim()}
-          className="rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-5 font-semibold text-white shadow-md shadow-cyan-500/20 transition-all hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          size="lg"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Search className="h-4 w-4" />
           )}
-        </button>
+        </Button>
       </form>
 
       {error && (

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Disc, AlertTriangle, CheckCircle2, Wrench } from "lucide-react";
 import PersonalisedCostLookup from "@/components/PersonalisedCostLookup";
 import RepairCostCTA from "@/components/RepairCostCTA";
+import Button from "@/components/Button";
 
 const TITLE = "Brake Pads Replacement Cost UK 2026: £90–£350 Per Axle";
 const DESCRIPTION =
@@ -513,13 +514,13 @@ export default function BrakePadsPage() {
                 diagnostics and repair, with quotes back the same day.
               </p>
 
-              <Link
+              <Button
                 href="/booking?type=diagnostic&source=brake-pads-page"
-                className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+                className="mt-4"
               >
                 Start the booking wizard
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-              </Link>
+              </Button>
 
               <p className="mt-2 text-xs text-slate-500">
                 Free quotes from local garages &middot; No obligation &middot; Takes about 60 seconds

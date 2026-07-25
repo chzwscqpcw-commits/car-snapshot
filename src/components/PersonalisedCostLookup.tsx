@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import Button from "@/components/Button";
 import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
 import {
@@ -196,7 +197,7 @@ export default function PersonalisedCostLookup({
                 BookMyGarage will use your reg to find local garages and show
                 actual prices — no booking fee, no obligation.
               </p>
-              <a
+              <Button
                 href={partnerHref}
                 target="_blank"
                 rel={partnerRel}
@@ -206,11 +207,11 @@ export default function PersonalisedCostLookup({
                     `personalised-cost-${slug}`
                   )
                 }
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+                className="mt-3"
               >
                 Compare quotes for {vehicle.registrationNumber}
                 <ArrowRight className="h-3.5 w-3.5" />
-              </a>
+              </Button>
               <p className="mt-2 text-[11px] text-slate-500">
                 Free Plate Check earns a small commission from BookMyGarage at no cost to you.
               </p>
@@ -278,11 +279,10 @@ export default function PersonalisedCostLookup({
               disabled={submitting}
               className="h-11 flex-1 rounded-lg border border-slate-700 bg-slate-950/60 px-3 font-[family-name:var(--font-geist-mono)] text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 disabled:opacity-60"
             />
-            <button
+            <Button
               type="button"
               onClick={handleLookup}
               disabled={submitting}
-              className="h-11 whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 text-sm font-semibold text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-md shadow-cyan-500/20"
             >
               {submitting ? (
                 <>
@@ -295,7 +295,7 @@ export default function PersonalisedCostLookup({
                   Get my estimate
                 </>
               )}
-            </button>
+            </Button>
           </div>
 
           {error && (

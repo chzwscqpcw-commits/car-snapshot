@@ -160,6 +160,7 @@ import {
 } from "lucide-react";
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import BoltMark from "@/components/BoltMark";
+import Button from "@/components/Button";
 import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
@@ -3558,10 +3559,10 @@ END:VEVENT
               </div>
             </div>
 
-            <button
+            <Button
               onClick={loadComparisonData}
               disabled={!compareReg1 || !compareReg2 || compareLoading}
-              className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-lg transition-all shadow-md shadow-cyan-500/20 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full"
             >
               {compareLoading ? (
                 <>
@@ -3571,7 +3572,7 @@ END:VEVENT
               ) : (
                 "Compare Vehicles"
               )}
-            </button>
+            </Button>
           </div>
         )}
 
@@ -3753,10 +3754,10 @@ END:VEVENT
                   className="w-full pl-12 pr-4 py-3.5 bg-slate-900/80 backdrop-blur-sm border border-slate-700/70 rounded-xl text-slate-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.2em]"
                 />
               </div>
-              <button
+              <Button
                 onClick={handleLookup}
                 disabled={loading}
-                className="px-6 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold rounded-xl transition-all transform active:scale-95 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-cyan-500/20"
+                size="lg"
               >
                 {loading ? (
                   <>
@@ -3769,7 +3770,7 @@ END:VEVENT
                     Look up
                   </>
                 )}
-              </button>
+              </Button>
 
               {recentLookups.length >= 2 && (
                 <button
@@ -3960,15 +3961,16 @@ END:VEVENT
                     </button>
 
                     {/* Primary PDF button */}
-                    <button
+                    <Button
                       onClick={() => downloadPDF()}
-                      className="ml-auto flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors"
+                      size="sm"
+                      className="ml-auto"
                       title="Download PDF report"
                     >
                       <FileText className="w-4 h-4" />
                       <span className="hidden sm:inline">{pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
                       <span className="sm:hidden">PDF</span>
-                    </button>
+                    </Button>
                 </div>
               </div>
 
@@ -5333,12 +5335,12 @@ END:VEVENT
                   <p className="text-sm font-medium text-slate-200">Save this report</p>
                   <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
                 </div>
-                <button
+                <Button
                   onClick={() => downloadPDF()}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
+                  size="sm"
                 >
                   Download free report
-                </button>
+                </Button>
               </div>
             </DataReveal>
 
@@ -5723,13 +5725,14 @@ END:VEVENT
                 >
                   Cancel
                 </button>
-                <button
+                <Button
                   onClick={handleInsuranceModalSave}
                   disabled={!insuranceModalDate}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 text-white font-medium rounded-lg transition-all shadow-md shadow-cyan-500/20 disabled:shadow-none disabled:cursor-not-allowed"
+                  size="sm"
+                  className="flex-1"
                 >
                   Save
-                </button>
+                </Button>
               </div>
             </div>
           </div>

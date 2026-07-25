@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Button from "@/components/Button";
 import {
   getUniqueMakes,
   getModelsForMake,
@@ -90,12 +91,9 @@ export default function CarsIndexPage() {
             Enter any UK registration number to see the full MOT history, tax
             status, mileage, recalls and estimated value.
           </p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
+          <Button href="/">
             Look up a vehicle
-          </Link>
+          </Button>
         </div>
 
         {/* ── Makes grid ───────────────────────────────────────────────── */}

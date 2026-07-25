@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Button from "@/components/Button";
 import { CAZ_ZONES } from "@/data/caz-zones";
 
 export const metadata: Metadata = {
@@ -86,12 +87,9 @@ export default function CleanAirZonesPage() {
             Enter any UK registration number to see Euro emission standard and
             Clean Air Zone compliance.
           </p>
-          <a
-            href="/ulez-check"
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
+          <Button href="/ulez-check">
             Check ULEZ &amp; emissions
-          </a>
+          </Button>
         </div>
 
         <div className="space-y-8 text-slate-300">

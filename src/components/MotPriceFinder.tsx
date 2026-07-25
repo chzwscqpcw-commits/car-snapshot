@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, PoundSterling } from "lucide-react";
+import Button from "@/components/Button";
 import { trackEvent } from "@/lib/tracking";
 
 function cleanReg(raw: string): string {
@@ -84,13 +85,10 @@ export default function MotPriceFinder({
             className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 pl-9 pr-3 font-mono text-sm uppercase tracking-widest text-white placeholder:normal-case placeholder:tracking-normal placeholder:text-slate-500 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
         </div>
-        <button
-          onClick={go}
-          className="flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 text-sm font-semibold text-white transition-all hover:from-emerald-600 hover:to-cyan-600 active:scale-95"
-        >
+        <Button onClick={go}>
           <PoundSterling className="h-4 w-4" />
           Compare MOT prices
-        </button>
+        </Button>
       </div>
 
       {error && <p className="mt-2 text-xs text-red-400">{error}</p>}

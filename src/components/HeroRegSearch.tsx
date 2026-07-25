@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
 import { trackConversion } from "@/lib/tracking";
 
 /**
@@ -114,10 +115,10 @@ export default function HeroRegSearch({
             className="h-12 w-full rounded-lg border border-slate-700 bg-slate-800 pl-9 pr-3 font-mono text-base uppercase tracking-widest text-white transition-all placeholder:normal-case placeholder:tracking-normal placeholder:text-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <button
+        <Button
           onClick={handleLookup}
           disabled={submitting}
-          className="flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 text-sm font-semibold text-white transition-all hover:from-blue-600 hover:to-cyan-600 active:scale-95 disabled:cursor-progress disabled:opacity-70"
+          size="lg"
         >
           {submitting ? (
             <>
@@ -130,7 +131,7 @@ export default function HeroRegSearch({
               {ctaLabel}
             </>
           )}
-        </button>
+        </Button>
       </div>
       {error ? (
         <p className="mt-2 text-xs text-red-400">{error}</p>

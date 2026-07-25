@@ -18,6 +18,7 @@ import {
   Compass,
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
+import Button from "@/components/Button";
 
 /**
  * 404 page — designed to get a lost user back into action fast.
@@ -91,13 +92,13 @@ export default function NotFound() {
                     className="w-full pl-12 pr-4 py-3.5 bg-slate-950 border border-slate-700/70 rounded-xl text-slate-100 placeholder:text-slate-600 placeholder:tracking-wider focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/40 transition-all font-mono text-lg tracking-[0.2em]"
                   />
                 </div>
-                <button
+                <Button
                   onClick={handleLookup}
-                  className="px-6 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-semibold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-cyan-500/20"
+                  size="lg"
                 >
                   Look up
                   <ArrowRight className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>

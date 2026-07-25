@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Button from "@/components/Button";
 import { CAZ_ZONES, getCazBySlug, getAllCazSlugs } from "@/data/caz-zones";
 
 type Props = {
@@ -141,14 +142,11 @@ export default async function CityCleanAirZonePage({ params }: Props) {
               ? "Enter any UK registration number to see ULEZ compliance status instantly."
               : "Enter any UK registration number to see Euro emission standard and likely compliance."}
           </p>
-          <a
-            href={zone.checkUrl}
-            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
+          <Button href={zone.checkUrl}>
             {zone.coveredByOurChecker
               ? "Check ULEZ compliance"
               : "Check your vehicle"}
-          </a>
+          </Button>
         </div>
 
         <div className="space-y-8 text-slate-300">

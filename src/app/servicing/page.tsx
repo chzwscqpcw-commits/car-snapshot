@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import Button from "@/components/Button";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -189,12 +190,13 @@ export default function ServicingPage() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary CTA → booking wizard */}
         <div className="mb-8">
-          <a
+          <Button
             href="/booking?type=full&source=servicing-page-hero"
-            className="block w-full text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition-colors"
+            size="lg"
+            className="block w-full text-center"
           >
             Compare service prices near you &rarr;
-          </a>
+          </Button>
           <p className="mt-2 text-center text-xs text-slate-500">
             Enter your reg, choose a service, see local prices in 60 seconds.
           </p>
@@ -575,12 +577,13 @@ export default function ServicingPage() {
             <p className="text-sm text-slate-400 mb-4">
               Enter your reg, confirm the service you need, and we&apos;ll show local garage prices in seconds. No email, no obligation.
             </p>
-            <a
+            <Button
               href="/booking?type=full&source=servicing-page-mid"
-              className="block w-full text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition-colors"
+              size="lg"
+              className="block w-full text-center"
             >
               Start the booking wizard &rarr;
-            </a>
+            </Button>
           </section>
 
           {/* FAQ section */}

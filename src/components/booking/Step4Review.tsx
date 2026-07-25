@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ExternalLink, Edit3, ShieldCheck } from "lucide-react";
+import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import {
@@ -230,24 +231,25 @@ export default function Step4Review({
           position: fixed on its children). The inline button is desktop-
           only on mobile we rely on the portaled sticky bar. */}
       <div className="space-y-2">
-        <a
+        <Button
           href={handoffUrl}
           target="_blank"
           rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
           onClick={handleHandoffClick}
-          className="hidden sm:flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:from-emerald-400 hover:to-cyan-400"
+          className="hidden sm:flex w-full"
         >
           Compare prices on BookMyGarage
           <ExternalLink className="h-4 w-4" />
-        </a>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="secondary"
           onClick={onEdit}
-          className="flex items-center justify-center gap-1.5 w-full rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800"
+          className="w-full"
         >
           <Edit3 className="h-3.5 w-3.5" />
           Edit details
-        </button>
+        </Button>
         <p className="text-[10px] text-slate-600 text-center pt-1">
           Free comparison · No booking fee · Free Plate Check earns a small commission
         </p>
@@ -288,16 +290,16 @@ function StickyMobileCta({
       className="sm:hidden fixed inset-x-0 bottom-0 z-50 border-t border-slate-800 bg-slate-950/95 backdrop-blur-md px-3 pt-3"
       style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
     >
-      <a
+      <Button
         href={href}
         target="_blank"
         rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
         onClick={onClick}
-        className="flex items-center justify-center gap-2 w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all"
+        className="w-full"
       >
         Compare prices on BookMyGarage
         <ExternalLink className="h-4 w-4" />
-      </a>
+      </Button>
     </div>,
     document.body,
   );

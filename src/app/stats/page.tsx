@@ -4,6 +4,7 @@ import StatsHubFeaturedCard from "@/components/stats/StatsHubFeaturedCard";
 import StatsHubPreviewCard from "@/components/stats/StatsHubPreviewCard";
 import StatsHubCategoryGroup from "@/components/stats/StatsHubCategoryGroup";
 import FuelPricesSparkline from "@/components/stats/sparklines/FuelPricesSparkline";
+import Button from "@/components/Button";
 
 export const metadata: Metadata = {
   title: "UK Motoring Statistics 2025 | Free Plate Check",
@@ -288,12 +289,9 @@ export default function StatsIndex() {
               Run a free MOT history check, see tax status, mileage records and
               more — instantly, no sign-up required.
             </p>
-            <Link
-              href="/"
-              className="inline-block bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-bold text-lg px-10 py-4 rounded-lg transition-all active:scale-95"
-            >
+            <Button href="/" size="lg">
               Search UK Vehicles Free &rarr;
-            </Link>
+            </Button>
             <p className="text-slate-500 text-sm mt-3">
               Covers MOT history &middot; Tax status &middot; Mileage &middot;
               ULEZ &middot; Safety recalls

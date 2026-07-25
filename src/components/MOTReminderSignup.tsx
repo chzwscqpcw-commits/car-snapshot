@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Bell, CalendarPlus, CheckCircle2, X, Loader2 } from "lucide-react";
+import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 import { DEFAULT_OFFSETS, OFFSET_OPTIONS } from "@/lib/mot-reminders";
@@ -623,11 +624,7 @@ export default function MOTReminderSignup({
             placeholder="Your email address"
             className="h-10 flex-1 rounded-md border border-slate-700 bg-slate-800 px-3 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
-          <button
-            type="submit"
-            disabled={submitting}
-            className="h-10 whitespace-nowrap rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 px-5 text-sm font-semibold text-white transition-all duration-150 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-60 shadow-md shadow-cyan-500/20"
-          >
+          <Button type="submit" disabled={submitting} size="sm">
             {submitting ? (
               <span className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -636,7 +633,7 @@ export default function MOTReminderSignup({
             ) : (
               "Remind me \u2192"
             )}
-          </button>
+          </Button>
         </div>
 
         {(errors["reg-0"] || errors.email || errors.general) && (
@@ -821,10 +818,10 @@ export default function MOTReminderSignup({
         )}
 
         {/* Submit button */}
-        <button
+        <Button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:from-blue-600 hover:to-cyan-600 disabled:opacity-60 shadow-md shadow-cyan-500/20 sm:w-auto sm:ml-auto sm:block"
+          className="w-full sm:w-auto sm:ml-auto sm:block"
         >
           {submitting ? (
             <span className="flex items-center justify-center gap-2">
@@ -834,7 +831,7 @@ export default function MOTReminderSignup({
           ) : (
             "Set my MOT reminder \u2192"
           )}
-        </button>
+        </Button>
 
         {timingPicker}
 

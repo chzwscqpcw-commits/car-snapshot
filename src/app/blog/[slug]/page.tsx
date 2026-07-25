@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLabel } from "@/lib/blog";
 import BlogTagPill from "@/components/BlogTagPill";
+import Button from "@/components/Button";
 import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
@@ -312,12 +313,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <p className="text-sm text-slate-400 mb-4">
                   {topicCta.description}
                 </p>
-                <a
-                  href={topicCta.path}
-                  className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-                >
+                <Button href={topicCta.path}>
                   Check a vehicle now
-                </a>
+                </Button>
               </div>
             );
           }
@@ -330,12 +328,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                 Enter a registration to see MOT history, tax status, mileage and
                 more — no signup required.
               </p>
-              <Link
-                href="/"
-                className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-              >
+              <Button href="/">
                 Look up a vehicle
-              </Link>
+              </Button>
             </div>
           );
         })()}

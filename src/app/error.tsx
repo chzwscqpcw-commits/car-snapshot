@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
+import Button from "@/components/Button";
 
 /**
  * Caught client-side error boundary for route segments below the root
@@ -46,20 +46,14 @@ export default function GlobalRouteError({
           )}
         </p>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
-          <button
-            onClick={reset}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-cyan-500/20 transition-all"
-          >
+          <Button onClick={reset}>
             <RotateCcw className="h-4 w-4" />
             Try again
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900/60 hover:bg-slate-800/60 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-colors"
-          >
+          </Button>
+          <Button href="/" variant="secondary">
             <Home className="h-4 w-4" />
             Go to homepage
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

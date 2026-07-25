@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import Button from "@/components/Button";
 
 type Category = "general" | "bug" | "feature" | "business" | "buy-this-site";
 
@@ -243,10 +244,10 @@ export default function ContactForm() {
         </div>
       )}
 
-      <button
+      <Button
         type="submit"
         disabled={submitting || message.length < 20 || !email}
-        className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-cyan-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full"
       >
         {submitting ? (
           <>
@@ -259,7 +260,7 @@ export default function ContactForm() {
             Send message
           </>
         )}
-      </button>
+      </Button>
 
       <p className="text-[11px] text-slate-500 leading-relaxed">
         By submitting you agree to us storing the message and your email long
