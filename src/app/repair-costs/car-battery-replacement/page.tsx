@@ -177,6 +177,10 @@ export default function CarBatteryPage() {
           </p>
         </section>
 
+        {/* Partner CTA — moved up after the price section; reg entry lives in
+            the PersonalisedCostLookup above, hence hideRegLookup. */}
+        <RepairCostCTA jobName="car battery replacement" partner="bookMyGarageRepair" hideRegLookup />
+
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-3">Signs your battery is on the way out</h2>
           <ul className="space-y-2 text-sm">
@@ -220,8 +224,6 @@ export default function CarBatteryPage() {
             isn&apos;t charging.
           </p>
         </section>
-
-        <RepairCostCTA jobName="car battery replacement" partner="bookMyGarageRepair" hideRegLookup />
 
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-4">FAQ</h2>

@@ -166,6 +166,11 @@ export default function AirconRegasPage() {
           </p>
         </section>
 
+        {/* Partner CTA — moved up to right after the price section (the "I know
+            the cost, get me a quote" moment); reg entry is owned by the
+            PersonalisedCostLookup at the top, so hideRegLookup avoids a dupe. */}
+        <RepairCostCTA jobName="aircon regas" partner="bookMyGarageRepair" hideRegLookup />
+
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-3">When you need one</h2>
           <p className="leading-relaxed mb-4">
@@ -244,8 +249,6 @@ export default function AirconRegasPage() {
             </li>
           </ul>
         </section>
-
-        <RepairCostCTA jobName="aircon regas" partner="bookMyGarageRepair" hideRegLookup />
 
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-4">FAQ</h2>
