@@ -136,11 +136,11 @@ export default function ReliabilityCharts() {
   return (
     <div className="space-y-8">
       {/* Chart 1: Top 20 horizontal bar */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Top 20 Most Reliable Cars
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Models with 50,000+ MOT tests, ranked by pass rate
         </p>
         <div className="w-full h-[420px] sm:h-[520px] md:h-[620px]">
@@ -151,7 +151,7 @@ export default function ReliabilityCharts() {
               margin={{ top: 4, right: 40, left: 0, bottom: 4 }}
             >
               <CartesianGrid
-                stroke="#2a2a2a"
+                stroke="#1e293b"
                 strokeDasharray="3 3"
                 horizontal={false}
               />
@@ -193,7 +193,7 @@ export default function ReliabilityCharts() {
       </div>
 
       {/* Tier legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
           85%+ Excellent
@@ -222,7 +222,7 @@ export default function ReliabilityCharts() {
             data={ageData}
             margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="age"
               stroke="#6b7280"
@@ -260,7 +260,7 @@ export default function ReliabilityCharts() {
       </ChartContainer>
 
       {/* Line legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
         {Object.entries(LINE_COLORS).map(([name, color]) => (
           <span key={name} className="flex items-center gap-1.5">
             <span
@@ -273,12 +273,12 @@ export default function ReliabilityCharts() {
       </div>
 
       {/* League table */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] overflow-hidden">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] overflow-hidden">
         <div className="px-4 py-4 sm:px-6">
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-100">
             Reliability League Table
           </h3>
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1 text-sm text-slate-400">
             Click column headers to sort. Only models with 50,000+ MOT tests
             included.
           </p>
@@ -286,46 +286,46 @@ export default function ReliabilityCharts() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-t border-[#2a2a2a] bg-[#141414] text-left text-xs uppercase tracking-wider text-gray-500">
+              <tr className="border-t border-[#1e293b] bg-[#141414] text-left text-xs uppercase tracking-wider text-slate-500">
                 <th
-                  className="cursor-pointer select-none px-4 py-3 sm:px-6 hover:text-gray-300 transition-colors"
+                  className="cursor-pointer select-none px-4 py-3 sm:px-6 hover:text-slate-300 transition-colors"
                   onClick={() => toggleSort("rank")}
                 >
                   Rank{sortIndicator("rank")}
                 </th>
                 <th
-                  className="cursor-pointer select-none px-4 py-3 sm:px-6 hover:text-gray-300 transition-colors"
+                  className="cursor-pointer select-none px-4 py-3 sm:px-6 hover:text-slate-300 transition-colors"
                   onClick={() => toggleSort("label")}
                 >
                   Model{sortIndicator("label")}
                 </th>
                 <th
-                  className="cursor-pointer select-none px-4 py-3 sm:px-6 text-right hover:text-gray-300 transition-colors"
+                  className="cursor-pointer select-none px-4 py-3 sm:px-6 text-right hover:text-slate-300 transition-colors"
                   onClick={() => toggleSort("tests")}
                 >
                   Tests{sortIndicator("tests")}
                 </th>
                 <th
-                  className="cursor-pointer select-none px-4 py-3 sm:px-6 text-right hover:text-gray-300 transition-colors"
+                  className="cursor-pointer select-none px-4 py-3 sm:px-6 text-right hover:text-slate-300 transition-colors"
                   onClick={() => toggleSort("passRate")}
                 >
                   Pass Rate{sortIndicator("passRate")}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2a2a2a]">
+            <tbody className="divide-y divide-[#1e293b]">
               {sorted.map((entry) => (
                 <tr
                   key={entry.label}
                   className="transition-colors hover:bg-[#1f1f1f]"
                 >
-                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-gray-400 font-medium">
+                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-slate-400 font-medium">
                     {entry.rank}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-gray-100 font-medium">
+                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-slate-100 font-medium">
                     {entry.label}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-right text-gray-400">
+                  <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-right text-slate-400">
                     {entry.tests.toLocaleString()}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 sm:px-6 text-right font-semibold">

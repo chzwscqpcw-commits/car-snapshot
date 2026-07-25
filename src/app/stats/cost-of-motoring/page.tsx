@@ -130,8 +130,8 @@ export default function CostOfMotoringPage() {
         <CostOfMotoringChart />
 
         {/* Insight copy */}
-        <article className="prose prose-invert mt-10 max-w-none text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <article className="prose prose-invert mt-10 max-w-none text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             The Rising Cost of Motoring in 2025
           </h2>
           <p>
@@ -143,7 +143,7 @@ export default function CostOfMotoringPage() {
             depreciation, VED (road tax) and routine servicing.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 mt-6">
+          <h3 className="text-lg font-semibold text-slate-100 mt-6">
             Depreciation: the hidden heavyweight
           </h3>
           <p>
@@ -158,7 +158,7 @@ export default function CostOfMotoringPage() {
             this initial hit.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 mt-6">
+          <h3 className="text-lg font-semibold text-slate-100 mt-6">
             Insurance premiums continue to climb
           </h3>
           <p>
@@ -174,7 +174,7 @@ export default function CostOfMotoringPage() {
             risen, pushing up the overall claims pool.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 mt-6">
+          <h3 className="text-lg font-semibold text-slate-100 mt-6">
             Fuel costs: lower than the 2022 peak but still elevated
           </h3>
           <p>
@@ -187,7 +187,7 @@ export default function CostOfMotoringPage() {
             and purchase prices partially offset this saving.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 mt-6">
+          <h3 className="text-lg font-semibold text-slate-100 mt-6">
             VED and servicing
           </h3>
           <p>
@@ -200,7 +200,7 @@ export default function CostOfMotoringPage() {
             the motor trade, averaging around &pound;860 per year.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 mt-6">
+          <h3 className="text-lg font-semibold text-slate-100 mt-6">
             Tips to reduce your motoring costs
           </h3>
           <p>

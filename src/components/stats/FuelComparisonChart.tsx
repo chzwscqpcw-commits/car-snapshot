@@ -63,7 +63,7 @@ export default function FuelComparisonChart() {
             data={fuelComparisonData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="annualMiles"
               stroke="#6b7280"
@@ -97,20 +97,20 @@ export default function FuelComparisonChart() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {Number(label).toLocaleString()} miles/year
                     </div>
                     {payload.map((entry, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2 text-xs text-gray-200"
+                        className="flex items-center gap-2 text-xs text-slate-200"
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full"
                           style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-gray-400">{entry.name}:</span>
+                        <span className="text-slate-400">{entry.name}:</span>
                         <span className="font-medium">
                           {"£"}
                           {(entry.value as number).toLocaleString()}
@@ -167,8 +167,8 @@ export default function FuelComparisonChart() {
       </ChartContainer>
 
       {/* Mileage slider */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <label className="block text-sm font-medium text-gray-300 mb-3">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <label className="block text-sm font-medium text-slate-300 mb-3">
           Your annual mileage:{" "}
           <span className="text-emerald-400 font-bold">
             {mileage.toLocaleString()} miles
@@ -183,7 +183,7 @@ export default function FuelComparisonChart() {
           onChange={(e) => setMileage(Number(e.target.value))}
           className="w-full accent-emerald-500 cursor-pointer"
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-slate-500 mt-1">
           <span>3,000</span>
           <span>15,000</span>
           <span>30,000</span>
@@ -191,14 +191,14 @@ export default function FuelComparisonChart() {
       </div>
 
       {/* Comparison table */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-4 text-lg font-semibold text-slate-100">
           Cost Comparison at {mileage.toLocaleString()} Miles/Year
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2a2a2a] text-gray-400">
+              <tr className="border-b border-[#1e293b] text-slate-400">
                 <th className="pb-2 text-left font-medium">Fuel Type</th>
                 <th className="pb-2 text-right font-medium">Annual Cost</th>
                 <th className="pb-2 text-right font-medium">Per Mile</th>
@@ -213,7 +213,7 @@ export default function FuelComparisonChart() {
                 return (
                   <tr
                     key={row.fuelType}
-                    className={`border-b border-[#2a2a2a] last:border-b-0 ${
+                    className={`border-b border-[#1e293b] last:border-b-0 ${
                       isCheapest ? "bg-emerald-900/20" : ""
                     }`}
                   >
@@ -227,7 +227,7 @@ export default function FuelComparisonChart() {
                           className={
                             isCheapest
                               ? "font-semibold text-emerald-400"
-                              : "text-gray-200"
+                              : "text-slate-200"
                           }
                         >
                           {row.fuelType}
@@ -241,16 +241,16 @@ export default function FuelComparisonChart() {
                     </td>
                     <td
                       className={`py-3 text-right font-medium ${
-                        isCheapest ? "text-emerald-400" : "text-gray-200"
+                        isCheapest ? "text-emerald-400" : "text-slate-200"
                       }`}
                     >
                       {"£"}
                       {row.annualCost.toLocaleString()}
                     </td>
-                    <td className="py-3 text-right text-gray-300">
+                    <td className="py-3 text-right text-slate-300">
                       {row.perMile}p
                     </td>
-                    <td className="py-3 text-right text-gray-300">
+                    <td className="py-3 text-right text-slate-300">
                       {row.annualCO2 > 0 ? `${row.annualCO2.toLocaleString()} kg` : "0 kg"}
                     </td>
                   </tr>
@@ -262,18 +262,18 @@ export default function FuelComparisonChart() {
       </div>
 
       {/* Break-even summary */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-3 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-3 text-lg font-semibold text-slate-100">
           EV Break-Even Analysis
         </h3>
-        <p className="text-sm leading-relaxed text-gray-400">
+        <p className="text-sm leading-relaxed text-slate-400">
           Assuming an EV costs around{" "}
-          <span className="text-gray-200 font-medium">
+          <span className="text-slate-200 font-medium">
             {"£"}
             {EV_PREMIUM.toLocaleString()}
           </span>{" "}
           more than an equivalent petrol car, and you save{" "}
-          <span className="text-gray-200 font-medium">
+          <span className="text-slate-200 font-medium">
             {(petrolPPM - evPPM).toFixed(1)}p per mile
           </span>{" "}
           on fuel, you would need to drive{" "}
@@ -282,9 +282,9 @@ export default function FuelComparisonChart() {
           </span>{" "}
           to recoup the higher purchase price through fuel savings alone.
         </p>
-        <p className="mt-3 text-sm leading-relaxed text-gray-400">
+        <p className="mt-3 text-sm leading-relaxed text-slate-400">
           At your selected mileage of{" "}
-          <span className="text-gray-200 font-medium">
+          <span className="text-slate-200 font-medium">
             {mileage.toLocaleString()} miles/year
           </span>
           , that would take approximately{" "}

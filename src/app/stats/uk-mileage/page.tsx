@@ -132,8 +132,8 @@ export default function UkMileagePage() {
         <MileageCharts />
 
         {/* Insight copy */}
-        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Why UK Drivers Are Covering Fewer Miles
           </h2>
           <p>

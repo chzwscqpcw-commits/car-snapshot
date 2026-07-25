@@ -107,7 +107,7 @@ export default function UsedCarPriceChart() {
                 <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="quarter"
               stroke="#6b7280"
@@ -139,13 +139,13 @@ export default function UsedCarPriceChart() {
                   (d) => d.quarter === label
                 );
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-200">
+                    <div className="flex items-center gap-2 text-xs text-slate-200">
                       <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-                      <span className="text-gray-400">Index:</span>
+                      <span className="text-slate-400">Index:</span>
                       <span className="font-medium">
                         {(payload[0].value as number).toFixed(1)}
                       </span>
@@ -194,24 +194,24 @@ export default function UsedCarPriceChart() {
         </ResponsiveContainer>
       </ChartContainer>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source:{" "}
         <a
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-gray-400 transition-colors"
+          className="underline hover:text-slate-400 transition-colors"
         >
           AutoTrader / Cap HPI Price Index
         </a>
       </p>
 
       {/* Chart 2: Depreciation Calculator */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Depreciation Calculator
         </h3>
-        <p className="mb-5 text-sm text-gray-400">
+        <p className="mb-5 text-sm text-slate-400">
           Estimate how much value a used car has lost and will lose over the next
           3 years.
         </p>
@@ -219,13 +219,13 @@ export default function UsedCarPriceChart() {
         <div className="grid gap-4 sm:grid-cols-3">
           {/* Purchase Year */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-slate-400">
               Purchase Year
             </label>
             <select
               value={purchaseYear}
               onChange={(e) => setPurchaseYear(parseInt(e.target.value, 10))}
-              className="w-full rounded-lg border border-[#2a2a2a] bg-[#232323] px-3 py-2.5 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500"
+              className="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2.5 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500"
             >
               {PURCHASE_YEARS.map((y) => (
                 <option key={y} value={y}>
@@ -237,11 +237,11 @@ export default function UsedCarPriceChart() {
 
           {/* Purchase Price */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-slate-400">
               Purchase Price
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
                 {"£"}
               </span>
               <input
@@ -251,14 +251,14 @@ export default function UsedCarPriceChart() {
                 placeholder="15000"
                 min={500}
                 max={500000}
-                className="w-full rounded-lg border border-[#2a2a2a] bg-[#232323] py-2.5 pl-7 pr-3 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] py-2.5 pl-7 pr-3 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500"
               />
             </div>
           </div>
 
           {/* Category */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-slate-400">
               Category
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -269,7 +269,7 @@ export default function UsedCarPriceChart() {
                   className={`rounded-md px-3 py-2 text-xs font-medium transition-colors ${
                     categoryMultiplier === cat.value
                       ? "bg-emerald-600 text-white"
-                      : "bg-[#232323] text-gray-400 hover:text-gray-200"
+                      : "bg-[#0f172a] text-slate-400 hover:text-slate-200"
                   }`}
                 >
                   {cat.label}
@@ -282,41 +282,41 @@ export default function UsedCarPriceChart() {
         {/* Results */}
         {depreciationResult && (
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4 text-center">
-              <div className="text-xs text-gray-500 mb-1">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4 text-center">
+              <div className="text-xs text-slate-500 mb-1">
                 Estimated Value Today
               </div>
               <div className="text-2xl font-bold text-emerald-400">
                 {formatCurrency(depreciationResult.currentValue)}
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-slate-500">
                 {depreciationResult.adjustedRetentionNow.toFixed(0)}% retained
                 after {depreciationResult.ageNow}{" "}
                 {depreciationResult.ageNow === 1 ? "year" : "years"}
               </div>
             </div>
 
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4 text-center">
-              <div className="text-xs text-gray-500 mb-1">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4 text-center">
+              <div className="text-xs text-slate-500 mb-1">
                 Projected Value in 3 Years
               </div>
               <div className="text-2xl font-bold text-amber-400">
                 {formatCurrency(depreciationResult.projectedValue)}
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-slate-500">
                 {depreciationResult.adjustedRetentionPlus3.toFixed(0)}% retained
                 after {depreciationResult.agePlus3} years
               </div>
             </div>
 
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-4 text-center">
-              <div className="text-xs text-gray-500 mb-1">
+            <div className="rounded-lg border border-[#1e293b] bg-[#020617] p-4 text-center">
+              <div className="text-xs text-slate-500 mb-1">
                 3-Year Depreciation Cost
               </div>
               <div className="text-2xl font-bold text-red-400">
                 {formatCurrency(depreciationResult.furtherDepreciation)}
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-slate-500">
                 {formatCurrency(
                   Math.round(depreciationResult.furtherDepreciation / 36)
                 )}{" "}
@@ -326,7 +326,7 @@ export default function UsedCarPriceChart() {
           </div>
         )}
 
-        <p className="mt-4 text-xs text-gray-500">
+        <p className="mt-4 text-xs text-slate-500">
           Estimates based on industry-average depreciation curves. Actual values
           depend on mileage, condition, service history and market demand.
         </p>

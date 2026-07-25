@@ -131,8 +131,8 @@ export default function CarRegistrationsPage() {
         <CarRegistrationCharts />
 
         {/* Insight copy */}
-        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="prose-invert mt-10 max-w-none space-y-4 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             UK Car Registration Trends: From Peak Diesel to the Electric Mandate
           </h2>
           <p>

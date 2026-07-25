@@ -4,7 +4,7 @@ import colourData from "@/data/colour-popularity.json";
  *  own colour — the visual hook that makes this chart shareable. */
 const COLOUR_HEX: Record<string, string> = {
   GREY: "#6b7280",
-  BLACK: "#1f2937",
+  BLACK: "#1e293b",
   BLUE: "#2563eb",
   WHITE: "#f1f5f9",
   SILVER: "#cbd5e1",

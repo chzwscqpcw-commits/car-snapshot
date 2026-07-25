@@ -121,8 +121,8 @@ export default function FuelTypeComparisonPage() {
         <FuelComparisonChart />
 
         {/* Insight copy */}
-        <div className="my-10 space-y-5 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <div className="my-10 space-y-5 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             Understanding UK Fuel Type Running Costs in 2026
           </h2>
 
@@ -160,7 +160,7 @@ export default function FuelTypeComparisonPage() {
             how often the battery is topped up.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 pt-2">
+          <h3 className="text-lg font-semibold text-slate-100 pt-2">
             When Does an EV Make Financial Sense?
           </h3>
 
@@ -187,7 +187,7 @@ export default function FuelTypeComparisonPage() {
             thousands per year in tax alone.
           </p>
 
-          <h3 className="text-lg font-semibold text-gray-100 pt-2">
+          <h3 className="text-lg font-semibold text-slate-100 pt-2">
             The Decline of Diesel
           </h3>
 

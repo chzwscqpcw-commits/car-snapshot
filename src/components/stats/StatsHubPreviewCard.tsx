@@ -33,20 +33,20 @@ export default function StatsHubPreviewCard({
   return (
     <Link
       href={href}
-      className="stats-reveal group block rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] hover:border-emerald-500/30 hover:bg-[#1e1e1e] transition-all duration-300 hover:-translate-y-0.5 p-4"
+      className="stats-reveal group block rounded-xl bg-[#0f172a] border border-[#1e293b] hover:border-emerald-500/30 hover:bg-[#1e1e1e] transition-all duration-300 hover:-translate-y-0.5 p-4"
       style={{ animationDelay: `${delay}ms` }}
     >
       {/* Row 1: Icon + Title + Arrow */}
       <div className="flex items-center gap-2.5">
         <span className="text-base shrink-0">{icon}</span>
         <h3 className="text-sm font-semibold text-white flex-1">{title}</h3>
-        <span className="text-gray-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all text-sm shrink-0">
+        <span className="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all text-sm shrink-0">
           &rarr;
         </span>
       </div>
 
       {/* Row 2: Description (not truncated) */}
-      <p className="text-xs text-gray-400 mt-2 pl-[30px] leading-relaxed">
+      <p className="text-xs text-slate-400 mt-2 pl-[30px] leading-relaxed">
         {description}
       </p>
 

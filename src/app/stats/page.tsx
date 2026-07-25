@@ -76,19 +76,19 @@ export default function StatsIndex() {
       />
 
       {/* ── Hero ── */}
-      <div className="border-b border-[#2a2a2a] pb-5 pt-8">
+      <div className="border-b border-[#1e293b] pb-5 pt-8">
         <div className="mx-auto max-w-4xl px-4">
-          <nav className="stats-reveal mb-4 text-sm text-gray-500" style={{ animationDelay: "0ms" }}>
-            <Link href="/" className="hover:text-gray-300 transition-colors">
+          <nav className="stats-reveal mb-4 text-sm text-slate-500" style={{ animationDelay: "0ms" }}>
+            <Link href="/" className="hover:text-slate-300 transition-colors">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-400">Statistics</span>
+            <span className="text-slate-400">Statistics</span>
           </nav>
           <h1 className="stats-reveal text-3xl font-bold tracking-tight text-[#f9fafb] sm:text-4xl" style={{ animationDelay: "0ms" }}>
             UK Motoring Statistics
           </h1>
-          <p className="stats-reveal mt-3 text-base text-gray-400 max-w-2xl" style={{ animationDelay: "50ms" }}>
+          <p className="stats-reveal mt-3 text-base text-slate-400 max-w-2xl" style={{ animationDelay: "50ms" }}>
             Interactive charts and data for every UK driver
           </p>
         </div>
@@ -284,7 +284,7 @@ export default function StatsIndex() {
             <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
               Check Your Own Vehicle
             </h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-slate-400 mb-6">
               Run a free MOT history check, see tax status, mileage records and
               more — instantly, no sign-up required.
             </p>
@@ -294,7 +294,7 @@ export default function StatsIndex() {
             >
               Search UK Vehicles Free &rarr;
             </Link>
-            <p className="text-gray-500 text-sm mt-3">
+            <p className="text-slate-500 text-sm mt-3">
               Covers MOT history &middot; Tax status &middot; Mileage &middot;
               ULEZ &middot; Safety recalls
             </p>

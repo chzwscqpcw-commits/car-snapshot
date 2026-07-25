@@ -125,8 +125,8 @@ export default function MostReliableCarsPage() {
         <ReliabilityCharts />
 
         {/* Insight copy */}
-        <article className="my-10 space-y-5 text-sm leading-relaxed text-gray-300">
-          <h2 className="text-xl font-bold text-gray-100">
+        <article className="my-10 space-y-5 text-sm leading-relaxed text-slate-300">
+          <h2 className="text-xl font-bold text-slate-100">
             What Makes a Car Reliable?
           </h2>
           <p>

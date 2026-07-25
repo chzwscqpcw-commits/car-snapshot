@@ -90,7 +90,7 @@ export default function MileageCharts() {
             margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
             {...annotatedChartProps}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -120,20 +120,20 @@ export default function MileageCharts() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
                     {payload.map((entry, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2 text-xs text-gray-200"
+                        className="flex items-center gap-2 text-xs text-slate-200"
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full"
                           style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-gray-400">{entry.name}:</span>
+                        <span className="text-slate-400">{entry.name}:</span>
                         <span className="font-medium">
                           {(entry.value as number).toLocaleString()} miles
                         </span>
@@ -172,7 +172,7 @@ export default function MileageCharts() {
             data={mileageByAgeData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="ageGroup"
               stroke="#6b7280"
@@ -202,20 +202,20 @@ export default function MileageCharts() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
                     {payload.map((entry, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2 text-xs text-gray-200"
+                        className="flex items-center gap-2 text-xs text-slate-200"
                       >
                         <span
                           className="inline-block h-2 w-2 rounded-full"
                           style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-gray-400">{entry.name}:</span>
+                        <span className="text-slate-400">{entry.name}:</span>
                         <span className="font-medium">
                           {(entry.value as number).toLocaleString()} miles/year
                         </span>
@@ -236,11 +236,11 @@ export default function MileageCharts() {
       </ChartContainer>
 
       {/* Interactive: Is my mileage normal? */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Is My Mileage Normal?
         </h3>
-        <p className="mb-5 text-sm text-gray-400">
+        <p className="mb-5 text-sm text-slate-400">
           Enter your vehicle&apos;s age and total mileage to see how it compares
           to the national average.
         </p>
@@ -249,7 +249,7 @@ export default function MileageCharts() {
           <div>
             <label
               htmlFor="vehicle-age"
-              className="mb-1.5 block text-xs font-medium text-gray-400"
+              className="mb-1.5 block text-xs font-medium text-slate-400"
             >
               Vehicle age (years)
             </label>
@@ -261,13 +261,13 @@ export default function MileageCharts() {
               placeholder="e.g. 5"
               value={vehicleAge}
               onChange={(e) => setVehicleAge(e.target.value)}
-              className="w-full rounded-lg bg-[#232323] px-3 py-2.5 text-sm text-gray-200 placeholder-gray-500 outline-none focus:ring-1 focus:ring-emerald-500"
+              className="w-full rounded-lg bg-[#0f172a] px-3 py-2.5 text-sm text-slate-200 placeholder-slate-500 outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
           <div>
             <label
               htmlFor="total-mileage"
-              className="mb-1.5 block text-xs font-medium text-gray-400"
+              className="mb-1.5 block text-xs font-medium text-slate-400"
             >
               Current total mileage
             </label>
@@ -278,34 +278,34 @@ export default function MileageCharts() {
               placeholder="e.g. 45000"
               value={totalMileage}
               onChange={(e) => setTotalMileage(e.target.value)}
-              className="w-full rounded-lg bg-[#232323] px-3 py-2.5 text-sm text-gray-200 placeholder-gray-500 outline-none focus:ring-1 focus:ring-emerald-500"
+              className="w-full rounded-lg bg-[#0f172a] px-3 py-2.5 text-sm text-slate-200 placeholder-slate-500 outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
         </div>
 
         {result && (
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div className="rounded-lg bg-[#232323] p-4 text-center">
+            <div className="rounded-lg bg-[#0f172a] p-4 text-center">
               <div className="text-2xl font-bold text-emerald-400">
                 {result.avgPerYear.toLocaleString()}
               </div>
-              <div className="mt-1 text-xs text-gray-400">
+              <div className="mt-1 text-xs text-slate-400">
                 Your avg. miles/year
               </div>
             </div>
-            <div className="rounded-lg bg-[#232323] p-4 text-center">
+            <div className="rounded-lg bg-[#0f172a] p-4 text-center">
               <div className="text-2xl font-bold text-sky-400">
                 {result.expected.toLocaleString()}
               </div>
-              <div className="mt-1 text-xs text-gray-400">
+              <div className="mt-1 text-xs text-slate-400">
                 Expected for {result.ageGroup}
               </div>
             </div>
-            <div className="rounded-lg bg-[#232323] p-4 text-center">
+            <div className="rounded-lg bg-[#0f172a] p-4 text-center">
               <div className={`text-2xl font-bold ${result.color}`}>
                 {result.verdict}
               </div>
-              <div className="mt-1 text-xs text-gray-400">Verdict</div>
+              <div className="mt-1 text-xs text-slate-400">Verdict</div>
             </div>
           </div>
         )}

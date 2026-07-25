@@ -140,7 +140,7 @@ export default function CarTheftCharts() {
             data={nationalTrend}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -167,13 +167,13 @@ export default function CarTheftCharts() {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-emerald-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {label}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-200">
+                    <div className="flex items-center gap-2 text-xs text-slate-200">
                       <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-                      <span className="text-gray-400">Thefts:</span>
+                      <span className="text-slate-400">Thefts:</span>
                       <span className="font-medium">
                         {(payload[0].value as number).toLocaleString()}
                       </span>
@@ -195,7 +195,7 @@ export default function CarTheftCharts() {
         </ResponsiveContainer>
       </ChartContainer>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source: ONS Crime Survey for England and Wales
       </p>
 
@@ -211,7 +211,7 @@ export default function CarTheftCharts() {
             margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
           >
             <CartesianGrid
-              stroke="#2a2a2a"
+              stroke="#1e293b"
               strokeDasharray="3 3"
               horizontal={false}
             />
@@ -242,13 +242,13 @@ export default function CarTheftCharts() {
                 if (!active || !payload?.length) return null;
                 const entry = payload[0];
                 return (
-                  <div className="rounded-lg border border-[#374151] bg-[#1f2937] px-3 py-2 shadow-lg">
-                    <div className="border-b border-red-500/40 pb-1 mb-2 text-xs font-medium text-gray-300">
+                  <div className="rounded-lg border border-[#334155] bg-[#1e293b] px-3 py-2 shadow-lg">
+                    <div className="border-b border-red-500/40 pb-1 mb-2 text-xs font-medium text-slate-300">
                       {entry.payload.name}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-200">
+                    <div className="flex items-center gap-2 text-xs text-slate-200">
                       <span className="inline-block h-2 w-2 rounded-full bg-red-400" />
-                      <span className="text-gray-400">Theft rate:</span>
+                      <span className="text-slate-400">Theft rate:</span>
                       <span className="font-medium">
                         {(entry.value as number).toFixed(1)} per 1,000
                       </span>
@@ -267,18 +267,18 @@ export default function CarTheftCharts() {
       </ChartContainer>
 
       {/* Interactive: Is my car at risk? */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           Is My Car at Risk?
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Select your car&apos;s make to see how its models rank for theft risk.
         </p>
 
         <select
           value={selectedMake}
           onChange={(e) => setSelectedMake(e.target.value)}
-          className="w-full sm:w-72 rounded-lg border border-[#374151] bg-[#232323] px-3 py-2.5 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500"
+          className="w-full sm:w-72 rounded-lg border border-[#334155] bg-[#0f172a] px-3 py-2.5 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500"
         >
           <option value="">Choose a make...</option>
           {makes.map((make) => (
@@ -296,12 +296,12 @@ export default function CarTheftCharts() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-semibold text-gray-100">
+                  <h4 className="font-semibold text-slate-100">
                     {titleCase(selectedMake)} Overall
                   </h4>
-                  <p className="mt-0.5 text-sm text-gray-400">
+                  <p className="mt-0.5 text-sm text-slate-400">
                     Average theft rate:{" "}
-                    <span className="font-medium text-gray-200">
+                    <span className="font-medium text-slate-200">
                       {makeAvgRate.toFixed(1)} per 1,000
                     </span>
                   </p>
@@ -321,19 +321,19 @@ export default function CarTheftCharts() {
                 return (
                   <div
                     key={m.model}
-                    className="flex items-center justify-between rounded-lg border border-[#2a2a2a] bg-[#161616] px-4 py-3"
+                    className="flex items-center justify-between rounded-lg border border-[#1e293b] bg-[#161616] px-4 py-3"
                   >
                     <div>
-                      <span className="text-sm font-medium text-gray-200">
+                      <span className="text-sm font-medium text-slate-200">
                         {titleCase(m.model)}
                       </span>
-                      <span className="ml-3 text-xs text-gray-500">
+                      <span className="ml-3 text-xs text-slate-500">
                         {m.thefts.toLocaleString()} thefts /{" "}
                         {m.registered.toLocaleString()} registered
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-slate-300">
                         {m.rate.toFixed(1)}/1k
                       </span>
                       <span className={`text-xs font-bold ${risk.color}`}>
@@ -346,11 +346,11 @@ export default function CarTheftCharts() {
             </div>
 
             {/* Recommendations */}
-            <div className="rounded-lg border border-[#2a2a2a] bg-[#161616] p-4">
-              <h4 className="mb-2 text-sm font-semibold text-gray-100">
+            <div className="rounded-lg border border-[#1e293b] bg-[#161616] p-4">
+              <h4 className="mb-2 text-sm font-semibold text-slate-100">
                 Theft Prevention Tips
               </h4>
-              <ul className="space-y-1.5 text-sm text-gray-400">
+              <ul className="space-y-1.5 text-sm text-slate-400">
                 {makeAvgRate > 20 && (
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-red-400">!</span>

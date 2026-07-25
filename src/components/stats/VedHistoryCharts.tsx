@@ -122,7 +122,7 @@ export default function VedHistoryCharts() {
             data={bandLineData}
             margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -164,7 +164,7 @@ export default function VedHistoryCharts() {
       </ChartContainer>
 
       {/* Band legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
         {Object.entries(BAND_LINE_COLORS).map(([name, color]) => (
           <span key={name} className="flex items-center gap-1.5">
             <span
@@ -186,7 +186,7 @@ export default function VedHistoryCharts() {
             data={lineChartData}
             margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -225,7 +225,7 @@ export default function VedHistoryCharts() {
       </ChartContainer>
 
       {/* Line legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
         {Object.entries(FIRST_YEAR_COLORS).map(([name, color]) => (
           <span key={name} className="flex items-center gap-1.5">
             <span
@@ -238,11 +238,11 @@ export default function VedHistoryCharts() {
       </div>
 
       {/* Interactive VED calculator */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           VED Rate Calculator
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Select a registration year and enter CO2 emissions to find the
           approximate annual VED rate.
         </p>
@@ -252,7 +252,7 @@ export default function VedHistoryCharts() {
           <div>
             <label
               htmlFor="ved-reg-year"
-              className="mb-1 block text-xs font-medium text-gray-400"
+              className="mb-1 block text-xs font-medium text-slate-400"
             >
               Registration year
             </label>
@@ -260,7 +260,7 @@ export default function VedHistoryCharts() {
               id="ved-reg-year"
               value={regYear}
               onChange={(e) => setRegYear(Number(e.target.value))}
-              className="rounded-lg border border-[#2a2a2a] bg-[#232323] px-3 py-2 text-sm text-gray-200 outline-none focus:ring-1 focus:ring-emerald-500"
+              className="rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-sm text-slate-200 outline-none focus:ring-1 focus:ring-emerald-500"
             >
               {regYears.map((y) => (
                 <option key={y} value={y}>
@@ -274,7 +274,7 @@ export default function VedHistoryCharts() {
           <div>
             <label
               htmlFor="ved-co2"
-              className="mb-1 block text-xs font-medium text-gray-400"
+              className="mb-1 block text-xs font-medium text-slate-400"
             >
               CO2 emissions (g/km)
             </label>
@@ -286,7 +286,7 @@ export default function VedHistoryCharts() {
               onChange={(e) => setCo2Input(e.target.value)}
               min={0}
               max={999}
-              className="w-32 rounded-lg border border-[#2a2a2a] bg-[#232323] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:ring-1 focus:ring-emerald-500"
+              className="w-32 rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-sm text-slate-200 placeholder-slate-500 outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
         </div>
@@ -298,12 +298,12 @@ export default function VedHistoryCharts() {
               <span className="text-2xl font-bold text-emerald-400">
                 {"£"}{calcResult.cost}/yr
               </span>
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-slate-400">
                 Band {calcResult.band} &middot; {calcResult.co2} g/km CO2
                 &middot; {regYear} rate
               </span>
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-slate-500">
               This shows the standard annual rate for the selected year. Actual
               rates may vary for vehicles with a list price over {"£"}40,000
               (premium supplement applies from April 2017).
@@ -312,19 +312,19 @@ export default function VedHistoryCharts() {
         )}
 
         {co2Input !== "" && !calcResult && (
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-slate-500">
             Enter a valid CO2 figure (0 or above) to see the rate.
           </p>
         )}
       </div>
 
-      <p className="text-xs text-gray-500 text-right">
+      <p className="text-xs text-slate-500 text-right">
         Source:{" "}
         <a
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-gray-400 transition-colors"
+          className="underline hover:text-slate-400 transition-colors"
         >
           DVLA / HMRC Vehicle Excise Duty
         </a>

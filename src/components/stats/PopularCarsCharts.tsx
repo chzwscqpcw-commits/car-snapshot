@@ -25,7 +25,7 @@ import CustomTooltip from "@/components/stats/CustomTooltip";
 /* ---------- colour chart data ---------- */
 const COLOUR_HEX: Record<string, string> = {
   WHITE: "#e5e7eb",
-  BLACK: "#374151",
+  BLACK: "#334155",
   GREY: "#6b7280",
   BLUE: "#3b82f6",
   RED: "#ef4444",
@@ -110,7 +110,7 @@ export default function PopularCarsCharts() {
             margin={{ top: 4, right: 40, left: 0, bottom: 4 }}
           >
             <CartesianGrid
-              stroke="#2a2a2a"
+              stroke="#1e293b"
               strokeDasharray="3 3"
               horizontal={false}
             />
@@ -160,7 +160,7 @@ export default function PopularCarsCharts() {
             data={popularModelTrend}
             margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
           >
-            <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               stroke="#6b7280"
@@ -200,7 +200,7 @@ export default function PopularCarsCharts() {
       </ChartContainer>
 
       {/* Line legend */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
         {Object.entries(MODEL_COLORS).map(([key, color]) => (
           <span key={key} className="flex items-center gap-1.5">
             <span
@@ -225,7 +225,7 @@ export default function PopularCarsCharts() {
             margin={{ top: 4, right: 40, left: 0, bottom: 4 }}
           >
             <CartesianGrid
-              stroke="#2a2a2a"
+              stroke="#1e293b"
               strokeDasharray="3 3"
               horizontal={false}
             />
@@ -263,18 +263,18 @@ export default function PopularCarsCharts() {
       </ChartContainer>
 
       {/* Interactive: How popular is my car? */}
-      <div className="rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 sm:p-6">
-        <h3 className="mb-1 text-lg font-semibold text-gray-100">
+      <div className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 sm:p-6">
+        <h3 className="mb-1 text-lg font-semibold text-slate-100">
           How Popular Is My Car?
         </h3>
-        <p className="mb-4 text-sm text-gray-400">
+        <p className="mb-4 text-sm text-slate-400">
           Select a make to see its rank and fleet size on UK roads.
         </p>
 
         <select
           value={selectedMake}
           onChange={(e) => setSelectedMake(e.target.value)}
-          className="w-full max-w-xs rounded-lg border border-[#374151] bg-[#111111] px-3 py-2 text-sm text-gray-200 outline-none focus:border-emerald-600 transition-colors"
+          className="w-full max-w-xs rounded-lg border border-[#334155] bg-[#020617] px-3 py-2 text-sm text-slate-200 outline-none focus:border-emerald-600 transition-colors"
         >
           <option value="">Choose a make...</option>
           {popularMakesData.map((m) => (
@@ -288,22 +288,22 @@ export default function PopularCarsCharts() {
           <div className="mt-4 rounded-lg border border-emerald-800/40 bg-emerald-900/20 p-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <div className="text-xs uppercase tracking-wider text-gray-500">
+                <div className="text-xs uppercase tracking-wider text-slate-500">
                   UK Fleet Size
                 </div>
                 <div className="mt-1 text-2xl font-bold text-emerald-400">
                   {(selectedInfo.fleetSize * 1000).toLocaleString()}
                 </div>
-                <div className="text-xs text-gray-400">registered vehicles</div>
+                <div className="text-xs text-slate-400">registered vehicles</div>
               </div>
               <div>
-                <div className="text-xs uppercase tracking-wider text-gray-500">
+                <div className="text-xs uppercase tracking-wider text-slate-500">
                   Popularity Rank
                 </div>
                 <div className="mt-1 text-2xl font-bold text-emerald-400">
                   {selectedInfo.ordinal}
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-slate-400">
                   out of all makes in the UK
                 </div>
               </div>

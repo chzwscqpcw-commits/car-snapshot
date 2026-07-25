@@ -50,7 +50,7 @@ export default function StatsRelated({ exclude }: { exclude: string }) {
       : allStats.filter((s) => s.slug !== exclude).slice(0, 3);
   return (
     <div className="my-10">
-      <h3 className="mb-4 text-lg font-semibold text-gray-100">
+      <h3 className="mb-4 text-lg font-semibold text-slate-100">
         Related Statistics
       </h3>
       <div className="grid gap-4 sm:grid-cols-3">
@@ -58,12 +58,12 @@ export default function StatsRelated({ exclude }: { exclude: string }) {
           <Link
             key={s.slug}
             href={`/stats/${s.slug}`}
-            className="group rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] p-4 transition-colors hover:border-emerald-700/50"
+            className="group rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 transition-colors hover:border-emerald-700/50"
           >
-            <div className="font-medium text-gray-100 group-hover:text-emerald-400 transition-colors">
+            <div className="font-medium text-slate-100 group-hover:text-emerald-400 transition-colors">
               {s.title}
             </div>
-            <div className="mt-1 text-sm text-gray-400">{s.description}</div>
+            <div className="mt-1 text-sm text-slate-400">{s.description}</div>
           </Link>
         ))}
       </div>
