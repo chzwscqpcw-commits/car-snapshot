@@ -22,6 +22,7 @@ import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
+import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
   lookupNewPrice,
   calculateDepreciationBaseline,
@@ -945,6 +946,10 @@ function DepreciationCurveCard({
 
   const max = rows[0].value; // year 0 — the new price — is always the max
   const thisYear = new Date().getFullYear();
+  const history = rows.filter((r) => !r.isFuture);
+  const future = rows.filter((r) => r.isFuture);
+  const { ref, revealed, reduced } = useScrollReveal();
+  const delay = (i: number) => (reduced ? 0 : i * 60); // grow-in, new → forecast
 
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
@@ -958,15 +963,11 @@ function DepreciationCurveCard({
         Estimated value each year of ownership, anchored to today&apos;s market estimate. Current year highlighted.
       </p>
 
-      <div className="space-y-2">
-        {rows.map((row) => {
+      <div ref={ref} className="space-y-2">
+        {/* Measured / anchored history — solid bars, "Today" highlighted */}
+        {history.map((row, i) => {
           const widthPct = Math.max(3, Math.round((row.value / max) * 100));
           const calendarYear = thisYear - HISTORY + row.year;
-          const barClass = row.isFuture
-            ? "from-slate-600/60 to-slate-500/60"
-            : row.isNow
-            ? "from-cyan-400 to-blue-400"
-            : "from-cyan-500/70 to-blue-500/70";
           return (
             <div
               key={row.year}
@@ -982,8 +983,15 @@ function DepreciationCurveCard({
               </span>
               <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
                 <div
-                  className={`absolute inset-y-0 left-0 rounded-md bg-gradient-to-r transition-all ${barClass}`}
-                  style={{ width: `${widthPct}%` }}
+                  className={`absolute inset-y-0 left-0 rounded-md bg-gradient-to-r ${
+                    row.isNow ? "from-cyan-400 to-blue-400" : "from-cyan-500/70 to-blue-500/70"
+                  }`}
+                  style={{
+                    width: `${widthPct}%`,
+                    transformOrigin: "left",
+                    transform: revealed ? "scaleX(1)" : "scaleX(0)",
+                    transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${delay(i)}ms`,
+                  }}
                 />
                 {row.isNow && (
                   <span className="absolute top-1/2 -translate-y-1/2 right-2 text-[10px] font-semibold uppercase tracking-wider text-cyan-100">
@@ -994,9 +1002,50 @@ function DepreciationCurveCard({
               <span
                 className={`font-mono text-xs sm:text-sm tabular-nums tracking-tight whitespace-nowrap ${
                   row.isNow ? "font-bold text-cyan-300" : "font-semibold text-slate-100"
-                } ${row.isFuture ? "text-slate-400" : ""}`}
+                }`}
+                style={{ opacity: revealed ? 1 : 0, transition: `opacity 400ms ease-out ${delay(i) + 120}ms` }}
               >
                 £{row.value.toLocaleString("en-GB")}
+              </span>
+            </div>
+          );
+        })}
+
+        {/* Clear break so the forecast never reads as measured data */}
+        {future.length > 0 && (
+          <div className="flex items-center gap-2 pt-1.5 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            <span className="h-px flex-1 bg-slate-800" />
+            Projected
+            <span className="h-px flex-1 bg-slate-800" />
+          </div>
+        )}
+
+        {/* Forecast — dashed outline + "~", visibly a projection, not a reading */}
+        {future.map((row, j) => {
+          const widthPct = Math.max(3, Math.round((row.value / max) * 100));
+          const calendarYear = thisYear - HISTORY + row.year;
+          const gi = history.length + j;
+          return (
+            <div key={row.year} className="grid grid-cols-[4rem_1fr_auto] items-center gap-2 sm:gap-3">
+              <span className="font-mono text-xs sm:text-sm text-slate-500 tabular-nums">
+                {calendarYear}
+              </span>
+              <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/40 overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-md border border-dashed border-slate-500/60 bg-slate-600/15"
+                  style={{
+                    width: `${widthPct}%`,
+                    transformOrigin: "left",
+                    transform: revealed ? "scaleX(1)" : "scaleX(0)",
+                    transition: `transform 600ms cubic-bezier(0.22,1,0.36,1) ${delay(gi)}ms`,
+                  }}
+                />
+              </div>
+              <span
+                className="font-mono text-xs sm:text-sm tabular-nums tracking-tight whitespace-nowrap font-medium text-slate-400"
+                style={{ opacity: revealed ? 1 : 0, transition: `opacity 400ms ease-out ${delay(gi) + 120}ms` }}
+              >
+                ~£{row.value.toLocaleString("en-GB")}
               </span>
             </div>
           );
