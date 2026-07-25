@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ConversionWidget from "@/components/stats/ConversionWidget";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import {
   MODEL_REGISTRY,
@@ -485,6 +486,14 @@ export default async function ModelGuidePage({ params }: PageProps) {
               )}
             </section>
           )}
+
+          {/* ── Buyer CTA — carVertical history report ───────────────────
+              Model-page readers are prospective buyers, not owners with a
+              reg to check (hence the reg-lookup widgets convert ~0). At this
+              point they've weighed safety/recalls/reliability, so buyer intent
+              peaks: surface the history report they actually want before they
+              commit to a used example. */}
+          <CarVerticalReportCTA variant="report" context="model-carvertical" />
 
           {/* ── Running costs ──────────────────────────────────────────── */}
           {data.runningCosts && (
