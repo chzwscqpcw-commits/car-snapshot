@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Wrench, Snowflake, Disc, BatteryCharging, Cog, Filter, Gauge, AlertTriangle, ShieldCheck, BookOpen } from "lucide-react";
+import RepairCostCTA from "@/components/RepairCostCTA";
 
 export const metadata: Metadata = {
   title: "Car Repair Costs UK — Free Price Guides & Local Quotes | Free Plate Check",
@@ -238,6 +239,9 @@ export default function RepairCostsHub() {
             </Link>
           ))}
         </div>
+
+        {/* Partner CTA — the "I've seen the prices, now get a real quote" moment */}
+        <RepairCostCTA jobName="car repair" />
 
         {/* Trust / consumer-protection */}
         <h2 className="text-xl font-bold text-slate-100 mt-14 mb-2">

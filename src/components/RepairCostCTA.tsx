@@ -65,92 +65,107 @@ export default function RepairCostCTA({
     router.push(`/?vrm=${cleaned}`);
   }
 
+  // Narrow contexts (hideRegLookup): just the affiliate button, no reg entry.
+  if (hideRegLookup) {
+    return (
+      <div className="my-8 rounded-xl border border-blue-800/40 bg-gradient-to-br from-blue-950/40 via-slate-900/60 to-slate-900/60 p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <Wrench className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base font-semibold text-white">
+              Get real quotes for {jobName} near you
+            </h3>
+            <p className="mt-1 text-sm text-slate-300">
+              Compare prices from local garages in seconds — no booking fee, no
+              obligation.
+            </p>
+
+            <Button
+              href={partnerHref}
+              target="_blank"
+              rel={partnerRel}
+              onClick={() => trackPartnerClick(partner, clickref)}
+              className="mt-4"
+            >
+              Compare quotes &mdash; BookMyGarage
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+            </Button>
+
+            <PartnerTrust partner="bookMyGarage" className="mt-3" />
+
+            <p className="mt-2 text-xs text-slate-500">
+              Free comparison · Free Plate Check earns a small commission, at no
+              cost to you.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Enter the reg once, then fork: both buttons use the same reg — one shows
+  // the car's full details, the other jumps straight to real local quotes.
   return (
-    <div className="my-8 rounded-xl border border-blue-800/40 bg-gradient-to-br from-blue-950/40 via-slate-900/60 to-slate-900/60 p-6 sm:p-7">
-      {/* Reg lookup — our unique angle */}
-      {!hideRegLookup && (
-        <>
-          <div className="flex items-start gap-3">
-            <Search className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
-            <div className="min-w-0 flex-1">
-              <h3 className="text-base font-semibold text-white">
-                Get a personalised {jobName} estimate
-              </h3>
-              <p className="mt-1 text-sm text-slate-300">
-                Enter your reg — we&apos;ll pull your year, model and mileage so
-                you can refine the price range to your specific car before
-                contacting a garage.
-              </p>
-
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                <input
-                  type="text"
-                  value={reg}
-                  onChange={(e) => {
-                    setReg(e.target.value.toUpperCase());
-                    setRegError("");
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleLookup();
-                  }}
-                  placeholder="e.g. AB12 CDE"
-                  maxLength={10}
-                  className="h-11 flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 font-mono text-sm tracking-widest text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  onClick={handleLookup}
-                  className="h-11 whitespace-nowrap rounded-lg bg-blue-500 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
-                >
-                  Check my car
-                </button>
-              </div>
-
-              {regError && (
-                <p className="mt-2 text-xs text-red-400">{regError}</p>
-              )}
-
-              <p className="mt-2 text-xs text-slate-500">
-                Free · No signup · Full vehicle details in seconds
-              </p>
-            </div>
-          </div>
-
-          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
-            <span className="h-px flex-1 bg-slate-800" />
-            <span className="font-medium">OR</span>
-            <span className="h-px flex-1 bg-slate-800" />
-          </div>
-        </>
-      )}
-
-      {/* BMG CTA */}
+    <div className="my-8 rounded-xl border border-blue-800/40 bg-gradient-to-br from-blue-950/40 via-slate-900/60 to-slate-900/60 p-5 sm:p-6">
       <div className="flex items-start gap-3">
-        <Wrench className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
+        <Search className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-white">
-            Get real quotes for {jobName} near you
+            Get a personalised {jobName} estimate
           </h3>
           <p className="mt-1 text-sm text-slate-300">
-            Compare prices from local garages in seconds — no booking fee, no
-            obligation.
+            Enter your reg — we&apos;ll pull your exact year, model and mileage.
+            Then choose: see your car&apos;s full details, or compare real
+            quotes from local garages.
           </p>
 
-          <Button
-            href={partnerHref}
-            target="_blank"
-            rel={partnerRel}
-            onClick={() => trackPartnerClick(partner, `repair-cost-cta-${jobName.replace(/\s+/g, "-").toLowerCase()}`)}
-            className="mt-4"
-          >
-            Compare quotes &mdash; BookMyGarage
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-          </Button>
+          <input
+            type="text"
+            value={reg}
+            onChange={(e) => {
+              setReg(e.target.value.toUpperCase());
+              setRegError("");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleLookup();
+            }}
+            placeholder="e.g. AB12 CDE"
+            maxLength={10}
+            className="mt-4 h-12 w-full rounded-lg border border-slate-700 bg-slate-800 px-3 text-center font-mono text-base tracking-[0.3em] text-white uppercase placeholder:text-slate-500 placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {regError && (
+            <p className="mt-2 text-xs text-red-400">{regError}</p>
+          )}
+
+          {/* The fork — two things you can do with the reg above */}
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <Button
+              variant="secondary"
+              onClick={handleLookup}
+              className="sm:flex-1"
+            >
+              <Search className="h-4 w-4" />
+              Check my car
+            </Button>
+            <Button
+              href={partnerHref}
+              target="_blank"
+              rel={partnerRel}
+              onClick={() => trackPartnerClick(partner, clickref)}
+              className="sm:flex-1"
+            >
+              <Wrench className="h-4 w-4" />
+              Compare real quotes
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+            </Button>
+          </div>
 
           <PartnerTrust partner="bookMyGarage" className="mt-3" />
 
           <p className="mt-2 text-xs text-slate-500">
-            Free comparison · Free Plate Check earns a small commission, at no
-            cost to you.
+            Free · No signup · Real quotes via BookMyGarage — no booking fee, and
+            we earn a small commission at no cost to you.
           </p>
         </div>
       </div>
