@@ -4,6 +4,7 @@ import MOTBookingCTA from "@/components/MOTBookingCTA";
 import RunningCostsResult from "@/components/tools/RunningCostsResult";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import HeroRegSearch from "@/components/HeroRegSearch";
+import TrustBar from "@/components/TrustBar";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 
@@ -195,6 +196,7 @@ export default async function RunningCostsPage({
               fold like the valuation/MOT pages; the lower ConversionWidget hides
               its own lookup so there's no duplicate. */}
           <HeroRegSearch targetPath="/running-costs" ctaLabel="Check running costs free" className="mt-5" />
+          <TrustBar className="mt-5" />
         </div>
       </div>
 
