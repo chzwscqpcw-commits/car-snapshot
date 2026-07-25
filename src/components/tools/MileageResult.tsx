@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { Gauge, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Gauge, AlertTriangle, TrendingUp, TrendingDown, CircleDashed } from "lucide-react";
 import {
   useVehicleLookup,
   LookupSkeleton,
@@ -284,6 +284,45 @@ function SparklineCard({ analysis }: { analysis: MileageAnalysis }) {
   );
 }
 
+/** Scroll-triggered reveal for the year-by-year bars (grow-in). State writes are
+ *  deferred out of the synchronous effect body (rAF / observer callback). */
+function useMileageReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let io: IntersectionObserver | null = null;
+    const raf = requestAnimationFrame(() => {
+      if (mq.matches) {
+        setReduced(true);
+        setRevealed(true);
+        return;
+      }
+      const el = ref.current;
+      if (!el) {
+        setRevealed(true);
+        return;
+      }
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]?.isIntersecting) {
+            setRevealed(true);
+            io?.disconnect();
+          }
+        },
+        { threshold: 0.3 },
+      );
+      io.observe(el);
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      io?.disconnect();
+    };
+  }, []);
+  return { ref, revealed, reduced };
+}
+
 /**
  * Year-by-year mileage breakdown. For most cars with annual MOTs this
  * surfaces twelve+ rows showing exactly how many miles were driven each
@@ -292,101 +331,108 @@ function SparklineCard({ analysis }: { analysis: MileageAnalysis }) {
  * and the most-requested kind of detail from buyers checking a used car.
  */
 function YearByYearCard({ analysis }: { analysis: MileageAnalysis }) {
-  const { yearly, ukAverage } = analysis;
-  const maxMiles = Math.max(...yearly.map((y) => y.miles), ukAverage);
-  // UK-average reference line position as a percent of the bar width.
+  const { yearly, ukAverage, readings } = analysis;
+  const real = yearly.filter((y) => !y.isEstimated);
+  const estimated = yearly.filter((y) => y.isEstimated);
+  // Scale bars from measured rows only, so a large pre-MOT estimate can't skew them.
+  const maxMiles = Math.max(ukAverage, 1, ...real.map((y) => y.miles));
   const ukAvgPct = Math.round((ukAverage / maxMiles) * 100);
-  const hasEstimated = yearly.some((y) => y.isEstimated);
+  // Collapse the MOT-exempt period into one honest "origin" summary rather than
+  // repeating identical fabricated bars (feedback: they read as fake data and
+  // were awkward). The first reading is the mileage accumulated by the first MOT.
+  const origin =
+    estimated.length > 0 && readings.length > 0
+      ? {
+          total: readings[0]!.value,
+          toYear: readings[0]!.date.getFullYear(),
+          span: estimated.length,
+          perYear: estimated[0]!.miles,
+        }
+      : null;
+  const { ref, revealed, reduced } = useMileageReveal();
 
   return (
     <section className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-1">
         <h3 className="text-sm font-semibold text-slate-100">Year-by-year mileage</h3>
         <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
-          {yearly.length} year{yearly.length === 1 ? "" : "s"}
+          {real.length} year{real.length === 1 ? "" : "s"} of records
         </span>
       </div>
       <p className="text-xs text-slate-500 mb-4">
         Miles driven between each MOT. Yellow line marks the UK average of{" "}
         {ukAverage.toLocaleString("en-GB")} mi/yr.
-        {hasEstimated && (
-          <>
-            {" "}
-            <span className="text-slate-400">
-              First three years are MOT-exempt and shown as evenly-spread estimates
-              from the first known reading.
-            </span>
-          </>
-        )}
       </p>
 
-      <div className="space-y-2">
-        {yearly.map((y) => {
+      {origin && (
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-800/25 px-4 py-3">
+          <CircleDashed className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-slate-300">
+              First {origin.span} year{origin.span === 1 ? "" : "s"} · MOT-exempt
+            </p>
+            <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+              <span className="font-mono tabular-nums text-slate-400">
+                {origin.total.toLocaleString("en-GB")} mi
+              </span>{" "}
+              accumulated by its first MOT in {origin.toYear} — about{" "}
+              {origin.perYear.toLocaleString("en-GB")} mi/yr. No annual record is
+              required in a car&apos;s first years.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div ref={ref} className="space-y-2">
+        {real.map((y, i) => {
           const widthPct = Math.max(2, Math.round((y.miles / maxMiles) * 100));
           const aboveAvg = y.deltaPct > 0;
-          const partial = !y.isEstimated && (y.daysCovered < 305 || y.daysCovered > 425);
+          const partial = y.daysCovered < 305 || y.daysCovered > 425;
+          const delay = reduced ? 0 : i * 70; // grow-in, oldest → newest
           return (
             <div
-              key={`${y.year}-${y.isEstimated ? "est" : "real"}`}
+              key={`${y.year}-${y.endDate.getTime()}`}
               className="grid grid-cols-[3.5rem_1fr_auto] items-center gap-2 sm:gap-3"
             >
-              <span className="font-mono text-xs sm:text-sm tabular-nums flex items-center gap-1.5">
-                <span className={y.isEstimated ? "text-slate-500" : "text-slate-400"}>
-                  {y.year}
-                </span>
-                {y.isEstimated && (
-                  <span
-                    className="inline-flex items-center text-[9px] font-semibold uppercase tracking-wider text-slate-500"
-                    title="MOT not required until the car was 3 years old — this row spreads the first known reading evenly across the pre-MOT years."
-                  >
-                    est
-                  </span>
-                )}
+              <span className="font-mono text-xs sm:text-sm tabular-nums text-slate-400">
+                {y.year}
               </span>
               <div className="relative h-6 sm:h-7 rounded-md bg-slate-800/60 overflow-hidden">
-                {/* The mileage bar — solid cyan→blue gradient for measured
-                    rows; muted slate hatching for estimates so the eye can
-                    instantly tell them apart from real data. */}
-                {y.isEstimated ? (
-                  <div
-                    className="absolute inset-y-0 left-0 rounded-md transition-all"
-                    style={{
-                      width: `${widthPct}%`,
-                      backgroundImage:
-                        "repeating-linear-gradient(135deg, rgba(148,163,184,0.35) 0, rgba(148,163,184,0.35) 4px, rgba(148,163,184,0.18) 4px, rgba(148,163,184,0.18) 8px)",
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80 transition-all"
-                    style={{ width: `${widthPct}%` }}
-                  />
-                )}
-                {/* UK average reference line — sits on top of the bar, vertical amber stripe. */}
+                {/* measured mileage — cyan→blue, grows in from the left on reveal */}
+                <div
+                  className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-cyan-500/80 to-blue-500/80"
+                  style={{
+                    width: `${widthPct}%`,
+                    transformOrigin: "left",
+                    transform: revealed ? "scaleX(1)" : "scaleX(0)",
+                    transition: `transform 650ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+                  }}
+                />
+                {/* UK-average reference line — fades in after the bars land */}
                 <div
                   aria-hidden="true"
                   className="absolute inset-y-0 w-px bg-amber-400/70"
-                  style={{ left: `${ukAvgPct}%` }}
+                  style={{
+                    left: `${ukAvgPct}%`,
+                    opacity: revealed ? 1 : 0,
+                    transition: `opacity 400ms ease-out ${delay + 320}ms`,
+                  }}
                 />
               </div>
-              <div className="flex items-center gap-1.5 text-right">
-                <span
-                  className={`font-mono text-xs sm:text-sm tabular-nums tracking-tight whitespace-nowrap ${
-                    y.isEstimated
-                      ? "font-medium text-slate-400 italic"
-                      : "font-semibold text-slate-100"
-                  }`}
-                >
+              <div
+                className="flex items-center gap-1.5 text-right"
+                style={{
+                  opacity: revealed ? 1 : 0,
+                  transition: `opacity 400ms ease-out ${delay + 140}ms`,
+                }}
+              >
+                <span className="font-mono text-xs sm:text-sm font-semibold tabular-nums tracking-tight whitespace-nowrap text-slate-100">
                   {y.miles.toLocaleString("en-GB")}
                   <span className="text-[10px] text-slate-500 ml-0.5">mi</span>
                 </span>
                 <span
                   className={`hidden sm:inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
-                    y.isEstimated
-                      ? "bg-slate-700/40 text-slate-400"
-                      : aboveAvg
-                      ? "bg-amber-500/10 text-amber-300"
-                      : "bg-emerald-500/10 text-emerald-300"
+                    aboveAvg ? "bg-amber-500/10 text-amber-300" : "bg-emerald-500/10 text-emerald-300"
                   }`}
                   title={partial ? `${y.daysCovered} days covered` : undefined}
                 >
