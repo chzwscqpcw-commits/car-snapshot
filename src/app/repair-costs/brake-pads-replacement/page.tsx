@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Disc, AlertTriangle, CheckCircle2, Wrench } from "lucide-react";
 import PersonalisedCostLookup from "@/components/PersonalisedCostLookup";
+import RepairCostCTA from "@/components/RepairCostCTA";
 
 const TITLE = "Brake Pads Replacement Cost UK 2026: £90–£350 Per Axle";
 const DESCRIPTION =
@@ -526,6 +527,13 @@ export default function BrakePadsPage() {
             </div>
           </div>
         </div>
+
+        {/* Booking CTA — every other repair-costs guide has this after the cost
+            content; brake-pads was the exception (revenue audit 2026-07). Brakes
+            are high buying-intent + a top-3 MOT failure, so a "get real quotes"
+            handoff belongs here. PersonalisedCostLookup above already owns the
+            reg box, so hideRegLookup avoids a duplicate. */}
+        <RepairCostCTA jobName="Brake pad replacement" partner="bookMyGarageRepair" hideRegLookup />
 
         <section>
           <h2 className="text-2xl font-bold text-slate-100 mb-4">FAQ</h2>
