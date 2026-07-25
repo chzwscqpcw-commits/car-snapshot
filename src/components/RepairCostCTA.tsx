@@ -6,6 +6,7 @@ import { Search, Wrench } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import PartnerTrust from "@/components/PartnerTrust";
+import Button from "@/components/Button";
 
 interface RepairCostCTAProps {
   /** What the user is reading about — used in CTA copy */
@@ -134,16 +135,16 @@ export default function RepairCostCTA({
             obligation.
           </p>
 
-          <a
+          <Button
             href={partnerHref}
             target="_blank"
             rel={partnerRel}
             onClick={() => trackPartnerClick(partner, `repair-cost-cta-${jobName.replace(/\s+/g, "-").toLowerCase()}`)}
-            className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white transition-all shadow-md shadow-cyan-500/20"
+            className="mt-4"
           >
             Compare quotes &mdash; BookMyGarage
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-          </a>
+          </Button>
 
           <PartnerTrust partner="bookMyGarage" className="mt-3" />
 
