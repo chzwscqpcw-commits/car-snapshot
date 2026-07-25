@@ -108,7 +108,7 @@ export default function MotActionBanner({
         ? "DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). Set a free reminder so it never catches you out."
         : urgency === "due-soon"
           ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Compare prices below and book before it lapses."
-          : "Set a free email reminder so you never get caught out — we'll nudge you in time to test early and keep your renewal date.";
+          : "A clean, unbroken MOT record helps hold your car's value — save a free reminder so its next test never catches you out.";
 
   const Icon =
     urgency === "expired" ? AlertTriangle : urgency === "due-soon" ? Clock : Calendar;
@@ -170,7 +170,7 @@ export default function MotActionBanner({
         ? "Set a free reminder for when its first MOT falls due:"
         : urgency === "due-soon"
           ? "Get a free reminder — we'll help you book in time:"
-          : `Get a free reminder before it expires on ${formatExpiryDisplay(motExpiryDate)}:`;
+          : `Remind me before it expires on ${formatExpiryDisplay(motExpiryDate)} — one tap to your calendar, no email needed:`;
 
   return (
     <div ref={ref} className={`mb-6 rounded-xl border p-4 sm:p-5 ${palette.container}`}>
@@ -201,7 +201,12 @@ export default function MotActionBanner({
           actually the point. For expired / due-soon the user needs to BOOK now,
           not be reminded: those placements drew 0 signups from 328 views (revenue
           audit 2026-07), and the reminder field there just competed with the
-          booking CTA above. The reg is already known, so this stays one field. */}
+          booking CTA above. The reg is already known, so this stays one field.
+          For `far` (the big 1,666-view/low-urgency bucket), lead with the
+          no-email "Add to calendar" option (calendarFirst) and the owner/value
+          framing that drives the valuation placement's signups — the email form
+          stays as the fallback beneath. `no-record` has no expiry to add to a
+          calendar, so it keeps the email field. */}
       {!showBmg && (
         <div className="mt-4">
           <div className="mb-2 flex items-center gap-2">
@@ -218,6 +223,7 @@ export default function MotActionBanner({
             hideReg
             allowTimingPicker
             showCalendar={urgency === "far"}
+            calendarFirst={urgency === "far"}
           />
         </div>
       )}
