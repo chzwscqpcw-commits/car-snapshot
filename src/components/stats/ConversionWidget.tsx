@@ -29,6 +29,12 @@ interface ConversionWidgetProps {
    * submission stays inside that tool's result view.
    */
   targetPath?: string;
+  /**
+   * Tags the reg_search event with a `source` for attribution (e.g.
+   * "blog-inline"), so bridge searches from a given surface are countable
+   * separately from the default tool/stats-page widget searches.
+   */
+  sourceTag?: string;
 }
 
 function cleanReg(raw: string): string {
@@ -51,6 +57,7 @@ export default function ConversionWidget({
   showLookup = true,
   reminderHeadline = "Never miss your MOT",
   targetPath = "/",
+  sourceTag,
 }: ConversionWidgetProps) {
   const router = useRouter();
   const [reg, setReg] = useState("");
@@ -112,6 +119,7 @@ export default function ConversionWidget({
         vrm: cleaned,
         flow: "tool",
         target_path: targetPath,
+        ...(sourceTag ? { source: sourceTag } : {}),
       });
       const join = targetPath.includes("?") ? "&" : "?";
       router.push(`${targetPath}${join}vrm=${cleaned}`);

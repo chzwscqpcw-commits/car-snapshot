@@ -8,6 +8,7 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
+import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
 import MotBookingInline from "@/components/MotBookingInline";
 
@@ -250,15 +251,37 @@ export default async function BlogPostPage({ params }: PageProps) {
         )}
 
         {(() => {
-          // For MOT posts, drop a subtle BookMyGarage prompt after the first
-          // section so the (affiliate) booking link appears early, not only at
-          // the foot of a long article.
-          const split = hasMotKeywords(post.keywords) ? splitAtSecondH2(post.content) : null;
+          // Drop a mid-article prompt after the first section so the bridge
+          // appears early — blog readers rarely reach the foot-of-article CTA
+          // (content→tool bridge audit: blog bridges at ~16%). MOT posts get the
+          // BookMyGarage booking prompt; other commercially-relevant posts get an
+          // inline reg-check routed to their topic tool (excludes /mot-reminder,
+          // which is a signup, not a reg→results check).
+          const isMot = hasMotKeywords(post.keywords);
+          const topicCta = getTopicCta(post.keywords);
+          const regCheckPath =
+            !isMot && topicCta && topicCta.path !== "/mot-reminder"
+              ? topicCta.path
+              : null;
+
+          const midInject = isMot ? (
+            <MotBookingInline clickref="blog-mot-inline" />
+          ) : regCheckPath && topicCta ? (
+            <ConversionWidget
+              showReminder={false}
+              sourceTag="blog-inline"
+              targetPath={regCheckPath}
+              headline={topicCta.label}
+              subtext={topicCta.description}
+            />
+          ) : null;
+
+          const split = midInject ? splitAtSecondH2(post.content) : null;
           if (split) {
             return (
               <>
                 <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[0] }} />
-                <MotBookingInline clickref="blog-mot-inline" />
+                {midInject}
                 <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[1] }} />
               </>
             );
