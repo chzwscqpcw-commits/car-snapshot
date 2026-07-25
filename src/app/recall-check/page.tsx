@@ -152,7 +152,7 @@ export default async function RecallCheckPage({
       <LandingHero
         h1="Free Car Recall Check"
         searchTargetPath="/recall-check"
-        searchCtaLabel="Check for recalls"
+        searchCtaLabel="Check for recalls free"
         subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
         badgeText="Free · No signup · DVSA recall database"
         previewImage="recall-check.png"

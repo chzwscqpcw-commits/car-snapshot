@@ -162,7 +162,7 @@ export default async function MileageCheckPage({
       <LandingHero
         h1="Free Mileage Check"
         searchTargetPath="/mileage-check"
-        searchCtaLabel="Check mileage"
+        searchCtaLabel="Check mileage free"
         subtitle="Every odometer reading from every MOT test since 2005 — verify mileage and spot clocking instantly. Free, no signup."
         badgeText="Free · No signup · MOT mileage records"
         previewImage="mileage-check.png"
