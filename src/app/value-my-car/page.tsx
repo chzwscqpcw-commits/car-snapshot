@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import HeroRegSearch from "@/components/HeroRegSearch";
+import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
@@ -264,6 +265,7 @@ export default async function ValueMyCarPage({
                   test (which won on /car-valuation). Lower widget hides its
                   duplicate lookup (showLookup={false}). */}
               <HeroRegSearch targetPath="/value-my-car" ctaLabel="Value my car free" />
+              <TrustBar className="mt-6" />
             </div>
           </div>
 
