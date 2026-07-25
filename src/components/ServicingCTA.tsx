@@ -3,6 +3,7 @@
 import { Wrench } from 'lucide-react';
 import { PARTNER_LINKS, getPartnerRel } from '@/config/partners';
 import { trackPartnerClick } from '@/lib/tracking';
+import PartnerTrust from '@/components/PartnerTrust';
 
 interface ServicingCTAProps {
   regNumber?: string;
@@ -62,6 +63,8 @@ export default function ServicingCTA({
             : 'Compare service prices — BookMyGarage ↗'}
         </a>
       </div>
+
+      <PartnerTrust partner="bookMyGarage" className="mt-3 ml-8" />
 
       <p className="text-xs text-slate-500 mt-3 ml-8">
         Free comparison · No booking fee · Quotes from local garages
