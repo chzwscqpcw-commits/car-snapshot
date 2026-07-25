@@ -46,8 +46,8 @@ export default function RoadSafetyCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
               angle={-45}
               textAnchor="end"
@@ -55,14 +55,14 @@ export default function RoadSafetyCharts() {
               interval="preserveStartEnd"
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               label={{
                 value: "Fatalities",
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
               tickFormatter={(v: number) => v.toLocaleString()}
@@ -100,7 +100,7 @@ export default function RoadSafetyCharts() {
               <ReferenceLine
                 key={a.year}
                 x={a.year}
-                stroke="#4b5563"
+                stroke="#475569"
                 strokeDasharray="4 4"
                 label={annotationLabel(a.label, i)}
               />
@@ -143,20 +143,20 @@ export default function RoadSafetyCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 10 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 10 }}
               tickLine={false}
               interval={0}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               label={{
                 value: "Fatalities",
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
             />

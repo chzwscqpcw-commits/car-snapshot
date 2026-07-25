@@ -285,8 +285,8 @@ export default function FuelPriceChart() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="label"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
               angle={-45}
               textAnchor="end"
@@ -294,14 +294,14 @@ export default function FuelPriceChart() {
               interval={tickInterval}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               label={{
                 value: yLabel,
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
               tickFormatter={(v: number) =>
@@ -359,7 +359,7 @@ export default function FuelPriceChart() {
                 <ReferenceLine
                   key={`${a.label}-${i}`}
                   x={xVal}
-                  stroke="#4b5563"
+                  stroke="#475569"
                   strokeDasharray="4 4"
                   label={labelConfig}
                 />

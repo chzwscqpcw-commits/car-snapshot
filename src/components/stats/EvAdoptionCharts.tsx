@@ -51,13 +51,13 @@ export default function EvAdoptionCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) =>
                 v >= 1_000_000
@@ -122,14 +122,14 @@ export default function EvAdoptionCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               interval={0}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) => `${v}%`}
             />

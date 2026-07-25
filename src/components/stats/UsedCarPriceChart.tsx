@@ -110,8 +110,8 @@ export default function UsedCarPriceChart() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="quarter"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
               interval={3}
               angle={-30}
@@ -119,15 +119,15 @@ export default function UsedCarPriceChart() {
               height={50}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               domain={[80, 160]}
               label={{
                 value: "Price Index",
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
             />
@@ -162,12 +162,12 @@ export default function UsedCarPriceChart() {
             {/* Baseline reference line at 100 */}
             <ReferenceLine
               y={100}
-              stroke="#6b7280"
+              stroke="#64748b"
               strokeDasharray="6 4"
               label={{
                 value: "Baseline (100)",
                 position: "right",
-                fill: "#6b7280",
+                fill: "#64748b",
                 fontSize: 10,
               }}
             />
@@ -176,7 +176,7 @@ export default function UsedCarPriceChart() {
               <ReferenceLine
                 key={a.quarter}
                 x={a.quarter}
-                stroke="#4b5563"
+                stroke="#475569"
                 strokeDasharray="4 4"
                 label={annotationLabel(a.label!, i)}
               />

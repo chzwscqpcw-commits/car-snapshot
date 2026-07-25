@@ -125,8 +125,8 @@ export default function VedHistoryCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
               angle={-45}
               textAnchor="end"
@@ -134,8 +134,8 @@ export default function VedHistoryCharts() {
               interval="preserveStartEnd"
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) => `£${v}`}
             />
@@ -189,14 +189,14 @@ export default function VedHistoryCharts() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
               interval={0}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) => `£${v.toLocaleString()}`}
             />

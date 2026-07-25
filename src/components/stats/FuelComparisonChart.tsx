@@ -66,8 +66,8 @@ export default function FuelComparisonChart() {
             <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
             <XAxis
               dataKey="annualMiles"
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) =>
                 v >= 1000 ? `${v / 1000}k` : `${v}`
@@ -76,19 +76,19 @@ export default function FuelComparisonChart() {
                 value: "Annual mileage",
                 position: "insideBottom",
                 offset: -2,
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
               }}
             />
             <YAxis
-              stroke="#6b7280"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
+              stroke="#64748b"
+              tick={{ fill: "#64748b", fontSize: 12 }}
               tickLine={false}
               tickFormatter={(v: number) => `£${v.toLocaleString()}`}
               label={{
                 value: "Annual cost (£)",
                 angle: -90,
                 position: "insideLeft",
-                style: { fill: "#6b7280", fontSize: 11 },
+                style: { fill: "#64748b", fontSize: 11 },
                 offset: 10,
               }}
             />
