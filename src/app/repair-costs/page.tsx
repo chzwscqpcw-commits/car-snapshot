@@ -81,7 +81,7 @@ const COST_GUIDES: CostGuide[] = [
     blurb: "Most batteries last 4–5 years. Modern cars with stop-start need specific AGM or EFB batteries which cost more.",
     range: "£80 – £250",
     Icon: BatteryCharging,
-    iconColor: "text-emerald-400",
+    iconColor: "text-cyan-400",
   },
   {
     slug: "clutch-replacement",
@@ -121,7 +121,7 @@ const TRUST_GUIDES: TrustGuide[] = [
     title: "How to spot a garage that's overcharging you",
     blurb: "Red flags, written quotes, asking for the old parts back, and what to do if you've already been stung.",
     Icon: ShieldCheck,
-    iconColor: "text-emerald-400",
+    iconColor: "text-cyan-400",
   },
 ];
 
@@ -172,13 +172,13 @@ export default function RepairCostsHub() {
 
       {/* Hero */}
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.10),_transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(34,211,238,0.10),_transparent_60%)]" />
         <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-10">
           <Link href="/tools" className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block">
             &larr; Back to all tools
           </Link>
 
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/40 bg-emerald-900/20 px-3 py-1 text-xs font-medium text-emerald-300">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-700/40 bg-cyan-900/20 px-3 py-1 text-xs font-medium text-cyan-300">
             <Wrench className="h-3 w-3" />
             Honest UK repair pricing
           </span>
@@ -193,15 +193,15 @@ export default function RepairCostsHub() {
 
           <div className="mt-5 grid grid-cols-3 gap-3 max-w-md">
             <div>
-              <p className="text-2xl font-bold text-emerald-400">6</p>
+              <p className="text-2xl font-bold text-cyan-400">6</p>
               <p className="text-xs text-slate-500">price guides</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-emerald-400">No&nbsp;signup</p>
+              <p className="text-2xl font-bold text-cyan-400">No&nbsp;signup</p>
               <p className="text-xs text-slate-500">just enter your reg</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-emerald-400">Live</p>
+              <p className="text-2xl font-bold text-cyan-400">Live</p>
               <p className="text-xs text-slate-500">garage quotes</p>
             </div>
           </div>
@@ -221,16 +221,16 @@ export default function RepairCostsHub() {
             <Link
               key={slug}
               href={`/repair-costs/${slug}`}
-              className="group block rounded-xl border border-slate-800 bg-slate-900/60 p-5 transition-colors hover:border-emerald-700/50"
+              className="group block rounded-xl border border-slate-800 bg-slate-900/60 p-5 transition-colors hover:border-cyan-700/50"
             >
               <div className="flex items-center gap-3">
                 <Icon className={`h-6 w-6 ${iconColor}`} />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-emerald-400 transition-colors">
+                <h3 className="text-base font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">
                   {title}
                 </h3>
               </div>
               <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">Typical range</p>
-              <p className="text-2xl font-bold text-emerald-400">{range}</p>
+              <p className="text-2xl font-bold text-cyan-400">{range}</p>
               <p className="mt-3 text-sm text-slate-400 leading-relaxed">{blurb}</p>
               <p className="mt-4 text-xs font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
                 See full guide &rarr;
