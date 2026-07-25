@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
-import { trackPartnerClick } from "@/lib/tracking";
+import { trackPartnerClick, trackConversion } from "@/lib/tracking";
 import Button from "@/components/Button";
 import BoltMark from "@/components/BoltMark";
 import ScanBeamReveal from "@/components/ScanBeamReveal";
@@ -103,6 +103,22 @@ export default function PersonalisedCostLookup({
       };
 
       const estimate = calculateRepairCost(slug, vehicle);
+
+      // A successful reg lookup is a genuine reg_search — count it so
+      // repair-cost bridging is visible in the funnel (it was previously
+      // invisible: this component only ever fired trackPartnerClick). flow
+      // "tool" matches the widget searches; source "repair-cost" + slug make
+      // these countable per guide. NB: this inline lookup shows the estimate in
+      // place rather than navigating, so these reg_search events have no paired
+      // results_view — a deliberate denominator change.
+      trackConversion("reg_search", {
+        vrm: cleaned,
+        flow: "tool",
+        source: "repair-cost",
+        slug,
+        target_path: `/repair-costs/${slug}`,
+      });
+
       setResult({ vehicle, estimate });
     } catch {
       setError("Couldn’t reach the lookup service — try again in a moment.");
