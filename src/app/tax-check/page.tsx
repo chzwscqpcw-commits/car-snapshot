@@ -160,7 +160,7 @@ export default async function TaxCheckPage({
       <LandingHero
         h1="Free Car Tax Check"
         searchTargetPath="/tax-check"
-        searchCtaLabel="Check tax status"
+        searchCtaLabel="Check tax status free"
         subtitle="Real-time DVLA tax status for any UK vehicle — see if it's taxed, SORN, or due. Plus VED band and annual cost. Free, instant, no signup."
         badgeText="Free · No signup · Real-time DVLA tax data"
         previewImage="tax-check.png"

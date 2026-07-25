@@ -271,7 +271,7 @@ export default async function MotCheckPage({
 
           {/* Hero reg box (graduated valuation_hero_reg_v1 winner). Lower widget
               hides its duplicate lookup (showLookup={false}). */}
-          <HeroRegSearch targetPath="/mot-check" ctaLabel="Check MOT history" className="mt-6" />
+          <HeroRegSearch targetPath="/mot-check" ctaLabel="Check MOT history free" className="mt-6" />
 
           <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
         </div>
