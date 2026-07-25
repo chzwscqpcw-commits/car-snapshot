@@ -4754,6 +4754,24 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* carVertical full-history CTA lifted into section-money — the
+                highest-reach section (~1,555 views vs ~437 for the old
+                Next-Steps slot; revenue audit 2026-07). Uses the `report`
+                variant (finance/write-off/import framing), distinct from the
+                `mileage`-themed placement kept beside MOT History below, so the
+                two reads differ and each attributes separately (money-carvertical
+                vs mot-history-carvertical). Sits after the valuation so it reads
+                as "verify what's behind this value", not a paywall. */}
+            <DataReveal delay={395}>
+              <div className="mb-8">
+                <CarVerticalReportCTA
+                  regNumber={data.registrationNumber}
+                  context="money-carvertical"
+                  variant="report"
+                />
+              </div>
+            </DataReveal>
+
             {/* ANNUAL RUNNING COSTS CARD */}
             {ownershipCost && (
               <DataReveal delay={410}>

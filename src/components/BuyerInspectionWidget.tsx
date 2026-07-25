@@ -17,11 +17,12 @@ const CHECKS = [
 ];
 
 /**
- * Inline results-page widget that asks whether the visitor is *buying* this car,
- * and only reveals the ClickMechanic pre-purchase-inspection offer if they are.
- * Segments buyers from owners so the pitch never bothers people checking their
- * own car, and the CTA lands only on genuine buyer intent. The reveal expands
- * the offer with the inspection checklist ticking in one by one.
+ * Inline results-page widget for the ClickMechanic pre-purchase-inspection offer.
+ * The offer is shown BY DEFAULT (revenue audit 2026-07: the old buyer-tap gate
+ * suppressed it to ~6 clicks/mo — most visitors never tapped "buyer"). Owners
+ * can dismiss it in one tap ("It's mine — hide") and re-open it if they were
+ * actually buying, so the pitch still respects owners but no longer hides itself
+ * from the buyers it's for. The checklist ticks in one by one on reveal.
  */
 export default function BuyerInspectionWidget({
   regNumber,
@@ -32,7 +33,7 @@ export default function BuyerInspectionWidget({
   context?: string;
   preview?: boolean;
 }) {
-  const [answer, setAnswer] = useState<null | "buyer" | "owner">(null);
+  const [answer, setAnswer] = useState<"buyer" | "owner">("buyer");
   const [postcode, setPostcode] = useState("");
   if (!preview && !isPartnerConfigured(partner)) return null;
 
@@ -63,33 +64,24 @@ export default function BuyerInspectionWidget({
           </div>
         </div>
 
-        {answer === null && (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setAnswer("buyer")}
-              className="rounded-lg px-3.5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: CM }}
-            >
-              Yes, I&apos;m considering it
-            </button>
-            <button
-              type="button"
-              onClick={() => setAnswer("owner")}
-              className="rounded-lg border border-slate-700 px-3.5 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800"
-            >
-              It&apos;s mine
-            </button>
-          </div>
+        {answer === "buyer" && (
+          <button
+            type="button"
+            onClick={() => setAnswer("owner")}
+            className="shrink-0 self-start text-xs text-slate-500 transition-colors hover:text-slate-300 sm:self-auto"
+          >
+            It&apos;s mine — hide
+          </button>
         )}
 
         {answer === "owner" && (
           <button
             type="button"
-            onClick={() => setAnswer(null)}
-            className="text-xs text-slate-500 transition-colors hover:text-slate-300"
+            onClick={() => setAnswer("buyer")}
+            className="shrink-0 self-start text-xs font-semibold transition-opacity hover:opacity-80 sm:self-auto"
+            style={{ color: CM }}
           >
-            Got it — back to your report
+            Buying it? Show inspection options
           </button>
         )}
       </div>
