@@ -3818,15 +3818,12 @@ END:VEVENT
             </div>
           )}
 
-          {/* Generic MOT reminder — light chip on the homepage (low-intent
-              placement). The chip carries its own headline, so the heavy
-              "Never miss your MOT again" block above it was removed to keep the
-              homepage lighter. Expands to the full form on tap. */}
-          {!data && !loading && (
-            <div className="mt-8 mb-4">
-              <MOTReminderCollapsible context="generic" triggerVariant="homepage" />
-            </div>
-          )}
+          {/* Homepage MOT-reminder chip removed (revenue audit 2026-07): the
+              "homepage" trigger drew 826 views/mo and 0 signups — asking for a
+              reminder before the visitor has even looked up a vehicle has no
+              intent behind it, and it was clutter on the landing view. Reminder
+              capture now lives only where it converts (the owner/valuation moment
+              + the far/no-record results states). */}
         </div>
 
 
