@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { getMarketCheckValuation } from "@/lib/marketcheck";
+import { isSalvageListing } from "@/lib/valuation";
 
 // ── eBay OAuth token cache ──────────────────────────────────────────────────
 
@@ -299,6 +300,7 @@ type EbayResult = {
   yearWidened: boolean;
   yearTolerance: number;
   rejectedByTitle: number;
+  rejectedBySalvage: number;
   rejectedByPriceFloor: number;
   rejectedByIqr: number;
   selectedSample: Array<{ title: string; price: number; year: number | null }>;
@@ -310,7 +312,6 @@ function buildComparables(
   model: string,
   year: number,
   fuelType: string | null,
-  depEstimate?: number,
 ): EbayResult | null {
   if (bundle.items.length === 0) return null;
 
@@ -337,17 +338,24 @@ function buildComparables(
     return true;
   });
 
-  // Step 2: enforce a price floor (kills £1 auction openers + write-offs).
-  // We layer two signals: a conservative year-based floor AND, if we have
-  // a depreciation estimate, 35% of that. The max of the two is the floor.
-  // For a 2019 BMW 3 Series with £14k dep estimate, this gives a £4.9k floor
-  // instead of the static £2k, correctly rejecting older/salvage BMWs that
-  // have "BMW 3 SERIES" in the title but no year.
-  const yearFloor = priceFloorForYear(year);
-  const depFloor = depEstimate ? Math.round(depEstimate * 0.35) : 0;
-  const floor = Math.max(yearFloor, depFloor);
+  // Step 2a: drop salvage, write-offs and parts listings on the TITLE. These
+  // are the listings the old price floor was trying to catch, and catching
+  // them by name means we no longer have to censor cheap-but-sound cars.
+  let rejectedBySalvage = 0;
+  const notSalvage = titleMatched.filter((i) => {
+    if (isSalvageListing(i.title)) {
+      rejectedBySalvage++;
+      return false;
+    }
+    return true;
+  });
+
+  // Step 2b: a conservative year-based price floor, to keep £1 starter bids
+  // out of the median. NOT scaled by our own depreciation estimate any more —
+  // see SALVAGE_TITLE_RE above for why that was self-reinforcing.
+  const floor = priceFloorForYear(year);
   let rejectedByPriceFloor = 0;
-  const aboveFloor = titleMatched.filter((i) => {
+  const aboveFloor = notSalvage.filter((i) => {
     if (i.price < floor) {
       rejectedByPriceFloor++;
       return false;
@@ -416,6 +424,7 @@ function buildComparables(
     yearWidened: yearTolerance > 0,
     yearTolerance,
     rejectedByTitle,
+    rejectedBySalvage,
     rejectedByPriceFloor,
     rejectedByIqr,
     selectedSample: selected.slice(0, 15).map((i) => ({
@@ -431,7 +440,6 @@ async function fetchEbayComparables(
   model: string,
   year: number,
   fuelType: string | null,
-  depEstimate: number | undefined,
   debug: boolean,
 ): Promise<{ result: EbayResult | null; debug?: Record<string, unknown> }> {
   const token = await getEbayToken();
@@ -441,7 +449,7 @@ async function fetchEbayComparables(
     const bundle = await fetchEbayItems(token, make, model);
     if (!bundle) return { result: null };
 
-    const result = buildComparables(bundle, make, model, year, fuelType, depEstimate);
+    const result = buildComparables(bundle, make, model, year, fuelType);
 
     if (debug) {
       return {
@@ -632,7 +640,7 @@ export async function GET(
     // it had ≥3 entries, which let data go stale.
     const [cacheResult, { result: ebayResult, debug: ebayDebug }, mcOutcome] = await Promise.all([
       checkCache(make, model, year),
-      fetchEbayComparables(make, model, year, fuelType, depEstimate, debug),
+      fetchEbayComparables(make, model, year, fuelType, debug),
       // Flag-gated; resolves to {ok:false} (no throw) when disabled/capped. The
       // free-tier monthly cap and TTL cache live inside this call.
       getMarketCheckValuation(make, model, year),
@@ -704,6 +712,7 @@ export async function GET(
         ...(ebayDebug || {}),
         marketcheck: { reason: mcOutcome.ok ? mcOutcome.source : mcOutcome.reason, aggregate: marketcheck },
         rejectedByTitle: ebayResult?.rejectedByTitle,
+        rejectedBySalvage: ebayResult?.rejectedBySalvage,
         rejectedByPriceFloor: ebayResult?.rejectedByPriceFloor,
         rejectedByIqr: ebayResult?.rejectedByIqr,
         selectedSample: ebayResult?.selectedSample ?? [],

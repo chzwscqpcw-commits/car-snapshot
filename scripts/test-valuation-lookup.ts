@@ -20,6 +20,7 @@ import {
   expectedTotalMiles,
   getListPriceDeflator,
   getMileageAdjustment,
+  isSalvageListing,
   lookupNewPrice,
 } from "../src/lib/valuation";
 
@@ -156,6 +157,39 @@ console.log("\nDepreciation baseline no longer double-counts mileage:");
 check("baseline is mileage-free",
   calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"),
   calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"));
+
+console.log("\nSalvage blocklist — must catch non-runners:");
+// Replaces depFloor, which discarded any listing below 35% of our own
+// depreciation estimate. That made the model censor the market data that would
+// have corrected it, and it never caught the listings it was named for: a
+// "CAT N REPAIRED" Focus is priced like a normal Focus minus a bit.
+for (const t of [
+  "FORD FOCUS 2017 CAT N REPAIRED DAMAGED SALVAGE",
+  "VW GOLF 2014 SPARES OR REPAIR",
+  "BMW 320D 2016 NON RUNNER",
+  "AUDI A3 2015 CAT S",
+  "FIESTA 2013 BREAKING FOR PARTS",
+  "CORSA 2010 WRITE OFF",
+  "POLO 2012 NO MOT SPARES",
+  "ASTRA 2011 PARTS ONLY",
+]) {
+  check(`blocks: ${t.slice(0, 40)}`, isSalvageListing(t), true);
+}
+
+console.log("\nSalvage blocklist — must not eat sound cars:");
+// The traps: CAT DELETE / CATALYTIC both contain "CAT", and "12 MONTHS MOT"
+// contains "MOT". "EXPORT" is deliberately absent from the list because
+// "export welcome" appears on plenty of perfectly sound cars.
+for (const t of [
+  "FORD FOCUS 2017 1.0 ECOBOOST TITANIUM 5DR",
+  "VW GOLF GTI 2018 EXPORT WELCOME",
+  "AUDI A3 SPORTBACK S LINE CAT DELETE PIPE",
+  "NISSAN QASHQAI 2015 CATALYTIC CONVERTER REPLACED",
+  "MINI COOPER S 2014 12 MONTHS MOT",
+  "FIAT 500 2013 SCRATCH ON BUMPER",
+]) {
+  check(`keeps:  ${t.slice(0, 40)}`, isSalvageListing(t), false);
+}
 
 console.log(
   failures === 0

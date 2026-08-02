@@ -201,6 +201,32 @@ export function lookupNewPrice(
   return DEFAULT_NEW_PRICE;
 }
 
+// ── Salvage / parts blocklist ──────────────────────────────────────────────
+//
+// Replaces the old depreciation-derived price floor. That floor discarded any
+// listing below 35% of our own depreciation estimate, on the theory that cheap
+// listings are salvage — which made the model censor the market data that
+// would have corrected it. An inflated new price raised the floor, the floor
+// truncated the cheap tail, the surviving median rose, and that median was
+// written to the shared cache and re-served to every other visitor.
+//
+// On a 2010 Focus it discarded 9 of 12 realistic listings and lifted the
+// median from £2,000 to £3,200. Meanwhile it never did the job it was named
+// for: `FORD FOCUS 2017 CAT N REPAIRED DAMAGED SALVAGE` is priced like a
+// normal 2017 Focus minus a bit, so it sailed over the floor.
+//
+// Excluding salvage is a job for the title, not the price. Deliberately
+// conservative — every term here means the car is not a normal runner. "EXPORT"
+// is NOT included: "export welcome" appears on plenty of sound cars.
+const SALVAGE_TITLE_RE =
+  /\b(?:SPARES?\s*(?:OR|AND|&)?\s*REPAIRS?|NON[-\s]?RUNNER|NOT\s+RUNNING|CAT\s?[SNCD]\b|SALVAGE|DAMAGED?|WRITE[-\s]?OFF|WRITTEN\s+OFF|BREAKING|PARTS\s+ONLY|NO\s+MOT|UNRECORDED|REPAIRABLE)\b/i;
+
+
+/** True when a listing title says the car is not a normal runner. */
+export function isSalvageListing(title: string): boolean {
+  return SALVAGE_TITLE_RE.test(title);
+}
+
 // ── Depreciation curve ──────────────────────────────────────────────────────
 
 export function getDepreciationMultiplier(vehicleAge: number): number {
