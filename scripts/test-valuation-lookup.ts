@@ -14,7 +14,14 @@
  * cheap ones. Run by `npm test`.
  */
 import NEW_PRICES from "../src/data/new-prices.json";
-import { getListPriceDeflator, lookupNewPrice } from "../src/lib/valuation";
+import {
+  calculateDepreciationBaseline,
+  combineValuationLayers,
+  expectedTotalMiles,
+  getListPriceDeflator,
+  getMileageAdjustment,
+  lookupNewPrice,
+} from "../src/lib/valuation";
 
 type Entry = { make: string; model: string; newPrice: number };
 const DATA = NEW_PRICES as Entry[];
@@ -89,6 +96,66 @@ check("negative age is treated as new", getListPriceDeflator(-5), 1);
 // A flat 3.5%/yr would give 0.539 here; the real index gives ~0.635, because
 // new-car prices were nearly flat 1996-2016 then jumped from 2021.
 check("18y deflator is nearer 0.64 than a flat-rate 0.54", d18 > 0.6 && d18 < 0.7, true);
+
+console.log("\nMileage — expectation accumulates and decelerates:");
+check("an older car is expected to have covered more in total",
+  expectedTotalMiles(16, "PETROL") > expectedTotalMiles(3, "PETROL"), true);
+// The correction that matters: mileage accrues more slowly as a car ages.
+// A flat registration-era rate expected 173,000 miles of an 18-year-old car,
+// so an utterly typical 95,000-mile 2008 Corsa scored the maximum low-mileage
+// bonus — identical to a genuinely rare 40,000-mile one.
+check("but fewer miles per year than when it was new",
+  expectedTotalMiles(18, "PETROL") / 18 < expectedTotalMiles(3, "PETROL") / 3, true);
+check("an 18-year-old car is expected around 100-130k, not 170k",
+  expectedTotalMiles(18, "PETROL") > 95000 && expectedTotalMiles(18, "PETROL") < 130000, true);
+check("a typical 95k-mile 18-year-old petrol is NOT treated as exceptional",
+  getMileageAdjustment(95000, 18, "PETROL") < 10, true);
+check("a genuinely rare 40k-mile 18-year-old still is",
+  getMileageAdjustment(40000, 18, "PETROL") >= 12, true);
+check("diesels are expected to cover more than petrols",
+  expectedTotalMiles(7, "DIESEL") > expectedTotalMiles(7, "PETROL"), true);
+check("unknown fuel still returns a sane figure", expectedTotalMiles(10) > 0, true);
+check("age zero has no expectation", expectedTotalMiles(0, "PETROL"), 0);
+
+console.log("\nMileage — the curve is continuous and monotonic:");
+const expected7 = expectedTotalMiles(7, "DIESEL");
+check("exactly average mileage is neutral", getMileageAdjustment(expected7, 7, "DIESEL"), 0);
+check("more miles is never worth more",
+  getMileageAdjustment(150000, 7, "DIESEL") < getMileageAdjustment(100000, 7, "DIESEL"), true);
+// The old band table jumped -5% to -12% at a boundary, a ~£1,200 cliff on one
+// extra mile. A continuous curve cannot do that.
+const cliffA = getMileageAdjustment(expected7 * 1.4, 7, "DIESEL");
+const cliffB = getMileageAdjustment(expected7 * 1.4 + 1, 7, "DIESEL");
+check("no cliff at the old band boundary", Math.abs(cliffA - cliffB) < 0.5, true);
+check("high mileage is penalised well beyond the old -12% floor",
+  getMileageAdjustment(250000, 7, "DIESEL") < -35, true);
+check("clamped below", getMileageAdjustment(900000, 7, "DIESEL") >= -45, true);
+check("clamped above", getMileageAdjustment(1, 7, "DIESEL") <= 12, true);
+check("no reading means no adjustment", getMileageAdjustment(null, 7, "DIESEL"), 0);
+check("a brand-new car has no mileage expectation", getMileageAdjustment(10, 0, "PETROL"), 0);
+
+console.log("\nMileage actually moves the headline:");
+// The regression this guards: getMileageAdjustment used to be consumed only
+// inside calculateDepreciationBaseline, which carries 20% of the blend, so a
+// -12% penalty arrived as -2.4%. A 2019 320d returned £15,550 at BOTH 150k and
+// 250k miles. Mileage now scales the blended value.
+const blend = (mileAdj: number): number =>
+  combineValuationLayers(14000, 14000, 20, null, 0, 0, 0, 20, null, null, null, null,
+    false, null, null, null, 0, null, null, mileAdj)!.estimatedValue;
+const at40k = blend(getMileageAdjustment(40000, 7, "DIESEL"));
+const at150k = blend(getMileageAdjustment(150000, 7, "DIESEL"));
+const at250k = blend(getMileageAdjustment(250000, 7, "DIESEL"));
+console.log(`     40k £${at40k} · 150k £${at150k} · 250k £${at250k}`);
+check("110,000 extra miles moves the value by more than £3,000", at40k - at150k > 3000, true);
+check("250k is worth materially less than 150k", at150k - at250k > 1500, true);
+check("the reported percentage reaches the caller", blend(-20) < blend(0), true);
+
+console.log("\nDepreciation baseline no longer double-counts mileage:");
+// Mileage moved OUT of the baseline; passing a different odometer must not
+// change it, or the adjustment would be applied twice.
+check("baseline is mileage-free",
+  calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"),
+  calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"));
 
 console.log(
   failures === 0

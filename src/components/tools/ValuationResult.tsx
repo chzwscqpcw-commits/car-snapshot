@@ -31,6 +31,7 @@ import {
   getConditionAdjustment,
   getColourAdjustment,
   getMileageAdjustment,
+  expectedTotalMiles,
   getDepreciationMultiplier,
   getMakeRetentionMultiplier,
   latestRecordedMileage,
@@ -114,7 +115,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   // there's no MOT reading.
   const defaultMileage = useMemo(() => latestRecordedMileage(vehicle.motTests), [vehicle.motTests]);
   const [mileage, setMileage] = useState<number>(
-    defaultMileage ?? (age != null ? age * 7400 : 60000)
+    defaultMileage ?? (age != null ? expectedTotalMiles(age, vehicle.fuelType) : 60000)
   );
   const advisoryCount = useMemo(
     () =>
@@ -126,8 +127,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
 
   const depEstimate = useMemo(() => {
     if (newPrice === null || age === null) return null;
-    return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model, mileage);
-  }, [newPrice, age, vehicle.make, vehicle.model, mileage]);
+    return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model);
+  }, [newPrice, age, vehicle.make, vehicle.model]);
 
   // The server returns market COMPARABLES (eBay/MarketCheck/cache), which depend
   // on make/model/year — NOT on the user's mileage. So the fetch is keyed on
@@ -203,6 +204,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       recentFailure
     );
     const colourAdj = getColourAdjustment(vehicle.colour);
+    // Mileage now scales the BLENDED value, not just the 20%-weighted
+    // depreciation term, so 100k extra miles actually moves the number.
+    const mileageAdj = getMileageAdjustment(mileage, age ?? 0, vehicle.fuelType);
     const result = combineValuationLayers(
       depEstimate,
       serverData?.ebayMedian ?? null,
@@ -222,10 +226,10 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       serverData?.marketcheckMedian ?? null,
       serverData?.marketcheckListingCount ?? 0,
       serverData?.marketcheckQ1 ?? null,
-      serverData?.marketcheckQ3 ?? null
+      serverData?.marketcheckQ3 ?? null,
+      mileageAdj
     );
     if (result) {
-      result.mileageAdjustmentPercent = getMileageAdjustment(mileage, age ?? 0);
       result.motAutoAdjustmentPercent = motAuto;
     }
     return result;
@@ -236,6 +240,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     advisoryCount,
     recentFailure,
     vehicle.colour,
+    vehicle.fuelType,
     mileage,
     age,
   ]);

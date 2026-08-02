@@ -1100,7 +1100,7 @@ export default function Home() {
     }
     const latestMileage = latestRecordedMileage(data.motTests);
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
-    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
+    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model);
 
     const params = new URLSearchParams({
       make: data.make,
@@ -1537,7 +1537,7 @@ export default function Home() {
     // local baseline can't disagree with the figure it sent to the API.
     const latestMileage = latestRecordedMileage(data.motTests);
 
-    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
+    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model);
     return { newPrice, vehicleAge, latestMileage, depBaseline };
   }, [data, lookupModel]);
 
@@ -1546,7 +1546,7 @@ export default function Home() {
     if (!data?.make || !data?.model || !valuationInputs) return null;
 
     const { vehicleAge, latestMileage, depBaseline } = valuationInputs;
-    const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge);
+    const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge, data.fuelType);
 
     const advisoryCount = data.motTests?.[0]?.rfrAndComments?.filter(
       (r) => r.type === "ADVISORY"
@@ -1575,10 +1575,10 @@ export default function Home() {
       valuationServerData?.marketcheckListingCount ?? 0,
       valuationServerData?.marketcheckQ1 ?? null,
       valuationServerData?.marketcheckQ3 ?? null,
+      mileageAdj,
     );
 
     if (result) {
-      result.mileageAdjustmentPercent = mileageAdj;
       result.motAutoAdjustmentPercent = motAuto;
     }
 

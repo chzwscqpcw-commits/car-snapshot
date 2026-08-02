@@ -100,8 +100,8 @@ export function useVehicleValuation(
 
   const depEstimate = useMemo(() => {
     if (newPrice === null || age === null) return null;
-    return calculateDepreciationBaseline(newPrice, age, vehicle.make!, vehicle.model!, mileage);
-  }, [newPrice, age, vehicle.make, vehicle.model, mileage]);
+    return calculateDepreciationBaseline(newPrice, age, vehicle.make!, vehicle.model!);
+  }, [newPrice, age, vehicle.make, vehicle.model]);
 
   useEffect(() => {
     if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
@@ -158,6 +158,7 @@ export function useVehicleValuation(
     if (depEstimate === null) return null;
     const { total: condAdj, motAuto } = getConditionAdjustment(condition, advisoryCount, recentFailure);
     const colourAdj = getColourAdjustment(vehicle.colour);
+    const mileageAdj = getMileageAdjustment(mileage, age ?? 0, vehicle.fuelType);
     const result = combineValuationLayers(
       depEstimate,
       serverData?.ebayMedian ?? null,
@@ -178,13 +179,13 @@ export function useVehicleValuation(
       serverData?.marketcheckListingCount ?? 0,
       serverData?.marketcheckQ1 ?? null,
       serverData?.marketcheckQ3 ?? null,
+      mileageAdj,
     );
     if (result) {
-      result.mileageAdjustmentPercent = getMileageAdjustment(mileage, age ?? 0);
       result.motAutoAdjustmentPercent = motAuto;
     }
     return result;
-  }, [depEstimate, serverData, condition, advisoryCount, recentFailure, vehicle.colour, mileage, age]);
+  }, [depEstimate, serverData, condition, advisoryCount, recentFailure, vehicle.colour, vehicle.fuelType, mileage, age]);
 
   return {
     newPrice,
