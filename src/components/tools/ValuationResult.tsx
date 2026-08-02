@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { trackValuationResult } from "@/lib/tracking";
 import {
   Sparkles,
   Info,
@@ -237,6 +238,52 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     vehicle.colour,
     mileage,
     age,
+  ]);
+
+  // ── Record what we actually showed ─────────────────────────────────────
+  // Nothing else in the pipeline captures the output: combineValuationLayers
+  // runs here, on the client, so the server row that stores every INPUT never
+  // learns the final figure. Deduped on the value itself, so re-renders don't
+  // double-count but a genuine change — the user completing the condition
+  // form — is captured as its own data point.
+  const loggedValuationRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!valuation || depEstimate === null) return;
+    const key = `${vrm}|${valuation.estimatedValue}|${condition ? "c" : "n"}`;
+    if (loggedValuationRef.current === key) return;
+    loggedValuationRef.current = key;
+    trackValuationResult({
+      surface: "tool",
+      make: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.yearOfManufacture,
+      age,
+      mileage,
+      newPrice,
+      depEstimate,
+      estimatedValue: valuation.estimatedValue,
+      rangeLow: valuation.rangeLow,
+      rangeHigh: valuation.rangeHigh,
+      confidence: valuation.confidence,
+      conditionProvided: condition !== null,
+      ebayMedian: serverData?.ebayMedian ?? null,
+      ebayListingCount: serverData?.ebayListingCount ?? 0,
+      cacheMedian: serverData?.cacheMedian ?? null,
+      marketcheckMedian: serverData?.marketcheckMedian ?? null,
+      sources: valuation.sources,
+    });
+  }, [
+    valuation,
+    vrm,
+    condition,
+    depEstimate,
+    newPrice,
+    age,
+    mileage,
+    serverData,
+    vehicle.make,
+    vehicle.model,
+    vehicle.yearOfManufacture,
   ]);
 
   return (
