@@ -98,8 +98,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     // matching the full report so the same car finds the same new price.
     const parsed = parseModel(vehicle.model, vehicle.make);
     const lookupModel = expandBaseModelForLookup(vehicle.make, parsed);
-    return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model);
-  }, [vehicle.make, vehicle.model]);
+    return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model, vehicle.fuelType);
+  }, [vehicle.make, vehicle.model, vehicle.fuelType]);
   const age = useMemo(
     () =>
       vehicle.yearOfManufacture

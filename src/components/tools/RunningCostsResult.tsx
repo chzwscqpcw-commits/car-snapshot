@@ -125,7 +125,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   );
 
   const segment: VehicleSegment = useMemo(() => {
-    const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
+    const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
     return classifyVehicleSegment({
       fuelType: vehicle.fuelType,
       bodyType: lookupBodyType(vehicle.make, vehicle.model) ?? undefined,
@@ -153,7 +153,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     if (!vehicle.yearOfManufacture) return null;
     const vehicleAge = new Date().getFullYear() - vehicle.yearOfManufacture;
     const isOver3Years = vehicleAge > 3;
-    const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
+    const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
     return calculateOwnershipCost({
       vedAnnualRate: ved.estimatedAnnualRate,
       fuelAnnualCost: scaledFuelCost,
@@ -982,7 +982,7 @@ function CostForecastCard({
   const HORIZON = 5;
   const thisYear = new Date().getFullYear();
   const currentAge = thisYear - vehicle.yearOfManufacture;
-  const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model);
+  const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
 
   const rows = Array.from({ length: HORIZON }, (_, i) => {
     const offset = i + 1; // next year, 2 years out, etc.

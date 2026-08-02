@@ -1,5 +1,7 @@
 // Vehicle valuation estimator — depreciation model + market data combination
 
+import priceIndexData from "@/data/new-car-price-index.json";
+
 export type ValuationConfidence = "high" | "medium" | "low" | "estimate-only";
 
 export type ValuationResult = {
@@ -45,6 +47,11 @@ const MAKE_AVERAGES: Record<string, number> = {
   VOLKSWAGEN: 28000,
   BMW: 40000,
   "MERCEDES-BENZ": 42000,
+  // DVLA returns the marque both with and without the hyphen; normalisation
+  // collapses the hyphenated form to "MERCEDES BENZ", so the bare spelling
+  // needs its own key or it lands on DEFAULT_NEW_PRICE.
+  MERCEDES: 42000,
+  ABARTH: 28000,
   AUDI: 38000,
   TOYOTA: 28000,
   VAUXHALL: 22000,
@@ -79,14 +86,72 @@ const MAKE_AVERAGES: Record<string, number> = {
   BYD: 34000,
 };
 
-const DEFAULT_NEW_PRICE = 25000;
+/** Parc-weighted median new price across the UK fleet. Was 25,000, which is
+ *  roughly a current new-car average and far too high for the older, cheaper
+ *  cars that actually reach this last-resort branch. */
+const DEFAULT_NEW_PRICE = 18000;
+
+/** MAKE_AVERAGES keyed by the SAME normalisation the lookup uses.
+ *  normalizeStr strips hyphens, so a literal "MERCEDES-BENZ" key could never
+ *  be hit by a "MERCEDES-BENZ" make (it normalises to "MERCEDES BENZ") and the
+ *  marque silently fell through to DEFAULT_NEW_PRICE. Build the map instead of
+ *  hand-maintaining both spellings. */
+const MAKE_AVERAGES_NORM: Record<string, number> = Object.fromEntries(
+  Object.entries(MAKE_AVERAGES).map(([k, v]) => [normalizeStr(k), v]),
+);
 
 // ── New price lookup ────────────────────────────────────────────────────────
+
+const tokens = (s: string): string[] => (s ? s.split(" ").filter(Boolean) : []);
+
+/**
+ * Is this model name an electrified variant sold alongside a combustion car of
+ * the same name? Matters because new-prices.json carries the EV at a much
+ * higher price (CORSA E £28,555 vs a real 2008 petrol Corsa's ~£10,300), and
+ * substring matching used to hand that price to every petrol Corsa.
+ *
+ * Deliberately narrow. A bare trailing "E" means electric (CORSA E), but a
+ * LEADING "E" does not — "E CLASS" is a diesel saloon. Marque-specific
+ * prefixes are gated on the marque so Hyundai's i10/i20/i30 aren't mistaken
+ * for BMW's i3/i4.
+ */
+function isElectrifiedVariant(normMake: string, normModel: string): boolean {
+  const t = tokens(normModel);
+  if (t.length === 0) return false;
+  const last = t[t.length - 1];
+  if (last === "E" || last === "EV") return true;
+  if (t.includes("ELECTRIC") || t.includes("EV")) return true;
+  if (t.some((x) => /^ID\.?\d+$/.test(x))) return true;
+  if (normModel.includes("E TRON")) return true;
+  if (normMake === "BMW" && t.some((x) => /^I[3-8]$/.test(x))) return true;
+  if (normMake.startsWith("MERCEDES") && t.some((x) => /^EQ[A-Z]{1,2}$/.test(x))) return true;
+  return false;
+}
+
+/**
+ * Does one model name extend the other from the FRONT? Replaces the old
+ * `a.includes(b) || b.includes(a)` substring test, which matched on any
+ * fragment anywhere and produced real mispricings in production:
+ *   "A CLASS" contains the letters C-L-A  → priced as a CLA  (£40,855)
+ *   "5"       is a substring of "CX 5"    → priced as a CX-5 (£31,550)
+ * Token-prefix keeps the legitimate cases ("CORSA" ⊂ "CORSA E",
+ * "3 SERIES" ⊂ "3 SERIES GRAN COUPE") and rejects both bugs above.
+ */
+function isTokenPrefix(a: string[], b: string[]): boolean {
+  const n = Math.min(a.length, b.length);
+  if (n === 0) return false;
+  for (let i = 0; i < n; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
 
 export function lookupNewPrice(
   data: NewPriceEntry[],
   make?: string,
   model?: string,
+  /** DVLA fuel type where known. Only used to decide whether an electrified
+   *  namesake is a legitimate match; omitting it falls back to preferring the
+   *  combustion variant, which is the safer default. */
+  fuelType?: string | null,
 ): number | null {
   if (!make) return null;
 
@@ -94,22 +159,43 @@ export function lookupNewPrice(
   const normModel = model ? normalizeStr(model) : "";
 
   if (data.length > 0 && normModel) {
-    // Exact match first
-    const exact = data.find(
-      (e) => normalizeStr(e.make) === normMake && normalizeStr(e.model) === normModel,
-    );
-    if (exact) return exact.newPrice;
+    const wantsElectric =
+      normalizeStr(fuelType ?? "").startsWith("ELECTRIC") ||
+      isElectrifiedVariant(normMake, normModel);
 
-    // Fuzzy: model contains or is contained (strip trim/variant)
     const sameMake = data.filter((e) => normalizeStr(e.make) === normMake);
-    const fuzzy = sameMake.find(
-      (e) => normModel.includes(normalizeStr(e.model)) || normalizeStr(e.model).includes(normModel),
+
+    /** Cheapest of a candidate set, preferring combustion unless the vehicle
+     *  really is electric. Cheapest is the right prior: these are base-trim
+     *  list prices and the alternative — first-in-file — is arbitrary.
+     *
+     *  Returns null when the ONLY namesakes are electrified and this car
+     *  isn't. That case is a genuine miss, not a near-miss: the table lists
+     *  CORSA E (£28,555) and CORSA ELECTRIC (£27,505) but no petrol Corsa, and
+     *  handing either to a 2008 1.2 petrol is how that car came to be valued
+     *  at £2,100. Falling through to the make average is wrong too, but it is
+     *  wrong by a lot less. */
+    const pick = (candidates: NewPriceEntry[]): number | null => {
+      if (candidates.length === 0) return null;
+      const pool = wantsElectric
+        ? candidates
+        : candidates.filter((e) => !isElectrifiedVariant(normMake, normalizeStr(e.model)));
+      if (pool.length === 0) return null;
+      return Math.min(...pool.map((e) => e.newPrice));
+    };
+
+    const exact = pick(sameMake.filter((e) => normalizeStr(e.model) === normModel));
+    if (exact !== null) return exact;
+
+    const modelTokens = tokens(normModel);
+    const fuzzy = pick(
+      sameMake.filter((e) => isTokenPrefix(modelTokens, tokens(normalizeStr(e.model)))),
     );
-    if (fuzzy) return fuzzy.newPrice;
+    if (fuzzy !== null) return fuzzy;
   }
 
   // Fallback: make average
-  if (MAKE_AVERAGES[normMake]) return MAKE_AVERAGES[normMake];
+  if (MAKE_AVERAGES_NORM[normMake]) return MAKE_AVERAGES_NORM[normMake];
 
   // Last resort
   return DEFAULT_NEW_PRICE;
@@ -241,6 +327,45 @@ export function getColourAdjustment(colour?: string): number {
   return COLOUR_ADJUSTMENTS[colour.toUpperCase()] ?? -2;
 }
 
+// ── List-price deflator ─────────────────────────────────────────────────────
+
+const PRICE_INDEX: Record<string, number> = priceIndexData.byYear;
+const PRICE_INDEX_MIN_YEAR = priceIndexData.minYear;
+const PRICE_INDEX_MAX_YEAR = priceIndexData.maxYear;
+
+/**
+ * How much less did a car of this age cost when it was NEW, relative to the
+ * equivalent car's list price today?
+ *
+ * src/data/new-prices.json holds CURRENT list prices — it is scraped from
+ * reviews of cars still on sale. Depreciating straight from those treated a
+ * decade of new-car list inflation as if it were retained value: a 2018 Golf
+ * was depreciated from the 2026 Golf's £41,860.
+ *
+ * Uses ONS series D7E8 (CPI new cars, 2015=100), OGL v3.0 — see
+ * scripts/fetch-new-car-price-index.ts. Verified deflators: 2008 → 0.635,
+ * 2012 → 0.693, 2016 → 0.714, 2020 → 0.819. Note how badly a flat annual rate
+ * fits that shape: new-car prices barely moved 1996–2016, then jumped sharply
+ * from 2021, so a constant 3.5%/yr over-deflates old cars by ~10pp.
+ *
+ * Expressed in terms of AGE rather than a calendar year so it stays pure — no
+ * clock read, and it can't drift out of step with getDepreciationMultiplier.
+ * Ages beyond the series clamp to the oldest year rather than extrapolating.
+ * Returns 1 (no adjustment) if the table is unusable, so a bad data file
+ * degrades to the previous behaviour instead of producing nonsense.
+ */
+export function getListPriceDeflator(vehicleAge: number): number {
+  const current = PRICE_INDEX[String(PRICE_INDEX_MAX_YEAR)];
+  if (!current) return 1;
+  const targetYear = Math.max(
+    PRICE_INDEX_MIN_YEAR,
+    PRICE_INDEX_MAX_YEAR - Math.max(0, Math.round(vehicleAge)),
+  );
+  const then = PRICE_INDEX[String(targetYear)];
+  if (!then) return 1;
+  return then / current;
+}
+
 // ── Depreciation baseline ───────────────────────────────────────────────────
 
 export function calculateDepreciationBaseline(
@@ -254,7 +379,11 @@ export function calculateDepreciationBaseline(
   const retMult = getMakeRetentionMultiplier(make, model);
   const mileageAdj = getMileageAdjustment(mileage, vehicleAge);
 
-  const baseValue = newPrice * depMult * retMult;
+  // Deflate today's list price back to what the car cost when it was new,
+  // THEN depreciate. The two are orthogonal: the deflator corrects the
+  // starting point, the curve models value lost since.
+  const listPriceWhenNew = newPrice * getListPriceDeflator(vehicleAge);
+  const baseValue = listPriceWhenNew * depMult * retMult;
   const mileageAdjusted = baseValue * (1 + mileageAdj / 100);
 
   return Math.max(roundTo50(mileageAdjusted), 250);

@@ -1093,7 +1093,7 @@ export default function Home() {
       setShowConditionForm(false);
       return;
     }
-    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
     if (!newPrice) {
       setValuationServerData(null);
       return;
@@ -1401,7 +1401,7 @@ export default function Home() {
   const vedResult = useMemo(() => {
     if (!data) return null;
     // Original model list price feeds the Expensive Car Supplement check.
-    const listPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model) ?? undefined;
+    const listPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType) ?? undefined;
     return calculateVed({
       co2Emissions: data.co2Emissions,
       engineCapacity: data.engineCapacity,
@@ -1526,7 +1526,7 @@ export default function Home() {
   const valuationResult = useMemo((): ValuationResult | null => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
 
-    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
     if (!newPrice) return null;
 
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
@@ -1578,7 +1578,7 @@ export default function Home() {
   // Ownership Cost Calculator
   // Vehicle segment for running-cost benchmarks (must be before ownershipCost)
   const vehicleSegment = useMemo((): VehicleSegment => {
-    const newPrice = data?.make ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model) : null;
+    const newPrice = data?.make ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType) : null;
     return classifyVehicleSegment({
       fuelType: data?.fuelType,
       bodyType: bodyStyle,
@@ -1592,7 +1592,7 @@ export default function Home() {
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
     const vedAnnual = vedResult?.estimatedAnnualRate ?? null;
     const annualFuelCost = liveAnnualCost ?? fuelEconomy?.estimatedAnnualCost ?? null;
-    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model);
+    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
     return calculateOwnershipCost({
       vedAnnualRate: vedAnnual,
       fuelAnnualCost: annualFuelCost,
