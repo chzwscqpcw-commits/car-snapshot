@@ -81,8 +81,8 @@ export function useVehicleValuation(
     if (!vehicle.make || !vehicle.model) return null;
     const parsed = parseModel(vehicle.model, vehicle.make);
     const lookupModel = expandBaseModelForLookup(vehicle.make, parsed);
-    return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model);
-  }, [vehicle.make, vehicle.model]);
+    return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model, vehicle.fuelType);
+  }, [vehicle.make, vehicle.model, vehicle.fuelType]);
 
   const age = useMemo(
     () =>
