@@ -272,3 +272,54 @@ export function trackEvent(
   if (window.gtag) window.gtag("event", eventName, payload);
   mirrorToServer(eventName, payload);
 }
+
+/**
+ * Record what the valuation tool actually told a user.
+ *
+ * WHY THIS EXISTS: the pipeline stored every INPUT to a valuation — the
+ * depreciation estimate, the eBay median, the listing counts — in
+ * `vehicle_valuations`, but never the OUTPUT. `combineValuationLayers` runs
+ * client-side, so the server that wrote the row never saw the final figure,
+ * and `combined_low`/`combined_high` were accepted by `writeCache` and never
+ * passed. Result: 0 of 10,302 rows recorded what was shown to anyone, which is
+ * why a systematic 1.85x overvaluation went unnoticed for six months.
+ *
+ * Emitting from the client is what closes that gap, since the client is where
+ * the number is produced. Fire-and-forget via the standard beacon path, so a
+ * telemetry failure can never affect the valuation the user sees.
+ *
+ * `conditionProvided` is the important field for analysis: filter to `false`
+ * to measure the MODEL's output, uncontaminated by the user's own flattering
+ * self-report of service history and bodywork.
+ */
+export function trackValuationResult(input: {
+  surface: "tool" | "report";
+  make?: string;
+  model?: string;
+  year?: number;
+  age: number | null;
+  mileage: number | null;
+  newPrice: number | null;
+  depEstimate: number | null;
+  estimatedValue: number;
+  rangeLow: number;
+  rangeHigh: number;
+  confidence: string;
+  conditionProvided: boolean;
+  ebayMedian: number | null;
+  ebayListingCount: number;
+  cacheMedian: number | null;
+  marketcheckMedian: number | null;
+  sources: string[];
+}): void {
+  trackEvent("valuation_result", {
+    ...input,
+    sources: input.sources.join(","),
+    // Precomputed so the bias query is a plain average rather than a join:
+    // >1 means the depreciation model read above the live market signal.
+    dep_vs_market:
+      input.depEstimate && input.ebayMedian
+        ? Math.round((input.depEstimate / input.ebayMedian) * 100) / 100
+        : null,
+  });
+}

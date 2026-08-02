@@ -1,15 +1,21 @@
 /**
  * MarketCheck UK — second used-car comparable signal (PROTOTYPE, stubbed).
  *
- * Strategy (per the Jun 2026 data-sources research + the actual Starter plan,
- * see memory valuation-price-data-sources): MarketCheck UK Starter is £0/mo
- * base + £0.0010 per call, with a one-time 1,000-call free credit MarketCheck
- * applies automatically. We therefore cap our own LIVE calls per calendar
- * month to a configurable limit — a monthly SPEND cap (max data fee ≈ limit ×
- * £0.0010). Every aggregate is cached in Supabase for free reuse, so the cap
- * only bites on genuinely-new or stale-refresh fetches; most lookups are free.
- * Monthly reset means the data keeps refreshing (unlike a one-time stop) while
- * spend stays bounded and tiny.
+ * STOOD DOWN 2026-08-02 — MARKETCHECK_ENABLED is false in Vercel. Kept wired
+ * because the kill switch is the first line of getMarketCheckValuation and
+ * restoring it is one env var. If you do restore it, read the note below on
+ * the fusion bias first: this layer was passed to combineValuationLayers with
+ * no asking-price discount while eBay got one, and because it returns a full
+ * 50-row page against eBay's median of 4 survivors, count-weighted fusion gave
+ * it ~92% of the market signal. Measured +57% above eBay across 12 probes.
+ *
+ * Strategy: MarketCheck UK Starter is £0/mo base plus a per-call data fee. We
+ * cap our own LIVE calls per calendar month to a configurable limit — a
+ * monthly SPEND cap (max data fee ≈ limit × MARKETCHECK_GBP_PER_CALL). Every
+ * aggregate is cached in Supabase for free reuse, so the cap only bites on
+ * genuinely-new or stale-refresh fetches; most lookups are free. Monthly reset
+ * means the data keeps refreshing (unlike a one-time stop) while spend stays
+ * bounded.
  *
  * TWO SAFETY RULES:
  *  1. FAIL-CLOSED cap. If we can't atomically confirm we're under the month's
@@ -66,15 +72,34 @@
 
 import { supabaseServerRole } from "@/lib/supabaseServer";
 
-/** Max LIVE API calls per calendar month. MarketCheck Starter is pay-per-call
- *  at £0.0010/call (the first 1,000 are a one-time free credit MarketCheck
- *  applies automatically). So this is a monthly SPEND cap: max monthly data
- *  fee ≈ limit × £0.0010 (e.g. 2,500 → ~£2.50/mo, 5,000 → ~£5/mo). Caching means
- *  most lookups never spend a call. Raise via env (or this default) as appetite
- *  allows — any sane value sits far below MarketCheck's £250/mo early-billing
- *  threshold. Raised 1,000 → 2,500 on 2026-06-08 as valuation volume grew. */
+/**
+ * GBP per LIVE call, for the endpoint we actually use — Inventory Search
+ * (/search/car/uk/active), billed as "UK Inventory Search & Listing/VDP".
+ *
+ * Verified 2026-08-02 against the logged-in rate card at
+ * developers.marketcheck.com/uk/subscriptions (Starter tier).
+ *
+ * THIS CONSTANT EXISTS BECAUSE GETTING IT WRONG COST REAL MONEY. The file
+ * previously documented £0.0010/call and sized the cap below as a "~£2.50/mo"
+ * spend cap on that basis. £0.0010 is the **MCP Playground Usage** rate — the
+ * only £0.0010 line on the rate card. Every real data endpoint is £0.0120. So
+ * the 2,500 cap was a £30/mo budget, 12× its documented intent, and invoice
+ * #MBDIFW6X-0003 (2026-08-01) duly came to £30.00 for exactly 2,500 calls.
+ *
+ * Anything that reports MarketCheck spend must import this rather than
+ * re-typing a number.
+ */
+export const MARKETCHECK_GBP_PER_CALL = 0.012;
+
+/** Max LIVE API calls per calendar month — a monthly SPEND cap of
+ *  limit × MARKETCHECK_GBP_PER_CALL. At the true £0.0120 rate: 208 ≈ £2.50/mo,
+ *  417 ≈ £5/mo, 833 ≈ £10/mo, 2,500 = £30/mo. Caching means most lookups never
+ *  spend a call. Keep it below MarketCheck's £250/mo early-billing threshold.
+ *  Raised 1,000 → 2,500 on 2026-06-08 as valuation volume grew — under the
+ *  mistaken belief that this was £2.50/mo. If MarketCheck is ever re-enabled,
+ *  set this deliberately against a real budget. */
 export const MARKETCHECK_MONTHLY_CALL_LIMIT = Number(process.env.MARKETCHECK_MONTHLY_CALL_LIMIT ?? 2500);
-/** Cache freshness. Refreshing is cheap (£0.0010), so the constraint is signal
+/** Cache freshness. Refreshing is cheap, so the constraint is signal
  *  staleness, not cost. Used-car make/model/year aggregates drift slowly and the
  *  reading is cushioned by a live (uncached) eBay comparable, so 90 days stays
  *  accurate while cutting refresh churn ~3x (re-warming our ~286 cached cars
@@ -138,7 +163,8 @@ export async function getMarketCheckValuation(
 
     // 2. Reserve one of this month's calls, atomically. Fail-closed: if we
     //    don't get a slot (monthly cap reached, or Supabase unavailable), we
-    //    don't call — so monthly spend can never exceed limit × £0.0010.
+    //    don't call — so monthly spend can never exceed
+    //    limit × MARKETCHECK_GBP_PER_CALL.
     const reserved = await deps.reserveCall(currentMonthKey(), MARKETCHECK_MONTHLY_CALL_LIMIT);
     if (!reserved) return { ok: false, reason: "capped" };
 

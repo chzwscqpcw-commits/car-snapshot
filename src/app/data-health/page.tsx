@@ -725,7 +725,7 @@ function MarketCheckGauge({ usage }: { usage: MarketCheckUsage }) {
       {/* Numbers */}
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
         <GaugeStat label="Remaining" value={remaining.toLocaleString()} sub="calls left" />
-        <GaugeStat label="Est. spend" value={`£${estSpendGbp.toFixed(2)}`} sub="≈ £0.0010/call" />
+        <GaugeStat label="Est. spend" value={`£${estSpendGbp.toFixed(2)}`} sub="≈ £0.0120/call" />
         <GaugeStat
           label="Cache"
           value={cacheEntries == null ? "—" : cacheEntries.toLocaleString()}

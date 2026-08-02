@@ -18,6 +18,7 @@ import { supabaseServerRole } from "@/lib/supabaseServer";
 import {
   MARKETCHECK_MONTHLY_CALL_LIMIT,
   MARKETCHECK_CACHE_TTL_DAYS,
+  MARKETCHECK_GBP_PER_CALL,
   marketCheckEnabled,
 } from "@/lib/marketcheck";
 
@@ -185,7 +186,7 @@ type MarketCheckUsage = {
   limit: number;
   percent: number; // 0–100, clamped
   remaining: number;
-  estSpendGbp: number; // calls × £0.0010
+  estSpendGbp: number; // calls × MARKETCHECK_GBP_PER_CALL
   cacheTtlDays: number;
   cacheEntries: number | null;
 };
@@ -218,7 +219,9 @@ async function fetchMarketCheckUsage(now: Date): Promise<MarketCheckUsage> {
     base.calls = calls;
     base.remaining = Math.max(0, limit - calls);
     base.percent = limit > 0 ? Math.min(100, Math.round((calls / limit) * 100)) : 0;
-    base.estSpendGbp = Math.round(calls * 0.001 * 100) / 100;
+    // Read the rate from the single source of truth. Hardcoding it here is
+    // what made this figure report 12x low against the real invoice.
+    base.estSpendGbp = Math.round(calls * MARKETCHECK_GBP_PER_CALL * 100) / 100;
     base.cacheEntries = cacheRes.count ?? null;
   } catch {
     // Leave defaults (zeros) — the dashboard renders an "unavailable" state.

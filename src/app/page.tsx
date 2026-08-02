@@ -165,7 +165,7 @@ import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
-import { trackPartnerClick, trackConversion, trackEvent, EXPERIMENTS, assignExperimentVariant, trackExperimentImpression } from "@/lib/tracking";
+import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult, EXPERIMENTS, assignExperimentVariant, trackExperimentImpression } from "@/lib/tracking";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -1522,8 +1522,10 @@ export default function Home() {
     return lookupVehicleDimensions(data.make, lookupModel ?? data.model);
   }, [data?.make, data?.model, lookupModel]);
 
-  // Vehicle valuation
-  const valuationResult = useMemo((): ValuationResult | null => {
+  // Inputs to the valuation, extracted from the blend below so the telemetry
+  // effect can report exactly the numbers the blend used, rather than
+  // recomputing them and risking the two drifting apart.
+  const valuationInputs = useMemo(() => {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
 
     const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
@@ -1536,6 +1538,14 @@ export default function Home() {
     const latestMileage = latestRecordedMileage(data.motTests);
 
     const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, latestMileage);
+    return { newPrice, vehicleAge, latestMileage, depBaseline };
+  }, [data, lookupModel]);
+
+  // Vehicle valuation
+  const valuationResult = useMemo((): ValuationResult | null => {
+    if (!data?.make || !data?.model || !valuationInputs) return null;
+
+    const { vehicleAge, latestMileage, depBaseline } = valuationInputs;
     const mileageAdj = getMileageAdjustment(latestMileage, vehicleAge);
 
     const advisoryCount = data.motTests?.[0]?.rfrAndComments?.filter(
@@ -1573,7 +1583,48 @@ export default function Home() {
     }
 
     return result;
-  }, [data, valuationServerData, valuationCondition, lookupModel]);
+  }, [data, valuationServerData, valuationCondition, valuationInputs]);
+
+  // ── Record what we actually showed ─────────────────────────────────────
+  // See trackValuationResult: the blend runs client-side, so nothing on the
+  // server ever learns the figure the user was given. Deduped on the value so
+  // re-renders don't double-count.
+  const loggedValuationRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!valuationResult || !valuationInputs) return;
+    const key = `${data?.registrationNumber ?? ""}|${valuationResult.estimatedValue}|${valuationCondition ? "c" : "n"}`;
+    if (loggedValuationRef.current === key) return;
+    loggedValuationRef.current = key;
+    trackValuationResult({
+      surface: "report",
+      make: data?.make,
+      model: data?.model,
+      year: data?.yearOfManufacture,
+      age: valuationInputs.vehicleAge,
+      mileage: valuationInputs.latestMileage,
+      newPrice: valuationInputs.newPrice,
+      depEstimate: valuationInputs.depBaseline,
+      estimatedValue: valuationResult.estimatedValue,
+      rangeLow: valuationResult.rangeLow,
+      rangeHigh: valuationResult.rangeHigh,
+      confidence: valuationResult.confidence,
+      conditionProvided: valuationCondition !== null,
+      ebayMedian: valuationServerData?.ebayMedian ?? null,
+      ebayListingCount: valuationServerData?.ebayListingCount ?? 0,
+      cacheMedian: valuationServerData?.cacheMedian ?? null,
+      marketcheckMedian: valuationServerData?.marketcheckMedian ?? null,
+      sources: valuationResult.sources,
+    });
+  }, [
+    valuationResult,
+    valuationInputs,
+    valuationServerData,
+    valuationCondition,
+    data?.registrationNumber,
+    data?.make,
+    data?.model,
+    data?.yearOfManufacture,
+  ]);
 
   // Ownership Cost Calculator
   // Vehicle segment for running-cost benchmarks (must be before ownershipCost)
