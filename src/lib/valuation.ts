@@ -240,19 +240,103 @@ export function getMakeRetentionMultiplier(make?: string, model?: string): numbe
 
 // ── Mileage adjustment ─────────────────────────────────────────────────────
 
-const EXPECTED_MILES_PER_YEAR = 8000;
+/**
+ * Relative driving intensity by fuel, from DfT NTS0901 (2024) mean annual
+ * mileage divided by the 7,100 all-fuel mean: petrol 6,200, diesel 8,300,
+ * hybrid 8,000, battery-electric 8,900. Diesel owners genuinely cover more
+ * ground, so an identical odometer means something different on a diesel.
+ * England-only and self-reported — a prior, not ground truth.
+ */
+const FUEL_MILEAGE_INTENSITY: Record<string, number> = {
+  PETROL: 6200 / 7100,
+  DIESEL: 8300 / 7100,
+  HYBRID: 8000 / 7100,
+  "HYBRID ELECTRIC": 8000 / 7100,
+  ELECTRICITY: 8900 / 7100,
+  ELECTRIC: 8900 / 7100,
+};
 
-export function getMileageAdjustment(currentMileage: number | null, vehicleAge: number): number {
-  if (!currentMileage || vehicleAge <= 0) return 0;
+/**
+ * Miles a car covers during its Nth year of life.
+ *
+ * Cars do not accumulate mileage at a constant rate — a new car is commuted in
+ * daily, a fifteen-year-old one is a second car doing local trips. Modelling
+ * this as a flat rate breaks at both ends of the age range, and the direction
+ * of the error flips:
+ *
+ *   - Flat 8,000/yr (the old constant) sits near the 63rd percentile of the
+ *     current fleet — DfT NTS0901 puts the 2024 mean at 7,100 and the median
+ *     near 6,500 — so most modern cars collected a bonus for being ordinary.
+ *   - But a flat *registration-era* rate is worse the other way. At 11,000/yr
+ *     an 18-year-old car is expected to have covered 173,000 miles, so a
+ *     perfectly typical 95,000-mile 2008 Corsa scored the maximum low-mileage
+ *     bonus — the same as a genuinely exceptional 40,000-mile example.
+ *
+ * A declining schedule fits observed UK cumulative mileage far better:
+ * ~27k at 3 years, ~57k at 7, ~85k at 11, ~120k at 18. The implied lifetime
+ * average falls from ~9,000/yr on a young car to ~6,600/yr on an old one,
+ * bracketing the DfT figure rather than contradicting it.
+ */
+function milesInYear(nthYear: number): number {
+  if (nthYear <= 3) return 9000;
+  if (nthYear <= 10) return 7500;
+  return 5000;
+}
 
-  const expectedMileage = vehicleAge * EXPECTED_MILES_PER_YEAR;
-  const ratio = currentMileage / expectedMileage;
+/**
+ * Expected TOTAL miles for a car of this age — the yardstick the adjustment is
+ * measured against, and the right default when we have no odometer reading.
+ * Sums the declining per-year schedule, then scales by how hard this fuel type
+ * is typically driven.
+ *
+ * Exported so UI defaults use the same figure as the maths: ValuationResult
+ * previously seeded its mileage slider from a hardcoded 7,400/yr while the
+ * model assumed 8,000, so the two disagreed about the same car.
+ */
+export function expectedTotalMiles(vehicleAge: number, fuelType?: string | null): number {
+  const age = Math.max(0, Math.round(vehicleAge));
+  let total = 0;
+  for (let y = 1; y <= age; y++) total += milesInYear(y);
+  const key = normalizeStr(fuelType ?? "");
+  return Math.round(total * (FUEL_MILEAGE_INTENSITY[key] ?? 1));
+}
 
-  if (ratio < 0.60) return 8;       // Significantly below average
-  if (ratio < 0.85) return 4;       // Below average
-  if (ratio <= 1.15) return 0;      // Average
-  if (ratio <= 1.40) return -5;     // Above average
-  return -12;                        // Significantly above average
+/** Elasticity of value to mileage. −0.35 × ln(ratio) means each doubling of
+ *  mileage relative to expectation costs ~24%. Calibrate against the
+ *  `valuation_result` telemetry before changing. */
+const MILEAGE_ELASTICITY = 0.35;
+/** Asymmetric on purpose. Unusually low mileage is worth a modest premium and
+ *  no more — buyers discount an implausible odometer — while very high mileage
+ *  can halve a car. The old table capped BOTH sides at ±12%, so 1.4× and 4.5×
+ *  expected mileage were penalised identically. */
+const MILEAGE_ADJ_MAX = 12;
+const MILEAGE_ADJ_MIN = -45;
+
+/**
+ * Percentage adjustment for mileage, as a continuous curve.
+ *
+ * Replaces a five-step band table whose boundaries created £1,200 cliffs on a
+ * single extra mile, and which flattened everything above 1.4× expected into
+ * one −12% bucket. Log-linear so the penalty keeps growing with the odometer.
+ *
+ * Roughly: +12% at 0.5× expected, +8% at 0.8×, 0% at 1.0×, −12% at 1.4×,
+ * −24% at 2×, −45% at 3.6× and beyond.
+ */
+export function getMileageAdjustment(
+  currentMileage: number | null,
+  vehicleAge: number,
+  fuelType?: string | null,
+): number {
+  if (!currentMileage || currentMileage <= 0 || vehicleAge <= 0) return 0;
+
+  const expected = expectedTotalMiles(vehicleAge, fuelType);
+  if (expected <= 0) return 0;
+
+  const ratio = currentMileage / expected;
+  if (!Number.isFinite(ratio) || ratio <= 0) return 0;
+
+  const adj = -100 * MILEAGE_ELASTICITY * Math.log(ratio);
+  return Math.round(Math.min(MILEAGE_ADJ_MAX, Math.max(MILEAGE_ADJ_MIN, adj)) * 10) / 10;
 }
 
 // ── MOT auto-adjustment ─────────────────────────────────────────────────────
@@ -368,25 +452,33 @@ export function getListPriceDeflator(vehicleAge: number): number {
 
 // ── Depreciation baseline ───────────────────────────────────────────────────
 
+/**
+ * Value implied by age alone, before mileage, condition or market comparables.
+ *
+ * NOTE: mileage is deliberately NOT applied here any more. It used to be, and
+ * because this term carries only 20% of the three-source blend, the maximum
+ * −12% mileage penalty arrived as −2.4% of the headline: a 2019 320d returned
+ * £16,100 at 40,000 miles and £15,550 at 150,000. Mileage is now applied to
+ * the blended value in combineValuationLayers, next to condition and colour —
+ * which is where it always belonged, since neither market query filters on
+ * mileage and the comparables therefore describe average-mileage cars.
+ */
 export function calculateDepreciationBaseline(
   newPrice: number,
   vehicleAge: number,
   make: string | undefined,
   model: string | undefined,
-  mileage: number | null,
 ): number {
   const depMult = getDepreciationMultiplier(vehicleAge);
   const retMult = getMakeRetentionMultiplier(make, model);
-  const mileageAdj = getMileageAdjustment(mileage, vehicleAge);
 
   // Deflate today's list price back to what the car cost when it was new,
   // THEN depreciate. The two are orthogonal: the deflator corrects the
   // starting point, the curve models value lost since.
   const listPriceWhenNew = newPrice * getListPriceDeflator(vehicleAge);
   const baseValue = listPriceWhenNew * depMult * retMult;
-  const mileageAdjusted = baseValue * (1 + mileageAdj / 100);
 
-  return Math.max(roundTo50(mileageAdjusted), 250);
+  return Math.max(roundTo50(baseValue), 250);
 }
 
 // ── Combine valuation layers ────────────────────────────────────────────────
@@ -414,6 +506,11 @@ export function combineValuationLayers(
   marketcheckCount: number = 0,
   marketcheckQ1: number | null = null,
   marketcheckQ3: number | null = null,
+  /** Mileage adjustment, applied to the BLENDED value rather than buried in
+   *  the depreciation term. Defaulted so older callers keep compiling, but
+   *  every real caller should pass getMileageAdjustment(...) — omitting it
+   *  reproduces the bug where mileage barely moved the number. */
+  mileageAdjPercent: number = 0,
 ): ValuationResult | null {
   if (!depreciationEstimate) return null;
 
@@ -532,10 +629,14 @@ export function combineValuationLayers(
     rangePercent = fallbackPercent;
   }
 
-  // Apply condition + colour adjustments
+  // Apply mileage + condition + colour to the blended value. Mileage belongs
+  // here because neither market query filters on it, so the comparables
+  // describe a car of average mileage for its age — exactly the baseline this
+  // adjustment is measured against.
   const condAdj = 1 + conditionAdjPercent / 100;
   const colAdj = 1 + colourAdjPercent / 100;
-  estimatedValue = estimatedValue * condAdj * colAdj;
+  const mileAdj = 1 + mileageAdjPercent / 100;
+  estimatedValue = estimatedValue * mileAdj * condAdj * colAdj;
 
   const rangeLow = roundTo50(estimatedValue * (1 - rangePercent / 100));
   const rangeHigh = roundTo50(estimatedValue * (1 + rangePercent / 100));
@@ -554,7 +655,7 @@ export function combineValuationLayers(
     estimatedValue: roundTo50(estimatedValue),
     confidence,
     sources,
-    mileageAdjustmentPercent: 0, // set by caller
+    mileageAdjustmentPercent: mileageAdjPercent,
     conditionAdjustmentPercent: conditionAdjPercent,
     motAutoAdjustmentPercent: 0, // set by caller
     colourAdjustmentPercent: colourAdjPercent,
