@@ -93,4 +93,4 @@ MOT history is valuable, but it has limits:
 
 When reviewing a vehicle's history, don't just glance at pass or fail. Read the detail. Look at the mileage progression across every test. Note which advisories come and go, and which ones persist. Compare the condition of the car you're looking at with what the records suggest.
 
-Combined with a visual inspection and a [thorough test drive](/blog/what-to-check-on-a-test-drive), MOT history gives you a remarkably clear picture of how a car has been treated. It's free, it takes two minutes, and it could save you from an expensive mistake.
+Combined with a visual inspection and a [thorough test drive](/blog/used-car-buying-guide#the-test-drive), MOT history gives you a remarkably clear picture of how a car has been treated. It's free, it takes two minutes, and it could save you from an expensive mistake.

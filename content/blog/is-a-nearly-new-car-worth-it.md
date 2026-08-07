@@ -72,7 +72,7 @@ For a nearly-new car worth thousands, it's worth going one step further:
 >
 > *carVertical provides and sells the report; we may earn a commission, at no extra cost to you.*
 
-And don't forget the running costs that come with any car — tax, insurance and imminent servicing all add up, as our guide to [the hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) lays out.
+And don't forget the running costs that come with any car — tax, insurance and imminent servicing all add up, as the [true first-year cost of a used car](/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price) lays out.
 
 ## The bottom line
 

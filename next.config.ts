@@ -33,6 +33,25 @@ const nextConfig: NextConfig = {
       destination: `https://${CANONICAL_HOST}/ev-charger-installation`,
       permanent: false,
     },
+    // Three used-car buying posts consolidated into one pillar guide. They were
+    // chasing the same intent as each other and splitting the ranking signal
+    // between them; the pillar absorbs all three. 301 because the old URLs are
+    // never coming back and we want Google to pass their equity to the pillar.
+    {
+      source: "/blog/how-to-check-car-before-buying-online",
+      destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide`,
+      permanent: true,
+    },
+    {
+      source: "/blog/what-to-check-on-a-test-drive",
+      destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide#the-test-drive`,
+      permanent: true,
+    },
+    {
+      source: "/blog/hidden-costs-buying-used-car",
+      destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price`,
+      permanent: true,
+    },
     {
       source: "/:path*",
       has: [{ type: "host", value: "freeplatecheck.com" }],
