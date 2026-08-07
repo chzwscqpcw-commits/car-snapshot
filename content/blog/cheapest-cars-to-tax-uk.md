@@ -26,7 +26,7 @@ faqItems:
 
 Vehicle Excise Duty (VED) — what most drivers still call road tax — is one of the quietest line items in car ownership. It's auto-renewed, often paid by direct debit, and rarely scrutinised. But the gap between the cheapest and most expensive cars to tax can run to more than £2,000 in the first year and several hundred pounds a year thereafter. Over a five-year ownership, that's the price of a decent set of tyres, a full service history, or a holiday.
 
-This guide sets out exactly what each kind of car pays in 2026/27, which models sit in the cheapest bands, which to avoid if a low tax bill matters to you, and how the April 2025 changes for electric vehicles reshape the picture. It's one of several [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) worth pricing in before you commit.
+This guide sets out exactly what each kind of car pays in 2026/27, which models sit in the cheapest bands, which to avoid if a low tax bill matters to you, and how the April 2025 changes for electric vehicles reshape the picture. It's one of several [ownership costs worth pricing in](/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price) before you commit to a used car.
 
 ## The 2026/27 headline figures
 

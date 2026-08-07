@@ -327,12 +327,20 @@ export const MOT_KEYWORDS = [
   "roadworthy",
 ];
 
+/**
+ * Word-boundary matched, not substring. A plain `.includes("mot")` also fires
+ * on **re**mot**e**, **mot**or and **mot**orway, which handed the BookMyGarage
+ * MOT inject to four posts that should have carried a different CTA — the
+ * motor-finance post being a genuine carVertical loss.
+ */
+const MOT_KEYWORD_PATTERNS = MOT_KEYWORDS.map(
+  (mk) => new RegExp(`\\b${mk.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`)
+);
+
 export function hasMotKeywords(keywords: string[]): boolean {
   if (!keywords || keywords.length === 0) return false;
   const lower = keywords.map((k) => k.toLowerCase());
-  return MOT_KEYWORDS.some((mk) =>
-    lower.some((k) => k.includes(mk.toLowerCase()))
-  );
+  return MOT_KEYWORD_PATTERNS.some((re) => lower.some((k) => re.test(k)));
 }
 
 interface TopicCta {

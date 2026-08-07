@@ -134,4 +134,4 @@ It typically costs £100–£200, but it could save you thousands. If the seller
 
 Most sellers are honest, but even honest sellers might not know about every issue with their car. These checks aren't about being suspicious — they're about making an informed decision.
 
-Take your time, do the homework, and don't let anyone rush you. For a detailed look at what to assess when you see the car in person, read our [test drive checklist](/blog/what-to-check-on-a-test-drive). A good car will still be a good car tomorrow.
+Take your time, do the homework, and don't let anyone rush you. For a detailed look at what to assess when you see the car in person, read the test drive section of our [complete used car buying guide](/blog/used-car-buying-guide#the-test-drive). A good car will still be a good car tomorrow.

@@ -69,7 +69,7 @@ Some cars are simply more desirable than others. A well-specced Range Rover Spor
 
 ### Running costs
 
-Cars that are cheap to run hold their value better because the total cost of ownership is lower. Understanding the [hidden costs of buying a used car](/blog/hidden-costs-buying-used-car) helps you see the full picture. A vehicle with low [road tax](/tax-check), good fuel economy, and reasonable insurance costs is worth more to the next buyer than one that is expensive in every category. You can check a vehicle's [running costs](/car-check) on Free Plate Check to see the full picture.
+Cars that are cheap to run hold their value better because the total cost of ownership is lower. Understanding the [true cost of running a used car](/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price) helps you see the full picture. A vehicle with low [road tax](/tax-check), good fuel economy, and reasonable insurance costs is worth more to the next buyer than one that is expensive in every category. You can check a vehicle's [running costs](/car-check) on Free Plate Check to see the full picture.
 
 ## Factors that affect individual resale value
 
