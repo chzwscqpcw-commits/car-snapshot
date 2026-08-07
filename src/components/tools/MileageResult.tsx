@@ -12,6 +12,7 @@ import {
   type MotTest,
 } from "@/components/tools/shared";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
+import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 
 interface MileageResultProps {
   vrm: string;
@@ -88,7 +89,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         <YearByYearCard analysis={analysis} />
       )}
       {analysis.clockingFlags.length > 0 && (
-        <ClockingCard flags={analysis.clockingFlags} />
+        <>
+          <ClockingCard flags={analysis.clockingFlags} />
+          {/* The alert told them to investigate; this is what they investigate
+              with. Highest-intent moment on the site and it was previously a
+              dead end. Tone-matched to the warning above so it reads as the
+              resolution of the alert, not an advert parked beside it. */}
+          <div className="mt-4">
+            <CarVerticalReportCTA
+              variant="anomaly"
+              context="mileage-anomaly-carvertical"
+              regNumber={vrm}
+            />
+          </div>
+        </>
       )}
       {analysis.readings.length === 0 && <NoReadings />}
     </ToolResultLayout>
