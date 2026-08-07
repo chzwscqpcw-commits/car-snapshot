@@ -48,6 +48,53 @@ export function isPartnerConfigured(partner: PartnerLink): boolean {
   return !partner.pending && !partner.url.includes("PENDING");
 }
 
+/**
+ * carVertical dashboard placement tags (`sub2`).
+ *
+ * This matters more than it looks. Our own analytics record `context` on every
+ * partner click, so we know clicks per placement precisely — but *sales* exist
+ * only on carVertical's side, keyed by `sub2`. Any placement that doesn't get
+ * its own tag can never be judged on whether it sells.
+ *
+ * Until now this was a two-way ternary: blog → `blog`, anything matching
+ * "mileage" → `mcheck`, and **everything else → `ccheck`**. That catch-all
+ * silently swallowed seven distinct placements, including the valuation result,
+ * which alone is ~57% of all our carVertical clicks. Dominyka's "the clicks
+ * aren't converting" could never be localised because we had collapsed the
+ * evidence before it reached her.
+ *
+ * `blog` and `mcheck` keep their existing meaning so those two series stay
+ * continuous across the change; it's the `ccheck` bucket that splits. Tell
+ * carVertical when this mapping changes — they segment their dashboard on it.
+ */
+const CARVERTICAL_SUB2: Record<string, string> = {
+  "valuation-result-carvertical": "val-result",
+  "money-carvertical": "val-money",
+  "mot-history-carvertical": "mot-hist",
+  "model-carvertical": "model",
+  "running-costs": "runcosts",
+  "report-carvertical": "report",
+  "report-nextsteps": "nextsteps",
+  "stats-car-theft": "stats-theft",
+  "stats-how-many-left": "stats-hml",
+  // A stats article, not the /mileage-check tool — kept out of `mcheck` so that
+  // series keeps meaning "the mileage tool" and stays comparable over time.
+  "stats-uk-mileage": "stats-mileage",
+};
+
+function carVerticalSub2(ctx: string): string {
+  const mapped = CARVERTICAL_SUB2[ctx];
+  if (mapped) return mapped;
+  if (ctx.includes("blog")) return "blog";
+  // Both /mileage-check placements (landing + result) share this tag — same
+  // page, and it's what `mcheck` has always meant.
+  if (ctx.includes("mileage")) return "mcheck";
+  // Unmapped placement: derive a tag from the context rather than folding it
+  // into a catch-all. A new placement showing up under its own name is the
+  // whole point — a catch-all is exactly how the previous seven went unnoticed.
+  return ctx.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24) || "unmapped";
+}
+
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
   bookMyGarage: {
     url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F",
@@ -229,6 +276,8 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   //   source_id=AFF + the NCRBZ8/6JHXF path identify us as the affiliate.
   // Report + mileage carry uid=5 + sub3; blog has neither (no reg to pre-fill).
   // Our OWN per-placement detail still comes from the partner_click `context`.
+  // sub2 mapping lives in CARVERTICAL_SUB2 below — see the note there on why
+  // it is not a two-way ternary any more.
   carVertical: {
     url: "https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog",
     name: "carVertical",
@@ -239,13 +288,11 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     buildLink: (reg: string, clickref?: string) => {
       const ctx = (clickref ?? "").toLowerCase();
       const TRACKER = "https://www.carvertical.deal/NCRBZ8/6JHXF/";
+      const sub2 = carVerticalSub2(ctx);
       // Blog placement: no reg to pre-fill, no uid (matches Dominyka's blog link).
-      if (ctx.includes("blog")) {
+      if (sub2 === "blog") {
         return `${TRACKER}?source_id=AFF&sub1=freeplatecheck&sub2=blog`;
       }
-      // sub2 segments the placement in carVertical's dashboard:
-      // mcheck = mileage-check page, ccheck = report / car-check.
-      const sub2 = ctx.includes("mileage") ? "mcheck" : "ccheck";
       const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
       return `${TRACKER}?uid=5&source_id=AFF&sub1=freeplatecheck&sub2=${sub2}&sub3=${encodeURIComponent(plate)}`;
     },
