@@ -20,6 +20,7 @@ import {
 } from "@/components/tools/shared";
 import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import SellingToBuyBridge from "@/components/SellingToBuyBridge";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
@@ -330,12 +331,23 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           MOT reminder inline instead of deflecting to the banner. */}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
       <SellCarCTA context="valuation-result" regNumber={vrm} />
-      {/* Buyer slice: someone valuing a car they're considering buying is the
-          ideal full-history-report + inspection lead. Generously spaced so the
-          sells never bunch together. (BMG servicing intentionally NOT shown on
-          valuation — it was one sell too many here.) */}
+      {/* Seller-framed, because that's who is actually here. The buyer-slice
+          assumption this placement was built on turned out to be wrong: 41% of
+          visitors land straight on a valuation page and are valuing a car they
+          already own, and 57% of all our carVertical clicks fire from this
+          screen. Asking "Buying this car?" of an owner is what produced the
+          checkout drop-off carVertical reported on 2026-08-07 — they click out
+          of curiosity, meet a paid checkout for a car they own, and leave.
+          Generously spaced so the sells never bunch together. (BMG servicing
+          intentionally NOT shown on valuation — one sell too many here.) */}
       <div className="mt-6">
-        <CarVerticalReportCTA variant="report" context="valuation-result-carvertical" regNumber={vrm} />
+        <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
+      </div>
+      {/* …and the same visitor is usually weeks from buying. This is the only
+          placement on the site that manufactures buyer intent rather than
+          waiting for it. */}
+      <div className="mt-6">
+        <SellingToBuyBridge context="valuation-selling-to-buy" />
       </div>
       <div className="mt-6">
         <BuyerInspectionWidget regNumber={vrm} context="valuation-result-buyer-inspection" />
