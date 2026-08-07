@@ -1,13 +1,13 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag } from "lucide-react";
+import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag, BadgeCheck, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
 import PartnerTrust from "@/components/PartnerTrust";
 
-type Variant = "report" | "mileage";
+type Variant = "report" | "mileage" | "seller" | "anomaly";
 
 interface CarVerticalReportCTAProps {
   /** Vehicle reg, passed through for the affiliate link / clickref. */
@@ -17,7 +17,9 @@ interface CarVerticalReportCTAProps {
   /** Render even while the partner is still pending — for the password-gated mock-up. */
   preview?: boolean;
   /** `report` = full free-vs-paid box (in-results); `mileage` = clocking-themed
-   *  placement for the /mileage-check landing page. */
+   *  placement for the /mileage-check landing page; `seller` = pre-sale framing
+   *  for owners valuing their own car; `anomaly` = resolution CTA attached to a
+   *  detected mileage rollback. */
   variant?: Variant;
 }
 
@@ -55,6 +57,22 @@ const MILEAGE_ALSO: string[] = [
   "Market value estimate",
 ];
 
+/** Accent tones. `rose` exists so the anomaly placement reads as the resolution
+ *  of the red mileage alert it sits under, rather than an advert parked beside
+ *  it. Full class strings — Tailwind can't see interpolated names. */
+const TONES = {
+  blue: {
+    wrap: "border-[#1b54ff]/30 bg-gradient-to-br from-[#1b54ff]/10 to-slate-900/20",
+    icon: "text-[#1b54ff]",
+    button: "bg-[#1b54ff] hover:bg-[#1746e0]",
+  },
+  rose: {
+    wrap: "border-rose-500/30 bg-gradient-to-br from-rose-500/10 to-slate-900/20",
+    icon: "text-rose-400",
+    button: "bg-rose-600 hover:bg-rose-500",
+  },
+} as const;
+
 const VARIANTS: Record<
   Variant,
   {
@@ -64,6 +82,9 @@ const VARIANTS: Record<
     cta: string;
     open: string;
     close: string;
+    tone: keyof typeof TONES;
+    /** Anomaly is a single decisive action — no "compare" affordance. */
+    toggle: boolean;
   }
 > = {
   report: {
@@ -74,6 +95,44 @@ const VARIANTS: Record<
     cta: "Get a carVertical report",
     open: "Compare with free",
     close: "Hide comparison",
+    tone: "blue",
+    toggle: true,
+  },
+  /** Pre-sale framing for owners. 41% of our visitors land straight on a
+   *  valuation page and are overwhelmingly valuing a car they already own — the
+   *  `report` variant asks "Buying this car?" of exactly the wrong person, which
+   *  is the checkout drop-off carVertical described on 2026-08-07.
+   *
+   *  Copy discipline (agreement 1.1, "not to act against carVertical
+   *  interests"): promise proof and no surprises, never imply the owner is
+   *  likely to find fraud on their own car. For most sellers the report finds
+   *  nothing, and "nothing to find, in writing" is the thing being sold.
+   *  Overstating it buys refunds, which costs carVertical more than a low
+   *  conversion rate does. */
+  seller: {
+    Icon: BadgeCheck,
+    heading: "Selling this car? See what a buyer will find",
+    value:
+      "Serious buyers run a history check before they commit. Knowing what yours shows — a settled finance agreement still sitting on the register, an old damage marker, a mileage flag — means no surprise mid-sale, and evidence behind your asking price.",
+    cta: "See your car's record",
+    open: "What a buyer sees",
+    close: "Hide details",
+    tone: "blue",
+    toggle: true,
+  },
+  /** Attached to a detected rollback. Claims here deliberately reuse the wording
+   *  already published in the `mileage` variant (National Mileage Register,
+   *  European import records) rather than introducing new ones. */
+  anomaly: {
+    Icon: Clock,
+    heading: "Find out which it is",
+    value:
+      "A drop between MOT tests is either a recording error or a car that's been clocked — the MOT record alone can't tell you which. carVertical's full history report cross-checks the National Mileage Register and European import records to trace rollbacks between tests or before import.",
+    cta: "Trace this discrepancy",
+    open: "",
+    close: "",
+    tone: "rose",
+    toggle: false,
   },
   mileage: {
     Icon: Gauge,
@@ -83,6 +142,8 @@ const VARIANTS: Record<
     cta: "Get the full carVertical report",
     open: "What else it covers",
     close: "Hide details",
+    tone: "blue",
+    toggle: true,
   },
 };
 
@@ -108,14 +169,15 @@ export default function CarVerticalReportCTA({
 
   const cfg = VARIANTS[variant];
   const Icon = cfg.Icon;
+  const tone = TONES[cfg.tone];
   const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
 
   return (
-    <div className="rounded-xl border border-[#1b54ff]/30 bg-gradient-to-br from-[#1b54ff]/10 to-slate-900/20 p-4 sm:p-5">
+    <div className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
       {/* Heading + logo */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2">
-          <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#1b54ff]" />
+          <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${tone.icon}`} />
           <h3 className="text-sm font-semibold text-white sm:text-base">{cfg.heading}</h3>
         </div>
         <CarVerticalLogo className="shrink-0 text-xs" />
@@ -142,25 +204,30 @@ export default function CarVerticalReportCTA({
           target="_blank"
           rel={getPartnerRel(partner)}
           onClick={() => trackPartnerClick("carVertical", context)}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#1b54ff] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1746e0] sm:w-auto"
+          className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors sm:w-auto ${tone.button}`}
         >
           {cfg.cta} <ArrowUpRight className="h-4 w-4" />
         </a>
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          aria-expanded={expanded}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-600/70 bg-slate-800/40 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/80 hover:text-white sm:w-auto"
-        >
-          {expanded ? cfg.close : cfg.open}
-          <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
-        </button>
+        {cfg.toggle && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-600/70 bg-slate-800/40 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/80 hover:text-white sm:w-auto"
+          >
+            {expanded ? cfg.close : cfg.open}
+            <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+          </button>
+        )}
       </div>
 
       <PartnerTrust partner="carVertical" className="mt-2.5" />
 
       {/* Expandable detail */}
-      {expanded && variant === "report" && (
+      {/* Seller reuses the report's comparison table unchanged — it's already
+          coordinated copy (agreement 1.1), and "what's in the paid report" is
+          the same answer whichever side of the sale you're on. */}
+      {expanded && (variant === "report" || variant === "seller") && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           <div className="grid grid-cols-[1fr_3.5rem_6rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>

@@ -69,6 +69,15 @@ export function isPartnerConfigured(partner: PartnerLink): boolean {
  */
 const CARVERTICAL_SUB2: Record<string, string> = {
   "valuation-result-carvertical": "val-result",
+  // Seller-framed replacement for the above. Kept as a separate tag rather than
+  // reusing `val-result` so the reframe can be compared against the buyer-framed
+  // copy it replaced instead of silently overwriting its history.
+  "valuation-result-seller": "val-seller",
+  "valuation-selling-to-buy": "sell2buy",
+  // Fires only when a rollback or implausible jump was actually detected — the
+  // highest-intent placement on the site, and worth its own line in the
+  // dashboard rather than being folded into the general mileage tool traffic.
+  "mileage-anomaly-carvertical": "anomaly",
   "money-carvertical": "val-money",
   "mot-history-carvertical": "mot-hist",
   "model-carvertical": "model",
