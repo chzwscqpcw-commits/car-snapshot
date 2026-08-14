@@ -96,10 +96,16 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
               dead end. Tone-matched to the warning above so it reads as the
               resolution of the alert, not an advert parked beside it. */}
           <div className="mt-4">
+            {/* Impressions on, because this placement only renders when a
+                rollback is actually flagged — so 0 clicks is ambiguous between
+                "never shown" and "shown and ignored", and only the first of
+                those is a reason to leave it alone. Rare by construction, so
+                the added event volume is negligible. */}
             <CarVerticalReportCTA
               variant="anomaly"
               context="mileage-anomaly-carvertical"
               regNumber={vrm}
+              trackImpression
             />
           </div>
         </>

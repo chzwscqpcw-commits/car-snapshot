@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag, BadgeCheck, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
-import { trackPartnerClick } from "@/lib/tracking";
+import { trackPartnerClick, trackEvent } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
 import PartnerTrust from "@/components/PartnerTrust";
 
@@ -16,6 +16,15 @@ interface CarVerticalReportCTAProps {
   context?: string;
   /** Render even while the partner is still pending — for the password-gated mock-up. */
   preview?: boolean;
+  /** Fire a `partner_impression` when this placement is actually scrolled into
+   *  view, giving the placement's clicks a denominator.
+   *
+   *  Opt-in rather than automatic: the valuation placements render on ~2,500
+   *  result views a week, and turning impressions on everywhere at once would
+   *  multiply event volume for placements whose click counts are already
+   *  readable. Switch it on per placement, when the question is "was this ever
+   *  seen?" — which for the anomaly CTA is unanswerable without it. */
+  trackImpression?: boolean;
   /** `report` = full free-vs-paid box (in-results); `mileage` = clocking-themed
    *  placement for the /mileage-check landing page; `seller` = pre-sale framing
    *  for owners valuing their own car; `anomaly` = resolution CTA attached to a
@@ -162,8 +171,48 @@ export default function CarVerticalReportCTA({
   context = "report-carvertical",
   preview = false,
   variant = "report",
+  trackImpression = false,
 }: CarVerticalReportCTAProps) {
   const [expanded, setExpanded] = useState(false);
+
+  // Fire `partner_impression` once, when the card is 50% visible — the same
+  // seen-not-just-mounted standard the experiment framework holds exposure to,
+  // so an impression means a real chance to click rather than "rendered
+  // somewhere below the fold". Never fires on the password-gated preview page,
+  // which would otherwise pollute the denominator with our own review traffic.
+  //
+  // Hooks sit ABOVE the not-configured early return below — moving them under
+  // it would make them conditional and break the rules of hooks.
+  const cardRef = useRef<HTMLDivElement>(null);
+  const seenRef = useRef(false);
+  useEffect(() => {
+    if (!trackImpression || preview || seenRef.current) return;
+    const node = cardRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !seenRef.current) {
+            seenRef.current = true;
+            // `click_context` (not `impression_context`) on purpose: it's the
+            // same key `partner_click` writes, so clicks and impressions group
+            // and join on one field with no special-casing downstream.
+            trackEvent("partner_impression", {
+              partner_id: "carVertical",
+              click_context: context,
+              variant,
+            });
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [trackImpression, preview, context, variant]);
+
   const partner = PARTNER_LINKS.carVertical;
   if (!preview && !isPartnerConfigured(partner)) return null;
 
@@ -173,7 +222,7 @@ export default function CarVerticalReportCTA({
   const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
 
   return (
-    <div className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
+    <div ref={cardRef} className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
       {/* Heading + logo */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2">
