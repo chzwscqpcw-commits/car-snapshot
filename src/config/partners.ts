@@ -76,6 +76,16 @@ const CARVERTICAL_SUB2: Record<string, string> = {
   // overwriting its history.
   "valuation-result-seller": "val-seller",
   "valuation-selling-to-buy": "sell2buy",
+  // The homepage's own valuation surface. `/` has an inline implementation
+  // rather than the shared ValuationResult component, so it needs its own
+  // contexts — but they map to the SAME sub2 as their tool-page twins on
+  // purpose: our `click_context` still tells us homepage vs tool page, while
+  // carVertical's dashboard keeps ONE line per placement concept instead of
+  // splitting an already-thin signal across two. Many-to-one is already how
+  // `blog` works below.
+  "money-seller": "val-seller",
+  "money-selling-to-buy": "sell2buy",
+  "mot-history-anomaly": "anomaly",
   // Fires only when a rollback or implausible jump was actually detected — the
   // highest-intent placement on the site, and worth its own line in the
   // dashboard rather than being folded into general mileage-tool traffic.

@@ -214,6 +214,7 @@ import InspectionCTA from "@/components/InspectionCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import SellingToBuyBridge from "@/components/SellingToBuyBridge";
 import Reveal from "@/components/Reveal";
 
 type VehicleData = {
@@ -4828,19 +4829,33 @@ END:VEVENT
 
             {/* carVertical full-history CTA lifted into section-money — the
                 highest-reach section (~1,555 views vs ~437 for the old
-                Next-Steps slot; revenue audit 2026-07). Uses the `report`
-                variant (finance/write-off/import framing), distinct from the
-                `mileage`-themed placement kept beside MOT History below, so the
-                two reads differ and each attributes separately (money-carvertical
-                vs mot-history-carvertical). Sits after the valuation so it reads
-                as "verify what's behind this value", not a paywall. */}
+                Next-Steps slot; revenue audit 2026-07). Sits after the valuation
+                so it reads as "verify what's behind this value", not a paywall.
+
+                Seller-framed since 2026-08-14. This is the homepage's own
+                valuation surface — /car-valuation and friends render the shared
+                ValuationResult component, but THIS page has its own inline
+                implementation, so the seller reframe shipped in #71 never
+                reached it. The homepage is ~1,415 of ~2,850 weekly valuation
+                views, so half the audience kept seeing "Buying this car?" on a
+                page where 41% of them are valuing a car they already own. Same
+                reasoning as ValuationResult; see the note there. */}
             <DataReveal delay={395}>
               <div className="mb-8">
                 <CarVerticalReportCTA
                   regNumber={data.registrationNumber}
-                  context="money-carvertical"
-                  variant="report"
+                  context="money-seller"
+                  variant="seller"
                 />
+              </div>
+            </DataReveal>
+
+            {/* …and the same visitor is usually weeks from buying. Mirrors the
+                bridge under ValuationResult so both valuation surfaces catch
+                the seller→buyer turn, not just the tool pages. */}
+            <DataReveal delay={400}>
+              <div className="mb-8">
+                <SellingToBuyBridge context="money-selling-to-buy" />
               </div>
             </DataReveal>
 
@@ -5349,13 +5364,45 @@ END:VEVENT
                       affiliate next to the data that motivates it). Far higher
                       exposure here than the old Next-Steps slot (~4% reach).
                       Sits AFTER the free MOT data, so it reads as "go deeper",
-                      not a paywall. Reg + 20%-off coupon pre-fill via buildLink. */}
+                      not a paywall. Reg + 20%-off coupon pre-fill via buildLink.
+
+                      When a rollback is ACTUALLY detected, this swaps to the
+                      anomaly placement — the same treatment MileageResult gives
+                      /mileage-check. The warning above says the reading is worth
+                      investigating; without this it hands the visitor nothing to
+                      investigate with. Swapped rather than stacked so the
+                      highest-intent moment on the site presents one decisive
+                      action instead of two competing carVertical boxes.
+
+                      Predicate matches the `hasMileageDiscrepancy` test used by
+                      the health score (line ~1436) — rollbacks are the "ALERT" /
+                      "decreased" warnings, not the informational ones. */}
                   <div className="mt-6">
-                    <CarVerticalReportCTA
-                      regNumber={data.registrationNumber}
-                      context="mot-history-carvertical"
-                      variant="mileage"
-                    />
+                    {(() => {
+                      // Recomputed here rather than reused: the insights grid
+                      // above builds its own `motInsights` inside an IIFE that
+                      // has already closed by this point. Same call, same
+                      // memo-free pattern the rest of this section uses.
+                      const motInsights = calculateMotInsights(data.motTests, data?.yearOfManufacture);
+                      const hasRollback =
+                        motInsights?.mileageWarnings.some(
+                          (w) => w.includes("ALERT") || w.includes("decreased")
+                        ) ?? false;
+                      return hasRollback ? (
+                        <CarVerticalReportCTA
+                          regNumber={data.registrationNumber}
+                          context="mot-history-anomaly"
+                          variant="anomaly"
+                          trackImpression
+                        />
+                      ) : (
+                        <CarVerticalReportCTA
+                          regNumber={data.registrationNumber}
+                          context="mot-history-carvertical"
+                          variant="mileage"
+                        />
+                      );
+                    })()}
                   </div>
                 </div>
               </DataReveal>
