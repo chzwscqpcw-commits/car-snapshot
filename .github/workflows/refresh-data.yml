@@ -9,6 +9,24 @@ name: Weekly Data Refresh
 # Direct-commits to main on changes (Vercel auto-deploys on push). For
 # data sanity, validates the full dataset before pushing — if validation
 # fails the workflow exits non-zero and no commit happens.
+#
+# ── Why the scrapers are capped and non-fatal ────────────────────────────────
+# Between 2026-05-24 and 2026-08-09 this workflow was cancelled twelve weeks
+# running and committed nothing. The Parkers new-car-price scraper had been
+# added to it on 05-20; recalls/VCA/NCAP kept scraping FINE each week, then
+# Parkers ran past the 20-minute job ceiling and GitHub killed the job before
+# "Commit and push" — so twelve weeks of good data was scraped and discarded,
+# and recalls sat frozen at 20 May while the site presented it as current.
+#
+# Two rules came out of that, and both matter more than any single dataset:
+#   1. No scraper may starve the commit. Every one is time-capped and
+#      continue-on-error, so a slow or broken source costs only its own data.
+#   2. Anything that can't finish inside this budget does not belong here.
+#      Parkers has NEVER completed in CI (~475 pages in 11m53s at
+#      CONCURRENCY=2); it now lives in refresh-prices.yml with a 60-minute
+#      budget of its own.
+# `Validate all data` still gates the commit, so partial refreshes can't push
+# garbage — the failure mode we want is "less fresh", never "wrong".
 
 on:
   schedule:
@@ -26,7 +44,11 @@ env:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Must exceed the SUM of the step caps below (5 + 6 + 12 = 23) plus setup
+    # and commit, or a bad week reintroduces the exact bug this replaced: the
+    # job dying before it can commit. 30 leaves ~5 minutes of genuine slack.
+    # Raise this whenever a step cap goes up.
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -47,26 +69,29 @@ jobs:
           ${{ env.CHROME_PATH }} --version
           echo "OK"
 
+      # Typical runtimes (measured): recalls ~14s, VCA ~37s, NCAP ~348-423s.
+      # Caps are generous multiples — they exist to stop a hang, not to rush a
+      # slow day. continue-on-error on all three so one dead source can never
+      # cost the other two their commit; the Summary below reports what failed.
       - name: Refresh DVSA recalls
+        id: recalls
+        timeout-minutes: 5
+        continue-on-error: true
         run: npx tsx scripts/fetch-recalls.ts
 
       - name: Refresh VCA fuel economy archive
+        id: vca
+        timeout-minutes: 6
+        continue-on-error: true
         run: |
           npx tsx scripts/fetch-vca-archive.ts
           npx tsx scripts/process-fuel-data.ts vca-csvs/*.csv
 
       - name: Refresh Euro NCAP ratings
-        run: npx tsx scripts/fetch-ncap-ratings.ts
-
-      - name: Refresh new-car list prices (Parkers)
-        run: npx tsx scripts/fetch-new-prices.ts
-
-      - name: Refresh EV specs (ev-database.org)
-        # ev-database.org rate-limits aggressively. If we get HTTP 429
-        # repeatedly the script may fail outright — that's not fatal to the
-        # weekly refresh; we ship whatever the other scrapers produced.
+        id: ncap
+        timeout-minutes: 12
         continue-on-error: true
-        run: npx tsx scripts/fetch-ev-specs.ts
+        run: npx tsx scripts/fetch-ncap-ratings.ts
 
       - name: Validate all data
         run: npx tsx scripts/validate-data.ts
@@ -74,7 +99,10 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          DATA_FILES="src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-prices.json src/data/ev-specs.json"
+          # Only the three this workflow refreshes. new-prices.json and
+          # ev-specs.json belong to refresh-prices.yml — listing them here would
+          # let this job commit whatever that one happened to leave behind.
+          DATA_FILES="src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json"
           if git diff --quiet $DATA_FILES; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No data changes — nothing to commit."
@@ -97,8 +125,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json
-          git commit -m "data: weekly auto-refresh"
+          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/_freshness.json
+          git commit -m "data: weekly auto-refresh (recalls, fuel economy, NCAP)"
+          # Rebase before pushing: refresh-prices.yml also commits to main, and
+          # a merged PR can land at any time. Without this a moved main means a
+          # rejected push and another silently-skipped week.
+          git pull --rebase origin main
           git push origin main
 
       - name: Summary
@@ -111,6 +143,16 @@ jobs:
           else
             echo "ℹ️ No data changes this week." >> $GITHUB_STEP_SUMMARY
           fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          # Scrapers are continue-on-error, so the job goes green even when one
+          # fails. Print each outcome or that becomes invisible — which is how
+          # twelve weeks of nothing went unnoticed in the first place.
+          echo "### Scraper outcomes" >> $GITHUB_STEP_SUMMARY
+          echo "| source | outcome |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| DVSA recalls | ${{ steps.recalls.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| VCA fuel economy | ${{ steps.vca.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Euro NCAP | ${{ steps.ncap.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Current entry counts" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

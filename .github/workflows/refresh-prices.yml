@@ -1,0 +1,138 @@
+name: New-Car Price & EV Spec Refresh
+
+# The two slow scrapers, split out of refresh-data.yml.
+#
+# WHY THEY LIVE HERE. Parkers was added to the weekly refresh on 2026-05-20 and
+# broke it immediately: it needs far longer than that job's ceiling, so every
+# run from 05-24 to 08-09 was killed mid-scrape, before the commit step. Twelve
+# weeks of perfectly good recalls/VCA/NCAP data was scraped and thrown away,
+# and recalls sat frozen at 20 May while the site served it as current.
+#
+# Parkers has never once completed in CI — it managed ~475 review pages in
+# 11m53s at CONCURRENCY=2 with a 400ms inter-request delay, and the sitemap is
+# far larger than that. It is not a 20-minute job and no amount of capping
+# makes it one. So: its own workflow, its own hour, its own commit. If it
+# overruns even this, it costs nothing but its own freshness.
+#
+# Runs Wednesday rather than Sunday so it cannot race the weekly refresh for
+# the same push.
+
+on:
+  schedule:
+    - cron: '0 4 * * 3' # Wednesdays at 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CHROME_PATH: /usr/bin/google-chrome-stable
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    # Generous by design. The scrapers below are individually capped, so this
+    # is an outer bound, not a target.
+    timeout-minutes: 75
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # full history so build-freshness-manifest.ts can `git log`
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Chrome present
+        run: |
+          ${{ env.CHROME_PATH }} --version
+          echo "OK"
+
+      - name: Refresh new-car list prices (Parkers)
+        id: parkers
+        # 55 minutes: it had reached ~475 pages at 11m53s when the old job
+        # killed it, so this is roughly a 4-5x headroom on the observed rate.
+        # If it still can't finish, the answer is to make the scraper
+        # incremental — not to raise this again.
+        timeout-minutes: 55
+        continue-on-error: true
+        run: npx tsx scripts/fetch-new-prices.ts
+
+      - name: Refresh EV specs (ev-database.org)
+        id: evspecs
+        # ev-database.org rate-limits aggressively; repeated HTTP 429s can make
+        # this fail outright. Never fatal — we ship whatever Parkers produced.
+        timeout-minutes: 10
+        continue-on-error: true
+        run: npx tsx scripts/fetch-ev-specs.ts
+
+      # Gates the commit exactly as the weekly refresh does: a partial or
+      # failed scrape may cost freshness, but must never push bad data.
+      - name: Validate all data
+        run: npx tsx scripts/validate-data.ts
+
+      - name: Check for changes
+        id: changes
+        run: |
+          DATA_FILES="src/data/new-prices.json src/data/ev-specs.json"
+          if git diff --quiet $DATA_FILES; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No price/spec changes — nothing to commit."
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected:"
+            git diff --stat $DATA_FILES
+          fi
+
+      - name: Rebuild freshness manifest
+        if: steps.changes.outputs.changed == 'true'
+        run: npx tsx scripts/build-freshness-manifest.ts
+
+      - name: Commit and push to main
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json
+          git commit -m "data: refresh new-car prices & EV specs"
+          # main moves — merged PRs, and the Sunday refresh. Rebase or a
+          # rejected push silently costs a week.
+          git pull --rebase origin main
+          git push origin main
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## New-Car Price & EV Spec Refresh — Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.changed }}" = "true" ]; then
+            echo "✅ Data changed. Commit pushed; Vercel will deploy." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes this run." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          # Both scrapers are continue-on-error, so a green job proves nothing
+          # on its own. Print the outcomes.
+          echo "### Scraper outcomes" >> $GITHUB_STEP_SUMMARY
+          echo "| source | outcome |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Parkers new-car prices | ${{ steps.parkers.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| EV specs | ${{ steps.evspecs.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Current entry counts" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          node -e "
+            const fs=require('fs');
+            for (const f of ['new-prices.json','ev-specs.json']) {
+              const d=JSON.parse(fs.readFileSync('src/data/'+f,'utf-8'));
+              const count = Array.isArray(d) ? d.length : Object.keys(d).length;
+              console.log(f.padEnd(22)+' '+count.toLocaleString()+' entries');
+            }
+          " >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
