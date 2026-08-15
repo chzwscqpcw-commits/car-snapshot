@@ -27,6 +27,20 @@ name: Weekly Data Refresh
 #      budget of its own.
 # `Validate all data` still gates the commit, so partial refreshes can't push
 # garbage — the failure mode we want is "less fresh", never "wrong".
+#
+# ── Why this opens a PR instead of pushing to main ───────────────────────────
+# `main` is branch-protected and requires the `checks` status. A direct push
+# from CI can't satisfy that, so `git push origin main` is rejected with GH006
+# no matter how healthy the scrape was — a SECOND breakage hiding behind the
+# timeout one, and the reason the old `data-refresh/*` branches exist: an
+# earlier version pushed branches that nothing ever merged, so they sat
+# orphaned for months.
+#
+# So: commit to a branch, open a PR, enable auto-merge. CI runs `checks` on the
+# data change, GitHub merges it the moment that passes, and Vercel deploys off
+# the merge. No PAT needed — an admin token would bypass protection (
+# enforce_admins is false) but would expire silently one day and reintroduce
+# exactly this class of invisible failure.
 
 on:
   schedule:
@@ -35,6 +49,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write # opens + auto-merges the data PR (main is protected)
 
 env:
   # ubuntu-latest ships with Chrome pre-installed at this path; our
@@ -120,18 +135,34 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         run: npx tsx scripts/build-freshness-manifest.ts
 
-      - name: Commit and push to main
+      - name: Open auto-merging data PR
         if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          BRANCH="data-refresh/${{ github.run_id }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
           git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/_freshness.json
           git commit -m "data: weekly auto-refresh (recalls, fuel economy, NCAP)"
-          # Rebase before pushing: refresh-prices.yml also commits to main, and
-          # a merged PR can land at any time. Without this a moved main means a
-          # rejected push and another silently-skipped week.
-          git pull --rebase origin main
-          git push origin main
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "data: weekly auto-refresh (recalls, fuel economy, NCAP)" \
+            --body "Automated weekly scrape. Merges itself once \`checks\` passes.
+
+          | source | outcome |
+          |---|---|
+          | DVSA recalls | ${{ steps.recalls.outcome }} |
+          | VCA fuel economy | ${{ steps.vca.outcome }} |
+          | Euro NCAP | ${{ steps.ncap.outcome }} |
+
+          Any \`failure\` above means that dataset kept its previous values — the
+          others still refreshed. See run ${{ github.run_id }}." \
+            --base main --head "$BRANCH"
+          # Auto-merge rather than a blind `gh pr merge`: `checks` has to go
+          # green on the data itself before this lands.
+          gh pr merge "$BRANCH" --auto --squash --delete-branch
 
       - name: Summary
         if: always()
