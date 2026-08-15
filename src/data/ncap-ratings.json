@@ -460,6 +460,26 @@
     "yearTested": 2025
   },
   {
+    "make": "CHANGAN DEEPAL",
+    "model": "S05",
+    "overallStars": 5,
+    "adultOccupant": 94,
+    "childOccupant": 87,
+    "pedestrian": 94,
+    "safetyAssist": 76,
+    "yearTested": 2025
+  },
+  {
+    "make": "CHANGAN DEEPAL",
+    "model": "S07",
+    "overallStars": 5,
+    "adultOccupant": 95,
+    "childOccupant": 87,
+    "pedestrian": 95,
+    "safetyAssist": 77,
+    "yearTested": 2024
+  },
+  {
     "make": "CHERY",
     "model": "OMODA5",
     "overallStars": 5,
@@ -688,26 +708,6 @@
     "pedestrian": 49,
     "safetyAssist": 32,
     "yearTested": 2021
-  },
-  {
-    "make": "DEEPAL",
-    "model": "S05",
-    "overallStars": 5,
-    "adultOccupant": 94,
-    "childOccupant": 87,
-    "pedestrian": 94,
-    "safetyAssist": 76,
-    "yearTested": 2025
-  },
-  {
-    "make": "DEEPAL",
-    "model": "S07",
-    "overallStars": 5,
-    "adultOccupant": 95,
-    "childOccupant": 87,
-    "pedestrian": 95,
-    "safetyAssist": 71,
-    "yearTested": 2024
   },
   {
     "make": "DONGFENG",

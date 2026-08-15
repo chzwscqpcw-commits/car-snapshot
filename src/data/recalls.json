@@ -12,6 +12,18 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "AUDI",
+    "models": [
+      "Q3"
+    ],
+    "buildDateStart": "2026-07-09",
+    "buildDateEnd": "2026-07-09",
+    "recallDate": "2026-08-11",
+    "defect": "On affected vehicles the seat belt webbing may not be connected correctly to the vehicle's load-bearing structure meaning it would not be able to restrain the occupant in the event of an accident.",
+    "remedy": "Check the affected seat belt and replace if necessary.",
+    "recallNumber": "R/2026/325"
+  },
+  {
     "make": "JEEP",
     "models": [
       "AVENGER"
@@ -24,6 +36,2346 @@
     "recallNumber": "R/2025/276"
   },
   {
+    "make": "ZF CV SYSTEMS HANNOVER GMBH",
+    "models": [
+      "WABCO HOSES 8288770016 8288770116 8288770006"
+    ],
+    "buildDateStart": "2025-09-10",
+    "buildDateEnd": "2026-10-24",
+    "recallDate": "2026-08-06",
+    "defect": "The hoses at issue are professional B2B aftermarket replacement parts for commercial trailers i.e. heavy commercial vehicles (i.e. not passenger cars).  If used as trailer brake hoses depending on the brake hose connection and trailer configuration holes cannot be ruled out that may negatively affect braking performance.",
+    "remedy": "Identify and replace affected B2B parts.",
+    "recallNumber": "R/2026/314"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE"
+    ],
+    "buildDateStart": "2025-09-07",
+    "buildDateEnd": "2025-10-07",
+    "recallDate": "2026-08-05",
+    "defect": "On a specific batch of vehicles the drivers seat wiring harness may not have been routed correctly which over time may cause it to wear or become damaged. This may stop the seat adjustment working illuminate warning lights cause a loss of the ability to change gear and in rare cases lead to unexpected engine stalling while driving increasing the risk of a collision.",
+    "remedy": "Carry out the required inspection of the drivers seat wiring harness and inspect its condition. If necessary the wiring harness will be rerouted and any damage to the insulation repaired.",
+    "recallNumber": "R/2026/299"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE"
+    ],
+    "buildDateStart": "2025-11-12",
+    "buildDateEnd": "2025-12-11",
+    "recallDate": "2026-08-05",
+    "defect": "On a specific batch of vehicles the drivers seat wiring harness may not have been routed correctly which over time may cause it to wear or become damaged. This may stop the seat adjustment working illuminate warning lights cause a loss of the ability to change gear and in rare cases lead to unexpected engine stalling while driving increasing the risk of a collision.",
+    "remedy": "Carry out the required inspection of the drivers seat wiring harness and inspect its condition. If necessary the wiring harness will be rerouted and any damage to the insulation repaired.",
+    "recallNumber": "R/2026/299"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE"
+    ],
+    "buildDateStart": "2025-12-12",
+    "buildDateEnd": "2025-12-12",
+    "recallDate": "2026-08-05",
+    "defect": "On a specific batch of vehicles the drivers seat wiring harness may not have been routed correctly which over time may cause it to wear or become damaged. This may stop the seat adjustment working illuminate warning lights cause a loss of the ability to change gear and in rare cases lead to unexpected engine stalling while driving increasing the risk of a collision.",
+    "remedy": "Carry out the required inspection of the drivers seat wiring harness and inspect its condition. If necessary the wiring harness will be rerouted and any damage to the insulation repaired.",
+    "recallNumber": "R/2026/299"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE PHEV"
+    ],
+    "buildDateStart": "2025-09-05",
+    "buildDateEnd": "2025-12-08",
+    "recallDate": "2026-08-05",
+    "defect": "On a specific batch of vehicles the drivers seat wiring harness may not have been routed correctly which over time may cause it to wear or become damaged. This may stop the seat adjustment working illuminate warning lights cause a loss of the ability to change gear and in rare cases lead to unexpected engine stalling while driving increasing the risk of a collision.",
+    "remedy": "Carry out the required inspection of the drivers seat wiring harness and inspect its condition. If necessary the wiring harness will be rerouted and any damage to the insulation repaired.",
+    "recallNumber": "R/2026/299"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE PHEV"
+    ],
+    "buildDateStart": "2025-12-09",
+    "buildDateEnd": "2026-01-08",
+    "recallDate": "2026-08-05",
+    "defect": "On a specific batch of vehicles the drivers seat wiring harness may not have been routed correctly which over time may cause it to wear or become damaged. This may stop the seat adjustment working illuminate warning lights cause a loss of the ability to change gear and in rare cases lead to unexpected engine stalling while driving increasing the risk of a collision.",
+    "remedy": "Carry out the required inspection of the drivers seat wiring harness and inspect its condition. If necessary the wiring harness will be rerouted and any damage to the insulation repaired.",
+    "recallNumber": "R/2026/299"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-08-26",
+    "buildDateEnd": "2026-12-18",
+    "recallDate": "2026-08-03",
+    "defect": "Front & 2nd row (left & right side) seat belt retaining bolts are not correctly fastened on some vehicles. If affected the seat belt restraint is compromised and there is a chance of an increase in passenger injury during a collision.",
+    "remedy": "Check all seat belt retaining bolts & apply the correct torque setting.",
+    "recallNumber": "R/2026/252"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-09-08",
+    "buildDateEnd": "2026-02-02",
+    "recallDate": "2026-08-03",
+    "defect": "Due to changes in production some areas have uneven material and strength to improve the bonnets outer appearance. As a result if the vehicle impacts a pedestrian the risk of injury may be higher.",
+    "remedy": "Check the LOT number of the bonnet replace if in the affected range.",
+    "recallNumber": "R/2026/253"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-08-26",
+    "buildDateEnd": "2025-12-18",
+    "recallDate": "2026-08-03",
+    "defect": "Front & 2nd row (left & right side) seat belt retaining bolts are not correctly fastened on some vehicles. If affected the seat belt restraint is compromised and there is a chance of an increase in passenger injury during a collision.",
+    "remedy": "Check all seat belt retaining bolts & apply the correct torque setting.",
+    "recallNumber": "R/2026/252"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-09-08",
+    "buildDateEnd": "2026-02-02",
+    "recallDate": "2026-08-03",
+    "defect": "Due to changes in production some areas have uneven material and strength to improve the bonnets outer appearance. As a result if the vehicle impacts a pedestrian the risk of injury may be higher.",
+    "remedy": "Check the LOT number of the bonnet replace if in the affected range.",
+    "recallNumber": "R/2026/253"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2024-08-27",
+    "buildDateEnd": "2024-10-04",
+    "recallDate": "2026-07-31",
+    "defect": "On affected vehicles the B-pillar label displays the Vehicle Identification Number but the fields for mandatory vehicle weight information may be blank.",
+    "remedy": "Remove the existing label clean the area and install a new replacement displaying the correct mandatory information.",
+    "recallNumber": "R/2026/312"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2024-07-27",
+    "buildDateEnd": "2025-01-14",
+    "recallDate": "2026-07-31",
+    "defect": "On affected vehicles the B-pillar label displays the Vehicle Identification Number but the fields for mandatory vehicle weight information may be blank.",
+    "remedy": "Remove the existing label clean the area and install a new replacement displaying the correct mandatory information.",
+    "recallNumber": "R/2026/312"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2024-11-07",
+    "buildDateEnd": "2024-12-13",
+    "recallDate": "2026-07-31",
+    "defect": "On affected vehicles the B-pillar label displays the Vehicle Identification Number but the fields for mandatory vehicle weight information may be blank.",
+    "remedy": "Remove the existing label clean the area and install a new replacement displaying the correct mandatory information.",
+    "recallNumber": "R/2026/312"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2024-05-17",
+    "buildDateEnd": "2024-05-18",
+    "recallDate": "2026-07-31",
+    "defect": "On affected vehicles the B-pillar label displays the Vehicle Identification Number but the fields for mandatory vehicle weight information may be blank.",
+    "remedy": "Remove the existing label clean the area and install a new replacement displaying the correct mandatory information.",
+    "recallNumber": "R/2026/312"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2024-10-03",
+    "buildDateEnd": "2024-10-04",
+    "recallDate": "2026-07-31",
+    "defect": "On affected vehicles the B-pillar label displays the Vehicle Identification Number but the fields for mandatory vehicle weight information may be blank.",
+    "remedy": "Remove the existing label clean the area and install a new replacement displaying the correct mandatory information.",
+    "recallNumber": "R/2026/312"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2021-07-02",
+    "buildDateEnd": "2021-12-16",
+    "recallDate": "2026-07-31",
+    "defect": "Affected vehicles may have an issue with the fuel lift pump that could cause the engine to stall.",
+    "remedy": "Update the Power Control Module software.",
+    "recallNumber": "R/2025/369"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2022-01-11",
+    "buildDateEnd": "2022-04-01",
+    "recallDate": "2026-07-31",
+    "defect": "Affected vehicles may have an issue with the fuel lift pump that could cause the engine to stall.",
+    "remedy": "Update the Power Control Module software.",
+    "recallNumber": "R/2025/369"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2022-04-19",
+    "buildDateEnd": "2022-07-29",
+    "recallDate": "2026-07-31",
+    "defect": "Affected vehicles may have an issue with the fuel lift pump that could cause the engine to stall.",
+    "remedy": "Update the Power Control Module software.",
+    "recallNumber": "R/2025/369"
+  },
+  {
+    "make": "SMART UK AUTOMOTIVE LTD",
+    "models": [
+      "#5"
+    ],
+    "buildDateStart": "2025-11-14",
+    "buildDateEnd": "2026-05-29",
+    "recallDate": "2026-07-31",
+    "defect": "It has come to our attention that your vehicle is part of a very small number of smart #5 vehicles of which under very specific circumstances the braking software may underperform and lead to unexpected skidding on specific surfaces in icy or wet weather conditions.  Test results have shown that this scenario can occur on low friction surfaces (e.g. epoxy or tilted floors). The issue could not be reproduced on normal road surfaces. Should these specific circumstances occur it cannot be ruled out that the braking leads to skidding and loss of control of the vehicle.",
+    "remedy": "The corrective measure consisting of the release of a new braking software that will correct the deviated behaviour.",
+    "recallNumber": "R/2026/276"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2025-12-04",
+    "buildDateEnd": "2026-01-07",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2025-11-06",
+    "buildDateEnd": "2026-03-04",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-25",
+    "buildDateEnd": "2026-05-06",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2025-10-25",
+    "buildDateEnd": "2026-02-16",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-04-02",
+    "buildDateEnd": "2026-04-21",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-10-16",
+    "buildDateEnd": "2026-01-19",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-02-26",
+    "buildDateEnd": "2026-05-27",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2025-10-18",
+    "buildDateEnd": "2025-11-15",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2026-05-04",
+    "buildDateEnd": "2026-05-07",
+    "recallDate": "2026-07-30",
+    "defect": "Affected vehicles may have an Electronic One-Way Clutch Assembly built with an unseated snap ring which may lead to a sudden and unexpected loss of forward or reverse movement.",
+    "remedy": "Disassemble the transmission to check the snap ring is correctly seated and replace any necessary parts.",
+    "recallNumber": "R/2026/306"
+  },
+  {
+    "make": "NISSAN",
+    "models": [
+      "INTERSTAR (XDD)"
+    ],
+    "buildDateStart": "2026-01-13",
+    "buildDateEnd": "2026-01-27",
+    "recallDate": "2026-07-29",
+    "defect": "For affected vehicles an incorrect Emissions Label may have been installed . As a result the label does not accurately reflect the vehicle’s actual emissions.",
+    "remedy": "Replace the Emissions Label with the correct European specification  label.",
+    "recallNumber": "R/2026/296"
+  },
+  {
+    "make": "NISSAN",
+    "models": [
+      "INTERSTAR (XDE)"
+    ],
+    "buildDateStart": "2026-01-13",
+    "buildDateEnd": "2026-01-27",
+    "recallDate": "2026-07-29",
+    "defect": "For affected vehicles an incorrect Emissions Label may have been installed . As a result the label does not accurately reflect the vehicle’s actual emissions.",
+    "remedy": "Replace the Emissions Label with the correct European specification  label.",
+    "recallNumber": "R/2026/296"
+  },
+  {
+    "make": "CUPRA",
+    "models": [
+      "TAVASCAN"
+    ],
+    "buildDateStart": "2024-08-09",
+    "buildDateEnd": "2026-02-14",
+    "recallDate": "2026-07-28",
+    "defect": "On affected vehicles when driving with the advanced full beam assist function a deviation of the light distribution of the Matrix Beam headlights occurs resulting in glare for both the vehicle in front and the oncoming vehicle.",
+    "remedy": "Reprogram the Matrix Beam headlight adjustment control and update the vehicle baseline.",
+    "recallNumber": "R/2026/311"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": [
+      "INSTER AX EV"
+    ],
+    "buildDateStart": "2024-02-14",
+    "buildDateEnd": "2026-04-14",
+    "recallDate": "2026-07-27",
+    "defect": "The vehicle three way coolant valve may become defective during the vehicle operation. This may result in a risk of the affected component melting.",
+    "remedy": "Replacement of the three way coolant valve.",
+    "recallNumber": "R/2026/267"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "COUNTRYMAN"
+    ],
+    "buildDateStart": "2010-07-14",
+    "buildDateEnd": "2014-06-27",
+    "recallDate": "2026-07-27",
+    "defect": "For certain vehicles BMW Group has  developed a package of measures (hardware and  software) for the emission control system of the MINI R60/R61.",
+    "remedy": "Installation of the hardware package including the required software measures",
+    "recallNumber": "R/2026/284"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "PACEMAN"
+    ],
+    "buildDateStart": "2013-01-19",
+    "buildDateEnd": "2014-06-27",
+    "recallDate": "2026-07-27",
+    "defect": "For certain vehicles BMW Group has  developed a package of measures (hardware and  software) for the emission control system of the MINI R60/R61.",
+    "remedy": "Installation of the hardware package including the required software measures",
+    "recallNumber": "R/2026/284"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PICANTO"
+    ],
+    "buildDateStart": "2020-09-07",
+    "buildDateEnd": "2023-07-21",
+    "recallDate": "2026-07-24",
+    "defect": "​​Fuel leakage may occur due to contact between the fuel line and the battery tray cable. For affected cars this may lead to damage of the fuel line and the risk of a fuel leak.​",
+    "remedy": "​​Carry out a visual inspection pipe if no damage re-route and secure the pipe. If damaged replace the pipe and re-route.",
+    "recallNumber": "R/2026/251"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PICANTO"
+    ],
+    "buildDateStart": "2020-09-07",
+    "buildDateEnd": "2023-07-21",
+    "recallDate": "2026-07-24",
+    "defect": "​​Fuel leakage may occur due to contact between the fuel line and the battery tray cable. For affected cars this may lead to damage of the fuel line and the risk of a fuel leak.​",
+    "remedy": "​​Carry out a visual inspection pipe if no damage re-route and secure the pipe. If damaged replace the pipe and re-route.",
+    "recallNumber": "R/2026/251"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PICANTO"
+    ],
+    "buildDateStart": "2020-09-07",
+    "buildDateEnd": "2023-07-21",
+    "recallDate": "2026-07-24",
+    "defect": "​​Fuel leakage may occur due to contact between the fuel line and the battery tray cable. For affected cars this may lead to damage of the fuel line and the risk of a fuel leak.​",
+    "remedy": "​​Carry out a visual inspection pipe if no damage re-route and secure the pipe. If damaged replace the pipe and re-route.",
+    "recallNumber": "R/2026/251"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PICANTO"
+    ],
+    "buildDateStart": "2020-09-07",
+    "buildDateEnd": "2023-07-21",
+    "recallDate": "2026-07-24",
+    "defect": "​​Fuel leakage may occur due to contact between the fuel line and the battery tray cable. For affected cars this may lead to damage of the fuel line and the risk of a fuel leak.​",
+    "remedy": "​​Carry out a visual inspection pipe if no damage re-route and secure the pipe. If damaged replace the pipe and re-route.",
+    "recallNumber": "R/2026/251"
+  },
+  {
+    "make": "ASTON MARTIN",
+    "models": [
+      "VALKYRIE COUPE"
+    ],
+    "buildDateStart": "2022-12-09",
+    "buildDateEnd": "2023-06-16",
+    "recallDate": "2026-07-20",
+    "defect": "On affected vehicles in a combination of very specific conditions the seal within one of the brake master cylinders can deform.  This can lead to brake fluid not being released back into the reservoir causing drag and leading to an increase in temperature increasing the risk of a localised fire.",
+    "remedy": "The revised remedy parts are not yet available.  Aston Martin will contact owners to schedule a time date and location for brake master cylinder replacement when parts are available.",
+    "recallNumber": "R/2026/300"
+  },
+  {
+    "make": "ASTON MARTIN",
+    "models": [
+      "VALKYRIE SPIDER"
+    ],
+    "buildDateStart": "2023-04-06",
+    "buildDateEnd": "2024-07-12",
+    "recallDate": "2026-07-20",
+    "defect": "On affected vehicles in a combination of very specific conditions the seal within one of the brake master cylinders can deform.  This can lead to brake fluid not being released back into the reservoir causing drag and leading to an increase in temperature increasing the risk of a localised fire.",
+    "remedy": "The revised remedy parts are not yet available.  Aston Martin will contact owners to schedule a time date and location for brake master cylinder replacement when parts are available.",
+    "recallNumber": "R/2026/300"
+  },
+  {
+    "make": "VAPOR RICON EUROPE LTD",
+    "models": [
+      "S-SERIES WHEELCHAIR LIFT"
+    ],
+    "buildDateStart": "2024-01-01",
+    "buildDateEnd": "2026-06-23",
+    "recallDate": "2026-07-20",
+    "defect": "Under certain conditions the platform lift motor could remain energised and move unintentionally despite the lift operator commanding the lift to stop increasing the risk of injury to the lift occupant or others in the vicinity.",
+    "remedy": "Install two diodes within the lift electrical system wiring to prevent voltage from a failed contactor maintaining a closed condition and to ensure proper de-energisation of the motor contactor when the operator commands the lift to stop.",
+    "recallNumber": "R/2026/303"
+  },
+  {
+    "make": "VAPOR RICON EUROPE LTD",
+    "models": [
+      "K-SERIES WHEELCHAIR LIFT"
+    ],
+    "buildDateStart": "2024-01-01",
+    "buildDateEnd": "2026-06-23",
+    "recallDate": "2026-07-20",
+    "defect": "Under certain conditions the platform lift motor could remain energised and move unintentionally despite the lift operator commanding the lift to stop increasing the risk of injury to the lift occupant or others in the vicinity.",
+    "remedy": "Install two diodes within the lift electrical system wiring to prevent voltage from a failed contactor maintaining a closed condition and to ensure proper de-energisation of the motor contactor when the operator commands the lift to stop.",
+    "recallNumber": "R/2026/303"
+  },
+  {
+    "make": "NISSAN",
+    "models": [
+      "QASHQAI"
+    ],
+    "buildDateStart": "2025-07-08",
+    "buildDateEnd": "2026-05-20",
+    "recallDate": "2026-07-14",
+    "defect": "For affected vehicles there is an issue involving the E power Battery Management system (BMS) where warnings and entering limp mode or loss of power cannot be ruled out.   Vehicle will not return to normal function until power-latch (IGN off for approximately 30 mins and key away from vehicle).",
+    "remedy": "Reprogram the Battery Management System (BMS).",
+    "recallNumber": "R/2026/290"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "TERRAMAR"
+    ],
+    "buildDateStart": "2025-06-07",
+    "buildDateEnd": "2026-06-18",
+    "recallDate": "2026-07-14",
+    "defect": "On affected vehicles a joint at the pyrotechnic inflator of the front seat belt retractors was not welded correctly presenting a risk of vehicle occupants being injured by small parts coming loose in the event of an accident.",
+    "remedy": "Replace the affected seat belts.",
+    "recallNumber": "R/2026/295"
+  },
+  {
+    "make": "AUDI",
+    "models": [
+      "Q3"
+    ],
+    "buildDateStart": "2025-11-03",
+    "buildDateEnd": "2026-05-26",
+    "recallDate": "2026-07-13",
+    "defect": "On affected vehicles a joint at the pyrotechnic inflator of the front seat belt retractors was not welded correctly presenting a risk of vehicle occupants being injured by small parts coming loose in the event of an accident.",
+    "remedy": "Replace the affected seat belts.",
+    "recallNumber": "R/2026/292"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "K4"
+    ],
+    "buildDateStart": "2025-08-08",
+    "buildDateEnd": "2026-02-19",
+    "recallDate": "2026-07-13",
+    "defect": "The rear centre seatbelt anchor buckle may not latch properly. This is due to a manufacturing error by the supplier the buckle may fail to fully engage when the tongue is inserted. A seatbelt anchor buckle that does not latch correctly may not provide adequate occupant restraint during certain collision events increasing the risk of injury.",
+    "remedy": "Carry out a visual inspection of the buckle replace if faulty.",
+    "recallNumber": "R/2026/207"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC40"
+    ],
+    "buildDateStart": "2019-03-12",
+    "buildDateEnd": "2021-12-06",
+    "recallDate": "2026-07-13",
+    "defect": "On affected vehicles the High Voltage (HV) Battery may have a manufacturing defect which could cause the Battery Cells to overheat when the HV Battery is fully charged. In a worst-case scenario there is a risk of fire when the vehicle is parked up with a fully charged HV Battery.",
+    "remedy": "Check and replace the HV Battery Cells if necessary and install modified software.",
+    "recallNumber": "R/2026/272"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2025-12-01",
+    "buildDateEnd": "2026-02-28",
+    "recallDate": "2026-07-10",
+    "defect": "On affected vehicles the Moving Off Information System (MOIS) has been disabled so it is unable to warn of pedestrians or cyclists close to and in front of the vehicle.",
+    "remedy": "Update the software to enable the MOIS.",
+    "recallNumber": "R/2026/297"
+  },
+  {
+    "make": "NISSAN",
+    "models": [
+      "X-TRAIL"
+    ],
+    "buildDateStart": "2021-12-01",
+    "buildDateEnd": "2026-04-21",
+    "recallDate": "2026-07-10",
+    "defect": "For affected vehicles the lithium-ion battery controller (LBC) on some X-Trail (T33) vehicles may not properly maintain diagnostic robustness.  It has been found that these ICs may misdiagnose abnormalities and as a result the system may enter fail-safe mode during driving which restricts motor output and prohibits charging.  Under certain conditions a loss of motive power may occur and the vehicle may stop while driving due to the loss of propulsion.",
+    "remedy": "Update to the Battery Management Software (BMW)",
+    "recallNumber": "R/2026/265"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "RELAY"
+    ],
+    "buildDateStart": "2024-02-02",
+    "buildDateEnd": "2025-11-13",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the Body Control Module is not correctly configured to detect a failure in the indicator lamps.  As a result if a turn indicator bulb fails it's not detected and the indicator warning does not activate.",
+    "remedy": "Update the vehicle configuration and the Secure Gateway Electronic Control Unit.",
+    "recallNumber": "R/2026/287"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-02-13",
+    "buildDateEnd": "2024-04-06",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-04-23",
+    "buildDateEnd": "2025-04-08",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-11-16",
+    "buildDateEnd": "2025-05-17",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-04-15",
+    "buildDateEnd": "2026-03-12",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-08-19",
+    "buildDateEnd": "2026-03-18",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-02-05",
+    "buildDateEnd": "2026-03-03",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the front outboard seatbelts may show fraying due to coming into contact with metal swarf from the production process.",
+    "remedy": "Replace the front outboard seatbelts.",
+    "recallNumber": "R/2026/261"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "MINIE 3DR HATCHBACK"
+    ],
+    "buildDateStart": "2026-03-20",
+    "buildDateEnd": "2026-04-07",
+    "recallDate": "2026-07-03",
+    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "recallNumber": "R/2026/250"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "MINI ACEMAN"
+    ],
+    "buildDateStart": "2026-03-25",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-07-03",
+    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "recallNumber": "R/2026/250"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "BOXER"
+    ],
+    "buildDateStart": "2024-01-23",
+    "buildDateEnd": "2025-12-15",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the Body Control Module is not correctly configured to detect a failure in the indicator lamps.  As a result if a turn indicator bulb fails it's not detected and the indicator warning does not activate.",
+    "remedy": "Update the vehicle configuration and the Secure Gateway Electronic Control Unit.",
+    "recallNumber": "R/2026/286"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "3008 V3"
+    ],
+    "buildDateStart": "2025-03-07",
+    "buildDateEnd": "2025-04-16",
+    "recallDate": "2026-07-03",
+    "defect": "Affected vehicles may have a tyre class mismatch between the technical specification declared in the Certificate of Conformity and the actual vehicle configuration.",
+    "remedy": "Check the tyre class of all vehicle tyres and exchange all 4 for Class A+ tyres if necessary",
+    "recallNumber": "R/2026/256"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "5008 V3"
+    ],
+    "buildDateStart": "2025-03-07",
+    "buildDateEnd": "2025-04-15",
+    "recallDate": "2026-07-03",
+    "defect": "Affected vehicles may have a tyre class mismatch between the technical specification declared in the Certificate of Conformity and the actual vehicle configuration.",
+    "remedy": "Check the tyre class of all vehicle tyres and exchange all 4 for Class A+ tyres if necessary",
+    "recallNumber": "R/2026/256"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "MOVANO"
+    ],
+    "buildDateStart": "2024-02-01",
+    "buildDateEnd": "2025-07-09",
+    "recallDate": "2026-07-03",
+    "defect": "On affected vehicles the Body Control Module is not correctly configured to detect a failure in the indicator lamps.  As a result if a turn indicator bulb fails it's not detected and the indicator warning does not activate.",
+    "remedy": "Update the vehicle configuration and the Secure Gateway Electronic Control Unit.",
+    "recallNumber": "R/2026/285"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "2 SERIES COUPE"
+    ],
+    "buildDateStart": "2026-05-15",
+    "buildDateEnd": "2026-05-22",
+    "recallDate": "2026-07-01",
+    "defect": "The safety recall relates to a PVC seam seal defect which may have occurred in the body area of the right real light housing. It is possible that seam sealant was not applied to a panel overlap area this may result in water ingress into the vehicle in the area of the right rear light. If water does enter the trunk in the area of the right rear light it may result in water ingress onto the exposed power distribution box as well as adjacent wiring harnesses and electrical components. It cannot be reliably excluded that electrical contacts may be affected particularly due to capillary effects. In this case moisture ingress and the resulting long-term corrosion may lead to increased contact resistance as well as functional degradation or failure of individual electrical components. Over the service life a thermal event cannot be completely ruled out.",
+    "remedy": "On the affected vehicles the PVC seam will be checked and if necessary reworked.",
+    "recallNumber": "R/2026/262"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-09-23",
+    "buildDateEnd": "2026-04-14",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-02-03",
+    "buildDateEnd": "2026-02-28",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2026-02-24",
+    "buildDateEnd": "2026-05-09",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2026-04-03",
+    "buildDateEnd": "2026-04-03",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2026-03-09",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-04",
+    "buildDateEnd": "2026-03-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-24",
+    "buildDateEnd": "2026-05-04",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-03-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-09",
+    "buildDateEnd": "2026-05-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-06-09",
+    "buildDateEnd": "2026-05-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-03-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-09",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-10",
+    "buildDateEnd": "2026-04-07",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-03-06",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT"
+    ],
+    "buildDateStart": "2026-03-09",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MACH-E"
+    ],
+    "buildDateStart": "2026-02-03",
+    "buildDateEnd": "2026-03-11",
+    "recallDate": "2026-06-30",
+    "defect": "Affected vehicles may experience erratic behaviour of the Glare Free High Beam function under certain circumstances.",
+    "remedy": "Update the Advanced Driver Assistance Systems Electronic Control Unit software.",
+    "recallNumber": "R/2026/268"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "AUTOGRAPH IV 794F"
+    ],
+    "buildDateStart": "2025-04-30",
+    "buildDateEnd": "2026-05-07",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "ENDEAVOUR B65 (ER1)"
+    ],
+    "buildDateStart": "2025-02-14",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "ADAMO XL-DL"
+    ],
+    "buildDateStart": "2026-03-11",
+    "buildDateEnd": "2026-04-30",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "ENDURANCE E65 (ER1)"
+    ],
+    "buildDateStart": "2025-12-11",
+    "buildDateEnd": "2026-05-19",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "AUTOGRAPH IV 815"
+    ],
+    "buildDateStart": "2025-10-09",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "AUTOGRAPH IV 794I"
+    ],
+    "buildDateStart": "2025-10-08",
+    "buildDateEnd": "2026-02-25",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "AUTOGRAPH IV 794T"
+    ],
+    "buildDateStart": "2025-10-07",
+    "buildDateEnd": "2026-01-30",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "BAILEY OF BRISTOL",
+    "models": [
+      "AUTOGRAPH 794XT"
+    ],
+    "buildDateStart": "2026-04-11",
+    "buildDateEnd": "2026-05-06",
+    "recallDate": "2026-06-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/259"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-06-16",
+    "buildDateEnd": "2026-05-31",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-03-01",
+    "buildDateEnd": "2025-08-14",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-11-28",
+    "buildDateEnd": "2026-06-02",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2024-05-02",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2023-09-18",
+    "buildDateEnd": "2024-08-13",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2025-04-07",
+    "buildDateEnd": "2025-08-01",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-08-13",
+    "buildDateEnd": "2026-03-18",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-04-07",
+    "buildDateEnd": "2026-03-17",
+    "recallDate": "2026-06-26",
+    "defect": "On affected vehicles the front wiper motor may not operate or may operate intermittently resulting in reduced or lost visibility in certain conditions.",
+    "remedy": "Update the wiper motor software and if necessary replace the wiper motor.",
+    "recallNumber": "R/2026/258"
+  },
+  {
+    "make": "JAGUAR",
+    "models": [
+      "F-PACE"
+    ],
+    "buildDateStart": "2024-05-03",
+    "buildDateEnd": "2025-01-14",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/273"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DEFENDER"
+    ],
+    "buildDateStart": "2024-06-03",
+    "buildDateEnd": "2026-04-18",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.    A damaged oil pressure and temperature sensor can lead to an oil leak from  the engine which can result in a slip hazard for following road users  particularly two-wheeled vehicles.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/241"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DISCOVERY"
+    ],
+    "buildDateStart": "2024-07-03",
+    "buildDateEnd": "2026-04-17",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.    A damaged oil pressure and temperature sensor can lead to an oil leak from  the engine which can result in a slip hazard for following road users  particularly two-wheeled vehicles.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/241"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER"
+    ],
+    "buildDateStart": "2024-01-03",
+    "buildDateEnd": "2024-12-06",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.    A damaged oil pressure and temperature sensor can lead to an oil leak from  the engine which can result in a slip hazard for following road users  particularly two-wheeled vehicles.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/241"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER SPORT"
+    ],
+    "buildDateStart": "2024-01-03",
+    "buildDateEnd": "2024-06-28",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.    A damaged oil pressure and temperature sensor can lead to an oil leak from  the engine which can result in a slip hazard for following road users  particularly two-wheeled vehicles.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/241"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER VELAR"
+    ],
+    "buildDateStart": "2024-06-03",
+    "buildDateEnd": "2026-04-17",
+    "recallDate": "2026-06-26",
+    "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.    A damaged oil pressure and temperature sensor can lead to an oil leak from  the engine which can result in a slip hazard for following road users  particularly two-wheeled vehicles.",
+    "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
+    "recallNumber": "R/2026/241"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-11-28",
+    "buildDateEnd": "2026-06-12",
+    "recallDate": "2026-06-23",
+    "defect": "Affected vehicles may experience loss of communication with the Door modules resulting in the Blind Spot Indicator System (BLIS) feature Window regulator mirror adjust and turn indicator repeater not working during this time. The mirror-mounted indicator lamps lack of function combined with the absence of a driver tell-tale results in a non-compliance with mandatory lighting standards.",
+    "remedy": "Install updated door control software.",
+    "recallNumber": "R/2026/254"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2025-11-05",
+    "buildDateEnd": "2026-05-21",
+    "recallDate": "2026-06-23",
+    "defect": "Affected vehicles may experience loss of communication with the Door modules resulting in the Blind Spot Indicator System (BLIS) feature Window regulator mirror adjust and turn indicator repeater not working during this time. The mirror-mounted indicator lamps lack of function combined with the absence of a driver tell-tale results in a non-compliance with mandatory lighting standards.",
+    "remedy": "Install updated door control software.",
+    "recallNumber": "R/2026/254"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "E-CLASS"
+    ],
+    "buildDateStart": "2017-05-30",
+    "buildDateEnd": "2017-05-30",
+    "recallDate": "2026-06-23",
+    "defect": "Mercedes-Benz AG has determined that on certain GLE/GLS (167   platform) C-Class (205 platform) E-Class (213 platform) S-Class (223   platform) GLC (253 platform) and CLS (257 platform) vehicles with diesel   engine the vacuum‑controlled coolant pump might exhibit a leakage   between the vacuum system and the coolant circuit.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners   will update the software of the coolant pump and replace the electrical   switch valve on the affected vehicles.",
+    "recallNumber": "R/2026/201"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "KB635 ACTIVE"
+    ],
+    "buildDateStart": "2025-09-10",
+    "buildDateEnd": "2026-06-12",
+    "recallDate": "2026-06-22",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/264"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-08-25",
+    "buildDateEnd": "2025-08-25",
+    "recallDate": "2026-06-22",
+    "defect": "Affected vehicles may experience a fracture of the High Voltage Battery front mounting bracket lower legs potentially causing the battery to drop onto the chassis frame.",
+    "remedy": "Replace the High Voltage Battery which contains the retaining brackets",
+    "recallNumber": "R/2026/123"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DEFENDER"
+    ],
+    "buildDateStart": "2019-04-02",
+    "buildDateEnd": "2026-06-04",
+    "recallDate": "2026-06-19",
+    "defect": "A concern has been identified where the connector to the driver’s airbag at  the clockspring may experience fretting corrosion over time. This can lead to  an increased resistance in the driver’s airbag circuit potentially resulting in  the airbag failing to deploy when requested to do so.    An airbag which fails to deploy as-intended will increase the risk of injury in  the event of a crash.",
+    "remedy": "Vehicles will have a protective lubricant gel applied to the driver’s airbag  connector terminals.",
+    "recallNumber": "R/2026/245"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DISCOVERY"
+    ],
+    "buildDateStart": "2020-07-01",
+    "buildDateEnd": "2026-06-05",
+    "recallDate": "2026-06-19",
+    "defect": "A concern has been identified where the connector to the driver’s airbag at  the clockspring may experience fretting corrosion over time. This can lead to  an increased resistance in the driver’s airbag circuit potentially resulting in  the airbag failing to deploy when requested to do so.    An airbag which fails to deploy as-intended will increase the risk of injury in  the event of a crash.",
+    "remedy": "Vehicles will have a protective lubricant gel applied to the driver’s airbag  connector terminals.",
+    "recallNumber": "R/2026/245"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER"
+    ],
+    "buildDateStart": "2020-09-25",
+    "buildDateEnd": "2026-06-04",
+    "recallDate": "2026-06-19",
+    "defect": "A concern has been identified where the connector to the driver’s airbag at  the clockspring may experience fretting corrosion over time. This can lead to  an increased resistance in the driver’s airbag circuit potentially resulting in  the airbag failing to deploy when requested to do so.    An airbag which fails to deploy as-intended will increase the risk of injury in  the event of a crash.",
+    "remedy": "Vehicles will have a protective lubricant gel applied to the driver’s airbag  connector terminals.",
+    "recallNumber": "R/2026/245"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLE"
+    ],
+    "buildDateStart": "2026-01-23",
+    "buildDateEnd": "2026-02-05",
+    "recallDate": "2026-06-19",
+    "defect": "Mercedes-Benz AG has determined that on certain GLE/GLS (167 platform)  vehicles the bolting connection of the rear seat belts might not meet  specifications.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will   rework the bolting connection of the affected rear seat belts on the affected   vehicles.",
+    "recallNumber": "R/2026/221"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "EV5"
+    ],
+    "buildDateStart": "2025-08-19",
+    "buildDateEnd": "2026-03-14",
+    "recallDate": "2026-06-18",
+    "defect": "On some vehicles the second-row lower seat bolts may not have been installed. On effected cars a missing bolt may increase the risk of injury if the vehicle was subjected to a collision from behind.",
+    "remedy": "Check the security of all the rear seat retaining bolts & install a new bolt if found missing",
+    "recallNumber": "R/2026/217"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "EV5"
+    ],
+    "buildDateStart": "2025-08-19",
+    "buildDateEnd": "2026-03-14",
+    "recallDate": "2026-06-18",
+    "defect": "On some vehicles the second-row lower seat bolts may not have been installed. On effected cars a missing bolt may increase the risk of injury if the vehicle was subjected to a collision from behind.",
+    "remedy": "Check the security of all the rear seat retaining bolts & install a new bolt if found missing",
+    "recallNumber": "R/2026/217"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-11-12",
+    "buildDateEnd": "2026-03-31",
+    "recallDate": "2026-06-16",
+    "defect": "Potential that the right-hand front shock absorber lower bracket welding may fail and the shock absorber becomes detached from the lower arm. This would cause the vehicle ride height to drop at the front right side.",
+    "remedy": "Check LOT number if within affected range replace shock absorber.",
+    "recallNumber": "R/2026/219"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "PV5"
+    ],
+    "buildDateStart": "2025-11-12",
+    "buildDateEnd": "2026-03-31",
+    "recallDate": "2026-06-16",
+    "defect": "Potential that the right-hand front shock absorber lower bracket welding may fail and the shock absorber becomes detached from the lower arm. This would cause the vehicle ride height to drop at the front right side.",
+    "remedy": "Check LOT number if within affected range replace shock absorber.",
+    "recallNumber": "R/2026/219"
+  },
+  {
+    "make": "DACIA",
+    "models": [
+      "BIGSTER"
+    ],
+    "buildDateStart": "2025-12-16",
+    "buildDateEnd": "2026-03-12",
+    "recallDate": "2026-06-15",
+    "defect": "For certain vehicles there may be a non-conformity of the rear suspension springs that could lead to breakage.",
+    "remedy": "As a preventative measure replace Left-hand and right-hand rear suspension springs",
+    "recallNumber": "R/2026/240"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2026-03-07",
+    "buildDateEnd": "2026-03-07",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may be equipped with a Driver Facing Camera that may not work as intended and therefore not compliant with current regulatory requirements.",
+    "remedy": "Replace the Driver Status Monitoring Camera Control Module.",
+    "recallNumber": "R/2026/242"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-02-19",
+    "buildDateEnd": "2026-03-11",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may be equipped with a Driver Facing Camera that may not work as intended and therefore not compliant with current regulatory requirements.",
+    "remedy": "Replace the Driver Status Monitoring Camera Control Module.",
+    "recallNumber": "R/2026/242"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2020-03-11",
+    "buildDateEnd": "2020-03-11",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2020-06-05",
+    "buildDateEnd": "2020-06-05",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2021-12-01",
+    "buildDateEnd": "2021-12-09",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2022-01-19",
+    "buildDateEnd": "2022-01-19",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FOCUS"
+    ],
+    "buildDateStart": "2020-10-05",
+    "buildDateEnd": "2020-10-05",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FOCUS"
+    ],
+    "buildDateStart": "2021-03-02",
+    "buildDateEnd": "2021-03-02",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FOCUS"
+    ],
+    "buildDateStart": "2022-06-01",
+    "buildDateEnd": "2022-11-07",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FOCUS"
+    ],
+    "buildDateStart": "2023-04-24",
+    "buildDateEnd": "2023-06-20",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CONNECT"
+    ],
+    "buildDateStart": "2019-06-27",
+    "buildDateEnd": "2019-06-27",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CONNECT"
+    ],
+    "buildDateStart": "2022-02-24",
+    "buildDateEnd": "2022-02-24",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2019-11-20",
+    "buildDateEnd": "2019-11-20",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2020-09-09",
+    "buildDateEnd": "2020-09-10",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2020-12-03",
+    "buildDateEnd": "2020-12-03",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2021-01-31",
+    "buildDateEnd": "2021-04-21",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2021-07-20",
+    "buildDateEnd": "2022-04-11",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2022-05-06",
+    "buildDateEnd": "2022-10-21",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2022-11-28",
+    "buildDateEnd": "2024-03-14",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2024-06-27",
+    "buildDateEnd": "2024-06-27",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2023-12-15",
+    "buildDateEnd": "2024-01-25",
+    "recallDate": "2026-06-15",
+    "defect": "Affected vehicles may have been repaired using a coolant pump with a potential issue. This issue may lead to incorrect engine timing resulting in an engine failure causing a sudden loss of power without prior warning. The engine cannot be restarted.",
+    "remedy": "Check and replace the water pump and timing belt if necessary.",
+    "recallNumber": "R/2026/237"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": [
+      "IONIQ AE EV"
+    ],
+    "buildDateStart": "2018-12-06",
+    "buildDateEnd": "2022-07-16",
+    "recallDate": "2026-06-15",
+    "defect": "Some vehicles fitted with a high voltage battery may have internal cell voltage deviation. If this occurs it may result in the risk of an electrical short circuit inside the battery. Until the high voltage battery software has been updated we recommend the vehicle to be parked in a well ventilated area. The vehicle can be used as normal.",
+    "remedy": "High Voltage Battery Software Update or replacement if required.",
+    "recallNumber": "R/2026/159"
+  },
+  {
+    "make": "JAGUAR",
+    "models": [
+      "E-PACE"
+    ],
+    "buildDateStart": "2020-11-09",
+    "buildDateEnd": "2022-03-04",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/555"
+  },
+  {
+    "make": "JAGUAR",
+    "models": [
+      "F-PACE"
+    ],
+    "buildDateStart": "2020-12-01",
+    "buildDateEnd": "2024-07-10",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/555"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DISCOVERY SPORT"
+    ],
+    "buildDateStart": "2020-07-07",
+    "buildDateEnd": "2025-04-08",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/553"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER EVOQUE"
+    ],
+    "buildDateStart": "2020-08-18",
+    "buildDateEnd": "2025-02-24",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/553"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DEFENDER"
+    ],
+    "buildDateStart": "2020-10-01",
+    "buildDateEnd": "2025-01-09",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/553"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DEFENDER"
+    ],
+    "buildDateStart": "2026-01-20",
+    "buildDateEnd": "2026-01-30",
+    "recallDate": "2026-06-12",
+    "defect": "A concern has been identified where the fuel tank wall thickness may be below  design specification near the inlet check valve.    A fuel tank with a thinner-than-designed wall may not perform adequately in  the event of a crash leading to increased risk of fuel spillage and potentially  fire.",
+    "remedy": "Affected vehicles will have the fuel tank replaced.",
+    "recallNumber": "R/2026/177"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "DISCOVERY"
+    ],
+    "buildDateStart": "2026-01-22",
+    "buildDateEnd": "2026-01-30",
+    "recallDate": "2026-06-12",
+    "defect": "A concern has been identified where the fuel tank wall thickness may be below  design specification near the inlet check valve.    A fuel tank with a thinner-than-designed wall may not perform adequately in  the event of a crash leading to increased risk of fuel spillage and potentially  fire.",
+    "remedy": "Affected vehicles will have the fuel tank replaced.",
+    "recallNumber": "R/2026/177"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER VELAR"
+    ],
+    "buildDateStart": "2021-01-21",
+    "buildDateEnd": "2025-03-13",
+    "recallDate": "2026-06-12",
+    "defect": "Vehicles have experienced thermal overload which may manifest in smoke or fire that may occur underneath the rear of the vehicle where the high voltage traction battery is located. The root cause is not yet known and investigations are continuing. A vehicle thermal overload condition such as fire or smoke can result in increased risk of occupant injury and/or injury to persons outside the vehicle as well as property damage.",
+    "remedy": "Vehicles will be inspected by the retailer and as required at-risk battery packs will be replaced.",
+    "recallNumber": "R/2025/553"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "S-CLASS"
+    ],
+    "buildDateStart": "2025-06-07",
+    "buildDateEnd": "2025-06-10",
+    "recallDate": "2026-06-11",
+    "defect": "Mercedes-Benz AG has determined that on certain S-Class (223 platform) and  EQS (297 platform) vehicles the bonding of the windshield might not meet   specifications.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will   replace the windshield.",
+    "recallNumber": "R/2026/191"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLB"
+    ],
+    "buildDateStart": "2025-11-25",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2026-06-05",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 platform) and  GLB (244 platform) vehicles the software of the communication module  might not meet the intended specification.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners  will update the software on the affected vehicles.",
+    "recallNumber": "R/2026/203"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "CLA"
+    ],
+    "buildDateStart": "2025-05-27",
+    "buildDateEnd": "2026-01-14",
+    "recallDate": "2026-06-05",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 platform) and  GLB (244 platform) vehicles the software of the communication module  might not meet the intended specification.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners  will update the software on the affected vehicles.",
+    "recallNumber": "R/2026/203"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "IX3"
+    ],
+    "buildDateStart": "2025-12-18",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-06-04",
+    "defect": "BMW has decided to initiate the safety recall “Curtain Airbag” with regard to the BMW model NA5. On affected vehicles both curtain airbags (left and right) may not have been properly screwed according to specification. If the curtain airbag is not installed properly it cannot be ruled out that noises (rattling) may occur while driving. Furthermore if the airbag  deploys this may result in altered deployment characteristics and the inflator generator may become separated. This could increase the risk of injury.",
+    "remedy": "On affected vehicles the screw connection of the curtain airbags (left and right) will be checked and reworked if necessary.",
+    "recallNumber": "R/2026/224"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "208"
+    ],
+    "buildDateStart": "2019-09-01",
+    "buildDateEnd": "2022-07-25",
+    "recallDate": "2026-06-04",
+    "defect": "Affected vehicle have a horn volume which does not comply with regulatory requirements.",
+    "remedy": "Replace the horn with one of a higher volume.",
+    "recallNumber": "R/2026/231"
+  },
+  {
+    "make": "BENTLEY",
+    "models": [
+      "CONTINENTAL GT"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-06-03",
+    "defect": "On affected vehicles the front axles may have been assembled with an incorrect drive shaft which is shorter than intended. If an incorrect front driveshaft has been fitted it may result in the hub securing nut becoming loose over time.",
+    "remedy": "Inspect the front driveshafts and replace them if required.",
+    "recallNumber": "R/2026/216"
+  },
+  {
+    "make": "BENTLEY",
+    "models": [
+      "CONTINENTAL GTC"
+    ],
+    "buildDateStart": "2026-03-04",
+    "buildDateEnd": "2026-04-20",
+    "recallDate": "2026-06-03",
+    "defect": "On affected vehicles the front axles may have been assembled with an incorrect drive shaft which is shorter than intended. If an incorrect front driveshaft has been fitted it may result in the hub securing nut becoming loose over time.",
+    "remedy": "Inspect the front driveshafts and replace them if required.",
+    "recallNumber": "R/2026/216"
+  },
+  {
+    "make": "BENTLEY",
+    "models": [
+      "FLYING SPUR"
+    ],
+    "buildDateStart": "2026-03-04",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-06-03",
+    "defect": "On affected vehicles the front axles may have been assembled with an incorrect drive shaft which is shorter than intended. If an incorrect front driveshaft has been fitted it may result in the hub securing nut becoming loose over time.",
+    "remedy": "Inspect the front driveshafts and replace them if required.",
+    "recallNumber": "R/2026/216"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "IX3"
+    ],
+    "buildDateStart": "2025-11-25",
+    "buildDateEnd": "2026-02-20",
+    "recallDate": "2026-06-03",
+    "defect": "BMW has decided to initiate the safety recall “Replace the Onboard  Charger” with regards to the certain BMW NA5 models.  On affected vehicles the onboard charger will be replaced. If there is a  reduced insulation there is an extremely low risk of a dangerous  voltage on the vehicle chassis. The fault is not detectable by the  customer.",
+    "remedy": "On affected vehicles the onboard charger will be replaced.",
+    "recallNumber": "R/2026/215"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "C5X"
+    ],
+    "buildDateStart": "2023-11-14",
+    "buildDateEnd": "2024-11-21",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/229"
+  },
+  {
+    "make": "DS",
+    "models": [
+      "DS4"
+    ],
+    "buildDateStart": "2022-12-14",
+    "buildDateEnd": "2026-02-09",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/230"
+  },
+  {
+    "make": "DS",
+    "models": [
+      "DS4"
+    ],
+    "buildDateStart": "2025-09-24",
+    "buildDateEnd": "2026-01-23",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may have an incorrectly routed fuel pipe at risk of contact with other components which could lead to a fuel leak or risk of fire.",
+    "remedy": "Check the correct routing of the fuel pipe and replace if necessary.",
+    "recallNumber": "R/2026/197"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "308"
+    ],
+    "buildDateStart": "2023-11-01",
+    "buildDateEnd": "2026-02-12",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/228"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "408"
+    ],
+    "buildDateStart": "2023-11-03",
+    "buildDateEnd": "2026-02-09",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/228"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "3008"
+    ],
+    "buildDateStart": "2023-10-09",
+    "buildDateEnd": "2025-07-09",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/228"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "5008"
+    ],
+    "buildDateStart": "2023-12-05",
+    "buildDateEnd": "2025-07-10",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/228"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA L"
+    ],
+    "buildDateStart": "2023-07-11",
+    "buildDateEnd": "2025-02-28",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/227"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "GRANDLAND"
+    ],
+    "buildDateStart": "2024-06-13",
+    "buildDateEnd": "2025-07-04",
+    "recallDate": "2026-06-03",
+    "defect": "Affected vehicles may experience an unexpected deactivation of the interior door handles when the key is in engine-running mode which could result in occupants being unable to exit.",
+    "remedy": "Update the Vehicle Supervision Module software.",
+    "recallNumber": "R/2026/227"
+  },
+  {
+    "make": "EURA MOBIL",
+    "models": [
+      "XTURA"
+    ],
+    "buildDateStart": "2024-01-22",
+    "buildDateEnd": "2026-06-02",
+    "recallDate": "2026-06-02",
+    "defect": "The 6 mm² cable cross-sections of the charging boosters may be too small to safely carry fault currents which could cause the cables to overload and overheat potentially leading to a fire.The charging booster’s wiring will be replaced and a pre-fuse will be fitted.",
+    "remedy": "The charging booster’s wiring will be replaced and a pre-fuse will be fitted.",
+    "recallNumber": "R/2026/275"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA L"
+    ],
+    "buildDateStart": "2025-10-17",
+    "buildDateEnd": "2026-01-22",
+    "recallDate": "2026-06-02",
+    "defect": "Affected vehicles may have an incorrectly routed fuel pipe at risk of contact with other components which could lead to a fuel leak or risk of fire.",
+    "remedy": "Check the correct routing of the fuel pipe and replace if necessary.",
+    "recallNumber": "R/2026/196"
+  },
+  {
+    "make": "SUBARU",
+    "models": [
+      "CROSSTREK"
+    ],
+    "buildDateStart": "2024-01-01",
+    "buildDateEnd": "2025-12-31",
+    "recallDate": "2026-06-01",
+    "defect": "For 2024-2025MY Crosstrek vehicles equipped with the genuine accessory trailer hitch for the European market the trailer hitch carries a vertical load value on its label that is lower than the vehicle’s vertical load value indicated in the Certificate of Conformity (CoC).",
+    "remedy": "For all the vehicles with the affected parts Subaru dealers will replace the trailer hitch assembly with the countermeasure part.",
+    "recallNumber": "R/2026/171"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "RELAY"
+    ],
+    "buildDateStart": "2024-09-27",
+    "buildDateEnd": "2025-12-04",
+    "recallDate": "2026-05-29",
+    "defect": "Affected vehicles have a smart tachograph fitted that may not comply with regulatory requirements.",
+    "remedy": "Replace the Tachograph Sensor Antenna(s) and adding Wiring Harnesses if necessary.",
+    "recallNumber": "R/2026/249"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "BOXER"
+    ],
+    "buildDateStart": "2023-10-03",
+    "buildDateEnd": "2025-12-04",
+    "recallDate": "2026-05-29",
+    "defect": "Affected vehicles have a smart tachograph fitted that may not comply with regulatory requirements.",
+    "remedy": "Replace the Tachograph Sensor Antenna(s) and adding Wiring Harnesses if necessary.",
+    "recallNumber": "R/2026/248"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "MOVANO"
+    ],
+    "buildDateStart": "2024-09-27",
+    "buildDateEnd": "2025-12-04",
+    "recallDate": "2026-05-29",
+    "defect": "Affected vehicles have a smart tachograph fitted that may not comply with regulatory requirements.",
+    "remedy": "Replace the Tachograph Sensor Antenna(s) and adding Wiring Harnesses if necessary.",
+    "recallNumber": "R/2026/247"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EDGE"
+    ],
+    "buildDateStart": "2015-12-09",
+    "buildDateEnd": "2016-09-06",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EDGE"
+    ],
+    "buildDateStart": "2016-08-24",
+    "buildDateEnd": "2017-08-16",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EDGE"
+    ],
+    "buildDateStart": "2017-09-13",
+    "buildDateEnd": "2018-05-28",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2015-07-20",
+    "buildDateEnd": "2016-06-01",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2016-06-02",
+    "buildDateEnd": "2017-01-06",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2017-01-03",
+    "buildDateEnd": "2017-10-02",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2017-11-14",
+    "buildDateEnd": "2018-06-13",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2018-05-14",
+    "buildDateEnd": "2018-12-20",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2014-07-30",
+    "buildDateEnd": "2019-06-29",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2016-07-12",
+    "buildDateEnd": "2018-07-30",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2014-07-02",
+    "buildDateEnd": "2015-06-26",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2015-06-15",
+    "buildDateEnd": "2015-10-02",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2015-10-04",
+    "buildDateEnd": "2016-03-17",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2016-02-23",
+    "buildDateEnd": "2016-07-05",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2016-06-23",
+    "buildDateEnd": "2016-12-15",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2016-12-16",
+    "buildDateEnd": "2017-06-06",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2017-05-26",
+    "buildDateEnd": "2018-05-31",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2018-05-10",
+    "buildDateEnd": "2018-07-27",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CONNECT"
+    ],
+    "buildDateStart": "2018-06-11",
+    "buildDateEnd": "2018-07-19",
+    "recallDate": "2026-05-28",
+    "defect": "Affected vehicles may have an issue with the rear-view camera. Drivers may experience a distorted or loss of image.",
+    "remedy": "Check vehicle and replace camera as required.",
+    "recallNumber": "R/2026/213"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER"
+    ],
+    "buildDateStart": "2026-02-17",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2026-05-27",
+    "defect": "A concern has been identified on certain 2026 model year Range Rover  Range Rover Sport and Range Rover Velar vehicles where the audio  amplifiers may have been subject to water damage and may not provide any  audio output including no seat belt reminder audible warnings to the driver.    A seat belt reminder audible warning chime that does not alert of an  unlatched seat belt can increase the risk of occupant injury in the event of a  crash.",
+    "remedy": "Affected vehicles will have the audio amplifier replaced.",
+    "recallNumber": "R/2026/198"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER SPORT"
+    ],
+    "buildDateStart": "2026-02-17",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2026-05-27",
+    "defect": "A concern has been identified on certain 2026 model year Range Rover  Range Rover Sport and Range Rover Velar vehicles where the audio  amplifiers may have been subject to water damage and may not provide any  audio output including no seat belt reminder audible warnings to the driver.    A seat belt reminder audible warning chime that does not alert of an  unlatched seat belt can increase the risk of occupant injury in the event of a  crash.",
+    "remedy": "Affected vehicles will have the audio amplifier replaced.",
+    "recallNumber": "R/2026/198"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER VELAR"
+    ],
+    "buildDateStart": "2026-05-02",
+    "buildDateEnd": "2026-04-03",
+    "recallDate": "2026-05-27",
+    "defect": "A concern has been identified on certain 2026 model year Range Rover  Range Rover Sport and Range Rover Velar vehicles where the audio  amplifiers may have been subject to water damage and may not provide any  audio output including no seat belt reminder audible warnings to the driver.    A seat belt reminder audible warning chime that does not alert of an  unlatched seat belt can increase the risk of occupant injury in the event of a  crash.",
+    "remedy": "Affected vehicles will have the audio amplifier replaced.",
+    "recallNumber": "R/2026/198"
+  },
+  {
+    "make": "ALPINE",
+    "models": [
+      "A390"
+    ],
+    "buildDateStart": "2025-09-05",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-05-22",
+    "defect": "For affected vehicles the upper section of the front bumper (Soft nose) -presents a risk of weld failure between the skin and the liner",
+    "remedy": "Replacement of the upper part of the front bumper.",
+    "recallNumber": "R/2026/209"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER"
+    ],
+    "buildDateStart": "2021-08-12",
+    "buildDateEnd": "2025-10-12",
+    "recallDate": "2026-05-21",
+    "defect": "The manufacturer has identified a concern on certain Range Rover and Range Rover Sport vehicles where the adhesion process used to re-attach the panoramic roof side finishers during vehicle quality rework operations in the assembly plant may not have been sufficient.  An inadequately adhered panoramic roof side finisher could over time come partially or completely loose. This could result in distraction to the driver or other road users or in the event of complete detachment harm to other road users particularly pedestrians or two-wheeled vehicles and increase the risk of injury or a crash.",
+    "remedy": "Vehicles will have the panoramic roof side finisher removed and securely attached.",
+    "recallNumber": "R/2026/079"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER SPORT"
+    ],
+    "buildDateStart": "2022-12-01",
+    "buildDateEnd": "2025-11-21",
+    "recallDate": "2026-05-21",
+    "defect": "The manufacturer has identified a concern on certain Range Rover and Range Rover Sport vehicles where the adhesion process used to re-attach the panoramic roof side finishers during vehicle quality rework operations in the assembly plant may not have been sufficient.  An inadequately adhered panoramic roof side finisher could over time come partially or completely loose. This could result in distraction to the driver or other road users or in the event of complete detachment harm to other road users particularly pedestrians or two-wheeled vehicles and increase the risk of injury or a crash.",
+    "remedy": "Vehicles will have the panoramic roof side finisher removed and securely attached.",
+    "recallNumber": "R/2026/079"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "208 V2"
+    ],
+    "buildDateStart": "2025-07-08",
+    "buildDateEnd": "2025-09-09",
+    "recallDate": "2026-05-19",
+    "defect": "On affected vehicles the front suspension lower control arm upper bolts may not have been tightened according to specification during assembly.",
+    "remedy": "Check the bolts for the correct torque and replace if necessary.",
+    "recallNumber": "R/2026/206"
+  },
+  {
     "make": "MERCEDES-BENZ",
     "models": [
       "G-CLASS"
@@ -34,6 +2386,102 @@
     "defect": "Mercedes-Benz AG has determined that on certain G-Class (465 platform)  vehicles with fully electric drive the wheel bolts might not meet the  requirements.",
     "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will  replace the wheel bolts on the affected vehicles.",
     "recallNumber": "R/2026/140"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2023-12-28",
+    "buildDateEnd": "2024-11-22",
+    "recallDate": "2026-05-11",
+    "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
+    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "recallNumber": "R/2026/210"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2024-05-02",
+    "buildDateEnd": "2024-10-28",
+    "recallDate": "2026-05-11",
+    "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
+    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "recallNumber": "R/2026/210"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2023-09-18",
+    "buildDateEnd": "2024-08-13",
+    "recallDate": "2026-05-11",
+    "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
+    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "recallNumber": "R/2026/210"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2023-08-24",
+    "buildDateEnd": "2024-01-22",
+    "recallDate": "2026-05-11",
+    "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
+    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "recallNumber": "R/2026/210"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "LEXUS GS-F"
+    ],
+    "buildDateStart": "2015-07-24",
+    "buildDateEnd": "2018-04-11",
+    "recallDate": "2026-05-11",
+    "defect": "For certain vehicles which are equipped with a low-pressure fuel pump that supplies fuel  through use of an impeller made of resin the material in this impeller may swell sufficiently to interfere with surrounding components potentially causing the fuel pump to become inoperative",
+    "remedy": "Replacement of the fuel pump",
+    "recallNumber": "R/2026/151"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "LEXUS RC-F"
+    ],
+    "buildDateStart": "2014-06-06",
+    "buildDateEnd": "2022-04-15",
+    "recallDate": "2026-05-11",
+    "defect": "For certain vehicles which are equipped with a low-pressure fuel pump that supplies fuel  through use of an impeller made of resin the material in this impeller may swell sufficiently to interfere with surrounding components potentially causing the fuel pump to become inoperative",
+    "remedy": "Replacement of the fuel pump",
+    "recallNumber": "R/2026/151"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "LEXUS GS-F"
+    ],
+    "buildDateStart": "2015-07-24",
+    "buildDateEnd": "2018-04-11",
+    "recallDate": "2026-05-11",
+    "defect": "For certain vehicles which are equipped with a low-pressure fuel pump that supplies fuel  through use of an impeller made of resin the material in this impeller may swell sufficiently to interfere with surrounding components potentially causing the fuel pump to become inoperative",
+    "remedy": "Replacement of the fuel pump",
+    "recallNumber": "R/2026/151"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "LEXUS RC-F"
+    ],
+    "buildDateStart": "2014-06-06",
+    "buildDateEnd": "2022-04-15",
+    "recallDate": "2026-05-11",
+    "defect": "For certain vehicles which are equipped with a low-pressure fuel pump that supplies fuel  through use of an impeller made of resin the material in this impeller may swell sufficiently to interfere with surrounding components potentially causing the fuel pump to become inoperative",
+    "remedy": "Replacement of the fuel pump",
+    "recallNumber": "R/2026/151"
   },
   {
     "make": "FORD",
@@ -58,6 +2506,18 @@
     "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Ranger automatic transmission vehicles where you may experience no reverse motion when the gear selector is placed in reverse due to a potential issue with the transmission main control valve body. The Malfunction Indicator Light (MIL) and Wrench light will illuminate when this malfunction occurs. The vehicle could roll forward despite the gear selector being in the reverse position depending on where parked. Unexpected vehicle motion can increase the risk of a crash.",
     "remedy": "Replace the transmission main control valve body",
     "recallNumber": "R/2026/174"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "GRANDLAND"
+    ],
+    "buildDateStart": "2023-05-15",
+    "buildDateEnd": "2023-09-08",
+    "recallDate": "2026-05-07",
+    "defect": "Due to a mechanical failure in the reducer bearing combined with a specific defect in the Electric Power Steering (EPS) software calibration affected vehicles may experience a loss of power steering which in the worst case could lead to steering lock.",
+    "remedy": "Update the EPS software calibration to prevent the potential loss of steering assistance.",
+    "recallNumber": "R/2026/199"
   },
   {
     "make": "ASTON MARTIN",
@@ -768,6 +3228,30 @@
     "recallNumber": "R/2026/173"
   },
   {
+    "make": "IVECO",
+    "models": [
+      "X WAY"
+    ],
+    "buildDateStart": "2020-11-27",
+    "buildDateEnd": "2024-11-19",
+    "recallDate": "2026-04-23",
+    "defect": "The manufacturer has determined that affected vehicles may be fitted with a front-axle braking system that does not fully comply with the regulatory authority’s requirements.",
+    "remedy": "Modification and optimisation of front axle brake lines on 4x2 vehicles.",
+    "recallNumber": "R/2026/193"
+  },
+  {
+    "make": "IVECO",
+    "models": [
+      "S WAY"
+    ],
+    "buildDateStart": "2020-11-27",
+    "buildDateEnd": "2024-11-19",
+    "recallDate": "2026-04-23",
+    "defect": "The manufacturer has determined that affected vehicles may be fitted with a front-axle braking system that does not fully comply with the regulatory authority’s requirements.",
+    "remedy": "Modification and optimisation of front axle brake lines on 4x2 vehicles.",
+    "recallNumber": "R/2026/193"
+  },
+  {
     "make": "BRIDGESTONE EUROPE NV/SA",
     "models": [
       "BRIDGESTONE DURAVIS R 660 ECO 215",
@@ -901,6 +3385,30 @@
     "defect": "Affected vehicles may exhibit improper headlamp levelling due to an incorrectly assembled Body Height Sensor.",
     "remedy": "Change the body height sensor.",
     "recallNumber": "R/2026/158"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "HIGHLANDER"
+    ],
+    "buildDateStart": "2021-03-31",
+    "buildDateEnd": "2023-11-01",
+    "recallDate": "2026-04-20",
+    "defect": "For certain  vehicles equipped with second row seats that use recliner assemblies to unlock the seatbacks allow for seatback angle adjustment and locking due to a design change made by the supplier the recliner teeth may not fully engage during seatback adjustment. This could lead to the seatback not remaining in a locked position increasing the risk of injury in the event of a crash at higher speeds.",
+    "remedy": "Replace the return springs in the recliner assembly with improved ones.",
+    "recallNumber": "R/2026/097"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "HIGHLANDER"
+    ],
+    "buildDateStart": "2021-03-31",
+    "buildDateEnd": "2023-11-01",
+    "recallDate": "2026-04-20",
+    "defect": "For certain  vehicles equipped with second row seats that use recliner assemblies to unlock the seatbacks allow for seatback angle adjustment and locking due to a design change made by the supplier the recliner teeth may not fully engage during seatback adjustment. This could lead to the seatback not remaining in a locked position increasing the risk of injury in the event of a crash at higher speeds.",
+    "remedy": "Replace the return springs in the recliner assembly with improved ones.",
+    "recallNumber": "R/2026/097"
   },
   {
     "make": "AUDI",
@@ -1047,6 +3555,18 @@
     "defect": "The manufacturer has determined that affected vehicles have both an earlier version and a later more advanced version of the AEBS control software installed. This co-occurrence may result in different information being displayed on the diagnostic dashboard and these differences could be mistakenly interpreted as an error or a failure of the AEBS",
     "remedy": "Instrument Cluster Software update.",
     "recallNumber": "R/2026/179"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "A CLASS"
+    ],
+    "buildDateStart": "2025-04-15",
+    "buildDateEnd": "2025-09-20",
+    "recallDate": "2026-04-15",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 platform) A-Class (177 platform) and GLA (247 platform) vehicles the bowden cable of the release mechanism of one or more doors might not have been properly mounted.",
+    "remedy": "As a precautionary measure Mercedes-Benz AG via its Mercedes-Benz service partners will check the bowden cables of the doors on the affected vehicles and mount them correctly if necessary.",
+    "recallNumber": "R/2026/098"
   },
   {
     "make": "IVECO",
@@ -2465,6 +4985,18 @@
     "recallNumber": "R/2026/109"
   },
   {
+    "make": "TOYOTA",
+    "models": [
+      "PRIUS"
+    ],
+    "buildDateStart": "2023-02-17",
+    "buildDateEnd": "2025-11-03",
+    "recallDate": "2026-03-16",
+    "defect": "For affected vehicles that are equipped with an electric rear door lock system which includes a door opener switch and a rear door lock release actuator If the seal performance for this switch is reduced this can temporarily allow water to enter the switch which can cause the switch to activate and the door could open unexpectedly.",
+    "remedy": "Installation of relay and wire harness.",
+    "recallNumber": "R/2026/027"
+  },
+  {
     "make": "CITROEN",
     "models": [
       "BERLINGO"
@@ -2547,6 +5079,18 @@
     "defect": "On affected vehicles due to a production nonconformity the water pump may malfunction which may cause a loss of engine power and result in the engine shutting down.",
     "remedy": "Replace the water pump.",
     "recallNumber": "R/2026/107"
+  },
+  {
+    "make": "RENAULT",
+    "models": [
+      "MEGANE IV"
+    ],
+    "buildDateStart": "2016-04-26",
+    "buildDateEnd": "2016-10-11",
+    "recallDate": "2026-03-12",
+    "defect": "Amendment to the Owners Handbook – Correction of an error in the operating instructions in paragraph 3.22 relating to the operation of the window lifter: incorrect description of  the rear door locking procedure",
+    "remedy": "Registered keeper will be sent a corrected page",
+    "recallNumber": "R/2026/103"
   },
   {
     "make": "VOLKSWAGEN",
@@ -2928,7 +5472,7 @@
     "buildDateStart": "2025-04-01",
     "buildDateEnd": "2025-12-08",
     "recallDate": "2026-03-02",
-    "defect": "We have recently identified an issue concerning the ECU (Electronic Control Unit) wiring harness clip in a specific batch of vehicles. Our investigation found that the ECU harness clip was not fully engaged during the assembly process. The incomplete engagement of the ECU harness clip may lead to engine warning light and an unexpected engine stall while the vehicle is in motion thereby increasing the risk of a crash.",
+    "defect": "We have recently identified an issue concerning the Electronic Control Unit wiring harness clip in a specific batch of vehicles. Our investigation found that the ECU harness clip was not fully engaged during the assembly process. The incomplete engagement of the ECU harness clip may lead to engine warning light and an unexpected engine stall while the vehicle is in motion thereby increasing the risk of a crash.",
     "remedy": "​​For vehicles within the risk scope a recall will be initiated and provide free inspection and repair for all affected vehicles. The solution includes checking and ensuring the correct installation of the harness fastener and replacing any worn harness if necessary.​",
     "recallNumber": "R/2026/069"
   },
@@ -3197,6 +5741,90 @@
     "recallNumber": "R/2026/082"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN B122"
+    ],
+    "buildDateStart": "2025-07-23",
+    "buildDateEnd": "2025-09-01",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 144"
+    ],
+    "buildDateStart": "2024-12-02",
+    "buildDateEnd": "2024-12-05",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 161"
+    ],
+    "buildDateStart": "2024-12-05",
+    "buildDateEnd": "2024-12-10",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 144"
+    ],
+    "buildDateStart": "2025-04-29",
+    "buildDateEnd": "2025-05-05",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 161"
+    ],
+    "buildDateStart": "2025-02-10",
+    "buildDateEnd": "2025-02-13",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 161"
+    ],
+    "buildDateStart": "2024-12-03",
+    "buildDateEnd": "2024-12-05",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BENIVAN 144"
+    ],
+    "buildDateStart": "2025-05-16",
+    "buildDateEnd": "2025-05-21",
+    "recallDate": "2026-02-23",
+    "defect": "On affected vehicles there is the possibility for detachment of the front high level spoiler.",
+    "remedy": "Install additional fixings.",
+    "recallNumber": "R/2026/226"
+  },
+  {
     "make": "SKODA",
     "models": [
       "KODIAQ"
@@ -3454,7 +6082,19 @@
       "SUPRA"
     ],
     "buildDateStart": "2020-09-04",
-    "buildDateEnd": "2022-08-31",
+    "buildDateEnd": "2025-03-28",
+    "recallDate": "2026-02-16",
+    "defect": "For affected vehicles due to unexpected wear on an internal component the starter motor may not function properly. In some cases this could lead to a non-starting engine or in extreme cases cause a thermal event or fire when attempting to start the engine or while driving.",
+    "remedy": "Replacement of the Starter motor.",
+    "recallNumber": "R/2026/034"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "SUPRA"
+    ],
+    "buildDateStart": "2020-09-04",
+    "buildDateEnd": "2025-03-28",
     "recallDate": "2026-02-16",
     "defect": "For affected vehicles due to unexpected wear on an internal component the starter motor may not function properly. In some cases this could lead to a non-starting engine or in extreme cases cause a thermal event or fire when attempting to start the engine or while driving.",
     "remedy": "Replacement of the Starter motor.",
@@ -3759,6 +6399,42 @@
     "defect": "On affected vehicles the software repair for previous recall 24C06 may not have been delivered properly and certain warning chimes may not be audible.",
     "remedy": "Update the Audio Front Control Module software and perform an additional verification process to ensure the configuration has been installed correctly.",
     "recallNumber": "R/2026/028"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "OMODA E5"
+    ],
+    "buildDateStart": "2023-12-25",
+    "buildDateEnd": "2026-03-06",
+    "recallDate": "2026-02-03",
+    "defect": "Market feedback has identified a few limited instances of an improperly locked driveshaft nut that may cause wheel vibration and abnormal noise on Omoda 5 and E5 models.",
+    "remedy": "To address this issue authorised dealers are required to inspect the driveshaft nut locking condition on all affected vehicles. Where any non conformity is identified corrective measures shall be undertaken in accordance with Omoda and Jaecoo UK Limited s technical instructions.",
+    "recallNumber": "R/2026/013"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "OMODA 5"
+    ],
+    "buildDateStart": "2023-07-04",
+    "buildDateEnd": "2026-03-10",
+    "recallDate": "2026-02-03",
+    "defect": "Market feedback has identified a few limited instances of an improperly locked driveshaft nut that may cause wheel vibration and abnormal noise on Omoda 5 and E5 models.",
+    "remedy": "To address this issue authorised dealers are required to inspect the driveshaft nut locking condition on all affected vehicles. Where any non conformity is identified corrective measures shall be undertaken in accordance with Omoda and Jaecoo UK Limited s technical instructions.",
+    "recallNumber": "R/2026/013"
+  },
+  {
+    "make": "OMODA AND JAECOO UK LIMITED",
+    "models": [
+      "OMODA 5 HEV"
+    ],
+    "buildDateStart": "2025-08-28",
+    "buildDateEnd": "2026-02-09",
+    "recallDate": "2026-02-03",
+    "defect": "Market feedback has identified a few limited instances of an improperly locked driveshaft nut that may cause wheel vibration and abnormal noise on Omoda 5 and E5 models.",
+    "remedy": "To address this issue authorised dealers are required to inspect the driveshaft nut locking condition on all affected vehicles. Where any non conformity is identified corrective measures shall be undertaken in accordance with Omoda and Jaecoo UK Limited s technical instructions.",
+    "recallNumber": "R/2026/013"
   },
   {
     "make": "OMODA AND JAECOO UK LIMITED",
@@ -5697,11 +8373,23 @@
     "models": [
       "MUSTANG"
     ],
+    "buildDateStart": "2014-10-20",
+    "buildDateEnd": "2015-06-02",
+    "recallDate": "2025-12-09",
+    "defect": "Affected vehicles may experience corrosion that can weaken or detach the seatbelt anchor pretensioner cables for both front seats.  A corroded pretensioner cable may not adequately restrain an occupant in a crash.",
+    "remedy": "Replacement parts are not yet available.  If corrosion is detected dealers will provide the affected customer with a rental car until replacement seat belt pretensioner parts are available to be installed.",
+    "recallNumber": "R/2025/530"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
     "buildDateStart": "2019-11-26",
     "buildDateEnd": "2021-03-16",
     "recallDate": "2025-12-09",
     "defect": "Affected vehicles may experience corrosion that can weaken or detach the seatbelt anchor pretensioner cables for both front seats.  A corroded pretensioner cable may not adequately restrain an occupant in a crash.",
-    "remedy": "The remedy has not yet been developed.  However vehicle owners with concerns are advised to present their vehicle at an approved repairer for inspection.",
+    "remedy": "Replacement parts are not yet available.  If corrosion is detected dealers will provide the affected customer with a rental car until replacement seat belt pretensioner parts are available to be installed.",
     "recallNumber": "R/2025/530"
   },
   {
@@ -5713,7 +8401,7 @@
     "buildDateEnd": "2020-12-22",
     "recallDate": "2025-12-09",
     "defect": "Affected vehicles may experience corrosion that can weaken or detach the seatbelt anchor pretensioner cables for both front seats.  A corroded pretensioner cable may not adequately restrain an occupant in a crash.",
-    "remedy": "The remedy has not yet been developed.  However vehicle owners with concerns are advised to present their vehicle at an approved repairer for inspection.",
+    "remedy": "Replacement parts are not yet available.  If corrosion is detected dealers will provide the affected customer with a rental car until replacement seat belt pretensioner parts are available to be installed.",
     "recallNumber": "R/2025/530"
   },
   {
@@ -5725,7 +8413,7 @@
     "buildDateEnd": "2021-04-20",
     "recallDate": "2025-12-09",
     "defect": "Affected vehicles may experience corrosion that can weaken or detach the seatbelt anchor pretensioner cables for both front seats.  A corroded pretensioner cable may not adequately restrain an occupant in a crash.",
-    "remedy": "The remedy has not yet been developed.  However vehicle owners with concerns are advised to present their vehicle at an approved repairer for inspection.",
+    "remedy": "Replacement parts are not yet available.  If corrosion is detected dealers will provide the affected customer with a rental car until replacement seat belt pretensioner parts are available to be installed.",
     "recallNumber": "R/2025/530"
   },
   {
@@ -5737,7 +8425,7 @@
     "buildDateEnd": "2021-06-17",
     "recallDate": "2025-12-09",
     "defect": "Affected vehicles may experience corrosion that can weaken or detach the seatbelt anchor pretensioner cables for both front seats.  A corroded pretensioner cable may not adequately restrain an occupant in a crash.",
-    "remedy": "The remedy has not yet been developed.  However vehicle owners with concerns are advised to present their vehicle at an approved repairer for inspection.",
+    "remedy": "Replacement parts are not yet available.  If corrosion is detected dealers will provide the affected customer with a rental car until replacement seat belt pretensioner parts are available to be installed.",
     "recallNumber": "R/2025/530"
   },
   {
@@ -6508,6 +9196,102 @@
     "defect": "For affected vehicles that previously had the chassis frame replaced in a special facility there is a possibility that some joints were not correctly tightened.",
     "remedy": "Retighten nuts and/or bolts in specific mounting or joint portions.",
     "recallNumber": "R/2025/477"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA H"
+    ],
+    "buildDateStart": "2005-01-03",
+    "buildDateEnd": "2014-06-11",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "MOKKA"
+    ],
+    "buildDateStart": "2011-12-15",
+    "buildDateEnd": "2018-06-06",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA J"
+    ],
+    "buildDateStart": "2009-02-24",
+    "buildDateEnd": "2018-08-23",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "CASCADA"
+    ],
+    "buildDateStart": "2012-05-08",
+    "buildDateEnd": "2018-08-22",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "MERIVA B"
+    ],
+    "buildDateStart": "2009-02-05",
+    "buildDateEnd": "2017-03-24",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "SIGNUM"
+    ],
+    "buildDateStart": "2005-02-16",
+    "buildDateEnd": "2008-06-19",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "VECTRA C"
+    ],
+    "buildDateStart": "2003-07-04",
+    "buildDateEnd": "2008-10-10",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ZAFIRA C"
+    ],
+    "buildDateStart": "2011-02-25",
+    "buildDateEnd": "2016-07-26",
+    "recallDate": "2025-12-01",
+    "defect": "On affected vehicles the chemicals in the Takata airbag inflators may deteriorate over time.  This may cause the inflators to rupture with too much force in a crash leading to serious injury or death in a worst-case scenario.",
+    "remedy": "Replace the driver airbag module.",
+    "recallNumber": "R/2025/511"
   },
   {
     "make": "BMW",
@@ -11091,6 +13875,30 @@
     ],
     "buildDateStart": "2024-09-10",
     "buildDateEnd": "2025-06-20",
+    "recallDate": "2025-08-15",
+    "defect": "Affected vehicles could experience loss of brake boost and extended brake pedal travel and stopping distance.",
+    "remedy": "Update the Electric Brake Boost module software to the latest level.",
+    "recallNumber": "R/2025/326"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-06-21",
+    "buildDateEnd": "2025-08-28",
+    "recallDate": "2025-08-15",
+    "defect": "Affected vehicles could experience loss of brake boost and extended brake pedal travel and stopping distance.",
+    "remedy": "Update the Electric Brake Boost module software to the latest level.",
+    "recallNumber": "R/2025/326"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-09-01",
+    "buildDateEnd": "2026-02-18",
     "recallDate": "2025-08-15",
     "defect": "Affected vehicles could experience loss of brake boost and extended brake pedal travel and stopping distance.",
     "remedy": "Update the Electric Brake Boost module software to the latest level.",
@@ -17161,6 +19969,126 @@
   {
     "make": "FORD",
     "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2015-04-01",
+    "buildDateEnd": "2015-04-16",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2015-01-19",
+    "buildDateEnd": "2015-09-04",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2015-03-19",
+    "buildDateEnd": "2015-11-02",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2015-10-31",
+    "buildDateEnd": "2016-06-20",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2016-05-13",
+    "buildDateEnd": "2016-09-22",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2016-07-13",
+    "buildDateEnd": "2017-09-25",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2017-09-04",
+    "buildDateEnd": "2018-02-26",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2018-02-14",
+    "buildDateEnd": "2018-09-28",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2018-09-03",
+    "buildDateEnd": "2019-03-11",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CMAX"
+    ],
+    "buildDateStart": "2019-03-12",
+    "buildDateEnd": "2019-05-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
       "KUGA"
     ],
     "buildDateStart": "2020-01-08",
@@ -17665,6 +20593,150 @@
   {
     "make": "FORD",
     "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-06-10",
+    "buildDateEnd": "2015-10-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-10-05",
+    "buildDateEnd": "2016-03-16",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-03-22",
+    "buildDateEnd": "2016-07-03",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-03-21",
+    "buildDateEnd": "2016-12-14",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-12-19",
+    "buildDateEnd": "2017-06-06",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2017-06-05",
+    "buildDateEnd": "2018-04-24",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-04-17",
+    "buildDateEnd": "2016-02-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-10-06",
+    "buildDateEnd": "2016-03-22",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-09-29",
+    "buildDateEnd": "2016-07-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-06-21",
+    "buildDateEnd": "2016-12-16",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-12-07",
+    "buildDateEnd": "2017-06-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2017-05-26",
+    "buildDateEnd": "2018-05-30",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
       "FOCUS MCA"
     ],
     "buildDateStart": "2014-09-09",
@@ -17861,6 +20933,150 @@
     ],
     "buildDateStart": "2020-10-14",
     "buildDateEnd": "2021-02-26",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-07-01",
+    "buildDateEnd": "2015-10-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-10-05",
+    "buildDateEnd": "2016-03-17",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-02-23",
+    "buildDateEnd": "2016-07-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-07-04",
+    "buildDateEnd": "2016-12-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-12-16",
+    "buildDateEnd": "2017-06-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2017-05-22",
+    "buildDateEnd": "2018-05-11",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-06-15",
+    "buildDateEnd": "2015-10-02",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2015-10-07",
+    "buildDateEnd": "2016-03-17",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-02-23",
+    "buildDateEnd": "2016-07-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-06-22",
+    "buildDateEnd": "2016-12-16",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2016-12-13",
+    "buildDateEnd": "2017-06-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2017-06-05",
+    "buildDateEnd": "2018-05-31",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
     "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
@@ -22520,6 +25736,30 @@
     ],
     "buildDateStart": "2012-09-26",
     "buildDateEnd": "2012-11-20",
+    "recallDate": "2024-07-16",
+    "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
+    "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
+    "recallNumber": "R/2024/285"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "ALTEA XL"
+    ],
+    "buildDateStart": "2012-10-26",
+    "buildDateEnd": "2012-10-26",
+    "recallDate": "2024-07-16",
+    "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
+    "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
+    "recallNumber": "R/2024/285"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "ALHAMBRA"
+    ],
+    "buildDateStart": "2012-07-17",
+    "buildDateEnd": "2015-01-13",
     "recallDate": "2024-07-16",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -29997,8 +33237,8 @@
     "models": [
       "ATECA"
     ],
-    "buildDateStart": "2015-06-12",
-    "buildDateEnd": "2016-04-14",
+    "buildDateStart": "2016-10-18",
+    "buildDateEnd": "2017-03-16",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -30009,7 +33249,7 @@
     "models": [
       "ALHAMBRA"
     ],
-    "buildDateStart": "2016-10-07",
+    "buildDateStart": "2015-07-13",
     "buildDateEnd": "2017-05-24",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
@@ -30031,10 +33271,22 @@
   {
     "make": "SEAT",
     "models": [
+      "TOLEDO"
+    ],
+    "buildDateStart": "2015-06-08",
+    "buildDateEnd": "2017-04-25",
+    "recallDate": "2023-09-11",
+    "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
+    "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
+    "recallNumber": "R/2023/273"
+  },
+  {
+    "make": "SEAT",
+    "models": [
       "LEON"
     ],
-    "buildDateStart": "2015-06-12",
-    "buildDateEnd": "2016-04-14",
+    "buildDateStart": "2008-01-24",
+    "buildDateEnd": "2017-02-10",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -73958,7 +77210,7 @@
     "recallNumber": "R/2018/377"
   },
   {
-    "make": "BAILEY",
+    "make": "BAILEY OF BRISTOL",
     "models": [
       "PURSUIT II"
     ],
@@ -115415,7 +118667,7 @@
     "recallNumber": "R/2011/094"
   },
   {
-    "make": "BAILEY",
+    "make": "BAILEY OF BRISTOL",
     "models": [
       "UNICORN"
     ],
@@ -120816,6 +124068,102 @@
     "recallNumber": "R/2010/037"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "TALISMAN"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SYMBOL"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BROADWAY"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "NUEVO"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "EXECUTIVE"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SIGMA"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "ZETA"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "BERKSHIRE"
+    ],
+    "buildDateStart": "2006-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-04-09",
+    "defect": "The tyre valves may fail as they are rated to 70psi and the maximum operating pressure for the tyre is 80psi. Note: the recommended operating pressures for the tyres when fitted to the vehicles in question are between 50 and 70psi. It is only when the tyre pressure is over 70psi that a failure might occur.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the rubber valves with higher rated metal bolt in valves.",
+    "recallNumber": "RSPV/2010/001"
+  },
+  {
     "make": "SUZUKI",
     "models": [
       "ALTO"
@@ -122738,6 +126086,18 @@
     "defect": "It has been identified that the holders of the rear spoiler may break. Should this occur whilst the vehicle is being driven the spoiler may detach completely.",
     "remedy": "Recalled vehicles will have the three attachment areas of the rear spoiler modified with additional bonded on reinforcements",
     "recallNumber": "R/2009/068"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "NUEVO"
+    ],
+    "buildDateStart": "2007-09-01",
+    "buildDateEnd": "2009-09-01",
+    "recallDate": "2009-08-15",
+    "defect": "The GRP body specifically the wheelarch has been manufactured to an incorrect profile and can under certain circumstances come into contact with the tyre and may puncture it.",
+    "remedy": "Recall affected vehicles to check or trim wheelarch to create a 25 mm tolerance between tyre and body",
+    "recallNumber": "RSPV/2009/006"
   },
   {
     "make": "ASTON MARTIN",
@@ -124808,6 +128168,18 @@
     "recallNumber": "R/2008/184"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "VARIOUS"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2008-12-01",
+    "defect": "It has been identified thatcertain versions of the FASP seat may inadvertently de-latch which in the worst case could lead to loss of vehicle control and cause the seat belt to become ineffective in the event of an accident.",
+    "remedy": "Recalled vehicles will have the subject seat checked and modified as necessary.",
+    "recallNumber": "RSPV/2009/003"
+  },
+  {
     "make": "MITSUBISHI",
     "models": [
       "L200"
@@ -125311,6 +128683,18 @@
     "defect": "It has been identified that on subject vehicles the windscreen wiper mechanism has not been manufactured to specification. As a result in time the windscreen wipers could fail.",
     "remedy": "Recalled vehicles will have the windscreen wiper mechanism replaced.",
     "recallNumber": "R/2008/155"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "AMETHYST"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2008-10-25",
+    "defect": "Bolts of the wrong specification have been fitted to the forward facing bed box. In extreme circumstances it is possible that the seat belt mounting could detach from the chassis.",
+    "remedy": "Recall the vehicles that are likely to be affected to fit bolts of the correct specification to the forward facing bed box.",
+    "recallNumber": "RSPV/2008/020"
   },
   {
     "make": "DUNNES STORES",
@@ -125925,6 +129309,42 @@
     "recallNumber": "RM/2008/029"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SYMBOL"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2008-08-18",
+    "defect": "Incorrect specification wheel bolts fitted to alloy wheels. Wheel nut may loosen in service.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the wheel bolts with ones that are the correct specification.",
+    "recallNumber": "RSPV/2008/021"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SIGMA"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2008-08-18",
+    "defect": "Incorrect specification wheel bolts fitted to alloy wheels. Wheel nut may loosen in service.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the wheel bolts with ones that are the correct specification.",
+    "recallNumber": "RSPV/2008/021"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "NUEVO"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2008-08-18",
+    "defect": "Incorrect specification wheel bolts fitted to alloy wheels. Wheel nut may loosen in service.",
+    "remedy": "Recall the vehicles that are likely to be affected to replace the wheel bolts with ones that are the correct specification.",
+    "recallNumber": "RSPV/2008/021"
+  },
+  {
     "make": "FIAT",
     "models": [
       "GRANDE PUNTO"
@@ -126271,6 +129691,18 @@
     "defect": "The earth terminal of the additional air heater may not be correctly attached. This can lead to overheating of the connection and in the most unfavourable case to a vehicle fire.",
     "remedy": "Recall the vehicles that are likely to be affected to modify the attachment of the earth cable on the heating element of the additional air heater.",
     "recallNumber": "R/2008/097"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SYMBOL"
+    ],
+    "buildDateStart": "2008-06-01",
+    "buildDateEnd": "2008-06-30",
+    "recallDate": "2008-07-15",
+    "defect": "It has been identified that the refrigerator flue may not have been connected such that fumes may enter the habitation area.",
+    "remedy": "Recalled vehicles will have the refrigerator flue extension fitted correctly.",
+    "recallNumber": "RSPV/2008/012"
   },
   {
     "make": "BMW",
@@ -127399,6 +130831,18 @@
     "defect": "It has been identified that a problem may arise with the steering mechanism which can result in hardness whilst manoeuvring.",
     "remedy": "Recalled vehicles will have the steering mechanism checked and lubricated. The mechanism will be replaced if found to be damaged. At the same time certain vehicles will have key components reinforced against the ingress of water. Thus preventing operating faults in the long term.",
     "recallNumber": "R/2008/036"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "DUETTO"
+    ],
+    "buildDateStart": "2000-10-01",
+    "buildDateEnd": "2006-08-31",
+    "recallDate": "2008-03-13",
+    "defect": "In extreme circumstances the seat latching system may fail to hold the seat in it correct location.  If this occurs the passenger make contact the dashboard or result in the driver loosing control.",
+    "remedy": "Recall the affected vehicles to have additional brackets fitted to the front seats and replace the travel end stops.",
+    "recallNumber": "RSPV/2008/001"
   },
   {
     "make": "FORD",
@@ -128743,6 +132187,18 @@
     "defect": "It has been identified that a brake hose may become worn as a result of rubbing contact against the heat shield protecting the exhaust system. This may lead in extreme cases to a leak from a brake circuit which manifests itself in increased brake pedal travel.",
     "remedy": "Recalled vehicles will have the exhaust heat shield adjusted in order to maintain the correct distance from the subject brake hose. Should the hose display signs of wear it will be replaced.",
     "recallNumber": "R/2007/164"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "WILTON"
+    ],
+    "buildDateStart": "2006-02-06",
+    "buildDateEnd": "2007-06-05",
+    "recallDate": "2007-10-31",
+    "defect": "Engine exhaust fumes may travel up the 'B' post and enter the cab area.",
+    "remedy": "Recall affected vehicles and fit a new designed exhaust extension",
+    "recallNumber": "R/2007/155"
   },
   {
     "make": "ISUZU",
@@ -132033,6 +135489,18 @@
     "recallNumber": "R/2006/158"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "AMETHYST"
+    ],
+    "buildDateStart": "2006-06-07",
+    "buildDateEnd": "2006-07-28",
+    "recallDate": "2006-09-14",
+    "defect": "It has been identified that two bolts are missing from the installation of the forward facing bed box which in extreme circumstances could result in the seat belt mounting detaching from the chassis.",
+    "remedy": "Recalled vehicles will have the subject mountings fitted with replacement high tensile bolts",
+    "recallNumber": "RSPV/2006/014"
+  },
+  {
     "make": "TOYOTA",
     "models": [
       "AVENSIS"
@@ -132655,6 +136123,43 @@
     "defect": "It has been identified that the lower rubber mounting on the metal bush of the rear shock absorbers may fail to meet the quality requirement. Dependant on the mileage and operating conditions the rubber mounting may come completely free from the shock absorber. If this occurs the bodywork would no longer be supported above the wheels causing it to come into contact with the wheel concerned. Should this occur the possibility exists that a critical driving condition might occur or even the risk of an accident.",
     "remedy": "Recalled vehicles will have the rear shock absorbers checked and replaced if necessary.",
     "recallNumber": "R/2006/119"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SYMBOL",
+      "ES"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2006-07-05",
+    "defect": "It has been identified that during production a spacer has been omitted from the nearside forward facing bed box seatbelt. This over time may cause the seatbelt to wear against the mounting bracket.",
+    "remedy": "Recalled vehicles will be fitted with a replacement seatbelt and spacer.",
+    "recallNumber": "RSPV/2006/010"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "PAVO"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2006-07-05",
+    "defect": "It has been identified that during production a spacer has been omitted from the nearside forward facing bed box seatbelt. This over time may cause the seatbelt to wear against the mounting bracket.",
+    "remedy": "Recalled vehicles will be fitted with a replacement seatbelt and spacer.",
+    "recallNumber": "RSPV/2006/010"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "DORSET"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2006-07-05",
+    "defect": "It has been identified that during production a spacer has been omitted from the nearside forward facing bed box seatbelt. This over time may cause the seatbelt to wear against the mounting bracket.",
+    "remedy": "Recalled vehicles will be fitted with a replacement seatbelt and spacer.",
+    "recallNumber": "RSPV/2006/010"
   },
   {
     "make": "FORD",
@@ -135718,6 +139223,117 @@
     "recallNumber": "R/2005/042"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "MIDAS"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "DORSET"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "PALERMO"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "LANCASHIRE",
+      "ES"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SUSSEX"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "SYMBOL",
+      "ES"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "INCA EK"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "NUEVO",
+      "ES"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "INCA EL"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-05-10",
+    "defect": "The rear fixing bolts for the FASP swivel seat can in extreme circumstances fail. If the bolts do fail the rear of the seat runners will no longer be attached to the floor pan. This concern was realised during industry wide testing.",
+    "remedy": "Recall the vehicles that are likely to be affected and replace the 20mm 10.9 tensile strength allen key head bolts with 20mm 12.9 tensile strength Unbrako bolts.",
+    "recallNumber": "R/2005/060"
+  },
+  {
     "make": "TOYOTA",
     "models": [
       "AVENSIS VERSO"
@@ -136102,6 +139718,90 @@
     "recallNumber": "R/2005/009"
   },
   {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "RAVENNA"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "VIVANTI"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "RIENZI"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "PALERMO"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "POLLENSA"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "INCA EL"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "INCA EK"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-17",
+    "defect": "Within the mains input socket the wiring insulation may have been cut back too far leaving bare wire exposed.",
+    "remedy": "Recalled vehicles will have the mains input socket box removed during which time the wiring connections will be remade ensuring that no bare wire is visible.",
+    "recallNumber": "R/2005/080"
+  },
+  {
     "make": "VAUXHALL",
     "models": [
       "ASTRA H"
@@ -136124,6 +139824,19 @@
     "defect": "In the stop lamp switch of subject vehicles equipped with LED stop lamps there is the possibility that silicone oxide may be generated the surface of the contact point and in consequence the resistance of the contact could increase. In this circumstance current may not flow causing the stop lamp to become inoperative.",
     "remedy": "Recalled vehicles will have the subject switch replaced with a quality assured unit.",
     "recallNumber": "R/2004/198"
+  },
+  {
+    "make": "AUTO-SLEEPERS GROUP",
+    "models": [
+      "NUEVO",
+      "ES"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2005-03-08",
+    "defect": "The earth wire could be incorrectly positioned in a connector block which could result in the Spinflo cooker not having a permanent earth connection. If certain other conditions were also met the cooker could give an electrical shock.",
+    "remedy": "Recall the vehicles that are likely to be affected and check the wiring behind the cooker with the wiring instructions. Where neccessary refit the earth wire in the correct position.",
+    "recallNumber": "R/2005/081"
   },
   {
     "make": "CHARLES PUGH (GLASS) LTD",
