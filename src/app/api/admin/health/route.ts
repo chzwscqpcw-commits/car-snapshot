@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { adminGate } from "@/lib/admin-auth";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { discoverFuelCsvUrl, parseFuelCsvDate } from "@/lib/govuk-fuel-csv";
 
 type ServiceStatus = {
   name: string;
@@ -149,19 +150,16 @@ async function checkEbay(): Promise<ServiceStatus> {
 
 // ── Fuel Prices ──────────────────────────────────────────────────────────────
 
-const FUEL_CSV_URL =
-  "https://assets.publishing.service.gov.uk/media/6993252f7da91680ad7f44a1/CSV__2018_-____3_.csv";
-
-function parseFuelDate(ukDate: string): string {
-  const parts = ukDate.split("/");
-  if (parts.length !== 3) return ukDate;
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
-}
-
+// The CSV URL is resolved through the GOV.UK Content API, never hardcoded —
+// GOV.UK re-mints the media id on every weekly republish. This check used to
+// pin one and had been reporting "CSV fetch failed (410)" since ~11 June 2026,
+// while /api/fuel-prices (which discovered it properly) served correct prices
+// throughout. See src/lib/govuk-fuel-csv.ts.
 async function checkFuelPrices(): Promise<ServiceStatus> {
   const start = Date.now();
   try {
-    const res = await fetch(FUEL_CSV_URL, { signal: AbortSignal.timeout(10000) });
+    const csvUrl = await discoverFuelCsvUrl(AbortSignal.timeout(10000));
+    const res = await fetch(csvUrl, { signal: AbortSignal.timeout(10000) });
     if (!res.ok) {
       return {
         name: "Fuel Prices",
@@ -178,7 +176,7 @@ async function checkFuelPrices(): Promise<ServiceStatus> {
 
     const petrol = parseFloat(cols[1]);
     const diesel = parseFloat(cols[2]);
-    const dateStr = parseFuelDate(cols[0]);
+    const dateStr = parseFuelCsvDate(cols[0]);
 
     if (isNaN(petrol) || isNaN(diesel)) {
       return {
