@@ -294,9 +294,13 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
       }
       if (response.status === 401 || response.status === 403) {
         console.error(`[MOT] Authentication failed (${response.status})`);
+        // Credential rot is the quietest failure here: tokens expire, the page
+        // still renders, and MOT history just silently stops appearing.
+        recordLookupFailure({ stage: "mot", reason: "auth_failed", status: response.status });
         return null;
       }
       console.error(`[MOT] API error: ${response.status}`);
+      recordLookupFailure({ stage: "mot", reason: "api_error", status: response.status });
       return null;
     }
 
@@ -323,8 +327,10 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
   } catch (error: unknown) {
     if ((error as Error).name === "AbortError") {
       console.error("[MOT] Request timeout");
+      recordLookupFailure({ stage: "mot", reason: "timeout" });
     } else {
       console.error("[MOT] Fetch error:", (error as Error)?.message || error);
+      recordLookupFailure({ stage: "mot", reason: "network_error" });
     }
     return null;
   }
@@ -389,6 +395,47 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
   }
 
   return transient;
+}
+
+/**
+ * Record a lookup failure to `site_events` as `lookup_error`.
+ *
+ * WHY: the `lookup` event fires only on the SUCCESS path, so every failure went
+ * to console.error and died in Vercel logs. A total DVLA outage is loud — it
+ * breaks the core product and users complain within minutes — but a PARTIAL
+ * degradation is silent: a rising 5xx rate, or 429s creeping in as traffic
+ * grows, still leaves most lookups working and nothing looking wrong. MOT is
+ * worse still, because it fails to `null` and the page renders anyway, minus
+ * the MOT history, with no signal anywhere that anything went missing.
+ *
+ * A separate event type rather than an `ok` flag on `lookup`, so the existing
+ * `lookup` series keeps its meaning and stays comparable across this change.
+ *
+ * Error rate = lookup_error / (lookup + lookup_error), sliceable by `stage`.
+ *
+ * NOT logged: 404s from either API. A plate that isn't registered is a normal
+ * user outcome, not a fault, and folding it in would drown the signal we want.
+ *
+ * Fire-and-forget, and wrapped — telemetry must never break a lookup.
+ */
+function recordLookupFailure(meta: {
+  stage: "dvla" | "mot" | "internal";
+  reason: string;
+  status?: number;
+  ipHash?: string | null;
+}): void {
+  try {
+    supabaseServer()
+      .from("site_events")
+      .insert({
+        event_type: "lookup_error",
+        metadata: { stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
+        ip_hash: meta.ipHash ?? null,
+      })
+      .then(() => {}, () => {});
+  } catch {
+    // Swallow — a telemetry failure must never affect the response.
+  }
 }
 
 function combineVehicleData(dvlaData: VehicleData, motData: MOTHistoryData | null): VehicleData {
@@ -499,6 +546,18 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const updatedAt = new Date().toISOString();
 
     if (dvlaResult && "error" in dvlaResult) {
+      // 404 = plate not registered. A normal outcome, not a fault — see the
+      // note on recordLookupFailure. Everything else is a real service problem,
+      // including 429: rate limiting is the failure most likely to creep up on
+      // us as traffic grows, and the one we'd currently never see.
+      if (dvlaResult.status !== 404) {
+        recordLookupFailure({
+          stage: "dvla",
+          reason: dvlaResult.status === 429 ? "rate_limited" : "service_error",
+          status: dvlaResult.status,
+          ipHash: ip !== "unknown" ? hashVrm(ip) : null,
+        });
+      }
       return NextResponse.json(
         { ok: false, error: dvlaResult.error } as ErrorResponse,
         { status: dvlaResult.status }
@@ -542,6 +601,11 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     });
   } catch (err: unknown) {
     console.error("lookup_error:", (err as Error)?.message || err);
+    recordLookupFailure({
+      stage: "internal",
+      reason: (err as Error)?.name || "exception",
+      status: 500,
+    });
     return NextResponse.json(
       { ok: false, error: "Server error. Please try again." } as ErrorResponse,
       { status: 500 }
