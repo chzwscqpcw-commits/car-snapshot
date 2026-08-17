@@ -50,6 +50,7 @@ on:
 permissions:
   contents: write
   pull-requests: write # opens + auto-merges the data PR (main is protected)
+  actions: write # approves this PR's own held CI run — see the note below
 
 env:
   # ubuntu-latest ships with Chrome pre-installed at this path; our
@@ -164,6 +165,53 @@ jobs:
           # green on the data itself before this lands.
           gh pr merge "$BRANCH" --auto --squash --delete-branch
 
+      # GitHub holds CI runs on bot-authored PRs as `action_required` pending
+      # human approval. The required `checks` status therefore never reports,
+      # auto-merge waits forever, and the PR sits open — which is exactly what
+      # happened to the 2026-08-16 run: it opened correctly at 04:47 and was
+      # still unmerged 38 hours later, found only by accident.
+      #
+      # Approving it here is what makes the refresh genuinely unattended.
+      # NOT allowed to fail the job: if GitHub refuses self-approval, the PR is
+      # still open and correct and a human can approve it — losing a week of
+      # freshness, not the data. The outcome is printed to the summary either
+      # way, because a silent "approved: no" is how this bit us the first time.
+      - name: Approve own CI run
+        id: approve
+        if: steps.changes.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="data-refresh/${{ github.run_id }}"
+          for i in $(seq 1 15); do
+            RID=$(gh run list --workflow=ci.yml --branch "$BRANCH" --limit 1 \
+                    --json databaseId,status,conclusion -q '.[0].databaseId // empty')
+            STATE=$(gh run list --workflow=ci.yml --branch "$BRANCH" --limit 1 \
+                    --json status,conclusion -q '.[0] | "\(.status)/\(.conclusion // "-")"')
+            if [ -n "$RID" ]; then
+              echo "CI run $RID is $STATE"
+              case "$STATE" in
+                *action_required*)
+                  gh api -X POST "repos/${{ github.repository }}/actions/runs/$RID/approve" \
+                    && echo "approved=true" >> $GITHUB_OUTPUT \
+                    && exit 0
+                  echo "self-approval refused by GitHub — needs a human"
+                  echo "approved=false" >> $GITHUB_OUTPUT
+                  exit 0
+                  ;;
+                queued/*|in_progress/*|completed/success)
+                  echo "no approval needed"
+                  echo "approved=n/a" >> $GITHUB_OUTPUT
+                  exit 0
+                  ;;
+              esac
+            fi
+            sleep 6
+          done
+          echo "no CI run appeared for $BRANCH within 90s"
+          echo "approved=absent" >> $GITHUB_OUTPUT
+
       - name: Summary
         if: always()
         run: |
@@ -185,6 +233,12 @@ jobs:
           echo "| VCA fuel economy | ${{ steps.vca.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Euro NCAP | ${{ steps.ncap.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          # `approved=false` means the PR is open and waiting on a human. That
+          # must be visible here, or it repeats the 2026-08-16 silence.
+          if [ "${{ steps.changes.outputs.changed }}" = "true" ]; then
+            echo "Self-approval of CI run: **${{ steps.approve.outputs.approved || 'unknown' }}**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "### Current entry counts" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           node -e "
