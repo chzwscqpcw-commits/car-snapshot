@@ -26,6 +26,7 @@ import { odometerMiles } from "@/lib/valuation";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import Button from "@/components/Button";
 import MotJourneyTimeline from "@/components/tools/MotJourneyTimeline";
+import WarrantyCTA from "@/components/WarrantyCTA";
 
 interface MotResultProps {
   vrm: string;
@@ -79,6 +80,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {tests.length > 0 && <FullHistory tests={tests} />}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
       <BmgHook vrm={vrm} stats={stats} />
+      <WarrantyHook vrm={vrm} vehicle={vehicle} stats={stats} />
     </ToolResultLayout>
   );
 }
@@ -498,6 +500,42 @@ function BmgHook({ vrm, stats }: { vrm: string; stats: MotStats }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Warrantywise hook. Deliberately NOT shown on every MOT lookup: advisories or
+ * defects on a car old enough to be out of factory cover is the clearest
+ * repair-risk signal the MOT data gives us, and it is the only state where the
+ * offer is honest. A car inside its manufacturer warranty would be buying
+ * duplicate cover, and a clean history has nothing to point at.
+ */
+function WarrantyHook({
+  vrm,
+  vehicle,
+  stats,
+}: {
+  vrm: string;
+  vehicle: LookupVehicle;
+  stats: MotStats;
+}) {
+  const year = vehicle.yearOfManufacture;
+  const age = year ? new Date().getFullYear() - year : null;
+  const flagged = stats.advisoryPreview.length + stats.defectPreview.length;
+  // >3 years: typical UK manufacturer warranty is 3 years, so anything younger
+  // is already covered.
+  if (age === null || age <= 3 || flagged === 0) return null;
+  const detail = `${flagged} ${flagged === 1 ? "item" : "items"} flagged at its last MOT`;
+  return (
+    <div className="mt-4">
+      <WarrantyCTA
+        layout="inline"
+        variant="mot"
+        context="mot-result-warranty"
+        regNumber={vrm}
+        detail={detail}
+      />
+    </div>
   );
 }
 

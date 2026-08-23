@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Filter, AlertTriangle, CheckCircle2 } from "lucide-react";
 import PersonalisedCostLookup from "@/components/PersonalisedCostLookup";
 import RepairCostCTA from "@/components/RepairCostCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 
 const TITLE = "DPF Cleaning Cost UK 2026 — Free Price Guide | Free Plate Check";
 const DESCRIPTION =
@@ -241,6 +242,19 @@ export default function DpfCleaningPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Warrantywise — placed at the END of the guide, not next to the BMG
+            quote CTA, so the two sells don't stack. The copy is explicit that
+            this job itself isn't covered; the price above is the anchor for the
+            failures that are. Only on the big-ticket guides — a £60 battery
+            doesn't motivate warranty thinking. */}
+        <section>
+          <WarrantyCTA
+            variant="repair"
+            context="repair-cost-dpf-warranty"
+            detail="DPF clean"
+          />
         </section>
 
         <section>

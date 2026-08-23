@@ -394,14 +394,17 @@ export type AffiliateStat = {
   topContexts: PartnerContextCount[];
 };
 
-// Non-affiliate partner clicks (We Buy Any Car, Warrantywise, Cuvva, …) — the
-// long tail not covered by the three affiliate cards.
+// Non-affiliate partner clicks (We Buy Any Car, Cuvva, …) — the long tail not
+// covered by the affiliate cards.
 export type OtherPartnerStat = { partner: string; today: number; last7d: number };
 
 const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boolean }[] = [
   { key: "carVertical", name: "carVertical", match: (p) => p.startsWith("carvertical") },
   { key: "bookMyGarage", name: "BookMyGarage", match: (p) => p.startsWith("bookmygarage") },
   { key: "clickMechanic", name: "ClickMechanic", match: (p) => p.startsWith("clickmechanic") },
+  // Live affiliate since 2026-08-23 — promoted out of the "other partners" long
+  // tail so its placement breakdown is visible here, not only in Awin.
+  { key: "warrantywise", name: "Warrantywise", match: (p) => p.startsWith("warrantywise") },
 ];
 
 /**
@@ -790,8 +793,8 @@ export async function GET(req: Request): Promise<NextResponse> {
     .map(([context, count]) => ({ context, count }))
     .sort((a, b) => b.count - a.count);
 
-  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic) + the
-  // non-affiliate long tail (We Buy Any Car, Warrantywise, Cuvva, …).
+  // Per-affiliate roll-up (carVertical / BookMyGarage / ClickMechanic /
+  // Warrantywise) + the non-affiliate long tail (We Buy Any Car, Cuvva, …).
   const { affiliates, other: otherPartners } = await affiliateClickBreakdown(sb, sevenDaysAgo, todayStart);
 
   // Booking step completes: numeric step values converted from string keys

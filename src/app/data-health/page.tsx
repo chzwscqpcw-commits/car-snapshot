@@ -1244,7 +1244,7 @@ export default function DataHealthPage() {
               </Section>
             )}
 
-            {/* ── AFFILIATE PARTNERS (carVertical / BMG / ClickMechanic) ── */}
+            {/* ── AFFILIATE PARTNERS (carVertical / BMG / ClickMechanic / Warrantywise) ── */}
             {stats && stats.affiliates && (
               <Section
                 title="Affiliate partners"
