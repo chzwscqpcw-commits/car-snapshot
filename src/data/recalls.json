@@ -12,6 +12,114 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2026-03-18",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-08-21",
+    "defect": "Affected vehicles may have a panoramic roof with an improper adhesion bond.  This could result in wind noise water leak or separation from the vehicle.",
+    "remedy": "Test the adhesion bonding of the panoramic roof. and replace if necessary",
+    "recallNumber": "R/2026/334"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "BERLINGO"
+    ],
+    "buildDateStart": "2025-05-28",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/337"
+  },
+  {
+    "make": "DS",
+    "models": [
+      "DS NO8 (BEV)"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-08-19",
+    "defect": "On the affected vehicles the main front wiring harness may contact a metal ground stud due to a design change resulting in a possible loss of electrical vehicle functions and in rare cases a risk of fire.",
+    "remedy": "Add a protective rubber cap to the ground stud.",
+    "recallNumber": "R/2026/317"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "RIFTER"
+    ],
+    "buildDateStart": "2025-05-27",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/336"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "COMBO"
+    ],
+    "buildDateStart": "2025-06-12",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/335"
+  },
+  {
+    "make": "SUZUKI",
+    "models": [
+      "E VITARA"
+    ],
+    "buildDateStart": "2025-05-02",
+    "buildDateEnd": "2025-11-08",
+    "recallDate": "2026-08-18",
+    "defect": "On affected vehicles there is a possibility of the rear doors being unable to open from either the inside or outside of the vehicle.",
+    "remedy": "Replace the outer rear door handles.",
+    "recallNumber": "R/2026/332"
+  },
+  {
+    "make": "SUZUKI",
+    "models": [
+      "E VITARA"
+    ],
+    "buildDateStart": "2025-06-05",
+    "buildDateEnd": "2025-11-08",
+    "recallDate": "2026-08-18",
+    "defect": "On affected vehicles there is a possibility of the rear doors being unable to open from either the inside or outside of the vehicle.",
+    "remedy": "Replace the outer rear door handles.",
+    "recallNumber": "R/2026/332"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER"
+    ],
+    "buildDateStart": "2025-09-09",
+    "buildDateEnd": "2025-10-28",
+    "recallDate": "2026-08-17",
+    "defect": "On affected vehicles the speed limit of 70 mph is not implemented as described in the technical data and stated in the vehicle registration document.",
+    "remedy": "Adjust the software in various control units.",
+    "recallNumber": "R/2026/320"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER"
+    ],
+    "buildDateStart": "2025-09-30",
+    "buildDateEnd": "2025-09-30",
+    "recallDate": "2026-08-17",
+    "defect": "On affected vehicles the speed limit of 70 mph is not implemented as described in the technical data and stated in the vehicle registration document.",
+    "remedy": "Adjust the software in various control units.",
+    "recallNumber": "R/2026/320"
+  },
+  {
     "make": "AUDI",
     "models": [
       "Q3"
@@ -713,10 +821,10 @@
       "MINIE 3DR HATCHBACK"
     ],
     "buildDateStart": "2026-03-20",
-    "buildDateEnd": "2026-04-07",
+    "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
     "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
     "recallNumber": "R/2026/250"
   },
   {
@@ -724,11 +832,11 @@
     "models": [
       "MINI ACEMAN"
     ],
-    "buildDateStart": "2026-03-25",
+    "buildDateStart": "2026-03-20",
     "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
     "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
     "recallNumber": "R/2026/250"
   },
   {
@@ -2396,7 +2504,7 @@
     "buildDateEnd": "2024-11-22",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2408,7 +2516,7 @@
     "buildDateEnd": "2024-10-28",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2420,7 +2528,7 @@
     "buildDateEnd": "2024-08-13",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2432,7 +2540,7 @@
     "buildDateEnd": "2024-01-22",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -9973,8 +10081,8 @@
     "buildDateStart": "2023-06-12",
     "buildDateEnd": "2024-02-29",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -9985,8 +10093,8 @@
     "buildDateStart": "2024-05-09",
     "buildDateEnd": "2025-05-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -9997,8 +10105,8 @@
     "buildDateStart": "2025-07-10",
     "buildDateEnd": "2025-07-10",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10009,8 +10117,8 @@
     "buildDateStart": "2019-11-26",
     "buildDateEnd": "2021-03-16",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10021,8 +10129,8 @@
     "buildDateStart": "2020-06-05",
     "buildDateEnd": "2020-12-22",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10033,8 +10141,8 @@
     "buildDateStart": "2020-12-01",
     "buildDateEnd": "2021-04-20",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10045,8 +10153,8 @@
     "buildDateStart": "2021-03-16",
     "buildDateEnd": "2021-06-17",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10057,8 +10165,8 @@
     "buildDateStart": "2021-06-02",
     "buildDateEnd": "2021-10-21",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10069,8 +10177,8 @@
     "buildDateStart": "2021-09-10",
     "buildDateEnd": "2021-10-29",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10081,8 +10189,8 @@
     "buildDateStart": "2021-05-25",
     "buildDateEnd": "2022-02-16",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10093,8 +10201,8 @@
     "buildDateStart": "2022-02-02",
     "buildDateEnd": "2022-03-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10105,8 +10213,8 @@
     "buildDateStart": "2022-02-28",
     "buildDateEnd": "2022-05-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10117,8 +10225,8 @@
     "buildDateStart": "2022-06-01",
     "buildDateEnd": "2022-10-24",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10129,8 +10237,8 @@
     "buildDateStart": "2019-08-07",
     "buildDateEnd": "2023-11-28",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10141,8 +10249,8 @@
     "buildDateStart": "2020-06-10",
     "buildDateEnd": "2020-06-10",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10153,8 +10261,8 @@
     "buildDateStart": "2023-03-01",
     "buildDateEnd": "2024-01-09",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10165,8 +10273,8 @@
     "buildDateStart": "2024-05-10",
     "buildDateEnd": "2025-06-26",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10177,8 +10285,8 @@
     "buildDateStart": "2025-06-20",
     "buildDateEnd": "2025-09-26",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10187,10 +10295,46 @@
       "KUGA"
     ],
     "buildDateStart": "2025-10-25",
-    "buildDateEnd": "2025-01-19",
+    "buildDateEnd": "2026-01-19",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-03",
+    "buildDateEnd": "2025-06-03",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-27",
+    "buildDateEnd": "2025-09-17",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2026-01-19",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10350,6 +10494,66 @@
     "defect": "On Affected vehicles it is possible that moisture has entered the Gear Shift Module (GSM) during the assembly process. Under certain conditions there is a risk that this moisture could result in non-illumination of the Light Emitting Diode (LED) indicating the selected gear.  Non-illumination of the LED gear indicator adjacent to the shifter would not conform to regulated requirements for automatic transmission control position indicator illumination.",
     "remedy": "Affected vehicles will have the Gear Shift Module replaced.",
     "recallNumber": "R/2025/436"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "3 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2015-10-26",
+    "buildDateEnd": "2018-07-31",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2016-08-19",
+    "buildDateEnd": "2019-02-22",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON LWB PHEV"
+    ],
+    "buildDateStart": "2016-03-17",
+    "buildDateEnd": "2019-02-20",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "5 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2017-02-27",
+    "buildDateEnd": "2020-06-29",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "5 SERIES LWB PHEV"
+    ],
+    "buildDateStart": "2018-11-16",
+    "buildDateEnd": "2018-11-16",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
   },
   {
     "make": "BMW",
@@ -21089,6 +21293,234 @@
     ],
     "buildDateStart": "2019-03-20",
     "buildDateEnd": "2019-05-30",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "ECOSPORT"
+    ],
+    "buildDateStart": "2017-10-18",
+    "buildDateEnd": "2018-05-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-05-08",
+    "buildDateEnd": "2015-09-11",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-09-14",
+    "buildDateEnd": "2015-10-22",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-10-16",
+    "buildDateEnd": "2015-12-17",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-12-18",
+    "buildDateEnd": "2016-01-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-02-01",
+    "buildDateEnd": "2016-04-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-04-11",
+    "buildDateEnd": "2016-06-10",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-07-04",
+    "buildDateEnd": "2016-08-15",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-09-28",
+    "buildDateEnd": "2017-08-30",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2017-10-18",
+    "buildDateEnd": "2018-05-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-05-05",
+    "buildDateEnd": "2015-08-31",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-29",
+    "buildDateEnd": "2016-06-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-05-25",
+    "buildDateEnd": "2016-08-26",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-08-23",
+    "buildDateEnd": "2016-10-14",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-10-24",
+    "buildDateEnd": "2017-04-12",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-05",
+    "buildDateEnd": "2015-08-27",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-29",
+    "buildDateEnd": "2016-06-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-06-01",
+    "buildDateEnd": "2016-07-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-08-27",
+    "buildDateEnd": "2017-04-25",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
     "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
