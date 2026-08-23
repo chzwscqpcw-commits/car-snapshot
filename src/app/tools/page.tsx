@@ -53,6 +53,12 @@ const CHECKS: Tool[] = [
     badge: "Most popular",
   },
   {
+    title: "MOT exemption check",
+    blurb: "Is your car over 40 and exempt from the MOT? See the exact date — and when the historic tax class starts, which isn't the same day.",
+    href: "/mot-exemption-check",
+    icon: ShieldCheck,
+  },
+  {
     title: "Tax check",
     blurb: "Current tax status, expiry date and the annual VED rate for your reg.",
     href: "/tax-check",

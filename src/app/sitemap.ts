@@ -78,6 +78,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/mot-exemption-check",
+      lastModified: new Date("2026-08-23"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/tax-check",
       lastModified: new Date("2026-02-14"),
       changeFrequency: "monthly",
