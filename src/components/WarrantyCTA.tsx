@@ -9,9 +9,11 @@ import { trackPartnerClick } from "@/lib/tracking";
  * `mot`      — an out-of-warranty car whose last MOT flagged advisories/defects.
  * `runningCosts` — the running-cost forecast, whose one unmodellable line is repairs.
  * `repair`   — a repair-cost guide for a job a warranty would actually have paid for.
- * `valuation` — an owner valuing a car that is past its manufacturer cover.
+ * `classic`  — a 1980s–2000s survivor, routed to their CLASSIC plan instead.
+ * `model`    — a model page whose readers are asking "is the X reliable?".
+ * `report`   — the full free vehicle report, as a next step.
  */
-type Variant = "generic" | "mot" | "runningCosts" | "repair" | "valuation";
+type Variant = "generic" | "mot" | "runningCosts" | "repair" | "classic" | "model" | "report";
 
 interface WarrantyCTAProps {
   /**
@@ -85,16 +87,45 @@ function copyFor(variant: Variant, detail?: string): { title: string; body: Reac
           </>
         ),
       };
-    case "valuation":
+    case "classic":
+      // Routed to their classic plan by buildLink (see partners.ts). Their own
+      // definition of a "modern classic" is a 1980s–2000s vehicle, so this is
+      // their product for this reader, not a stretch of the mainstream one.
       return {
-        title: "Your car is past its manufacturer warranty",
+        title: "Still running one of the survivors?",
         body: (
           <>
-            At this age the factory cover has almost certainly run out, and repair bills
-            climb fastest in exactly the years that follow.{" "}
+            Parts get scarcer and specialists get pricier as a model thins out — the
+            reason these cars disappear is usually one bill the owner decided not to pay.{" "}
+            <strong className="text-slate-100">Warrantywise</strong> cover modern classics
+            (their term for 1980s–2000s cars) as a separate plan, built around exactly
+            that problem.
+          </>
+        ),
+      };
+    case "model":
+      return {
+        title: `Worried what ${detail ?? "this model"} costs when it goes wrong?`,
+        body: (
+          <>
+            Reliability data tells you the odds; it doesn&apos;t pay the bill when you land
+            on the wrong side of them.{" "}
             <strong className="text-slate-100">Warrantywise</strong> extended warranties
-            cover major mechanical and electrical failures — and a car with live cover is
-            an easier sell when you do come to move it on.
+            cover major mechanical and electrical failures — engine, gearbox, electronics,
+            air-con — on cars past their manufacturer cover.
+          </>
+        ),
+      };
+    case "report":
+      return {
+        title: "Your report is free. The next repair bill won't be.",
+        body: (
+          <>
+            You now know this car&apos;s MOT record, mileage and advisories. What none of
+            that predicts is the failure that hasn&apos;t happened yet.{" "}
+            <strong className="text-slate-100">Warrantywise</strong> extended warranties
+            cover major mechanical and electrical breakdowns on cars past their factory
+            warranty.
           </>
         ),
       };

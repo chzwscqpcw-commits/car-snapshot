@@ -1773,7 +1773,40 @@ export default function Home() {
       });
     }
 
-    // 3. Car insurance comparison (low priority — only if space). Gated on
+    // 3. Extended warranty (Warrantywise). This page is the whole reason the
+    //    placement is worth having: the same `isOver3Years && advisories` signal
+    //    the prompt above uses runs here on ~6,300 views a month, versus ~68 on
+    //    the standalone /mot-check tool where the shared MotResult placement
+    //    lives. Gated at 5+ years rather than 3 so it stays a qualified offer
+    //    and does not simply echo the advisory prompt's trigger — and kept
+    //    low-priority (`prompts.length < 3`) so a SORN or advisory warning, both
+    //    more urgent to the reader, always outrank it.
+    const vehicleAgeYears = data.yearOfManufacture
+      ? new Date().getFullYear() - data.yearOfManufacture
+      : null;
+    if (
+      prompts.length < 3 &&
+      vehicleAgeYears !== null &&
+      vehicleAgeYears >= 5 &&
+      !motExpired &&
+      isPartnerConfigured(PARTNER_LINKS.warrantywise)
+    ) {
+      prompts.push({
+        variant: "subtle",
+        icon: <Shield className="w-5 h-5 text-emerald-400" />,
+        title: "Past its manufacturer warranty",
+        description:
+          "Factory cover has run out on a car this age, and repair bills climb fastest in the years that follow. An extended warranty covers major mechanical and electrical failures.",
+        linkText: "Get a warranty quote — Warrantywise",
+        linkHref:
+          PARTNER_LINKS.warrantywise.buildLink?.(data.registrationNumber, "action-warranty") ??
+          PARTNER_LINKS.warrantywise.url,
+        partnerId: "warrantywise",
+        trackingContext: "action-warranty",
+      });
+    }
+
+    // 4. Car insurance comparison (low priority — only if space). Gated on
     //    isPartnerConfigured so it appears only once Confused.com (Awin) is
     //    approved — replaces the old non-affiliate Parkers insurance-group leak.
     if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.goCompare)) {

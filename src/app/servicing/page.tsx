@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import StatCallouts from "@/components/StatCallouts";
 import Button from "@/components/Button";
 
@@ -584,6 +585,12 @@ export default function ServicingPage() {
             >
               Start the booking wizard &rarr;
             </Button>
+          </section>
+
+          {/* Servicing keeps a warranty valid — the two subjects are directly
+              linked, and this page already explains Block Exemption at length. */}
+          <section>
+            <WarrantyCTA context="servicing-warranty" />
           </section>
 
           {/* FAQ section */}

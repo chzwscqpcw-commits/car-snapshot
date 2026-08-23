@@ -5,6 +5,7 @@ import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 
@@ -273,6 +274,13 @@ export default function CarCheckPage() {
 
           <section>
             <MOTBookingCTA regNumber="" context="neutral" placement="car-check" />
+          </section>
+
+          {/* The report tells you what HAS happened to this car; a warranty is
+              about what hasn't yet. Sits after the booking CTA so the free
+              actions come first. */}
+          <section>
+            <WarrantyCTA variant="report" context="car-check-warranty" />
           </section>
 
           <section>

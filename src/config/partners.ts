@@ -195,8 +195,18 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     pending: false,
     description: "Extended car warranty covering major component failures",
     shortDescription: "Warranty quotes",
+    // Destination routes on the clickref, the same way ClickMechanic's does.
+    // Warrantywise sell a separate CLASSIC plan and their own schema defines a
+    // "modern classic" as a vehicle from the 1980s–2000s — which is precisely
+    // the cohort /stats/how-many-left attracts (rare, surviving, mostly 90s/00s
+    // cars). Sending a Rover 800 owner to the mainstream quote flow would be the
+    // wrong product; sending them to the classic page is the right one.
     buildLink: (_reg: string, clickref?: string) => {
-      const dest = "https://www.warrantywise.co.uk/get-a-quote/";
+      const ctx = (clickref ?? "").toLowerCase();
+      const isClassic = ctx.includes("classic") || ctx.includes("how-many-left");
+      const dest = isClassic
+        ? "https://www.warrantywise.co.uk/classic-car-warranty/"
+        : "https://www.warrantywise.co.uk/get-a-quote/";
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=75286&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
         clickref,
@@ -562,6 +572,29 @@ const HISTORY_INTENT_KEYWORDS = [
   "buying a used car",
   "checks before buying",
 ];
+
+/**
+ * Warranty intent — posts about cover, breakdowns and repair bills rather than
+ * provenance or MOT booking. Checked AFTER hasMotKeywords and
+ * hasVehicleHistoryIntent so an MOT post keeps its booking prompt and an HPI
+ * post keeps carVertical; this only claims posts nothing else wanted.
+ *
+ * Written because `used-car-warranty-worth-it-2026` — the single most
+ * warranty-relevant page on the site — matched none of the existing routers and
+ * therefore rendered no CTA at all.
+ */
+const WARRANTY_INTENT_KEYWORDS = [
+  "warranty",
+  "extended warranty",
+  "breakdown cover",
+  "repair bill",
+];
+
+export function hasWarrantyIntent(keywords: string[]): boolean {
+  if (!keywords || keywords.length === 0) return false;
+  const lower = keywords.map((k) => k.toLowerCase());
+  return WARRANTY_INTENT_KEYWORDS.some((wk) => lower.some((k) => k.includes(wk)));
+}
 
 export function hasVehicleHistoryIntent(keywords: string[]): boolean {
   if (!keywords || keywords.length === 0) return false;

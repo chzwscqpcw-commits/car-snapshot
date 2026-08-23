@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
 import HowManyLeftExplorer from "@/components/stats/HowManyLeftExplorer";
@@ -304,6 +305,13 @@ export default function HowManyLeftPage() {
             for anything changing hands. */}
         <div className="my-10">
           <CarVerticalReportCTA variant="report" context="stats-how-many-left" />
+        </div>
+
+        {/* Rarity readers skew to 1980s–2000s survivors, which is Warrantywise's
+            own definition of a "modern classic" — buildLink routes this context
+            to their classic plan rather than the mainstream quote flow. */}
+        <div className="my-10">
+          <WarrantyCTA variant="classic" context="stats-how-many-left-classic" />
         </div>
 
         <StatsRelated exclude="how-many-left" />
