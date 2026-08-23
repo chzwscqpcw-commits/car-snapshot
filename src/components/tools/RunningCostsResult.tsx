@@ -43,6 +43,7 @@ import {
 } from "@/lib/insurance-estimate";
 import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import Button from "@/components/Button";
 
 interface RunningCostsResultProps {
@@ -167,6 +168,13 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     });
   }, [vehicle, ved, scaledFuelCost, segment, blendedValue]);
 
+  // Out of factory cover? Drives the warranty placement below — a car still
+  // inside its 3-year manufacturer warranty would be buying duplicate cover.
+  const outOfWarranty = useMemo(() => {
+    if (!vehicle.yearOfManufacture) return false;
+    return new Date().getFullYear() - vehicle.yearOfManufacture > 3;
+  }, [vehicle.yearOfManufacture]);
+
   // Insurance (excluded by ownership-cost lib; we layer it on here)
   const insurance = useMemo<InsuranceEstimate>(
     () => estimateInsurance(segment, insuranceInputs, milesPerYear),
@@ -242,6 +250,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {/* Running costs are a "should I buy this car?" signal — offer the full
           history check (finance/write-off/stolen/mileage) at that buyer intent. */}
       <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" />
+      {/* Repairs are the one line this page forecasts least well — everything
+          else here (fuel, tax, insurance, servicing) is modellable, a failed
+          gearbox isn't. That gap is the honest case for a warranty, so the
+          placement sits directly under the forecast it qualifies. */}
+      {outOfWarranty && (
+        <div className="mt-4">
+          <WarrantyCTA
+            layout="inline"
+            variant="runningCosts"
+            context="running-costs-warranty"
+            regNumber={vrm}
+          />
+        </div>
+      )}
       <Disclaimer />
     </ToolResultLayout>
   );

@@ -159,17 +159,48 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       );
     },
   },
-  // Extended car warranty (Awin) — applied 2026-05-17, pending approval
+  // Extended car warranty (Awin merchant 75286) — applied 2026-05-17,
+  // APPROVED + activated 2026-08-23.
+  //
+  // clickref is threaded through exactly as BookMyGarage/ClickMechanic do. It
+  // is not optional bookkeeping: without it every warranty commission lands in
+  // one undifferentiated bucket in Awin and no placement can be judged on
+  // whether it actually sells — the same blindness the carVertical `sub2`
+  // catch-all caused (see CARVERTICAL_SUB2 above).
+  //
+  // NO REG PRE-FILL IS POSSIBLE (probed 2026-08-23, after it visibly failed on a
+  // real lookup). Findings, so nobody re-tries this:
+  //   · warrantywise.co.uk's homepage has no reg field at all.
+  //   · The quote journey starts at vehicle.warrantywise.co.uk/warranty/registration/
+  //     — a DIFFERENT subdomain, reached via a 301 from /get-a-quote/.
+  //   · That 301 STRIPS the query string, so nothing survives the hop.
+  //   · The quote page ignores every candidate param. Browser-tested after
+  //     hydration (not just server HTML, since it is a JS app): vrm, reg,
+  //     registration, registrationNumber, regNumber, vehicleRegistration,
+  //     vehicle_registration, plate, numberPlate, vrn — all 10 leave the
+  //     "Enter Registration" input empty. The value reaches the framework's
+  //     page-props `query` blob and the app simply never reads it.
+  //   · So pre-fill is not something we can unlock from our side by guessing a
+  //     name; Warrantywise would have to build it. Asked of Jack Fisher.
+  // So we deep-link to /get-a-quote/ on the PRIMARY domain (keeps the click on
+  // the domain Awin tracks; the 301 then lands the user on the reg-entry step
+  // rather than a marketing homepage) and drop the reg entirely — carrying a
+  // plate in an outbound URL for zero benefit is pure leakage. `reg` stays in
+  // the signature so wiring a real param back in is a one-line change if Jack
+  // Fisher confirms one.
   warrantywise: {
-    url: "https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=https%3A%2F%2Fwww.warrantywise.co.uk%2F",
+    url: "https://www.awin1.com/cread.php?awinmid=75286&awinaffid=2729598&ued=https%3A%2F%2Fwww.warrantywise.co.uk%2F",
     name: "Warrantywise",
     isAffiliate: true,
-    pending: true,
+    pending: false,
     description: "Extended car warranty covering major component failures",
     shortDescription: "Warranty quotes",
-    buildLink: (reg: string) => {
-      const destination = encodeURIComponent(`https://www.warrantywise.co.uk/?vrm=${reg}`);
-      return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
+    buildLink: (_reg: string, clickref?: string) => {
+      const dest = "https://www.warrantywise.co.uk/get-a-quote/";
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=75286&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
+        clickref,
+      );
     },
   },
   // Pay-as-you-go temporary insurance (Awin) — applied 2026-05-17, pending approval
@@ -180,9 +211,15 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     pending: true,
     description: "Hourly, daily and weekly car insurance — bought in 90 seconds",
     shortDescription: "Temporary insurance",
-    buildLink: (reg: string) => {
-      const destination = encodeURIComponent(`https://www.cuvva.com/?vrm=${reg}`);
-      return `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${destination}`;
+    // Same clickref treatment as warrantywise above — Cuvva is still pending,
+    // but the gap was identical and would have cost the same attribution.
+    buildLink: (reg: string, clickref?: string) => {
+      const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
+      const dest = `https://www.cuvva.com/${plate ? `?vrm=${plate}` : ""}`;
+      return withClickref(
+        `https://www.awin1.com/cread.php?awinmid=PENDING_AWINMID&awinaffid=2729598&ued=${encodeURIComponent(dest)}`,
+        clickref,
+      );
     },
   },
   // ClickMechanic — pre-purchase inspections + EV-charger installation (Awin
