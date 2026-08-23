@@ -88,18 +88,23 @@ function copyFor(variant: Variant, detail?: string): { title: string; body: Reac
         ),
       };
     case "classic":
-      // Routed to their classic plan by buildLink (see partners.ts). Their own
-      // definition of a "modern classic" is a 1980s–2000s vehicle, so this is
-      // their product for this reader, not a stretch of the mainstream one.
+      // Routed to their classic plan by buildLink (see partners.ts).
+      //
+      // Do NOT reinstate the "1980s–2000s" band that used to be in this copy.
+      // That is Warrantywise's definition of a MODERN classic specifically, and
+      // stating it here told a 1973 Austin Maxi owner — on the exemption
+      // checker, where pre-1980 cars are the norm — that the product was for
+      // cars newer than theirs. Their classic page covers "a vintage classic or
+      // a modern classic car", so the copy stays at that wider framing.
       return {
         title: "Still running one of the survivors?",
         body: (
           <>
             Parts get scarcer and specialists get pricier as a model thins out — the
             reason these cars disappear is usually one bill the owner decided not to pay.{" "}
-            <strong className="text-slate-100">Warrantywise</strong> cover modern classics
-            (their term for 1980s–2000s cars) as a separate plan, built around exactly
-            that problem.
+            <strong className="text-slate-100">Warrantywise</strong> cover classics —
+            vintage and modern alike — on a separate plan built around exactly that
+            problem.
           </>
         ),
       };
