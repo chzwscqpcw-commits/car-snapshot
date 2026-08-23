@@ -6,6 +6,8 @@ import { lookupRarity, suggestModels, type RarityResult } from "@/lib/how-many-l
 import { buildModelFacts } from "@/lib/model-facts";
 import ModelFact from "@/components/ModelFact";
 import Button from "@/components/Button";
+import WarrantyCTA from "@/components/WarrantyCTA";
+import { trackEvent } from "@/lib/tracking";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -86,9 +88,30 @@ export default function HowManyLeftExplorer() {
   const [phIdx, setPhIdx] = useState(0);
   const meterRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Fire one `hml_lookup` per completed lookup. The explorer had NO
+   * instrumentation at all — on a page drawing ~2.4k views/month we could not
+   * say how many people used it, in which mode, or what era of car they looked
+   * up, which made any decision about what to put here a guess. `rarity` and
+   * `year` are the two fields that answer "is this audience owners of old cars,
+   * or people reminiscing about one they had in 1997?".
+   */
+  function trackLookup(v: Vehicle, r: RarityResult | null, lookupMode: "reg" | "model") {
+    trackEvent("hml_lookup", {
+      mode: lookupMode,
+      make: v.make || null,
+      model: v.model || null,
+      year: v.year ?? null,
+      rarity: r?.category ?? null,
+      licensed: r?.licensed ?? null,
+    });
+  }
+
   function pickModel(s: { make: string; model: string }) {
     setVehicle({ reg: "", make: s.make, model: s.model });
-    setRarity(lookupRarity(s.make, s.model));
+    const r = lookupRarity(s.make, s.model);
+    setRarity(r);
+    trackLookup({ reg: "", make: s.make, model: s.model }, r, "model");
     setSuggestions([]);
     setModelQuery("");
     setError("");
@@ -156,7 +179,9 @@ export default function HowManyLeftExplorer() {
         year: data.yearOfManufacture,
       };
       setVehicle(v);
-      setRarity(lookupRarity(v.make, v.model));
+      const r = lookupRarity(v.make, v.model);
+      setRarity(r);
+      trackLookup(v, r, "reg");
     } catch {
       setError("Couldn't reach the lookup service — try again.");
     } finally {
@@ -199,6 +224,10 @@ export default function HowManyLeftExplorer() {
   if (vehicle) {
     const r = rarity ? RARITY[rarity.category] : null;
     const name = `${vehicle.year ?? ""} ${vehicle.make} ${vehicle.model}`.trim();
+    const isClassicEra =
+      vehicle.year != null
+        ? vehicle.year <= 2010
+        : rarity?.category === "very-rare" || rarity?.category === "rare";
     return (
       <div className="relative overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-6 sm:p-8">
         <div
@@ -281,6 +310,26 @@ export default function HowManyLeftExplorer() {
           <p className="mt-3 text-center text-xs text-slate-500">
             MOT history, tax, mileage, valuation, recalls &amp; more — free, no signup.
           </p>
+
+          {/* Warrantywise (classic plan) — attached to the RESULT rather than the
+              foot of the page, because this is the moment that earns it: the
+              reader has just been told how few of their car survive. The old
+              placement sat below four stats sections as the third of three
+              consecutive CTAs.
+
+              Gate: when we know the year (reg lookups only) require a genuinely
+              old car; in model mode there is no year, so fall back to rarity —
+              but only the two scarcest bands, so a low-volume NEW model doesn't
+              get pitched a classic-car warranty. */}
+          {isClassicEra && (
+            <div className="mt-6">
+              <WarrantyCTA
+                layout="inline"
+                variant="classic"
+                context="hml-explorer-classic"
+              />
+            </div>
+          )}
         </div>
       </div>
     );
