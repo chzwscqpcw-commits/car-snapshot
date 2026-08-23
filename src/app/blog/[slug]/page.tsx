@@ -5,13 +5,14 @@ import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLab
 import BlogTagPill from "@/components/BlogTagPill";
 import Button from "@/components/Button";
 import { ArrowLeft, Clock } from "lucide-react";
-import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta, hasVehicleHistoryIntent } from "@/config/partners";
+import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta, hasVehicleHistoryIntent, hasWarrantyIntent } from "@/config/partners";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
 import MotBookingInline from "@/components/MotBookingInline";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 
 /**
  * Split rendered post HTML just before the 2nd <h2> so an inline CTA can sit
@@ -263,9 +264,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           // through to the weaker free /car-check tool.
           const isMot = hasMotKeywords(post.keywords);
           const isHistory = !isMot && hasVehicleHistoryIntent(post.keywords);
+          // Warranty posts had NO branch at all — `used-car-warranty-worth-it-2026`
+          // is the most warranty-relevant page on the site and matched none of
+          // hasMotKeywords / hasVehicleHistoryIntent / getTopicCta, so it rendered
+          // no CTA whatsoever. Checked third so MOT posts keep their booking
+          // prompt and HPI posts keep carVertical; this only claims what nothing
+          // else wanted.
+          const isWarranty = !isMot && !isHistory && hasWarrantyIntent(post.keywords);
           const topicCta = getTopicCta(post.keywords);
           const regCheckPath =
-            !isMot && !isHistory && topicCta && topicCta.path !== "/mot-reminder"
+            !isMot && !isHistory && !isWarranty && topicCta && topicCta.path !== "/mot-reminder"
               ? topicCta.path
               : null;
 
@@ -274,6 +282,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           ) : isHistory ? (
             <div className="my-8">
               <CarVerticalReportCTA context="blog-carvertical" />
+            </div>
+          ) : isWarranty ? (
+            <div className="my-8">
+              <WarrantyCTA context="blog-warranty" />
             </div>
           ) : regCheckPath && topicCta ? (
             <ConversionWidget

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Wrench, Snowflake, Disc, BatteryCharging, Cog, Filter, Gauge, AlertTriangle, ShieldCheck, BookOpen } from "lucide-react";
 import RepairCostCTA from "@/components/RepairCostCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 
 export const metadata: Metadata = {
   title: "Car Repair Costs UK — Free Price Guides & Local Quotes | Free Plate Check",
@@ -242,6 +243,13 @@ export default function RepairCostsHub() {
 
         {/* Partner CTA — the "I've seen the prices, now get a real quote" moment */}
         <RepairCostCTA jobName="car repair" />
+
+        {/* Same honest framing as the individual guides: the jobs listed above
+            are service and wear items no warranty covers — the point is the
+            bigger failures that aren't on this page. */}
+        <div className="mt-12">
+          <WarrantyCTA variant="repair" context="repair-costs-hub-warranty" detail="job like these" />
+        </div>
 
         {/* Trust / consumer-protection */}
         <h2 className="text-xl font-bold text-slate-100 mt-14 mb-2">

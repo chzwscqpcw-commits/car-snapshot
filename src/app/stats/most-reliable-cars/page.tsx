@@ -4,6 +4,7 @@ import StatCallout from "@/components/stats/StatCallout";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import CiteThisData from "@/components/stats/CiteThisData";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import ReliabilityCharts from "@/components/stats/ReliabilityCharts";
@@ -210,6 +211,13 @@ export default function MostReliableCarsPage() {
 
         {/* CTA */}
         <ConversionWidget headline="How reliable is your car?" subtext="Enter any UK reg to see MOT pass rate, recurring advisories, and a full reliability picture for your vehicle." />
+
+        {/* This page's whole subject is "which cars go wrong". The reader who
+            finds their car low on the table is the most qualified warranty
+            prospect on the site. */}
+        <div className="my-10">
+          <WarrantyCTA context="stats-reliability-warranty" />
+        </div>
 
         {/* Related */}
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import {
   MODEL_REGISTRY,
@@ -494,6 +495,17 @@ export default async function ModelGuidePage({ params }: PageProps) {
               peaks: surface the history report they actually want before they
               commit to a used example. */}
           <CarVerticalReportCTA variant="report" context="model-carvertical" />
+
+          {/* These pages rank for "is the {model} reliable" — the reliability
+              question and the warranty question are the same worry, one framed
+              as odds and the other as who pays. */}
+          <div className="my-8">
+            <WarrantyCTA
+              variant="model"
+              context="model-warranty"
+              detail={data.displayName}
+            />
+          </div>
 
           {/* ── Running costs ──────────────────────────────────────────── */}
           {data.runningCosts && (
