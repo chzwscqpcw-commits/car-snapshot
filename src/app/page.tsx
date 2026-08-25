@@ -214,7 +214,7 @@ import InspectionCTA from "@/components/InspectionCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
-import SellingToBuyBridge from "@/components/SellingToBuyBridge";
+import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
 
 type VehicleData = {
@@ -4883,12 +4883,13 @@ END:VEVENT
               </div>
             </DataReveal>
 
-            {/* …and the same visitor is usually weeks from buying. Mirrors the
-                bridge under ValuationResult so both valuation surfaces catch
-                the seller→buyer turn, not just the tool pages. */}
+            {/* SellingToBuyBridge removed 2026-08-25 — see the matching note in
+                ValuationResult. It was the second carVertical ask on a screen
+                that already has one, and the CTA above now carries the price and
+                the multi-car pack pitch. */}
             <DataReveal delay={400}>
               <div className="mb-8">
-                <SellingToBuyBridge context="money-selling-to-buy" />
+                <PartnerReturnPrompt context="money-return" />
               </div>
             </DataReveal>
 

@@ -116,6 +116,39 @@ function carVerticalSub2(ctx: string): string {
   return ctx.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24) || "unmapped";
 }
 
+/**
+ * carVertical UK list prices, read off carvertical.com/gb/pricing on the date
+ * below. Kept here as ONE constant because the CTA now states the price to the
+ * visitor, and a stale figure on our side is worse than no figure at all.
+ *
+ * Why state it: 307 clicks analysed 2026-08-25 showed a median of 72 seconds
+ * between clicking out and reappearing on our site — long enough to see a price
+ * and leave, not long enough to buy. The CTA had no price anywhere, so every
+ * click was a blind one and the £37.99 checkout came as a shock.
+ *
+ * We are paid per SALE (€6), never per click, so filtering out visitors who
+ * would never pay £38 costs us nothing and fixes the exact complaint carVertical
+ * raised. Expect click volume to drop; that is the intent.
+ *
+ * ⚠️ Re-verify when carVertical run a promotion, and tell Dominyka before
+ * changing this copy — pricing claims are coordinated under agreement 1.1/3.1.
+ */
+export const CARVERTICAL_PRICING = {
+  /** One report, full price. */
+  single: 37.99,
+  /** Per-report price in the three-report pack — the multi-car shopper's price. */
+  packOf3PerReport: 20.99,
+  /** Our coupon, applied automatically through the tracking link. */
+  discountPct: 20,
+  verifiedOn: "2026-08-25",
+} as const;
+
+/** £37.99 -> "£30.39". Rounded to the penny the way a checkout would show it. */
+export function carVerticalDiscountedSingle(): string {
+  const p = CARVERTICAL_PRICING.single * (1 - CARVERTICAL_PRICING.discountPct / 100);
+  return `£${p.toFixed(2)}`;
+}
+
 export const PARTNER_LINKS: Record<string, PartnerLink> = {
   bookMyGarage: {
     url: "https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F",
