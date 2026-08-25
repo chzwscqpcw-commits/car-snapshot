@@ -20,7 +20,7 @@ import {
 } from "@/components/tools/shared";
 import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
-import SellingToBuyBridge from "@/components/SellingToBuyBridge";
+import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
@@ -343,12 +343,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       <div className="mt-6">
         <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
       </div>
-      {/* …and the same visitor is usually weeks from buying. This is the only
-          placement on the site that manufactures buyer intent rather than
-          waiting for it. */}
-      <div className="mt-6">
-        <SellingToBuyBridge context="valuation-selling-to-buy" />
-      </div>
+      {/* SellingToBuyBridge removed 2026-08-25. It was a SECOND carVertical ask
+          on a screen that already carries one, and the two together produced the
+          run of consecutive sells flagged during the placement review. Across
+          both valuation surfaces the bridge drew 28 clicks to the seller CTA's
+          136 — and since we are paid per sale and not per click, the duplicate
+          was costing attention without buying anything. The seller CTA above now
+          carries the price and the multi-car pack pitch, so it is the stronger
+          of the two to keep. Component retained for /preview/carvertical.
+      */}
+      {/* Half of everyone who clicks through to carVertical is back here within
+          ~72 seconds having declined the price. This is the only thing on the
+          site that acknowledges that. */}
+      <PartnerReturnPrompt context="valuation-result-return" />
+
       <div className="mt-6">
         <BuyerInspectionWidget regNumber={vrm} context="valuation-result-buyer-inspection" />
       </div>

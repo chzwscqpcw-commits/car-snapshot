@@ -1,11 +1,25 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ShieldCheck, Gauge, Check, Minus, ArrowUpRight, ChevronDown, Tag, BadgeCheck, Clock } from "lucide-react";
-import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
-import { trackPartnerClick, trackEvent } from "@/lib/tracking";
+import {
+  PARTNER_LINKS,
+  getPartnerRel,
+  isPartnerConfigured,
+  CARVERTICAL_PRICING,
+  carVerticalDiscountedSingle,
+} from "@/config/partners";
+import {
+  trackPartnerClick,
+  trackEvent,
+  getSessionRegCount,
+  markCarVerticalClick,
+} from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
 import PartnerTrust from "@/components/PartnerTrust";
+
+/** The shopping signal can't change while this card is on screen. */
+const NO_SUBSCRIBE = () => () => {};
 
 type Variant = "report" | "mileage" | "seller" | "anomaly";
 
@@ -175,6 +189,17 @@ export default function CarVerticalReportCTA({
 }: CarVerticalReportCTAProps) {
   const [expanded, setExpanded] = useState(false);
 
+  // Is this visitor comparison-shopping? sessionStorage is client-only, so the
+  // server snapshot is `false` and the single-report price is what renders until
+  // hydration — the safe copy either way. useSyncExternalStore rather than
+  // setState-in-an-effect so no lint rule needs suppressing; the value can't
+  // change while the card is mounted, hence the no-op subscribe.
+  const shopper = useSyncExternalStore(
+    NO_SUBSCRIBE,
+    () => getSessionRegCount() >= 2,
+    () => false,
+  );
+
   // Fire `partner_impression` once, when the card is 50% visible — the same
   // seen-not-just-mounted standard the experiment framework holds exposure to,
   // so an impression means a real chance to click rather than "rendered
@@ -235,13 +260,44 @@ export default function CarVerticalReportCTA({
       {/* One-line value */}
       <p className="mt-1.5 text-xs leading-relaxed text-slate-400 sm:text-sm">{cfg.value}</p>
 
+      {/* PRICE, stated before the click.
+          307 clicks analysed 2026-08-25: median 72 seconds between clicking out
+          and reappearing here — long enough to see a checkout, not to buy. There
+          was no price anywhere in this component, so every click was blind and
+          £37.99 landed as a shock. We are paid per SALE, never per click, so
+          losing the visitors who would never pay costs nothing.
+
+          When the session has looked up two or more cars, the pack price leads
+          instead: that visitor is comparison-shopping, and carVertical price for
+          exactly them (£20.99/report in a three-pack vs £37.99 for one). */}
+      <p className="mt-2.5 text-xs text-slate-300 sm:text-[13px]">
+        {shopper ? (
+          <>
+            Checking a few cars?{" "}
+            <strong className="font-semibold text-white">
+              £{CARVERTICAL_PRICING.packOf3PerReport.toFixed(2)} per report
+            </strong>{" "}
+            in a three-report pack, or £{CARVERTICAL_PRICING.single.toFixed(2)} for a single
+            car.
+          </>
+        ) : (
+          <>
+            <strong className="font-semibold text-white">
+              £{CARVERTICAL_PRICING.single.toFixed(2)}
+            </strong>{" "}
+            for one report — {carVerticalDiscountedSingle()} with your code. Cheaper per car
+            in a pack (£{CARVERTICAL_PRICING.packOf3PerReport.toFixed(2)} each for three).
+          </>
+        )}
+      </p>
+
       {/* Discount badge — the freeplatecheck voucher (20% off) auto-applies via the
           tracking link AND is shown as a visible code, so it still credits us on
           direct / word-of-mouth visits and survives ad-blockers that strip click
           tracking (coupon attributes either way — confirmed by carVertical 2026-06-12). */}
-      <p className="mt-2.5 inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+      <p className="mt-2 inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
         <Tag className="h-3 w-3 shrink-0" aria-hidden />
-        20% off with code
+        {CARVERTICAL_PRICING.discountPct}% off with code
         <span className="font-mono font-bold tracking-wide text-emerald-200">freeplatecheck</span>
         — applied automatically via our link
       </p>
@@ -252,7 +308,10 @@ export default function CarVerticalReportCTA({
           href={href}
           target="_blank"
           rel={getPartnerRel(partner)}
-          onClick={() => trackPartnerClick("carVertical", context)}
+          onClick={() => {
+            markCarVerticalClick();
+            trackPartnerClick("carVertical", context);
+          }}
           className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors sm:w-auto ${tone.button}`}
         >
           {cfg.cta} <ArrowUpRight className="h-4 w-4" />

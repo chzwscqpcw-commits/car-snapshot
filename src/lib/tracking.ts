@@ -229,6 +229,89 @@ export type ConversionType = "reg_search" | "mot_reminder";
  * variants the visitor has been bucketed into, so we can attribute conversions
  * to a specific variant in GA4.
  */
+/* ── Session shopping-signal helpers ─────────────────────────────────────────
+ *
+ * Two facts about carVertical clickers, measured over 307 clicks:
+ *   · 31% had searched more than one registration BEFORE clicking.
+ *   · 49% of those who bounced back searched a DIFFERENT car within minutes;
+ *     none re-searched the one they had just clicked about.
+ *
+ * Someone comparing several cars is the only cohort on the site showing genuine
+ * buying behaviour, and carVertical price for them explicitly — a single report
+ * is £37.99, three are £20.99 each. These helpers let a placement notice that
+ * pattern and pitch the pack instead of a single report.
+ *
+ * sessionStorage, not localStorage: this is about the shopping trip happening
+ * right now, not a visitor who once looked at two cars in June.
+ */
+const SESSION_REGS_KEY = "session_regs_seen";
+const CV_CLICK_KEY = "carvertical_clicked_at";
+
+/** Record a registration the visitor has looked up this session (de-duped). */
+export function recordSessionReg(vrm: string): void {
+  if (typeof window === "undefined") return;
+  const plate = (vrm ?? "").replace(/\s+/g, "").toUpperCase();
+  if (!plate) return;
+  try {
+    const raw = sessionStorage.getItem(SESSION_REGS_KEY);
+    const seen: string[] = raw ? JSON.parse(raw) : [];
+    if (seen.includes(plate)) return;
+    seen.push(plate);
+    // Cap it — a bot or a very long session shouldn't grow this unbounded.
+    sessionStorage.setItem(SESSION_REGS_KEY, JSON.stringify(seen.slice(-12)));
+  } catch {
+    /* storage disabled — the pack pitch simply never fires */
+  }
+}
+
+/** How many DISTINCT registrations this session has looked up. */
+export function getSessionRegCount(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const raw = sessionStorage.getItem(SESSION_REGS_KEY);
+    return raw ? (JSON.parse(raw) as string[]).length : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Stamp the moment a visitor clicks out to carVertical. */
+export function markCarVerticalClick(): void {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(CV_CLICK_KEY, String(Date.now()));
+  } catch {
+    /* no-op */
+  }
+}
+
+/**
+ * The raw click-out stamp, or null. Deliberately NOT "milliseconds since" —
+ * this is read through useSyncExternalStore, whose snapshot has to be stable
+ * between calls or React re-renders forever. Callers do their own arithmetic.
+ *
+ * Median real-world gap before the visitor reappears is ~72 seconds: they see
+ * the £37.99 checkout and come straight back.
+ */
+export function getCarVerticalClickStamp(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return sessionStorage.getItem(CV_CLICK_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/** Clear the stamp once the return prompt has been shown and acted on. */
+export function clearCarVerticalClick(): void {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.removeItem(CV_CLICK_KEY);
+  } catch {
+    /* no-op */
+  }
+}
+
 export function trackConversion(
   conversionType: ConversionType,
   metadata?: Record<string, unknown>
@@ -239,6 +322,13 @@ export function trackConversion(
     conversion_type: conversionType,
     ...metadata,
   };
+
+  // Every reg lookup on the site funnels through here, so this is the one place
+  // the session's distinct-plate count can be kept without touching six
+  // callsites (hero, homepage, compare, cost lookup, stats widget).
+  if (conversionType === "reg_search" && typeof metadata?.vrm === "string") {
+    recordSessionReg(metadata.vrm);
+  }
 
   // Attribute to a variant only if this session was exposed to it; de-dupe per
   // conversion type so each exposed session counts at most once (≤100% rates).
