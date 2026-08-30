@@ -775,7 +775,7 @@
     "overallStars": 4,
     "adultOccupant": 76,
     "childOccupant": 85,
-    "pedestrian": 76,
+    "pedestrian": 80,
     "safetyAssist": 65,
     "yearTested": 2025
   },
@@ -1431,7 +1431,7 @@
   },
   {
     "make": "JAGUAR",
-    "model": "I-PACE",
+    "model": "I PACE",
     "overallStars": 5,
     "adultOccupant": 91,
     "childOccupant": 81,
@@ -2481,7 +2481,7 @@
   },
   {
     "make": "NISSAN",
-    "model": "X-TRAIL",
+    "model": "X TRAIL",
     "overallStars": 5,
     "adultOccupant": 91,
     "childOccupant": 90,
@@ -3105,7 +3105,7 @@
     "overallStars": 5,
     "adultOccupant": 89,
     "childOccupant": 85,
-    "pedestrian": 89,
+    "pedestrian": 80,
     "safetyAssist": 79,
     "yearTested": 2025
   },
@@ -3155,7 +3155,7 @@
     "overallStars": 5,
     "adultOccupant": 88,
     "childOccupant": 85,
-    "pedestrian": 88,
+    "pedestrian": 80,
     "safetyAssist": 79,
     "yearTested": 2025
   },
@@ -3295,7 +3295,7 @@
     "overallStars": 5,
     "adultOccupant": 88,
     "childOccupant": 85,
-    "pedestrian": 88,
+    "pedestrian": 80,
     "safetyAssist": 79,
     "yearTested": 2025
   },

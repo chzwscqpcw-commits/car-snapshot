@@ -12,6 +12,210 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-02-05",
+    "buildDateEnd": "2025-06-04",
+    "recallDate": "2026-08-27",
+    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
+    "remedy": "Replace the EGR valve.",
+    "recallNumber": "R/2026/160"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-10",
+    "buildDateEnd": "2025-06-11",
+    "recallDate": "2026-08-27",
+    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
+    "remedy": "Replace the EGR valve.",
+    "recallNumber": "R/2026/160"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-02-27",
+    "buildDateEnd": "2025-03-27",
+    "recallDate": "2026-08-27",
+    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
+    "remedy": "Replace the EGR valve.",
+    "recallNumber": "R/2026/160"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-03-28",
+    "buildDateEnd": "2025-07-27",
+    "recallDate": "2026-08-27",
+    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
+    "remedy": "Replace the EGR valve.",
+    "recallNumber": "R/2026/160"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-09-03",
+    "buildDateEnd": "2025-09-03",
+    "recallDate": "2026-08-27",
+    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
+    "remedy": "Replace the EGR valve.",
+    "recallNumber": "R/2026/160"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "EV6"
+    ],
+    "buildDateStart": "2021-09-16",
+    "buildDateEnd": "2024-01-19",
+    "recallDate": "2026-08-25",
+    "defect": "​​Due to a quality deviation by the supplier certain battery cells within the High Voltage Battery System Assembly manufactured in limited production periods may have been produced with a misaligned electrode. A misaligned electrode may over time result in an internal short circuit in certain situations thereby increasing the risk of fire.​",
+    "remedy": "If the HV battery State of Health is greater than 90% Kia UK will replace the defective module in the pack if 90% or lower the complete battery pack assembly will be replaced.",
+    "recallNumber": "R/2026/309"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "CLA"
+    ],
+    "buildDateStart": "2025-10-29",
+    "buildDateEnd": "2026-03-02",
+    "recallDate": "2026-08-25",
+    "defect": "Mercedes-Benz AG has determined that in certain CLA (174 platform) and GLB (244 platform) vehicles the circuit board for the power electronics of the rear electric drive unit might not meet the specifications.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the power electronics of the rear electric drive unit on the affected vehicles.",
+    "recallNumber": "R/2026/315"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLB"
+    ],
+    "buildDateStart": "2025-03-26",
+    "buildDateEnd": "2025-03-26",
+    "recallDate": "2026-08-25",
+    "defect": "Mercedes-Benz AG has determined that in certain CLA (174 platform) and GLB (244 platform) vehicles the circuit board for the power electronics of the rear electric drive unit might not meet the specifications.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the power electronics of the rear electric drive unit on the affected vehicles.",
+    "recallNumber": "R/2026/315"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2026-03-18",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-08-21",
+    "defect": "Affected vehicles may have a panoramic roof with an improper adhesion bond.  This could result in wind noise water leak or separation from the vehicle.",
+    "remedy": "Test the adhesion bonding of the panoramic roof. and replace if necessary",
+    "recallNumber": "R/2026/334"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "BERLINGO"
+    ],
+    "buildDateStart": "2025-05-28",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/337"
+  },
+  {
+    "make": "DS",
+    "models": [
+      "DS NO8 (BEV)"
+    ],
+    "buildDateStart": "2026-03-06",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-08-19",
+    "defect": "On the affected vehicles the main front wiring harness may contact a metal ground stud due to a design change resulting in a possible loss of electrical vehicle functions and in rare cases a risk of fire.",
+    "remedy": "Add a protective rubber cap to the ground stud.",
+    "recallNumber": "R/2026/317"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "RIFTER"
+    ],
+    "buildDateStart": "2025-05-27",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/336"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "COMBO"
+    ],
+    "buildDateStart": "2025-06-12",
+    "buildDateEnd": "2026-03-01",
+    "recallDate": "2026-08-19",
+    "defect": "On affected vehicles a software defect in the instrument cluster may prevent the cluster display from switching on when the vehicle is started resulting in a black screen.",
+    "remedy": "Update the Body Control Module software.",
+    "recallNumber": "R/2026/335"
+  },
+  {
+    "make": "SUZUKI",
+    "models": [
+      "E VITARA"
+    ],
+    "buildDateStart": "2025-05-02",
+    "buildDateEnd": "2025-11-08",
+    "recallDate": "2026-08-18",
+    "defect": "On affected vehicles there is a possibility of the rear doors being unable to open from either the inside or outside of the vehicle.",
+    "remedy": "Replace the outer rear door handles.",
+    "recallNumber": "R/2026/332"
+  },
+  {
+    "make": "SUZUKI",
+    "models": [
+      "E VITARA"
+    ],
+    "buildDateStart": "2025-06-05",
+    "buildDateEnd": "2025-11-08",
+    "recallDate": "2026-08-18",
+    "defect": "On affected vehicles there is a possibility of the rear doors being unable to open from either the inside or outside of the vehicle.",
+    "remedy": "Replace the outer rear door handles.",
+    "recallNumber": "R/2026/332"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER"
+    ],
+    "buildDateStart": "2025-09-09",
+    "buildDateEnd": "2025-10-28",
+    "recallDate": "2026-08-17",
+    "defect": "On affected vehicles the speed limit of 70 mph is not implemented as described in the technical data and stated in the vehicle registration document.",
+    "remedy": "Adjust the software in various control units.",
+    "recallNumber": "R/2026/320"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER"
+    ],
+    "buildDateStart": "2025-09-30",
+    "buildDateEnd": "2025-09-30",
+    "recallDate": "2026-08-17",
+    "defect": "On affected vehicles the speed limit of 70 mph is not implemented as described in the technical data and stated in the vehicle registration document.",
+    "remedy": "Adjust the software in various control units.",
+    "recallNumber": "R/2026/320"
+  },
+  {
     "make": "AUDI",
     "models": [
       "Q3"
@@ -713,10 +917,10 @@
       "MINIE 3DR HATCHBACK"
     ],
     "buildDateStart": "2026-03-20",
-    "buildDateEnd": "2026-04-07",
+    "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
     "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
     "recallNumber": "R/2026/250"
   },
   {
@@ -724,11 +928,11 @@
     "models": [
       "MINI ACEMAN"
     ],
-    "buildDateStart": "2026-03-25",
+    "buildDateStart": "2026-03-20",
     "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
     "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be replaced.",
+    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
     "recallNumber": "R/2026/250"
   },
   {
@@ -1788,6 +1992,54 @@
     "recallNumber": "R/2026/191"
   },
   {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE"
+    ],
+    "buildDateStart": "2025-10-15",
+    "buildDateEnd": "2025-03-02",
+    "recallDate": "2026-06-08",
+    "defect": "​​Vehicles equipped with a 1.5L engine may be subject to engine failure and loss of engine power caused by water pump pulley slippage. This condition may result in timing belt misalignment and engine shutdown. The pulley may detach from the shaft leading to the loss of vehicle components on the roadway and complete loss of engine power increasing the risk of an accident.​",
+    "remedy": "​​Engine Water Pump Replacement​",
+    "recallNumber": "R/2026/200"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE CITY"
+    ],
+    "buildDateStart": "2025-10-15",
+    "buildDateEnd": "2026-03-02",
+    "recallDate": "2026-06-08",
+    "defect": "​​Vehicles equipped with a 1.5L engine may be subject to engine failure and loss of engine power caused by water pump pulley slippage. This condition may result in timing belt misalignment and engine shutdown. The pulley may detach from the shaft leading to the loss of vehicle components on the roadway and complete loss of engine power increasing the risk of an accident.​",
+    "remedy": "​​Engine Water Pump Replacement​",
+    "recallNumber": "R/2026/200"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE"
+    ],
+    "buildDateStart": "2025-10-15",
+    "buildDateEnd": "2026-03-02",
+    "recallDate": "2026-06-08",
+    "defect": "​​Vehicles equipped with a 1.5L engine may be subject to engine failure and loss of engine power caused by water pump pulley slippage. This condition may result in timing belt misalignment and engine shutdown. The pulley may detach from the shaft leading to the loss of vehicle components on the roadway and complete loss of engine power increasing the risk of an accident.​",
+    "remedy": "​​Engine Water Pump Replacement​",
+    "recallNumber": "R/2026/200"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE CITY"
+    ],
+    "buildDateStart": "2025-10-15",
+    "buildDateEnd": "2026-03-02",
+    "recallDate": "2026-06-08",
+    "defect": "​​Vehicles equipped with a 1.5L engine may be subject to engine failure and loss of engine power caused by water pump pulley slippage. This condition may result in timing belt misalignment and engine shutdown. The pulley may detach from the shaft leading to the loss of vehicle components on the roadway and complete loss of engine power increasing the risk of an accident.​",
+    "remedy": "​​Engine Water Pump Replacement​",
+    "recallNumber": "R/2026/200"
+  },
+  {
     "make": "MERCEDES-BENZ",
     "models": [
       "GLB"
@@ -2396,7 +2648,7 @@
     "buildDateEnd": "2024-11-22",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2408,7 +2660,7 @@
     "buildDateEnd": "2024-10-28",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2420,7 +2672,7 @@
     "buildDateEnd": "2024-08-13",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -2432,7 +2684,7 @@
     "buildDateEnd": "2024-01-22",
     "recallDate": "2026-05-11",
     "defect": "On affected left-hand drive (LHD) vehicles there is a risk of a leak from a fuel line on to the diesel particulate filter (DPF) and/or exhaust components which may in a worst-case scenario result in an under-bonnet fire.",
-    "remedy": "Fit modified fuel feed line (The manufacturer will contact customers when parts are available expected October 2026).",
+    "remedy": "Fit modified fuel feed line.",
     "recallNumber": "R/2026/210"
   },
   {
@@ -3471,66 +3723,6 @@
     "defect": "On affected motorcycles a fatigue failure of the front brake caliper support may occur after multiple hard or emergency braking. If the support fails front braking will be lost and it will increase the risk of a crash causing injury or even death.",
     "remedy": "Install a Caliper Support Reinforcement Kit on the front brake caliper support.",
     "recallNumber": "R/2026/154"
-  },
-  {
-    "make": "FORD",
-    "models": [
-      "KUGA"
-    ],
-    "buildDateStart": "2025-02-05",
-    "buildDateEnd": "2025-06-04",
-    "recallDate": "2026-04-15",
-    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
-    "remedy": "A remedy is not currently available.  The manufacturer is working to provide a software update to prevent this failure.  Should you experience EGR failure contact your dealer immediately.",
-    "recallNumber": "R/2026/160"
-  },
-  {
-    "make": "FORD",
-    "models": [
-      "KUGA"
-    ],
-    "buildDateStart": "2025-06-10",
-    "buildDateEnd": "2025-06-11",
-    "recallDate": "2026-04-15",
-    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
-    "remedy": "A remedy is not currently available.  The manufacturer is working to provide a software update to prevent this failure.  Should you experience EGR failure contact your dealer immediately.",
-    "recallNumber": "R/2026/160"
-  },
-  {
-    "make": "FORD",
-    "models": [
-      "RANGER"
-    ],
-    "buildDateStart": "2025-02-27",
-    "buildDateEnd": "2025-03-27",
-    "recallDate": "2026-04-15",
-    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
-    "remedy": "A remedy is not currently available.  The manufacturer is working to provide a software update to prevent this failure.  Should you experience EGR failure contact your dealer immediately.",
-    "recallNumber": "R/2026/160"
-  },
-  {
-    "make": "FORD",
-    "models": [
-      "RANGER"
-    ],
-    "buildDateStart": "2025-03-28",
-    "buildDateEnd": "2025-07-27",
-    "recallDate": "2026-04-15",
-    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
-    "remedy": "A remedy is not currently available.  The manufacturer is working to provide a software update to prevent this failure.  Should you experience EGR failure contact your dealer immediately.",
-    "recallNumber": "R/2026/160"
-  },
-  {
-    "make": "FORD",
-    "models": [
-      "RANGER"
-    ],
-    "buildDateStart": "2025-09-03",
-    "buildDateEnd": "2025-09-03",
-    "recallDate": "2026-04-15",
-    "defect": "On affected vehicles the Exhaust Gas Recirculation (EGR) valve may fail leading to weak acceleration engine vibration a no start condition or a loss of power.",
-    "remedy": "A remedy is not currently available.  The manufacturer is working to provide a software update to prevent this failure.  Should you experience EGR failure contact your dealer immediately.",
-    "recallNumber": "R/2026/160"
   },
   {
     "make": "IVECO",
@@ -4863,6 +5055,18 @@
     "defect": "The front passenger airbag inflator (PAB) may contain propellant that could possibly degrade over a period of time. This may cause metal fragments to pass through the air bag and into the vehicle interior at high speed which may result in injury to vehicle occupants in the event of a deployment event.",
     "remedy": "On affected vehicles replace the inflator assembly.",
     "recallNumber": "R/2026/133"
+  },
+  {
+    "make": "ALFA ROMEO",
+    "models": [
+      "JUNIOR MHEV"
+    ],
+    "buildDateStart": "2023-12-13",
+    "buildDateEnd": "2026-01-19",
+    "recallDate": "2026-03-18",
+    "defect": "On affected vehicles due to a production nonconformity there may be contact or a reduced clearance between the fuel Particulate Filter pipe and the pole protection cup of the 48V Belt Starter Generator. Under wet conditions there is a possibility that this insufficient clearance may lead to water infiltration creating an electrical arc which could trigger a thermal event such as overheating. In the worst-case scenario this could result in a risk of fire in the engine compartment.",
+    "remedy": "Replace the pole protection cup of the 48V Belt Starter Generator. In addition check the distance between the fuel Particulate Filter pipe and the pole protection cup of the 48V Belt Starter Generator. If the distance is less than 10 mm re-position the pipe or replace the pipe if damaged.",
+    "recallNumber": "R/2026/113"
   },
   {
     "make": "FORD",
@@ -9973,8 +10177,8 @@
     "buildDateStart": "2023-06-12",
     "buildDateEnd": "2024-02-29",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -9985,8 +10189,8 @@
     "buildDateStart": "2024-05-09",
     "buildDateEnd": "2025-05-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -9997,8 +10201,8 @@
     "buildDateStart": "2025-07-10",
     "buildDateEnd": "2025-07-10",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10009,8 +10213,8 @@
     "buildDateStart": "2019-11-26",
     "buildDateEnd": "2021-03-16",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10021,8 +10225,8 @@
     "buildDateStart": "2020-06-05",
     "buildDateEnd": "2020-12-22",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10033,8 +10237,8 @@
     "buildDateStart": "2020-12-01",
     "buildDateEnd": "2021-04-20",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10045,8 +10249,8 @@
     "buildDateStart": "2021-03-16",
     "buildDateEnd": "2021-06-17",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10057,8 +10261,8 @@
     "buildDateStart": "2021-06-02",
     "buildDateEnd": "2021-10-21",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10069,8 +10273,8 @@
     "buildDateStart": "2021-09-10",
     "buildDateEnd": "2021-10-29",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10081,8 +10285,8 @@
     "buildDateStart": "2021-05-25",
     "buildDateEnd": "2022-02-16",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10093,8 +10297,8 @@
     "buildDateStart": "2022-02-02",
     "buildDateEnd": "2022-03-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10105,8 +10309,8 @@
     "buildDateStart": "2022-02-28",
     "buildDateEnd": "2022-05-31",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10117,8 +10321,8 @@
     "buildDateStart": "2022-06-01",
     "buildDateEnd": "2022-10-24",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10129,8 +10333,8 @@
     "buildDateStart": "2019-08-07",
     "buildDateEnd": "2023-11-28",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10141,8 +10345,8 @@
     "buildDateStart": "2020-06-10",
     "buildDateEnd": "2020-06-10",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10153,8 +10357,8 @@
     "buildDateStart": "2023-03-01",
     "buildDateEnd": "2024-01-09",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10165,8 +10369,8 @@
     "buildDateStart": "2024-05-10",
     "buildDateEnd": "2025-06-26",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10177,8 +10381,8 @@
     "buildDateStart": "2025-06-20",
     "buildDateEnd": "2025-09-26",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10187,10 +10391,46 @@
       "KUGA"
     ],
     "buildDateStart": "2025-10-25",
-    "buildDateEnd": "2025-01-19",
+    "buildDateEnd": "2026-01-19",
     "recallDate": "2025-11-04",
-    "defect": "Ford constantly monitors production processes and vehicles in service. While monitoring vehicles in operation we have become aware of a number of Kuga PHEV vehicles on which the high voltage battery may have some cells that could potentially develop an internal short circuit. In the event of a high voltage battery cell internal short circuit the customer will experience a Stop Safely Now message and warning icon in the instrument cluster. The customer may also experience a loss of motive power increasing the risk of an accident. The customer will continue to have 12-volt (V) accessories steering and braking control. The customer may also experience battery thermal venting potentially resulting in a vehicle fire increasing the risk of injury. Although customers may recall our previous communication about a similar issue under Field Service Action (FSA) 24S79 all customers will need to follow these new instructions regardless of whether that prior action was completed on their vehicles.",
-    "remedy": "Ford engineers are working on the development of a remedy for this issue. While Ford has not issued instructions to stop driving until a remedy becomes available to mitigate the risk Ford will ask all affected customers to ONLY use the default Auto EV mode and avoid deep mud and snow modes until further notice. Ford will also send customers a letter instructing them not to charge their High-Voltage Battery above 80%. To make it easier for customers to limit the charge Ford will include with this letter a leaflet containing clear instructions on how to set the limit using the in-vehicle screen or via the Ford App. Once a remedy is available Ford will send customers a follow up letter instructing them to contact their dealer to schedule an appointment in order for the fix to be deployed on their vehicle.",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-03",
+    "buildDateEnd": "2025-06-03",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-27",
+    "buildDateEnd": "2025-09-17",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
+    "recallNumber": "R/2025/527"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2026-01-19",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2025-11-04",
+    "defect": "On affected vehicles the high voltage battery may have some cells that could potentially develop a short circuit leading to a Stop Safely Now message and possible loss of motive power or battery thermal venting.",
+    "remedy": "Update the vehicle's Battery Energy Control Module software.",
     "recallNumber": "R/2025/527"
   },
   {
@@ -10350,6 +10590,66 @@
     "defect": "On Affected vehicles it is possible that moisture has entered the Gear Shift Module (GSM) during the assembly process. Under certain conditions there is a risk that this moisture could result in non-illumination of the Light Emitting Diode (LED) indicating the selected gear.  Non-illumination of the LED gear indicator adjacent to the shifter would not conform to regulated requirements for automatic transmission control position indicator illumination.",
     "remedy": "Affected vehicles will have the Gear Shift Module replaced.",
     "recallNumber": "R/2025/436"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "3 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2015-10-26",
+    "buildDateEnd": "2018-07-31",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2016-08-19",
+    "buildDateEnd": "2019-02-22",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON LWB PHEV"
+    ],
+    "buildDateStart": "2016-03-17",
+    "buildDateEnd": "2019-02-20",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "5 SERIES SALOON PHEV"
+    ],
+    "buildDateStart": "2017-02-27",
+    "buildDateEnd": "2020-06-29",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "5 SERIES LWB PHEV"
+    ],
+    "buildDateStart": "2018-11-16",
+    "buildDateEnd": "2018-11-16",
+    "recallDate": "2025-10-27",
+    "defect": "For affected vehicles there is a concern involving water ingress and corrosion to the starter motor for where a short circuit cannot be ruled out. It is strongly recommended to park the vehicle outdoors and not in the immediate vicinity of buildings until the repair has been carried out.",
+    "remedy": "Replacement of the starter motor.",
+    "recallNumber": "R/2025/405"
   },
   {
     "make": "BMW",
@@ -21089,6 +21389,234 @@
     ],
     "buildDateStart": "2019-03-20",
     "buildDateEnd": "2019-05-30",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "ECOSPORT"
+    ],
+    "buildDateStart": "2017-10-18",
+    "buildDateEnd": "2018-05-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-05-08",
+    "buildDateEnd": "2015-09-11",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-09-14",
+    "buildDateEnd": "2015-10-22",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-10-16",
+    "buildDateEnd": "2015-12-17",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2015-12-18",
+    "buildDateEnd": "2016-01-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-02-01",
+    "buildDateEnd": "2016-04-08",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-04-11",
+    "buildDateEnd": "2016-06-10",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-07-04",
+    "buildDateEnd": "2016-08-15",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2016-09-28",
+    "buildDateEnd": "2017-08-30",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "B-MAX"
+    ],
+    "buildDateStart": "2017-10-18",
+    "buildDateEnd": "2018-05-05",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-05-05",
+    "buildDateEnd": "2015-08-31",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-29",
+    "buildDateEnd": "2016-06-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-05-25",
+    "buildDateEnd": "2016-08-26",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-08-23",
+    "buildDateEnd": "2016-10-14",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-10-24",
+    "buildDateEnd": "2017-04-12",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-05",
+    "buildDateEnd": "2015-08-27",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2015-08-29",
+    "buildDateEnd": "2016-06-01",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-06-01",
+    "buildDateEnd": "2016-07-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "FIESTA MCA"
+    ],
+    "buildDateStart": "2016-08-27",
+    "buildDateEnd": "2017-04-25",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
     "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
@@ -69294,478 +69822,10 @@
     "models": [
       "V40CC"
     ],
-    "buildDateStart": "2014-04-28",
-    "buildDateEnd": "2016-11-14",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V70"
-    ],
-    "buildDateStart": "2014-04-25",
-    "buildDateEnd": "2016-04-29",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2015-04-10",
-    "buildDateEnd": "2016-08-10",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S90"
-    ],
-    "buildDateStart": "2014-06-14",
-    "buildDateEnd": "2018-04-10",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
-    "buildDateStart": "2013-06-19",
-    "buildDateEnd": "2016-06-10",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC90"
-    ],
-    "buildDateStart": "2014-12-22",
-    "buildDateEnd": "2016-11-23",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60"
-    ],
-    "buildDateStart": "2012-11-14",
-    "buildDateEnd": "2018-09-09",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60"
-    ],
-    "buildDateStart": "2015-04-24",
-    "buildDateEnd": "2016-11-14",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
-    "buildDateStart": "2018-04-16",
-    "buildDateEnd": "2019-04-18",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC60"
-    ],
-    "buildDateStart": "2016-04-22",
-    "buildDateEnd": "2016-10-14",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
     "buildDateStart": "2015-04-20",
     "buildDateEnd": "2016-06-30",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2015-04-20",
-    "buildDateEnd": "2016-11-15",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC70"
-    ],
-    "buildDateStart": "2013-11-07",
-    "buildDateEnd": "2016-04-26",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC70"
-    ],
-    "buildDateStart": "2012-11-21",
-    "buildDateEnd": "2016-05-10",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC90"
-    ],
-    "buildDateStart": "2014-09-09",
-    "buildDateEnd": "2018-04-20",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V70"
-    ],
-    "buildDateStart": "2012-11-21",
-    "buildDateEnd": "2016-04-22",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2014-05-05",
-    "buildDateEnd": "2016-10-04",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC60"
-    ],
-    "buildDateStart": "2012-11-14",
-    "buildDateEnd": "2016-10-14",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V70"
-    ],
-    "buildDateStart": "2015-04-20",
-    "buildDateEnd": "2016-04-22",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V90"
-    ],
-    "buildDateStart": "2016-06-30",
-    "buildDateEnd": "2018-04-17",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC90"
-    ],
-    "buildDateStart": "2014-09-23",
-    "buildDateEnd": "2018-04-23",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "XC60"
-    ],
-    "buildDateStart": "2013-11-05",
-    "buildDateEnd": "2016-04-22",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
-    "buildDateStart": "2013-06-19",
-    "buildDateEnd": "2018-07-02",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60"
-    ],
-    "buildDateStart": "2015-05-20",
-    "buildDateEnd": "2018-05-24",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60"
-    ],
-    "buildDateStart": "2014-04-25",
-    "buildDateEnd": "2016-10-17",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60"
-    ],
-    "buildDateStart": "2013-06-03",
-    "buildDateEnd": "2016-10-18",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
-    "buildDateStart": "2015-04-16",
-    "buildDateEnd": "2016-11-16",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60CC"
-    ],
-    "buildDateStart": "2015-04-13",
-    "buildDateEnd": "2016-06-29",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V90"
-    ],
-    "buildDateStart": "2016-12-02",
-    "buildDateEnd": "2018-02-05",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V70"
-    ],
-    "buildDateStart": "2013-11-07",
-    "buildDateEnd": "2016-04-26",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2014-04-30",
-    "buildDateEnd": "2016-11-15",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S90"
-    ],
-    "buildDateStart": "2015-06-25",
-    "buildDateEnd": "2018-04-25",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S80"
-    ],
-    "buildDateStart": "2013-10-15",
-    "buildDateEnd": "2016-04-07",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60"
-    ],
-    "buildDateStart": "2013-10-23",
-    "buildDateEnd": "2016-10-16",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60CC"
-    ],
-    "buildDateStart": "2015-05-18",
-    "buildDateEnd": "2016-10-14",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V90CC"
-    ],
-    "buildDateStart": "2016-04-21",
-    "buildDateEnd": "2018-05-02",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2015-04-10",
-    "buildDateEnd": "2018-04-18",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S90"
-    ],
-    "buildDateStart": "2015-05-26",
-    "buildDateEnd": "2016-11-24",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60"
-    ],
-    "buildDateStart": "2012-11-27",
-    "buildDateEnd": "2018-06-16",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2013-06-13",
-    "buildDateEnd": "2016-10-06",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
@@ -69777,103 +69837,55 @@
     "buildDateStart": "2012-11-21",
     "buildDateEnd": "2016-04-27",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
   {
     "make": "VOLVO",
     "models": [
-      "S80"
+      "V40"
     ],
-    "buildDateStart": "2012-11-21",
-    "buildDateEnd": "2016-04-08",
+    "buildDateStart": "2015-04-10",
+    "buildDateEnd": "2016-08-10",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
   {
     "make": "VOLVO",
     "models": [
-      "V90"
+      "S90"
     ],
-    "buildDateStart": "2015-12-19",
-    "buildDateEnd": "2016-11-24",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V90CC"
-    ],
-    "buildDateStart": "2016-12-14",
+    "buildDateStart": "2014-06-14",
     "buildDateEnd": "2018-04-10",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
   {
     "make": "VOLVO",
     "models": [
-      "S60"
+      "V40CC"
     ],
-    "buildDateStart": "2015-04-16",
-    "buildDateEnd": "2016-10-13",
+    "buildDateStart": "2013-06-19",
+    "buildDateEnd": "2016-06-10",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
   {
     "make": "VOLVO",
     "models": [
-      "S60"
+      "XC90"
     ],
-    "buildDateStart": "2014-05-13",
-    "buildDateEnd": "2016-10-05",
+    "buildDateStart": "2014-12-22",
+    "buildDateEnd": "2016-11-23",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60"
-    ],
-    "buildDateStart": "2013-10-29",
-    "buildDateEnd": "2016-04-10",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V60CC"
-    ],
-    "buildDateStart": "2014-11-14",
-    "buildDateEnd": "2016-10-17",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60CC"
-    ],
-    "buildDateStart": "2015-04-13",
-    "buildDateEnd": "2016-09-29",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
@@ -69885,67 +69897,7 @@
     "buildDateStart": "2015-06-02",
     "buildDateEnd": "2016-06-30",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60"
-    ],
-    "buildDateStart": "2014-05-15",
-    "buildDateEnd": "2018-06-29",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60CC"
-    ],
-    "buildDateStart": "2015-04-13",
-    "buildDateEnd": "2016-09-30",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40CC"
-    ],
-    "buildDateStart": "2014-05-07",
-    "buildDateEnd": "2016-10-06",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "S60"
-    ],
-    "buildDateStart": "2012-11-14",
-    "buildDateEnd": "2016-10-05",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
-    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
-    "recallNumber": "R/2019/180"
-  },
-  {
-    "make": "VOLVO",
-    "models": [
-      "V40"
-    ],
-    "buildDateStart": "2013-06-13",
-    "buildDateEnd": "2018-06-29",
-    "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
@@ -69957,7 +69909,187 @@
     "buildDateStart": "2015-05-12",
     "buildDateEnd": "2016-07-04",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40CC"
+    ],
+    "buildDateStart": "2019-04-16",
+    "buildDateEnd": "2019-04-18",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC60"
+    ],
+    "buildDateStart": "2012-11-14",
+    "buildDateEnd": "2016-10-14",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40CC"
+    ],
+    "buildDateStart": "2015-05-07",
+    "buildDateEnd": "2016-10-06",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40"
+    ],
+    "buildDateStart": "2014-05-05",
+    "buildDateEnd": "2016-10-04",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC70"
+    ],
+    "buildDateStart": "2013-11-07",
+    "buildDateEnd": "2016-04-26",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC70"
+    ],
+    "buildDateStart": "2012-11-21",
+    "buildDateEnd": "2016-05-10",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC90"
+    ],
+    "buildDateStart": "2014-09-09",
+    "buildDateEnd": "2018-04-20",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V70"
+    ],
+    "buildDateStart": "2013-11-07",
+    "buildDateEnd": "2016-04-26",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40"
+    ],
+    "buildDateStart": "2015-04-20",
+    "buildDateEnd": "2016-11-15",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "XC60"
+    ],
+    "buildDateStart": "2013-11-05",
+    "buildDateEnd": "2016-04-22",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V70"
+    ],
+    "buildDateStart": "2015-04-20",
+    "buildDateEnd": "2016-04-22",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V90"
+    ],
+    "buildDateStart": "2016-06-30",
+    "buildDateEnd": "2018-04-17",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V90CC"
+    ],
+    "buildDateStart": "2016-12-14",
+    "buildDateEnd": "2018-04-10",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40"
+    ],
+    "buildDateStart": "2015-04-10",
+    "buildDateEnd": "2018-04-18",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60"
+    ],
+    "buildDateStart": "2015-05-20",
+    "buildDateEnd": "2018-05-24",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
@@ -69969,7 +70101,7 @@
     "buildDateStart": "2014-04-25",
     "buildDateEnd": "2018-05-06",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
@@ -69981,7 +70113,211 @@
     "buildDateStart": "2015-04-09",
     "buildDateEnd": "2018-06-04",
     "recallDate": "2019-10-07",
-    "defect": "The engine�s plastic inlet manifold may melt and deform",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40CC"
+    ],
+    "buildDateStart": "2015-04-16",
+    "buildDateEnd": "2016-11-16",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60CC"
+    ],
+    "buildDateStart": "2015-04-13",
+    "buildDateEnd": "2016-06-29",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V90"
+    ],
+    "buildDateStart": "2015-12-19",
+    "buildDateEnd": "2016-11-24",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V40"
+    ],
+    "buildDateStart": "2013-06-13",
+    "buildDateEnd": "2016-10-06",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S90"
+    ],
+    "buildDateStart": "2015-05-26",
+    "buildDateEnd": "2016-11-24",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S80"
+    ],
+    "buildDateStart": "2013-10-15",
+    "buildDateEnd": "2016-04-07",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V60"
+    ],
+    "buildDateStart": "2013-10-23",
+    "buildDateEnd": "2016-10-16",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V60CC"
+    ],
+    "buildDateStart": "2015-05-18",
+    "buildDateEnd": "2016-10-14",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V60"
+    ],
+    "buildDateStart": "2013-06-03",
+    "buildDateEnd": "2016-10-18",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S80"
+    ],
+    "buildDateStart": "2012-11-21",
+    "buildDateEnd": "2016-04-08",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60"
+    ],
+    "buildDateStart": "2015-04-16",
+    "buildDateEnd": "2016-10-13",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60"
+    ],
+    "buildDateStart": "2012-11-14",
+    "buildDateEnd": "2016-10-05",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60"
+    ],
+    "buildDateStart": "2013-10-29",
+    "buildDateEnd": "2016-04-10",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V60CC"
+    ],
+    "buildDateStart": "2014-11-14",
+    "buildDateEnd": "2016-10-17",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60CC"
+    ],
+    "buildDateStart": "2015-04-13",
+    "buildDateEnd": "2016-09-30",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "S60"
+    ],
+    "buildDateStart": "2014-05-15",
+    "buildDateEnd": "2018-06-29",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
+    "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
+    "recallNumber": "R/2019/180"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "V60"
+    ],
+    "buildDateStart": "2015-04-24",
+    "buildDateEnd": "2016-11-14",
+    "recallDate": "2019-10-07",
+    "defect": "The engines plastic inlet manifold may melt and deform",
     "remedy": "Update vehicles with improved soot reducing software cleaning of TMAP and EMAP. Fit additional hoses where necessary.",
     "recallNumber": "R/2019/180"
   },
