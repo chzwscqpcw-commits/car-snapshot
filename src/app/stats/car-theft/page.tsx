@@ -8,6 +8,7 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 
 import CarTheftCharts from "@/components/stats/CarTheftCharts";
 import CiteThisData from "@/components/stats/CiteThisData";
+import DataAsOf from "@/components/stats/DataAsOf";
 
 export const metadata: Metadata = {
   title: "Most Stolen Cars in the UK 2026 — Full Theft Rate List",
@@ -118,12 +119,15 @@ export default function CarTheftPage() {
         <CarTheftCharts />
 
         {/* Source / methodology note — keeps the figures honest by the letter
-            now that the page actively invites citation. */}
+            now that the page actively invites citation. "Updated periodically"
+            was doing a lot of work on its own: this dataset is refreshed by
+            hand and had not moved since February, so the date is stated
+            outright rather than implied. */}
         <p className="mt-3 text-xs text-slate-500">
-          Figures are representative of relative theft risk by model, based on
-          the latest available data and updated periodically — indicative of
-          which models are most at risk rather than a precise annual count.
+          Figures are representative of relative theft risk by model — indicative
+          of which models are most at risk rather than a precise annual count.
         </p>
+        <DataAsOf files={["theft-risk.json"]} className="mt-1" />
 
         {/* Cite-this-data box — makes it frictionless for journalists/bloggers
             to credit the figures WITH a link back (digital-PR backlink play). */}
