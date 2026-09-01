@@ -482,8 +482,24 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   },
 };
 
+/**
+ * `rel` for an outbound partner link.
+ *
+ * Affiliate links get `sponsored` (Google's required disclosure) AND
+ * `nofollow`. The `nofollow` is not redundant: `sponsored` tells Google how to
+ * treat the link for ranking, but it is `nofollow` that asks a crawler not to
+ * fetch the URL at all — and an affiliate network counts a click the moment
+ * its tracker is requested, by anything. Component CTAs sit in server-rendered
+ * HTML on fully crawlable pages, so without this they bank clicks against zero
+ * sales exactly the way the inline blog links did (see src/lib/affiliateLinks.ts).
+ *
+ * This is the polite half of the defence — it only binds crawlers that choose
+ * to obey. The /go route additionally refuses them outright; component CTAs
+ * don't route through /go because they can track their own clicks in the
+ * browser, so `nofollow` is what they have.
+ */
 export function getPartnerRel(partner: PartnerLink): string {
-  if (partner.isAffiliate) return "noopener sponsored";
+  if (partner.isAffiliate) return "noopener sponsored nofollow";
   return "noopener noreferrer";
 }
 
