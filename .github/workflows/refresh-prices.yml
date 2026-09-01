@@ -58,21 +58,54 @@ jobs:
 
       - name: Refresh new-car list prices (Parkers)
         id: parkers
-        # 55 minutes: it had reached ~475 pages at 11m53s when the old job
-        # killed it, so this is roughly a 4-5x headroom on the observed rate.
-        # If it still can't finish, the answer is to make the scraper
-        # incremental — not to raise this again.
+        # The scraper is now incremental and stops itself at --budget-minutes,
+        # so it should never reach this cap; the cap is a backstop for a hung
+        # browser, not the mechanism. 45m budget vs a measured ~53 pages/min
+        # over ~1,800 pages ≈ a full pass most weeks, and a clean partial when
+        # the site is slow. Either way it WRITES what it got.
         timeout-minutes: 55
         continue-on-error: true
-        run: npx tsx scripts/fetch-new-prices.ts
+        run: npx tsx scripts/fetch-new-prices.ts --budget-minutes=45
 
       - name: Refresh EV specs (ev-database.org)
         id: evspecs
         # ev-database.org rate-limits aggressively; repeated HTTP 429s can make
         # this fail outright. Never fatal — we ship whatever Parkers produced.
-        timeout-minutes: 10
+        #
+        # The old 10-minute cap could never work: a full pass is ~1,400 pages at
+        # a measured ~79 pages/min, so every run was killed mid-scrape and, with
+        # the old write-at-the-end design, produced nothing at all for 194 days.
+        # 15m budget inside a 20m cap now covers a full pass most weeks, and
+        # 429-throttled URLs are left unmarked so the next run retries them.
+        timeout-minutes: 20
         continue-on-error: true
-        run: npx tsx scripts/fetch-ev-specs.ts
+        run: npx tsx scripts/fetch-ev-specs.ts --budget-minutes=15
+
+      # Make a hollow run impossible to miss.
+      #
+      # Both scrapers are continue-on-error, which is right — a Parkers failure
+      # should not throw away good EV data. But it also meant this workflow
+      # reported SUCCESS every Wednesday from 19 August while both scrapers
+      # timed out and committed nothing. Green is what let it rot unnoticed for
+      # 194 days, and the run summary that recorded the truth is a page nobody
+      # opens unprompted.
+      #
+      # So: one scraper down is a warning (the other still refreshed); BOTH
+      # down means the run achieved literally nothing and goes red, because a
+      # red run is the only signal that actually reaches anyone.
+      - name: Surface scraper failures
+        if: always()
+        run: |
+          P="${{ steps.parkers.outcome }}"
+          E="${{ steps.evspecs.outcome }}"
+          echo "Parkers=$P  EV specs=$E"
+          [ "$P" != "success" ] && echo "::warning title=Parkers scrape failed::outcome=$P — new-prices.json keeps its previous values"
+          [ "$E" != "success" ] && echo "::warning title=EV spec scrape failed::outcome=$E — ev-specs.json keeps its previous values"
+          if [ "$P" != "success" ] && [ "$E" != "success" ]; then
+            echo "::error title=Price refresh achieved nothing::both scrapers failed; no data was refreshed this run"
+            exit 1
+          fi
+          exit 0
 
       # Gates the commit exactly as the weekly refresh does: a partial or
       # failed scrape may cost freshness, but must never push bad data.
@@ -82,7 +115,11 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          DATA_FILES="src/data/new-prices.json src/data/ev-specs.json"
+          # The scrape-state files are committed on purpose: CI runners are
+          # ephemeral, so state is the only way a run knows which slice the
+          # previous one covered. Without it the scrapers restart from scratch
+          # every week and never converge.
+          DATA_FILES="src/data/new-prices.json src/data/ev-specs.json scripts/scrape-state"
           if git diff --quiet $DATA_FILES; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No price/spec changes — nothing to commit."
@@ -109,7 +146,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json
+          git add src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json scripts/scrape-state
           git commit -m "data: refresh new-car prices & EV specs"
           git push origin "$BRANCH"
           gh pr create \

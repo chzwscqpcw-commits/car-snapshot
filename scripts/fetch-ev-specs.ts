@@ -2,8 +2,16 @@
  * Fetches EV specs from ev-database.org and writes src/data/ev-specs.json.
  *
  * Usage:
- *   npx tsx scripts/fetch-ev-specs.ts             # full run (~1,339 EVs)
- *   npx tsx scripts/fetch-ev-specs.ts --limit=10  # test on first 10
+ *   npx tsx scripts/fetch-ev-specs.ts                      # default 40min budget
+ *   npx tsx scripts/fetch-ev-specs.ts --budget-minutes=8   # one CI slice
+ *   npx tsx scripts/fetch-ev-specs.ts --limit=10           # test on first 10
+ *
+ * INCREMENTAL. A full pass over ~1,339 URLs takes ~45 minutes at the polite
+ * rate below, which does not fit a CI step — and the old all-or-nothing write
+ * meant a timeout produced NOTHING. It ran green and wrote nothing for 194
+ * days. Now each run refreshes the stalest slice within its time budget and
+ * writes what it got, so the dataset converges over successive runs. See
+ * scripts/lib/incremental-scrape.ts.
  *
  * Strategy:
  * - Sitemap lists every EV detail URL — no pagination scraping needed
@@ -17,6 +25,19 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import puppeteer, { type Browser } from "puppeteer-core";
+import {
+  Deadline,
+  allRecords,
+  coverage,
+  loadState,
+  orderByStaleness,
+  parseBudgetMinutes,
+  pruneRecords,
+  seedFromExisting,
+  writeCompactJsonArray,
+  saveState,
+  upsertRecord,
+} from "./lib/incremental-scrape";
 
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const OUT_PATH = path.join(PROJECT_ROOT, "src", "data", "ev-specs.json");
@@ -271,21 +292,27 @@ async function launchBrowser(): Promise<Browser> {
 async function scrapeAll(
   urls: string[],
   concurrency: number,
-): Promise<{ specs: EvSpec[]; errors: { url: string; error: string }[] }> {
-  const specs: EvSpec[] = [];
+  deadline: Deadline,
+): Promise<{ specs: Array<EvSpec & { url: string }>; errors: { url: string; error: string }[]; stopped: boolean }> {
+  const specs: Array<EvSpec & { url: string }> = [];
   const errors: { url: string; error: string }[] = [];
   const total = urls.length;
   let done = 0;
+  let stopped = false;
 
   // Process in batches; restart the browser between batches to keep
   // memory bounded. Each batch internally uses `concurrency` workers.
   for (let batchStart = 0; batchStart < urls.length; batchStart += BROWSER_RESTART_EVERY) {
+    // Budget is checked between batches AND between pages, so we stop cleanly
+    // with results in hand rather than being killed mid-write.
+    if (deadline.expired()) { stopped = true; break; }
     const batch = urls.slice(batchStart, batchStart + BROWSER_RESTART_EVERY);
     const browser = await launchBrowser();
     try {
       let i = 0;
       async function worker() {
         while (true) {
+          if (deadline.expired()) { stopped = true; return; }
           const idx = i++;
           if (idx >= batch.length) return;
           let result: Awaited<ReturnType<typeof scrapeOne>>;
@@ -295,7 +322,7 @@ async function scrapeAll(
             result = { url: batch[idx], error: (e as Error).message };
           }
           if ("make" in result) {
-            specs.push(result);
+            specs.push({ ...result, url: batch[idx] });
           } else {
             errors.push(result);
           }
@@ -320,82 +347,119 @@ async function scrapeAll(
     }
   }
   process.stdout.write("\n");
-  return { specs, errors };
+  return { specs, errors, stopped };
 }
 
-function dedupe(specs: EvSpec[], urlOrderByMake: Map<string, number>): EvSpec[] {
-  // Group by make+model, keep the entry from the highest sitemap-ID URL (newest model year on ev-database.org).
-  const map = new Map<string, { spec: EvSpec; order: number }>();
-  for (const s of specs) {
-    const key = `${s.make}|${s.model}`;
-    const order = urlOrderByMake.get(key) ?? 0;
-    const existing = map.get(key);
-    if (!existing || order > existing.order) {
-      map.set(key, { spec: s, order });
-    }
-  }
-  return Array.from(map.values())
-    .map((e) => e.spec)
-    .sort((a, b) =>
-      a.make === b.make ? a.model.localeCompare(b.model) : a.make.localeCompare(b.make),
-    );
+const STATE_NAME = "ev-specs";
+/** Default when run by hand: long enough for a full pass locally. */
+const DEFAULT_BUDGET_MIN = 40;
+
+function evKey(spec: EvSpec): string {
+  return `${spec.make}|${spec.model}`;
+}
+
+/** ev-database sitemap ids climb over time, so a higher id is a newer entry. */
+function sitemapId(url: string): number {
+  return parseInt(url.match(/\/car\/(\d+)/)?.[1] || "0", 10);
 }
 
 async function main() {
   const { limit } = parseArgs();
+  const budgetMinutes = parseBudgetMinutes(DEFAULT_BUDGET_MIN);
+
   console.log("Fetching ev-database.org sitemap…");
   const allUrls = await fetchSitemapUrls();
-  // Sitemap URLs sorted by ID (ascending = older). Reverse so newest first
-  // — useful for dedupe (first occurrence wins by sitemap order).
-  const sortedUrls = [...allUrls].sort((a, b) => {
-    const idA = parseInt(a.match(/\/car\/(\d+)/)?.[1] || "0", 10);
-    const idB = parseInt(b.match(/\/car\/(\d+)/)?.[1] || "0", 10);
-    return idB - idA;
-  });
-  const urls = limit ? sortedUrls.slice(0, limit) : sortedUrls;
-  console.log(`Found ${allUrls.length} EV URLs${limit ? ` (limited to ${limit})` : ""}\n`);
-
-  console.log(`Scraping with concurrency=${CONCURRENCY}, browser restart every ${BROWSER_RESTART_EVERY} pages…`);
-  const { specs, errors } = await scrapeAll(urls, CONCURRENCY);
-
-  // Build URL-order map for tiebreaking dedupe (higher ID = newer)
-  const urlOrderByMake = new Map<string, number>();
-  for (const s of specs) {
-    const matchUrl = urls.find((u) => {
-      const slug = u.match(/\/car\/\d+\/([^/?#]+)/)?.[1] || "";
-      return slug.toUpperCase().replace(/-/g, " ").includes(`${s.make} ${s.model}`);
-    });
-    const id = matchUrl ? parseInt(matchUrl.match(/\/car\/(\d+)/)?.[1] || "0", 10) : 0;
-    const key = `${s.make}|${s.model}`;
-    if (!urlOrderByMake.has(key) || urlOrderByMake.get(key)! < id) {
-      urlOrderByMake.set(key, id);
-    }
-  }
-
-  const deduped = dedupe(specs, urlOrderByMake);
-
-  console.log(`\nSummary:`);
-  console.log(`  Pages scraped:    ${urls.length}`);
-  console.log(`  Successful:       ${specs.length}`);
-  console.log(`  Errors:           ${errors.length}`);
-  console.log(`  Unique make+model: ${deduped.length}`);
+  // Newest first, so a first-ever run covers current models before old ones.
+  const sortedUrls = [...allUrls].sort((a, b) => sitemapId(b) - sitemapId(a));
+  console.log(`Found ${allUrls.length} EV URLs`);
 
   if (limit) {
-    console.log(`\n--- Sample output (--limit=${limit}) ---`);
-    for (const s of deduped.slice(0, 10)) {
-      console.log(JSON.stringify(s));
-    }
-    console.log(`\n(not writing to ${OUT_PATH} — limit mode)`);
-  } else {
-    fs.writeFileSync(OUT_PATH, JSON.stringify(deduped, null, 2) + "\n");
-    console.log(`\n✓ Wrote ${deduped.length} EV specs → ${OUT_PATH}`);
+    // Limit mode stays a pure dry run — no state, no writes.
+    const work = sortedUrls.slice(0, limit);
+    console.log(`\nLimit mode: scraping ${work.length}, writing nothing.\n`);
+    const { specs } = await scrapeAll(work, CONCURRENCY, new Deadline(budgetMinutes));
+    for (const sp of specs.slice(0, 10)) console.log(JSON.stringify(sp));
+    return;
   }
+
+  const state = loadState<EvSpec>(STATE_NAME);
+  // First incremental run: adopt whatever the old all-at-once process left in
+  // ev-specs.json, so the site keeps its data while the slices converge
+  // instead of collapsing to one budget's worth. See seedFromExisting.
+  if (fs.existsSync(OUT_PATH)) {
+    const existing = JSON.parse(fs.readFileSync(OUT_PATH, "utf-8")) as EvSpec[];
+    const seeded = seedFromExisting(state, existing, evKey);
+    if (seeded) console.log(`  seeded ${seeded} existing records from ${path.basename(OUT_PATH)}`);
+  }
+  const before = coverage(sortedUrls, state);
+  console.log(
+    `  state: ${before.known} known · ${before.unknown} never scraped` +
+      (before.oldest ? ` · oldest ${before.oldest.slice(0, 10)}` : ""),
+  );
+
+  // Stalest first: never-scraped, then oldest.
+  const work = orderByStaleness(sortedUrls, state);
+  console.log(
+    `\nScraping up to ${work.length} pages with a ${budgetMinutes}-minute budget ` +
+      `(concurrency=${CONCURRENCY}, browser restart every ${BROWSER_RESTART_EVERY})…`,
+  );
+
+  const deadline = new Deadline(budgetMinutes);
+  const { specs, errors, stopped } = await scrapeAll(work, CONCURRENCY, deadline);
+
+  // Merge this slice in. Rank by sitemap id so a partial run can't let an
+  // older model year overwrite a newer one just by being scraped later.
+  const nowIso = new Date().toISOString();
+  for (const sp of specs) {
+    const { url, ...record } = sp;
+    state.urls[url] = nowIso;
+    upsertRecord(state, evKey(record), sitemapId(url), record);
+  }
+  // Errors split two ways, and getting this wrong quietly breaks convergence.
+  //
+  // A TRANSIENT failure (429, timeout, dropped connection) means "ask again" —
+  // we learned nothing about that URL. Marking it attempted would push it to
+  // the back of the staleness queue and, on a run that is entirely rate-limited,
+  // would mark the whole slice as done having fetched nothing.
+  //
+  // A PERMANENT one (a 404, or a page we parsed but that lacks the fields we
+  // need) will fail identically next week, so it IS marked — otherwise a
+  // handful of broken URLs sit at the front of the queue forever and the rest
+  // of the dataset never gets refreshed.
+  const isTransient = (msg: string) =>
+    /HTTP 429|HTTP 5\d\d|timeout|timed out|ECONN|socket|disconnected|Navigation/i.test(msg);
+  let retryable = 0;
+  for (const e of errors) {
+    if (isTransient(e.error)) retryable++;
+    else state.urls[e.url] = nowIso;
+  }
+
+  // Prune ONLY after a genuinely complete pass — see pruneRecords.
+  const attempted = specs.length + errors.length;
+  let pruned = 0;
+  if (!stopped && retryable === 0 && attempted >= work.length) {
+    const liveKeys = new Set(Object.keys(state.records));
+    for (const sp of specs) liveKeys.add(evKey(sp));
+    pruned = pruneRecords(state, liveKeys);
+  }
+
+  const out = allRecords(state).sort((a, b) =>
+    a.make === b.make ? a.model.localeCompare(b.model) : a.make.localeCompare(b.make),
+  );
+  writeCompactJsonArray(OUT_PATH, out);
+  saveState(STATE_NAME, state);
+
+  const after = coverage(sortedUrls, state);
+  console.log(`\nSummary:`);
+  console.log(`  Pages this run:    ${attempted} (${specs.length} parsed · ${errors.length} errors, ${retryable} retryable)`);
+  console.log(`  Stopped on budget: ${stopped ? "yes" : "no — full pass"}`);
+  console.log(`  Coverage:          ${after.known}/${sortedUrls.length} URLs seen · ${after.unknown} still never scraped`);
+  if (pruned) console.log(`  Pruned:            ${pruned} delisted`);
+  console.log(`\n✓ Wrote ${out.length} EV specs → ${OUT_PATH}`);
 
   if (errors.length && errors.length < 20) {
     console.log(`\nErrors (sample):`);
-    for (const e of errors.slice(0, 10)) {
-      console.log(`  ${e.error.slice(0, 70)} — ${e.url}`);
-    }
+    for (const e of errors.slice(0, 10)) console.log(`  ${e.error.slice(0, 70)} — ${e.url}`);
   }
 }
 
