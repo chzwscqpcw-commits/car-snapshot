@@ -124,14 +124,26 @@ const FILE_META: Record<string, FileMeta> = {
     refreshHint: "Compile common failure reasons from DVSA MOT statistics publications",
     sourceUrl: "https://www.gov.uk/government/statistics/mot-testing-data",
   },
+  // 365 rather than 180, matching body-types.json. These two describe physical
+  // facts about models already built: a 2019 Golf's tyre size and kerb weight
+  // are the same today as they were in February, and will be the same next
+  // year. The only thing that genuinely ages them is new models joining the
+  // fleet, which is an annual-scale change, not a six-monthly one.
+  //
+  // The old 180 made both go amber on the dashboard every six months with
+  // nothing to actually do about it. That is worse than useless: a freshness
+  // warning nobody can action is what teaches you to ignore the freshness
+  // warnings that matter — and mot-pass-rates.json and theft-risk.json, sitting
+  // in the same amber block, DO matter, because they are annual statistics the
+  // stats pages present as current.
   "tyre-sizes.json": {
-    threshold: 180,
+    threshold: 365,
     source: "curated",
     refreshHint: "Update from tyre databases and manufacturer specification sheets",
     sourceUrl: null,
   },
   "vehicle-dimensions.json": {
-    threshold: 180,
+    threshold: 365,
     source: "curated",
     refreshHint: "Update length/width/height/weight from manufacturer specification pages",
     sourceUrl: null,
