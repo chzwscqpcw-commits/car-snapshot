@@ -2,8 +2,15 @@
  * Fetches new-car list prices from Parkers and writes src/data/new-prices.json.
  *
  * Usage:
- *   npx tsx scripts/fetch-new-prices.ts             # full run (~980 URLs)
- *   npx tsx scripts/fetch-new-prices.ts --limit=10  # test on first 10
+ *   npx tsx scripts/fetch-new-prices.ts                      # default 50min budget
+ *   npx tsx scripts/fetch-new-prices.ts --budget-minutes=45  # one CI slice
+ *   npx tsx scripts/fetch-new-prices.ts --limit=10           # test on first 10
+ *
+ * INCREMENTAL. The sitemap yields ~1,850 review pages; at the polite rate below
+ * that does not fit a CI step, and the old all-or-nothing write meant a timeout
+ * produced NOTHING — this ran green and wrote nothing from 20 May onward. Each
+ * run now refreshes the stalest slice within its budget and writes what it got.
+ * See scripts/lib/incremental-scrape.ts.
  *
  * Strategy:
  * - Parkers publishes a gzipped sitemap (`review.xml.gz`) listing 11k+
@@ -18,6 +25,19 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as zlib from "node:zlib";
 import puppeteer, { type Browser } from "puppeteer-core";
+import {
+  Deadline,
+  allRecords,
+  coverage,
+  loadState,
+  orderByStaleness,
+  parseBudgetMinutes,
+  pruneRecords,
+  saveState,
+  seedFromExisting,
+  upsertRecord,
+  writeCompactJsonArray,
+} from "./lib/incremental-scrape";
 
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const OUT_PATH = path.join(PROJECT_ROOT, "src", "data", "new-prices.json");
@@ -168,22 +188,29 @@ async function launchBrowser(): Promise<Browser> {
 async function scrapeAll(
   entries: SitemapEntry[],
   concurrency: number,
+  deadline: Deadline,
 ): Promise<{
-  prices: Array<NewPrice & { lastmod: string }>;
+  prices: Array<NewPrice & { lastmod: string; url: string }>;
   errors: { url: string; error: string }[];
+  stopped: boolean;
 }> {
-  const prices: Array<NewPrice & { lastmod: string }> = [];
+  const prices: Array<NewPrice & { lastmod: string; url: string }> = [];
   const errors: { url: string; error: string }[] = [];
   const total = entries.length;
   let done = 0;
+  let stopped = false;
 
   for (let batchStart = 0; batchStart < entries.length; batchStart += BROWSER_RESTART_EVERY) {
+    // Checked between batches AND between pages, so we stop cleanly holding
+    // results rather than being killed mid-write.
+    if (deadline.expired()) { stopped = true; break; }
     const batch = entries.slice(batchStart, batchStart + BROWSER_RESTART_EVERY);
     const browser = await launchBrowser();
     try {
       let i = 0;
       async function worker() {
         while (true) {
+          if (deadline.expired()) { stopped = true; return; }
           const idx = i++;
           if (idx >= batch.length) return;
           let result: Awaited<ReturnType<typeof scrapeOne>>;
@@ -195,7 +222,7 @@ async function scrapeAll(
             result = { url: batch[idx].url, error: (e as Error).message };
           }
           if ("make" in result) {
-            prices.push(result);
+            prices.push({ ...result, url: batch[idx].url });
           } else {
             errors.push(result);
           }
@@ -219,59 +246,105 @@ async function scrapeAll(
     }
   }
   process.stdout.write("\n");
-  return { prices, errors };
+  return { prices, errors, stopped };
 }
 
-function dedupe(prices: Array<NewPrice & { lastmod: string }>): NewPrice[] {
-  // Group by make+model, keep the most recently-updated review.
-  const map = new Map<string, NewPrice & { lastmod: string }>();
-  for (const p of prices) {
-    const key = `${p.make}|${p.model}`;
-    const existing = map.get(key);
-    if (
-      !existing ||
-      parseLastmod(p.lastmod).getTime() > parseLastmod(existing.lastmod).getTime()
-    ) {
-      map.set(key, p);
-    }
-  }
-  return Array.from(map.values())
-    .map(({ make, model, newPrice }) => ({ make, model, newPrice }))
-    .sort((a, b) =>
-      a.make === b.make ? a.model.localeCompare(b.model) : a.make.localeCompare(b.make),
-    );
+const STATE_NAME = "new-prices";
+/** Default when run by hand: enough for a full pass locally. */
+const DEFAULT_BUDGET_MIN = 50;
+
+function priceKey(p: NewPrice): string {
+  return `${p.make}|${p.model}`;
 }
 
 async function main() {
   const { limit } = parseArgs();
+  const budgetMinutes = parseBudgetMinutes(DEFAULT_BUDGET_MIN);
+
   console.log("Fetching Parkers review sitemap…");
   const allEntries = await fetchSitemapEntries();
   console.log(`  Total review URLs: ${allEntries.length}`);
   const recent = filterRecent(allEntries, MAX_LASTMOD_DAYS);
   console.log(`  Updated within ${MAX_LASTMOD_DAYS}d: ${recent.length}`);
-
-  // Newest first so dedupe keeps the freshest take per make+model.
+  // Newest review first, so a first-ever run covers current cars first.
   recent.sort((a, b) => parseLastmod(b.lastmod).getTime() - parseLastmod(a.lastmod).getTime());
-  const work = limit ? recent.slice(0, limit) : recent;
-  console.log(`Scraping ${work.length} review pages (concurrency=${CONCURRENCY}, browser restart every ${BROWSER_RESTART_EVERY})…\n`);
-
-  const { prices, errors } = await scrapeAll(work, CONCURRENCY);
-  const deduped = dedupe(prices);
-
-  console.log(`\nSummary:`);
-  console.log(`  Pages scraped:     ${work.length}`);
-  console.log(`  Prices parsed:     ${prices.length}`);
-  console.log(`  Skipped/errors:    ${errors.length}`);
-  console.log(`  Unique make+model: ${deduped.length}`);
 
   if (limit) {
-    console.log(`\n--- Sample output ---`);
-    for (const p of deduped.slice(0, 10)) console.log(JSON.stringify(p));
-    console.log(`\n(not writing to ${OUT_PATH} — limit mode)`);
-  } else {
-    fs.writeFileSync(OUT_PATH, JSON.stringify(deduped, null, 2) + "\n");
-    console.log(`\n✓ Wrote ${deduped.length} new-car prices → ${OUT_PATH}`);
+    const work = recent.slice(0, limit);
+    console.log(`\nLimit mode: scraping ${work.length}, writing nothing.\n`);
+    const { prices } = await scrapeAll(work, CONCURRENCY, new Deadline(budgetMinutes));
+    for (const pr of prices.slice(0, 10)) console.log(JSON.stringify(pr));
+    return;
   }
+
+  const state = loadState<NewPrice>(STATE_NAME);
+  // First incremental run adopts the existing file so the site keeps its data
+  // while the slices converge, rather than collapsing to one budget's worth.
+  if (fs.existsSync(OUT_PATH)) {
+    const existing = JSON.parse(fs.readFileSync(OUT_PATH, "utf-8")) as NewPrice[];
+    const seeded = seedFromExisting(state, existing, priceKey);
+    if (seeded) console.log(`  seeded ${seeded} existing records from ${path.basename(OUT_PATH)}`);
+  }
+
+  const byUrl = new Map(recent.map((e) => [e.url, e]));
+  const orderedUrls = orderByStaleness(recent.map((e) => e.url), state);
+  const work = orderedUrls.map((u) => byUrl.get(u)!).filter(Boolean);
+
+  const before = coverage(orderedUrls, state);
+  console.log(
+    `  state: ${before.known} known · ${before.unknown} never scraped` +
+      (before.oldest ? ` · oldest ${before.oldest.slice(0, 10)}` : ""),
+  );
+  console.log(
+    `\nScraping up to ${work.length} pages with a ${budgetMinutes}-minute budget ` +
+      `(concurrency=${CONCURRENCY}, browser restart every ${BROWSER_RESTART_EVERY})…\n`,
+  );
+
+  const deadline = new Deadline(budgetMinutes);
+  const { prices, errors, stopped } = await scrapeAll(work, CONCURRENCY, deadline);
+
+  // Rank by review lastmod, matching the old dedupe rule ("prefer the most
+  // recently-updated review"), so a partial run can't let a stale trim page
+  // overwrite a fresher one purely by being scraped later.
+  const nowIso = new Date().toISOString();
+  for (const pr of prices) {
+    const { url, lastmod, ...record } = pr;
+    state.urls[url] = nowIso;
+    upsertRecord(state, priceKey(record), parseLastmod(lastmod).getTime(), record);
+  }
+  // Transient failures are left unmarked so they retry; permanent ones are
+  // marked so they can't sit at the front of the queue forever. Note a page
+  // with no "Price new" string is a legitimate permanent skip here — that is
+  // how discontinued cars present.
+  const isTransient = (msg: string) =>
+    /HTTP 429|HTTP 5\d\d|timeout|timed out|ECONN|socket|disconnected|Navigation/i.test(msg);
+  let retryable = 0;
+  for (const e of errors) {
+    if (isTransient(e.error)) retryable++;
+    else state.urls[e.url] = nowIso;
+  }
+
+  const attempted = prices.length + errors.length;
+  let pruned = 0;
+  if (!stopped && retryable === 0 && attempted >= work.length) {
+    const liveKeys = new Set(Object.keys(state.records));
+    for (const pr of prices) liveKeys.add(priceKey(pr));
+    pruned = pruneRecords(state, liveKeys);
+  }
+
+  const out = allRecords(state).sort((a, b) =>
+    a.make === b.make ? a.model.localeCompare(b.model) : a.make.localeCompare(b.make),
+  );
+  writeCompactJsonArray(OUT_PATH, out);
+  saveState(STATE_NAME, state);
+
+  const after = coverage(orderedUrls, state);
+  console.log(`\nSummary:`);
+  console.log(`  Pages this run:    ${attempted} (${prices.length} parsed · ${errors.length} skipped/errors, ${retryable} retryable)`);
+  console.log(`  Stopped on budget: ${stopped ? "yes" : "no — full pass"}`);
+  console.log(`  Coverage:          ${after.known}/${orderedUrls.length} URLs seen · ${after.unknown} still never scraped`);
+  if (pruned) console.log(`  Pruned:            ${pruned} delisted`);
+  console.log(`\n✓ Wrote ${out.length} new-car prices → ${OUT_PATH}`);
 }
 
 main().catch((err) => {
