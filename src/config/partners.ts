@@ -42,6 +42,17 @@ function withClickref(awinUrl: string, clickref?: string): string {
   return `${awinUrl}${sep}clickref=${encodeURIComponent(clickref)}`;
 }
 
+/**
+ * BookMyGarage service-page destination. The reg is optional: blog-prose links
+ * routed through /go have no vehicle context, and emitting a bare `?vrm=`
+ * hands BMG an empty parameter to parse for no benefit.
+ */
+function bmgDestination(path: string, reg: string): string {
+  const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
+  const base = `https://www.bookmygarage.com/${path}/`;
+  return encodeURIComponent(plate ? `${base}?vrm=${plate}` : base);
+}
+
 export function isPartnerConfigured(partner: PartnerLink): boolean {
   // Any PENDING_* placeholder (PENDING_AWINMID, PENDING_WEBGAINS) means the
   // tracking IDs aren't provisioned yet — render nothing.
@@ -157,7 +168,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     description: "Compare MOT prices at local garages",
     shortDescription: "MOT quotes",
     buildLink: (reg: string, clickref?: string) => {
-      const destination = encodeURIComponent(`https://www.bookmygarage.com/mot/?vrm=${reg}`);
+      const destination = bmgDestination("mot", reg);
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
         clickref,
@@ -171,7 +182,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     description: "Compare car service prices at local garages",
     shortDescription: "Service quotes",
     buildLink: (reg: string, clickref?: string) => {
-      const destination = encodeURIComponent(`https://www.bookmygarage.com/car-servicing/?vrm=${reg}`);
+      const destination = bmgDestination("car-servicing", reg);
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
         clickref,
@@ -185,7 +196,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     description: "Compare car repair prices at local garages",
     shortDescription: "Repair quotes",
     buildLink: (reg: string, clickref?: string) => {
-      const destination = encodeURIComponent(`https://www.bookmygarage.com/car-repairs/?vrm=${reg}`);
+      const destination = bmgDestination("car-repairs", reg);
       return withClickref(
         `https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=${destination}`,
         clickref,
@@ -391,8 +402,19 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       const TRACKER = "https://www.carvertical.deal/NCRBZ8/6JHXF/";
       const sub2 = carVerticalSub2(ctx);
       // Blog placement: no reg to pre-fill, no uid (matches Dominyka's blog link).
+      //
+      // Links written inline in post prose arrive here as `blog-inline-<slug>`
+      // (via /go/carvertical — see src/lib/affiliateLinks.ts). Those carry the
+      // slug in sub3 so each post is individually attributable, while sub2
+      // stays "blog" — that series is the one carVertical already reports on,
+      // and splitting it would break its continuity for no gain. The older
+      // `blog-carvertical` component CTA keeps its bare, sub3-less link.
       if (sub2 === "blog") {
-        return `${TRACKER}?source_id=AFF&sub1=freeplatecheck&sub2=blog`;
+        const base = `${TRACKER}?source_id=AFF&sub1=freeplatecheck&sub2=blog`;
+        const post = ctx.startsWith("blog-inline-")
+          ? ctx.slice("blog-inline-".length)
+          : "";
+        return post ? `${base}&sub3=${encodeURIComponent(post)}` : base;
       }
       const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
       return `${TRACKER}?uid=5&source_id=AFF&sub1=freeplatecheck&sub2=${sub2}&sub3=${encodeURIComponent(plate)}`;
@@ -525,6 +547,9 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
       "holds its value",
       "depreciat",
       "trade-in value",
+      "best time to buy",
+      "best time to sell",
+      "used car price",
     ],
     cta: {
       path: "/car-valuation",
@@ -562,6 +587,118 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
       path: "/car-check",
       label: "Run a free car check",
       description: "Enter a reg to see full vehicle details from official DVLA data.",
+    },
+  },
+  // Running costs — insurance, fuel and the cost-of-ownership cluster.
+  //
+  // `car-insurance-groups-explained` is the site's SECOND best-read post (315
+  // views/30d) and rendered no call to action at all, because it matched none
+  // of the matchers above. Nineteen posts were in that state. Insurance has no
+  // live partner yet (GoCompare is still pending), but /running-costs is a
+  // genuine fit rather than a filler: it prices insurance, fuel, tax and
+  // servicing for the specific vehicle, which is the question these posts leave
+  // the reader holding.
+  {
+    keywords: [
+      "insurance group",
+      "car insurance",
+      "insurance cost",
+      "cheapest cars to insure",
+      "running cost",
+      "cost of owning",
+      "fuel econom",
+      "save fuel",
+      "fuel price",
+      "fuel duty",
+      "mpg",
+      "petrol vs diesel",
+      "electric car cost",
+      "ev charger",
+      "ev grant",
+      "electric car grant",
+    ],
+    cta: {
+      path: "/running-costs",
+      label: "See this car's running costs",
+      description: "Enter a reg for a full annual cost estimate — fuel, tax, insurance and servicing.",
+    },
+  },
+  // Paperwork, plates and ownership documents. All questions about a specific
+  // vehicle's record, which is exactly what the free car check answers.
+  {
+    keywords: [
+      "v5c",
+      "logbook",
+      "number plate",
+      "private plate",
+      "personalised registration",
+      "plate change",
+      "76 plate",
+      "keeper",
+      "vehicle documents",
+    ],
+    cta: {
+      path: "/car-check",
+      label: "Run a free car check",
+      description: "Enter a reg to see full vehicle details from official DVLA data.",
+    },
+  },
+  // Faults, symptoms and garage-bill topics. The reader has a car in front of
+  // them with something wrong; the check surfaces its MOT and advisory record,
+  // which is the context those bills sit in.
+  {
+    keywords: [
+      "warning light",
+      "dashboard",
+      "overheat",
+      "air con",
+      "aircon",
+      "garage overcharging",
+      "repair cost",
+      "breakdown",
+      "pothole",
+      // Seasonal driving-conditions posts: lights, tyres and wipers are all
+      // MOT items, so the vehicle's advisory record is the relevant context.
+      "driving in fog",
+      "heavy rain",
+      "winter driving",
+      // Motor-finance redress. No tool of ours answers a PCP mis-selling
+      // question directly — this is the closest honest fit rather than a good
+      // one, and it beats the alternative, which was rendering nothing at all.
+      "car finance",
+      "pcp",
+      "finance compensation",
+    ],
+    cta: {
+      path: "/car-check",
+      label: "Check this vehicle's record",
+      description: "Enter a reg to see MOT history and advisories from official DVSA data.",
+    },
+  },
+  // Enforcement / penalty topics. Deliberately LAST: it's the broadest matcher
+  // in the list, and a post about an MOT fine or an unpaid ULEZ charge should
+  // reach its own specific tool above before falling through to here.
+  //
+  // Added because enforcement posts are the site's best-read content — the ANPR
+  // guide alone is ~26% of all blog traffic — and a post that matched none of
+  // the matchers above rendered NO call to action whatsoever. Same failure the
+  // warranty posts had before `hasWarrantyIntent` was added.
+  {
+    keywords: [
+      "penalty charge",
+      "pcn",
+      "bus lane",
+      "box junction",
+      "fine",
+      "penalty notice",
+      "anpr",
+      "speeding",
+      "points on licence",
+    ],
+    cta: {
+      path: "/car-check",
+      label: "Check this vehicle's status",
+      description: "Enter a reg to see MOT, tax and emissions status in one place — before the next letter arrives.",
     },
   },
 ];

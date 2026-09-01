@@ -5,6 +5,7 @@ import { Car, Wrench, Check, ArrowUpRight, Star } from "lucide-react";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { usePartnerImpression } from "@/components/usePartnerImpression";
 
 const CM = "#3c93f7";
 const partner = PARTNER_LINKS.clickMechanic;
@@ -35,6 +36,13 @@ export default function BuyerInspectionWidget({
 }) {
   const [answer, setAnswer] = useState<"buyer" | "owner">("buyer");
   const [postcode, setPostcode] = useState("");
+  // Never counted on the password-gated preview page — our own review traffic
+  // has no business in the denominator. Hook above the early return.
+  const cardRef = usePartnerImpression(
+    "clickMechanic",
+    context,
+    !preview && isPartnerConfigured(partner),
+  );
   if (!preview && !isPartnerConfigured(partner)) return null;
 
   // ClickMechanic skips data entry only when it has BOTH reg + postcode; the
@@ -46,7 +54,7 @@ export default function BuyerInspectionWidget({
   const open = answer === "buyer";
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 sm:p-5">
+    <div ref={cardRef} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 sm:p-5">
       {/* Question row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">

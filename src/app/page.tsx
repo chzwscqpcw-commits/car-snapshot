@@ -211,6 +211,7 @@ import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import MotActionBanner from "@/components/MotActionBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import InspectionCTA from "@/components/InspectionCTA";
+import WarrantyCTA from "@/components/WarrantyCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
@@ -1727,6 +1728,26 @@ export default function Home() {
     secondaryLink?: { text: string; href: string; partnerId: string; trackingContext: string };
   };
 
+  /**
+   * Warrantywise eligibility for the Health & Safety placement.
+   *
+   * Same qualification the Next Steps prompt used before it was moved here:
+   * 5+ years old (comfortably past factory cover, and not merely echoing the
+   * 3-year advisory prompt) and a live MOT — never pitch cover on a car that
+   * can't legally be driven, and never on one still inside its manufacturer
+   * warranty, which would be duplicate cover.
+   */
+  const warrantyEligible = useMemo(() => {
+    if (!data) return false;
+    if (!isPartnerConfigured(PARTNER_LINKS.warrantywise)) return false;
+    const motExpired = isOver3Years && motDaysUntilExpiry < 0;
+    if (motExpired) return false;
+    const age = data.yearOfManufacture
+      ? new Date().getFullYear() - data.yearOfManufacture
+      : null;
+    return age !== null && age >= 5;
+  }, [data, isOver3Years, motDaysUntilExpiry]);
+
   const actionPrompts = useMemo((): ActionPromptConfig[] => {
     if (!data) return [];
     const prompts: ActionPromptConfig[] = [];
@@ -1773,38 +1794,14 @@ export default function Home() {
       });
     }
 
-    // 3. Extended warranty (Warrantywise). This page is the whole reason the
-    //    placement is worth having: the same `isOver3Years && advisories` signal
-    //    the prompt above uses runs here on ~6,300 views a month, versus ~68 on
-    //    the standalone /mot-check tool where the shared MotResult placement
-    //    lives. Gated at 5+ years rather than 3 so it stays a qualified offer
-    //    and does not simply echo the advisory prompt's trigger — and kept
-    //    low-priority (`prompts.length < 3`) so a SORN or advisory warning, both
-    //    more urgent to the reader, always outrank it.
-    const vehicleAgeYears = data.yearOfManufacture
-      ? new Date().getFullYear() - data.yearOfManufacture
-      : null;
-    if (
-      prompts.length < 3 &&
-      vehicleAgeYears !== null &&
-      vehicleAgeYears >= 5 &&
-      !motExpired &&
-      isPartnerConfigured(PARTNER_LINKS.warrantywise)
-    ) {
-      prompts.push({
-        variant: "subtle",
-        icon: <Shield className="w-5 h-5 text-emerald-400" />,
-        title: "Past its manufacturer warranty",
-        description:
-          "Factory cover has run out on a car this age, and repair bills climb fastest in the years that follow. An extended warranty covers major mechanical and electrical failures.",
-        linkText: "Get a warranty quote — Warrantywise",
-        linkHref:
-          PARTNER_LINKS.warrantywise.buildLink?.(data.registrationNumber, "action-warranty") ??
-          PARTNER_LINKS.warrantywise.url,
-        partnerId: "warrantywise",
-        trackingContext: "action-warranty",
-      });
-    }
+    // 3. Extended warranty MOVED OUT of this list (2026-09-01). It sat here for
+    //    the page's ~6,300 views a month, but Next Steps is the LAST section on
+    //    a very long results page: only 204 of 3,846 result views reached it in
+    //    a 9-day window — 5.3%. The prompt earned 1 click in 30 days. Reach on
+    //    this page is not the same thing as reach on this page's last section.
+    //    It now renders inside Health & Safety (~4x the section reach, and the
+    //    right context: the advisories are right above it). See the
+    //    `warrantyEligible` block near the section-health SectionGroup.
 
     // 4. Car insurance comparison (low priority — only if space). Gated on
     //    isPartnerConfigured so it appears only once Confused.com (Awin) is
@@ -4639,6 +4636,30 @@ END:VEVENT
                       <p className="text-xs text-slate-400 mt-2">ULEZ compliance calculated using DVLA emission data and published TfL emission standards.</p>
                     </div>
                   </div>
+                </div>
+              </DataReveal>
+            )}
+
+            {/* Extended warranty — moved here from Next Steps, which only 5.3%
+                of result views ever reached. This section gets ~4x that, and
+                the placement reads better here anyway: the advisories and
+                health score it argues from are directly above it. Uses the
+                `mot` copy when there are advisories to point at, and the
+                neutral copy otherwise. */}
+            {warrantyEligible && (
+              <DataReveal delay={200}>
+                <div className="mb-8">
+                  <WarrantyCTA
+                    context="health-warranty"
+                    regNumber={data.registrationNumber}
+                    layout="inline"
+                    variant={latestAdvisoryCount > 0 ? "mot" : "generic"}
+                    detail={
+                      latestAdvisoryCount > 0
+                        ? `${latestAdvisoryCount} item${latestAdvisoryCount !== 1 ? "s" : ""} flagged at its last MOT`
+                        : undefined
+                    }
+                  />
                 </div>
               </DataReveal>
             )}

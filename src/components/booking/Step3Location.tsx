@@ -27,6 +27,24 @@ interface Props {
 
 const CHIPS: FlexibilityChip[] = ["asap", "within_week", "within_two_weeks", "browsing"];
 
+/**
+ * Mid-sentence form of the service name. `serviceLabel` is title-cased for
+ * standalone use ("Full service"), and lower-casing it wholesale would mangle
+ * the acronym into "mot test".
+ */
+function servicePhrase(service: ServiceType): string {
+  switch (service) {
+    case "mot":
+      return "MOT test";
+    case "interim":
+      return "interim service";
+    case "full":
+      return "full service";
+    case "diagnostic":
+      return "diagnostic check";
+  }
+}
+
 function todayPlus(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() + days);
@@ -59,17 +77,50 @@ export default function Step3Location({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-white">Where &amp; when?</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-white">
+          Your estimated {servicePhrase(service)} price
+        </h2>
         <p className="mt-1 text-sm text-slate-400">
-          Postcode lets us show local price ranges. Skip it if you&apos;d rather BookMyGarage
-          asks — same result.
+          Here&apos;s the typical range for your vehicle. Add a postcode to narrow it to
+          your area — or carry straight on to live garage quotes.
+        </p>
+      </div>
+
+      {/*
+        The estimate is shown BEFORE anything is asked for.
+
+        This step used to open with an empty postcode box and no price at all —
+        the range only appeared once a valid postcode had been typed. Users
+        arrived here having just clicked a button that said "Compare prices",
+        and were met with a form instead of an answer. It showed in the funnel:
+        of the sessions arriving from the results-page MOT CTA, 36 reached this
+        step in 9 days and 5 went on to Step 4 — a 14% pass rate, against 94%
+        for the same step reached from /cheap-mot, where the visitor had already
+        decided they were shopping. Leading with the number keeps the promise
+        the CTA made, and makes the postcode an upgrade rather than a toll.
+      */}
+      <div className="rounded-xl border border-emerald-800/40 bg-gradient-to-br from-emerald-950/30 to-slate-900/40 p-4">
+        <p className="text-xs uppercase font-semibold tracking-wider text-slate-400">
+          {postcodeValid ? `Typical near ${postcode}` : "Typical UK price"}
+        </p>
+        <p className="mt-1 font-mono text-2xl font-bold text-emerald-300 tabular-nums">
+          {formatPriceRange(livePrice)}
+        </p>
+        <p className="mt-1 text-xs text-slate-400">
+          {postcodeValid ? (
+            <>
+              {region.label} &middot; ~{garages.label} BookMyGarage partner garages near you
+            </>
+          ) : (
+            <>UK average &middot; add a postcode below for local pricing</>
+          )}
         </p>
       </div>
 
       {/* Postcode */}
       <div>
         <label htmlFor="postcode" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-          Postcode
+          Postcode <span className="font-normal normal-case tracking-normal text-slate-500">(optional)</span>
         </label>
         <div className="relative">
           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" aria-hidden="true" />
@@ -87,18 +138,8 @@ export default function Step3Location({
             inputMode="text"
           />
         </div>
-        {postcodeValid && (
-          <div className="mt-2 rounded-lg border border-slate-800/80 bg-slate-900/40 p-3 text-xs text-slate-300 leading-relaxed">
-            <p>
-              Typical price for your vehicle near{" "}
-              <span className="font-mono text-cyan-300">{postcode}</span> ({region.label}):{" "}
-              <span className="font-mono font-semibold text-emerald-300">{formatPriceRange(livePrice)}</span>
-            </p>
-            <p className="mt-1 text-slate-500">
-              ~{garages.label} BookMyGarage partner garages in your area
-            </p>
-          </div>
-        )}
+        {/* The live figure now lives in the panel above, which updates as this
+            field is typed — repeating it here would say the same thing twice. */}
       </div>
 
       {/* Flexibility */}

@@ -1,7 +1,7 @@
 ---
 title: "Autumn Car Checklist: Getting Your Car Ready for Darker, Wetter Roads"
 description: "A practical autumn car checklist for UK drivers: tyres, lights, wipers, battery and demisting. Get ahead of the wet, dark commute before deep winter arrives."
-date: "2026-09-12"
+date: "2026-10-10"
 lastModified: "2026-09-12"
 keywords: ["autumn car checklist", "autumn car maintenance", "get car ready for autumn", "car checks for winter", "car tyres autumn", "car lights check", "driving in autumn"]
 author: "Free Plate Check"

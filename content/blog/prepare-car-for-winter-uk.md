@@ -1,7 +1,7 @@
 ---
 title: "How to Prepare Your Car for Winter: A UK Driver's Guide"
 description: "A practical guide to getting your car ready for winter driving in the UK. Covers antifreeze, tyres, batteries, lights, and building an emergency kit."
-date: "2026-10-15"
+date: "2026-10-31"
 keywords: ["winter car prep UK", "winter driving tips", "car maintenance winter", "prepare car for winter", "winter car checklist UK", "driving in winter"]
 author: "Free Plate Check"
 faqItems:

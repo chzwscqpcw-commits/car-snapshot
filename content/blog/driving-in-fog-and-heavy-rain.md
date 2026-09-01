@@ -1,7 +1,7 @@
 ---
 title: "Driving in Fog and Heavy Rain: The Law on Lights and Stopping Distances"
 description: "Autumn brings fog and downpours. Here's the Highway Code law on dipped headlights and fog lights, why wet stopping distances at least double, and how to drive safely when visibility drops."
-date: "2026-09-19"
+date: "2026-10-24"
 lastModified: "2026-09-19"
 keywords: ["driving in fog", "fog lights law", "when to use fog lights", "driving in heavy rain", "stopping distances wet", "driving in bad weather UK", "Highway Code fog"]
 author: "Free Plate Check"

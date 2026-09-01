@@ -3,6 +3,7 @@
 import { Shield, Tag } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { usePartnerImpression } from "@/components/usePartnerImpression";
 
 /**
  * `generic` — standalone tool-landing pages, no vehicle context.
@@ -167,7 +168,14 @@ export default function WarrantyCTA({
   layout = "block",
 }: WarrantyCTAProps) {
   const partner = PARTNER_LINKS.warrantywise;
-  if (!isPartnerConfigured(partner)) return null;
+  const configured = isPartnerConfigured(partner);
+
+  // Impression fires when the card is actually 50% on screen. Hook must sit
+  // above the early return below — moving it under would make it conditional
+  // and break the rules of hooks.
+  const cardRef = usePartnerImpression("warrantywise", context, configured, { variant });
+
+  if (!configured) return null;
 
   // Always go through buildLink, even with no reg — it's what carries the
   // clickref. `partner.url` is the bare tracker and would drop attribution.
@@ -181,6 +189,7 @@ export default function WarrantyCTA({
 
   return (
     <div
+      ref={cardRef}
       className={
         inline
           ? "rounded-2xl border border-emerald-800/40 bg-gradient-to-br from-emerald-950/30 via-slate-900/70 to-slate-900 p-5 sm:p-6"

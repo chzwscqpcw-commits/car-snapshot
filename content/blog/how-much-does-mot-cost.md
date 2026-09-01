@@ -45,7 +45,7 @@ Council-run MOT test centres — available in some areas — are often among the
 
 ### Regional differences
 
-Where you live makes a difference. MOT prices in London and the South East tend to sit at the higher end, while garages in the North of England, Scotland, and Wales are often cheaper. It's worth checking a few options near you rather than assuming prices are uniform.
+Where you live makes a difference. MOT prices in London and the South East tend to sit at the higher end, while garages in the North of England, Scotland, and Wales are often cheaper. It's worth checking a few options near you rather than assuming prices are uniform — our [cheap MOT comparison](/cheap-mot) shows what garages in your area actually charge, for free and without a signup.
 
 You can [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to see what garages in your area are charging and book at the best rate.
 
@@ -118,3 +118,5 @@ A fresh MOT pass doesn't mean a car is in good condition. If you're buying a use
 ## The bottom line
 
 The maximum MOT fee is £54.85 for a car, but most drivers will pay between £25 and £50 with a bit of shopping around. The test is identical regardless of price, so there's no reason to pay over the odds. Book within the one-month early window, check your lights and tyres beforehand, and know the free retest rules — a few minutes of preparation can save you both money and hassle.
+
+When you're ready to book, [compare cheap MOT prices near you](/cheap-mot) — same DVSA test, and the spread between the cheapest and dearest garage a mile apart is routinely £30 or more.
