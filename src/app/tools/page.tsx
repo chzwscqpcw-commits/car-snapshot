@@ -321,6 +321,7 @@ function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
   return (
     <Link
       href={tool.href}
+      prefetch={false}
       className={`group relative flex flex-col gap-2 sm:gap-3 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3 sm:p-5 transition-all hover:bg-slate-900/70 hover:shadow-xl ${accentRing}`}
     >
       <div className="flex items-start justify-between gap-2">

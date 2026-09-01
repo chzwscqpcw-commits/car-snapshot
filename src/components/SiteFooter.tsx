@@ -168,6 +168,9 @@ function FooterColumn({
           <li key={l.href}>
             <Link
               href={l.href}
+              // Footer nav renders on all 377 pages and is rarely the next
+              // click. Prefetching every link on every page is pure waste.
+              prefetch={false}
               className="text-slate-300 transition-colors hover:text-cyan-300"
             >
               {l.label}

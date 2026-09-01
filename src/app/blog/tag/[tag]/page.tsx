@@ -107,6 +107,7 @@ export default async function TagPage({ params }: PageProps) {
             <Link
               key={t.tag}
               href={`/blog/tag/${t.tag}`}
+              prefetch={false}
               className={`group inline-flex items-center gap-1.5 transition-opacity ${t.tag === tag ? "" : "opacity-70 hover:opacity-100"}`}
             >
               <BlogTagPill tag={t.tag} label={t.label} />
@@ -130,6 +131,7 @@ export default async function TagPage({ params }: PageProps) {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
+                prefetch={false}
                 className="group flex flex-col rounded-lg border border-slate-800 bg-slate-900/40 p-5 transition-all hover:border-slate-600 hover:bg-slate-900/70"
               >
                 {postTags.length > 0 && (
