@@ -2,6 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 function hashIp(ip: string): string {
@@ -62,32 +63,44 @@ export async function POST(req: Request) {
     const ipHash = ip !== "unknown" ? hashIp(ip) : null;
 
     const sb = supabaseServer();
-    // Await the insert (was previously fire-and-forget). The endpoint is
-    // called from navigator.sendBeacon / fetch with keepalive — neither
-    // cares about response time, but the previous .then(noop, noop) pattern
-    // swallowed any failure silently and returned ok: true regardless. That
-    // made it impossible to spot Supabase rate-limit hits, RLS regressions
-    // or transient network blips. Now we log + return the real status; the
-    // client still ignores it but Vercel logs surface the failure mode.
-    const { error: insertError } = await sb
-      .from("site_events")
-      .insert({
-        event_type: type,
-        metadata,
-        ip_hash: ipHash,
-      });
 
-    if (insertError) {
-      console.error(
-        `[event] insert failed for ${type}:`,
-        insertError.code,
-        insertError.message,
-      );
-      return NextResponse.json(
-        { ok: false, error: "insert_failed" },
-        { status: 500 },
-      );
-    }
+    // The insert runs via waitUntil: the response returns immediately and the
+    // write completes in the background, with the function kept alive until it
+    // finishes.
+    //
+    // WHY. This route is the busiest thing on the site — 189,212 calls in the
+    // last 30 days, one per tracked event. Awaiting the insert billed Fluid
+    // Active CPU for ~189k Supabase round-trips whose result nobody reads:
+    // callers are navigator.sendBeacon (which discards the response by
+    // definition) and fetch with keepalive. That contributed to going over the
+    // plan's Active CPU allowance.
+    //
+    // This is NOT a return to the old fire-and-forget `.then(noop, noop)`. That
+    // was replaced because it swallowed failures silently, leaving Supabase
+    // rate limits, RLS regressions and network blips invisible. The logging is
+    // exactly as it was — waitUntil just stops us paying to hold the request
+    // open for it, and unlike a bare unawaited promise it guarantees the write
+    // isn't cut off when the response returns.
+    //
+    // The one thing given up is the 500 on insert failure. That is genuinely
+    // free: the previous comment noted the client ignores the status anyway,
+    // and the value was always in the logs.
+    // An async IIFE rather than .then(): supabase-js returns a PromiseLike,
+    // which waitUntil does not accept.
+    waitUntil(
+      (async () => {
+        const { error: insertError } = await sb
+          .from("site_events")
+          .insert({ event_type: type, metadata, ip_hash: ipHash });
+        if (insertError) {
+          console.error(
+            `[event] insert failed for ${type}:`,
+            insertError.code,
+            insertError.message,
+          );
+        }
+      })(),
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {
