@@ -2,6 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 const RATE_LIMIT_MAX = 20;
@@ -425,14 +426,26 @@ function recordLookupFailure(meta: {
   ipHash?: string | null;
 }): void {
   try {
-    supabaseServer()
-      .from("site_events")
-      .insert({
-        event_type: "lookup_error",
-        metadata: { stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
-        ip_hash: meta.ipHash ?? null,
-      })
-      .then(() => {}, () => {});
+    // waitUntil, not a bare unawaited promise. Vercel can freeze the function
+    // the moment the response is returned, which kills in-flight work — so
+    // `.then(noop, noop)` meant these rows could be silently dropped. That
+    // would have been a particularly unhelpful bug: this telemetry exists
+    // precisely to make silent failures visible, and was itself failing
+    // silently. waitUntil keeps the function alive for the write without
+    // holding up the response.
+    waitUntil(
+      (async () => {
+        await supabaseServer()
+          .from("site_events")
+          .insert({
+            event_type: "lookup_error",
+            metadata: { stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
+            ip_hash: meta.ipHash ?? null,
+          });
+      })().catch(() => {
+        // Swallow — telemetry must never affect a lookup.
+      }),
+    );
   } catch {
     // Swallow — a telemetry failure must never affect the response.
   }
