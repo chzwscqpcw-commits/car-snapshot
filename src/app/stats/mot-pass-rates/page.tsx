@@ -5,6 +5,7 @@ import FaqAccordion from "@/components/stats/FaqAccordion";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import CiteThisData from "@/components/stats/CiteThisData";
+import DataAsOf from "@/components/stats/DataAsOf";
 import passRateData from "@/data/mot-pass-rates.json";
 
 import MotPassRateCharts from "@/components/stats/MotPassRateCharts";
@@ -182,6 +183,16 @@ export default function MotPassRatesPage() {
 
         {/* Charts */}
         <MotPassRateCharts />
+
+        {/* The page states the DVSA test year its figures COVER (2024/25, in
+            the schema and the prose); this states when our copy of the data was
+            last refreshed, which is a different fact and the one a citing
+            journalist needs. Both datasets the charts draw on are listed, so
+            the OLDER of the two is what's shown. */}
+        <DataAsOf
+          files={["mot-pass-rates.json", "mot-failure-reasons.json"]}
+          className="mt-3"
+        />
 
         {/* Insight copy */}
         <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
