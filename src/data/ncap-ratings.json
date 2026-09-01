@@ -2021,7 +2021,7 @@
   },
   {
     "make": "MERCEDES-BENZ",
-    "model": "CLE COUPE",
+    "model": "CLE",
     "overallStars": 5,
     "adultOccupant": 93,
     "childOccupant": 89,
@@ -3708,16 +3708,6 @@
     "pedestrian": 90,
     "safetyAssist": 87,
     "yearTested": 2025
-  },
-  {
-    "make": "XPENG",
-    "model": "G6",
-    "overallStars": 5,
-    "adultOccupant": 88,
-    "childOccupant": 85,
-    "pedestrian": 88,
-    "safetyAssist": 75,
-    "yearTested": 2024
   },
   {
     "make": "XPENG",
