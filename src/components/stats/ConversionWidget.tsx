@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { Search, Bell, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
+import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 import Button from "@/components/Button";
 
@@ -62,6 +62,13 @@ export default function ConversionWidget({
   const router = useRouter();
   const [reg, setReg] = useState("");
   const [regError, setRegError] = useState("");
+
+  // Placement tag for the BookMyGarage link below. Used as BOTH our
+  // click_context and the Awin clickref, so a commission line matches the
+  // surface that earned it. Falls back to a fixed name where the caller sets
+  // no sourceTag (stats and tool pages), rather than to something anonymous.
+  const bmgContext = sourceTag ? `widget-mot-${sourceTag}` : "widget-mot-footer";
+  const bmgConfigured = isPartnerConfigured(PARTNER_LINKS.bookMyGarage);
 
   // MOT reminder state
   const [reminderReg, setReminderReg] = useState("");
@@ -353,12 +360,26 @@ export default function ConversionWidget({
             </div>
           </div>
 
-          {/* BookMyGarage affiliate link */}
+          {/* BookMyGarage affiliate link.
+
+              Was a hardcoded awin1.com URL with the merchant id frozen into
+              this file, no clickref and no click handler — so it produced no
+              partner_click of our own, and its commissions arrived in Awin
+              with nothing to say which surface earned them. Same gap as the
+              inline blog links (see src/lib/affiliateLinks.ts), and it matters
+              more here than a single link normally would: this widget is what
+              the blog CTA router mounts for every reg-check post, which is now
+              most of the corpus.
+
+              Context carries sourceTag where the caller sets one, so blog
+              placements stay separable from stats/tool-page ones. */}
+          {bmgConfigured && (
           <div className="mt-3 border-t border-slate-700/50 pt-3">
             <a
-              href="https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F"
+              href={PARTNER_LINKS.bookMyGarage.buildLink!("", bmgContext)}
               target="_blank"
-              rel="noopener sponsored"
+              rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
+              onClick={() => trackPartnerClick("bookMyGarage", bmgContext)}
               className="inline-flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-emerald-400"
             >
               Need an MOT or service? Compare prices from local garages &mdash; BookMyGarage
@@ -368,6 +389,7 @@ export default function ConversionWidget({
               Free Plate Check may earn a small commission from partner links, at no cost to you.
             </p>
           </div>
+          )}
         </div>
       )}
 
