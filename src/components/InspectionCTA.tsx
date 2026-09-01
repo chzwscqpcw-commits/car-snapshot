@@ -3,6 +3,7 @@
 import { ClipboardCheck } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { usePartnerImpression } from "@/components/usePartnerImpression";
 import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 
 interface InspectionCTAProps {
@@ -19,12 +20,16 @@ interface InspectionCTAProps {
  */
 export default function InspectionCTA({ context, regNumber }: InspectionCTAProps) {
   const partner = PARTNER_LINKS.clickMechanic;
-  if (!isPartnerConfigured(partner)) return null;
+  const configured = isPartnerConfigured(partner);
+  // Hook above the early return — see the note in usePartnerImpression.
+  const cardRef = usePartnerImpression("clickMechanic", context, configured);
+
+  if (!configured) return null;
 
   const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
 
   return (
-    <div className="rounded-xl border border-cyan-800/40 bg-gradient-to-br from-cyan-950/30 to-slate-900/30 p-5 sm:p-6">
+    <div ref={cardRef} className="rounded-xl border border-cyan-800/40 bg-gradient-to-br from-cyan-950/30 to-slate-900/30 p-5 sm:p-6">
       <div className="flex items-start gap-3 mb-3">
         <ClipboardCheck className="h-5 w-5 text-cyan-400 mt-0.5 shrink-0" />
         <h3 className="text-base sm:text-lg font-semibold text-white">

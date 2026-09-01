@@ -3,6 +3,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { usePartnerImpression } from "@/components/usePartnerImpression";
 
 const CM = "#3c93f7"; // ClickMechanic brand blue (cleared for use by Scott, 2026-06-17)
 
@@ -23,8 +24,10 @@ export default function ClickMechanicCTA({
 }) {
   const partner = PARTNER_LINKS.clickMechanic;
   const href = partner.buildLink ? partner.buildLink("", context) : partner.url;
+  const linkRef = usePartnerImpression<HTMLAnchorElement>("clickMechanic", context);
   return (
     <a
+      ref={linkRef}
       href={href}
       target="_blank"
       rel={getPartnerRel(partner)}

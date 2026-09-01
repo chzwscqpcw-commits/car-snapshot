@@ -7,6 +7,11 @@
  * - /preview/     — internal screenshot/preview routes with fixture data,
  *                   explicitly tagged "not linked, robots-noindex" in code
  * - /demo/        — affiliate-partner demo previews behind a password
+ * - /go/          — tracked outbound affiliate redirects. Nothing to index,
+ *                   and following one banks a real click in the partner's
+ *                   dashboard for a visit that never happened. The route
+ *                   refuses crawlers itself too (src/lib/bots.ts) — this
+ *                   disallow is the polite first line, not the only one.
  * - /*?vrm=       — plate-lookup deep-links (e.g. /car-valuation?vrm=AB12CDE).
  *                   `vrm` is the LIVE search param the app reads/writes; keep
  *                   this in lock-step with the router.push targets. These carry
@@ -24,7 +29,7 @@
  * default to blocked.
  */
 
-const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/", "/*?vrm=", "/*?reg="];
+const DISALLOW = ["/api/", "/data-health", "/preview/", "/demo/", "/go/", "/*?vrm=", "/*?reg="];
 
 const AI_CRAWLERS = [
   "GPTBot",

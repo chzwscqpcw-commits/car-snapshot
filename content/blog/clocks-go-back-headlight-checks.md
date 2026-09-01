@@ -1,7 +1,7 @@
 ---
 title: "Clocks Go Back: Headlight and Bulb Checks Before the Dark Nights"
 description: "The clocks go back on 25 October 2026, so the evening commute falls in darkness. A simple bulb walk-round and headlight check keeps you safe and MOT-ready."
-date: "2026-10-03"
+date: "2026-10-17"
 lastModified: "2026-10-03"
 keywords: ["clocks go back 2026", "headlight check", "car bulb check", "driving in the dark", "car lights MOT", "check car lights", "dazzling headlights"]
 author: "Free Plate Check"

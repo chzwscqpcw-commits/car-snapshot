@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import html from "remark-html";
+import { rewriteAffiliateLinks } from "./affiliateLinks";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
@@ -239,7 +240,11 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   const result = await remark().use(remarkGfm).use(html).process(content);
   const words = content.trim().split(/\s+/).length;
-  const { html: contentWithIds, toc } = addHeadingIds(result.toString());
+  // Affiliate links typed into the prose come out of remark as bare anchors —
+  // untracked, unmarked and crawler-followable. Rewrite before the heading
+  // pass so every post is covered without hand-editing markdown.
+  const withAffiliates = rewriteAffiliateLinks(result.toString(), slug);
+  const { html: contentWithIds, toc } = addHeadingIds(withAffiliates);
 
   return {
     slug,

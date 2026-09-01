@@ -1,7 +1,7 @@
 ---
 title: "Is a Nearly-New Car Worth It? Buying After the September Plate Change"
 description: "A nearly-new car lets the first owner absorb the steepest depreciation. Here's why the weeks after the September 76-plate change are a value sweet spot — and what to check first."
-date: "2026-09-05"
+date: "2026-09-19"
 lastModified: "2026-09-05"
 keywords: ["nearly new car", "is a nearly new car worth it", "buying a car after plate change", "pre-registered car", "ex demo car", "nearly new vs new car", "used car value"]
 author: "Free Plate Check"
