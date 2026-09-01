@@ -142,6 +142,7 @@ export default function BlogPage() {
                 <Link
                   key={t.tag}
                   href={`/blog/tag/${t.tag}`}
+                  prefetch={false}
                   className="group inline-flex items-center gap-1.5"
                 >
                   <BlogTagPill tag={t.tag} label={t.label} />
@@ -209,6 +210,9 @@ export default function BlogPage() {
                   <Link
                     key={post.slug}
                     href={`/blog/${post.slug}`}
+                    // A scanned list of 80+ posts; prefetching all of them
+                    // costs an edge request each for pages nobody opens.
+                    prefetch={false}
                     className="group flex flex-col rounded-lg border border-slate-800 bg-slate-900/40 p-5 transition-all hover:border-slate-600 hover:bg-slate-900/70"
                   >
                     {postTags.length > 0 && (

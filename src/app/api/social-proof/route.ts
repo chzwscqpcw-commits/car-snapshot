@@ -21,8 +21,22 @@ export async function GET() {
       { total: count ?? 0 },
       {
         headers: {
+          // `max-age` is the part that matters for Edge Requests.
+          //
+          // The previous header had s-maxage + stale-while-revalidate only,
+          // which caches at Vercel's CDN. That saves a function invocation and
+          // a Supabase count — but Vercel bills an Edge Request for a CDN cache
+          // HIT just the same, so it did nothing for the limit we are actually
+          // over (1.6M/1M). Only `max-age` stops the browser sending the
+          // request at all, and a request never sent is the only one that is
+          // free.
+          //
+          // 10 minutes in the browser: this is a cumulative "vehicles checked"
+          // counter for reassurance, so nobody is harmed by a slightly stale
+          // figure, and it only ever moves upward. s-maxage stays shorter so a
+          // genuinely new visitor still gets a recent number.
           "Cache-Control":
-            "public, s-maxage=300, stale-while-revalidate=600",
+            "public, max-age=600, s-maxage=300, stale-while-revalidate=600",
         },
       },
     );
