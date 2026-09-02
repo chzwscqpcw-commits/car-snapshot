@@ -143,6 +143,24 @@ function carVerticalSub2(ctx: string): string {
  *
  * ⚠️ Re-verify when carVertical run a promotion, and tell Dominyka before
  * changing this copy — pricing claims are coordinated under agreement 1.1/3.1.
+ *
+ * CONFIRMED BY THE ADVERTISER 2026-09-02. Dominyka sent the full price list
+ * direct, which is a stronger source than the public pricing page these were
+ * originally read from. Every figure below matched, including the promo prices
+ * our discountPct computes (£30.39 single, £16.79 per report in the 3-pack).
+ *
+ *   standard   1 report £37.99 · 2-pack £51.98 (£25.99 ea) · 3-pack £62.97 (£20.99 ea)
+ *   with code  1 report £30.39 · 2-pack £41.58 (£20.79 ea) · 3-pack £50.38 (£16.79 ea)
+ *
+ * The 2-REPORT PACK is deliberately absent below. She offered it and approved
+ * omitting it: "If you want to highlight the single and the three-pack, that's
+ * fine from our side." Two anchors — the entry price and the best per-report
+ * price — bracket the range; a third number in the middle adds clutter without
+ * changing the reader's decision. It is recorded here so nobody has to ask
+ * again if that judgement is ever revisited.
+ *
+ * She also confirmed affiliate discounts will not exceed 20% and undertook to
+ * give advance notice of any pricing change.
  */
 export const CARVERTICAL_PRICING = {
   /** One report, full price. */
@@ -151,7 +169,8 @@ export const CARVERTICAL_PRICING = {
   packOf3PerReport: 20.99,
   /** Our coupon, applied automatically through the tracking link. */
   discountPct: 20,
-  verifiedOn: "2026-08-25",
+  /** Confirmed direct with carVertical (Dominyka), not read off the public page. */
+  verifiedOn: "2026-09-02",
 } as const;
 
 /** £37.99 -> "£30.39". Rounded to the penny the way a checkout would show it. */
