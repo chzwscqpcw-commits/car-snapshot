@@ -1,0 +1,2171 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-02T09:27:06.697Z",
+  "urls": {
+    "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3712/Mercedes-Benz-CLA-Shooting-Brake-AMG-45-4MATICplus": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3713/Mazda-6e-78-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3711/Mercedes-Benz-CLA-AMG-45-4MATICplus": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3710/Renault-5-E-Tech-52kWh-150hp": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3709/Renault-5-E-Tech-40kWh-120hp": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3707/Porsche-Macan-Turbo-Electric": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3708/Renault-5-E-Tech-37kWh-110hp": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3706/Porsche-Macan-GTS-Electric": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3705/Porsche-Macan-4S-Electric": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3703/Porsche-Macan-Electric": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3704/Porsche-Macan-4-Electric": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3701/Geely-EX2-47-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3702/Mercedes-Benz-AMG-GT-4-Door-Coupe-53-4MATICplus": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3700/Geely-EX2-35-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3688/Mercedes-Benz-CLA-Shooting-Brake-250": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3686/Mercedes-Benz-GLA-250plus": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3687/Mercedes-Benz-GLA-350-4MATIC": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3685/Mercedes-Benz-GLA-200": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3684/Jeep-Compass-Electric-74-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3683/Genesis-GV60-Magma": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3682/Nissan-Ariya-e-4ORCE-87kWh---225-kW": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3681/Nissan-Ariya-87kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3678/XPENG-L03-AWD-Performance": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3677/XPENG-L03-RWD-Long-Range": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3676/XPENG-L03-RWD-Standard-Range": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3675/Volkswagen-ID-Polo-99-kW---37-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3674/Volkswagen-ID-Polo-85-kW---37-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3673/Volkswagen-ID-Cross-155-kW---52-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3672/Kia-EV4-Hatchback-814-kWh-GT": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3671/Kia-PV5-Passenger-712-kWh---7-Seats": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3670/Kia-PV5-Passenger-515-kWh---7-Seats": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3669/Kia-EV4-Hatchback-814-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3668/Kia-EV4-Hatchback-583-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3667/Kia-EV4-Hatchback-814-kWh-AWD": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3666/Leapmotor-B03X-530-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3665/Leapmotor-B03X-398-kWh": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3664/BMW-iX5-60-xDrive": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3663/Kia-EV3-GT": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3662/Jeep-Compass-Electric-4xe": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3661/Jeep-Compass-Electric-Long-Range": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3660/Skoda-Peaq-90x": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3659/Skoda-Peaq-90": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3658/Skoda-Peaq-60": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3657/BMW-i3-50-xDrive": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3655/Peugeot-e-208-GTi": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3656/Honda-Super-N": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3654/Mercedes-Benz-GLC-300-4MATIC": "2026-09-02T09:27:06.690Z"
+  },
+  "records": {
+    "TESLA|MODEL 3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3",
+        "batteryKwh": 60,
+        "rangeWltp": 305,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 208,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL 3 LONG RANGE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 LONG RANGE",
+        "batteryKwh": 82,
+        "rangeWltp": 390,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 366,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL Y": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y",
+        "batteryKwh": 60,
+        "rangeWltp": 283,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 220,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL Y LONG RANGE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y LONG RANGE",
+        "batteryKwh": 82,
+        "rangeWltp": 331,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 378,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL S": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL S",
+        "batteryKwh": 100,
+        "rangeWltp": 405,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "12h (0-100%)",
+        "motorKw": 493,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL X": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL X",
+        "batteryKwh": 100,
+        "rangeWltp": 348,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "12h (0-100%)",
+        "motorKw": 493,
+        "driveType": "AWD"
+      }
+    },
+    "NISSAN|LEAF": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "LEAF",
+        "batteryKwh": 40,
+        "rangeWltp": 168,
+        "chargeFast": "40 min (20-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 110,
+        "driveType": "FWD"
+      }
+    },
+    "NISSAN|LEAF E+": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "LEAF E+",
+        "batteryKwh": 62,
+        "rangeWltp": 239,
+        "chargeFast": "40 min (20-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "NISSAN|ARIYA": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "ARIYA",
+        "batteryKwh": 66,
+        "rangeWltp": 250,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "BMW|I3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "I3",
+        "batteryKwh": 42,
+        "rangeWltp": 190,
+        "chargeFast": "42 min (0-80%)",
+        "chargeSlow": "6h (0-100%)",
+        "motorKw": 125,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|I4": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "I4",
+        "batteryKwh": 84,
+        "rangeWltp": 365,
+        "chargeFast": "31 min (10-80%)",
+        "chargeSlow": "8.5h (0-100%)",
+        "motorKw": 250,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|IX": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX",
+        "batteryKwh": 77,
+        "rangeWltp": 257,
+        "chargeFast": "35 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 240,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|IX3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX3",
+        "batteryKwh": 80,
+        "rangeWltp": 285,
+        "chargeFast": "34 min (10-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|IX1": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX1",
+        "batteryKwh": 65,
+        "rangeWltp": 272,
+        "chargeFast": "29 min (10-80%)",
+        "chargeSlow": "6.5h (0-100%)",
+        "motorKw": 230,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|E-TRON": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "AUDI",
+        "model": "E-TRON",
+        "batteryKwh": 95,
+        "rangeWltp": 312,
+        "chargeFast": "28 min (5-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|Q4 E-TRON": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q4 E-TRON",
+        "batteryKwh": 82,
+        "rangeWltp": 316,
+        "chargeFast": "29 min (5-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|E-TRON GT": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "AUDI",
+        "model": "E-TRON GT",
+        "batteryKwh": 93,
+        "rangeWltp": 298,
+        "chargeFast": "23 min (5-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 350,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|Q8 E-TRON": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q8 E-TRON",
+        "batteryKwh": 114,
+        "rangeWltp": 373,
+        "chargeFast": "31 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES BENZ|EQA": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQA",
+        "batteryKwh": 67,
+        "rangeWltp": 263,
+        "chargeFast": "32 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 140,
+        "driveType": "FWD"
+      }
+    },
+    "MERCEDES BENZ|EQB": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQB",
+        "batteryKwh": 67,
+        "rangeWltp": 243,
+        "chargeFast": "32 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 168,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES BENZ|EQC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQC",
+        "batteryKwh": 80,
+        "rangeWltp": 255,
+        "chargeFast": "40 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES BENZ|EQS": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQS",
+        "batteryKwh": 108,
+        "rangeWltp": 453,
+        "chargeFast": "31 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 265,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES BENZ|EQE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQE",
+        "batteryKwh": 91,
+        "rangeWltp": 394,
+        "chargeFast": "32 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 215,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID.3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID.3",
+        "batteryKwh": 58,
+        "rangeWltp": 217,
+        "chargeFast": "30 min (5-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID.4": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID.4",
+        "batteryKwh": 77,
+        "rangeWltp": 323,
+        "chargeFast": "29 min (5-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID.5": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID.5",
+        "batteryKwh": 77,
+        "rangeWltp": 329,
+        "chargeFast": "29 min (5-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID.7": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID.7",
+        "batteryKwh": 86,
+        "rangeWltp": 382,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID. BUZZ": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID. BUZZ",
+        "batteryKwh": 82,
+        "rangeWltp": 258,
+        "chargeFast": "30 min (5-80%)",
+        "chargeSlow": "8.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "HYUNDAI|IONIQ 5": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "IONIQ 5",
+        "batteryKwh": 77,
+        "rangeWltp": 315,
+        "chargeFast": "18 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "HYUNDAI|IONIQ 6": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "IONIQ 6",
+        "batteryKwh": 77,
+        "rangeWltp": 338,
+        "chargeFast": "18 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "HYUNDAI|KONA ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "KONA ELECTRIC",
+        "batteryKwh": 65,
+        "rangeWltp": 305,
+        "chargeFast": "41 min (10-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV6": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV6",
+        "batteryKwh": 77,
+        "rangeWltp": 321,
+        "chargeFast": "18 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "KIA|EV9": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV9",
+        "batteryKwh": 100,
+        "rangeWltp": 336,
+        "chargeFast": "24 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "KIA|NIRO EV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "NIRO EV",
+        "batteryKwh": 65,
+        "rangeWltp": 285,
+        "chargeFast": "43 min (10-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|SOUL EV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "SOUL EV",
+        "batteryKwh": 64,
+        "rangeWltp": 280,
+        "chargeFast": "42 min (10-80%)",
+        "chargeSlow": "9h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "POLESTAR|2": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "2",
+        "batteryKwh": 78,
+        "rangeWltp": 341,
+        "chargeFast": "28 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 170,
+        "driveType": "FWD"
+      }
+    },
+    "POLESTAR|3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "3",
+        "batteryKwh": 111,
+        "rangeWltp": 379,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 360,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EX30": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX30",
+        "batteryKwh": 51,
+        "rangeWltp": 214,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "6h (0-100%)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EX40": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX40",
+        "batteryKwh": 82,
+        "rangeWltp": 300,
+        "chargeFast": "28 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 185,
+        "driveType": "FWD"
+      }
+    },
+    "VOLVO|EC40": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EC40",
+        "batteryKwh": 82,
+        "rangeWltp": 295,
+        "chargeFast": "28 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 185,
+        "driveType": "FWD"
+      }
+    },
+    "VOLVO|EX90": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX90",
+        "batteryKwh": 111,
+        "rangeWltp": 370,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|XC40 RECHARGE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "XC40 RECHARGE",
+        "batteryKwh": 82,
+        "rangeWltp": 300,
+        "chargeFast": "28 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 185,
+        "driveType": "FWD"
+      }
+    },
+    "JAGUAR|I-PACE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "JAGUAR",
+        "model": "I-PACE",
+        "batteryKwh": 90,
+        "rangeWltp": 292,
+        "chargeFast": "45 min (0-80%)",
+        "chargeSlow": "13h (0-100%)",
+        "motorKw": 294,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|TAYCAN": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "TAYCAN",
+        "batteryKwh": 93,
+        "rangeWltp": 354,
+        "chargeFast": "22 min (5-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 300,
+        "driveType": "RWD"
+      }
+    },
+    "MINI|ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MINI",
+        "model": "ELECTRIC",
+        "batteryKwh": 33,
+        "rangeWltp": 145,
+        "chargeFast": "36 min (0-80%)",
+        "chargeSlow": "4h (0-100%)",
+        "motorKw": 135,
+        "driveType": "FWD"
+      }
+    },
+    "MINI|COUNTRYMAN SE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MINI",
+        "model": "COUNTRYMAN SE",
+        "batteryKwh": 67,
+        "rangeWltp": 252,
+        "chargeFast": "29 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|500 ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "FIAT",
+        "model": "500 ELECTRIC",
+        "batteryKwh": 42,
+        "rangeWltp": 199,
+        "chargeFast": "35 min (0-80%)",
+        "chargeSlow": "6h (0-100%)",
+        "motorKw": 87,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E-208": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E-208",
+        "batteryKwh": 51,
+        "rangeWltp": 225,
+        "chargeFast": "25 min (0-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E-2008": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E-2008",
+        "batteryKwh": 54,
+        "rangeWltp": 214,
+        "chargeFast": "25 min (0-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E-3008": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E-3008",
+        "batteryKwh": 73,
+        "rangeWltp": 326,
+        "chargeFast": "25 min (20-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 157,
+        "driveType": "FWD"
+      }
+    },
+    "VAUXHALL|CORSA ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VAUXHALL",
+        "model": "CORSA ELECTRIC",
+        "batteryKwh": 51,
+        "rangeWltp": 222,
+        "chargeFast": "25 min (0-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "VAUXHALL|MOKKA ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VAUXHALL",
+        "model": "MOKKA ELECTRIC",
+        "batteryKwh": 54,
+        "rangeWltp": 209,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E-C4": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E-C4",
+        "batteryKwh": 54,
+        "rangeWltp": 222,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "RENAULT|ZOE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "ZOE",
+        "batteryKwh": 52,
+        "rangeWltp": 245,
+        "chargeFast": "50 min (0-80%)",
+        "chargeSlow": "9h (0-100%)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "RENAULT|MEGANE E-TECH": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "MEGANE E-TECH",
+        "batteryKwh": 60,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "RENAULT|SCENIC E-TECH": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "SCENIC E-TECH",
+        "batteryKwh": 87,
+        "rangeWltp": 385,
+        "chargeFast": "27 min (15-80%)",
+        "chargeSlow": "9h (0-100%)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "MG|MG4": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MG",
+        "model": "MG4",
+        "batteryKwh": 64,
+        "rangeWltp": 281,
+        "chargeFast": "35 min (10-80%)",
+        "chargeSlow": "7.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "MG|ZS EV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MG",
+        "model": "ZS EV",
+        "batteryKwh": 73,
+        "rangeWltp": 273,
+        "chargeFast": "36 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "MG|MG5": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MG",
+        "model": "MG5",
+        "batteryKwh": 61,
+        "rangeWltp": 250,
+        "chargeFast": "40 min (10-80%)",
+        "chargeSlow": "8.5h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "BYD|ATTO 3": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BYD",
+        "model": "ATTO 3",
+        "batteryKwh": 60,
+        "rangeWltp": 261,
+        "chargeFast": "29 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "BYD|SEAL": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BYD",
+        "model": "SEAL",
+        "batteryKwh": 83,
+        "rangeWltp": 354,
+        "chargeFast": "26 min (10-80%)",
+        "chargeSlow": "9h (0-100%)",
+        "motorKw": 230,
+        "driveType": "RWD"
+      }
+    },
+    "BYD|DOLPHIN": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BYD",
+        "model": "DOLPHIN",
+        "batteryKwh": 60,
+        "rangeWltp": 265,
+        "chargeFast": "29 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "FORD|MUSTANG MACH-E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "FORD",
+        "model": "MUSTANG MACH-E",
+        "batteryKwh": 75,
+        "rangeWltp": 273,
+        "chargeFast": "38 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 198,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|EXPLORER ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "FORD",
+        "model": "EXPLORER ELECTRIC",
+        "batteryKwh": 77,
+        "rangeWltp": 310,
+        "chargeFast": "25 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "HONDA|E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "HONDA",
+        "model": "E",
+        "batteryKwh": 36,
+        "rangeWltp": 137,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "4h (0-100%)",
+        "motorKw": 113,
+        "driveType": "RWD"
+      }
+    },
+    "MAZDA|MX-30": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MAZDA",
+        "model": "MX-30",
+        "batteryKwh": 36,
+        "rangeWltp": 124,
+        "chargeFast": "36 min (20-80%)",
+        "chargeSlow": "5h (0-100%)",
+        "motorKw": 107,
+        "driveType": "FWD"
+      }
+    },
+    "SKODA|ENYAQ": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "SKODA",
+        "model": "ENYAQ",
+        "batteryKwh": 82,
+        "rangeWltp": 339,
+        "chargeFast": "29 min (5-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "CUPRA|BORN": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "CUPRA",
+        "model": "BORN",
+        "batteryKwh": 82,
+        "rangeWltp": 340,
+        "chargeFast": "28 min (5-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 170,
+        "driveType": "RWD"
+      }
+    },
+    "SEAT|MII ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "SEAT",
+        "model": "MII ELECTRIC",
+        "batteryKwh": 37,
+        "rangeWltp": 162,
+        "chargeFast": "60 min (0-80%)",
+        "chargeSlow": "4h (0-100%)",
+        "motorKw": 61,
+        "driveType": "FWD"
+      }
+    },
+    "SMART|FORTWO EQ": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "SMART",
+        "model": "FORTWO EQ",
+        "batteryKwh": 18,
+        "rangeWltp": 84,
+        "chargeFast": "40 min (10-80%)",
+        "chargeSlow": "3h (0-100%)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|#1": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "SMART",
+        "model": "#1",
+        "batteryKwh": 66,
+        "rangeWltp": 273,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "LEXUS|UX 300E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "UX 300E",
+        "batteryKwh": 73,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "LEXUS|RZ": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "RZ",
+        "batteryKwh": 72,
+        "rangeWltp": 250,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "9.5h (0-100%)",
+        "motorKw": 230,
+        "driveType": "AWD"
+      }
+    },
+    "TOYOTA|BZ4X": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "BZ4X",
+        "batteryKwh": 72,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "9.5h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "GENESIS|GV60": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV60",
+        "batteryKwh": 77,
+        "rangeWltp": 292,
+        "chargeFast": "18 min (10-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "GENESIS|ELECTRIFIED G80": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "ELECTRIFIED G80",
+        "batteryKwh": 88,
+        "rangeWltp": 283,
+        "chargeFast": "22 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 272,
+        "driveType": "AWD"
+      }
+    },
+    "ORA|FUNKY CAT": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "ORA",
+        "model": "FUNKY CAT",
+        "batteryKwh": 63,
+        "rangeWltp": 193,
+        "chargeFast": "40 min (10-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 126,
+        "driveType": "FWD"
+      }
+    },
+    "VAUXHALL|ASTRA ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VAUXHALL",
+        "model": "ASTRA ELECTRIC",
+        "batteryKwh": 54,
+        "rangeWltp": 258,
+        "chargeFast": "26 min (20-80%)",
+        "chargeSlow": "8h (0-100%)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "BMW|I5": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5",
+        "batteryKwh": 84,
+        "rangeWltp": 360,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "9h (0-100%)",
+        "motorKw": 250,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|I7": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "I7",
+        "batteryKwh": 102,
+        "rangeWltp": 388,
+        "chargeFast": "34 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 400,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E-UP": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E-UP",
+        "batteryKwh": 37,
+        "rangeWltp": 159,
+        "chargeFast": "60 min (0-80%)",
+        "chargeSlow": "4h (0-100%)",
+        "motorKw": 61,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E-BERLINGO": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E-BERLINGO",
+        "batteryKwh": 50,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E-RIFTER": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E-RIFTER",
+        "batteryKwh": 50,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "TOYOTA|PROACE CITY ELECTRIC": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "PROACE CITY ELECTRIC",
+        "batteryKwh": 50,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "7h (0-100%)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "MERCEDES BENZ|EQV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "EQV",
+        "batteryKwh": 100,
+        "rangeWltp": 213,
+        "chargeFast": "45 min (10-80%)",
+        "chargeSlow": "10h (0-100%)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "SUBARU|SOLTERRA": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "SUBARU",
+        "model": "SOLTERRA",
+        "batteryKwh": 72,
+        "rangeWltp": 258,
+        "chargeFast": "30 min (10-80%)",
+        "chargeSlow": "9.5h (0-100%)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "LOTUS|ELETRE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "LOTUS",
+        "model": "ELETRE",
+        "batteryKwh": 112,
+        "rangeWltp": 373,
+        "chargeFast": "20 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 450,
+        "driveType": "AWD"
+      }
+    },
+    "ROLLS ROYCE|SPECTRE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "ROLLS ROYCE",
+        "model": "SPECTRE",
+        "batteryKwh": 102,
+        "rangeWltp": 323,
+        "chargeFast": "34 min (10-80%)",
+        "chargeSlow": "11h (0-100%)",
+        "motorKw": 430,
+        "driveType": "AWD"
+      }
+    },
+    "BENTLEY|BENTAYGA HYBRID": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BENTLEY",
+        "model": "BENTAYGA HYBRID",
+        "batteryKwh": 18,
+        "rangeWltp": 27,
+        "chargeFast": null,
+        "chargeSlow": "2.5h (0-100%)",
+        "motorKw": 100,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|XC60 RECHARGE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "XC60 RECHARGE",
+        "batteryKwh": 18,
+        "rangeWltp": 47,
+        "chargeFast": null,
+        "chargeSlow": "3h (0-100%)",
+        "motorKw": 107,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|XC90 RECHARGE": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "XC90 RECHARGE",
+        "batteryKwh": 18,
+        "rangeWltp": 45,
+        "chargeFast": null,
+        "chargeSlow": "3h (0-100%)",
+        "motorKw": 107,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|330E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "330E",
+        "batteryKwh": 12,
+        "rangeWltp": 37,
+        "chargeFast": null,
+        "chargeSlow": "3.5h (0-100%)",
+        "motorKw": 83,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|X5 XDRIVE45E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "BMW",
+        "model": "X5 XDRIVE45E",
+        "batteryKwh": 24,
+        "rangeWltp": 54,
+        "chargeFast": null,
+        "chargeSlow": "3.5h (0-100%)",
+        "motorKw": 83,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES BENZ|C 300 E": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MERCEDES BENZ",
+        "model": "C 300 E",
+        "batteryKwh": 25,
+        "rangeWltp": 62,
+        "chargeFast": null,
+        "chargeSlow": "3h (0-100%)",
+        "motorKw": 95,
+        "driveType": "RWD"
+      }
+    },
+    "MITSUBISHI|OUTLANDER PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "MITSUBISHI",
+        "model": "OUTLANDER PHEV",
+        "batteryKwh": 20,
+        "rangeWltp": 53,
+        "chargeFast": "25 min (0-80%)",
+        "chargeSlow": "4h (0-100%)",
+        "motorKw": 85,
+        "driveType": "AWD"
+      }
+    },
+    "TOYOTA|RAV4 PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "RAV4 PHEV",
+        "batteryKwh": 18,
+        "rangeWltp": 46,
+        "chargeFast": null,
+        "chargeSlow": "5h (0-100%)",
+        "motorKw": 134,
+        "driveType": "AWD"
+      }
+    },
+    "HYUNDAI|TUCSON PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "TUCSON PHEV",
+        "batteryKwh": 14,
+        "rangeWltp": 38,
+        "chargeFast": null,
+        "chargeSlow": "2h (0-100%)",
+        "motorKw": 67,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|SPORTAGE PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "SPORTAGE PHEV",
+        "batteryKwh": 14,
+        "rangeWltp": 43,
+        "chargeFast": null,
+        "chargeSlow": "2h (0-100%)",
+        "motorKw": 67,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|NIRO PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "KIA",
+        "model": "NIRO PHEV",
+        "batteryKwh": 12,
+        "rangeWltp": 40,
+        "chargeFast": null,
+        "chargeSlow": "2.5h (0-100%)",
+        "motorKw": 62,
+        "driveType": "FWD"
+      }
+    },
+    "FORD|KUGA PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "FORD",
+        "model": "KUGA PHEV",
+        "batteryKwh": 14,
+        "rangeWltp": 35,
+        "chargeFast": null,
+        "chargeSlow": "3.5h (0-100%)",
+        "motorKw": 97,
+        "driveType": "FWD"
+      }
+    },
+    "RANGE ROVER|RANGE ROVER PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "RANGE ROVER",
+        "model": "RANGE ROVER PHEV",
+        "batteryKwh": 38,
+        "rangeWltp": 70,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "5h (0-100%)",
+        "motorKw": 105,
+        "driveType": "AWD"
+      }
+    },
+    "RANGE ROVER|RANGE ROVER SPORT PHEV": {
+      "rank": -1,
+      "scrapedAt": "1970-01-01T00:00:00.000Z",
+      "record": {
+        "make": "RANGE ROVER",
+        "model": "RANGE ROVER SPORT PHEV",
+        "batteryKwh": 38,
+        "rangeWltp": 70,
+        "chargeFast": "30 min (0-80%)",
+        "chargeSlow": "5h (0-100%)",
+        "motorKw": 105,
+        "driveType": "AWD"
+      }
+    },
+    "POLESTAR|4 SUV DUAL MOTOR": {
+      "rank": 3715,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "4 SUV DUAL MOTOR",
+        "batteryKwh": 94,
+        "rangeWltp": 298,
+        "chargeFast": "31 min (200 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 400,
+        "driveType": "AWD"
+      }
+    },
+    "POLESTAR|4 SUV REAR MOTOR": {
+      "rank": 3714,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "4 SUV REAR MOTOR",
+        "batteryKwh": 94,
+        "rangeWltp": 304,
+        "chargeFast": "31 min (200 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA SHOOTING BRAKE AMG 45 4MATICPLUS": {
+      "rank": 3712,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA SHOOTING BRAKE AMG 45 4MATICPLUS",
+        "batteryKwh": 94,
+        "rangeWltp": 336,
+        "chargeFast": "22 min (330 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 500,
+        "driveType": "AWD"
+      }
+    },
+    "MAZDA|6E 78 KWH": {
+      "rank": 3713,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MAZDA",
+        "model": "6E 78 KWH",
+        "batteryKwh": 77,
+        "rangeWltp": 292,
+        "chargeFast": "25 min (200 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 190,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA AMG 45 4MATICPLUS": {
+      "rank": 3711,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA AMG 45 4MATICPLUS",
+        "batteryKwh": 94,
+        "rangeWltp": 354,
+        "chargeFast": "22 min (330 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 500,
+        "driveType": "AWD"
+      }
+    },
+    "RENAULT|5 E TECH 52KWH 150HP": {
+      "rank": 3710,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "5 E TECH 52KWH 150HP",
+        "batteryKwh": 52,
+        "rangeWltp": 214,
+        "chargeFast": "31 min (101 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 110,
+        "driveType": "FWD"
+      }
+    },
+    "RENAULT|5 E TECH 40KWH 120HP": {
+      "rank": 3709,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "5 E TECH 40KWH 120HP",
+        "batteryKwh": 40,
+        "rangeWltp": 165,
+        "chargeFast": "32 min (80 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 90,
+        "driveType": "FWD"
+      }
+    },
+    "PORSCHE|MACAN TURBO ELECTRIC": {
+      "rank": 3707,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "MACAN TURBO ELECTRIC",
+        "batteryKwh": 94.9,
+        "rangeWltp": 289,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "5h15m (22 kW AC)",
+        "motorKw": 470,
+        "driveType": "AWD"
+      }
+    },
+    "RENAULT|5 E TECH 37KWH 110HP": {
+      "rank": 3708,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "5 E TECH 37KWH 110HP",
+        "batteryKwh": 36.5,
+        "rangeWltp": 152,
+        "chargeFast": "32 min (80 kW DC)",
+        "chargeSlow": "6h30m (6.6 kW AC)",
+        "motorKw": 80,
+        "driveType": "FWD"
+      }
+    },
+    "PORSCHE|MACAN GTS ELECTRIC": {
+      "rank": 3706,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "MACAN GTS ELECTRIC",
+        "batteryKwh": 94.9,
+        "rangeWltp": 289,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "5h15m (22 kW AC)",
+        "motorKw": 420,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|MACAN 4S ELECTRIC": {
+      "rank": 3705,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "MACAN 4S ELECTRIC",
+        "batteryKwh": 94.9,
+        "rangeWltp": 292,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 380,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|MACAN ELECTRIC": {
+      "rank": 3703,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "MACAN ELECTRIC",
+        "batteryKwh": 94.9,
+        "rangeWltp": 308,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 265,
+        "driveType": "RWD"
+      }
+    },
+    "PORSCHE|MACAN 4 ELECTRIC": {
+      "rank": 3704,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "MACAN 4 ELECTRIC",
+        "batteryKwh": 94.9,
+        "rangeWltp": 292,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "GEELY|EX2 47 KWH": {
+      "rank": 3701,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "GEELY",
+        "model": "EX2 47 KWH",
+        "batteryKwh": 47.1,
+        "rangeWltp": 174,
+        "chargeFast": "35 min (80 kW DC)",
+        "chargeSlow": "8h30m (6.6 kW AC)",
+        "motorKw": 85,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|AMG GT 4 DOOR COUPE 53 4MATICPLUS": {
+      "rank": 3702,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "AMG GT 4 DOOR COUPE 53 4MATICPLUS",
+        "batteryKwh": 106,
+        "rangeWltp": 391,
+        "chargeFast": "12 min (600 kW DC)",
+        "chargeSlow": "11h30m (11 kW AC)",
+        "motorKw": 400,
+        "driveType": "AWD"
+      }
+    },
+    "GEELY|EX2 35 KWH": {
+      "rank": 3700,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "GEELY",
+        "model": "EX2 35 KWH",
+        "batteryKwh": 35.4,
+        "rangeWltp": 134,
+        "chargeFast": "35 min (60 kW DC)",
+        "chargeSlow": "6h30m (6.6 kW AC)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA SHOOTING BRAKE 250": {
+      "rank": 3688,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA SHOOTING BRAKE 250",
+        "batteryKwh": 71,
+        "rangeWltp": 295,
+        "chargeFast": "21 min (250 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|GLA 250PLUS": {
+      "rank": 3686,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLA 250PLUS",
+        "batteryKwh": 85,
+        "rangeWltp": 304,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|GLA 350 4MATIC": {
+      "rank": 3687,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLA 350 4MATIC",
+        "batteryKwh": 85,
+        "rangeWltp": 298,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 260,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|GLA 200": {
+      "rank": 3685,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLA 200",
+        "batteryKwh": 58,
+        "rangeWltp": 208,
+        "chargeFast": "20 min (200 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "RWD"
+      }
+    },
+    "JEEP|COMPASS ELECTRIC 74 KWH": {
+      "rank": 3684,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "JEEP",
+        "model": "COMPASS ELECTRIC 74 KWH",
+        "batteryKwh": 73.7,
+        "rangeWltp": 230,
+        "chargeFast": "36 min (160 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 157,
+        "driveType": "FWD"
+      }
+    },
+    "GENESIS|GV60 MAGMA": {
+      "rank": 3683,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV60 MAGMA",
+        "batteryKwh": 80,
+        "rangeWltp": 236,
+        "chargeFast": "17 min (264 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 448,
+        "driveType": "AWD"
+      }
+    },
+    "NISSAN|ARIYA E 4ORCE 87KWH   225 KW": {
+      "rank": 3682,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "ARIYA E 4ORCE 87KWH   225 KW",
+        "batteryKwh": 87,
+        "rangeWltp": 252,
+        "chargeFast": "48 min (130 kW DC)",
+        "chargeSlow": "9h30m (11 kW AC)",
+        "motorKw": 225,
+        "driveType": "AWD"
+      }
+    },
+    "NISSAN|ARIYA 87KWH": {
+      "rank": 3681,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "ARIYA 87KWH",
+        "batteryKwh": 87,
+        "rangeWltp": 280,
+        "chargeFast": "48 min (130 kW DC)",
+        "chargeSlow": "9h30m (11 kW AC)",
+        "motorKw": 178,
+        "driveType": "FWD"
+      }
+    },
+    "XPENG|L03 AWD PERFORMANCE": {
+      "rank": 3678,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "XPENG",
+        "model": "L03 AWD PERFORMANCE",
+        "batteryKwh": 69.5,
+        "rangeWltp": 242,
+        "chargeFast": "20 min (236 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 285,
+        "driveType": "AWD"
+      }
+    },
+    "XPENG|L03 RWD LONG RANGE": {
+      "rank": 3677,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "XPENG",
+        "model": "L03 RWD LONG RANGE",
+        "batteryKwh": 69.5,
+        "rangeWltp": 261,
+        "chargeFast": "20 min (236 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 180,
+        "driveType": "RWD"
+      }
+    },
+    "XPENG|L03 RWD STANDARD RANGE": {
+      "rank": 3676,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "XPENG",
+        "model": "L03 RWD STANDARD RANGE",
+        "batteryKwh": 57,
+        "rangeWltp": 217,
+        "chargeFast": "21 min (193 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 180,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID POLO 99 KW   37 KWH": {
+      "rank": 3675,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID POLO 99 KW   37 KWH",
+        "batteryKwh": 37.5,
+        "rangeWltp": 152,
+        "chargeFast": "24 min (88 kW DC)",
+        "chargeSlow": "4 hours (11 kW AC)",
+        "motorKw": 99,
+        "driveType": "FWD"
+      }
+    },
+    "VOLKSWAGEN|ID POLO 85 KW   37 KWH": {
+      "rank": 3674,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID POLO 85 KW   37 KWH",
+        "batteryKwh": 37.5,
+        "rangeWltp": 152,
+        "chargeFast": "24 min (88 kW DC)",
+        "chargeSlow": "4 hours (11 kW AC)",
+        "motorKw": 85,
+        "driveType": "FWD"
+      }
+    },
+    "VOLKSWAGEN|ID CROSS 155 KW   52 KWH": {
+      "rank": 3673,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID CROSS 155 KW   52 KWH",
+        "batteryKwh": 51.7,
+        "rangeWltp": 196,
+        "chargeFast": "24 min (105 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 155,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV4 HATCHBACK 814 KWH GT": {
+      "rank": 3672,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV4 HATCHBACK 814 KWH GT",
+        "batteryKwh": 78,
+        "rangeWltp": 280,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 215,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|PV5 PASSENGER 712 KWH   7 SEATS": {
+      "rank": 3671,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "PV5 PASSENGER 712 KWH   7 SEATS",
+        "batteryKwh": 67,
+        "rangeWltp": 208,
+        "chargeFast": "39 min (150 kW DC)",
+        "chargeSlow": "7h15m (11 kW AC)",
+        "motorKw": 120,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|PV5 PASSENGER 515 KWH   7 SEATS": {
+      "rank": 3670,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "PV5 PASSENGER 515 KWH   7 SEATS",
+        "batteryKwh": 48,
+        "rangeWltp": 152,
+        "chargeFast": "28 min (150 kW DC)",
+        "chargeSlow": "5h15m (11 kW AC)",
+        "motorKw": 89,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV4 HATCHBACK 814 KWH": {
+      "rank": 3669,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV4 HATCHBACK 814 KWH",
+        "batteryKwh": 78,
+        "rangeWltp": 314,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV4 HATCHBACK 583 KWH": {
+      "rank": 3668,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV4 HATCHBACK 583 KWH",
+        "batteryKwh": 55,
+        "rangeWltp": 224,
+        "chargeFast": "30 min (100 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV4 HATCHBACK 814 KWH AWD": {
+      "rank": 3667,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV4 HATCHBACK 814 KWH AWD",
+        "batteryKwh": 78,
+        "rangeWltp": 304,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 195,
+        "driveType": "AWD"
+      }
+    },
+    "LEAPMOTOR|B03X 530 KWH": {
+      "rank": 3666,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B03X 530 KWH",
+        "batteryKwh": 52,
+        "rangeWltp": 183,
+        "chargeFast": "22 min (133 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 145,
+        "driveType": "FWD"
+      }
+    },
+    "LEAPMOTOR|B03X 398 KWH": {
+      "rank": 3665,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B03X 398 KWH",
+        "batteryKwh": 39,
+        "rangeWltp": 140,
+        "chargeFast": "22 min (100 kW DC)",
+        "chargeSlow": "4h15m (11 kW AC)",
+        "motorKw": 130,
+        "driveType": "FWD"
+      }
+    },
+    "BMW|IX5 60 XDRIVE": {
+      "rank": 3664,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX5 60 XDRIVE",
+        "batteryKwh": 141,
+        "rangeWltp": 416,
+        "chargeFast": "23 min (460 kW DC)",
+        "chargeSlow": "7h45m (22 kW AC)",
+        "motorKw": 425,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|EV3 GT": {
+      "rank": 3663,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV3 GT",
+        "batteryKwh": 78,
+        "rangeWltp": 267,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 215,
+        "driveType": "AWD"
+      }
+    },
+    "JEEP|COMPASS ELECTRIC 4XE": {
+      "rank": 3662,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "JEEP",
+        "model": "COMPASS ELECTRIC 4XE",
+        "batteryKwh": 96.1,
+        "rangeWltp": 289,
+        "chargeFast": "28 min (160 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 276,
+        "driveType": "AWD"
+      }
+    },
+    "JEEP|COMPASS ELECTRIC LONG RANGE": {
+      "rank": 3661,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "JEEP",
+        "model": "COMPASS ELECTRIC LONG RANGE",
+        "batteryKwh": 96.3,
+        "rangeWltp": 295,
+        "chargeFast": "28 min (160 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 170,
+        "driveType": "FWD"
+      }
+    },
+    "SKODA|PEAQ 90X": {
+      "rank": 3660,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "SKODA",
+        "model": "PEAQ 90X",
+        "batteryKwh": 86,
+        "rangeWltp": 304,
+        "chargeFast": "29 min (199 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 220,
+        "driveType": "AWD"
+      }
+    },
+    "SKODA|PEAQ 90": {
+      "rank": 3659,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "SKODA",
+        "model": "PEAQ 90",
+        "batteryKwh": 86,
+        "rangeWltp": 311,
+        "chargeFast": "29 min (199 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "SKODA|PEAQ 60": {
+      "rank": 3658,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "SKODA",
+        "model": "PEAQ 60",
+        "batteryKwh": 59,
+        "rangeWltp": 221,
+        "chargeFast": "27 min (160 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|I3 50 XDRIVE": {
+      "rank": 3657,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "BMW",
+        "model": "I3 50 XDRIVE",
+        "batteryKwh": 108.7,
+        "rangeWltp": 444,
+        "chargeFast": "21 min (400 kW DC)",
+        "chargeSlow": "11h45m (11 kW AC)",
+        "motorKw": 345,
+        "driveType": "AWD"
+      }
+    },
+    "PEUGEOT|E 208 GTI": {
+      "rank": 3655,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E 208 GTI",
+        "batteryKwh": 50.8,
+        "rangeWltp": 193,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 207,
+        "driveType": "FWD"
+      }
+    },
+    "HONDA|SUPER N": {
+      "rank": 3656,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "HONDA",
+        "model": "SUPER N",
+        "batteryKwh": 28,
+        "rangeWltp": 115,
+        "chargeFast": "31 min (50 kW DC)",
+        "chargeSlow": "3 hours (11 kW AC)",
+        "motorKw": 70,
+        "driveType": "FWD"
+      }
+    },
+    "MERCEDES-BENZ|GLC 300 4MATIC": {
+      "rank": 3654,
+      "scrapedAt": "2026-09-02T09:27:06.691Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLC 300 4MATIC",
+        "batteryKwh": 85,
+        "rangeWltp": 304,
+        "chargeFast": "23 min (320 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 310,
+        "driveType": "AWD"
+      }
+    }
+  }
+}
