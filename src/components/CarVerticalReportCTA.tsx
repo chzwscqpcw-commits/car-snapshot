@@ -33,11 +33,26 @@ interface CarVerticalReportCTAProps {
   /** Fire a `partner_impression` when this placement is actually scrolled into
    *  view, giving the placement's clicks a denominator.
    *
-   *  Opt-in rather than automatic: the valuation placements render on ~2,500
-   *  result views a week, and turning impressions on everywhere at once would
-   *  multiply event volume for placements whose click counts are already
-   *  readable. Switch it on per placement, when the question is "was this ever
-   *  seen?" — which for the anomaly CTA is unanswerable without it. */
+   *  DEFAULTS TO TRUE as of 2026-09-06. It was opt-in, on the reasoning that
+   *  the valuation placements render on ~2,500 result views a week and
+   *  instrumenting everything would multiply event volume for placements whose
+   *  click counts were already readable.
+   *
+   *  Click counts turned out not to be readable at all. The first five days of
+   *  impression data on the other partners showed Warrantywise at 747
+   *  impressions for 2 clicks (0.27%) and ClickMechanic at 502 for zero — and
+   *  the one carVertical placement that DID have a denominator,
+   *  `mot-history-anomaly`, converted at 4.3%, roughly sixteen times better on
+   *  a twentieth of the exposure. A raw click count cannot tell you which of
+   *  those two situations you are in, and that is the only question worth
+   *  asking about a placement.
+   *
+   *  The volume concern was real but is now affordable: the site moved to
+   *  Vercel Pro on 1 Sep, and /api/event no longer blocks on its insert
+   *  (waitUntil, #93). Expect roughly 10-15k additional events a month.
+   *
+   *  Set `trackImpression={false}` on a placement once its rate is established
+   *  and you want the volume back. */
   trackImpression?: boolean;
   /** `report` = full free-vs-paid box (in-results); `mileage` = clocking-themed
    *  placement for the /mileage-check landing page; `seller` = pre-sale framing
@@ -185,7 +200,7 @@ export default function CarVerticalReportCTA({
   context = "report-carvertical",
   preview = false,
   variant = "report",
-  trackImpression = false,
+  trackImpression = true,
 }: CarVerticalReportCTAProps) {
   const [expanded, setExpanded] = useState(false);
 
