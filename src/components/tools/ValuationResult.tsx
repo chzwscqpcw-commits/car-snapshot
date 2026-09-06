@@ -22,7 +22,6 @@ import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
-import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
@@ -357,9 +356,25 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           site that acknowledges that. */}
       <PartnerReturnPrompt context="valuation-result-return" />
 
-      <div className="mt-6">
-        <BuyerInspectionWidget regNumber={vrm} context="valuation-result-buyer-inspection" />
-      </div>
+      {/* BuyerInspectionWidget removed 2026-09-06. It offered to send a mechanic
+          to inspect a car before purchase, on the screen where someone finds out
+          what their own car is worth.
+
+          Impression tracking, added 2026-09-01, made the mismatch measurable:
+          195 impressions here and 303 on the homepage results across five days,
+          and ZERO clicks from either. Of the 364 sessions shown it anywhere,
+          361 — 99% — had also run a valuation. It was not a copy problem.
+
+          This also retires an older theory. The revenue audit removed the
+          "are you a buyer?" tap-gate because it suppressed the offer to ~6
+          clicks a month; showing it to everyone lifted impressions to 502 and
+          produced none at all. The gate was never the bottleneck — the audience
+          is. 41% of visitors are valuing a car they own and 6% are buyers.
+
+          ClickMechanic keeps the surfaces that match real buyer intent:
+          /pre-purchase-inspection, and the homepage results placement, which is
+          gated on MOT concerns AND self-segments by buyer/owner role.
+      */}
       {evOrHybrid && (
         <div className="mt-6">
           <EvChargerPromptWidget source="valuation-result" />
