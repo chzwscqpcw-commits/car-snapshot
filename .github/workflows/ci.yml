@@ -38,5 +38,14 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: PDF report smoke-test
-        run: npm run test:pdf
+      # `npm test`, not `npm run test:pdf`. CI ran the PDF smoke-test alone, so
+      # test:valuation and test:historic were never a gate — and on 2026-09-02
+      # that let a real mispricing reach production: the weekly scrape added a
+      # petrol VAUXHALL CORSA row, a latent bug in lookupNewPrice handed every
+      # electric Corsa that cheaper price, and test:valuation caught it locally
+      # while CI stayed green. Thirteen EV models were wrong for four days.
+      #
+      # Both suites are dependency-free and run in seconds, so there was never a
+      # cost reason to leave them out.
+      - name: Test suite
+        run: npm test

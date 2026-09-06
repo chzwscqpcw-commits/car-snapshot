@@ -177,20 +177,66 @@ export function lookupNewPrice(
      *  wrong by a lot less. */
     const pick = (candidates: NewPriceEntry[]): number | null => {
       if (candidates.length === 0) return null;
-      const pool = wantsElectric
-        ? candidates
-        : candidates.filter((e) => !isElectrifiedVariant(normMake, normalizeStr(e.model)));
+      const isEv = (e: NewPriceEntry) =>
+        isElectrifiedVariant(normMake, normalizeStr(e.model));
+
+      // Symmetry matters here, and its absence was a live mispricing.
+      //
+      // The combustion branch has always excluded electrified namesakes. The
+      // electric branch did not filter at all — it kept the whole candidate set
+      // and then took Math.min, which hands every EV its cheaper petrol
+      // namesake's price. It stayed hidden only while new-prices.json happened
+      // to list no petrol Corsa: the table held CORSA E and CORSA ELECTRIC and
+      // nothing else, so "cheapest" was still an EV.
+      //
+      // The 2026-09-02 scrape added VAUXHALL CORSA at £8,575 and the latent bug
+      // became a real one, valuing an electric Corsa at £8,575 instead of
+      // £27,505. Thirteen EV models were affected, the worst being the Nissan
+      // Micra Electric at £7,995 against a true £22,995.
+      //
+      // So: an EV prefers electrified candidates, and only falls back to the
+      // full set when no electrified namesake exists — a model whose EV variant
+      // simply isn't in the table yet, where the combustion price is a poor
+      // estimate but the best available one.
+      let pool: NewPriceEntry[];
+      if (wantsElectric) {
+        const evOnly = candidates.filter(isEv);
+        pool = evOnly.length > 0 ? evOnly : candidates;
+      } else {
+        pool = candidates.filter((e) => !isEv(e));
+      }
       if (pool.length === 0) return null;
       return Math.min(...pool.map((e) => e.newPrice));
     };
 
-    const exact = pick(sameMake.filter((e) => normalizeStr(e.model) === normModel));
+    const modelTokens = tokens(normModel);
+    const exactSet = sameMake.filter((e) => normalizeStr(e.model) === normModel);
+    const fuzzySet = sameMake.filter((e) =>
+      isTokenPrefix(modelTokens, tokens(normalizeStr(e.model))),
+    );
+
+    // An electrified namesake wins ACROSS both tiers, not just within one.
+    //
+    // Checking exact-then-fuzzy in strict order breaks the electric case: DVLA
+    // reports an electric Corsa as model "CORSA" with fuelType ELECTRIC, so the
+    // exact tier matches the petrol CORSA row, returns £8,575, and the fuzzy
+    // tier that would have found CORSA ELECTRIC (£27,505) never runs. The name
+    // it is registered under is the combustion one; only the fuel type says
+    // otherwise, so the EV entry is always a tier below.
+    if (wantsElectric) {
+      const evPool = [...exactSet, ...fuzzySet].filter((e) =>
+        isElectrifiedVariant(normMake, normalizeStr(e.model)),
+      );
+      if (evPool.length > 0) return Math.min(...evPool.map((e) => e.newPrice));
+      // No electrified namesake in the table at all — fall through and treat it
+      // like any other car. The combustion price is a poor estimate for an EV,
+      // but it beats the make average.
+    }
+
+    const exact = pick(exactSet);
     if (exact !== null) return exact;
 
-    const modelTokens = tokens(normModel);
-    const fuzzy = pick(
-      sameMake.filter((e) => isTokenPrefix(modelTokens, tokens(normalizeStr(e.model)))),
-    );
+    const fuzzy = pick(fuzzySet);
     if (fuzzy !== null) return fuzzy;
   }
 
