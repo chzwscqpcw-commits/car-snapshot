@@ -5448,7 +5448,6 @@ END:VEVENT
                           regNumber={data.registrationNumber}
                           context="mot-history-anomaly"
                           variant="anomaly"
-                          trackImpression
                         />
                       ) : (
                         <CarVerticalReportCTA

@@ -105,7 +105,6 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
               variant="anomaly"
               context="mileage-anomaly-carvertical"
               regNumber={vrm}
-              trackImpression
             />
           </div>
         </>
