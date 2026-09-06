@@ -476,7 +476,7 @@
     "adultOccupant": 95,
     "childOccupant": 87,
     "pedestrian": 95,
-    "safetyAssist": 71,
+    "safetyAssist": 77,
     "yearTested": 2024
   },
   {
@@ -1558,6 +1558,16 @@
     "pedestrian": 76,
     "safetyAssist": 83,
     "yearTested": 2023
+  },
+  {
+    "make": "KIA",
+    "model": "K4",
+    "overallStars": 5,
+    "adultOccupant": 80,
+    "childOccupant": 86,
+    "pedestrian": 80,
+    "safetyAssist": 75,
+    "yearTested": 2025
   },
   {
     "make": "KIA",
@@ -3708,6 +3718,16 @@
     "pedestrian": 90,
     "safetyAssist": 87,
     "yearTested": 2025
+  },
+  {
+    "make": "XPENG",
+    "model": "G6",
+    "overallStars": 5,
+    "adultOccupant": 88,
+    "childOccupant": 85,
+    "pedestrian": 88,
+    "safetyAssist": 75,
+    "yearTested": 2024
   },
   {
     "make": "XPENG",

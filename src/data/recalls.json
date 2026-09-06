@@ -12,6 +12,462 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "SKODA",
+    "models": [
+      "SUPERB"
+    ],
+    "buildDateStart": "2016-08-02",
+    "buildDateEnd": "2017-06-16",
+    "recallDate": "2026-09-02",
+    "defect": "On affected vehicles in the event of an accident in which the airbag is deployed the front airbag gas generator could burst sending metal fragments into the vehicle.  This could cause serious harm or fatal injuries to the driver and their passengers.",
+    "remedy": "Replace the front airbag on the driver side.",
+    "recallNumber": "R/2026/342"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "SUPERB"
+    ],
+    "buildDateStart": "2016-11-30",
+    "buildDateEnd": "2016-11-30",
+    "recallDate": "2026-09-02",
+    "defect": "On affected vehicles in the event of an accident in which the airbag is deployed the front airbag gas generator could burst sending metal fragments into the vehicle.  This could cause serious harm or fatal injuries to the driver and their passengers.",
+    "remedy": "Replace the front airbag on the driver side.",
+    "recallNumber": "R/2026/342"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "OCTAVIA"
+    ],
+    "buildDateStart": "2016-02-08",
+    "buildDateEnd": "2017-04-18",
+    "recallDate": "2026-09-02",
+    "defect": "On affected vehicles in the event of an accident in which the airbag is deployed the front airbag gas generator could burst sending metal fragments into the vehicle.  This could cause serious harm or fatal injuries to the driver and their passengers.",
+    "remedy": "Replace the front airbag on the driver side.",
+    "recallNumber": "R/2026/342"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "RAPID"
+    ],
+    "buildDateStart": "2017-03-09",
+    "buildDateEnd": "2017-03-09",
+    "recallDate": "2026-09-02",
+    "defect": "On affected vehicles in the event of an accident in which the airbag is deployed the front airbag gas generator could burst sending metal fragments into the vehicle.  This could cause serious harm or fatal injuries to the driver and their passengers.",
+    "remedy": "Replace the front airbag on the driver side.",
+    "recallNumber": "R/2026/342"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "FABIA"
+    ],
+    "buildDateStart": "2017-04-12",
+    "buildDateEnd": "2017-04-12",
+    "recallDate": "2026-09-02",
+    "defect": "On affected vehicles in the event of an accident in which the airbag is deployed the front airbag gas generator could burst sending metal fragments into the vehicle.  This could cause serious harm or fatal injuries to the driver and their passengers.",
+    "remedy": "Replace the front airbag on the driver side.",
+    "recallNumber": "R/2026/342"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SPX"
+    ],
+    "buildDateStart": "2018-10-23",
+    "buildDateEnd": "2018-10-23",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "COMPACT SC"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "COMPACT SP"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SPB"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SGX"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SLB"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SPB"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "COMPACT SL"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "V-SERIES V 55SP"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "V-SERIES V 60SP"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "V-SERIES V 65SL"
+    ],
+    "buildDateStart": "2020-09-15",
+    "buildDateEnd": "2026-05-08",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SPB"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SX"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SGX"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SLB"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SPB FAMILY"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SPX"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SG"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "V-SERIES V 55SP"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "COMPACT MAX SL"
+    ],
+    "buildDateStart": "2024-02-26",
+    "buildDateEnd": "2026-03-26",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "COMPACT MAX SP"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 600 SP"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SGX"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SLB"
+    ],
+    "buildDateStart": "2019-10-02",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "A-SERIES A 70DK"
+    ],
+    "buildDateStart": "2024-11-02",
+    "buildDateEnd": "2026-04-03",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "S-SERIES S 75SL"
+    ],
+    "buildDateStart": "2024-11-02",
+    "buildDateEnd": "2026-04-03",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SGX"
+    ],
+    "buildDateStart": "2024-02-06",
+    "buildDateEnd": "2025-11-13",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SLB"
+    ],
+    "buildDateStart": "2024-02-06",
+    "buildDateEnd": "2025-11-13",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "SUPERTWIN 600 SPB"
+    ],
+    "buildDateStart": "2025-10-01",
+    "buildDateEnd": "2026-01-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "SUPERTWIN 700 SGX"
+    ],
+    "buildDateStart": "2025-10-01",
+    "buildDateEnd": "2026-01-30",
+    "recallDate": "2026-09-01",
+    "defect": "For certain vehicles the ISOFIX mountings may have inadequate weld seams at the attachment points. In the event of a vehicle crash the forces transmitted through a child seat attached to the ISOFIX anchorages may cause the bracket to fracture resulting in an increased risk of injury to the child.",
+    "remedy": "Vehicle owners are instructed not to use the ISOFIX attachment points until a technical inspection and if necessary a retrofit or repair has been carried out by an authorised dealer. Vehicles that pass the inspection may continue to be used; vehicles that fail will be retrofitted accordingly.",
+    "recallNumber": "R/2026/236"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA L"
+    ],
+    "buildDateStart": "2025-09-26",
+    "buildDateEnd": "2025-12-10",
+    "recallDate": "2026-09-01",
+    "defect": "Affected vehicles may have Vehicle Supervision Module (VSM) software that displays incorrect speed-limit indications resulting in non-compliance with applicable regulatory requirements.",
+    "remedy": "Update the VSM software and update the In-Vehicle-Infotainment software via Over-The-Air at the dealer if necessary.",
+    "recallNumber": "R/2026/169"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-03-13",
+    "buildDateEnd": "2025-03-25",
+    "recallDate": "2026-08-31",
+    "defect": "On affected vehicles it may be possible that one or more engine camshaft roller finger followers were not properly installed at the time of assembly.  An improperly installed camshaft roller finger follower may result in engine failure resulting in a no-start condition or a loss of motive power.",
+    "remedy": "Replace the engine.",
+    "recallNumber": "R/2026/289"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2025-04-07",
+    "buildDateEnd": "2025-07-24",
+    "recallDate": "2026-08-31",
+    "defect": "On affected vehicles it may be possible that one or more engine camshaft roller finger followers were not properly installed at the time of assembly.  An improperly installed camshaft roller finger follower may result in engine failure resulting in a no-start condition or a loss of motive power.",
+    "remedy": "Replace the engine.",
+    "recallNumber": "R/2026/289"
+  },
+  {
     "make": "FORD",
     "models": [
       "KUGA"
@@ -72,6 +528,18 @@
     "recallNumber": "R/2026/160"
   },
   {
+    "make": "LAIKA CARAVANS S.P.A.",
+    "models": [
+      "KREOS H 5109"
+    ],
+    "buildDateStart": "2023-01-01",
+    "buildDateEnd": "2025-12-31",
+    "recallDate": "2026-08-26",
+    "defect": "For affected vehicles with a rear seat equipped with an ISOFIX attachment system the welded joints of the ISOFIX attachment points may have been manufactured with a defect and could fail in the event of an accident.",
+    "remedy": "Users are asked to stop using ISOFIX connection points to attach child seats with immediate effect. Dealers or garages will inspect and if necessary replace the ISOFIX bracket.",
+    "recallNumber": "R/2026/341"
+  },
+  {
     "make": "KIA",
     "models": [
       "EV6"
@@ -82,6 +550,18 @@
     "defect": "​​Due to a quality deviation by the supplier certain battery cells within the High Voltage Battery System Assembly manufactured in limited production periods may have been produced with a misaligned electrode. A misaligned electrode may over time result in an internal short circuit in certain situations thereby increasing the risk of fire.​",
     "remedy": "If the HV battery State of Health is greater than 90% Kia UK will replace the defective module in the pack if 90% or lower the complete battery pack assembly will be replaced.",
     "recallNumber": "R/2026/309"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER"
+    ],
+    "buildDateStart": "2015-11-24",
+    "buildDateEnd": "2017-07-18",
+    "recallDate": "2026-08-25",
+    "defect": "For affected vehicles the repair procedure for a prior safety recall was incorrect. As a result the front suspension knuckles have been replaced with those of an incorrect specification.",
+    "remedy": "Vehicles will have both front suspension knuckles replaced.",
+    "recallNumber": "R/2026/329"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -1390,6 +1870,18 @@
     "defect": "A concern has been identified on certain AJ20-D6 engines where the Front End Auxiliary Drive (FEAD) belt idler pulley may over-rotate following a high torsion input and lead to a clash with and damage to the oil pressure and  temperature sensor.",
     "remedy": "Vehicles will have the Front-End Auxiliary Drive (FEAD) idler pulley replaced.",
     "recallNumber": "R/2026/273"
+  },
+  {
+    "make": "JEEP",
+    "models": [
+      "CHEROKEE"
+    ],
+    "buildDateStart": "2017-03-27",
+    "buildDateEnd": "2019-02-20",
+    "recallDate": "2026-06-26",
+    "defect": "Affected vehicles may have been built with an improperly seated input shaft snap ring on the power transfer unit (PTU). An input shaft snap ring that is not fully seated may allow uncontrolled movement of the input shaft inward which can cause an unexpected loss of motive power or loss of PARK function while stationary. A loss of motive power can cause a vehicle crash without prior warning. A loss of PARK function can cause a vehicle crash without prior warning and/or injury to others outside the vehicle.",
+    "remedy": "Install modified software in the Drivetrain Control Module (DTCM) and the PTU to detect and monitor for excessive wear within the PTU. If a PTU failure is confirmed by the software the PTU will be replaced.",
+    "recallNumber": "R/2026/138"
   },
   {
     "make": "LAND ROVER",
@@ -4155,6 +4647,18 @@
     "defect": "The vehicle fuel pump may have an internal malfunction which may fail over time. The malfunction indicator light MIL on the vehicle instrument cluster may illuminate when this symptom occurs and if ignored and the vehicle continues to be driven the vehicle may lose motive power.",
     "remedy": "The affected vehicles will have the fuel pump replaced as a permanent solution",
     "recallNumber": "R/2026/093"
+  },
+  {
+    "make": "JEEP",
+    "models": [
+      "AVENGER MHEV"
+    ],
+    "buildDateStart": "2023-05-25",
+    "buildDateEnd": "2026-01-19",
+    "recallDate": "2026-04-06",
+    "defect": "On affected vehicles due to a production nonconformity there may be contact or a reduced clearance between the fuel Particulate Filter pipe and the pole protection cup of the 48V Belt Starter Generator. Under wet conditions there is a possibility that this insufficient clearance may lead to water infiltration creating an electrical arc which could trigger a thermal event such as overheating. In the worst-case scenario this could result in a risk of fire in the engine compartment.",
+    "remedy": "Replace the pole protection cup of the 48V Belt Starter Generator. In addition check the distance between the fuel Particulate Filter pipe and the pole protection cup of the 48V Belt Starter Generator. If the distance is less than 10 mm re-position the pipe or replace the pipe if damaged.",
+    "recallNumber": "R/2026/114"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -21617,6 +22121,126 @@
     ],
     "buildDateStart": "2016-08-27",
     "buildDateEnd": "2017-04-25",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2016-05-30",
+    "buildDateEnd": "2016-08-29",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2016-09-19",
+    "buildDateEnd": "2016-12-16",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2016-12-07",
+    "buildDateEnd": "2017-02-20",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2017-02-20",
+    "buildDateEnd": "2017-02-28",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-01-04",
+    "buildDateEnd": "2018-03-31",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2015-08-03",
+    "buildDateEnd": "2016-08-23",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2016-08-18",
+    "buildDateEnd": "2016-11-29",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2017-01-04",
+    "buildDateEnd": "2017-02-13",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2017-03-04",
+    "buildDateEnd": "2017-12-20",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-01-11",
+    "buildDateEnd": "2018-03-28",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
     "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
