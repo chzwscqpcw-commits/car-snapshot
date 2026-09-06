@@ -12,7 +12,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 |-------|---------|-------|
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
-| PDF smoke-test | `npm test` (`scripts/test-pdf-report.ts`) | Asserts the report's valuation headline + km→miles conversion |
+| Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
