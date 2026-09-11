@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, Search } from "lucide-react";
 import type { LookupVehicle } from "@/components/tools/shared";
 
 interface Props {
@@ -89,28 +89,21 @@ export default function Step1Vehicle({ initialVrm, onConfirm }: Props) {
         }}
         className="space-y-3"
       >
-        {/* UK number plate. The blue GB band and the yellow field are the most
-            recognisable object in this whole subject — the input may as well
-            look like the thing the user is copying from. */}
-        <div className="flex items-stretch overflow-hidden rounded-lg border-2 border-slate-950 shadow-lg shadow-black/40 focus-within:ring-2 focus-within:ring-cyan-400/70">
-          <div className="flex w-9 shrink-0 flex-col items-center justify-end gap-1 bg-[#003399] pb-1.5 pt-2 sm:w-11">
-            <span aria-hidden="true" className="text-[7px] leading-[1.15] text-yellow-300 sm:text-[8px]">
-              ★★★
-              <br />
-              ★&nbsp;&nbsp;★
-              <br />
-              ★★★
-            </span>
-            <span className="text-[10px] font-bold tracking-wider text-white sm:text-xs">GB</span>
-          </div>
+        {/* Conventional dark input, matching HeroRegSearch on the homepage and
+            /compare. Plate styling is display-only on this site (see the note
+            at the top of RegPlate.tsx) — the yellow plate turns up at the top
+            of Step 2 once we have a vehicle to put on it, which is where it
+            reads as an answer rather than an ambiguous place to type. */}
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
           <input
             type="text"
             value={vrm}
             onChange={(e) => setVrm(e.target.value.toUpperCase())}
-            placeholder="AB12 CDE"
-            maxLength={8}
+            placeholder="Enter reg, e.g. AB12 CDE"
+            maxLength={10}
             aria-label="Vehicle registration"
-            className="h-14 w-full bg-[#FFD400] px-3 text-center text-2xl font-extrabold tracking-[0.14em] text-slate-950 placeholder:font-bold placeholder:text-slate-950/35 focus:outline-none sm:h-16 sm:text-3xl"
+            className="h-12 w-full rounded-lg border border-slate-700 bg-slate-800 pl-9 pr-3 font-mono text-base uppercase tracking-widest text-white transition-all placeholder:normal-case placeholder:tracking-normal placeholder:text-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             inputMode="text"
             autoCapitalize="characters"
             autoCorrect="off"
