@@ -44,10 +44,17 @@ export default function RepairCostCTA({
 
   const partnerConfig = PARTNER_LINKS[partner];
   const clickref = `repair-cost-cta-${jobName.replace(/\s+/g, "-").toLowerCase()}`;
+  // Always build through `buildLink` so the clickref survives.
+  //
+  // This used to fall back to the bare `partnerConfig.url` whenever the reg
+  // box was empty — which, for the `hideRegLookup` placement, is *always*. The
+  // bare URL carries no clickref, so Awin banked those clicks in an anonymous
+  // bucket: 25 clicks over 1 May–10 Sep that our own analytics attributed to
+  // `repair-cost-cta-*` and Awin could not attribute to anything at all.
+  // `buildLink` handles an empty reg perfectly well — it just omits the vrm
+  // param — so there was never a reason to route around it.
   const partnerHref = partnerConfig.buildLink
-    ? cleanReg(reg)
-      ? partnerConfig.buildLink(cleanReg(reg), clickref)
-      : partnerConfig.url
+    ? partnerConfig.buildLink(cleanReg(reg), clickref)
     : partnerConfig.url;
   const partnerRel = getPartnerRel(partnerConfig);
 

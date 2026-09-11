@@ -17,17 +17,23 @@ export interface PartnerLink {
    * Construct the affiliate URL for a given vehicle reg.
    *
    * @param reg The vehicle registration to pre-fill on the merchant page.
-   * @param clickref Optional Awin clickref — Awin passes this through to
-   *   commission reports so we can filter conversions by which CTA the user
-   *   clicked. Should match the click_context passed to trackPartnerClick
-   *   for that same callsite so the dashboard event and the Awin commission
-   *   line up. Strongly recommended on every callsite — gives per-CTA
-   *   conversion attribution within Awin's admin.
+   * @param clickref Awin clickref — Awin passes this through to commission
+   *   reports so we can filter conversions by which CTA the user clicked.
+   *   Should match the click_context passed to trackPartnerClick for that same
+   *   callsite so the dashboard event and the Awin commission line up.
+   *
+   *   **Required, deliberately.** It was optional until 11 Sep 2026, and two
+   *   components quietly routed around it by falling back to the bare
+   *   `partner.url` when they had no registration to hand. The result was 30
+   *   clicks Awin could not attribute to any placement — and an untagged
+   *   bucket holding the single largest basket of the year (£243.27) with no
+   *   way to tell which link had earned it. Making the parameter required
+   *   turns that mistake into a compile error.
    * @param postcode Optional location postcode to pre-fill on the merchant page
    *   (currently only ClickMechanic's inspection flow — it needs BOTH vrm +
    *   postcode to skip data entry; other partners ignore it).
    */
-  buildLink?: (reg: string, clickref?: string, postcode?: string) => string;
+  buildLink?: (reg: string, clickref: string, postcode?: string) => string;
 }
 
 /**
