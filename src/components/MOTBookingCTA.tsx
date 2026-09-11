@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { PoundSterling, ChevronDown } from 'lucide-react';
-import { PARTNER_LINKS, getPartnerRel } from '@/config/partners';
-import { trackPartnerClick } from '@/lib/tracking';
+import { trackEvent } from '@/lib/tracking';
 import Button from '@/components/Button';
 
 interface MOTBookingCTAProps {
@@ -87,9 +86,10 @@ export default function MOTBookingCTA({
 }: MOTBookingCTAProps) {
   const [expanded, setExpanded] = useState(false);
 
-  // Compose click_context. Without a placement we keep the legacy form
-  // (`mot-booking-cta-<context>`) so historical dashboard rows stay
-  // attributable to their existing surface.
+  // Compose the CTA's identifying string. Without a placement we keep the
+  // legacy form (`mot-booking-cta-<context>`) so the series stays stitchable
+  // to the historical rows, even though the event name around it has changed
+  // (see the onClick handler below).
   const clickContext = placement
     ? `mot-booking-cta-${placement}-${context}`
     : `mot-booking-cta-${context}`;
@@ -101,7 +101,6 @@ export default function MOTBookingCTA({
   // service-type recommendation based on vehicle age, AND localised price
   // ranges before the BMG hand-off. The source param ties the eventual
   // commission back to this CTA placement when it lands in Awin.
-  const partner = PARTNER_LINKS.bookMyGarage;
   const wizardSource = placement
     ? `mot_cta_${placement}_${context}`
     : `mot_cta_${context}`;
@@ -128,10 +127,14 @@ export default function MOTBookingCTA({
     context === 'expired' || context === 'due-soon' || context === 'reminder-set';
   const preselectMot = motIsDue || (placement ? MOT_INTENT_PLACEMENTS.has(placement) : true);
 
+  // No `rel` here, deliberately. This link used to carry the BookMyGarage
+  // partner rel — "noopener sponsored nofollow" — on a link to our own
+  // /booking page. That told Google not to follow or pass equity from around
+  // a dozen internal placements into the page we most want ranking, including
+  // the results page. It's an internal link; it gets internal-link treatment.
   const href = `/booking?vrm=${encodeURIComponent(regNumber)}${
     preselectMot ? '&type=mot' : ''
   }&source=${encodeURIComponent(wizardSource)}`;
-  const rel = getPartnerRel(partner);
 
   const { heading, body } = preselectMot ? COPY[context] : OPEN_CHOICE_COPY;
 
@@ -149,14 +152,22 @@ export default function MOTBookingCTA({
       <p className="text-sm text-slate-300 mb-4 ml-8">{body}</p>
 
       {/* CTA button — internal nav to the booking wizard (no target=_blank).
-          trackPartnerClick still fires so partner_click attribution flows;
-          the BMG hand-off (with clickref) happens at the end of the wizard
-          via Step 4, so commission tracking is preserved end-to-end. */}
+          This fires `booking_cta_click`, NOT `partner_click`. It used to fire
+          the latter, which was simply untrue: the href points at our own
+          /booking, and BookMyGarage never sees this click. It inflated the
+          BookMyGarage click count by 28% (53 of 240 over 30 days) and
+          double-counted anyone who went on to hand off for real. The actual
+          partner click happens at Step 4 with the Awin clickref attached. */}
       <div className="ml-8">
         <Button
           href={href}
-          rel={rel}
-          onClick={() => trackPartnerClick('bookMyGarage', clickContext)}
+          onClick={() =>
+            trackEvent('booking_cta_click', {
+              cta_context: clickContext,
+              source: wizardSource,
+              preselected_service: preselectMot ? 'mot' : null,
+            })
+          }
           className="w-full sm:w-auto"
         >
           Compare prices near {formattedReg} →

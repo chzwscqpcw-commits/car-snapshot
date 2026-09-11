@@ -9,6 +9,7 @@ import Step3Location from "./Step3Location";
 import Step4Review from "./Step4Review";
 import {
   categoriseVehicle,
+  resolveRegion,
   type FlexibilityChip,
   type ServiceType,
   type VehicleBasics,
@@ -59,6 +60,33 @@ function saveToStorage(state: State): void {
 
 function isServiceType(s: unknown): s is ServiceType {
   return typeof s === "string" && ALLOWED_TYPES.includes(s as ServiceType);
+}
+
+/**
+ * Strip the identifying parts of a state patch before it goes to analytics.
+ *
+ * `advance()` used to spread the whole patch into the event, which shipped the
+ * visitor's raw postcode into `site_events` — 195 of them between 1 May and
+ * 11 Sep 2026. A postcode alongside a registration and a timestamp identifies a
+ * household, and nothing downstream ever needed the raw value: every question
+ * we ask of this data ("which regions book?", "does entering a postcode help?")
+ * is answered by the resolved region and a boolean.
+ *
+ * The full vehicle blob goes too — it's large, it duplicates what
+ * /api/lookup already returns, and it has a registration in it.
+ */
+function analyticsSafe(patch: Partial<State>): Record<string, unknown> {
+  const { postcode, vehicle: _vehicle, vrm: _vrm, ...rest } = patch;
+  void _vehicle;
+  void _vrm;
+
+  if (postcode === undefined) return rest;
+
+  return {
+    ...rest,
+    has_postcode: postcode.length > 0,
+    region: postcode ? resolveRegion(postcode).key : null,
+  };
 }
 
 export default function BookingWizard() {
@@ -169,7 +197,7 @@ export default function BookingWizard() {
 
   function advance(nextStep: Step, patch: Partial<State>, eventName: string) {
     setState((s) => ({ ...s, ...patch, step: nextStep }));
-    trackEvent(eventName, { step: nextStep, ...patch });
+    trackEvent(eventName, { step: nextStep, ...analyticsSafe(patch) });
   }
 
   // Use a stable category for downstream steps. Falls back to medium_petrol
