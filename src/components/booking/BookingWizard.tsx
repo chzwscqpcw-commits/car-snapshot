@@ -215,6 +215,23 @@ export default function BookingWizard() {
     ? `${state.vehicle.make ?? ""} ${state.vehicle.model ?? ""}`.trim()
     : "";
 
+  // The one-line proof that the lookup did something: "2013 · petrol · 998cc".
+  const vehicleDetail = state.vehicle
+    ? [
+        state.vehicle.yearOfManufacture,
+        state.vehicle.fuelType?.toLowerCase(),
+        state.vehicle.engineCapacity ? `${state.vehicle.engineCapacity}cc` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : "";
+
+  // Price the service cards for where the visitor actually is. Step 2 used to
+  // receive a hardcoded "UK average" even when a postcode was already sitting
+  // in sessionStorage from an earlier visit, so a London user was quoted
+  // national prices and then watched them jump 30% at Step 3.
+  const step2Region = resolveRegion(state.postcode);
+
   // Build a recommendation context from the looked-up vehicle. For users who
   // skipped the lookup we use neutral defaults that fall through to the
   // "full service" fallback recommendation.
@@ -256,8 +273,11 @@ export default function BookingWizard() {
             }}
             onSelect={(service) => advance(3, { service }, "booking_step_complete")}
             category={category}
-            region={{ key: "default", label: "UK average", multiplier: 1.0 }}
+            region={step2Region}
             recommendationContext={recommendationContext}
+            vrm={state.vrm}
+            vehicleLabel={vehicleLabel}
+            vehicleDetail={vehicleDetail}
           />
         )}
 

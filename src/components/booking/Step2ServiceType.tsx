@@ -11,6 +11,7 @@ import {
   type RegionInfo,
 } from "@/lib/booking";
 import { recommendService } from "@/lib/booking";
+import { RegPlate } from "@/components/RegPlate";
 
 interface Props {
   onSelect: (service: ServiceType) => void;
@@ -18,6 +19,12 @@ interface Props {
   category: VehicleCategory;
   region: RegionInfo;
   recommendationContext: RecommendationContext;
+  /** Reg as entered, echoed back so a wrong plate is obvious. */
+  vrm?: string;
+  /** "Ford Fiesta" — empty when the visitor skipped the lookup. */
+  vehicleLabel?: string;
+  /** "2013 · petrol · 998cc" — the evidence that the lookup did something. */
+  vehicleDetail?: string;
 }
 
 const SERVICE_CARDS: { id: ServiceType; title: string; oneLiner: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -33,11 +40,48 @@ export default function Step2ServiceType({
   category,
   region,
   recommendationContext,
+  vrm,
+  vehicleLabel,
+  vehicleDetail,
 }: Props) {
   const recommendation = recommendService(recommendationContext);
 
+  // Lead with the recommendation.
+  //
+  // The cards used to render in a fixed order with MOT first and the
+  // recommendation merely badged. That ordering was doing real work against
+  // us: of the visitors who reach this step and choose freely, 65% take a
+  // service rather than an MOT (42 vs 23 since 1 May), and a service pays 4-5x
+  // the commission. Putting the car's actual recommendation in the first slot
+  // costs the reader nothing — every option stays on screen, priced — and
+  // stops the default from arguing for the wrong one.
+  const cards = [...SERVICE_CARDS].sort((a, b) => {
+    if (a.id === recommendation.service) return -1;
+    if (b.id === recommendation.service) return 1;
+    return 0;
+  });
+
   return (
     <div className="space-y-5">
+      {vehicleLabel && (
+        <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/70 px-3.5 py-3">
+          {vrm && <RegPlate reg={vrm} size="sm" variant="pill" className="shrink-0" />}
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-white">{vehicleLabel}</p>
+            {vehicleDetail && (
+              <p className="truncate text-xs text-slate-400">{vehicleDetail}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onBack}
+            className="shrink-0 text-xs text-slate-500 underline underline-offset-2 transition-colors hover:text-slate-300"
+          >
+            Not your car?
+          </button>
+        </div>
+      )}
+
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-white">What service?</h2>
         <p className="mt-1 text-sm text-slate-400">
@@ -47,7 +91,7 @@ export default function Step2ServiceType({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-        {SERVICE_CARDS.map((card) => {
+        {cards.map((card) => {
           const isRecommended = card.id === recommendation.service;
           const meta = serviceMeta(card.id);
           const price = priceRangeFor(card.id, category, region);
