@@ -277,6 +277,71 @@ export function formatPriceRange(p: PriceRange): string {
   return `£${p.min}–£${p.max}`;
 }
 
+// ── The saving ───────────────────────────────────────────────────────────────
+
+export interface SavingsInfo {
+  /** Cheapest typical quote. */
+  min: number;
+  /** Dearest typical quote — for the MOT this is the DVSA legal cap. */
+  max: number;
+  /** max − min: what shopping around is actually worth on this job. */
+  spread: number;
+  /** True only for the MOT, whose ceiling is set in law rather than by market. */
+  isLegalCap: boolean;
+}
+
+/**
+ * What comparing is worth, in pounds.
+ *
+ * The wizard has always shown a *range* and never named the *gap*, which is
+ * the thing the page is actually selling. "£175–£295" asks the reader to do
+ * the subtraction; "£120 between the cheapest and dearest quote" is the offer.
+ *
+ * Worth knowing which number to lead with: the MOT's spread is £19.85 against
+ * a full service's £120, and at BookMyGarage's 5.06% the service is also worth
+ * 4–5x the commission. The bigger saving and the better-paying job happen to be
+ * the same one, which is a rare piece of luck — the honest pitch and the
+ * profitable pitch point the same way.
+ */
+export function savingsFor(
+  service: ServiceType,
+  category: VehicleCategory,
+  region: RegionInfo,
+): SavingsInfo {
+  const range = priceRangeFor(service, category, region);
+  // Guard against float drift on the MOT's £54.85 cap.
+  const spread = Math.round((range.max - range.min) * 100) / 100;
+  return {
+    min: range.min,
+    max: range.max,
+    spread,
+    isLegalCap: service === "mot",
+  };
+}
+
+/** "£120" / "£19.85" — pennies only when the figure genuinely has them. */
+export function formatSaving(amount: number): string {
+  return Number.isInteger(amount) ? `£${amount}` : `£${amount.toFixed(2)}`;
+}
+
+/**
+ * One sentence naming the saving, phrased for the job in hand.
+ *
+ * The MOT gets its own wording because its ceiling is a legal maximum, not a
+ * market high — saying "the legal maximum is £54.85 and garages start at £35"
+ * is both more useful and more trustworthy than treating the cap as though it
+ * were just an expensive garage.
+ */
+export function savingSentence(info: SavingsInfo): string {
+  const spread = formatSaving(info.spread);
+  if (info.isLegalCap) {
+    return `The legal maximum is ${formatSaving(info.max)} — garages routinely charge from ${formatSaving(
+      info.min,
+    )}. Comparing is worth up to ${spread}.`;
+  }
+  return `${spread} between the cheapest and dearest typical quote for this job. Comparing is the only way to find out which you're being offered.`;
+}
+
 // ── Utility: human-readable flexibility ──────────────────────────────────────
 
 export function flexibilityLabel(f: FlexibilityChip): string {
