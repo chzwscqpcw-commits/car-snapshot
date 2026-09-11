@@ -57,3 +57,12 @@ vca-csvs/
 *.tsbuildinfo
 next-env.d.ts
 vca-data/
+
+# calibration harness working dir (contains real VRMs from dealer listings)
+.calibration/
+
+# Affiliate network exports (Awin commission/clickref CSVs, etc.)
+# Ad-hoc downloads land in the project root. These are revenue data, they go
+# stale the day after you pull them, and this repo is public. Root-level only —
+# data CSVs that genuinely belong to the project live in subdirectories.
+/*.csv
