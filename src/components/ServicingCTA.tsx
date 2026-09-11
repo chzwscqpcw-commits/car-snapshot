@@ -36,7 +36,11 @@ export default function ServicingCTA({
   const { heading, body } = COPY[context];
   const partner = PARTNER_LINKS.bookMyGarageService;
   const clickref = `servicing-cta-${context}`;
-  const href = regNumber && partner.buildLink
+  // `regNumber &&` used to send reg-less visitors to the bare `partner.url`,
+  // which carries no clickref — so every such click landed in Awin's
+  // unattributed bucket while our own events happily recorded
+  // `servicing-cta-<context>`. buildLink copes with an empty reg.
+  const href = partner.buildLink
     ? partner.buildLink(regNumber, clickref)
     : partner.url;
   const rel = getPartnerRel(partner);

@@ -33,8 +33,14 @@ export default function TempInsuranceCTA({
   const partner = PARTNER_LINKS.cuvva;
   if (!isPartnerConfigured(partner)) return null;
 
-  const href = regNumber && partner.buildLink
-    ? partner.buildLink(regNumber)
+  // Same shape of defect the BookMyGarage CTAs had: no clickref passed, and a
+  // reg-conditional that fell through to the untagged `partner.url`. Cuvva is
+  // still pending activation so nothing has been lost yet — which is exactly
+  // when it's cheapest to fix. `context` is already the value we send to
+  // trackPartnerClick, so the two series will join on one string from the
+  // first click this placement ever earns.
+  const href = partner.buildLink
+    ? partner.buildLink(regNumber ?? "", context)
     : partner.url;
 
   return (
