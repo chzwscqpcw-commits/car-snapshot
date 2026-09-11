@@ -11,6 +11,8 @@ import {
   formatPriceRange,
   priceRangeFor,
   resolveRegion,
+  savingSentence,
+  savingsFor,
   serviceLabel,
   serviceMeta,
   type FlexibilityChip,
@@ -129,6 +131,7 @@ export default function Step4Review({
 }: Props) {
   const region = resolveRegion(postcode);
   const price = priceRangeFor(service, category, region);
+  const saving = savingsFor(service, category, region);
   const meta = serviceMeta(service);
   const clickref = `booking-flow-${service}`;
   const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode, clickref);
@@ -219,6 +222,17 @@ export default function Step4Review({
         </div>
       </div>
 
+      {/* The saving, restated at the point of commitment.
+          Step 3 names it while the reader is still deciding; here it answers
+          the question they're asking as they leave — "is this actually worth
+          the click?" — with a figure rather than an adjective. */}
+      <div className="rounded-xl border border-emerald-900/40 bg-emerald-950/20 px-3.5 py-3 sm:px-4">
+        <p className="text-xs leading-relaxed text-emerald-200/90">
+          <span className="font-semibold">Why compare: </span>
+          {savingSentence(saving)}
+        </p>
+      </div>
+
       {/* "What happens next" — single-line privacy reassurance on mobile so
           it doesn't push the summary off-screen. Full paragraph on desktop
           where the space exists. */}
@@ -231,10 +245,15 @@ export default function Step4Review({
           You&apos;ll hand off to BookMyGarage with your reg{postcode ? " and postcode" : ""} pre-filled.
           You&apos;ll see real-time quotes from local garages, then book with whichever
           suits you. We don&apos;t share your email or sell your details — that stays at BMG.
+          {" "}
+          <span className="text-slate-300">
+            You pay the garage exactly what you&apos;d pay going to BookMyGarage direct —
+            booking through us never costs more.
+          </span>
         </p>
-        <p className="sm:hidden inline-flex items-center gap-1.5 text-[11px] text-slate-500">
-          <ShieldCheck className="h-3 w-3 text-cyan-400 shrink-0" />
-          Pre-filled hand-off. No email shared.
+        <p className="sm:hidden inline-flex items-start gap-1.5 text-[11px] leading-relaxed text-slate-500">
+          <ShieldCheck className="mt-0.5 h-3 w-3 shrink-0 text-cyan-400" />
+          <span>Pre-filled hand-off. No email shared. Same price as booking direct.</span>
         </p>
       </div>
 

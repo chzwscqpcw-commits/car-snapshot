@@ -9,6 +9,8 @@ import {
   formatPriceRange,
   priceRangeFor,
   resolveRegion,
+  savingSentence,
+  savingsFor,
   type FlexibilityChip,
   type ServiceType,
   type VehicleCategory,
@@ -71,6 +73,10 @@ export default function Step3Location({
     () => priceRangeFor(service, category, region),
     [service, category, region],
   );
+  const saving = useMemo(
+    () => savingsFor(service, category, region),
+    [service, category, region],
+  );
 
   const postcodeValid = postcode.trim().length >= 2;
 
@@ -115,6 +121,25 @@ export default function Step3Location({
             <>UK average &middot; add a postcode below for local pricing</>
           )}
         </p>
+
+        {/* Name the saving.
+            The panel showed a range and left the reader to do the subtraction.
+            The gap is what the page is actually selling, so it says the number.
+            For the MOT that means naming the legal cap rather than treating it
+            as merely an expensive garage — and adding the line that disarms the
+            obvious worry, because a cheap test really is the same test. */}
+        <div className="mt-3 border-t border-emerald-900/40 pt-2.5">
+          <p className="text-xs leading-relaxed text-emerald-200/90">
+            <span className="font-semibold">Worth comparing: </span>
+            {savingSentence(saving)}
+          </p>
+          {saving.isLegalCap && (
+            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+              Every MOT follows the same DVSA inspection and is logged to the same
+              government database — a cheaper test is not a lighter one.
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Postcode */}
