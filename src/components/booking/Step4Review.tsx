@@ -30,6 +30,19 @@ interface Props {
 }
 
 /**
+ * BookMyGarage's canonical host.
+ *
+ * Every BMG URL in the codebase used `www.` except the results deep-link
+ * below, which used the bare domain. That sent the visitor through a
+ * non-www -> www redirect *inside* the Awin tracking chain — an extra hop at
+ * the one moment attribution has to survive, and the step that carries every
+ * penny of BookMyGarage commission. There is no upside to the inconsistency,
+ * so it's a constant now rather than four string literals that can drift
+ * apart again.
+ */
+const BMG_ORIGIN = "https://www.bookmygarage.com";
+
+/**
  * BMG's results page URL is the same shape for every service — only the `p`
  * query param changes. Mapping derived from observing the redirect after
  * submitting the search form on each of BMG's service-landing pages:
@@ -74,14 +87,14 @@ function buildBmgHandoffUrl(
     params.set("p", bmgResultsServiceId(service));
     params.set("postcode", postcode);
     params.set("vrm", vrm);
-    destination = `https://bookmygarage.com/results/?${params.toString()}`;
+    destination = `${BMG_ORIGIN}/results/?${params.toString()}`;
   } else {
     const base =
       service === "mot"
-        ? "https://www.bookmygarage.com/mot/"
+        ? `${BMG_ORIGIN}/mot/`
         : service === "diagnostic"
-          ? "https://www.bookmygarage.com/car-repairs/"
-          : "https://www.bookmygarage.com/car-servicing/";
+          ? `${BMG_ORIGIN}/car-repairs/`
+          : `${BMG_ORIGIN}/car-servicing/`;
     const params = new URLSearchParams();
     if (vrm) params.set("vrm", vrm);
     if (postcode) params.set("postcode", postcode);
