@@ -11,6 +11,7 @@ import {
   type RegionInfo,
 } from "@/lib/booking";
 import { recommendService } from "@/lib/booking";
+import { RegPlate } from "@/components/RegPlate";
 
 interface Props {
   onSelect: (service: ServiceType) => void;
@@ -64,11 +65,7 @@ export default function Step2ServiceType({
     <div className="space-y-5">
       {vehicleLabel && (
         <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/70 px-3.5 py-3">
-          {vrm && (
-            <span className="shrink-0 rounded border border-slate-950 bg-[#FFD400] px-2 py-1 text-xs font-extrabold tracking-wider text-slate-950">
-              {vrm}
-            </span>
-          )}
+          {vrm && <RegPlate reg={vrm} size="sm" variant="pill" className="shrink-0" />}
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-white">{vehicleLabel}</p>
             {vehicleDetail && (
