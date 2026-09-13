@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import {
+  classifyPostcode,
   flexibilityLabel,
   formatPriceRange,
   priceRangeFor,
@@ -82,12 +83,18 @@ function buildBmgHandoffUrl(
   //
   // When postcode is missing, we fall back to the per-service search
   // page so BMG can still ask for the postcode itself.
-  const hasFullContext = vrm && postcode;
+  // Only deep-link when the postcode is genuinely geocodable. A fragment
+  // ("SW") used to reach this line and produce a results URL BookMyGarage
+  // could not resolve, breaking the hand-off. Step 3 no longer emits one, but
+  // this guard stays: sessionStorage written by an older build still holds
+  // fragments, and this is the step that carries all the commission.
+  const pc = classifyPostcode(postcode);
+  const hasFullContext = vrm && pc.usable;
   let destination: string;
   if (hasFullContext) {
     const params = new URLSearchParams();
     params.set("p", bmgResultsServiceId(service));
-    params.set("postcode", postcode);
+    params.set("postcode", pc.normalised);
     params.set("vrm", vrm);
     destination = `${BMG_ORIGIN}/results/?${params.toString()}`;
   } else {
@@ -99,7 +106,7 @@ function buildBmgHandoffUrl(
           : `${BMG_ORIGIN}/car-servicing/`;
     const params = new URLSearchParams();
     if (vrm) params.set("vrm", vrm);
-    if (postcode) params.set("postcode", postcode);
+    if (pc.usable) params.set("postcode", pc.normalised);
     const query = params.toString();
     destination = query ? `${base}?${query}` : base;
   }
@@ -131,6 +138,10 @@ export default function Step4Review({
 }: Props) {
   const region = resolveRegion(postcode);
   const price = priceRangeFor(service, category, region);
+  // The summary should show what we'll actually send on. A fragment left in
+  // sessionStorage by an older build isn't a location and isn't forwarded, so
+  // it shouldn't be echoed back as though it were.
+  const shownPostcode = classifyPostcode(postcode).normalised;
   const saving = savingsFor(service, category, region);
   const meta = serviceMeta(service);
   const clickref = `booking-flow-${service}`;
@@ -188,7 +199,7 @@ export default function Step4Review({
           <div className="flex items-baseline justify-between gap-2">
             <div className="min-w-0">
               <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Location</p>
-              <p className="text-sm text-white font-mono truncate">{postcode || "Not specified"}</p>
+              <p className="text-sm text-white font-mono truncate">{shownPostcode || "Not specified"}</p>
             </div>
             <div className="min-w-0 text-right">
               <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Timing</p>
@@ -213,7 +224,7 @@ export default function Step4Review({
           </div>
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Location</p>
-            <p className="mt-0.5 text-white font-mono">{postcode || "Not specified"}</p>
+            <p className="mt-0.5 text-white font-mono">{shownPostcode || "Not specified"}</p>
           </div>
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Timing</p>
