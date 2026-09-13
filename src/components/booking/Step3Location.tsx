@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { MapPin, Calendar, ChevronRight } from "lucide-react";
 import Button from "@/components/Button";
 import {
+  classifyPostcode,
   estimateGarageDensity,
   flexibilityLabel,
   formatPriceRange,
@@ -78,7 +79,12 @@ export default function Step3Location({
     [service, category, region],
   );
 
-  const postcodeValid = postcode.trim().length >= 2;
+  // A fragment is not a location. `resolveRegion` happily prices off the 1-2
+  // letter area prefix, which is why "SW" used to look fine here and then
+  // break the BookMyGarage hand-off — see classifyPostcode().
+  const pc = classifyPostcode(postcode);
+  const postcodeValid = pc.usable;
+  const postcodeIncomplete = pc.kind === "partial";
 
   return (
     <div className="space-y-5">
@@ -163,8 +169,18 @@ export default function Step3Location({
             inputMode="text"
           />
         </div>
-        {/* The live figure now lives in the panel above, which updates as this
-            field is typed — repeating it here would say the same thing twice. */}
+        {/* The live figure lives in the panel above, which updates as this field
+            is typed — repeating it here would say the same thing twice. What
+            does belong here is whether what they've typed is usable: an
+            incomplete postcode is silently dropped at the hand-off, and being
+            told beats finding out on BookMyGarage's site. Still not a gate —
+            the button below works either way. */}
+        {postcodeIncomplete && (
+          <p className="mt-2 text-xs text-amber-300/90">
+            That&apos;s not a complete postcode yet — add the rest (e.g. GU1 or GU1 1AA)
+            so we can send it on. Leave it blank and BookMyGarage will ask you instead.
+          </p>
+        )}
       </div>
 
       {/* Flexibility */}
@@ -218,12 +234,12 @@ export default function Step3Location({
           type="button"
           onClick={() =>
             postcodeValid
-              ? onContinue(postcode, date, flexibility)
+              ? onContinue(pc.normalised, date, flexibility)
               : onSkipPostcode(date, flexibility)
           }
           className="w-full"
         >
-          Review &amp; compare prices
+          {postcodeValid ? "Review & compare prices" : "Continue without a postcode"}
           <ChevronRight className="h-4 w-4" />
         </Button>
         <button

@@ -130,6 +130,72 @@ export function resolveRegion(postcode: string): RegionInfo {
   return { key: "default", label: "UK average", multiplier: 1.0 };
 }
 
+// ── Postcode validation ──────────────────────────────────────────────────────
+
+export type PostcodeKind = "empty" | "partial" | "outcode" | "full";
+
+export interface PostcodeInfo {
+  kind: PostcodeKind;
+  /** Uppercased and single-spaced. Empty unless the postcode is usable. */
+  normalised: string;
+  /** Safe to hand to a partner that has to geocode it. */
+  usable: boolean;
+}
+
+/** Outcode: 1-2 letters, a digit, optionally one more letter or digit. GU1, SW1A, M1, B33. */
+const OUTCODE_RE = /^[A-Z]{1,2}\d[A-Z\d]?$/;
+/** Incode: a digit and two letters. 1AA, 4ST. */
+const INCODE_RE = /^\d[A-Z]{2}$/;
+/** Full postcode with no separator typed: outcode immediately followed by incode. */
+const FULL_RE = /^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})$/;
+/** Anything the user typed as a separator splits outcode from incode. */
+const SEPARATED_RE = /^([A-Z0-9]+)[^A-Z0-9]+([A-Z0-9]*)$/;
+
+/**
+ * Decide whether a typed postcode is real enough to hand to BookMyGarage.
+ *
+ * Step 3 used to treat `postcode.trim().length >= 2` as valid, so "SW" was a
+ * postcode. Our own side coped — `resolveRegion` and `estimateGarageDensity`
+ * read only the 1-2 letter area prefix, which is genuinely all the pricing
+ * needs — so the page confidently said "Typical near SW · London · 40+
+ * garages". BookMyGarage then got `?postcode=SW`, could not geocode it, and
+ * the hand-off broke. On the one step that carries every penny of commission.
+ *
+ * An area prefix is not a location. This draws the line: a complete outcode or
+ * a full postcode is usable, anything shorter is a fragment. It is deliberately
+ * permissive about whether the postcode *exists* — we are not a postcode
+ * database, we only need enough shape for someone else to geocode.
+ *
+ * A typed separator is honoured as the outcode/incode boundary, because
+ * stripping it loses real information: "GU1 1" is someone halfway through
+ * GU1 1AA, but "GU11" on its own is the Aldershot district. Collapsing both to
+ * "GU11" would send a visitor in Guildford to garages twelve miles away, which
+ * is worse than asking them to finish typing.
+ */
+export function classifyPostcode(raw: string): PostcodeInfo {
+  const upper = (raw ?? "").toUpperCase().trim();
+  const compact = upper.replace(/[^A-Z0-9]/g, "");
+  if (!compact) return { kind: "empty", normalised: "", usable: false };
+
+  const separated = upper.match(SEPARATED_RE);
+  if (separated) {
+    const [, out, inc] = separated;
+    if (!OUTCODE_RE.test(out)) return { kind: "partial", normalised: "", usable: false };
+    if (INCODE_RE.test(inc)) return { kind: "full", normalised: `${out} ${inc}`, usable: true };
+    // "GU1 " — they've finished the outcode and paused. That's usable on its own.
+    if (inc === "") return { kind: "outcode", normalised: out, usable: true };
+    // "GU1 1" — mid-incode. Wait for the rest rather than guess.
+    return { kind: "partial", normalised: "", usable: false };
+  }
+
+  const full = compact.match(FULL_RE);
+  if (full) return { kind: "full", normalised: `${full[1]} ${full[2]}`, usable: true };
+
+  if (OUTCODE_RE.test(compact)) return { kind: "outcode", normalised: compact, usable: true };
+
+  return { kind: "partial", normalised: "", usable: false };
+}
+
 // ── Garage density estimate (Step 3 social proof) ────────────────────────────
 
 export function estimateGarageDensity(postcode: string): { label: string; tier: "high" | "medium" | "low" } {
