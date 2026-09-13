@@ -84,7 +84,10 @@ export default function Step3Location({
   // break the BookMyGarage hand-off — see classifyPostcode().
   const pc = classifyPostcode(postcode);
   const postcodeValid = pc.usable;
-  const postcodeIncomplete = pc.kind === "partial";
+  // Two different kinds of "not yet". Someone on "GU22" is one keystroke group
+  // away and deserves different words to someone on "GU".
+  const almostThere = pc.kind === "outcode";
+  const postcodeIncomplete = pc.kind === "partial" || almostThere;
 
   return (
     <div className="space-y-5">
@@ -177,8 +180,9 @@ export default function Step3Location({
             the button below works either way. */}
         {postcodeIncomplete && (
           <p className="mt-2 text-xs text-amber-300/90">
-            That&apos;s not a complete postcode yet — add the rest (e.g. GU1 or GU1 1AA)
-            so we can send it on. Leave it blank and BookMyGarage will ask you instead.
+            {almostThere
+              ? "Almost — add the last part too (e.g. GU22 7XX). BookMyGarage needs a full postcode; a district on its own comes back as invalid."
+              : "That's not a complete postcode yet — the full thing (e.g. GU22 7XX) lets us hand it straight over. Leave it blank and BookMyGarage will ask you instead."}
           </p>
         )}
       </div>
