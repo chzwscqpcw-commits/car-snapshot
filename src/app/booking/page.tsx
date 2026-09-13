@@ -41,11 +41,21 @@ const BASE_DESC =
 
 /** Outcode only: 1-2 letters, a digit, optionally one more letter or digit. */
 const OUTCODE_RE = /^[A-Z]{1,2}\d[A-Z\d]?$/;
-const SERVICE_WORDS: Record<string, string> = {
-  mot: "MOT",
-  interim: "interim service",
-  full: "full service",
-  diagnostic: "diagnostic check",
+/**
+ * Each service as it reads mid-sentence, with its own indefinite article.
+ *
+ * "a" vs "an" can't be derived from the first letter here: "MOT" starts with a
+ * consonant and takes "an", because the article follows how a word is *said*
+ * ("em-oh-tee"), not how it's spelt. Storing the article beside the word is
+ * shorter than any rule that would get it right, and MOT is the most-shared
+ * service — so "What a MOT typically costs" would have been the first line of
+ * the most common share we produce.
+ */
+const SERVICE_WORDS: Record<string, { word: string; article: string }> = {
+  mot: { word: "MOT", article: "an" },
+  interim: { word: "interim service", article: "an" },
+  full: { word: "full service", article: "a" },
+  diagnostic: { word: "diagnostic check", article: "a" },
 };
 
 /**
@@ -111,9 +121,10 @@ export async function generateMetadata({
 
   if (!shared) return base;
 
-  const word = SERVICE_WORDS[service] ?? "MOT";
+  const entry = SERVICE_WORDS[service] ?? SERVICE_WORDS.mot;
+  const { word, article } = entry;
   const title = `${word.charAt(0).toUpperCase()}${word.slice(1)} prices near ${outcode}`;
-  const description = `What a ${word} typically costs near ${outcode}, and how many local garages you can compare. Free, no signup.`;
+  const description = `What ${article} ${word} typically costs near ${outcode}, and how many local garages you can compare. Free, no signup.`;
   const image = `/api/og/coverage?pc=${encodeURIComponent(outcode)}&type=${encodeURIComponent(
     SERVICE_WORDS[service] ? service : "mot",
   )}`;
