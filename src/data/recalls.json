@@ -12,6 +12,54 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "HYUNDAI",
+    "models": [
+      "IONIQ 5"
+    ],
+    "buildDateStart": "2021-09-28",
+    "buildDateEnd": "2023-08-07",
+    "recallDate": "2026-09-07",
+    "defect": "Affected vehicles may contain a suspect HV (high voltage) battery module manufactured by the supplier during a specific production period. It is recommended that the vehicle is to be parked in a well ventilated area. The vehicle can be used as normal.",
+    "remedy": "Replacement of the high voltage battery module will be carried out.",
+    "recallNumber": "R/2026/319"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2024-09-18",
+    "buildDateEnd": "2024-11-04",
+    "recallDate": "2026-09-04",
+    "defect": "On affected vehicles during freezing temperatures or below the windshield wipers may become inoperative.  In other cases the windshield wipers may operate only at the high-speed setting and an inoperative windshield washer system may prevent washer fluid from being effectively used to clean the windshield.",
+    "remedy": "Inspect the windshield wiper system and replace the wiper motor if necessary.",
+    "recallNumber": "R/2026/345"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2024-11-27",
+    "buildDateEnd": "2025-07-07",
+    "recallDate": "2026-09-04",
+    "defect": "On affected vehicles during freezing temperatures or below the windshield wipers may become inoperative.  In other cases the windshield wipers may operate only at the high-speed setting and an inoperative windshield washer system may prevent washer fluid from being effectively used to clean the windshield.",
+    "remedy": "Inspect the windshield wiper system and replace the wiper motor if necessary.",
+    "recallNumber": "R/2026/345"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2025-10-24",
+    "buildDateEnd": "2025-12-01",
+    "recallDate": "2026-09-04",
+    "defect": "On affected vehicles during freezing temperatures or below the windshield wipers may become inoperative.  In other cases the windshield wipers may operate only at the high-speed setting and an inoperative windshield washer system may prevent washer fluid from being effectively used to clean the windshield.",
+    "remedy": "Inspect the windshield wiper system and replace the wiper motor if necessary.",
+    "recallNumber": "R/2026/345"
+  },
+  {
     "make": "SKODA",
     "models": [
       "SUPERB"
@@ -6022,7 +6070,7 @@
       "X3"
     ],
     "buildDateStart": "2020-09-28",
-    "buildDateEnd": "2022-01-28",
+    "buildDateEnd": "2024-05-29",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6058,7 +6106,7 @@
       "3 SERIES SALOON"
     ],
     "buildDateStart": "2020-09-18",
-    "buildDateEnd": "2024-02-01",
+    "buildDateEnd": "2025-04-29",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6070,7 +6118,7 @@
       "3 SERIES TOURING"
     ],
     "buildDateStart": "2020-09-18",
-    "buildDateEnd": "2022-09-30",
+    "buildDateEnd": "2025-04-09",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6082,7 +6130,7 @@
       "4 SERIES COUPE"
     ],
     "buildDateStart": "2020-08-18",
-    "buildDateEnd": "2022-11-14",
+    "buildDateEnd": "2025-04-25",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6094,7 +6142,7 @@
       "4 SERIES CONVERTIBLE"
     ],
     "buildDateStart": "2020-09-23",
-    "buildDateEnd": "2022-08-31",
+    "buildDateEnd": "2025-04-25",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6106,7 +6154,7 @@
       "4 SERIES GRAN COUPE"
     ],
     "buildDateStart": "2021-04-16",
-    "buildDateEnd": "2022-09-29",
+    "buildDateEnd": "2025-05-05",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6118,7 +6166,7 @@
       "Z4"
     ],
     "buildDateStart": "2020-09-02",
-    "buildDateEnd": "2022-08-25",
+    "buildDateEnd": "2025-04-16",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6130,7 +6178,7 @@
       "5 SERIES SALOON"
     ],
     "buildDateStart": "2020-10-30",
-    "buildDateEnd": "2022-04-01",
+    "buildDateEnd": "2023-06-02",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6142,7 +6190,7 @@
       "6 SERIES GT"
     ],
     "buildDateStart": "2021-07-28",
-    "buildDateEnd": "2021-08-03",
+    "buildDateEnd": "2023-01-19",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -6154,7 +6202,7 @@
       "2 SERIES COUPE"
     ],
     "buildDateStart": "2020-12-18",
-    "buildDateEnd": "2024-05-10",
+    "buildDateEnd": "2024-04-29",
     "recallDate": "2026-03-02",
     "defect": "The Safety Recall relates to the engine starter motor. The fault relates to  the RSW22 starter RWT (reinforced water tightness). It was found that  with RWT starters an increased abrasion of the magnetic contact can  cause the growth of deposits at the lowest point of the relay interior.  This in turn may increase the relay contact resistance resulting in false  starts or even causing short circuits and possibly a thermal reaction.  In case of a short circuit the possibility of a thermal event cannot be excluded. This may happen while attempting to start the vehicle or while  driving due to vibrations causing a short circuit due to moving deposits.",
     "remedy": "On the affected vehicles the starter motor will be replaced with a variant  by another supplier with a different design.  Until the repair has been completed it is recommended to not leave the  vehicle running unattended after starting the engine.",
@@ -9340,6 +9388,42 @@
     "defect": "Affected vehicles may have High Voltage (HV) battery bolts that are loose which over time could lead to a loss of motive power. .",
     "remedy": "Check the HV battery bolts for security and fitment and replace if necessary.",
     "recallNumber": "R/2025/525"
+  },
+  {
+    "make": "STROMER",
+    "models": [
+      "ST3 WITH SUSPENSION FORK"
+    ],
+    "buildDateStart": "2018-08-08",
+    "buildDateEnd": "2025-12-02",
+    "recallDate": "2025-12-03",
+    "defect": "The front fork steer tube can fatigue prematurely and crack break or separate during use.  As a result the rider may lose control of their bike posing a fall and injury hazard.",
+    "remedy": "Replace the suspension fork.",
+    "recallNumber": "R/2026/348"
+  },
+  {
+    "make": "STROMER",
+    "models": [
+      "ST5 WITH SUSPENSION FORK"
+    ],
+    "buildDateStart": "2018-08-08",
+    "buildDateEnd": "2025-12-02",
+    "recallDate": "2025-12-03",
+    "defect": "The front fork steer tube can fatigue prematurely and crack break or separate during use.  As a result the rider may lose control of their bike posing a fall and injury hazard.",
+    "remedy": "Replace the suspension fork.",
+    "recallNumber": "R/2026/348"
+  },
+  {
+    "make": "STROMER",
+    "models": [
+      "ST7 WITH SUSPENSION FORK"
+    ],
+    "buildDateStart": "2018-08-08",
+    "buildDateEnd": "2025-12-02",
+    "recallDate": "2025-12-03",
+    "defect": "The front fork steer tube can fatigue prematurely and crack break or separate during use.  As a result the rider may lose control of their bike posing a fall and injury hazard.",
+    "remedy": "Replace the suspension fork.",
+    "recallNumber": "R/2026/348"
   },
   {
     "make": "VOLVO",
