@@ -138,7 +138,11 @@ export interface PostcodeInfo {
   kind: PostcodeKind;
   /** Uppercased and single-spaced. Empty unless the postcode is usable. */
   normalised: string;
-  /** Safe to hand to a partner that has to geocode it. */
+  /**
+   * Safe to hand to a partner that has to geocode it — true only for a FULL
+   * postcode. BookMyGarage rejects a bare outcode outright ("Invalid
+   * postcode"), verified 13 Sep 2026.
+   */
   usable: boolean;
 }
 
@@ -161,10 +165,18 @@ const SEPARATED_RE = /^([A-Z0-9]+)[^A-Z0-9]+([A-Z0-9]*)$/;
  * garages". BookMyGarage then got `?postcode=SW`, could not geocode it, and
  * the hand-off broke. On the one step that carries every penny of commission.
  *
- * An area prefix is not a location. This draws the line: a complete outcode or
- * a full postcode is usable, anything shorter is a fragment. It is deliberately
- * permissive about whether the postcode *exists* — we are not a postcode
- * database, we only need enough shape for someone else to geocode.
+ * **Only a FULL postcode is sendable.** An outcode is not, and this was worth
+ * testing rather than assuming: BookMyGarage was handed `?postcode=GU22` and
+ * answered "Invalid postcode / Unable to Load Results", stranding the visitor
+ * on a dead results page with no obvious way forward. A district is a location
+ * to a human and to us; it is not one to their geocoder.
+ *
+ * So `usable` means full postcode, full stop. `outcode` survives as its own
+ * kind purely so Step 3 can say something more useful to someone who is nearly
+ * there ("add the last part") than to someone who has typed two letters.
+ *
+ * `normalised` is populated only when usable, so nothing downstream can
+ * display a postcode we aren't actually sending.
  *
  * A typed separator is honoured as the outcode/incode boundary, because
  * stripping it loses real information: "GU1 1" is someone halfway through
@@ -183,7 +195,7 @@ export function classifyPostcode(raw: string): PostcodeInfo {
     if (!OUTCODE_RE.test(out)) return { kind: "partial", normalised: "", usable: false };
     if (INCODE_RE.test(inc)) return { kind: "full", normalised: `${out} ${inc}`, usable: true };
     // "GU1 " — they've finished the outcode and paused. That's usable on its own.
-    if (inc === "") return { kind: "outcode", normalised: out, usable: true };
+    if (inc === "") return { kind: "outcode", normalised: "", usable: false };
     // "GU1 1" — mid-incode. Wait for the rest rather than guess.
     return { kind: "partial", normalised: "", usable: false };
   }
@@ -191,7 +203,7 @@ export function classifyPostcode(raw: string): PostcodeInfo {
   const full = compact.match(FULL_RE);
   if (full) return { kind: "full", normalised: `${full[1]} ${full[2]}`, usable: true };
 
-  if (OUTCODE_RE.test(compact)) return { kind: "outcode", normalised: compact, usable: true };
+  if (OUTCODE_RE.test(compact)) return { kind: "outcode", normalised: "", usable: false };
 
   return { kind: "partial", normalised: "", usable: false };
 }
@@ -201,8 +213,10 @@ export function classifyPostcode(raw: string): PostcodeInfo {
 /**
  * Which of BookMyGarage's two entry points this hand-off will use.
  *
- * "results" skips their search form entirely — we have the reg and a
- * geocodable postcode, so we land the visitor straight on live garage quotes.
+ * "results" skips their search form entirely — we have the reg and a FULL
+ * postcode, so we land the visitor straight on live garage quotes. Anything
+ * less takes the search route: BMG rejects a bare outcode, and a dead results
+ * page is far worse than their own form asking properly.
  * "search" is the per-service landing page, where BMG asks for what we're
  * missing.
  *

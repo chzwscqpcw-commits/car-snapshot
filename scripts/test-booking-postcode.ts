@@ -45,13 +45,19 @@ console.log("\nFull postcodes — every real outcode shape, normalised:");
   }
 }
 
-console.log("\nOutcodes alone are usable — BMG can geocode a district:");
+console.log("\nOutcodes are recognised but NOT sendable — BMG rejects them:");
 {
-  for (const input of ["GU1", "SW1A", "M1", "B33", "EC1A"]) {
+  // Verified 13 Sep 2026: BookMyGarage handed ?postcode=GU22 answered
+  // "Invalid postcode / Unable to Load Results" and stranded the visitor.
+  for (const input of ["GU1", "SW1A", "M1", "B33", "EC1A", "GU22"]) {
     const r = classifyPostcode(input);
-    check(`"${input}" is a usable outcode`, r.kind === "outcode" && r.usable && r.normalised === input,
-      `got kind=${r.kind}`);
+    check(`"${input}" is an outcode but not usable`,
+      r.kind === "outcode" && !r.usable, `got kind=${r.kind} usable=${r.usable}`);
   }
+  check("an outcode yields no normalised value to display or send",
+    classifyPostcode("GU22").normalised === "", classifyPostcode("GU22").normalised);
+  check('"GU22 " with a trailing space is still just an outcode',
+    classifyPostcode("GU22 ").kind === "outcode" && !classifyPostcode("GU22 ").usable);
 }
 
 console.log("\nFragments are NOT usable — this is the bug that broke the hand-off:");
@@ -97,8 +103,10 @@ console.log("\nThe regression in full: pricing stayed right while the hand-off b
   check("resolveRegion still prices a bare 'SW' as London",
     resolveRegion("SW").key === "london", `got ${resolveRegion("SW").key}`);
   check("...but classifyPostcode refuses to send it", !classifyPostcode("SW").usable);
-  check("a complete outcode is both priced and sendable",
-    resolveRegion("SW1A").key === "london" && classifyPostcode("SW1A").usable);
+  check("an outcode still prices as London but is not sendable",
+    resolveRegion("SW1A").key === "london" && !classifyPostcode("SW1A").usable);
+  check("only a full postcode is both priced and sendable",
+    resolveRegion("SW1A 1AA").key === "london" && classifyPostcode("SW1A 1AA").usable);
 }
 
 if (failures > 0) {
@@ -119,7 +127,10 @@ import { bmgClickref, bmgRouteFor } from "../src/lib/booking";
 console.log("\nRoute: deep-link needs BOTH a reg and a geocodable postcode:");
 {
   check("reg + full postcode → results", bmgRouteFor("LN63XYZ", "GU1 1AA") === "results");
-  check("reg + outcode → results", bmgRouteFor("LN63XYZ", "GU1") === "results");
+  check("reg + outcode → search (BMG rejects bare outcodes)",
+    bmgRouteFor("LN63XYZ", "GU1") === "search", `got ${bmgRouteFor("LN63XYZ", "GU1")}`);
+  check("reg + GU22 → search (the exact case that stranded a real user)",
+    bmgRouteFor("P7SJG", "GU22") === "search", `got ${bmgRouteFor("P7SJG", "GU22")}`);
   check("reg + fragment → search", bmgRouteFor("LN63XYZ", "SW") === "search",
     `got ${bmgRouteFor("LN63XYZ", "SW")}`);
   check("reg + no postcode → search", bmgRouteFor("LN63XYZ", "") === "search");
