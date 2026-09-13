@@ -106,3 +106,55 @@ if (failures > 0) {
   process.exit(1);
 }
 console.log("\n✅ All booking-postcode assertions passed.\n");
+
+// ── BookMyGarage hand-off routing ────────────────────────────────────────────
+//
+// Which route we take decides which clickref Awin records, and that is the
+// whole point of splitting them: both routes shared one clickref until now, so
+// there was no way to tell whether skipping BMG's search form actually sells
+// better.
+
+import { bmgClickref, bmgRouteFor } from "../src/lib/booking";
+
+console.log("\nRoute: deep-link needs BOTH a reg and a geocodable postcode:");
+{
+  check("reg + full postcode → results", bmgRouteFor("LN63XYZ", "GU1 1AA") === "results");
+  check("reg + outcode → results", bmgRouteFor("LN63XYZ", "GU1") === "results");
+  check("reg + fragment → search", bmgRouteFor("LN63XYZ", "SW") === "search",
+    `got ${bmgRouteFor("LN63XYZ", "SW")}`);
+  check("reg + no postcode → search", bmgRouteFor("LN63XYZ", "") === "search");
+  check("postcode but no reg → search", bmgRouteFor("", "GU1 1AA") === "search");
+  check("neither → search", bmgRouteFor("", "") === "search");
+}
+
+console.log("\nClickref: the deep-link keeps the existing name, the new route is suffixed:");
+{
+  check("deep-link MOT is unchanged", bmgClickref("mot", "results") === "booking-flow-mot",
+    bmgClickref("mot", "results"));
+  check("search MOT is suffixed", bmgClickref("mot", "search") === "booking-flow-mot-search",
+    bmgClickref("mot", "search"));
+  check("deep-link full service is unchanged", bmgClickref("full", "results") === "booking-flow-full");
+  check("search full service is suffixed", bmgClickref("full", "search") === "booking-flow-full-search");
+  for (const service of ["mot", "interim", "full", "diagnostic"] as const) {
+    for (const route of ["results", "search"] as const) {
+      check(
+        `${service}/${route} still starts with booking-flow- (the admin dashboard filters on it)`,
+        bmgClickref(service, route).startsWith("booking-flow-"),
+        bmgClickref(service, route),
+      );
+    }
+  }
+}
+
+console.log("\nThe two never disagree — a fragment can't produce a deep-link clickref:");
+{
+  const route = bmgRouteFor("LN63XYZ", "SW");
+  check("fragment routes to search and is labelled as such",
+    route === "search" && bmgClickref("mot", route) === "booking-flow-mot-search");
+}
+
+if (failures > 0) {
+  console.log(`\n❌ ${failures} assertion(s) failed.\n`);
+  process.exit(1);
+}
+console.log("✅ Hand-off routing assertions passed.\n");

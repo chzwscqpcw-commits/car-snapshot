@@ -7,6 +7,8 @@ import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import {
+  bmgClickref,
+  bmgRouteFor,
   classifyPostcode,
   flexibilityLabel,
   formatPriceRange,
@@ -16,6 +18,7 @@ import {
   savingsFor,
   serviceLabel,
   serviceMeta,
+  type BmgRoute,
   type FlexibilityChip,
   type ServiceType,
   type VehicleCategory,
@@ -70,28 +73,21 @@ function buildBmgHandoffUrl(
   vrm: string,
   postcode: string,
   clickref: string,
+  route: BmgRoute,
 ): string {
   // The Awin tracker still wraps the destination so attribution works.
   //
-  // When we have BOTH vrm and postcode, deep-link to BMG's results page
-  // for the chosen service — skipping the search form and its "Compare
-  // Prices Instantly" click. Confirmed safe for affiliate attribution
-  // (May 29 2026 verification: a real-user click via the deep-linked MOT
-  // results URL landed in Awin within minutes, with clickref tagging
-  // preserved). Same URL shape for all services, only the p param
-  // differs.
+  // The deep-link is confirmed safe for affiliate attribution (May 29 2026:
+  // a real-user click via the deep-linked MOT results URL landed in Awin
+  // within minutes with clickref tagging preserved). Same URL shape for every
+  // service, only the p param differs.
   //
-  // When postcode is missing, we fall back to the per-service search
-  // page so BMG can still ask for the postcode itself.
-  // Only deep-link when the postcode is genuinely geocodable. A fragment
-  // ("SW") used to reach this line and produce a results URL BookMyGarage
-  // could not resolve, breaking the hand-off. Step 3 no longer emits one, but
-  // this guard stays: sessionStorage written by an older build still holds
-  // fragments, and this is the step that carries all the commission.
+  // The postcode must be genuinely geocodable to take this route. A fragment
+  // ("SW") used to reach here and produce a results URL BMG could not resolve,
+  // breaking the hand-off; `bmgRouteFor` is what now keeps that out.
   const pc = classifyPostcode(postcode);
-  const hasFullContext = vrm && pc.usable;
   let destination: string;
-  if (hasFullContext) {
+  if (route === "results") {
     const params = new URLSearchParams();
     params.set("p", bmgResultsServiceId(service));
     params.set("postcode", pc.normalised);
@@ -144,8 +140,9 @@ export default function Step4Review({
   const shownPostcode = classifyPostcode(postcode).normalised;
   const saving = savingsFor(service, category, region);
   const meta = serviceMeta(service);
-  const clickref = `booking-flow-${service}`;
-  const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode, clickref);
+  const route = bmgRouteFor(vrm, postcode);
+  const clickref = bmgClickref(service, route);
+  const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode, clickref, route);
 
   function handleHandoffClick() {
     trackPartnerClick("bookMyGarage", clickref);
