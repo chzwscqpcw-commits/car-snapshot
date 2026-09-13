@@ -95,9 +95,20 @@ interface Props {
   type?: string;
   /** ?source= — which CTA sent them; rides on every funnel event. */
   source?: string;
+  /**
+   * ?postcode= — seeded by a shared link. Outcode only in practice, because
+   * the share action strips the incode along with the registration, so the
+   * recipient still has to finish their own before we can hand off.
+   */
+  postcode?: string;
 }
 
-export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source: urlSource }: Props) {
+export default function BookingWizard({
+  vrm: urlVrmRaw,
+  type: urlTypeRaw,
+  source: urlSource,
+  postcode: urlPostcode,
+}: Props) {
   const source = urlSource || "direct";
   const urlVrm = (urlVrmRaw ?? "").toUpperCase().replace(/\s+/g, "");
   const urlType = urlTypeRaw?.toLowerCase();
@@ -120,7 +131,7 @@ export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source
       vrm: urlVrm,
       vehicle: null,
       service: initialService,
-      postcode: "",
+      postcode: urlPostcode ?? "",
       date: "",
       flexibility: "within_week",
     };
@@ -142,7 +153,9 @@ export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source
       ...s,
       vrm: stored.vrm ?? s.vrm,
       service: stored.service && isServiceType(stored.service) ? stored.service : s.service,
-      postcode: stored.postcode ?? s.postcode,
+      // A postcode from the URL is what the sharer sent; it outranks
+      // whatever this browser happened to type last week.
+      postcode: urlPostcode ? s.postcode : (stored.postcode ?? s.postcode),
       date: stored.date ?? s.date,
       flexibility: stored.flexibility ?? s.flexibility,
       step: (stored.step as Step) ?? s.step,
@@ -156,6 +169,7 @@ export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source
       source,
       prefilled_vrm: Boolean(urlVrm),
       prefilled_type: urlType ?? null,
+      prefilled_postcode: Boolean(urlPostcode),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
