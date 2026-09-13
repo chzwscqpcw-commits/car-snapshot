@@ -188,16 +188,33 @@ export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source
     saveToStorage(state);
   }, [state]);
 
-  // Scroll to top of the page on every step change. Without this, advancing
-  // from a tall step (Step 3 has postcode + date + flexibility + price
-  // context) leaves the user halfway down the page when Step 4 mounts,
-  // hiding the hero, progress dots and the summary heading. We scroll
-  // instantly (not smooth) so the new step's content is visible from the
-  // first paint rather than animating up over hundreds of ms.
+  // Bring the WIZARD into view on a step change — not the top of the page.
+  //
+  // This used to be `window.scrollTo(0, 0)`, which is wrong on a phone. The
+  // hero sits above the wizard, so yanking the viewport to y=0 puts the step
+  // the visitor just advanced to *below the fold*: they submit a reg and the
+  // thing they were looking at scrolls away, leaving them to scroll back down
+  // to find what they typed. Making Step 1 advance immediately made this more
+  // frequent, because there's no longer an intermediate card absorbing the
+  // moment.
+  //
+  // Scrolling the card itself to the top of the viewport keeps the promise the
+  // original comment made — the new step is visible from the first frame —
+  // without discarding the visitor's position.
+  //
+  // Skipped on mount: someone arriving on /booking should see the hero and
+  // read what the page is, not be thrown straight past it.
+  const wizardRef = useRef<HTMLDivElement>(null);
+  const skipFirstScroll = useRef(true);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
+    if (skipFirstScroll.current) {
+      skipFirstScroll.current = false;
+      return;
     }
+    const el = wizardRef.current;
+    if (!el || typeof window === "undefined") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }, [state.step]);
 
   // Background-fetch the vehicle when we have a vrm but no vehicle data.
@@ -280,7 +297,7 @@ export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={wizardRef} className="space-y-6 scroll-mt-4">
       <BookingProgress current={state.step} />
 
       <div
