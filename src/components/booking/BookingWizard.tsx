@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import BookingProgress from "./BookingProgress";
 import Step1Vehicle from "./Step1Vehicle";
 import Step2ServiceType from "./Step2ServiceType";
@@ -89,45 +88,74 @@ function analyticsSafe(patch: Partial<State>): Record<string, unknown> {
   };
 }
 
-export default function BookingWizard() {
-  const searchParams = useSearchParams();
+interface Props {
+  /** ?vrm= — read on the server so the wizard can render without client JS. */
+  vrm?: string;
+  /** ?type= — the pre-selected service, when a CTA chose one. */
+  type?: string;
+  /** ?source= — which CTA sent them; rides on every funnel event. */
+  source?: string;
+}
 
-  // Initial state pulled from (in order): URL params → sessionStorage → defaults.
+export default function BookingWizard({ vrm: urlVrmRaw, type: urlTypeRaw, source: urlSource }: Props) {
+  const source = urlSource || "direct";
+  const urlVrm = (urlVrmRaw ?? "").toUpperCase().replace(/\s+/g, "");
+  const urlType = urlTypeRaw?.toLowerCase();
+
+  // Initial state comes from the URL params ONLY.
+  //
+  // sessionStorage used to be read here too, which was fine while this whole
+  // subtree was client-only — but it can't be now. The server has no
+  // sessionStorage, so a stored step would make the client's first render
+  // disagree with the server's HTML and break hydration. The restore moved to
+  // an effect below, which runs after mount when storage is actually readable.
   const [state, setState] = useState<State>(() => {
-    const urlVrm = searchParams.get("vrm")?.toUpperCase().replace(/\s+/g, "") ?? "";
-    const urlType = searchParams.get("type")?.toLowerCase();
-
-    const stored = urlVrm ? null : loadFromStorage();
-
-    const initialVrm = urlVrm || stored?.vrm || "";
-    const initialService = isServiceType(urlType)
-      ? (urlType as ServiceType)
-      : stored?.service && isServiceType(stored.service)
-        ? stored.service
-        : null;
+    const initialService = isServiceType(urlType) ? (urlType as ServiceType) : null;
 
     let initialStep: Step = 1;
     if (urlVrm) initialStep = initialService ? 3 : 2;
-    else if (stored?.step) initialStep = (stored.step as Step) ?? 1;
 
     return {
       step: initialStep,
-      vrm: initialVrm,
+      vrm: urlVrm,
       vehicle: null,
       service: initialService,
-      postcode: stored?.postcode ?? "",
-      date: stored?.date ?? "",
-      flexibility: stored?.flexibility ?? "within_week",
+      postcode: "",
+      date: "",
+      flexibility: "within_week",
     };
   });
 
+  // Restore a part-finished wizard from sessionStorage, after mount.
+  //
+  // A deep-link wins: if the URL named a vehicle, that's the car the visitor
+  // just asked about, not whatever they abandoned last week. Returning
+  // mid-flow visitors now see step 1 for a frame before jumping to where they
+  // left off — the cost of letting everyone else get server-rendered HTML.
+  const restored = useRef(false);
+  useEffect(() => {
+    restored.current = true;
+    if (urlVrm) return;
+    const stored = loadFromStorage();
+    if (!stored) return;
+    setState((s) => ({
+      ...s,
+      vrm: stored.vrm ?? s.vrm,
+      service: stored.service && isServiceType(stored.service) ? stored.service : s.service,
+      postcode: stored.postcode ?? s.postcode,
+      date: stored.date ?? s.date,
+      flexibility: stored.flexibility ?? s.flexibility,
+      step: (stored.step as Step) ?? s.step,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Fire booking_wizard_start once on mount.
   useEffect(() => {
-    const source = searchParams.get("source") ?? "direct";
     trackEvent("booking_wizard_start", {
       source,
-      prefilled_vrm: Boolean(searchParams.get("vrm")),
-      prefilled_type: searchParams.get("type") ?? null,
+      prefilled_vrm: Boolean(urlVrm),
+      prefilled_type: urlType ?? null,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -142,29 +170,51 @@ export default function BookingWizard() {
   // stage; drop-off between adjacent steps = the leak. `source` carries which
   // CTA sent them (e.g. action_banner_expired, mot-booking-cta-health-*).
   useEffect(() => {
-    trackEvent("booking_step_view", {
-      step: state.step,
-      source: searchParams.get("source") ?? "direct",
-    });
+    trackEvent("booking_step_view", { step: state.step, source });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.step]);
 
   // Persist on every state change so refresh / back navigation lands the
   // user where they left off.
+  const skipFirstSave = useRef(true);
   useEffect(() => {
+    // Skip the mount commit. The restore effect above has scheduled its
+    // setState by now but the new state hasn't landed, so saving here would
+    // write the empty default over the very thing we're restoring.
+    if (skipFirstSave.current) {
+      skipFirstSave.current = false;
+      return;
+    }
     saveToStorage(state);
   }, [state]);
 
-  // Scroll to top of the page on every step change. Without this, advancing
-  // from a tall step (Step 3 has postcode + date + flexibility + price
-  // context) leaves the user halfway down the page when Step 4 mounts,
-  // hiding the hero, progress dots and the summary heading. We scroll
-  // instantly (not smooth) so the new step's content is visible from the
-  // first paint rather than animating up over hundreds of ms.
+  // Bring the WIZARD into view on a step change — not the top of the page.
+  //
+  // This used to be `window.scrollTo(0, 0)`, which is wrong on a phone. The
+  // hero sits above the wizard, so yanking the viewport to y=0 puts the step
+  // the visitor just advanced to *below the fold*: they submit a reg and the
+  // thing they were looking at scrolls away, leaving them to scroll back down
+  // to find what they typed. Making Step 1 advance immediately made this more
+  // frequent, because there's no longer an intermediate card absorbing the
+  // moment.
+  //
+  // Scrolling the card itself to the top of the viewport keeps the promise the
+  // original comment made — the new step is visible from the first frame —
+  // without discarding the visitor's position.
+  //
+  // Skipped on mount: someone arriving on /booking should see the hero and
+  // read what the page is, not be thrown straight past it.
+  const wizardRef = useRef<HTMLDivElement>(null);
+  const skipFirstScroll = useRef(true);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
+    if (skipFirstScroll.current) {
+      skipFirstScroll.current = false;
+      return;
     }
+    const el = wizardRef.current;
+    if (!el || typeof window === "undefined") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }, [state.step]);
 
   // Background-fetch the vehicle when we have a vrm but no vehicle data.
@@ -247,7 +297,7 @@ export default function BookingWizard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={wizardRef} className="space-y-6 scroll-mt-4">
       <BookingProgress current={state.step} />
 
       <div
