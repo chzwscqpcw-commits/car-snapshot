@@ -360,3 +360,33 @@ a {
     opacity: 1;
   }
 }
+
+/* Keep a focused field clear of the browser's own chrome.
+ *
+ * Tap a text input on a phone and the browser scrolls it into view — flush to
+ * the top of the layout viewport. On iOS Safari and Brave the floating URL bar
+ * and tab strip are drawn *over* that viewport, so a field that lands at y=0
+ * ends up sliced in half behind them: you tap the reg box, the keyboard opens,
+ * and you can't read what you're typing. Reported on /booking in Brave on iOS,
+ * but every reg and postcode box on the site has the same problem — there are
+ * seven of them, and a global rule covers the ones added later too.
+ *
+ * `scroll-margin-top` is what browsers honour when scrolling an element into
+ * view, so this reserves room above the field without moving anything on the
+ * page or changing a single layout. 6rem matches the value the blog headings
+ * already use for anchor links. Desktop needs far less — there's no floating
+ * chrome over the viewport — so it drops to a token gap above `sm`.
+ */
+input,
+textarea,
+select {
+  scroll-margin-top: 6rem;
+}
+
+@media (min-width: 640px) {
+  input,
+  textarea,
+  select {
+    scroll-margin-top: 1.5rem;
+  }
+}
