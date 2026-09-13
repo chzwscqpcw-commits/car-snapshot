@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import BookingWizard from "@/components/booking/BookingWizard";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 
@@ -70,7 +69,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BookingPage() {
+/**
+ * Read the deep-link params on the server and hand them to the wizard.
+ *
+ * BookingWizard used to call `useSearchParams()`, which opts its whole subtree
+ * out of prerendering — so production served a pulsing grey box where the reg
+ * input should be, and the page's entire purpose appeared only after 14 JS
+ * chunks had loaded and hydrated. That is the wrong trade for a page taking
+ * roughly two-thirds of its traffic straight from search.
+ *
+ * Every other tool page here (/mot-check, /car-valuation, /tax-check …) already
+ * reads `searchParams` server-side and renders its reg input into the HTML.
+ * This just stops /booking being the exception.
+ */
+export default async function BookingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vrm?: string; type?: string; source?: string }>;
+}) {
+  const params = await searchParams;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -154,13 +171,7 @@ export default function BookingPage() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-5 sm:py-10">
-        <Suspense
-          fallback={
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-6 h-96 animate-pulse" />
-          }
-        >
-          <BookingWizard />
-        </Suspense>
+        <BookingWizard vrm={params?.vrm} type={params?.type} source={params?.source} />
 
         <section className="mt-8 sm:mt-12">
           <h2 className="text-lg sm:text-xl font-bold text-slate-100 mb-3 sm:mb-4">Frequently asked questions</h2>
