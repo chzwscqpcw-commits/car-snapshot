@@ -146,7 +146,7 @@ export default function CoverageRing({ postcode, service, category }: Props) {
   const outcode = pc.normalised.split(" ")[0];
 
   return (
-    <div className="mt-4 rounded-xl border border-cyan-900/40 bg-slate-950/40 p-4">
+    <div className="mt-3 rounded-xl border border-cyan-900/40 bg-slate-950/40 p-3 sm:mt-4 sm:p-4">
       {knownBad ? (
         <p className="text-xs leading-relaxed text-amber-300/90">
           We can&apos;t find <span className="font-mono">{pc.normalised}</span> in the Royal Mail
@@ -154,12 +154,10 @@ export default function CoverageRing({ postcode, service, category }: Props) {
           You can continue without one and they&apos;ll ask.
         </p>
       ) : (
-        <div className="flex flex-wrap items-center justify-center gap-5 sm:justify-start sm:gap-6">
+        <div className="flex items-center gap-4 sm:gap-6">
           <svg
-            width="168"
-            height="168"
             viewBox="0 0 300 300"
-            className="shrink-0"
+            className="h-20 w-20 shrink-0 sm:h-40 sm:w-40"
             role="img"
             aria-label={`Coverage rings at five and ten miles around ${pc.normalised}. Around ${garages.label} partner garages within ten miles.`}
           >
@@ -197,39 +195,52 @@ export default function CoverageRing({ postcode, service, category }: Props) {
               strokeOpacity="0.7"
               strokeWidth="1.5"
             />
-            <line x1="150" y1="150" x2="150" y2="26" stroke="#22D3EE" strokeOpacity="0.22" strokeWidth="1" />
-            <text x="158" y="94" fill="#94A3B8" fontSize="11" fontFamily="inherit">5 mi</text>
-            <text x="158" y="42" fill="#94A3B8" fontSize="11" fontFamily="inherit">10 mi</text>
-
-            <rect x="112" y="137" width="76" height="27" rx="4" fill="#FFD400" stroke="#020617" strokeWidth="1.5" />
-            <text
-              x="150"
-              y="156"
-              fill="#101317"
-              fontSize="15"
-              fontWeight="700"
-              textAnchor="middle"
-              fontFamily="inherit"
-            >
-              {outcode}
-            </text>
+            {/* Labels and plate are desktop-only. Rendered at 80px on a phone
+                they'd be four-pixel text — and both facts are already in the
+                copy beside the ring ("Typical near GU2 4JT", "within 10
+                miles"), so nothing is lost by dropping them. What survives is
+                the geometry, which still reads as "an area around you". */}
+            <g className="hidden sm:block">
+              <line x1="150" y1="150" x2="150" y2="26" stroke="#22D3EE" strokeOpacity="0.22" strokeWidth="1" />
+              <text x="158" y="94" fill="#94A3B8" fontSize="11" fontFamily="inherit">5 mi</text>
+              <text x="158" y="42" fill="#94A3B8" fontSize="11" fontFamily="inherit">10 mi</text>
+              <rect x="112" y="137" width="76" height="27" rx="4" fill="#FFD400" stroke="#020617" strokeWidth="1.5" />
+              <text
+                x="150"
+                y="156"
+                fill="#101317"
+                fontSize="15"
+                fontWeight="700"
+                textAnchor="middle"
+                fontFamily="inherit"
+              >
+                {outcode}
+              </text>
+            </g>
+            {/* A small plate dot keeps the centre anchored on mobile. */}
+            <circle cx="150" cy="150" r="14" className="sm:hidden" fill="#FFD400" stroke="#020617" strokeWidth="2" />
           </svg>
 
-          <div className="flex min-w-0 flex-col gap-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-3">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                 Typical near {pc.normalised}
               </p>
-              <p className="font-mono text-2xl font-bold tabular-nums text-emerald-300">
+              <p className="font-mono text-xl font-bold tabular-nums text-emerald-300 sm:text-2xl">
                 {money(min)} – {money(max)}
               </p>
+              {/* Neutral wording on purpose. A regional multiplier SCALES the
+                  range — in the South-East and London it raises it — so the
+                  local figure is frequently higher than the national one.
+                  Saying "narrowed from" while the number goes up is a lie the
+                  reader can check in the same glance. */}
               {(local.min !== national.min || local.max !== national.max) && (
                 <p className="text-xs text-slate-500">
-                  narrowed from {money(national.min)} – {money(national.max)} UK-wide
+                  UK-wide {money(national.min)} – {money(national.max)}
                 </p>
               )}
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <div className="flex flex-wrap gap-x-5 gap-y-1">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                   Within 10 miles
