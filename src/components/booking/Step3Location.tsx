@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { MapPin, Calendar, ChevronRight } from "lucide-react";
 import Button from "@/components/Button";
+import CoverageRing from "./CoverageRing";
 import {
   classifyPostcode,
   estimateGarageDensity,
@@ -186,6 +187,13 @@ export default function Step3Location({
           </p>
         )}
       </div>
+
+      {/* The coverage panel — deliberately BELOW the postcode field.
+          Step 3 leads with a price because gating on the postcode once cost
+          14% reaching Step 4 against 94%. This has to be the payoff for adding
+          detail, never the thing that unlocked the answer. It renders nothing
+          at all until the postcode is complete. */}
+      <CoverageRing postcode={postcode} service={service} category={category} />
 
       {/* Flexibility */}
       <div>
