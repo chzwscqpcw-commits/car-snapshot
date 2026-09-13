@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Share2, Check } from "lucide-react";
 import {
   classifyPostcode,
   estimateGarageDensity,
   priceRangeFor,
   resolveRegion,
+  serviceLabel,
   type PriceRange,
   type ServiceType,
   type VehicleCategory,
 } from "@/lib/booking";
+import { trackEvent } from "@/lib/tracking";
 
 interface Props {
   /** Raw postcode as typed. The panel only appears once it's a full one. */
@@ -101,6 +104,7 @@ const UNKNOWN: Place = { key: "", valid: null, district: null };
 export default function CoverageRing({ postcode, service, category }: Props) {
   const pc = classifyPostcode(postcode);
   const [resolved, setResolved] = useState<Place>(UNKNOWN);
+  const [copied, setCopied] = useState(false);
   // An answer for a different postcode is not an answer for this one.
   const place = resolved.key === pc.normalised ? resolved : UNKNOWN;
 
@@ -134,6 +138,49 @@ export default function CoverageRing({ postcode, service, category }: Props) {
   // postcode exists both are the same, so nothing moves and nothing flashes.
   const min = useTweened(pc.usable ? local.min : national.min);
   const max = useTweened(pc.usable ? local.max : national.max);
+
+  /**
+   * Build the shareable link.
+   *
+   * OUTCODE ONLY, and no registration. A link carrying a plate and a full
+   * postcode identifies a household and a car, and this is a link built to be
+   * pasted into group chats — "GU2" is thousands of homes, "GU2 4JT" is a
+   * street. What's worth sending a friend was never your car anyway; it's what
+   * a service costs where you live.
+   *
+   * The consequence is deliberate: the recipient has to finish their own
+   * postcode before we can deep-link them to BookMyGarage. That's the right
+   * trade, and it's also the thing we'd have to ask them for regardless.
+   */
+  function shareUrl(): string {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const q = new URLSearchParams({ postcode: pc.normalised.split(" ")[0], type: service });
+    return `${origin}/booking?${q.toString()}`;
+  }
+
+  async function handleShare() {
+    const url = shareUrl();
+    const title = `${serviceLabel(service)} prices near ${pc.normalised.split(" ")[0]}`;
+    trackEvent("booking_share", { service, outcode: pc.normalised.split(" ")[0] });
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch {
+        // Cancelled, or the sheet refused — fall through to the clipboard so
+        // the button always does something.
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2200);
+    } catch {
+      // No clipboard permission. Nothing useful left to try, and a failed
+      // share must never interrupt a booking.
+    }
+  }
 
   if (!pc.usable) return null;
 
@@ -267,6 +314,24 @@ export default function CoverageRing({ postcode, service, category }: Props) {
                 </p>
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                  Link copied
+                </>
+              ) : (
+                <>
+                  <Share2 className="h-3.5 w-3.5" />
+                  Share prices near {pc.normalised.split(" ")[0]}
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}

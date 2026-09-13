@@ -35,57 +35,104 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: "Book MOT or Service Near You — Compare Prices Free | Free Plate Check",
-  description:
-    "Compare MOT and service prices from local garages in seconds. Pre-fill your registration, postcode and service type, then book with BookMyGarage. Free, no signup, no email.",
-  keywords: [
-    "book MOT online",
-    "book MOT near me",
-    "compare MOT prices UK",
-    "book car service near me",
-    "MOT booking comparison",
-    "find a garage near me",
-    "MOT booking",
-    "car service booking UK",
-  ],
-  alternates: {
-    canonical: "https://www.freeplatecheck.co.uk/booking",
-  },
-  openGraph: {
-    title: "Book MOT or Service Near You — Compare Prices Free",
-    description:
-      "Compare MOT and service prices from local garages in seconds. Pre-fill your registration and book through BookMyGarage.",
-    url: "https://www.freeplatecheck.co.uk/booking",
-    siteName: "Free Plate Check",
-    locale: "en_GB",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Book MOT or Service Near You — Compare Prices Free",
-    description:
-      "Compare MOT and service prices from local garages in seconds. Pre-fill your registration and book through BookMyGarage.",
-  },
+const BASE_TITLE = "Book MOT or Service Near You — Compare Prices Free | Free Plate Check";
+const BASE_DESC =
+  "Compare MOT and service prices from local garages in seconds. Pre-fill your registration, postcode and service type, then book with BookMyGarage. Free, no signup, no email.";
+
+/** Outcode only: 1-2 letters, a digit, optionally one more letter or digit. */
+const OUTCODE_RE = /^[A-Z]{1,2}\d[A-Z\d]?$/;
+const SERVICE_WORDS: Record<string, string> = {
+  mot: "MOT",
+  interim: "interim service",
+  full: "full service",
+  diagnostic: "diagnostic check",
 };
 
 /**
- * Read the deep-link params on the server and hand them to the wizard.
+ * Tailor the link preview when someone shares a booking area.
  *
- * BookingWizard used to call `useSearchParams()`, which opts its whole subtree
- * out of prerendering — so production served a pulsing grey box where the reg
- * input should be, and the page's entire purpose appeared only after 14 JS
- * chunks had loaded and hydrated. That is the wrong trade for a page taking
- * roughly two-thirds of its traffic straight from search.
+ * `opengraph-image.tsx` only ever receives `params`, never `searchParams`, so
+ * a per-postcode card can't come from the route convention — `generateMetadata`
+ * does get them, and points og:image at /api/og/coverage instead.
  *
- * Every other tool page here (/mot-check, /car-valuation, /tax-check …) already
- * reads `searchParams` server-side and renders its reg input into the HTML.
- * This just stops /booking being the exception.
+ * Only the OUTCODE is honoured here, and only if it looks like one. The share
+ * action deliberately strips the registration and the incode: a link carrying
+ * a plate and a full postcode identifies a household and a car, and this is a
+ * link designed to be pasted into group chats. `GU1` is thousands of homes;
+ * `GU1 1AA` is a street.
+ *
+ * A shared area page is `noindex`. These are links for people, not thousands
+ * of thin near-duplicate pages for Google — /booking itself stays indexable
+ * and is the one that should rank.
  */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ postcode?: string; type?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const outcode = (params?.postcode ?? "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, 4);
+  const service = (params?.type ?? "").toLowerCase();
+  const shared = OUTCODE_RE.test(outcode);
+
+  const base: Metadata = {
+    title: BASE_TITLE,
+    description: BASE_DESC,
+    keywords: [
+      "book MOT online",
+      "book MOT near me",
+      "compare MOT prices UK",
+      "book car service near me",
+      "MOT booking comparison",
+      "find a garage near me",
+      "MOT booking",
+      "car service booking UK",
+    ],
+    alternates: { canonical: "https://www.freeplatecheck.co.uk/booking" },
+    openGraph: {
+      title: "Book MOT or Service Near You — Compare Prices Free",
+      description:
+        "Compare MOT and service prices from local garages in seconds. Pre-fill your registration and book through BookMyGarage.",
+      url: "https://www.freeplatecheck.co.uk/booking",
+      siteName: "Free Plate Check",
+      locale: "en_GB",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Book MOT or Service Near You — Compare Prices Free",
+      description:
+        "Compare MOT and service prices from local garages in seconds. Pre-fill your registration and book through BookMyGarage.",
+    },
+  };
+
+  if (!shared) return base;
+
+  const word = SERVICE_WORDS[service] ?? "MOT";
+  const title = `${word.charAt(0).toUpperCase()}${word.slice(1)} prices near ${outcode}`;
+  const description = `What a ${word} typically costs near ${outcode}, and how many local garages you can compare. Free, no signup.`;
+  const image = `/api/og/coverage?pc=${encodeURIComponent(outcode)}&type=${encodeURIComponent(
+    SERVICE_WORDS[service] ? service : "mot",
+  )}`;
+
+  return {
+    ...base,
+    title,
+    description,
+    // Shared links are for people, not for the index.
+    robots: { index: false, follow: true },
+    openGraph: { ...base.openGraph, title, description, images: [image] },
+    twitter: { ...base.twitter, title, description, images: [image] },
+  };
+}
+
 export default async function BookingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ vrm?: string; type?: string; source?: string }>;
+  searchParams: Promise<{ vrm?: string; type?: string; source?: string; postcode?: string }>;
 }) {
   const params = await searchParams;
   const breadcrumbJsonLd = {
@@ -171,7 +218,12 @@ export default async function BookingPage({
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-5 sm:py-10">
-        <BookingWizard vrm={params?.vrm} type={params?.type} source={params?.source} />
+        <BookingWizard
+          vrm={params?.vrm}
+          type={params?.type}
+          source={params?.source}
+          postcode={params?.postcode}
+        />
 
         <section className="mt-8 sm:mt-12">
           <h2 className="text-lg sm:text-xl font-bold text-slate-100 mb-3 sm:mb-4">Frequently asked questions</h2>
