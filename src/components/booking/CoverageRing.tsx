@@ -234,11 +234,22 @@ export default function CoverageRing({ postcode, service, category }: Props) {
                   local figure is frequently higher than the national one.
                   Saying "narrowed from" while the number goes up is a lie the
                   reader can check in the same glance. */}
-              {(local.min !== national.min || local.max !== national.max) && (
+              {local.min !== national.min || local.max !== national.max ? (
                 <p className="text-xs text-slate-500">
                   UK-wide {money(national.min)} – {money(national.max)}
                 </p>
-              )}
+              ) : service === "mot" ? (
+                /* The MOT fee is regulated, so `priceRangeFor` returns the same
+                   band for every region — the number genuinely cannot move when
+                   a postcode arrives. Without this line the panel looks like it
+                   tried to localise and failed. Saying why turns a non-event
+                   into the most useful fact on the screen: shop on price
+                   anyway, because the cap is a ceiling and not a rate. */
+                <p className="text-xs text-slate-500">
+                  Capped nationally — your area changes which garages are near you,
+                  not the legal maximum
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-1">
               <div>
