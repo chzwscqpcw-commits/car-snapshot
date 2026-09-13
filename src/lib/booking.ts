@@ -196,6 +196,41 @@ export function classifyPostcode(raw: string): PostcodeInfo {
   return { kind: "partial", normalised: "", usable: false };
 }
 
+// ── BookMyGarage hand-off routing ────────────────────────────────────────────
+
+/**
+ * Which of BookMyGarage's two entry points this hand-off will use.
+ *
+ * "results" skips their search form entirely — we have the reg and a
+ * geocodable postcode, so we land the visitor straight on live garage quotes.
+ * "search" is the per-service landing page, where BMG asks for what we're
+ * missing.
+ *
+ * This is lifted out because the clickref has to know. Both routes shared one
+ * clickref until now, so Awin could never tell us whether skipping the form
+ * actually sells better — a question worth answering before we spend anything
+ * more on getting postcodes out of people. 79% already give one.
+ */
+export type BmgRoute = "results" | "search";
+
+export function bmgRouteFor(vrm: string, postcode: string): BmgRoute {
+  return vrm && classifyPostcode(postcode).usable ? "results" : "search";
+}
+
+/**
+ * The Awin clickref for a hand-off.
+ *
+ * `booking-flow-<service>` keeps its existing meaning for the deep-link so the
+ * series stays continuous against the 1 May - 10 Sep baseline (134 clicks, 8
+ * sales on booking-flow-mot). The suffix goes on the NEW, smaller route
+ * instead. Note the historical figure is a blend of both — it only becomes
+ * purely deep-link from this change onwards.
+ */
+export function bmgClickref(service: ServiceType, route: BmgRoute): string {
+  return route === "results" ? `booking-flow-${service}` : `booking-flow-${service}-search`;
+}
+
+
 // ── Garage density estimate (Step 3 social proof) ────────────────────────────
 
 export function estimateGarageDensity(postcode: string): { label: string; tier: "high" | "medium" | "low" } {
