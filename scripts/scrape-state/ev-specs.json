@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-02T09:27:06.697Z",
+  "updatedAt": "2026-09-16T10:03:17.709Z",
   "urls": {
     "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
@@ -50,7 +50,51 @@
     "https://ev-database.org/car/3657/BMW-i3-50-xDrive": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3655/Peugeot-e-208-GTi": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3656/Honda-Super-N": "2026-09-02T09:27:06.690Z",
-    "https://ev-database.org/car/3654/Mercedes-Benz-GLC-300-4MATIC": "2026-09-02T09:27:06.690Z"
+    "https://ev-database.org/car/3654/Mercedes-Benz-GLC-300-4MATIC": "2026-09-02T09:27:06.690Z",
+    "https://ev-database.org/car/3742/Tesla-Model-Y-Premium-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3741/Tesla-Model-Y-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3739/Mercedes-Benz-VLE-400-4MATIC": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3740/Tesla-Model-3-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3738/Volvo-EC40-P8-Performance-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3737/Volvo-EC40-P8-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3735/Volvo-EC40-P5": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3736/Volvo-EC40-P5-Long-Range": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3734/Volvo-EX40-P8-Performance-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3732/Volvo-EX40-P5-Long-Range": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3733/Volvo-EX40-P8-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3731/Volvo-EX40-P5": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3729/Dacia-Spring-Electric-80": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3728/Audi-A2-e-tron-240-kW---79-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3727/Audi-A2-e-tron-170-kW---79-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3726/Audi-A2-e-tron-140-kW---58-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3725/Audi-A2-e-tron-125-kW---50-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3724/Hyundai-STARIA-Electric-84-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3723/Jeep-Avenger-Electric": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3722/Opel-Corsa-Electric-GSE": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3721/Maserati-Grecale-Folgore": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3720/Maserati-GranCabrio-Folgore": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3719/Maserati-GranTurismo-Folgore": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3718/Land-Rover-Range-Rover-LWB-EV550": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3717/Land-Rover-Range-Rover-EV550": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3701/Geely-E2-47-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3716/Land-Rover-Range-Rover-EV450": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3700/Geely-E2-35-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3699/Smart-5-Premium-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3653/Mercedes-Benz-GLC-250": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3652/Toyota-Hilux-Electric-592-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3651/Kia-EV5-814-kWh-GT": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3650/Rolls-Royce-Spectre-Series-II": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3648/Ford-Capri-Extended-Range-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3649/Ford-Capri-Extended-Range-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3647/Ford-Capri-Standard-Range-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3646/Ford-Explorer-Extended-Range-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3644/Ford-Explorer-Standard-Range-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3645/Ford-Explorer-Extended-Range-RWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3643/Ferrari-Luce": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3641/JAC-E30X-515-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3640/JAC-E30X-41-kWh": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3639/Kia-EV3-Long-Range-AWD": "2026-09-16T10:03:17.700Z",
+    "https://ev-database.org/car/3638/Kia-EV3-Long-Range": "2026-09-16T10:03:17.700Z"
   },
   "records": {
     "TESLA|MODEL 3": {
@@ -2165,6 +2209,622 @@
         "chargeSlow": "9h15m (11 kW AC)",
         "motorKw": 310,
         "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL Y PREMIUM AWD": {
+      "rank": 3742,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y PREMIUM AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 295,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 364,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL Y RWD": {
+      "rank": 3741,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y RWD",
+        "batteryKwh": 60,
+        "rangeWltp": 236,
+        "chargeFast": "24 min (175 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 227,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|VLE 400 4MATIC": {
+      "rank": 3739,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "VLE 400 4MATIC",
+        "batteryKwh": 115,
+        "rangeWltp": 314,
+        "chargeFast": "26 min (300 kW DC)",
+        "chargeSlow": "12h30m (11 kW AC)",
+        "motorKw": 310,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL 3 RWD": {
+      "rank": 3740,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 RWD",
+        "batteryKwh": 60,
+        "rangeWltp": 286,
+        "chargeFast": "24 min (175 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 208,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EC40 P8 PERFORMANCE AWD": {
+      "rank": 3738,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EC40 P8 PERFORMANCE AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 249,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 325,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EC40 P8 AWD": {
+      "rank": 3737,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EC40 P8 AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 249,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EC40 P5": {
+      "rank": 3735,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EC40 P5",
+        "batteryKwh": 67,
+        "rangeWltp": 224,
+        "chargeFast": "30 min (180 kW DC)",
+        "chargeSlow": "7h15m (11 kW AC)",
+        "motorKw": 175,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EC40 P5 LONG RANGE": {
+      "rank": 3736,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EC40 P5 LONG RANGE",
+        "batteryKwh": 79,
+        "rangeWltp": 261,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 185,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EX40 P8 PERFORMANCE AWD": {
+      "rank": 3734,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX40 P8 PERFORMANCE AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 239,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 325,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EX40 P5 LONG RANGE": {
+      "rank": 3732,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX40 P5 LONG RANGE",
+        "batteryKwh": 79,
+        "rangeWltp": 249,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 185,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EX40 P8 AWD": {
+      "rank": 3733,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX40 P8 AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 239,
+        "chargeFast": "32 min (207 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EX40 P5": {
+      "rank": 3731,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX40 P5",
+        "batteryKwh": 67,
+        "rangeWltp": 214,
+        "chargeFast": "30 min (180 kW DC)",
+        "chargeSlow": "7h15m (11 kW AC)",
+        "motorKw": 175,
+        "driveType": "RWD"
+      }
+    },
+    "DACIA|SPRING ELECTRIC 80": {
+      "rank": 3729,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "DACIA",
+        "model": "SPRING ELECTRIC 80",
+        "batteryKwh": 27.5,
+        "rangeWltp": 109,
+        "chargeFast": "30 min (50 kW DC)",
+        "chargeSlow": "5 hours (6.6 kW AC)",
+        "motorKw": 60,
+        "driveType": "FWD"
+      }
+    },
+    "AUDI|A2 E TRON 240 KW   79 KWH": {
+      "rank": 3728,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A2 E TRON 240 KW   79 KWH",
+        "batteryKwh": 79,
+        "rangeWltp": 314,
+        "chargeFast": "30 min (183 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 240,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|A2 E TRON 170 KW   79 KWH": {
+      "rank": 3727,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A2 E TRON 170 KW   79 KWH",
+        "batteryKwh": 79,
+        "rangeWltp": 314,
+        "chargeFast": "30 min (183 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 170,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|A2 E TRON 140 KW   58 KWH": {
+      "rank": 3726,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A2 E TRON 140 KW   58 KWH",
+        "batteryKwh": 58,
+        "rangeWltp": 233,
+        "chargeFast": "27 min (105 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 140,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|A2 E TRON 125 KW   50 KWH": {
+      "rank": 3725,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A2 E TRON 125 KW   50 KWH",
+        "batteryKwh": 50,
+        "rangeWltp": 202,
+        "chargeFast": "25 min (100 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 125,
+        "driveType": "RWD"
+      }
+    },
+    "HYUNDAI|STARIA ELECTRIC 84 KWH": {
+      "rank": 3724,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "STARIA ELECTRIC 84 KWH",
+        "batteryKwh": 80,
+        "rangeWltp": 193,
+        "chargeFast": "21 min (256 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "JEEP|AVENGER ELECTRIC": {
+      "rank": 3723,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "JEEP",
+        "model": "AVENGER ELECTRIC",
+        "batteryKwh": 50.8,
+        "rangeWltp": 193,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|CORSA ELECTRIC GSE": {
+      "rank": 3722,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "OPEL",
+        "model": "CORSA ELECTRIC GSE",
+        "batteryKwh": 50.8,
+        "rangeWltp": 186,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 207,
+        "driveType": "FWD"
+      }
+    },
+    "MASERATI|GRECALE FOLGORE": {
+      "rank": 3721,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "MASERATI",
+        "model": "GRECALE FOLGORE",
+        "batteryKwh": 98.6,
+        "rangeWltp": 277,
+        "chargeFast": "40 min (150 kW DC)",
+        "chargeSlow": "5h30m (22 kW AC)",
+        "motorKw": 410,
+        "driveType": "AWD"
+      }
+    },
+    "MASERATI|GRANCABRIO FOLGORE": {
+      "rank": 3720,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "MASERATI",
+        "model": "GRANCABRIO FOLGORE",
+        "batteryKwh": 83,
+        "rangeWltp": 273,
+        "chargeFast": "19 min (270 kW DC)",
+        "chargeSlow": "4h30m (22 kW AC)",
+        "motorKw": 560,
+        "driveType": "AWD"
+      }
+    },
+    "MASERATI|GRANTURISMO FOLGORE": {
+      "rank": 3719,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "MASERATI",
+        "model": "GRANTURISMO FOLGORE",
+        "batteryKwh": 83,
+        "rangeWltp": 289,
+        "chargeFast": "17 min (261 kW DC)",
+        "chargeSlow": "4h30m (22 kW AC)",
+        "motorKw": 560,
+        "driveType": "AWD"
+      }
+    },
+    "LAND ROVER|RANGE ROVER LWB EV550": {
+      "rank": 3718,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "LAND ROVER",
+        "model": "RANGE ROVER LWB EV550",
+        "batteryKwh": 118.5,
+        "rangeWltp": 292,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "6h30m (22 kW AC)",
+        "motorKw": 405,
+        "driveType": "AWD"
+      }
+    },
+    "LAND ROVER|RANGE ROVER EV550": {
+      "rank": 3717,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "LAND ROVER",
+        "model": "RANGE ROVER EV550",
+        "batteryKwh": 118.5,
+        "rangeWltp": 298,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "6h30m (22 kW AC)",
+        "motorKw": 405,
+        "driveType": "AWD"
+      }
+    },
+    "GEELY|E2 47 KWH": {
+      "rank": 3701,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "GEELY",
+        "model": "E2 47 KWH",
+        "batteryKwh": 47.1,
+        "rangeWltp": 174,
+        "chargeFast": "35 min (80 kW DC)",
+        "chargeSlow": "8h30m (6.6 kW AC)",
+        "motorKw": 85,
+        "driveType": "RWD"
+      }
+    },
+    "LAND ROVER|RANGE ROVER EV450": {
+      "rank": 3716,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "LAND ROVER",
+        "model": "RANGE ROVER EV450",
+        "batteryKwh": 118.5,
+        "rangeWltp": 298,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "6h30m (22 kW AC)",
+        "motorKw": 331,
+        "driveType": "AWD"
+      }
+    },
+    "GEELY|E2 35 KWH": {
+      "rank": 3700,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "GEELY",
+        "model": "E2 35 KWH",
+        "batteryKwh": 35.4,
+        "rangeWltp": 134,
+        "chargeFast": "35 min (60 kW DC)",
+        "chargeSlow": "6h30m (6.6 kW AC)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|5 PREMIUM AWD": {
+      "rank": 3699,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "SMART",
+        "model": "5 PREMIUM AWD",
+        "batteryKwh": 94,
+        "rangeWltp": 283,
+        "chargeFast": "19 min (400 kW DC)",
+        "chargeSlow": "5h15m (22 kW AC)",
+        "motorKw": 432,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|GLC 250": {
+      "rank": 3653,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLC 250",
+        "batteryKwh": 85,
+        "rangeWltp": 311,
+        "chargeFast": "23 min (320 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 260,
+        "driveType": "RWD"
+      }
+    },
+    "TOYOTA|HILUX ELECTRIC 592 KWH": {
+      "rank": 3652,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "HILUX ELECTRIC 592 KWH",
+        "batteryKwh": 54,
+        "rangeWltp": 124,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 144,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|EV5 814 KWH GT": {
+      "rank": 3651,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV5 814 KWH GT",
+        "batteryKwh": 78,
+        "rangeWltp": 233,
+        "chargeFast": "30 min (150 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 225,
+        "driveType": "AWD"
+      }
+    },
+    "ROLLS ROYCE|SPECTRE SERIES II": {
+      "rank": 3650,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "ROLLS ROYCE",
+        "model": "SPECTRE SERIES II",
+        "batteryKwh": 112.4,
+        "rangeWltp": 320,
+        "chargeFast": "29 min (195 kW DC)",
+        "chargeSlow": "6 hours (22 kW AC)",
+        "motorKw": 442,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|CAPRI EXTENDED RANGE RWD": {
+      "rank": 3648,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "CAPRI EXTENDED RANGE RWD",
+        "batteryKwh": 79,
+        "rangeWltp": 292,
+        "chargeFast": "30 min (183 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|CAPRI EXTENDED RANGE AWD": {
+      "rank": 3649,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "CAPRI EXTENDED RANGE AWD",
+        "batteryKwh": 77,
+        "rangeWltp": 277,
+        "chargeFast": "28 min (185 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 250,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|CAPRI STANDARD RANGE RWD": {
+      "rank": 3647,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "CAPRI STANDARD RANGE RWD",
+        "batteryKwh": 58,
+        "rangeWltp": 217,
+        "chargeFast": "27 min (105 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 140,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|EXPLORER EXTENDED RANGE AWD": {
+      "rank": 3646,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "EXPLORER EXTENDED RANGE AWD",
+        "batteryKwh": 77,
+        "rangeWltp": 267,
+        "chargeFast": "28 min (185 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 250,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|EXPLORER STANDARD RANGE RWD": {
+      "rank": 3644,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "EXPLORER STANDARD RANGE RWD",
+        "batteryKwh": 58,
+        "rangeWltp": 208,
+        "chargeFast": "27 min (105 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 140,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|EXPLORER EXTENDED RANGE RWD": {
+      "rank": 3645,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FORD",
+        "model": "EXPLORER EXTENDED RANGE RWD",
+        "batteryKwh": 79,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (183 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "FERRARI|LUCE": {
+      "rank": 3643,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "FERRARI",
+        "model": "LUCE",
+        "batteryKwh": 115,
+        "rangeWltp": 360,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "6h15m (22 kW AC)",
+        "motorKw": 772,
+        "driveType": "AWD"
+      }
+    },
+    "JAC|E30X 515 KWH": {
+      "rank": 3641,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "JAC",
+        "model": "E30X 515 KWH",
+        "batteryKwh": 50.5,
+        "rangeWltp": 183,
+        "chargeFast": "45 min (64 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "JAC|E30X 41 KWH": {
+      "rank": 3640,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "JAC",
+        "model": "E30X 41 KWH",
+        "batteryKwh": 40,
+        "rangeWltp": 149,
+        "chargeFast": "44 min (64 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "KIA|EV3 LONG RANGE AWD": {
+      "rank": 3639,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV3 LONG RANGE AWD",
+        "batteryKwh": 78,
+        "rangeWltp": 273,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 195,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|EV3 LONG RANGE": {
+      "rank": 3638,
+      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV3 LONG RANGE",
+        "batteryKwh": 78,
+        "rangeWltp": 283,
+        "chargeFast": "33 min (135 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
       }
     }
   }
