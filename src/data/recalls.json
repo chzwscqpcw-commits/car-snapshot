@@ -14,6 +14,42 @@
   {
     "make": "HYUNDAI",
     "models": [
+      "SANTA FE MX5"
+    ],
+    "buildDateStart": "2023-03-13",
+    "buildDateEnd": "2026-02-14",
+    "recallDate": "2026-09-14",
+    "defect": "Affected vehicles may have incorrectly secured front seat belt anchor points. This may result in a lack of protection in the event of a vehicle collision.",
+    "remedy": "A modification will be applied to the seat belt anchor area to rectify the concern",
+    "recallNumber": "R/2026/322"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": [
+      "IONIQ 6 CE EV"
+    ],
+    "buildDateStart": "2022-10-05",
+    "buildDateEnd": "2025-06-24",
+    "recallDate": "2026-09-14",
+    "defect": "Affected vehicles may have incorrectly secured front seat belt anchor points. This may result in a lack of protection in the event of a vehicle collision.",
+    "remedy": "A modification will be applied to the seat belt anchor area to rectify the concern",
+    "recallNumber": "R/2026/322"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLE"
+    ],
+    "buildDateStart": "2022-12-21",
+    "buildDateEnd": "2025-08-10",
+    "recallDate": "2026-09-14",
+    "defect": "Mercedes-Benz AG has determined that on certain GLE (167 platform)   vehicles with OM654 and hybrid drive a heat shield in the firewall area   might not be installed according to specification.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners   will check the heat shield and the fuel line on the affected vehicles and   rework it if necessary.",
+    "recallNumber": "R/2026/326"
+  },
+  {
+    "make": "HYUNDAI",
+    "models": [
       "IONIQ 5"
     ],
     "buildDateStart": "2021-09-28",
@@ -514,6 +550,18 @@
     "defect": "On affected vehicles it may be possible that one or more engine camshaft roller finger followers were not properly installed at the time of assembly.  An improperly installed camshaft roller finger follower may result in engine failure resulting in a no-start condition or a loss of motive power.",
     "remedy": "Replace the engine.",
     "recallNumber": "R/2026/289"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "URBAN CRUISER"
+    ],
+    "buildDateStart": "2025-04-24",
+    "buildDateEnd": "2025-11-08",
+    "recallDate": "2026-08-31",
+    "defect": "During the manufacturing process of the rear outer door handle an insufficient amount of grease may have been applied to components of the internal linkage. As a result corrosion may develop on an internal spring over time. Which may cause it to bind or seize.",
+    "remedy": "Replacement of the rear door handles",
+    "recallNumber": "R/2026/321"
   },
   {
     "make": "FORD",
@@ -1270,6 +1318,30 @@
     "defect": "Under certain conditions the platform lift motor could remain energised and move unintentionally despite the lift operator commanding the lift to stop increasing the risk of injury to the lift occupant or others in the vicinity.",
     "remedy": "Install two diodes within the lift electrical system wiring to prevent voltage from a failed contactor maintaining a closed condition and to ensure proper de-energisation of the motor contactor when the operator commands the lift to stop.",
     "recallNumber": "R/2026/303"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE MAX BEV"
+    ],
+    "buildDateStart": "2024-06-20",
+    "buildDateEnd": "2025-04-29",
+    "recallDate": "2026-07-15",
+    "defect": "For certain vehicles the Body Control Module (BCM) is not properly configured to detect turn signal lamp failures. As a result if a bulb fails the BCM does not recognize the fault and fails to activate a mandatory tell-tale and warning to the driver.",
+    "remedy": "Software update to Body Control Module (BCM)",
+    "recallNumber": "R/2026/274"
+  },
+  {
+    "make": "TOYOTA",
+    "models": [
+      "PROACE MAX BEV"
+    ],
+    "buildDateStart": "2025-10-15",
+    "buildDateEnd": "2026-03-02",
+    "recallDate": "2026-07-15",
+    "defect": "For certain vehicles the Body Control Module (BCM) is not properly configured to detect turn signal lamp failures. As a result if a bulb fails the BCM does not recognize the fault and fails to activate a mandatory tell-tale and warning to the driver.",
+    "remedy": "Software update to Body Control Module (BCM)",
+    "recallNumber": "R/2026/274"
   },
   {
     "make": "NISSAN",
@@ -3586,6 +3658,42 @@
     "defect": "Some vehicles fitted with a high voltage battery may have internal cell voltage deviation. If this occurs it may result in the risk of an electrical short circuit inside the battery. Until the high voltage battery software has been updated we recommend the vehicle to be parked in a well ventilated area. The vehicle can be used as normal.",
     "remedy": "Hyundai has launched a Safety Recall to update the battery management system (BMS) software.",
     "recallNumber": "R/2026/128"
+  },
+  {
+    "make": "VEGA AUTO ACCESSORIES LIMITED",
+    "models": [
+      "JET 'J' MOTORCYCLE HELMET BATCH 1-6"
+    ],
+    "buildDateStart": "2021-12-08",
+    "buildDateEnd": "2023-01-14",
+    "recallDate": "2026-05-01",
+    "defect": "Affected helmets do not meet the requirements of ECE 22.05 and present a danger to users.",
+    "remedy": "Affected helmets will be replaced and scrapped.",
+    "recallNumber": "R/2026/307"
+  },
+  {
+    "make": "VEGA AUTO ACCESSORIES LIMITED",
+    "models": [
+      "JET 'J' MOTORCYCLE HELMET BATCH 7"
+    ],
+    "buildDateStart": "2023-01-20",
+    "buildDateEnd": "2023-03-11",
+    "recallDate": "2026-05-01",
+    "defect": "Affected helmets do not meet the requirements of ECE 22.05 and present a danger to users.",
+    "remedy": "Affected helmets will be replaced and scrapped.",
+    "recallNumber": "R/2026/307"
+  },
+  {
+    "make": "VEGA AUTO ACCESSORIES LIMITED",
+    "models": [
+      "JET 'J' MOTORCYCLE HELMET BATCH 8-9"
+    ],
+    "buildDateStart": "2023-03-13",
+    "buildDateEnd": "2023-05-25",
+    "recallDate": "2026-05-01",
+    "defect": "Affected helmets do not meet the requirements of ECE 22.05 and present a danger to users.",
+    "remedy": "Affected helmets will be replaced and scrapped.",
+    "recallNumber": "R/2026/307"
   },
   {
     "make": "FORD",
@@ -32343,6 +32451,30 @@
     "recallNumber": "R/2023/277"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2021-03-06",
+    "buildDateEnd": "2022-02-28",
+    "recallDate": "2024-01-02",
+    "defect": "The fuel pump impeller could swell and cause the fuel pump to stop working.�",
+    "remedy": "Inspect and if necessary replace the fuel pump.",
+    "recallNumber": "RM/2023/034"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2020-02-21",
+    "buildDateEnd": "2020-02-21",
+    "recallDate": "2024-01-02",
+    "defect": "The fuel pump impeller could swell and cause the fuel pump to stop working.�",
+    "remedy": "Inspect and if necessary replace the fuel pump.",
+    "recallNumber": "RM/2023/034"
+  },
+  {
     "make": "MERCEDES-BENZ",
     "models": [
       "GLE"
@@ -32389,6 +32521,54 @@
     "defect": "On affected vehicles the Steering column mounting bracket may suffer structural failure.",
     "remedy": "Inspect steering column mounting bracket for structural integrity and replace dashboard crossmember if required.",
     "recallNumber": "R/2023/330"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3"
+    ],
+    "buildDateStart": "2022-09-28",
+    "buildDateEnd": "2023-05-19",
+    "recallDate": "2023-12-21",
+    "defect": "The rear view mirror's lens may dislodge from the housing.",
+    "remedy": "Both rearview mirror assemblies will be replaced with revised units.",
+    "recallNumber": "RM/2024/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3"
+    ],
+    "buildDateStart": "2022-09-28",
+    "buildDateEnd": "2023-05-19",
+    "recallDate": "2023-12-21",
+    "defect": "The rear view mirror's lens may dislodge from the housing.",
+    "remedy": "Both rearview mirror assemblies will be replaced with revised units.",
+    "recallNumber": "RM/2024/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3"
+    ],
+    "buildDateStart": "2022-09-28",
+    "buildDateEnd": "2023-05-19",
+    "recallDate": "2023-12-21",
+    "defect": "The rear view mirror's lens may dislodge from the housing.",
+    "remedy": "Both rearview mirror assemblies will be replaced with revised units.",
+    "recallNumber": "RM/2024/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3-S"
+    ],
+    "buildDateStart": "2022-09-28",
+    "buildDateEnd": "2023-05-19",
+    "recallDate": "2023-12-21",
+    "defect": "The rear view mirror's lens may dislodge from the housing.",
+    "remedy": "Both rearview mirror assemblies will be replaced with revised units.",
+    "recallNumber": "RM/2024/002"
   },
   {
     "make": "BMW",
@@ -33399,6 +33579,42 @@
     "defect": "On affected vehicles the side airbag installed in bucket seats may be activated unnecessarily.",
     "remedy": "Recode the airbag control unit",
     "recallNumber": "R/2023/319"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "TRAXTER"
+    ],
+    "buildDateStart": "2022-06-16",
+    "buildDateEnd": "2023-03-30",
+    "recallDate": "2023-11-06",
+    "defect": "The Operator�s Guide �Maintenance Schedule� section contains incorrect information regarding driven clutch pulley maintenance intervals which may lead to clutch failure.",
+    "remedy": "A new Maintenance Schedule Booklet containing the revised maintenance schedules will be issued to affected customers.",
+    "recallNumber": "RSPV/2023/011"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "TRAXTER"
+    ],
+    "buildDateStart": "2021-03-16",
+    "buildDateEnd": "2022-08-04",
+    "recallDate": "2023-11-06",
+    "defect": "The Operator�s Guide �Maintenance Schedule� section contains incorrect information regarding driven clutch pulley maintenance intervals which may lead to clutch failure.",
+    "remedy": "A new Maintenance Schedule Booklet containing the revised maintenance schedules will be issued to affected customers.",
+    "recallNumber": "RSPV/2023/011"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "MAVERICK TRAIL"
+    ],
+    "buildDateStart": "2022-06-08",
+    "buildDateEnd": "2023-06-14",
+    "recallDate": "2023-11-06",
+    "defect": "The Operator�s Guide �Maintenance Schedule� section contains incorrect information regarding driven clutch pulley maintenance intervals which may lead to clutch failure.",
+    "remedy": "A new Maintenance Schedule Booklet containing the revised maintenance schedules will be issued to affected customers.",
+    "recallNumber": "RSPV/2023/011"
   },
   {
     "make": "CFMOTO",
@@ -34473,8 +34689,8 @@
     "models": [
       "ATECA"
     ],
-    "buildDateStart": "2016-10-18",
-    "buildDateEnd": "2017-03-16",
+    "buildDateStart": "2016-04-13",
+    "buildDateEnd": "2017-12-09",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -34485,8 +34701,8 @@
     "models": [
       "ALHAMBRA"
     ],
-    "buildDateStart": "2015-07-13",
-    "buildDateEnd": "2017-05-24",
+    "buildDateStart": "2015-03-10",
+    "buildDateEnd": "2017-06-07",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -34497,8 +34713,8 @@
     "models": [
       "IBIZA"
     ],
-    "buildDateStart": "2015-07-04",
-    "buildDateEnd": "2017-05-19",
+    "buildDateStart": "2015-03-03",
+    "buildDateEnd": "2017-09-06",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -34509,8 +34725,8 @@
     "models": [
       "TOLEDO"
     ],
-    "buildDateStart": "2015-06-08",
-    "buildDateEnd": "2017-04-25",
+    "buildDateStart": "2013-11-04",
+    "buildDateEnd": "2017-06-09",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -34521,8 +34737,8 @@
     "models": [
       "LEON"
     ],
-    "buildDateStart": "2008-01-24",
-    "buildDateEnd": "2017-02-10",
+    "buildDateStart": "2012-03-19",
+    "buildDateEnd": "2017-04-18",
     "recallDate": "2023-09-11",
     "defect": "In vehicles produced in a specific period with airbags from manufacturer Takata in the event of an accident with airbag activation the driver airbag gas generator housing may explode.�",
     "remedy": "Inspect the driver�s airbag and replace it if necessary.�",
@@ -36813,6 +37029,18 @@
     "recallNumber": "R/2023/097"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "TRAXTER"
+    ],
+    "buildDateStart": "2022-10-04",
+    "buildDateEnd": "2023-05-26",
+    "recallDate": "2023-06-02",
+    "defect": "Some vehicles were assembled with a fuel hose assembly that may have internal damage which could lead to a fuel leak.�",
+    "remedy": "Replace the fuel hose assembly",
+    "recallNumber": "RSPV/2023/004"
+  },
+  {
     "make": "LAND ROVER",
     "models": [
       "DEFENDER 130"
@@ -38459,6 +38687,90 @@
     "recallNumber": "R/2023/071"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER RT LTD 1330"
+    ],
+    "buildDateStart": "2020-05-21",
+    "buildDateEnd": "2023-03-08",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER RT 1330"
+    ],
+    "buildDateStart": "2019-09-18",
+    "buildDateEnd": "2020-05-21",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER SPORT"
+    ],
+    "buildDateStart": "2021-08-13",
+    "buildDateEnd": "2023-03-08",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER RALLY"
+    ],
+    "buildDateStart": "2021-02-25",
+    "buildDateEnd": "2023-03-07",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 600"
+    ],
+    "buildDateStart": "2021-05-25",
+    "buildDateEnd": "2023-03-09",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 900"
+    ],
+    "buildDateStart": "2021-11-17",
+    "buildDateEnd": "2023-03-03",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 600"
+    ],
+    "buildDateStart": "2022-05-25",
+    "buildDateEnd": "2023-03-09",
+    "recallDate": "2023-03-17",
+    "defect": "Potential contamination or component friction in the brake light switch may cause the brake lights to stay illuminated even when the brake pedal is not pressed.",
+    "remedy": "Adjust or replace the brake light switch depending on model affected. Additionally add a spring to the brake light switch.",
+    "recallNumber": "RSPV/2023/003"
+  },
+  {
     "make": "MG",
     "models": [
       "EHS"
@@ -38999,6 +39311,66 @@
     "recallNumber": "R/2023/042"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER F3-S"
+    ],
+    "buildDateStart": "2022-01-27",
+    "buildDateEnd": "2022-05-18",
+    "recallDate": "2023-02-09",
+    "defect": "The rear-view mirror lenses may dislodge from the mirror housing",
+    "remedy": "Installed revised mirror housing assembly",
+    "recallNumber": "RSPV/2023/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3"
+    ],
+    "buildDateStart": "2023-02-22",
+    "buildDateEnd": "2023-02-22",
+    "recallDate": "2023-02-09",
+    "defect": "The rear-view mirror lenses may dislodge from the mirror housing",
+    "remedy": "Installed revised mirror housing assembly",
+    "recallNumber": "RSPV/2023/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER F3"
+    ],
+    "buildDateStart": "2022-05-05",
+    "buildDateEnd": "2022-05-24",
+    "recallDate": "2023-02-09",
+    "defect": "The rear-view mirror lenses may dislodge from the mirror housing",
+    "remedy": "Installed revised mirror housing assembly",
+    "recallNumber": "RSPV/2023/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER F3"
+    ],
+    "buildDateStart": "2022-05-05",
+    "buildDateEnd": "2022-05-05",
+    "recallDate": "2023-02-09",
+    "defect": "The rear-view mirror lenses may dislodge from the mirror housing",
+    "remedy": "Installed revised mirror housing assembly",
+    "recallNumber": "RSPV/2023/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER F3-S"
+    ],
+    "buildDateStart": "2022-01-28",
+    "buildDateEnd": "2022-04-14",
+    "recallDate": "2023-02-09",
+    "defect": "The rear-view mirror lenses may dislodge from the mirror housing",
+    "remedy": "Installed revised mirror housing assembly",
+    "recallNumber": "RSPV/2023/002"
+  },
+  {
     "make": "MERCEDES-BENZ",
     "models": [
       "SPRINTER 907"
@@ -39037,10 +39409,22 @@
   {
     "make": "AUDI",
     "models": [
+      "Q5"
+    ],
+    "buildDateStart": "2011-11-21",
+    "buildDateEnd": "2011-11-21",
+    "recallDate": "2023-02-06",
+    "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
+    "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the driver side.",
+    "recallNumber": "R/2023/052"
+  },
+  {
+    "make": "AUDI",
+    "models": [
       "A5 CABRIO"
     ],
-    "buildDateStart": "2009-09-08",
-    "buildDateEnd": "2010-03-12",
+    "buildDateStart": "2009-02-26",
+    "buildDateEnd": "2011-09-30",
     "recallDate": "2023-02-06",
     "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
     "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the driver side.",
@@ -39051,8 +39435,8 @@
     "models": [
       "A5"
     ],
-    "buildDateStart": "2009-12-12",
-    "buildDateEnd": "2011-07-08",
+    "buildDateStart": "2009-07-20",
+    "buildDateEnd": "2011-11-20",
     "recallDate": "2023-02-06",
     "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
     "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the driver side.",
@@ -39063,8 +39447,8 @@
     "models": [
       "Q5"
     ],
-    "buildDateStart": "2008-10-31",
-    "buildDateEnd": "2012-08-15",
+    "buildDateStart": "2008-10-06",
+    "buildDateEnd": "2012-08-18",
     "recallDate": "2023-02-06",
     "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
     "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the driver side.",
@@ -39217,6 +39601,18 @@
   {
     "make": "AUDI",
     "models": [
+      "A6"
+    ],
+    "buildDateStart": "2004-05-18",
+    "buildDateEnd": "2010-02-22",
+    "recallDate": "2023-02-01",
+    "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
+    "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the passenger side.",
+    "recallNumber": "R/2023/053"
+  },
+  {
+    "make": "AUDI",
+    "models": [
       "A4 CABRIO"
     ],
     "buildDateStart": "2006-07-14",
@@ -39249,18 +39645,6 @@
     "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
     "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the driver side.",
     "recallNumber": "R/2023/054"
-  },
-  {
-    "make": "AUDI",
-    "models": [
-      "A6"
-    ],
-    "buildDateStart": "2004-05-18",
-    "buildDateEnd": "2010-02-22",
-    "recallDate": "2023-02-01",
-    "defect": "If a front airbag is deployed it is possible that the gas generator housing in which the propellant is generated may burst on vehicles manufactured within a limited period.",
-    "remedy": "As a precautionary safety measure it is necessary to replace the airbag unit on the passenger side.",
-    "recallNumber": "R/2023/053"
   },
   {
     "make": "AUDI",
@@ -41350,6 +41734,90 @@
     "defect": "A small number of Ford Ranger vehicles could suffer a differential drive pinion failure caused by micro cracks created during the production process.",
     "remedy": "Inspect and replace rear differential parts as necessary.",
     "recallNumber": "R/2022/142"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 900"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER RALLY 900 ACE"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 900 ACE"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 600"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER RALLY 900R"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER AR 900 ACE"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER 600 ACE"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2022-10-19",
+    "recallDate": "2022-10-31",
+    "defect": "The position light and flasher electrical harnesses in the front fenders may be loose and rub on the tyre. Over time this could lead to a short circuit causing the engine to stall while driving without the ability to restart the vehicle. If this happens the Vehicle Stability System (VSS) which includes the Anti-Blocking System (ABS) will not be available.",
+    "remedy": "Dealers will install locking ties under the fender to hold the wiring harness. In the event of a damaged harness the damaged harness section will be replaced",
+    "recallNumber": "RSPV/2022/014"
   },
   {
     "make": "FORD",
@@ -44235,6 +44703,18 @@
     "recallNumber": "RM/2022/018"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2021-02-25",
+    "buildDateEnd": "2022-07-05",
+    "recallDate": "2022-07-14",
+    "defect": "The Handlebar Stem Bolt may break suddenly. This could cause a loss of steering control.",
+    "remedy": "Clean the threads of the steering column and install the new handlebar stem bolt",
+    "recallNumber": "RSPV/2022/011"
+  },
+  {
     "make": "CITROEN",
     "models": [
       "DS3 CROSSBACK"
@@ -45062,6 +45542,30 @@
     "defect": "The drainpipe of the evaporator housing of the air conditioning system may have been incorrectly manufactured leading to water accumulating and dripping onto the airbag control unit.",
     "remedy": "Check the drainpipe of the evaporator housing. If found to be incorrectly manufactured the drainpipe must be modified and the airbag control unit replaced.",
     "recallNumber": "R/2022/200"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER RT"
+    ],
+    "buildDateStart": "2014-04-15",
+    "buildDateEnd": "2019-04-15",
+    "recallDate": "2022-05-26",
+    "defect": "The front sprocket may be defective and may be subject to premature wear.",
+    "remedy": "The front sprocket will need to be replaced.",
+    "recallNumber": "RM/2022/016"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER F3"
+    ],
+    "buildDateStart": "2014-04-15",
+    "buildDateEnd": "2019-04-15",
+    "recallDate": "2022-05-26",
+    "defect": "The front sprocket may be defective and may be subject to premature wear.",
+    "remedy": "The front sprocket will need to be replaced.",
+    "recallNumber": "RM/2022/016"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -53151,6 +53655,18 @@
     "recallNumber": "R/2021/237"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "TRAXTER HD10 (82 HP ENGINE)"
+    ],
+    "buildDateStart": "2019-02-01",
+    "buildDateEnd": "2021-06-17",
+    "recallDate": "2021-06-17",
+    "defect": "The stock CVT air intake may become completely obstructed when vehicles are equipped with a track kit and used in snow.",
+    "remedy": "BRP will reimburse or pay for the installation of a CVT air intake relocating kit.",
+    "recallNumber": "RSPV/2021/009"
+  },
+  {
     "make": "FORD",
     "models": [
       "MUSTANG MACH-E"
@@ -55167,6 +55683,30 @@
     "defect": "Vehicles could be equipped with a front axle brake caliper carrier which could have been manufactured outside the specifications.",
     "remedy": "Conduct a check the brake caliper carriers on the front axle and as a precautionary measure renew any front axle brake caliper carrier should it be part of the affected batch.",
     "recallNumber": "R/2021/164"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RENEGADE"
+    ],
+    "buildDateStart": "2021-01-27",
+    "buildDateEnd": "2021-03-26",
+    "recallDate": "2021-05-05",
+    "defect": "The front lower ball joint may not have been properly installed into the steering knuckle.",
+    "remedy": "Inspect and if required properly install the lower ball joint into the steering knuckle.",
+    "recallNumber": "RSPV/2021/008"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "OUTLANDER"
+    ],
+    "buildDateStart": "2021-01-27",
+    "buildDateEnd": "2021-03-26",
+    "recallDate": "2021-05-05",
+    "defect": "The front lower ball joint may not have been properly installed into the steering knuckle.",
+    "remedy": "Inspect and if required properly install the lower ball joint into the steering knuckle.",
+    "recallNumber": "RSPV/2021/008"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -57753,6 +58293,18 @@
     "defect": "Due to incorrect type-approval data processing the manufacturer's plate (VIN plate) and registration document must be replaced.",
     "remedy": "Replace the VIN plate and update the registration document as required.",
     "recallNumber": "R/2021/068"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2020-06-18",
+    "buildDateEnd": "2021-01-26",
+    "recallDate": "2021-03-18",
+    "defect": "In some specific riding conditions a high heat could develop in the muffler causing the upper right hand vent grill to melt.",
+    "remedy": "Reprogram the ECM and install a heat reflective foil kit.",
+    "recallNumber": "RSPV/2021/007"
   },
   {
     "make": "CHRYSLER",
@@ -61572,6 +62124,18 @@
     "recallNumber": "R/2020/254"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2019-09-26",
+    "buildDateEnd": "2020-03-31",
+    "recallDate": "2020-10-16",
+    "defect": "The front wheels assembly may not have been performed properly during the predelivery preparation.",
+    "remedy": "Check and correct if required the front wheel torque and fitment of a locking clip",
+    "recallNumber": "RSPV/2020/021"
+  },
+  {
     "make": "HYUNDAI",
     "models": [
       "KONA EV"
@@ -64831,6 +65395,18 @@
     "recallNumber": "R/2020/211"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "IMMI 4 POINT HARNESS"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2020-07-16",
+    "defect": "Some 4-point harnesses sold as an accessory could have been manufactured with missing stitching at attachment points.",
+    "remedy": "BRP is asking its dealers to contact the consumers about the recall and to bring their harnesses for inspection and if necessary a replacement.",
+    "recallNumber": "RCOMP/2020/002"
+  },
+  {
     "make": "CITROEN",
     "models": [
       "BERLINGO"
@@ -66701,6 +67277,18 @@
     "defect": "The steering gear tie rod may not have been assembled with a required spherical washer",
     "remedy": "Both steering gear tie rods will be checked and if affected tie rod/s and accompanying swivel bearing/s will be replaced",
     "recallNumber": "R/2019/288"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER RT"
+    ],
+    "buildDateStart": "2019-09-18",
+    "buildDateEnd": "2020-02-18",
+    "recallDate": "2020-04-01",
+    "defect": "The brake pedal mount could break during an emergency stop and cause a total loss of braking capacity.",
+    "remedy": "Install a bracket to secure the brake mechanism to the rear footrest support.",
+    "recallNumber": "RSPV/2020/008"
   },
   {
     "make": "BMW",
@@ -71064,6 +71652,18 @@
     "defect": "The swivel bearing/s on the front axle of the affected vehicles may not have been produced to specification.",
     "remedy": "The swivel bearing/s on the affected vehicles will be replaced.",
     "recallNumber": "R/2019/377"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RYKER"
+    ],
+    "buildDateStart": "2018-07-06",
+    "buildDateEnd": "2019-09-13",
+    "recallDate": "2019-10-03",
+    "defect": "The wheel nuts may crack resulting in a reduced clamping force.",
+    "remedy": "Replace the affected wheel nuts with a revised design component",
+    "recallNumber": "RSPV/2019/006"
   },
   {
     "make": "JAGUAR",
@@ -82960,6 +83560,30 @@
     "recallNumber": "R/2018/160"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RENEGADE"
+    ],
+    "buildDateStart": "2017-06-15",
+    "buildDateEnd": "2018-03-01",
+    "recallDate": "2018-06-19",
+    "defect": "The fuel tank may build excessive pressure due to a blocked vent. This could cause fuel to spray on occupants or bystanders when opening the fuel cap potentially causing injury. Additionally if an ignition source was present this could create a risk of fire causing injury and/or damage to property.",
+    "remedy": "Cut the vent hose to the specified length. Route the vent according to the correct procedure.",
+    "recallNumber": "RSPV/2018/006"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM OUTLANDER"
+    ],
+    "buildDateStart": "2017-06-15",
+    "buildDateEnd": "2018-03-01",
+    "recallDate": "2018-06-19",
+    "defect": "The fuel tank may build excessive pressure due to a blocked vent. This could cause fuel to spray on occupants or bystanders when opening the fuel cap potentially causing injury. Additionally if an ignition source was present this could create a risk of fire causing injury and/or damage to property.",
+    "remedy": "Cut the vent hose to the specified length. Route the vent according to the correct procedure.",
+    "recallNumber": "RSPV/2018/006"
+  },
+  {
     "make": "DACIA",
     "models": [
       "SANDERO"
@@ -86684,6 +87308,30 @@
     "recallNumber": "R/2017/346"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "OUTLANDER MAX"
+    ],
+    "buildDateStart": "2016-06-24",
+    "buildDateEnd": "2017-06-16",
+    "recallDate": "2017-12-19",
+    "defect": "The DPS shaft may break causing a loss of steering control.",
+    "remedy": "Affected machines will be assessed and where possible an interim repair can be completed. The manufacturer  advises to STOP using the machine until the recommended repair is completed.",
+    "recallNumber": "RSPV/2017/018"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "OUTLANDER"
+    ],
+    "buildDateStart": "2016-06-24",
+    "buildDateEnd": "2017-06-16",
+    "recallDate": "2017-12-19",
+    "defect": "The DPS shaft may break causing a loss of steering control.",
+    "remedy": "Affected machines will be assessed and where possible an interim repair can be completed. The manufacturer  advises to STOP using the machine until the recommended repair is completed.",
+    "recallNumber": "RSPV/2017/018"
+  },
+  {
     "make": "FIAT",
     "models": [
       "500"
@@ -90007,6 +90655,18 @@
     "defect": "In unusual situations the Active Electronic Braking System (AEBS) can misinterpret freeze frame data and cause the brakes to fully apply when not required. The driver does have time to cancel the braking activity. Brake lamps and warning flashers alert drivers behind. If the truck driver or the driver following are not alert there is an increased risk of collision.",
     "remedy": "Vehicle Owners are to be contacted informing them of the concern and asking them to observe the notes in the Owner�s Manual regarding potentially initiated random braking procedures. When the new update to the sensor system has been validated the vehicles will be recalled for the Control Units to be updated.",
     "recallNumber": "R/2017/129"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RT ROADSTERS"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2017-06-08",
+    "defect": "Due to an error in the manufacturing process the headlamp lens may not conform to specification.",
+    "remedy": "On affected vehicles replace high and low beam headlight assemblies",
+    "recallNumber": "RSPV/2017/007"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -94214,6 +94874,18 @@
     "recallNumber": "R/2016/300"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "DEFENDER"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2016-12-20",
+    "defect": "It has been identified that an error in the gearbox software can result in the incorrect message being displayed on the machine's instrument cluster. The gearbox position maybe displayed as being in the P or parked position even when the gearbox is not mechanically engaged in the park position. This could result in the machine rolling away.",
+    "remedy": "Recall all affected machines and perform a gearbox position learning cycle.",
+    "recallNumber": "RSPV/2016/018"
+  },
+  {
     "make": "DACIA",
     "models": [
       "LOGAN"
@@ -94320,6 +94992,18 @@
     "defect": "It has been identified that due to a manufacturing issue the Anti-lock Braking System (ABS) Actuator Control Unit may have contamination within it. When in use the contamination particle can migrate within the ABS unit and become trapped in a valve. In this condition the ABS may not operate as per design intent in the worst case when the ABS is activated under certain unusual driving conditions the customer may experience wheel lock and the vehicle�s dynamic behaviour would be adversely affected.",
     "remedy": "Recall all affected vehicles to inspect the ABS control unit and where necessary replace it with new component.",
     "recallNumber": "R/2016/273"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "MAVERICK X3"
+    ],
+    "buildDateStart": "2016-01-01",
+    "buildDateEnd": "2016-11-09",
+    "recallDate": "2016-12-16",
+    "defect": "On affected vehicles  the steering rack and pinion assembly may have been manufactured  with an incorrect amount of grease. In some circumstances this situation may result in steering lock. The manufacturer advises not to use the vehicles until such time remedial action has been completed.",
+    "remedy": "Replace steering rack and pinion assembly",
+    "recallNumber": "RSPV/2016/017"
   },
   {
     "make": "SUZUKI",
@@ -96519,7 +97203,7 @@
     "recallNumber": "R/2016/127"
   },
   {
-    "make": "TEMSA GLOBAL",
+    "make": "TEMSA",
     "models": [
       "MD9"
     ],
@@ -96796,7 +97480,7 @@
     "recallNumber": "R/2016/155"
   },
   {
-    "make": "TEMSA GLOBAL",
+    "make": "TEMSA",
     "models": [
       "MD9"
     ],
@@ -98354,6 +99038,18 @@
     "defect": "Incorrect fuel pump seals were provided to all markets as Aftersales (AS) service parts for the Subject Vehicles. There is a possibility that some of them were used for the replacement and/or repair. In the event that the incorrect Aftersales service parts were used for replacement and/or repair there may be a possibility of fuel leakage under vehicle rollover conditions.",
     "remedy": "On affected vehicles replace fuel pump seal",
     "recallNumber": "R/2016/075"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "COMMANDER"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2016-04-29",
+    "defect": "Steering coupling splines may strip on rack and pinion assembly resulting in a loss of steering control.",
+    "remedy": "The owners have been notified of the recommendation not to use the subject vehicles. In the meantime consumers who must use their vehicles can contact BRP Can-Am side-by-side dealer and make an appointment to have their vehicles verified. This free verification is a temporary action to allow limited use of the vehicles until the availability of the free repair. When the free repair is in stock the owners will be invited to present their vehicles for rework.",
+    "recallNumber": "RSPV/2016/009"
   },
   {
     "make": "JAGUAR",
@@ -105600,6 +106296,18 @@
     "recallNumber": "R/2015/040"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2012-01-23",
+    "buildDateEnd": "2013-06-26",
+    "recallDate": "2015-02-17",
+    "defect": "Under very hot ambient conditions and low speed riding the temperature in the engine compartment may rise and thereby increase the risk of a skin burn or a vehicle fire.",
+    "remedy": "Recall the vehicles that are likely to be affected and install reflecting heat shields and heat deflectors.",
+    "recallNumber": "RSPV/2015/002"
+  },
+  {
     "make": "LAND ROVER",
     "models": [
       "RANGE ROVER SPORT"
@@ -109518,7 +110226,7 @@
     "recallNumber": "R/2014/027"
   },
   {
-    "make": "TEMSA GLOBAL",
+    "make": "TEMSA",
     "models": [
       "SAFARI"
     ],
@@ -111005,6 +111713,30 @@
     "defect": "Over time partial wear of the gearbox control harnesses may occur due to contact with surrounding components. Gear selection may be affected as a result of electrical faults in some rare cases including the lighting of the warning lamp on the instrument panel and the driveability of the vehicle may be compromised.",
     "remedy": "Recall the vehicles that are likely to be affected to check the condition of the gearbox control harness and where necessary fit additional protection.",
     "recallNumber": "R/2013/107"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2012-01-23",
+    "buildDateEnd": "2013-06-26",
+    "recallDate": "2013-10-03",
+    "defect": "Under some riding conditions the tandem master cylinder manifold inlet may melt and allow brake fluid to drip onto a heat source which may lead to a vehicle fire.",
+    "remedy": "Recall the vehicles that are likely to be affected to inspect the manifold of the tandem master cylinder and replace where necessary. Reflecting heat shields and heat deflectors will also be installed.",
+    "recallNumber": "RSPV/2013/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2012-02-12",
+    "buildDateEnd": "2013-06-26",
+    "recallDate": "2013-10-03",
+    "defect": "Under some riding conditions the tandem master cylinder manifold inlet may melt and allow brake fluid to drip onto a heat source which may lead to a vehicle fire.",
+    "remedy": "Recall the vehicles that are likely to be affected to inspect the manifold of the tandem master cylinder and replace where necessary. Reflecting heat shields and heat deflectors will also be installed.",
+    "recallNumber": "RSPV/2013/002"
   },
   {
     "make": "CITROEN",
@@ -114213,6 +114945,126 @@
     "recallNumber": "RM/2012/025"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2011-07-06",
+    "buildDateEnd": "2012-07-12",
+    "recallDate": "2012-12-21",
+    "defect": "Fuel vapour may exit the fuel vapour canister vent hose in the engine compartment.  If these vapours come into contact with an ignition source it will create a risk of a fire.",
+    "remedy": "Recall all affected machines to inspect the fuel vapour canister vent hose and if required either replace it or re-route it.",
+    "recallNumber": "RSPV/2012/015"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2009-03-04",
+    "buildDateEnd": "2011-02-01",
+    "recallDate": "2012-12-21",
+    "defect": "Fuel vapour may exit the fuel vapour canister vent hose in the engine compartment.  If these vapours come into contact with an ignition source it will create a risk of a fire.",
+    "remedy": "Recall all affected machines to inspect the fuel vapour canister vent hose and if required either replace it or re-route it.",
+    "recallNumber": "RSPV/2012/015"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2010-10-26",
+    "buildDateEnd": "2011-07-19",
+    "recallDate": "2012-12-21",
+    "defect": "Fuel vapour may exit the fuel vapour canister vent hose in the engine compartment.  If these vapours come into contact with an ignition source it will create a risk of a fire.",
+    "remedy": "Recall all affected machines to inspect the fuel vapour canister vent hose and if required either replace it or re-route it.",
+    "recallNumber": "RSPV/2012/015"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "COMMANDER"
+    ],
+    "buildDateStart": "2011-08-01",
+    "buildDateEnd": "2011-09-30",
+    "recallDate": "2012-12-21",
+    "defect": "It is possible that the steering column may not have been correctly secured to the steering rack and pinion.  This can cause the steering column splines to fail which will cause a loss of directional control.",
+    "remedy": "Recall all affected machines measure the tolerance between the lower portion of the steering shaft and the rack and pinion and if necessary replace the steering shaft or column.",
+    "recallNumber": "RSPV/2012/016"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2008-09-25",
+    "buildDateEnd": "2010-06-30",
+    "recallDate": "2012-12-21",
+    "defect": "Fuel vapour may exit the fuel vapour canister vent hose in the engine compartment.  If these vapours come into contact with an ignition source it will create a risk of a fire.",
+    "remedy": "Recall all affected machines to inspect the fuel vapour canister vent hose and if required either replace it or re-route it.",
+    "recallNumber": "RSPV/2012/015"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2007-04-04",
+    "buildDateEnd": "2008-11-17",
+    "recallDate": "2012-12-21",
+    "defect": "The fuel cap may not correctly seal the fuel tank filler neck. This can result in the release of fuel vapour. If the vapours come into contact with an ignition source this will create a risk of a fire.",
+    "remedy": "Recall affected machines to replace the fuel cap.",
+    "recallNumber": "RSPV/2012/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2007-04-04",
+    "buildDateEnd": "2008-11-17",
+    "recallDate": "2012-12-21",
+    "defect": "Fuel vapour may exit the fuel vapour canister vent hose in the engine compartment.  If these vapours come into contact with an ignition source it will create a risk of a fire.",
+    "remedy": "Recall all affected machines to inspect the fuel vapour canister vent hose and if required either replace it or re-route it.",
+    "recallNumber": "RSPV/2012/015"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2010-03-26",
+    "buildDateEnd": "2010-11-17",
+    "recallDate": "2012-12-21",
+    "defect": "The fuel cap may not correctly seal the fuel tank filler neck. This can result in the release of fuel vapour. If the vapours come into contact with an ignition source this will create a risk of a fire.",
+    "remedy": "Recall affected machines to replace the fuel cap.",
+    "recallNumber": "RSPV/2012/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2008-09-25",
+    "buildDateEnd": "2010-06-30",
+    "recallDate": "2012-12-21",
+    "defect": "The fuel cap may not correctly seal the fuel tank filler neck. This can result in the release of fuel vapour. If the vapours come into contact with an ignition source this will create a risk of a fire.",
+    "remedy": "Recall affected machines to replace the fuel cap.",
+    "recallNumber": "RSPV/2012/014"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "COMMANDER"
+    ],
+    "buildDateStart": "2011-04-01",
+    "buildDateEnd": "2012-04-30",
+    "recallDate": "2012-12-21",
+    "defect": "It is possible that the steering column may not have been correctly secured to the steering rack and pinion.  This can cause the steering column splines to fail which will cause a loss of directional control.",
+    "remedy": "Recall all affected machines measure the tolerance between the lower portion of the steering shaft and the rack and pinion and if necessary replace the steering shaft or column.",
+    "recallNumber": "RSPV/2012/016"
+  },
+  {
     "make": "LAND ROVER",
     "models": [
       "RANGE ROVER"
@@ -115149,6 +116001,18 @@
     "defect": "In some operating conditions hot combustion gases can cause premature erosion of the central electrode. In extreme circumstances this may cause the engine to misfire and run rough. If this is not noticed by the rider/driver and they continue to use the vehicle it could cause the engine to cut out.",
     "remedy": "Recall all affected spark plugs and replace them.",
     "recallNumber": "RCOMP/2012/005"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "COMMANDER"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2012-10-24",
+    "defect": "In very specific riding terrains and conditions i.e. vehicle driven in water (minimum of 310 mm 12 inches deep) containing an significant quantity of floating debris such as grass hay and leaves a significant accumulation of debris may accumulate in a short period of time in the exhaust area. This accumulation could lead to a vehicle fire when the exhaust pipe is hot and the debris are dried.",
+    "remedy": "Recall the machines that are likely to be affected to ascertain the usage and where necessary fit an additional grille. Additionally an addendum to the Owner's Manual will be included in both hard copy and to the on-line downloadable version which explains about the necessity to clean out the debris and how to reach the areas the debris needs cleaning from.",
+    "recallNumber": "RSPV/2012/009"
   },
   {
     "make": "CITROEN",
@@ -116685,6 +117549,30 @@
     "defect": "There could be a sudden and unexpected failure of the bottom end of the engine because of a non-conformity during production of the connecting rods.",
     "remedy": "Recall the vehicles that are likely to be affected to replace the engine.",
     "recallNumber": "R/2012/056"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2009-10-15",
+    "buildDateEnd": "2010-07-10",
+    "recallDate": "2012-04-23",
+    "defect": "It is possible that the brake pedal connection rod linkage securing pin may become disengaged and eventually fall out. If not noticed this could result in the eventual loss of the brake system.",
+    "remedy": "Recall all affected vehicles and replace the brake rod pins with new modified pins.",
+    "recallNumber": "RSPV/2012/002"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "2009-07-24",
+    "buildDateEnd": "2009-07-24",
+    "recallDate": "2012-04-23",
+    "defect": "It is possible that the brake pedal connection rod linkage securing pin may become disengaged and eventually fall out. If not noticed this could result in the eventual loss of the brake system.",
+    "remedy": "Recall all affected vehicles and replace the brake rod pins with new modified pins.",
+    "recallNumber": "RSPV/2012/002"
   },
   {
     "make": "CITROEN",
@@ -118389,6 +119277,30 @@
     "defect": "There is a possibility that one mounting hole has been missed from the towbar side bracket.  Although there have not been any reported incidents it is possible that long term use may cause damage to the chassis which could result in a chassis failure.",
     "remedy": "Recall all affected units and inspect unit.  If it is found that the side bracket does not have the correct number of mounting then the side bracket will be replaced with a new one.",
     "recallNumber": "RCOMP/2011/008"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RENEGADE"
+    ],
+    "buildDateStart": "2010-01-01",
+    "buildDateEnd": "2011-11-14",
+    "recallDate": "2011-11-18",
+    "defect": "The main shaft for the Dynamic Power Steering may crack and fragment. It is possible for a fragment to lodge in the mechanism and cause the operator to lose control of the steering.",
+    "remedy": "Recall the vehicles that are likely to be affected to inspect and if necessary replace the Dynamic Power Steering unit.",
+    "recallNumber": "RSPV/2011/013"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "OUTLANDER"
+    ],
+    "buildDateStart": "2010-01-01",
+    "buildDateEnd": "2011-11-14",
+    "recallDate": "2011-11-18",
+    "defect": "The main shaft for the Dynamic Power Steering may crack and fragment. It is possible for a fragment to lodge in the mechanism and cause the operator to lose control of the steering.",
+    "remedy": "Recall the vehicles that are likely to be affected to inspect and if necessary replace the Dynamic Power Steering unit.",
+    "recallNumber": "RSPV/2011/013"
   },
   {
     "make": "BMW",
@@ -122339,6 +123251,30 @@
     "recallNumber": "R/2010/164"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "DS450"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2010-11-17",
+    "defect": "The speedometers of the affected machines are incorrectly calibrated and will read 30% less than the speed they are actually travelling.",
+    "remedy": "The recalled machines will have the speedometer re-calibrated.",
+    "recallNumber": "RSPV/2010/005"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "DS450"
+    ],
+    "buildDateStart": "2009-01-01",
+    "buildDateEnd": "2009-12-31",
+    "recallDate": "2010-11-17",
+    "defect": "The speedometers of the affected machines are incorrectly calibrated and will read 30% less than the speed they are actually travelling.",
+    "remedy": "The recalled machines will have the speedometer re-calibrated.",
+    "recallNumber": "RSPV/2010/005"
+  },
+  {
     "make": "LUNAR",
     "models": [
       "LEXON 570"
@@ -122854,6 +123790,18 @@
     "defect": "Although highly unlikely it is possible that the wiring harness for the 12V auxiliary battery could as a result of incorrect routing chaff on the carbon fibre armature of the vehicle. If this condition exists and is not addressed it could in time result in a short circuit and electrical arching which could cause a fire. The high voltage main battery pack and associated wiring is not affected in any way and the issue poses no threat to the electrical system that powers the vehicle.",
     "remedy": "Recall all affected vehicles to check the wiring and install a protective sleeve as an additional precautionary measure.",
     "recallNumber": "R/2010/206"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SKI-DOO EXPEDITION"
+    ],
+    "buildDateStart": "2005-01-01",
+    "buildDateEnd": "2010-12-31",
+    "recallDate": "2010-10-14",
+    "defect": "Under certain extreme conditions there is a possibility of an electrostatic spark being produced which could create a explosion.",
+    "remedy": "Recall the units that are likely to be affected to replace the fuel filter assembly of the fuel feed line to the engine with one which features components possessing the appropriate conductivity characteristic.",
+    "recallNumber": "RSPV/2011/001"
   },
   {
     "make": "MAZDA",
@@ -123394,6 +124342,30 @@
     "defect": "It is possible that the hose connection between the coolant expansion tank and the bleed hose can work loose. If this should occur then coolant will leak and air will enter the system. Under these conditions the low coolant level warning light will not function. If the vehicle is driven in this condition it will cause engine damage and in the extreme possible failure.",
     "remedy": "Recall the affected vehicle to replace the tank and bleeder hose.",
     "recallNumber": "R/2010/144"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER GS"
+    ],
+    "buildDateStart": "2008-09-01",
+    "buildDateEnd": "2009-05-31",
+    "recallDate": "2010-09-20",
+    "defect": "Steering may become notchy and if not corrected this could lead to the steering becoming stiffer and eventual loss of control.",
+    "remedy": "Recall the vehicles that are likely to be affected to fit an improved Dynamic Power Steering Unit and a software upgrade.",
+    "recallNumber": "RM/2010/021"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER GS"
+    ],
+    "buildDateStart": "2007-07-01",
+    "buildDateEnd": "2008-11-30",
+    "recallDate": "2010-09-20",
+    "defect": "Steering may become notchy and if not corrected this could lead to the steering becoming stiffer and eventual loss of control.",
+    "remedy": "Recall the vehicles that are likely to be affected to fit an improved Dynamic Power Steering Unit and a software upgrade.",
+    "recallNumber": "RM/2010/021"
   },
   {
     "make": "CHRYSLER",
@@ -124642,6 +125614,18 @@
     "defect": "The clevis pin may displace from the brake pedal/brake booster input rod assembly as the clevis pin securing clip may not have been fitted at the factory.",
     "remedy": "Recall the vehicles that are likely to be affected to check and where necessary fit a clevis pin securing clip.",
     "recallNumber": "R/2010/061"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2010-06-07",
+    "defect": "When bringing the vehicle to a stop the clutch may remain engaged stalling the engine.  Once the engine is stalled it may not restart and the rear wheel could be locked. If this occurs the engine will stall and it will be hard to push the vehicle to a safe place as the rear wheel will be locked.",
+    "remedy": "Recall the vehicles that are likely to be affected to update the centrifugal clutch assembly with new components.",
+    "recallNumber": "RSPV/2010/003"
   },
   {
     "make": "CITROEN",
@@ -126073,6 +127057,30 @@
     "recallNumber": "R/2009/127"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "OUTLANDER"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2009-12-04",
+    "defect": "It has been identified that an electrical short circuit to earth of the dynamic power steering (DPS) may occur. This can result in the vehicle suddenly steering to the left of it's own accord causing the driver to lose directional control.",
+    "remedy": "Recalled vehicles will have the DPS system upgraded with new software which will alert the driver to the presence of a problem. Additionally disable the DPS in order to prevent any undesirable steering inputs.",
+    "recallNumber": "RSPV/2009/010"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "RENEGADE"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2009-12-04",
+    "defect": "It has been identified that an electrical short circuit to earth of the dynamic power steering (DPS) may occur. This can result in the vehicle suddenly steering to the left of it's own accord causing the driver to lose directional control.",
+    "remedy": "Recalled vehicles will have the DPS system upgraded with new software which will alert the driver to the presence of a problem. Additionally disable the DPS in order to prevent any undesirable steering inputs.",
+    "recallNumber": "RSPV/2009/010"
+  },
+  {
     "make": "LAND ROVER",
     "models": [
       "DEFENDER"
@@ -127240,6 +128248,30 @@
     "recallNumber": "RPC/2009/009"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER GS"
+    ],
+    "buildDateStart": "2008-09-01",
+    "buildDateEnd": "2009-05-31",
+    "recallDate": "2009-07-29",
+    "defect": "Operator may need to exert a force greater than expected to initiate the turning of the steering handlebar in order to correct its trajectory.",
+    "remedy": "Recall affected machines and re-program dynamic power steering system to improve smoothness of operation.",
+    "recallNumber": "RM/2009/026"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "SPYDER GS"
+    ],
+    "buildDateStart": "2007-07-01",
+    "buildDateEnd": "2008-11-30",
+    "recallDate": "2009-07-29",
+    "defect": "Operator may need to exert a force greater than expected to initiate the turning of the steering handlebar in order to correct its trajectory.",
+    "remedy": "Recall affected machines and re-program dynamic power steering system to improve smoothness of operation.",
+    "recallNumber": "RM/2009/026"
+  },
+  {
     "make": "CITROEN",
     "models": [
       "C1"
@@ -127625,6 +128657,18 @@
     "defect": "It has been identified that due to improper insulation of a branch of the engine wiring harness the possibility exists that the harness will chafe on either a cam cover securing bolt or on the cam cover itself. Damage to the harness may lead to a sudden loss of engine power or in the worst case a fire.",
     "remedy": "Recalled vehicles will have the subject wiring harness fitted with a protector.",
     "recallNumber": "R/2009/049"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "DS450"
+    ],
+    "buildDateStart": "2008-03-01",
+    "buildDateEnd": "2009-01-31",
+    "recallDate": "2009-06-12",
+    "defect": "It has been identified that the rear brake caliper mounting bolts are too short. This can effect the rear brake caliper system integrity and may lead to partial or total dismounting of the caliper. Should this occur braking potential may be lost.",
+    "remedy": "Recalled machines will have the mounting bolts replaced.",
+    "recallNumber": "RM/2009/020"
   },
   {
     "make": "CITROEN",
@@ -128742,6 +129786,18 @@
     "defect": "It is possible that white smoke can occur from the exhaust pipe and engine speed may increase whilst driving.",
     "remedy": "Recall affected vehicles and replace Power Control Module.",
     "recallNumber": "R/2008/194"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "DS90 X"
+    ],
+    "buildDateStart": "2007-08-01",
+    "buildDateEnd": "2008-07-31",
+    "recallDate": "2009-02-05",
+    "defect": "Engine may fail to shut off when pulling the cord from the accessory tether engine shut off switch post.",
+    "remedy": "Recall affected vehicles and remove the tether engine shut off switch assy; along with it's cord.",
+    "recallNumber": "RSPV/2008/027"
   },
   {
     "make": "MITSUBISHI",
