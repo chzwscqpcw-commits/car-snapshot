@@ -12,6 +12,222 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM ORIGIN MY25"
+    ],
+    "buildDateStart": "2024-05-02",
+    "buildDateEnd": "2025-06-17",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM PULSE MY25"
+    ],
+    "buildDateStart": "2024-02-05",
+    "buildDateEnd": "2025-06-13",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM CANYON MY25"
+    ],
+    "buildDateStart": "2024-11-07",
+    "buildDateEnd": "2024-03-20",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM CANYON MY26"
+    ],
+    "buildDateStart": "2025-06-10",
+    "buildDateEnd": "2026-02-27",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3 MY24"
+    ],
+    "buildDateStart": "2023-04-21",
+    "buildDateEnd": "2024-04-17",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3 MY25"
+    ],
+    "buildDateStart": "2024-03-21",
+    "buildDateEnd": "2025-03-04",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER F3 MY26"
+    ],
+    "buildDateStart": "2025-02-17",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER RT MY24"
+    ],
+    "buildDateStart": "2023-04-28",
+    "buildDateEnd": "2024-04-16",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER RT MY25"
+    ],
+    "buildDateStart": "2024-03-22",
+    "buildDateEnd": "2025-07-04",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "BRP CAN-AM",
+    "models": [
+      "CAN-AM SPYDER RT MY26"
+    ],
+    "buildDateStart": "2025-02-25",
+    "buildDateEnd": "2026-04-13",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
+    "remedy": "Install modified software via an over-the-air (OTA) update.",
+    "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLC"
+    ],
+    "buildDateStart": "2017-12-22",
+    "buildDateEnd": "2019-03-20",
+    "recallDate": "2026-09-21",
+    "defect": "Mercedes-Benz AG has determined that on certain 4MATIC E-Class (213  platform) S-Class Coupé (217 platform) S-Class (222 platform) E-Class  Coupe/Convertible (238 platform) GLC (253 platform) and CLS (257 platform)  vehicles increased wear of the universal joint on the drive shaft might occur.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will  check the drive shaft on the affected vehicles and replace it if necessary.",
+    "recallNumber": "R/2026/148"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "E-CLASS"
+    ],
+    "buildDateStart": "2019-01-25",
+    "buildDateEnd": "2019-09-26",
+    "recallDate": "2026-09-21",
+    "defect": "Mercedes-Benz AG has determined that on certain 4MATIC E-Class (213  platform) S-Class Coupé (217 platform) S-Class (222 platform) E-Class  Coupe/Convertible (238 platform) GLC (253 platform) and CLS (257 platform)  vehicles increased wear of the universal joint on the drive shaft might occur.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will  check the drive shaft on the affected vehicles and replace it if necessary.",
+    "recallNumber": "R/2026/148"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "E-CLASS"
+    ],
+    "buildDateStart": "2019-04-03",
+    "buildDateEnd": "2019-04-03",
+    "recallDate": "2026-09-21",
+    "defect": "Mercedes-Benz AG has determined that on certain 4MATIC E-Class (213  platform) S-Class Coupé (217 platform) S-Class (222 platform) E-Class  Coupe/Convertible (238 platform) GLC (253 platform) and CLS (257 platform)  vehicles increased wear of the universal joint on the drive shaft might occur.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will  check the drive shaft on the affected vehicles and replace it if necessary.",
+    "recallNumber": "R/2026/148"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "CLS"
+    ],
+    "buildDateStart": "2019-08-02",
+    "buildDateEnd": "2019-08-02",
+    "recallDate": "2026-09-21",
+    "defect": "Mercedes-Benz AG has determined that on certain 4MATIC E-Class (213  platform) S-Class Coupé (217 platform) S-Class (222 platform) E-Class  Coupe/Convertible (238 platform) GLC (253 platform) and CLS (257 platform)  vehicles increased wear of the universal joint on the drive shaft might occur.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will  check the drive shaft on the affected vehicles and replace it if necessary.",
+    "recallNumber": "R/2026/148"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2024-12-20",
+    "buildDateEnd": "2025-06-30",
+    "recallDate": "2026-09-18",
+    "defect": "Affected vehicles may have a touch condition between a fixing screw and push nut to the Instrument Panel (IP) wiring harness.    If the vehicle’s wiring is damaged different warning messages may appear depending on which wire is affected. These could include warnings for the airbag system eCall stability control or driver assistance features such as Lane Keeping Aid or Pre-Collision Assist.  The airbags will not deploy by accident but if an airbag warning is ignored the airbags may not work correctly in a crash.  In some cases the vehicle could lose power while driving and display a “Stop safely now” message. If this happens braking and steering will still work so the driver can safely bring the vehicle to a stop.  Damaged wiring could also cause a short circuit which may increase the risk of fire.",
+    "remedy": "Inspect and reposition wiring harness to increase clearance and protect surfaces and if necessary repair or replace the instrument panel wiring harness.",
+    "recallNumber": "R/2026/355"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-06-10",
+    "buildDateEnd": "2025-10-24",
+    "recallDate": "2026-09-18",
+    "defect": "Affected vehicles may have a touch condition between a fixing screw and push nut to the Instrument Panel (IP) wiring harness.    If the vehicle’s wiring is damaged different warning messages may appear depending on which wire is affected. These could include warnings for the airbag system eCall stability control or driver assistance features such as Lane Keeping Aid or Pre-Collision Assist.  The airbags will not deploy by accident but if an airbag warning is ignored the airbags may not work correctly in a crash.  In some cases the vehicle could lose power while driving and display a “Stop safely now” message. If this happens braking and steering will still work so the driver can safely bring the vehicle to a stop.  Damaged wiring could also cause a short circuit which may increase the risk of fire.",
+    "remedy": "Inspect and reposition wiring harness to increase clearance and protect surfaces and if necessary repair or replace the instrument panel wiring harness.",
+    "recallNumber": "R/2026/355"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-10-25",
+    "buildDateEnd": "2026-05-20",
+    "recallDate": "2026-09-18",
+    "defect": "Affected vehicles may have a touch condition between a fixing screw and push nut to the Instrument Panel (IP) wiring harness.    If the vehicle’s wiring is damaged different warning messages may appear depending on which wire is affected. These could include warnings for the airbag system eCall stability control or driver assistance features such as Lane Keeping Aid or Pre-Collision Assist.  The airbags will not deploy by accident but if an airbag warning is ignored the airbags may not work correctly in a crash.  In some cases the vehicle could lose power while driving and display a “Stop safely now” message. If this happens braking and steering will still work so the driver can safely bring the vehicle to a stop.  Damaged wiring could also cause a short circuit which may increase the risk of fire.",
+    "remedy": "Inspect and reposition wiring harness to increase clearance and protect surfaces and if necessary repair or replace the instrument panel wiring harness.",
+    "recallNumber": "R/2026/355"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2026-04-20",
+    "buildDateEnd": "2026-07-24",
+    "recallDate": "2026-09-18",
+    "defect": "Affected vehicles may have a touch condition between a fixing screw and push nut to the Instrument Panel (IP) wiring harness.    If the vehicle’s wiring is damaged different warning messages may appear depending on which wire is affected. These could include warnings for the airbag system eCall stability control or driver assistance features such as Lane Keeping Aid or Pre-Collision Assist.  The airbags will not deploy by accident but if an airbag warning is ignored the airbags may not work correctly in a crash.  In some cases the vehicle could lose power while driving and display a “Stop safely now” message. If this happens braking and steering will still work so the driver can safely bring the vehicle to a stop.  Damaged wiring could also cause a short circuit which may increase the risk of fire.",
+    "remedy": "Inspect and reposition wiring harness to increase clearance and protect surfaces and if necessary repair or replace the instrument panel wiring harness.",
+    "recallNumber": "R/2026/355"
+  },
+  {
     "make": "HYUNDAI",
     "models": [
       "SANTA FE MX5"
@@ -46,6 +262,102 @@
     "defect": "Mercedes-Benz AG has determined that on certain GLE (167 platform)   vehicles with OM654 and hybrid drive a heat shield in the firewall area   might not be installed according to specification.",
     "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners   will check the heat shield and the fuel line on the affected vehicles and   rework it if necessary.",
     "recallNumber": "R/2026/326"
+  },
+  {
+    "make": "CADILLAC",
+    "models": [
+      "ESCALADE"
+    ],
+    "buildDateStart": "2021-10-06",
+    "buildDateEnd": "2023-04-04",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/346"
+  },
+  {
+    "make": "CADILLAC",
+    "models": [
+      "ESCALADE ESV"
+    ],
+    "buildDateStart": "2021-03-24",
+    "buildDateEnd": "2023-03-09",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/346"
+  },
+  {
+    "make": "CHEVROLET",
+    "models": [
+      "CHEVROLET SILVERADO 1500"
+    ],
+    "buildDateStart": "2021-03-01",
+    "buildDateEnd": "2022-02-15",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/343"
+  },
+  {
+    "make": "CHEVROLET",
+    "models": [
+      "CHEVROLET SUBURBAN"
+    ],
+    "buildDateStart": "2023-04-05",
+    "buildDateEnd": "2024-05-31",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/343"
+  },
+  {
+    "make": "CHEVROLET",
+    "models": [
+      "CHEVROLET TAHOE"
+    ],
+    "buildDateStart": "2023-04-03",
+    "buildDateEnd": "2024-05-29",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/343"
+  },
+  {
+    "make": "GENERAL MOTORS",
+    "models": [
+      "SIERRA 1500"
+    ],
+    "buildDateStart": "2021-03-11",
+    "buildDateEnd": "2024-05-31",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/347"
+  },
+  {
+    "make": "GENERAL MOTORS",
+    "models": [
+      "YUKON"
+    ],
+    "buildDateStart": "2021-03-01",
+    "buildDateEnd": "2023-04-05",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/347"
+  },
+  {
+    "make": "GENERAL MOTORS",
+    "models": [
+      "YUKON XL"
+    ],
+    "buildDateStart": "2021-03-01",
+    "buildDateEnd": "2024-05-31",
+    "recallDate": "2026-09-10",
+    "defect": "The connecting rod and/or crankshaft engine components in these vehicles may have manufacturing defects that can lead to engine damage and engine failure. If the engine fails while driving the vehicle will lose propulsion increasing the risk of a crash.",
+    "remedy": "Dealers will inspect the engine. If the vehicle fails the inspection procedure the engine will be repaired or replaced. Vehicles that pass inspection will be provided a higher viscosity oil which will also require a new oil fill cap identifying the new required oil grade an oil filter replacement and an owner’s manual insert free of charge.",
+    "recallNumber": "R/2026/347"
   },
   {
     "make": "HYUNDAI",
@@ -668,7 +980,7 @@
     "buildDateEnd": "2026-03-02",
     "recallDate": "2026-08-25",
     "defect": "Mercedes-Benz AG has determined that in certain CLA (174 platform) and GLB (244 platform) vehicles the circuit board for the power electronics of the rear electric drive unit might not meet the specifications.",
-    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the power electronics of the rear electric drive unit on the affected vehicles.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the rear axle.",
     "recallNumber": "R/2026/315"
   },
   {
@@ -680,7 +992,7 @@
     "buildDateEnd": "2025-03-26",
     "recallDate": "2026-08-25",
     "defect": "Mercedes-Benz AG has determined that in certain CLA (174 platform) and GLB (244 platform) vehicles the circuit board for the power electronics of the rear electric drive unit might not meet the specifications.",
-    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the power electronics of the rear electric drive unit on the affected vehicles.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the rear axle.",
     "recallNumber": "R/2026/315"
   },
   {
@@ -796,8 +1108,8 @@
     "models": [
       "Q3"
     ],
-    "buildDateStart": "2026-07-09",
-    "buildDateEnd": "2026-07-09",
+    "buildDateStart": "2025-11-03",
+    "buildDateEnd": "2026-07-27",
     "recallDate": "2026-08-11",
     "defect": "On affected vehicles the seat belt webbing may not be connected correctly to the vehicle's load-bearing structure meaning it would not be able to restrain the occupant in the event of an accident.",
     "remedy": "Check the affected seat belt and replace if necessary.",
@@ -1519,8 +1831,8 @@
     "buildDateStart": "2026-03-20",
     "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
-    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
+    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting  plate (bracket) the rearview mirror could become partially or even  completely detached from the windshield. If the rearview mirror  becomes partially or even completely detached this could impair the  visibility while driving. In the event of an accident this could increase  the risk of injury.",
+    "remedy": "The windscreen will be replaced on all vehicles.",
     "recallNumber": "R/2026/250"
   },
   {
@@ -1531,8 +1843,8 @@
     "buildDateStart": "2026-03-20",
     "buildDateEnd": "2026-04-13",
     "recallDate": "2026-07-03",
-    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting plate  (bracket) the rearview mirror could become partially or even completely  detached from the windshield. If the rearview mirror becomes partially or  even completely detached this could impair the visibility while driving. In  the event of an accident this could increase the risk of injury.",
-    "remedy": "On the affected vehicles the windscreen (with mounting plate) will be checked and if necessary replaced",
+    "defect": "The Safety Recall relates to the interior rear-view mirror.  The interior  mirror mounting plate may not have been bonded to the windscreen  sufficiently. Due to an insufficient adhesive surface on the mounting  plate (bracket) the rearview mirror could become partially or even  completely detached from the windshield. If the rearview mirror  becomes partially or even completely detached this could impair the  visibility while driving. In the event of an accident this could increase  the risk of injury.",
+    "remedy": "The windscreen will be replaced on all vehicles.",
     "recallNumber": "R/2026/250"
   },
   {
@@ -4351,7 +4663,7 @@
   {
     "make": "BRP CAN-AM",
     "models": [
-      "CAN-AM ORIGIN"
+      "CAN-AM ORIGIN MY25"
     ],
     "buildDateStart": "2024-05-02",
     "buildDateEnd": "2025-06-17",
@@ -4363,7 +4675,7 @@
   {
     "make": "BRP CAN-AM",
     "models": [
-      "CAN-AM ORIGIN"
+      "CAN-AM ORIGIN MY25"
     ],
     "buildDateStart": "2025-11-21",
     "buildDateEnd": "2026-02-16",
@@ -27076,10 +27388,10 @@
   {
     "make": "SEAT",
     "models": [
-      "LEON"
+      "TOLEDO"
     ],
-    "buildDateStart": "2012-09-26",
-    "buildDateEnd": "2012-11-20",
+    "buildDateStart": "2012-07-10",
+    "buildDateEnd": "2013-12-14",
     "recallDate": "2024-07-16",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -27088,10 +27400,22 @@
   {
     "make": "SEAT",
     "models": [
-      "ALTEA XL"
+      "LEON"
     ],
-    "buildDateStart": "2012-10-26",
-    "buildDateEnd": "2012-10-26",
+    "buildDateStart": "2011-11-08",
+    "buildDateEnd": "2013-04-04",
+    "recallDate": "2024-07-16",
+    "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
+    "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
+    "recallNumber": "R/2024/285"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "ALTEA"
+    ],
+    "buildDateStart": "2011-12-15",
+    "buildDateEnd": "2015-07-07",
     "recallDate": "2024-07-16",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -27102,8 +27426,8 @@
     "models": [
       "ALHAMBRA"
     ],
-    "buildDateStart": "2012-07-17",
-    "buildDateEnd": "2015-01-13",
+    "buildDateStart": "2012-04-23",
+    "buildDateEnd": "2015-05-28",
     "recallDate": "2024-07-16",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -27234,8 +27558,104 @@
     "models": [
       "CRAFTER"
     ],
-    "buildDateStart": "2006-05-09",
-    "buildDateEnd": "2013-05-23",
+    "buildDateStart": "2011-10-18",
+    "buildDateEnd": "2016-07-18",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2012-02-10",
+    "buildDateEnd": "2016-07-25",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2011-07-26",
+    "buildDateEnd": "2016-07-14",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2012-02-06",
+    "buildDateEnd": "2015-08-13",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2011-08-18",
+    "buildDateEnd": "2016-06-09",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2008-04-11",
+    "buildDateEnd": "2015-06-12",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2014-10-02",
+    "buildDateEnd": "2014-10-02",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2014-02-13",
+    "buildDateEnd": "2014-02-13",
+    "recallDate": "2024-07-04",
+    "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
+    "remedy": ": Replace the passenger’s airbag on affected vehicles.",
+    "recallNumber": "R/2024/263"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "CRAFTER"
+    ],
+    "buildDateStart": "2006-05-18",
+    "buildDateEnd": "2014-01-22",
     "recallDate": "2024-07-04",
     "defect": "On affected vehicles with passenger airbags from the manufacturer Takata in the event of an accident with airbag activation the passenger airbag gas generator housing may burst and produce fragments.",
     "remedy": ": Replace the passenger’s airbag on affected vehicles.",
@@ -32451,7 +32871,7 @@
     "recallNumber": "R/2023/277"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -32463,7 +32883,7 @@
     "recallNumber": "RM/2023/034"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -32523,7 +32943,7 @@
     "recallNumber": "R/2023/330"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM SPYDER F3"
     ],
@@ -32535,7 +32955,7 @@
     "recallNumber": "RM/2024/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM SPYDER F3"
     ],
@@ -32547,7 +32967,7 @@
     "recallNumber": "RM/2024/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM SPYDER F3"
     ],
@@ -32559,7 +32979,7 @@
     "recallNumber": "RM/2024/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM SPYDER F3-S"
     ],
@@ -33581,7 +34001,7 @@
     "recallNumber": "R/2023/319"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "TRAXTER"
     ],
@@ -33593,7 +34013,7 @@
     "recallNumber": "RSPV/2023/011"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "TRAXTER"
     ],
@@ -33605,7 +34025,7 @@
     "recallNumber": "RSPV/2023/011"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "MAVERICK TRAIL"
     ],
@@ -37029,7 +37449,7 @@
     "recallNumber": "R/2023/097"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "TRAXTER"
     ],
@@ -38687,7 +39107,7 @@
     "recallNumber": "R/2023/071"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER RT LTD 1330"
     ],
@@ -38699,7 +39119,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER RT 1330"
     ],
@@ -38711,7 +39131,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER SPORT"
     ],
@@ -38723,7 +39143,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER RALLY"
     ],
@@ -38735,7 +39155,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 600"
     ],
@@ -38747,7 +39167,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 900"
     ],
@@ -38759,7 +39179,7 @@
     "recallNumber": "RSPV/2023/003"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 600"
     ],
@@ -39311,7 +39731,7 @@
     "recallNumber": "R/2023/042"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER F3-S"
     ],
@@ -39323,7 +39743,7 @@
     "recallNumber": "RSPV/2023/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM SPYDER F3"
     ],
@@ -39335,7 +39755,7 @@
     "recallNumber": "RSPV/2023/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER F3"
     ],
@@ -39347,7 +39767,7 @@
     "recallNumber": "RSPV/2023/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER F3"
     ],
@@ -39359,7 +39779,7 @@
     "recallNumber": "RSPV/2023/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER F3-S"
     ],
@@ -41736,7 +42156,7 @@
     "recallNumber": "R/2022/142"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 900"
     ],
@@ -41748,7 +42168,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER RALLY 900 ACE"
     ],
@@ -41760,7 +42180,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 900 ACE"
     ],
@@ -41772,7 +42192,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 600"
     ],
@@ -41784,7 +42204,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER RALLY 900R"
     ],
@@ -41796,7 +42216,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER AR 900 ACE"
     ],
@@ -41808,7 +42228,7 @@
     "recallNumber": "RSPV/2022/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER 600 ACE"
     ],
@@ -44703,7 +45123,7 @@
     "recallNumber": "RM/2022/018"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -45544,7 +45964,7 @@
     "recallNumber": "R/2022/200"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER RT"
     ],
@@ -45556,7 +45976,7 @@
     "recallNumber": "RM/2022/016"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER F3"
     ],
@@ -53655,7 +54075,7 @@
     "recallNumber": "R/2021/237"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "TRAXTER HD10 (82 HP ENGINE)"
     ],
@@ -55685,7 +56105,7 @@
     "recallNumber": "R/2021/164"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RENEGADE"
     ],
@@ -55697,7 +56117,7 @@
     "recallNumber": "RSPV/2021/008"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "OUTLANDER"
     ],
@@ -58295,7 +58715,7 @@
     "recallNumber": "R/2021/068"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -62124,7 +62544,7 @@
     "recallNumber": "R/2020/254"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -65395,7 +65815,7 @@
     "recallNumber": "R/2020/211"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "IMMI 4 POINT HARNESS"
     ],
@@ -67279,7 +67699,7 @@
     "recallNumber": "R/2019/288"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER RT"
     ],
@@ -71654,7 +72074,7 @@
     "recallNumber": "R/2019/377"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RYKER"
     ],
@@ -83560,7 +83980,7 @@
     "recallNumber": "R/2018/160"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RENEGADE"
     ],
@@ -83572,7 +83992,7 @@
     "recallNumber": "RSPV/2018/006"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "CAN-AM OUTLANDER"
     ],
@@ -87308,7 +87728,7 @@
     "recallNumber": "R/2017/346"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "OUTLANDER MAX"
     ],
@@ -87320,7 +87740,7 @@
     "recallNumber": "RSPV/2017/018"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "OUTLANDER"
     ],
@@ -90657,7 +91077,7 @@
     "recallNumber": "R/2017/129"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RT ROADSTERS"
     ],
@@ -94874,7 +95294,7 @@
     "recallNumber": "R/2016/300"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "DEFENDER"
     ],
@@ -94994,7 +95414,7 @@
     "recallNumber": "R/2016/273"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "MAVERICK X3"
     ],
@@ -99040,7 +99460,7 @@
     "recallNumber": "R/2016/075"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "COMMANDER"
     ],
@@ -106296,7 +106716,7 @@
     "recallNumber": "R/2015/040"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -111715,7 +112135,7 @@
     "recallNumber": "R/2013/107"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -111727,7 +112147,7 @@
     "recallNumber": "RSPV/2013/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -114945,7 +115365,7 @@
     "recallNumber": "RM/2012/025"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -114957,7 +115377,7 @@
     "recallNumber": "RSPV/2012/015"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -114969,7 +115389,7 @@
     "recallNumber": "RSPV/2012/015"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -114981,7 +115401,7 @@
     "recallNumber": "RSPV/2012/015"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "COMMANDER"
     ],
@@ -114993,7 +115413,7 @@
     "recallNumber": "RSPV/2012/016"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -115005,7 +115425,7 @@
     "recallNumber": "RSPV/2012/015"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -115017,7 +115437,7 @@
     "recallNumber": "RSPV/2012/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -115029,7 +115449,7 @@
     "recallNumber": "RSPV/2012/015"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -115041,7 +115461,7 @@
     "recallNumber": "RSPV/2012/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -115053,7 +115473,7 @@
     "recallNumber": "RSPV/2012/014"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "COMMANDER"
     ],
@@ -116003,7 +116423,7 @@
     "recallNumber": "RCOMP/2012/005"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "COMMANDER"
     ],
@@ -117551,7 +117971,7 @@
     "recallNumber": "R/2012/056"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -117563,7 +117983,7 @@
     "recallNumber": "RSPV/2012/002"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -119279,7 +119699,7 @@
     "recallNumber": "RCOMP/2011/008"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RENEGADE"
     ],
@@ -119291,7 +119711,7 @@
     "recallNumber": "RSPV/2011/013"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "OUTLANDER"
     ],
@@ -123251,7 +123671,7 @@
     "recallNumber": "R/2010/164"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "DS450"
     ],
@@ -123263,7 +123683,7 @@
     "recallNumber": "RSPV/2010/005"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "DS450"
     ],
@@ -123792,7 +124212,7 @@
     "recallNumber": "R/2010/206"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SKI-DOO EXPEDITION"
     ],
@@ -124344,7 +124764,7 @@
     "recallNumber": "R/2010/144"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER GS"
     ],
@@ -124356,7 +124776,7 @@
     "recallNumber": "RM/2010/021"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER GS"
     ],
@@ -125616,7 +126036,7 @@
     "recallNumber": "R/2010/061"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER"
     ],
@@ -127057,7 +127477,7 @@
     "recallNumber": "R/2009/127"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "OUTLANDER"
     ],
@@ -127069,7 +127489,7 @@
     "recallNumber": "RSPV/2009/010"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "RENEGADE"
     ],
@@ -128248,7 +128668,7 @@
     "recallNumber": "RPC/2009/009"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER GS"
     ],
@@ -128260,7 +128680,7 @@
     "recallNumber": "RM/2009/026"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "SPYDER GS"
     ],
@@ -128659,7 +129079,7 @@
     "recallNumber": "R/2009/049"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "DS450"
     ],
@@ -129788,7 +130208,7 @@
     "recallNumber": "R/2008/194"
   },
   {
-    "make": "BRP CAN-AM",
+    "make": "BRP CAN-AM 1",
     "models": [
       "DS90 X"
     ],
