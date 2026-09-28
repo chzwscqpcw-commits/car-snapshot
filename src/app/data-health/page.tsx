@@ -165,7 +165,7 @@ type FuelPriceData = {
 type InsightsData =
   | { status: "ok"; summary: string; generatedAt: string; cached: boolean }
   | { status: "no_key"; summary: null }
-  | { status: "error"; summary: null };
+  | { status: "error"; summary: null; detail?: string };
 
 // ── PIN Gate (unchanged behaviour, brushed-up visuals) ───────────────────────
 
@@ -817,10 +817,21 @@ function ActivitySummaryCard({
         </p>
       )}
 
+      {/* The reason, not just the shrug. A bare "try again" is what let a
+          decommissioned Groq model sit broken here for six weeks — the card
+          looked the same on a dead model as on a dropped connection. `detail`
+          is a provider status line (PIN-gated page, no secret in it). */}
       {!showInitialSpinner && insights?.status === "error" && (
-        <p className="text-xs text-amber-300/90 leading-relaxed">
-          Couldn&apos;t generate a summary just now — try again.
-        </p>
+        <>
+          <p className="text-xs text-amber-300/90 leading-relaxed">
+            Couldn&apos;t generate a summary just now — try again.
+          </p>
+          {insights.detail && (
+            <p className="mt-1.5 break-words font-mono text-[10px] leading-relaxed text-slate-500">
+              {insights.detail}
+            </p>
+          )}
+        </>
       )}
 
       {!showInitialSpinner && insights?.status === "ok" && (

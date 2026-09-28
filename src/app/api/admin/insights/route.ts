@@ -9,7 +9,7 @@ import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
 type InsightsResponse =
   | { status: "ok"; summary: string; generatedAt: string; cached: boolean }
   | { status: "no_key"; summary: null }
-  | { status: "error"; summary: null };
+  | { status: "error"; summary: null; detail?: string };
 
 // 15-minute cache TTL. Bounds Anthropic cost to ~1 call / 15 min no matter how
 // often the (unauthenticated) endpoint is hit, so it can't run up a bill.
@@ -300,40 +300,70 @@ async function generateSummary(prompt: string): Promise<string | null> {
   return null;
 }
 
-// Groq — free, OpenAI-compatible chat completions. Llama 3.3 70B is plenty for
-// a short plain-English summary.
+/**
+ * Groq retires models on short notice and answers a retired id with a 400, not
+ * a fallback. `llama-3.3-70b-versatile` — the single hardcoded id this used to
+ * send — was decommissioned on 2026-08-16, and the card went blank from that
+ * day until it was noticed on 2026-09-28. Six weeks, because a dead model and a
+ * dropped network call looked identical from the dashboard: "try again".
+ *
+ * Hence a LIST rather than an id. The next retirement costs one failed call and
+ * falls through to the next model instead of taking the feature down, and
+ * GROQ_MODEL lets a replacement be set from Vercel without a deploy.
+ */
+const GROQ_MODELS: string[] = [
+  process.env.GROQ_MODEL,
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
+].filter((m): m is string => typeof m === "string" && m.trim().length > 0);
+
+/** Why the last Groq attempt failed — surfaced to the (PIN-gated) dashboard. */
+let lastGroqError: string | null = null;
+
+// Groq — free, OpenAI-compatible chat completions. A 3-4 sentence plain-English
+// summary, so the smallest model that writes cleanly is the right one.
 async function generateViaGroq(prompt: string): Promise<string | null> {
-  try {
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        max_tokens: 220,
-        temperature: 0.5,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-    if (!res.ok) {
-      console.error("[insights] Groq API non-OK:", res.status);
-      return null;
+  lastGroqError = null;
+  for (const model of GROQ_MODELS) {
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: 220,
+          temperature: 0.5,
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+      if (!res.ok) {
+        // The body carries the actual reason ("model_decommissioned",
+        // "invalid_api_key", a rate limit). Logging only the status is what made
+        // the last outage take six weeks to diagnose. Never log the key.
+        const body = (await res.text().catch(() => "")).slice(0, 300);
+        lastGroqError = `${model}: HTTP ${res.status}${body ? ` — ${body}` : ""}`;
+        console.error("[insights] Groq API non-OK:", lastGroqError);
+        continue;
+      }
+      const json = (await res.json()) as {
+        choices?: { message?: { content?: string } }[];
+      };
+      const text = json.choices?.[0]?.message?.content;
+      if (typeof text !== "string" || text.trim().length === 0) {
+        lastGroqError = `${model}: empty completion`;
+        console.error("[insights] Groq returned no text for", model);
+        continue;
+      }
+      return text.trim();
+    } catch (err) {
+      lastGroqError = `${model}: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[insights] Groq call failed:", lastGroqError);
     }
-    const json = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const text = json.choices?.[0]?.message?.content;
-    if (typeof text !== "string" || text.trim().length === 0) return null;
-    return text.trim();
-  } catch (err) {
-    console.error(
-      "[insights] Groq call failed:",
-      err instanceof Error ? err.message : String(err),
-    );
-    return null;
   }
+  return null;
 }
 
 async function generateViaAnthropic(prompt: string): Promise<string | null> {
@@ -352,7 +382,9 @@ async function generateViaAnthropic(prompt: string): Promise<string | null> {
       }),
     });
     if (!res.ok) {
-      console.error("[insights] Anthropic API non-OK:", res.status);
+      const body = (await res.text().catch(() => "")).slice(0, 300);
+      lastGroqError = `anthropic: HTTP ${res.status}${body ? ` — ${body}` : ""}`;
+      console.error("[insights] Anthropic API non-OK:", lastGroqError);
       return null;
     }
     const json = (await res.json()) as {
@@ -397,7 +429,13 @@ export async function GET(req: Request): Promise<NextResponse<InsightsResponse>>
     const digest = await gatherDigest();
     const summary = await generateSummary(buildPrompt(digest));
     if (!summary) {
-      return NextResponse.json({ status: "error", summary: null });
+      // The reason goes to the dashboard, not just the logs. This endpoint is
+      // PIN-gated and the detail is a provider status line with no secret in it.
+      return NextResponse.json({
+        status: "error",
+        summary: null,
+        ...(lastGroqError ? { detail: lastGroqError } : {}),
+      });
     }
 
     const generatedAt = new Date().toISOString();
