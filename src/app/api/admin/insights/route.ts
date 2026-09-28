@@ -310,19 +310,39 @@ async function generateSummary(prompt: string): Promise<string | null> {
  * Hence a LIST rather than an id. The next retirement costs one failed call and
  * falls through to the next model instead of taking the feature down, and
  * GROQ_MODEL lets a replacement be set from Vercel without a deploy.
+ *
+ * The replacements are REASONING models, which the old settings could not
+ * drive: gpt-oss bills its hidden chain-of-thought against the completion
+ * budget, so the 220-token cap inherited from Llama was spent thinking and the
+ * reply came back with empty content and finish_reason "length". Hence
+ * `reasoning_effort: "low"` and a budget with room for both phases — the
+ * visible answer is still the 3-4 sentences the prompt asks for.
  */
-const GROQ_MODELS: string[] = [
-  process.env.GROQ_MODEL,
-  "openai/gpt-oss-120b",
-  "openai/gpt-oss-20b",
-].filter((m): m is string => typeof m === "string" && m.trim().length > 0);
+type GroqModel = { id: string; reasoning: boolean };
 
-/** Why the last Groq attempt failed — surfaced to the (PIN-gated) dashboard. */
+/** gpt-oss, qwen3 and deepseek-r1 on Groq all think before they answer. */
+function isReasoningModel(id: string): boolean {
+  return /gpt-oss|qwen3|deepseek-r1/i.test(id);
+}
+
+const GROQ_MODELS: GroqModel[] = (() => {
+  const ids = [process.env.GROQ_MODEL, "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
+    .filter((m): m is string => typeof m === "string" && m.trim().length > 0)
+    .map((m) => m.trim());
+  return Array.from(new Set(ids)).map((id) => ({ id, reasoning: isReasoningModel(id) }));
+})();
+
+/** Reasoning eats this before a word is written, so the cap is not the reply length. */
+const REASONING_TOKEN_BUDGET = 1500;
+const PLAIN_TOKEN_BUDGET = 220;
+
+/** Why Groq failed — EVERY attempt, surfaced to the (PIN-gated) dashboard. */
 let lastGroqError: string | null = null;
 
 // Groq — free, OpenAI-compatible chat completions. A 3-4 sentence plain-English
 // summary, so the smallest model that writes cleanly is the right one.
 async function generateViaGroq(prompt: string): Promise<string | null> {
+  const failures: string[] = [];
   lastGroqError = null;
   for (const model of GROQ_MODELS) {
     try {
@@ -333,9 +353,16 @@ async function generateViaGroq(prompt: string): Promise<string | null> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model,
-          max_tokens: 220,
+          model: model.id,
+          // max_completion_tokens, not max_tokens: the latter is deprecated on
+          // the OpenAI-compatible API and does not account for reasoning.
+          max_completion_tokens: model.reasoning
+            ? REASONING_TOKEN_BUDGET
+            : PLAIN_TOKEN_BUDGET,
           temperature: 0.5,
+          // Only sent where it is understood — an unexpected parameter is a 400
+          // on models that do not reason, and GROQ_MODEL may name one.
+          ...(model.reasoning ? { reasoning_effort: "low" } : {}),
           messages: [{ role: "user", content: prompt }],
         }),
       });
@@ -344,25 +371,36 @@ async function generateViaGroq(prompt: string): Promise<string | null> {
         // "invalid_api_key", a rate limit). Logging only the status is what made
         // the last outage take six weeks to diagnose. Never log the key.
         const body = (await res.text().catch(() => "")).slice(0, 300);
-        lastGroqError = `${model}: HTTP ${res.status}${body ? ` — ${body}` : ""}`;
-        console.error("[insights] Groq API non-OK:", lastGroqError);
+        failures.push(`${model.id}: HTTP ${res.status}${body ? ` — ${body}` : ""}`);
+        console.error("[insights] Groq API non-OK:", failures[failures.length - 1]);
         continue;
       }
       const json = (await res.json()) as {
-        choices?: { message?: { content?: string } }[];
+        choices?: { message?: { content?: string }; finish_reason?: string }[];
+        usage?: { completion_tokens?: number };
       };
       const text = json.choices?.[0]?.message?.content;
       if (typeof text !== "string" || text.trim().length === 0) {
-        lastGroqError = `${model}: empty completion`;
-        console.error("[insights] Groq returned no text for", model);
+        // finish_reason is the tell: "length" means the budget was spent before
+        // any prose was written, which is a reasoning-token problem, not an
+        // outage. Without it, "empty completion" is unactionable.
+        const finish = json.choices?.[0]?.finish_reason ?? "unknown";
+        const used = json.usage?.completion_tokens;
+        failures.push(
+          `${model.id}: empty completion (finish_reason=${finish}${used != null ? `, ${used} tokens used` : ""})`,
+        );
+        console.error("[insights] Groq returned no text:", failures[failures.length - 1]);
         continue;
       }
       return text.trim();
     } catch (err) {
-      lastGroqError = `${model}: ${err instanceof Error ? err.message : String(err)}`;
-      console.error("[insights] Groq call failed:", lastGroqError);
+      failures.push(`${model.id}: ${err instanceof Error ? err.message : String(err)}`);
+      console.error("[insights] Groq call failed:", failures[failures.length - 1]);
     }
   }
+  // Every attempt, not just the last — the previous version reported only the
+  // final model, which hid what the preferred one had done.
+  lastGroqError = failures.join(" | ") || null;
   return null;
 }
 
