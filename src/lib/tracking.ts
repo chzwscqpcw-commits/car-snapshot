@@ -238,7 +238,7 @@ export type ConversionType = "reg_search" | "mot_reminder";
  *
  * Someone comparing several cars is the only cohort on the site showing genuine
  * buying behaviour, and carVertical price for them explicitly — a single report
- * is £37.99, three are £20.99 each. These helpers let a placement notice that
+ * is £39.99, three are £20.99 each. These helpers let a placement notice that
  * pattern and pitch the pack instead of a single report.
  *
  * sessionStorage, not localStorage: this is about the shopping trip happening
@@ -291,7 +291,7 @@ export function markCarVerticalClick(): void {
  * between calls or React re-renders forever. Callers do their own arithmetic.
  *
  * Median real-world gap before the visitor reappears is ~72 seconds: they see
- * the £37.99 checkout and come straight back.
+ * the checkout price and come straight back.
  */
 export function getCarVerticalClickStamp(): string | null {
   if (typeof window === "undefined") return null;

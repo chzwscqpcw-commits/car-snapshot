@@ -279,12 +279,12 @@ export default function CarVerticalReportCTA({
           307 clicks analysed 2026-08-25: median 72 seconds between clicking out
           and reappearing here — long enough to see a checkout, not to buy. There
           was no price anywhere in this component, so every click was blind and
-          £37.99 landed as a shock. We are paid per SALE, never per click, so
+          the checkout (£37.99 at the time) landed as a shock. We are paid per SALE, never per click, so
           losing the visitors who would never pay costs nothing.
 
           When the session has looked up two or more cars, the pack price leads
           instead: that visitor is comparison-shopping, and carVertical price for
-          exactly them (£20.99/report in a three-pack vs £37.99 for one). */}
+          exactly them (£20.99/report in a three-pack vs £39.99 for one). */}
       <p className="mt-2.5 text-xs text-slate-300 sm:text-[13px]">
         {shopper ? (
           <>

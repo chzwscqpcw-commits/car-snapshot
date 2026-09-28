@@ -141,22 +141,24 @@ function carVerticalSub2(ctx: string): string {
  * Why state it: 307 clicks analysed 2026-08-25 showed a median of 72 seconds
  * between clicking out and reappearing on our site — long enough to see a price
  * and leave, not long enough to buy. The CTA had no price anywhere, so every
- * click was a blind one and the £37.99 checkout came as a shock.
+ * click was a blind one and the checkout (£37.99 at the time) came as a shock.
  *
  * We are paid per SALE (€6), never per click, so filtering out visitors who
- * would never pay £38 costs us nothing and fixes the exact complaint carVertical
+ * would never pay £40 costs us nothing and fixes the exact complaint carVertical
  * raised. Expect click volume to drop; that is the intent.
  *
  * ⚠️ Re-verify when carVertical run a promotion, and tell Dominyka before
  * changing this copy — pricing claims are coordinated under agreement 1.1/3.1.
  *
- * CONFIRMED BY THE ADVERTISER 2026-09-02. Dominyka sent the full price list
+ * CONFIRMED BY THE ADVERTISER 2026-09-21. Dominyka sends the full price list
  * direct, which is a stronger source than the public pricing page these were
- * originally read from. Every figure below matched, including the promo prices
- * our discountPct computes (£30.39 single, £16.79 per report in the 3-pack).
+ * originally read from. She gave advance notice of a rise in the SINGLE report
+ * only — £37.99 -> £39.99 (£30.39 -> £31.99 with our code). The 2- and 3-report
+ * packs are unchanged, so the pack per-report figure we quote (£20.99, £16.79
+ * with the code) still stands.
  *
- *   standard   1 report £37.99 · 2-pack £51.98 (£25.99 ea) · 3-pack £62.97 (£20.99 ea)
- *   with code  1 report £30.39 · 2-pack £41.58 (£20.79 ea) · 3-pack £50.38 (£16.79 ea)
+ *   standard   1 report £39.99 · 2-pack £51.98 (£25.99 ea) · 3-pack £62.97 (£20.99 ea)
+ *   with code  1 report £31.99 · 2-pack £41.58 (£20.79 ea) · 3-pack £50.38 (£16.79 ea)
  *
  * The 2-REPORT PACK is deliberately absent below. She offered it and approved
  * omitting it: "If you want to highlight the single and the three-pack, that's
@@ -170,16 +172,16 @@ function carVerticalSub2(ctx: string): string {
  */
 export const CARVERTICAL_PRICING = {
   /** One report, full price. */
-  single: 37.99,
+  single: 39.99,
   /** Per-report price in the three-report pack — the multi-car shopper's price. */
   packOf3PerReport: 20.99,
   /** Our coupon, applied automatically through the tracking link. */
   discountPct: 20,
   /** Confirmed direct with carVertical (Dominyka), not read off the public page. */
-  verifiedOn: "2026-09-02",
+  verifiedOn: "2026-09-21",
 } as const;
 
-/** £37.99 -> "£30.39". Rounded to the penny the way a checkout would show it. */
+/** £39.99 -> "£31.99". Rounded to the penny the way a checkout would show it. */
 export function carVerticalDiscountedSingle(): string {
   const p = CARVERTICAL_PRICING.single * (1 - CARVERTICAL_PRICING.discountPct / 100);
   return `£${p.toFixed(2)}`;
