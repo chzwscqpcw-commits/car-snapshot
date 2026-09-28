@@ -14,7 +14,7 @@ import { CARVERTICAL_PRICING, carVerticalDiscountedSingle } from "@/config/partn
  *
  * Why it exists: of 154 people who clicked out (measured 2026-08-25), 84 came
  * back to us — median 72 seconds later, 42% inside a minute. They had seen the
- * £37.99 checkout and declined it. Half of them then looked up a DIFFERENT car;
+ * checkout (£37.99 at the time) and declined it. Half of them then looked up a DIFFERENT car;
  * not one re-searched the car they had just clicked about. So they haven't
  * stopped shopping, they've stopped shopping *that* car at that price.
  *
