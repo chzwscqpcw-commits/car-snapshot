@@ -12,6 +12,126 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2023-09-12",
+    "buildDateEnd": "2023-09-12",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2024-03-23",
+    "buildDateEnd": "2025-06-30",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-07-07",
+    "buildDateEnd": "2025-10-24",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2025-10-25",
+    "buildDateEnd": "2026-05-06",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2026-04-23",
+    "buildDateEnd": "2026-05-29",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MACH-E"
+    ],
+    "buildDateStart": "2026-02-03",
+    "buildDateEnd": "2026-04-16",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-02-04",
+    "buildDateEnd": "2026-09-03",
+    "recallDate": "2026-09-25",
+    "defect": "On affected vehicles there may be insufficient clearance between a bulkhead bolt and the fuel tank which could cause damage over time and lead to a fuel leak.",
+    "remedy": "Replace the bulkhead bolt.",
+    "recallNumber": "R/2026/365"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-06-06",
+    "buildDateEnd": "2025-05-06",
+    "recallDate": "2026-09-25",
+    "defect": "On affected vehicles there may be insufficient clearance between a bulkhead bolt and the fuel tank which could cause damage over time and lead to a fuel leak.",
+    "remedy": "Replace the bulkhead bolt.",
+    "recallNumber": "R/2026/365"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-11-13",
+    "buildDateEnd": "2025-08-14",
+    "recallDate": "2026-09-25",
+    "defect": "On affected vehicles there may be insufficient clearance between a bulkhead bolt and the fuel tank which could cause damage over time and lead to a fuel leak.",
+    "remedy": "Replace the bulkhead bolt.",
+    "recallNumber": "R/2026/365"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2025-04-07",
+    "buildDateEnd": "2026-03-17",
+    "recallDate": "2026-09-25",
+    "defect": "On affected vehicles there may be insufficient clearance between a bulkhead bolt and the fuel tank which could cause damage over time and lead to a fuel leak.",
+    "remedy": "Replace the bulkhead bolt.",
+    "recallNumber": "R/2026/365"
+  },
+  {
     "make": "BRP CAN-AM",
     "models": [
       "CAN-AM ORIGIN MY25"
@@ -130,6 +250,18 @@
     "defect": "On affected vehicles depending on driver usage of USB and Bluetooth connections a communication failure or memory leak may occur within the instrument cluster. This condition can cause the cluster to temporarily reset freeze or become persistently blank. Physical telltales will continue to function properly.   An inoperative or frozen instrument cluster will fail to display critical safety information including vehicle speed and warning telltales. Additionally during a cluster reset turn signals and hazard lights will temporarily deactivate or fail to respond. These conditions reduce the driver's awareness of vehicle status and limit the ability of surrounding road users to recognize the driver’s intent increasing the risk of a crash.",
     "remedy": "Install modified software via an over-the-air (OTA) update.",
     "recallNumber": "R/2026/354"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "PUMA"
+    ],
+    "buildDateStart": "2024-06-06",
+    "buildDateEnd": "2025-05-06",
+    "recallDate": "2026-09-21",
+    "defect": "On affected vehicles the incorrect exhaust system cold end may have been fitted during production.",
+    "remedy": "Replace the cold end of the exhaust system.",
+    "recallNumber": "R/2026/357"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -994,6 +1126,18 @@
     "defect": "Mercedes-Benz AG has determined that in certain CLA (174 platform) and GLB (244 platform) vehicles the circuit board for the power electronics of the rear electric drive unit might not meet the specifications.",
     "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will replace the rear axle.",
     "recallNumber": "R/2026/315"
+  },
+  {
+    "make": "IVECO",
+    "models": [
+      "S WAY"
+    ],
+    "buildDateStart": "2025-09-04",
+    "buildDateEnd": "2026-01-13",
+    "recallDate": "2026-08-24",
+    "defect": "Following a process carried out by the supplier of the ball joints mounted on the steering transverse tie rod [track rod tube] and in order to protect end customers and guarantee the highest quality standards IVECO has decided to launch a recall campaign.",
+    "remedy": "The remedy is to replace the track rod assembly with new ball joint ends OR drag link assembly depending on vehicle configuration.",
+    "recallNumber": "R/2026/333"
   },
   {
     "make": "FORD",
@@ -30081,8 +30225,8 @@
     "models": [
       "ALTEA"
     ],
-    "buildDateStart": "2009-11-02",
-    "buildDateEnd": "2010-07-27",
+    "buildDateStart": "2008-11-24",
+    "buildDateEnd": "2012-06-04",
     "recallDate": "2024-04-10",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -30093,8 +30237,8 @@
     "models": [
       "LEON"
     ],
-    "buildDateStart": "2009-11-23",
-    "buildDateEnd": "2011-04-28",
+    "buildDateStart": "2008-11-20",
+    "buildDateEnd": "2012-07-30",
     "recallDate": "2024-04-10",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
@@ -30105,8 +30249,8 @@
     "models": [
       "ALHAMBRA"
     ],
-    "buildDateStart": "2011-03-14",
-    "buildDateEnd": "2011-03-14",
+    "buildDateStart": "2010-04-07",
+    "buildDateEnd": "2012-05-29",
     "recallDate": "2024-04-10",
     "defect": "On affected vehicles a deterioration of the driver airbag propellant could occur. In the event of an accident and the activation of the driver airbag fragments of the generator housing could become detached and injure the vehicle occupants.",
     "remedy": "The driver side front airbag gas generator must be replaced in all affected vehicles.",
