@@ -18,6 +18,8 @@ import {
   ToolResultLayout,
   type LookupVehicle,
 } from "@/components/tools/shared";
+import { usePathname } from "next/navigation";
+import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
@@ -84,6 +86,9 @@ export default function ValuationResult({ vrm, previewVehicle }: ValuationResult
 }
 
 function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+  // Five routes render this result; the scroll series is only useful if it says
+  // which one it came from.
+  const pathname = usePathname();
   const [serverData, setServerData] = useState<ServerValuation | null>(null);
   const [serverState, setServerState] = useState<"loading" | "ok" | "skipped">(
     "loading"
@@ -298,6 +303,18 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       excludePill="valuation"
       revealPitch="Valuation is just one piece — the full report adds MOT history, recalls, ULEZ, running costs and negotiation helpers, all on one page."
     >
+      {/* Mounted INSIDE the result, so the denominator is "sessions that got a
+          valuation" rather than "sessions that opened the page" — the first is
+          the only one the seller CTA below is ever shown to.
+
+          Why: `valuation-result-seller` is the best-converting placement on the
+          site at 6.83%, but only ~25% of the 5,649 valuations run on these tools
+          in September produced an impression of it — against 43% for the weaker
+          homepage placement. It sits six blocks down (hero, mileage, valuation,
+          depreciation, condition, reminder), so the obvious theory is that most
+          readers stop before it. Moving a placement that converts this well on a
+          theory is how you lose the 6.83%, so measure first. */}
+      <ScrollDepthTracker path={pathname ?? "/valuation-result"} />
       <Hero
         valuation={valuation}
         depEstimate={depEstimate}
