@@ -1,10 +1,16 @@
 name: Weekly Data Refresh
 
-# Weekly puppeteer-based refresh of the three agency data sources that
-# need a real browser to scrape past Imperva / Next.js / JS rendering:
+# Weekly refresh of the three agency data sources that need a real browser to
+# scrape past Imperva / Next.js / JS rendering:
 #   - DVSA recalls
 #   - VCA fuel economy (full 2000-2026 archive)
 #   - Euro NCAP crash ratings
+#
+# Plus one that does not: the ONS new-car price index. It is a plain CSV fetch
+# that finishes in about a second, so it rides along here rather than earning a
+# workflow of its own. It had no schedule at all until 2026-10-01 and sat on a
+# 2026-08-02 snapshot as a result — the series is monthly, so weekly is more
+# than enough to keep it current.
 #
 # Direct-commits to main on changes (Vercel auto-deploys on push). For
 # data sanity, validates the full dataset before pushing — if validation
@@ -60,11 +66,11 @@ env:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # Must exceed the SUM of the step caps below (5 + 6 + 12 = 23) plus setup
-    # and commit, or a bad week reintroduces the exact bug this replaced: the
-    # job dying before it can commit. 30 leaves ~5 minutes of genuine slack.
+    # Must exceed the SUM of the step caps below (5 + 6 + 12 + 3 = 26) plus
+    # setup and commit, or a bad week reintroduces the exact bug this replaced:
+    # the job dying before it can commit. 33 leaves ~5 minutes of genuine slack.
     # Raise this whenever a step cap goes up.
-    timeout-minutes: 30
+    timeout-minutes: 33
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -109,16 +115,26 @@ jobs:
         continue-on-error: true
         run: npx tsx scripts/fetch-ncap-ratings.ts
 
+      # ONS MM23 (series D7E8) — the deflator behind our real-terms price
+      # comparisons. Measured at ~1s; the 3-minute cap is a hang backstop, not
+      # a budget. continue-on-error for the same reason as the three above: a
+      # dead ONS endpoint must not cost the others their commit.
+      - name: Refresh ONS new-car price index
+        id: priceindex
+        timeout-minutes: 3
+        continue-on-error: true
+        run: npx tsx scripts/fetch-new-car-price-index.ts
+
       - name: Validate all data
         run: npx tsx scripts/validate-data.ts
 
       - name: Check for changes
         id: changes
         run: |
-          # Only the three this workflow refreshes. new-prices.json and
+          # Only the four this workflow refreshes. new-prices.json and
           # ev-specs.json belong to refresh-prices.yml — listing them here would
           # let this job commit whatever that one happened to leave behind.
-          DATA_FILES="src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json"
+          DATA_FILES="src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-car-price-index.json"
           if git diff --quiet $DATA_FILES; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No data changes — nothing to commit."
@@ -145,11 +161,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/_freshness.json
-          git commit -m "data: weekly auto-refresh (recalls, fuel economy, NCAP)"
+          git add src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-car-price-index.json src/data/_freshness.json
+          git commit -m "data: weekly auto-refresh (recalls, fuel economy, NCAP, price index)"
           git push origin "$BRANCH"
           gh pr create \
-            --title "data: weekly auto-refresh (recalls, fuel economy, NCAP)" \
+            --title "data: weekly auto-refresh (recalls, fuel economy, NCAP, price index)" \
             --body "Automated weekly scrape. Merges itself once \`checks\` passes.
 
           | source | outcome |
@@ -157,6 +173,7 @@ jobs:
           | DVSA recalls | ${{ steps.recalls.outcome }} |
           | VCA fuel economy | ${{ steps.vca.outcome }} |
           | Euro NCAP | ${{ steps.ncap.outcome }} |
+          | ONS price index | ${{ steps.priceindex.outcome }} |
 
           Any \`failure\` above means that dataset kept its previous values — the
           others still refreshed. See run ${{ github.run_id }}." \
@@ -232,6 +249,7 @@ jobs:
           echo "| DVSA recalls | ${{ steps.recalls.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| VCA fuel economy | ${{ steps.vca.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Euro NCAP | ${{ steps.ncap.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ONS price index | ${{ steps.priceindex.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           # `approved=false` means the PR is open and waiting on a human. That
           # must be visible here, or it repeats the 2026-08-16 silence.
