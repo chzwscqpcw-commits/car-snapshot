@@ -6,6 +6,7 @@ import BlogTagPill from "@/components/BlogTagPill";
 import Button from "@/components/Button";
 import { ArrowLeft, Clock } from "lucide-react";
 import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta, hasVehicleHistoryIntent, hasWarrantyIntent } from "@/config/partners";
+import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import ConversionWidget from "@/components/stats/ConversionWidget";
@@ -169,6 +170,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      {/* Blog posts emitted no scroll_depth at all, so there was no way to tell
+          how many readers ever reached a mid-article CTA — which is the only
+          thing that makes a placement argument more than an opinion. */}
+      <ScrollDepthTracker path={`/blog/${slug}`} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
