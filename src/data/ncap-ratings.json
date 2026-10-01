@@ -21,26 +21,6 @@
   },
   {
     "make": "ALFA ROMEO",
-    "model": "GIULIETTA",
-    "overallStars": 3,
-    "adultOccupant": 72,
-    "childOccupant": 56,
-    "pedestrian": 59,
-    "safetyAssist": 25,
-    "yearTested": 2017
-  },
-  {
-    "make": "ALFA ROMEO",
-    "model": "STELVIO",
-    "overallStars": 5,
-    "adultOccupant": 97,
-    "childOccupant": 84,
-    "pedestrian": 71,
-    "safetyAssist": 60,
-    "yearTested": 2017
-  },
-  {
-    "make": "ALFA ROMEO",
     "model": "TONALE",
     "overallStars": 5,
     "adultOccupant": 83,
@@ -111,16 +91,6 @@
   },
   {
     "make": "AUDI",
-    "model": "A6 E-TRON",
-    "overallStars": 5,
-    "adultOccupant": 92,
-    "childOccupant": 91,
-    "pedestrian": 92,
-    "safetyAssist": 80,
-    "yearTested": 2025
-  },
-  {
-    "make": "AUDI",
     "model": "A7",
     "overallStars": 5,
     "adultOccupant": 93,
@@ -177,26 +147,6 @@
     "childOccupant": 86,
     "pedestrian": 71,
     "safetyAssist": 72,
-    "yearTested": 2019
-  },
-  {
-    "make": "AUDI",
-    "model": "Q8",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 87,
-    "pedestrian": 71,
-    "safetyAssist": 73,
-    "yearTested": 2019
-  },
-  {
-    "make": "AUDI",
-    "model": "Q8 E-TRON",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 85,
-    "pedestrian": 91,
-    "safetyAssist": 76,
     "yearTested": 2019
   },
   {
@@ -281,16 +231,6 @@
   },
   {
     "make": "BMW",
-    "model": "6 SERIES",
-    "overallStars": 5,
-    "adultOccupant": 86,
-    "childOccupant": 85,
-    "pedestrian": 81,
-    "safetyAssist": 59,
-    "yearTested": 2017
-  },
-  {
-    "make": "BMW",
     "model": "I4",
     "overallStars": 4,
     "adultOccupant": 87,
@@ -298,16 +238,6 @@
     "pedestrian": 87,
     "safetyAssist": 64,
     "yearTested": 2022
-  },
-  {
-    "make": "BMW",
-    "model": "IX",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 87,
-    "pedestrian": 91,
-    "safetyAssist": 81,
-    "yearTested": 2021
   },
   {
     "make": "BMW",
@@ -338,16 +268,6 @@
     "pedestrian": 88,
     "safetyAssist": 80,
     "yearTested": 2025
-  },
-  {
-    "make": "BMW",
-    "model": "X4",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 84,
-    "pedestrian": 70,
-    "safetyAssist": 58,
-    "yearTested": 2017
   },
   {
     "make": "BMW",
@@ -450,16 +370,6 @@
     "yearTested": 2023
   },
   {
-    "make": "CADILLAC",
-    "model": "OPTIQ",
-    "overallStars": 5,
-    "adultOccupant": 83,
-    "childOccupant": 81,
-    "pedestrian": 83,
-    "safetyAssist": 74,
-    "yearTested": 2025
-  },
-  {
     "make": "CHANGAN DEEPAL",
     "model": "S05",
     "overallStars": 5,
@@ -476,7 +386,7 @@
     "adultOccupant": 95,
     "childOccupant": 87,
     "pedestrian": 95,
-    "safetyAssist": 71,
+    "safetyAssist": 77,
     "yearTested": 2024
   },
   {
@@ -568,16 +478,6 @@
     "pedestrian": 80,
     "safetyAssist": 62,
     "yearTested": 2025
-  },
-  {
-    "make": "CITROEN",
-    "model": "C5 X",
-    "overallStars": 4,
-    "adultOccupant": 82,
-    "childOccupant": 87,
-    "pedestrian": 69,
-    "safetyAssist": 66,
-    "yearTested": 2022
   },
   {
     "make": "CITROEN",
@@ -721,26 +621,6 @@
   },
   {
     "make": "DS",
-    "model": "3",
-    "overallStars": 3,
-    "adultOccupant": 69,
-    "childOccupant": 37,
-    "pedestrian": 55,
-    "safetyAssist": 29,
-    "yearTested": 2017
-  },
-  {
-    "make": "DS",
-    "model": "3 CROSSBACK",
-    "overallStars": 5,
-    "adultOccupant": 96,
-    "childOccupant": 86,
-    "pedestrian": 64,
-    "safetyAssist": 76,
-    "yearTested": 2019
-  },
-  {
-    "make": "DS",
     "model": "4",
     "overallStars": 5,
     "adultOccupant": 85,
@@ -760,36 +640,6 @@
     "yearTested": 2017
   },
   {
-    "make": "DS",
-    "model": "9",
-    "overallStars": 4,
-    "adultOccupant": 79,
-    "childOccupant": 86,
-    "pedestrian": 67,
-    "safetyAssist": 67,
-    "yearTested": 2022
-  },
-  {
-    "make": "DS",
-    "model": "N°7",
-    "overallStars": 4,
-    "adultOccupant": 76,
-    "childOccupant": 85,
-    "pedestrian": 80,
-    "safetyAssist": 65,
-    "yearTested": 2025
-  },
-  {
-    "make": "DS",
-    "model": "N°8",
-    "overallStars": 4,
-    "adultOccupant": 76,
-    "childOccupant": 85,
-    "pedestrian": 76,
-    "safetyAssist": 65,
-    "yearTested": 2025
-  },
-  {
     "make": "EBRO",
     "model": "S400",
     "overallStars": 4,
@@ -802,16 +652,6 @@
   {
     "make": "EBRO",
     "model": "S700",
-    "overallStars": 5,
-    "adultOccupant": 82,
-    "childOccupant": 85,
-    "pedestrian": 82,
-    "safetyAssist": 78,
-    "yearTested": 2025
-  },
-  {
-    "make": "EBRO",
-    "model": "S800",
     "overallStars": 5,
     "adultOccupant": 82,
     "childOccupant": 85,
@@ -911,16 +751,6 @@
   },
   {
     "make": "FORD",
-    "model": "CAPRI",
-    "overallStars": 5,
-    "adultOccupant": 89,
-    "childOccupant": 86,
-    "pedestrian": 89,
-    "safetyAssist": 72,
-    "yearTested": 2024
-  },
-  {
-    "make": "FORD",
     "model": "EXPLORER",
     "overallStars": 5,
     "adultOccupant": 89,
@@ -951,26 +781,6 @@
   },
   {
     "make": "FORD",
-    "model": "GRAND C-MAX",
-    "overallStars": 3,
-    "adultOccupant": 76,
-    "childOccupant": 60,
-    "pedestrian": 59,
-    "safetyAssist": 29,
-    "yearTested": 2017
-  },
-  {
-    "make": "FORD",
-    "model": "KA",
-    "overallStars": 3,
-    "adultOccupant": 73,
-    "childOccupant": 61,
-    "pedestrian": 57,
-    "safetyAssist": 29,
-    "yearTested": 2017
-  },
-  {
-    "make": "FORD",
     "model": "KUGA",
     "overallStars": 5,
     "adultOccupant": 92,
@@ -992,22 +802,12 @@
   {
     "make": "FORD",
     "model": "MUSTANG",
-    "overallStars": 3,
+    "overallStars": 2,
     "adultOccupant": 72,
     "childOccupant": 32,
-    "pedestrian": 78,
-    "safetyAssist": 61,
+    "pedestrian": 64,
+    "safetyAssist": 72,
     "yearTested": 2017
-  },
-  {
-    "make": "FORD",
-    "model": "MUSTANG MACH-E",
-    "overallStars": 5,
-    "adultOccupant": 92,
-    "childOccupant": 86,
-    "pedestrian": 69,
-    "safetyAssist": 82,
-    "yearTested": 2021
   },
   {
     "make": "FORD",
@@ -1028,16 +828,6 @@
     "pedestrian": 84,
     "safetyAssist": 84,
     "yearTested": 2022
-  },
-  {
-    "make": "FORD",
-    "model": "TOURNEO CONNECT",
-    "overallStars": 5,
-    "adultOccupant": 84,
-    "childOccupant": 82,
-    "pedestrian": 84,
-    "safetyAssist": 79,
-    "yearTested": 2021
   },
   {
     "make": "FORD",
@@ -1088,26 +878,6 @@
     "pedestrian": 76,
     "safetyAssist": 88,
     "yearTested": 2021
-  },
-  {
-    "make": "GENESIS",
-    "model": "G80",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 87,
-    "pedestrian": 77,
-    "safetyAssist": 91,
-    "yearTested": 2021
-  },
-  {
-    "make": "GENESIS",
-    "model": "GV60",
-    "overallStars": 5,
-    "adultOccupant": 89,
-    "childOccupant": 87,
-    "pedestrian": 63,
-    "safetyAssist": 88,
-    "yearTested": 2022
   },
   {
     "make": "GENESIS",
@@ -1162,22 +932,12 @@
   {
     "make": "HONDA",
     "model": "CR-V",
-    "overallStars": 5,
+    "overallStars": 4,
     "adultOccupant": 85,
     "childOccupant": 86,
-    "pedestrian": 80,
-    "safetyAssist": 79,
+    "pedestrian": 85,
+    "safetyAssist": 67,
     "yearTested": 2024
-  },
-  {
-    "make": "HONDA",
-    "model": "E",
-    "overallStars": 4,
-    "adultOccupant": 76,
-    "childOccupant": 82,
-    "pedestrian": 76,
-    "safetyAssist": 65,
-    "yearTested": 2020
   },
   {
     "make": "HONDA",
@@ -1361,16 +1121,6 @@
   },
   {
     "make": "IM",
-    "model": "IM5",
-    "overallStars": 5,
-    "adultOccupant": 89,
-    "childOccupant": 85,
-    "pedestrian": 89,
-    "safetyAssist": 87,
-    "yearTested": 2025
-  },
-  {
-    "make": "IM",
     "model": "IM6",
     "overallStars": 5,
     "adultOccupant": 90,
@@ -1410,36 +1160,6 @@
     "yearTested": 2025
   },
   {
-    "make": "JAGUAR",
-    "model": "E-PACE",
-    "overallStars": 5,
-    "adultOccupant": 86,
-    "childOccupant": 87,
-    "pedestrian": 77,
-    "safetyAssist": 72,
-    "yearTested": 2017
-  },
-  {
-    "make": "JAGUAR",
-    "model": "F-PACE",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 85,
-    "pedestrian": 80,
-    "safetyAssist": 72,
-    "yearTested": 2017
-  },
-  {
-    "make": "JAGUAR",
-    "model": "I PACE",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 81,
-    "pedestrian": 91,
-    "safetyAssist": 81,
-    "yearTested": 2018
-  },
-  {
     "make": "JEEP",
     "model": "AVENGER",
     "overallStars": 3,
@@ -1451,16 +1171,6 @@
   },
   {
     "make": "JEEP",
-    "model": "CHEROKEE",
-    "overallStars": 4,
-    "adultOccupant": 80,
-    "childOccupant": 78,
-    "pedestrian": 80,
-    "safetyAssist": 69,
-    "yearTested": 2019
-  },
-  {
-    "make": "JEEP",
     "model": "COMPASS",
     "overallStars": 4,
     "adultOccupant": 80,
@@ -1468,16 +1178,6 @@
     "pedestrian": 80,
     "safetyAssist": 66,
     "yearTested": 2025
-  },
-  {
-    "make": "JEEP",
-    "model": "GRAND CHEROKEE",
-    "overallStars": 5,
-    "adultOccupant": 84,
-    "childOccupant": 89,
-    "pedestrian": 84,
-    "safetyAssist": 81,
-    "yearTested": 2022
   },
   {
     "make": "JEEP",
@@ -1572,11 +1272,11 @@
   {
     "make": "KIA",
     "model": "NIRO",
-    "overallStars": 5,
+    "overallStars": 4,
     "adultOccupant": 91,
     "childOccupant": 84,
     "pedestrian": 91,
-    "safetyAssist": 79,
+    "safetyAssist": 60,
     "yearTested": 2022
   },
   {
@@ -1601,26 +1301,6 @@
   },
   {
     "make": "KIA",
-    "model": "RIO",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 84,
-    "pedestrian": 71,
-    "safetyAssist": 59,
-    "yearTested": 2017
-  },
-  {
-    "make": "KIA",
-    "model": "SORENTO",
-    "overallStars": 5,
-    "adultOccupant": 82,
-    "childOccupant": 85,
-    "pedestrian": 63,
-    "safetyAssist": 87,
-    "yearTested": 2020
-  },
-  {
-    "make": "KIA",
     "model": "SPORTAGE",
     "overallStars": 5,
     "adultOccupant": 87,
@@ -1631,22 +1311,12 @@
   },
   {
     "make": "KIA",
-    "model": "STINGER",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 81,
-    "pedestrian": 78,
-    "safetyAssist": 82,
-    "yearTested": 2017
-  },
-  {
-    "make": "KIA",
     "model": "STONIC",
-    "overallStars": 5,
-    "adultOccupant": 93,
+    "overallStars": 3,
+    "adultOccupant": 85,
     "childOccupant": 84,
-    "pedestrian": 71,
-    "safetyAssist": 59,
+    "pedestrian": 62,
+    "safetyAssist": 25,
     "yearTested": 2017
   },
   {
@@ -1710,16 +1380,6 @@
     "yearTested": 2022
   },
   {
-    "make": "LAND ROVER",
-    "model": "RANGE ROVER VELAR",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 85,
-    "pedestrian": 74,
-    "safetyAssist": 72,
-    "yearTested": 2017
-  },
-  {
     "make": "LEAPMOTOR",
     "model": "B10",
     "overallStars": 5,
@@ -1761,16 +1421,6 @@
   },
   {
     "make": "LEXUS",
-    "model": "NX",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 87,
-    "pedestrian": 91,
-    "safetyAssist": 91,
-    "yearTested": 2022
-  },
-  {
-    "make": "LEXUS",
     "model": "RX",
     "overallStars": 5,
     "adultOccupant": 90,
@@ -1778,26 +1428,6 @@
     "pedestrian": 90,
     "safetyAssist": 91,
     "yearTested": 2022
-  },
-  {
-    "make": "LEXUS",
-    "model": "RZ",
-    "overallStars": 5,
-    "adultOccupant": 87,
-    "childOccupant": 87,
-    "pedestrian": 87,
-    "safetyAssist": 81,
-    "yearTested": 2023
-  },
-  {
-    "make": "LEXUS",
-    "model": "UX",
-    "overallStars": 5,
-    "adultOccupant": 96,
-    "childOccupant": 85,
-    "pedestrian": 96,
-    "safetyAssist": 77,
-    "yearTested": 2019
   },
   {
     "make": "LUCID",
@@ -1857,16 +1487,6 @@
     "childOccupant": 85,
     "pedestrian": 91,
     "safetyAssist": 83,
-    "yearTested": 2024
-  },
-  {
-    "make": "MAXUS",
-    "model": "MIFA 7",
-    "overallStars": 5,
-    "adultOccupant": 92,
-    "childOccupant": 87,
-    "pedestrian": 81,
-    "safetyAssist": 75,
     "yearTested": 2024
   },
   {
@@ -1971,16 +1591,6 @@
   },
   {
     "make": "MERCEDES-BENZ",
-    "model": "A-CLASS",
-    "overallStars": 5,
-    "adultOccupant": 96,
-    "childOccupant": 91,
-    "pedestrian": 92,
-    "safetyAssist": 75,
-    "yearTested": 2018
-  },
-  {
-    "make": "MERCEDES-BENZ",
     "model": "B-CLASS",
     "overallStars": 5,
     "adultOccupant": 96,
@@ -1997,26 +1607,6 @@
     "childOccupant": 89,
     "pedestrian": 93,
     "safetyAssist": 82,
-    "yearTested": 2022
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "C-CLASS CABRIOLET",
-    "overallStars": 5,
-    "adultOccupant": 89,
-    "childOccupant": 79,
-    "pedestrian": 66,
-    "safetyAssist": 53,
-    "yearTested": 2017
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "CITAN TOURER",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 93,
-    "pedestrian": 91,
-    "safetyAssist": 90,
     "yearTested": 2022
   },
   {
@@ -2051,26 +1641,6 @@
   },
   {
     "make": "MERCEDES-BENZ",
-    "model": "EQA",
-    "overallStars": 5,
-    "adultOccupant": 97,
-    "childOccupant": 90,
-    "pedestrian": 97,
-    "safetyAssist": 75,
-    "yearTested": 2019
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "EQB",
-    "overallStars": 5,
-    "adultOccupant": 95,
-    "childOccupant": 91,
-    "pedestrian": 78,
-    "safetyAssist": 74,
-    "yearTested": 2019
-  },
-  {
-    "make": "MERCEDES-BENZ",
     "model": "EQC",
     "overallStars": 5,
     "adultOccupant": 96,
@@ -2088,26 +1658,6 @@
     "pedestrian": 95,
     "safetyAssist": 81,
     "yearTested": 2022
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "EQE SUV",
-    "overallStars": 5,
-    "adultOccupant": 87,
-    "childOccupant": 90,
-    "pedestrian": 87,
-    "safetyAssist": 85,
-    "yearTested": 2023
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "EQS",
-    "overallStars": 5,
-    "adultOccupant": 96,
-    "childOccupant": 91,
-    "pedestrian": 96,
-    "safetyAssist": 80,
-    "yearTested": 2021
   },
   {
     "make": "MERCEDES-BENZ",
@@ -2131,16 +1681,6 @@
   },
   {
     "make": "MERCEDES-BENZ",
-    "model": "GLB",
-    "overallStars": 5,
-    "adultOccupant": 92,
-    "childOccupant": 88,
-    "pedestrian": 78,
-    "safetyAssist": 74,
-    "yearTested": 2019
-  },
-  {
-    "make": "MERCEDES-BENZ",
     "model": "GLC",
     "overallStars": 5,
     "adultOccupant": 92,
@@ -2148,36 +1688,6 @@
     "pedestrian": 92,
     "safetyAssist": 84,
     "yearTested": 2022
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "GLE",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 90,
-    "pedestrian": 91,
-    "safetyAssist": 78,
-    "yearTested": 2019
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "T-CLASS",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 93,
-    "pedestrian": 91,
-    "safetyAssist": 90,
-    "yearTested": 2022
-  },
-  {
-    "make": "MERCEDES-BENZ",
-    "model": "X-CLASS",
-    "overallStars": 5,
-    "adultOccupant": 90,
-    "childOccupant": 87,
-    "pedestrian": 80,
-    "safetyAssist": 77,
-    "yearTested": 2017
   },
   {
     "make": "MG",
@@ -2281,16 +1791,6 @@
   },
   {
     "make": "MG",
-    "model": "ZS EV",
-    "overallStars": 5,
-    "adultOccupant": 90,
-    "childOccupant": 85,
-    "pedestrian": 90,
-    "safetyAssist": 70,
-    "yearTested": 2019
-  },
-  {
-    "make": "MG",
     "model": "ZS HYBRID",
     "overallStars": 4,
     "adultOccupant": 75,
@@ -2298,16 +1798,6 @@
     "pedestrian": 75,
     "safetyAssist": 76,
     "yearTested": 2024
-  },
-  {
-    "make": "MINI",
-    "model": "ACEMAN",
-    "overallStars": 5,
-    "adultOccupant": 83,
-    "childOccupant": 87,
-    "pedestrian": 83,
-    "safetyAssist": 79,
-    "yearTested": 2025
   },
   {
     "make": "MINI",
@@ -2360,56 +1850,6 @@
     "yearTested": 2025
   },
   {
-    "make": "MITSUBISHI",
-    "model": "GRANDIS",
-    "overallStars": 4,
-    "adultOccupant": 73,
-    "childOccupant": 80,
-    "pedestrian": 73,
-    "safetyAssist": 69,
-    "yearTested": 2024
-  },
-  {
-    "make": "MOBILIZE",
-    "model": "LIMO",
-    "overallStars": 4,
-    "adultOccupant": 80,
-    "childOccupant": 79,
-    "pedestrian": 80,
-    "safetyAssist": 71,
-    "yearTested": 2022
-  },
-  {
-    "make": "NIO",
-    "model": "EL6",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 85,
-    "pedestrian": 78,
-    "safetyAssist": 76,
-    "yearTested": 2024
-  },
-  {
-    "make": "NIO",
-    "model": "EL7",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 85,
-    "pedestrian": 80,
-    "safetyAssist": 79,
-    "yearTested": 2023
-  },
-  {
-    "make": "NIO",
-    "model": "ES8",
-    "overallStars": 5,
-    "adultOccupant": 82,
-    "childOccupant": 84,
-    "pedestrian": 72,
-    "safetyAssist": 92,
-    "yearTested": 2021
-  },
-  {
     "make": "NIO",
     "model": "ET5",
     "overallStars": 5,
@@ -2418,16 +1858,6 @@
     "pedestrian": 83,
     "safetyAssist": 81,
     "yearTested": 2023
-  },
-  {
-    "make": "NIO",
-    "model": "ET7",
-    "overallStars": 5,
-    "adultOccupant": 91,
-    "childOccupant": 87,
-    "pedestrian": 73,
-    "safetyAssist": 95,
-    "yearTested": 2022
   },
   {
     "make": "NISSAN",
@@ -2451,26 +1881,6 @@
   },
   {
     "make": "NISSAN",
-    "model": "LEAF",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 86,
-    "pedestrian": 93,
-    "safetyAssist": 71,
-    "yearTested": 2018
-  },
-  {
-    "make": "NISSAN",
-    "model": "MICRA",
-    "overallStars": 4,
-    "adultOccupant": 80,
-    "childOccupant": 80,
-    "pedestrian": 80,
-    "safetyAssist": 68,
-    "yearTested": 2024
-  },
-  {
-    "make": "NISSAN",
     "model": "QASHQAI",
     "overallStars": 4,
     "adultOccupant": 78,
@@ -2478,16 +1888,6 @@
     "pedestrian": 78,
     "safetyAssist": 62,
     "yearTested": 2025
-  },
-  {
-    "make": "NISSAN",
-    "model": "TOWNSTAR",
-    "overallStars": 4,
-    "adultOccupant": 78,
-    "childOccupant": 87,
-    "pedestrian": 78,
-    "safetyAssist": 72,
-    "yearTested": 2021
   },
   {
     "make": "NISSAN",
@@ -2511,16 +1911,6 @@
   },
   {
     "make": "OPEL",
-    "model": "AMPERA-E",
-    "overallStars": 4,
-    "adultOccupant": 82,
-    "childOccupant": 73,
-    "pedestrian": 75,
-    "safetyAssist": 72,
-    "yearTested": 2017
-  },
-  {
-    "make": "OPEL",
     "model": "ASTRA",
     "overallStars": 4,
     "adultOccupant": 80,
@@ -2528,16 +1918,6 @@
     "pedestrian": 80,
     "safetyAssist": 66,
     "yearTested": 2022
-  },
-  {
-    "make": "OPEL",
-    "model": "COMBO TOUR",
-    "overallStars": 4,
-    "adultOccupant": 91,
-    "childOccupant": 81,
-    "pedestrian": 58,
-    "safetyAssist": 68,
-    "yearTested": 2018
   },
   {
     "make": "OPEL",
@@ -2551,16 +1931,6 @@
   },
   {
     "make": "OPEL",
-    "model": "CROSSLAND X",
-    "overallStars": 5,
-    "adultOccupant": 85,
-    "childOccupant": 84,
-    "pedestrian": 62,
-    "safetyAssist": 57,
-    "yearTested": 2017
-  },
-  {
-    "make": "OPEL",
     "model": "GRANDLAND",
     "overallStars": 4,
     "adultOccupant": 80,
@@ -2568,36 +1938,6 @@
     "pedestrian": 80,
     "safetyAssist": 62,
     "yearTested": 2025
-  },
-  {
-    "make": "OPEL",
-    "model": "GRANDLAND X",
-    "overallStars": 5,
-    "adultOccupant": 84,
-    "childOccupant": 87,
-    "pedestrian": 63,
-    "safetyAssist": 60,
-    "yearTested": 2017
-  },
-  {
-    "make": "OPEL",
-    "model": "INSIGNIA",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 85,
-    "pedestrian": 78,
-    "safetyAssist": 69,
-    "yearTested": 2017
-  },
-  {
-    "make": "OPEL",
-    "model": "KARL",
-    "overallStars": 3,
-    "adultOccupant": 61,
-    "childOccupant": 60,
-    "pedestrian": 58,
-    "safetyAssist": 25,
-    "yearTested": 2017
   },
   {
     "make": "OPEL",
@@ -2691,16 +2031,6 @@
   },
   {
     "make": "POLESTAR",
-    "model": "2",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 89,
-    "pedestrian": 93,
-    "safetyAssist": 83,
-    "yearTested": 2021
-  },
-  {
-    "make": "POLESTAR",
     "model": "3",
     "overallStars": 5,
     "adultOccupant": 90,
@@ -2728,26 +2058,6 @@
     "pedestrian": 91,
     "safetyAssist": 79,
     "yearTested": 2025
-  },
-  {
-    "make": "PORSCHE",
-    "model": "MACAN",
-    "overallStars": 5,
-    "adultOccupant": 90,
-    "childOccupant": 90,
-    "pedestrian": 90,
-    "safetyAssist": 78,
-    "yearTested": 2024
-  },
-  {
-    "make": "PORSCHE",
-    "model": "TAYCAN",
-    "overallStars": 5,
-    "adultOccupant": 85,
-    "childOccupant": 83,
-    "pedestrian": 85,
-    "safetyAssist": 73,
-    "yearTested": 2019
   },
   {
     "make": "RENAULT",
@@ -2831,16 +2141,6 @@
   },
   {
     "make": "RENAULT",
-    "model": "KOLEOS",
-    "overallStars": 5,
-    "adultOccupant": 90,
-    "childOccupant": 79,
-    "pedestrian": 62,
-    "safetyAssist": 75,
-    "yearTested": 2017
-  },
-  {
-    "make": "RENAULT",
     "model": "MEGANE E-TECH",
     "overallStars": 5,
     "adultOccupant": 85,
@@ -2891,16 +2191,6 @@
   },
   {
     "make": "SEAT",
-    "model": "ALHAMBRA",
-    "overallStars": 4,
-    "adultOccupant": 89,
-    "childOccupant": 78,
-    "pedestrian": 89,
-    "safetyAssist": 62,
-    "yearTested": 2019
-  },
-  {
-    "make": "SEAT",
     "model": "ARONA",
     "overallStars": 5,
     "adultOccupant": 83,
@@ -2931,32 +2221,12 @@
   },
   {
     "make": "SEAT",
-    "model": "MII",
-    "overallStars": 3,
-    "adultOccupant": 81,
-    "childOccupant": 83,
-    "pedestrian": 46,
-    "safetyAssist": 55,
-    "yearTested": 2019
-  },
-  {
-    "make": "SEAT",
     "model": "TARRACO",
     "overallStars": 5,
     "adultOccupant": 97,
     "childOccupant": 84,
     "pedestrian": 97,
     "safetyAssist": 79,
-    "yearTested": 2019
-  },
-  {
-    "make": "SKODA",
-    "model": "CITIGO",
-    "overallStars": 3,
-    "adultOccupant": 81,
-    "childOccupant": 83,
-    "pedestrian": 46,
-    "safetyAssist": 55,
     "yearTested": 2019
   },
   {
@@ -3008,16 +2278,6 @@
     "pedestrian": 96,
     "safetyAssist": 76,
     "yearTested": 2019
-  },
-  {
-    "make": "SKODA",
-    "model": "KAROQ",
-    "overallStars": 5,
-    "adultOccupant": 93,
-    "childOccupant": 79,
-    "pedestrian": 73,
-    "safetyAssist": 58,
-    "yearTested": 2017
   },
   {
     "make": "SKODA",
@@ -3141,16 +2401,6 @@
   },
   {
     "make": "SUBARU",
-    "model": "OUTBACK",
-    "overallStars": 5,
-    "adultOccupant": 88,
-    "childOccupant": 89,
-    "pedestrian": 84,
-    "safetyAssist": 95,
-    "yearTested": 2021
-  },
-  {
-    "make": "SUBARU",
     "model": "SOLTERRA",
     "overallStars": 5,
     "adultOccupant": 88,
@@ -3251,16 +2501,6 @@
   },
   {
     "make": "TOGG",
-    "model": "T10F",
-    "overallStars": 5,
-    "adultOccupant": 95,
-    "childOccupant": 85,
-    "pedestrian": 95,
-    "safetyAssist": 80,
-    "yearTested": 2025
-  },
-  {
-    "make": "TOGG",
     "model": "T10X",
     "overallStars": 5,
     "adultOccupant": 94,
@@ -3272,11 +2512,11 @@
   {
     "make": "TOYOTA",
     "model": "AYGO",
-    "overallStars": 4,
-    "adultOccupant": 82,
+    "overallStars": 3,
+    "adultOccupant": 74,
     "childOccupant": 63,
     "pedestrian": 64,
-    "safetyAssist": 57,
+    "safetyAssist": 25,
     "yearTested": 2017
   },
   {
@@ -3331,16 +2571,6 @@
   },
   {
     "make": "TOYOTA",
-    "model": "MIRAI",
-    "overallStars": 5,
-    "adultOccupant": 88,
-    "childOccupant": 85,
-    "pedestrian": 88,
-    "safetyAssist": 82,
-    "yearTested": 2021
-  },
-  {
-    "make": "TOYOTA",
     "model": "PROACE CITY",
     "overallStars": 4,
     "adultOccupant": 91,
@@ -3388,16 +2618,6 @@
     "pedestrian": 79,
     "safetyAssist": 76,
     "yearTested": 2025
-  },
-  {
-    "make": "VINFAST",
-    "model": "VF8",
-    "overallStars": 4,
-    "adultOccupant": 76,
-    "childOccupant": 89,
-    "pedestrian": 77,
-    "safetyAssist": 79,
-    "yearTested": 2023
   },
   {
     "make": "VOLKSWAGEN",
@@ -3531,16 +2751,6 @@
   },
   {
     "make": "VOLKSWAGEN",
-    "model": "SHARAN",
-    "overallStars": 4,
-    "adultOccupant": 89,
-    "childOccupant": 78,
-    "pedestrian": 89,
-    "safetyAssist": 62,
-    "yearTested": 2019
-  },
-  {
-    "make": "VOLKSWAGEN",
     "model": "T-CROSS",
     "overallStars": 3,
     "adultOccupant": 74,
@@ -3610,16 +2820,6 @@
     "yearTested": 2022
   },
   {
-    "make": "VOLKSWAGEN",
-    "model": "UP",
-    "overallStars": 3,
-    "adultOccupant": 81,
-    "childOccupant": 83,
-    "pedestrian": 46,
-    "safetyAssist": 55,
-    "yearTested": 2019
-  },
-  {
     "make": "VOLVO",
     "model": "C40 RECHARGE",
     "overallStars": 5,
@@ -3648,26 +2848,6 @@
     "pedestrian": 92,
     "safetyAssist": 86,
     "yearTested": 2025
-  },
-  {
-    "make": "VOLVO",
-    "model": "S60",
-    "overallStars": 5,
-    "adultOccupant": 96,
-    "childOccupant": 84,
-    "pedestrian": 74,
-    "safetyAssist": 76,
-    "yearTested": 2018
-  },
-  {
-    "make": "VOLVO",
-    "model": "S90",
-    "overallStars": 5,
-    "adultOccupant": 95,
-    "childOccupant": 80,
-    "pedestrian": 76,
-    "safetyAssist": 93,
-    "yearTested": 2017
   },
   {
     "make": "VOLVO",
