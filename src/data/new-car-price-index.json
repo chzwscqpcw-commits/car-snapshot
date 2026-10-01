@@ -4,12 +4,12 @@
   "dataset": "MM23",
   "sourceUrl": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7e8/mm23/data",
   "licence": "Open Government Licence v3.0 (Crown copyright)",
-  "fetchedAt": "2026-08-02",
+  "fetchedAt": "2026-10-01",
   "minYear": 1996,
   "maxYear": 2026,
   "partialYears": {
     "2026": {
-      "months": 6,
+      "months": 8,
       "value": 140.9
     }
   },

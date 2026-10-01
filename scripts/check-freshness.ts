@@ -32,6 +32,11 @@ interface FreshnessEntry {
 // Curated sources get 180 days before flagging
 const FILE_CONFIG: Record<string, { threshold: number; source: "automatable" | "curated" }> = {
   "recalls.json":            { threshold: 90,  source: "automatable" },
+  // Scheduled into refresh-data.yml on 2026-10-01. It was absent from this
+  // config as well as from every workflow, so nothing watched it and nothing
+  // refreshed it — it sat on a 2026-08-02 snapshot unnoticed. ONS publishes
+  // monthly; 90 days flags a genuinely broken fetch, not a quiet month.
+  "new-car-price-index.json": { threshold: 90, source: "automatable" },
   "how-many-left.json":      { threshold: 90,  source: "automatable" },
   "body-types.json":         { threshold: 90,  source: "automatable" },
   "fuel-economy.json":       { threshold: 180, source: "curated" },
