@@ -525,6 +525,47 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
  * don't route through /go because they can track their own clicks in the
  * browser, so `nofollow` is what they have.
  */
+/**
+ * Href for a component CTA, routed through our own /go redirect instead of
+ * linking straight at the partner's tracker.
+ *
+ * WHY. A direct tracker href is a link in our HTML, and a crawler that ignores
+ * `nofollow` — which the AI crawlers routinely do — banks a real click in the
+ * partner's dashboard without ever running our JavaScript. That is exactly what
+ * produced 1 Sep 2026: carVertical recorded 522 clicks that day against 2 in
+ * `site_events`, 516 of them with no sub2 at all. /go was built for the blog
+ * prose links and fixed those, but every component CTA kept linking out
+ * directly, so the leak stayed open on them.
+ *
+ * The reconciliation that found it: across 7 Aug – 2 Oct carVertical reported
+ * 135 clicks on `model`, `stats-theft`, `stats-mileage`, `stats-hml`, `ccheck`
+ * and `mcheck`, where our own events recorded 1. On /stats/how-many-left that
+ * would mean 13.5% of everyone who saw the card clicked it — double our best
+ * placement anywhere — AND every beacon failing. Crawlers are the parsimonious
+ * explanation, and these are the highest-page-count, lowest-reach surfaces we
+ * have.
+ *
+ * Two things follow from routing through /go: crawlers get a 204 and never
+ * reach the tracker, and the click is recorded SERVER-side, which also survives
+ * the ad-blockers that eat a `sendBeacon`. Callers therefore must NOT also fire
+ * `trackPartnerClick`, or every click counts twice.
+ *
+ * The plate rides as `?vrm=`, the same param the rest of the site uses, so it
+ * stays inside the existing crawl-block (`robots.ts` disallows `/*?vrm=`) and
+ * the gtag scrub — see the plate-in-URL mitigation. /go is `no-store` and
+ * `noindex, nofollow` on top of that.
+ */
+export function goLink(
+  partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair",
+  context: string,
+  reg?: string,
+): string {
+  const params = new URLSearchParams({ ctx: context });
+  const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
+  if (plate) params.set("vrm", plate);
+  return `/go/${partner}?${params.toString()}`;
+}
+
 export function getPartnerRel(partner: PartnerLink): string {
   if (partner.isAffiliate) return "noopener sponsored nofollow";
   return "noopener noreferrer";

@@ -43,6 +43,23 @@ function sanitiseSlug(raw: string | null): string {
   return raw.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 64);
 }
 
+/**
+ * Placement tag from a component CTA. Same shape as a slug — the value decides
+ * `sub2`, so anything arriving here is bounded to the character set and length
+ * the partner's dashboard can hold. A junk value can only ever create a junk
+ * placement row, never escape into the URL.
+ */
+function sanitiseContext(raw: string | null): string {
+  if (!raw) return "";
+  return raw.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 48);
+}
+
+/** Plate for the partner's sub3 pre-fill; A-Z and digits only. */
+function sanitiseVrm(raw: string | null): string {
+  if (!raw) return "";
+  return raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+}
+
 function hashIp(ip: string): string {
   const salt = process.env.VRM_SALT || "change-me";
   return crypto.createHash("sha256").update(`${salt}:${ip}`).digest("hex");
@@ -63,13 +80,20 @@ export async function GET(
 
   const url = new URL(req.url);
   const slug = sanitiseSlug(url.searchParams.get("post"));
+  const ctxParam = sanitiseContext(url.searchParams.get("ctx"));
+  const vrm = sanitiseVrm(url.searchParams.get("vrm"));
 
   // `blog-inline-<slug>` is both our own click_context and the clickref the
   // partner link is built from, so the two series join on one value. The
   // `blog-` prefix keeps it inside the existing sub2="blog" bucket that the
   // partner already reports on, while the slug rides in sub3 for per-post
   // detail — continuity preserved, granularity gained.
-  const context = slug ? `blog-inline-${slug}` : "blog-inline";
+  //
+  // `ctx` carries a component placement's own tag through unchanged, so a CTA
+  // routed through here keeps the exact context (and therefore the exact sub2)
+  // it had when it linked straight out. `post` still wins for the prose links
+  // already published in rendered HTML.
+  const context = slug ? `blog-inline-${slug}` : ctxParam || "blog-inline";
 
   // Crawlers, scrapers and speculative browser prefetches get a 204: no
   // redirect, so the partner's tracker is never hit and no click is banked.
@@ -82,7 +106,7 @@ export async function GET(
     });
   }
 
-  const destination = link.buildLink ? link.buildLink("", context) : link.url;
+  const destination = link.buildLink ? link.buildLink(vrm, context) : link.url;
 
   // Record the click, but never let telemetry cost the user their click —
   // if Supabase is slow or erroring we still redirect.

@@ -8,9 +8,9 @@ import {
   isPartnerConfigured,
   CARVERTICAL_PRICING,
   carVerticalDiscountedSingle,
+  goLink,
 } from "@/config/partners";
 import {
-  trackPartnerClick,
   trackEvent,
   getSessionRegCount,
   markCarVerticalClick,
@@ -259,7 +259,15 @@ export default function CarVerticalReportCTA({
   const cfg = VARIANTS[variant];
   const Icon = cfg.Icon;
   const tone = TONES[cfg.tone];
-  const href = partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url;
+  // Routed through our own /go redirect so crawlers get a 204 instead of
+  // banking a click in carVertical's dashboard, and so the click is recorded
+  // server-side where an ad-blocker cannot drop it. See goLink() for the
+  // measurement that forced this. The preview page keeps the direct link: it is
+  // our own review traffic and must not write click events, exactly as it is
+  // already excluded from impressions above.
+  const href = preview
+    ? (partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url)
+    : goLink("carvertical", context, regNumber);
 
   return (
     <div ref={cardRef} className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
@@ -324,8 +332,12 @@ export default function CarVerticalReportCTA({
           target="_blank"
           rel={getPartnerRel(partner)}
           onClick={() => {
+            // /go records the partner_click server-side; firing it here too
+            // would double-count every click. markCarVerticalClick is
+            // sessionStorage for the return prompt and has no server half, so
+            // it stays. The preview page never reaches /go, and deliberately
+            // records nothing either way.
             markCarVerticalClick();
-            trackPartnerClick("carVertical", context);
           }}
           className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors sm:w-auto ${tone.button}`}
         >
