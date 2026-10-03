@@ -215,6 +215,34 @@ export default function CarVerticalReportCTA({
     () => false,
   );
 
+  /**
+   * A visitor who has looked up two or more plates this session is shopping,
+   * not valuing their own car — and until now the only thing that changed for
+   * them was the price line. The heading still read "Selling this car? See what
+   * a buyer will find" to someone comparing three cars, because the variant is
+   * fixed by the page, not by what the visitor has done.
+   *
+   * September: 1,454 of 7,859 visitors who searched (18.5%) looked up 2+
+   * plates, and they clicked through to carVertical at 4.1% against 2.2% for
+   * single-plate visitors — nearly double, while being shown seller copy. This
+   * hands them the buyer framing that was written for them.
+   *
+   * `report` is EXISTING, already-approved copy — it is what the valuation
+   * surfaces showed before the seller reframe, so this needs no new coordination
+   * under agreement 1.1. Only `seller` is reassigned: `mileage` and `anomaly`
+   * fire on a detected fact about the car and mean the same thing to anyone.
+   */
+  const effectiveVariant: Variant = shopper && variant === "seller" ? "report" : variant;
+
+  // Read at fire time, not capture time. `shopper` is false until hydration
+  // settles, and an above-the-fold card can intersect in that window — logging
+  // the framing the visitor never saw would quietly corrupt the comparison this
+  // whole change exists to make.
+  const variantRef = useRef(effectiveVariant);
+  useEffect(() => {
+    variantRef.current = effectiveVariant;
+  });
+
   // Fire `partner_impression` once, when the card is 50% visible — the same
   // seen-not-just-mounted standard the experiment framework holds exposure to,
   // so an impression means a real chance to click rather than "rendered
@@ -240,7 +268,7 @@ export default function CarVerticalReportCTA({
             trackEvent("partner_impression", {
               partner_id: "carVertical",
               click_context: context,
-              variant,
+              variant: variantRef.current,
             });
             obs.disconnect();
             break;
@@ -251,12 +279,12 @@ export default function CarVerticalReportCTA({
     );
     obs.observe(node);
     return () => obs.disconnect();
-  }, [trackImpression, preview, context, variant]);
+  }, [trackImpression, preview, context, effectiveVariant]);
 
   const partner = PARTNER_LINKS.carVertical;
   if (!preview && !isPartnerConfigured(partner)) return null;
 
-  const cfg = VARIANTS[variant];
+  const cfg = VARIANTS[effectiveVariant];
   const Icon = cfg.Icon;
   const tone = TONES[cfg.tone];
   // Routed through our own /go redirect so crawlers get a 204 instead of
@@ -267,7 +295,7 @@ export default function CarVerticalReportCTA({
   // already excluded from impressions above.
   const href = preview
     ? (partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url)
-    : goLink("carvertical", context, regNumber);
+    : goLink("carvertical", context, regNumber, effectiveVariant);
 
   return (
     <div ref={cardRef} className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
@@ -362,7 +390,7 @@ export default function CarVerticalReportCTA({
       {/* Seller reuses the report's comparison table unchanged — it's already
           coordinated copy (agreement 1.1), and "what's in the paid report" is
           the same answer whichever side of the sale you're on. */}
-      {expanded && (variant === "report" || variant === "seller") && (
+      {expanded && (effectiveVariant === "report" || effectiveVariant === "seller") && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           <div className="grid grid-cols-[1fr_3.5rem_6rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>
@@ -398,7 +426,7 @@ export default function CarVerticalReportCTA({
         </div>
       )}
 
-      {expanded && variant === "mileage" && (
+      {expanded && effectiveVariant === "mileage" && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           {/* Highlighted — the mileage/odometer cross-checks */}
           <div className="bg-[#1b54ff]/[0.10] p-3">

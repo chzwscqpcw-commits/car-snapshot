@@ -559,10 +559,17 @@ export function goLink(
   partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair",
   context: string,
   reg?: string,
+  variant?: string,
 ): string {
   const params = new URLSearchParams({ ctx: context });
   const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
   if (plate) params.set("vrm", plate);
+  // `v` rides ALONGSIDE the context and never feeds sub2. The same placement
+  // can now show two different framings, and we need to tell their clicks apart
+  // — but the partner's sub2 series is the only per-placement history either
+  // side holds, so splitting it to answer our own question would cost more than
+  // the answer is worth.
+  if (variant) params.set("v", variant);
   return `/go/${partner}?${params.toString()}`;
 }
 
