@@ -54,6 +54,12 @@ function sanitiseContext(raw: string | null): string {
   return raw.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 48);
 }
 
+/** Which framing the placement was showing; recorded, never routed. */
+function sanitiseVariant(raw: string | null): string {
+  if (!raw) return "";
+  return raw.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 24);
+}
+
 /** Plate for the partner's sub3 pre-fill; A-Z and digits only. */
 function sanitiseVrm(raw: string | null): string {
   if (!raw) return "";
@@ -82,6 +88,7 @@ export async function GET(
   const slug = sanitiseSlug(url.searchParams.get("post"));
   const ctxParam = sanitiseContext(url.searchParams.get("ctx"));
   const vrm = sanitiseVrm(url.searchParams.get("vrm"));
+  const variant = sanitiseVariant(url.searchParams.get("v"));
 
   // `blog-inline-<slug>` is both our own click_context and the clickref the
   // partner link is built from, so the two series join on one value. The
@@ -120,6 +127,10 @@ export async function GET(
         metadata: {
           partner_id: entry.partnerKey,
           click_context: context,
+          // Same key the impression writes, so a placement showing two framings
+          // can be read as impressions-by-variant against clicks-by-variant
+          // without touching the context the partner reports on.
+          ...(variant ? { variant } : {}),
           via: "go_redirect",
         },
         ip_hash: ip !== "unknown" ? hashIp(ip) : null,
