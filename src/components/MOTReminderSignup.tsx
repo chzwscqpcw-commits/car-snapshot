@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Bell, CalendarPlus, CheckCircle2, X, Loader2 } from "lucide-react";
 import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
@@ -124,7 +124,7 @@ export default function MOTReminderSignup({
   hideReg = false,
   allowTimingPicker = false,
   showCalendar = false,
-  calendarFirst = false,
+  calendarFirst,
 }: MOTReminderSignupProps) {
   const [regs, setRegs] = useState<string[]>([regNumber?.toUpperCase() || ""]);
   const [email, setEmail] = useState("");
@@ -144,6 +144,34 @@ export default function MOTReminderSignup({
   // results banner already has the expiry via props, so it skips this.
   const [lookupExpiry, setLookupExpiry] = useState("");
   const lookupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /**
+   * Should the no-email "add to calendar" option LEAD, rather than sit under
+   * the email form?
+   *
+   * September says yes wherever it can. The calendar path produced 13 of the
+   * 30 reminder conversions — 43% — despite being the secondary option almost
+   * everywhere. And the split is stark: 11 of those 13 came from
+   * `action_banner_far`, the single surface that sets calendarFirst, against 2
+   * from `valuation_result`, which has far more traffic but buries the calendar
+   * below the email ask. Where it leads it converts; where it trails it does
+   * not.
+   *
+   * Gated on the expiry being more than 60 days out — the same threshold the
+   * action banner calls "far". Closer than that and the default -35/-7 day
+   * alarms are in the past or nearly so, which makes a calendar entry the worse
+   * answer and an email the better one.
+   *
+   * An explicit prop still wins, so the banner keeps deciding for itself.
+   */
+  const expiryIsFar = useMemo(() => {
+    const exp = motExpiryDate || lookupExpiry;
+    if (!exp) return false;
+    const t = new Date(exp).getTime();
+    if (Number.isNaN(t)) return false;
+    return (t - Date.now()) / 86_400_000 > 60;
+  }, [motExpiryDate, lookupExpiry]);
+
 
   // Stop pulse after 3 seconds
   useEffect(() => {
@@ -276,7 +304,18 @@ export default function MOTReminderSignup({
     downloadIcs(reg, exp, offsets.length ? offsets : DEFAULT_OFFSETS);
   }, [motExpiryDate, lookupExpiry, regNumber, regs, offsets, fireCalendarEvent]);
 
-  const validate = useCallback((): boolean => {
+  /**
+   * Returns the failing field keys, empty when valid.
+   *
+   * It used to return a bare boolean, and the error event carried only the
+   * context — so 72 of the 112 validation failures on record say nothing about
+   * what went wrong. Over the same period ConversionWidget, which does label
+   * its errors, showed that `reg_empty` was its single biggest failure. Being
+   * unable to make that comparison on the main component is why this funnel
+   * stayed unexplained: 61% of everyone who tried to submit was blocked, and
+   * nothing recorded by what.
+   */
+  const validate = useCallback((): string[] => {
     const newErrors: Record<string, string> = {};
 
     // When the vehicle is already known we hide the reg field and trust the
@@ -300,15 +339,22 @@ export default function MOTReminderSignup({
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length ? Object.keys(newErrors) : [];
   }, [regs, email, hideReg]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       trackEvent("mot_reminder_submit_attempt", { context, trigger_variant: triggerVariant ?? null, vrm_count: regs.length });
-      if (!validate()) {
-        trackEvent("mot_reminder_validation_error", { context, trigger_variant: triggerVariant ?? null });
+      const failed = validate();
+      if (failed.length) {
+        // `field` matches the key ConversionWidget writes, so the two reminder
+        // surfaces group together instead of needing special-casing.
+        trackEvent("mot_reminder_validation_error", {
+          context,
+          trigger_variant: triggerVariant ?? null,
+          field: failed.join(","),
+        });
         return;
       }
 
@@ -526,6 +572,8 @@ export default function MOTReminderSignup({
   const calOffsets = offsets.length ? offsets : DEFAULT_OFFSETS;
   const calReg = (regNumber && cleanReg(regNumber)) || cleanReg(regs[0]);
   const effectiveExpiry = motExpiryDate || lookupExpiry;
+
+  const calendarLeads = calendarFirst ?? expiryIsFar;
   const calendarSingle = hideReg || regs.length === 1;
   const calendarReady = !!effectiveExpiry && canAddToCalendar(effectiveExpiry);
   const calProviderClass =
@@ -651,7 +699,7 @@ export default function MOTReminderSignup({
         className="space-y-2"
         noValidate
       >
-        {calendarBlock && calendarFirst && (
+        {calendarBlock && calendarLeads && (
           <>
             {calendarBlock}
             {orDivider("or get email reminders")}
@@ -675,7 +723,7 @@ export default function MOTReminderSignup({
         </p>
 
         {/* No-email calendar backup — last, clearly separated from the email block */}
-        {calendarBlock && !calendarFirst && (
+        {calendarBlock && !calendarLeads && (
           <>
             {orDivider("no email? we can still remind you")}
             {calendarBlock}
