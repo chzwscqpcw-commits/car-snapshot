@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:19:05.249Z",
+  "updatedAt": "2026-10-07T11:50:14.170Z",
   "urls": {
     "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
@@ -271,7 +271,56 @@
     "https://ev-database.org/car/3431/XPENG-P7plus-RWD-Standard-Range": "2026-09-30T11:19:05.241Z",
     "https://ev-database.org/car/3430/Zeekr-7GT-Privilege-AWD": "2026-09-30T11:19:05.241Z",
     "https://ev-database.org/car/3429/Zeekr-7GT-Long-Range-RWD": "2026-09-30T11:19:05.241Z",
-    "https://ev-database.org/car/3428/Zeekr-7GT-Core-RWD": "2026-09-30T11:19:05.241Z"
+    "https://ev-database.org/car/3428/Zeekr-7GT-Core-RWD": "2026-09-30T11:19:05.241Z",
+    "https://ev-database.org/car/3823/BMW-iX3-40-xDrive": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3824/Kia-EV5-603-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3822/MG-IM6-Standard-Range": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3821/Lexus-TZ-550e-Long-Range": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3820/Lexus-TZ-450e-Long-Range": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3819/Lexus-TZ-450e-Standard-Range": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3818/Bentley-Torcal-S": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3817/Bentley-Torcal": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3816/Land-Rover-Range-Rover-Sport-EV550": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3815/Land-Rover-Range-Rover-Sport-EV450": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3814/BMW-i3-40-xDrive": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3813/Volkswagen-e-Caravelle-L2-210-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3812/Volkswagen-e-Caravelle-L2-160-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3811/Volkswagen-e-Caravelle-L2-100-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3810/Volkswagen-e-Caravelle-L1-210-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3809/Volkswagen-e-Caravelle-L1-160-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3808/Volkswagen-e-Caravelle-L1-100-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3807/Volkswagen-e-Caravelle-L2-210-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3806/Volkswagen-e-Caravelle-L2-160-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3805/Volkswagen-e-Caravelle-L2-100-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3804/Volkswagen-e-Caravelle-L1-210-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3803/Volkswagen-e-Caravelle-L1-160-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3802/Volkswagen-e-Caravelle-L1-100-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3801/Volkswagen-e-Transporter-Kombi-L2-210-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3800/Volkswagen-e-Transporter-Kombi-L2-160-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3799/Volkswagen-e-Transporter-Kombi-L2-100-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3798/Volkswagen-e-Transporter-Kombi-L1-210-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3797/Volkswagen-e-Transporter-Kombi-L1-160-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3796/Volkswagen-e-Transporter-Kombi-L1-100-kW-4MOTION-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3795/Volkswagen-e-Transporter-Kombi-L2-210-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3794/Volkswagen-e-Transporter-Kombi-L2-160-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3793/Volkswagen-e-Transporter-Kombi-L2-100-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3792/Volkswagen-e-Transporter-Kombi-L1-210-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3791/Volkswagen-e-Transporter-Kombi-L1-160-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3790/Volkswagen-e-Transporter-Kombi-L1-100-kW-71-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3789/Mercedes-Benz-GLB-250": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3788/Mercedes-Benz-GLB-200": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3427/Ford-e-Tourneo-Custom-L2-210-kW-AWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3426/Ford-e-Tourneo-Custom-L2-210-kW-RWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3425/Ford-e-Tourneo-Custom-L2-160-kW-AWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3423/Ford-e-Tourneo-Custom-L1-210-kW-AWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3424/Ford-e-Tourneo-Custom-L2-160-kW-RWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3422/Ford-e-Tourneo-Custom-L1-210-kW-RWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3420/Ford-e-Tourneo-Custom-L1-160-kW-RWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3421/Ford-e-Tourneo-Custom-L1-160-kW-AWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3419/MG-MGS6-EV-Dual-Motor-77-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3418/MG-MGS6-EV-RWD-77-kWh": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3417/Tesla-Model-Y-Long-Range-RWD": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3409/Dacia-Spring-Electric-100": "2026-10-07T11:50:14.160Z"
   },
   "records": {
     "TESLA|MODEL 3": {
@@ -5354,6 +5403,692 @@
         "chargeSlow": "4 hours (22 kW AC)",
         "motorKw": 310,
         "driveType": "RWD"
+      }
+    },
+    "BMW|IX3 40 XDRIVE": {
+      "rank": 3823,
+      "scrapedAt": "2026-10-07T11:50:14.160Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX3 40 XDRIVE",
+        "batteryKwh": 82.6,
+        "rangeWltp": 311,
+        "chargeFast": "21 min (300 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 275,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|EV5 603 KWH": {
+      "rank": 3824,
+      "scrapedAt": "2026-10-07T11:50:14.160Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV5 603 KWH",
+        "batteryKwh": 58,
+        "rangeWltp": 193,
+        "chargeFast": "30 min (150 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "MG|IM6 STANDARD RANGE": {
+      "rank": 3822,
+      "scrapedAt": "2026-10-07T11:50:14.160Z",
+      "record": {
+        "make": "MG",
+        "model": "IM6 STANDARD RANGE",
+        "batteryKwh": 73.5,
+        "rangeWltp": 236,
+        "chargeFast": "27 min (153 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 217,
+        "driveType": "RWD"
+      }
+    },
+    "LEXUS|TZ 550E LONG RANGE": {
+      "rank": 3821,
+      "scrapedAt": "2026-10-07T11:50:14.160Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "TZ 550E LONG RANGE",
+        "batteryKwh": 90,
+        "rangeWltp": 258,
+        "chargeFast": "36 min (150 kW DC)",
+        "chargeSlow": "5 hours (22 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "LEXUS|TZ 450E LONG RANGE": {
+      "rank": 3820,
+      "scrapedAt": "2026-10-07T11:50:14.160Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "TZ 450E LONG RANGE",
+        "batteryKwh": 90,
+        "rangeWltp": 261,
+        "chargeFast": "36 min (150 kW DC)",
+        "chargeSlow": "5 hours (22 kW AC)",
+        "motorKw": 230,
+        "driveType": "AWD"
+      }
+    },
+    "LEXUS|TZ 450E STANDARD RANGE": {
+      "rank": 3819,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "TZ 450E STANDARD RANGE",
+        "batteryKwh": 72,
+        "rangeWltp": 211,
+        "chargeFast": "29 min (150 kW DC)",
+        "chargeSlow": "4 hours (22 kW AC)",
+        "motorKw": 230,
+        "driveType": "AWD"
+      }
+    },
+    "BENTLEY|TORCAL S": {
+      "rank": 3818,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "BENTLEY",
+        "model": "TORCAL S",
+        "batteryKwh": 108.7,
+        "rangeWltp": 292,
+        "chargeFast": "17 min (400 kW DC)",
+        "chargeSlow": "6 hours (22 kW AC)",
+        "motorKw": 653,
+        "driveType": "AWD"
+      }
+    },
+    "BENTLEY|TORCAL": {
+      "rank": 3817,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "BENTLEY",
+        "model": "TORCAL",
+        "batteryKwh": 108.7,
+        "rangeWltp": 292,
+        "chargeFast": "17 min (400 kW DC)",
+        "chargeSlow": "6 hours (22 kW AC)",
+        "motorKw": 604,
+        "driveType": "AWD"
+      }
+    },
+    "LAND ROVER|RANGE ROVER SPORT EV550": {
+      "rank": 3816,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "LAND ROVER",
+        "model": "RANGE ROVER SPORT EV550",
+        "batteryKwh": 118.5,
+        "rangeWltp": 304,
+        "chargeFast": "23 min (325 kW DC)",
+        "chargeSlow": "6h30m (22 kW AC)",
+        "motorKw": 405,
+        "driveType": "AWD"
+      }
+    },
+    "LAND ROVER|RANGE ROVER SPORT EV450": {
+      "rank": 3815,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "LAND ROVER",
+        "model": "RANGE ROVER SPORT EV450",
+        "batteryKwh": 118.5,
+        "rangeWltp": 304,
+        "chargeFast": "23 min (325 kW DC)",
+        "chargeSlow": "6h30m (22 kW AC)",
+        "motorKw": 331,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|I3 40 XDRIVE": {
+      "rank": 3814,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "BMW",
+        "model": "I3 40 XDRIVE",
+        "batteryKwh": 82.8,
+        "rangeWltp": 348,
+        "chargeFast": "22 min (300 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 275,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 210 KW 4MOTION 71 KWH": {
+      "rank": 3813,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 210 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 160 KW 4MOTION 71 KWH": {
+      "rank": 3812,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 160 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 100 KW 4MOTION 71 KWH": {
+      "rank": 3811,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 100 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 210 KW 4MOTION 71 KWH": {
+      "rank": 3810,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 210 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 160 KW 4MOTION 71 KWH": {
+      "rank": 3809,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 160 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 100 KW 4MOTION 71 KWH": {
+      "rank": 3808,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 100 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 210 KW 71 KWH": {
+      "rank": 3807,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 210 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 160 KW 71 KWH": {
+      "rank": 3806,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 160 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 100 KW 71 KWH": {
+      "rank": 3805,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 100 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 210 KW 71 KWH": {
+      "rank": 3804,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 210 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 160 KW 71 KWH": {
+      "rank": 3803,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 160 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 100 KW 71 KWH": {
+      "rank": 3802,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 100 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 210 KW 4MOTION 71 KWH": {
+      "rank": 3801,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 210 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 160 KW 4MOTION 71 KWH": {
+      "rank": 3800,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 160 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 100 KW 4MOTION 71 KWH": {
+      "rank": 3799,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 100 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 210 KW 4MOTION 71 KWH": {
+      "rank": 3798,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 210 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 160 KW 4MOTION 71 KWH": {
+      "rank": 3797,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 160 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 100 KW 4MOTION 71 KWH": {
+      "rank": 3796,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 100 KW 4MOTION 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 171,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 210 KW 71 KWH": {
+      "rank": 3795,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 210 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 160 KW 71 KWH": {
+      "rank": 3794,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 160 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 100 KW 71 KWH": {
+      "rank": 3793,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 100 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 210 KW 71 KWH": {
+      "rank": 3792,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 210 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 160 KW 71 KWH": {
+      "rank": 3791,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 160 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 100 KW 71 KWH": {
+      "rank": 3790,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 100 KW 71 KWH",
+        "batteryKwh": 70.9,
+        "rangeWltp": 174,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|GLB 250": {
+      "rank": 3789,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLB 250",
+        "batteryKwh": 71,
+        "rangeWltp": 245,
+        "chargeFast": "21 min (250 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|GLB 200": {
+      "rank": 3788,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLB 200",
+        "batteryKwh": 58,
+        "rangeWltp": 202,
+        "chargeFast": "21 min (200 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L2 210 KW AWD": {
+      "rank": 3427,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L2 210 KW AWD",
+        "batteryKwh": 71,
+        "rangeWltp": 155,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L2 210 KW RWD": {
+      "rank": 3426,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L2 210 KW RWD",
+        "batteryKwh": 71,
+        "rangeWltp": 158,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L2 160 KW AWD": {
+      "rank": 3425,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L2 160 KW AWD",
+        "batteryKwh": 71,
+        "rangeWltp": 162,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L1 210 KW AWD": {
+      "rank": 3423,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L1 210 KW AWD",
+        "batteryKwh": 71,
+        "rangeWltp": 158,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L2 160 KW RWD": {
+      "rank": 3424,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L2 160 KW RWD",
+        "batteryKwh": 71,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L1 210 KW RWD": {
+      "rank": 3422,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L1 210 KW RWD",
+        "batteryKwh": 71,
+        "rangeWltp": 158,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L1 160 KW RWD": {
+      "rank": 3420,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L1 160 KW RWD",
+        "batteryKwh": 71,
+        "rangeWltp": 168,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TOURNEO CUSTOM L1 160 KW AWD": {
+      "rank": 3421,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TOURNEO CUSTOM L1 160 KW AWD",
+        "batteryKwh": 71,
+        "rangeWltp": 165,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "MG|MGS6 EV DUAL MOTOR 77 KWH": {
+      "rank": 3419,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "MG",
+        "model": "MGS6 EV DUAL MOTOR 77 KWH",
+        "batteryKwh": 74.3,
+        "rangeWltp": 245,
+        "chargeFast": "36 min (144 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 266,
+        "driveType": "AWD"
+      }
+    },
+    "MG|MGS6 EV RWD 77 KWH": {
+      "rank": 3418,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "MG",
+        "model": "MGS6 EV RWD 77 KWH",
+        "batteryKwh": 74.3,
+        "rangeWltp": 252,
+        "chargeFast": "36 min (144 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 180,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL Y LONG RANGE RWD": {
+      "rank": 3417,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y LONG RANGE RWD",
+        "batteryKwh": 74,
+        "rangeWltp": 292,
+        "chargeFast": "36 min (250 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 220,
+        "driveType": "RWD"
+      }
+    },
+    "DACIA|SPRING ELECTRIC 100": {
+      "rank": 3409,
+      "scrapedAt": "2026-10-07T11:50:14.161Z",
+      "record": {
+        "make": "DACIA",
+        "model": "SPRING ELECTRIC 100",
+        "batteryKwh": 24,
+        "rangeWltp": 99,
+        "chargeFast": "30 min (40 kW DC)",
+        "chargeSlow": "4h30m (6.6 kW AC)",
+        "motorKw": 75,
+        "driveType": "FWD"
       }
     }
   }
