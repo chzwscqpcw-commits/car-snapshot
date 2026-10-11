@@ -313,7 +313,14 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           homepage placement. It sits six blocks down (hero, mileage, valuation,
           depreciation, condition, reminder), so the obvious theory is that most
           readers stop before it. Moving a placement that converts this well on a
-          theory is how you lose the 6.83%, so measure first. */}
+          theory is how you lose the 6.83%, so measure first.
+
+          Measured 2–11 Oct (unique visitors, /value-my-car + /car-valuation):
+          25% depth 931, 50% depth 584, saw the seller CTA 456, 75% depth 349.
+          The CTA sat between the half and three-quarter marks and half the
+          readers stopped before it — so it now sits directly under the
+          valuation. Judge the move on clicks per valuation, not CTR: the rate
+          will dip as less-engaged readers start seeing it. */}
       <ScrollDepthTracker path={pathname ?? "/valuation-result"} />
       <Hero
         valuation={valuation}
@@ -332,6 +339,27 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           condition={condition}
         />
       )}
+      {/* Seller-framed, because that's who is actually here. The buyer-slice
+          assumption this placement was built on turned out to be wrong: 41% of
+          visitors land straight on a valuation page and are valuing a car they
+          already own, and 57% of all our carVertical clicks fire from this
+          screen. Asking "Buying this car?" of an owner is what produced the
+          checkout drop-off carVertical reported on 2026-08-07 — they click out
+          of curiosity, meet a paid checkout for a car they own, and leave.
+          (BMG servicing intentionally NOT shown on valuation — one sell too
+          many here.)
+
+          Directly under the valuation since 2026-10-11, ahead of the
+          depreciation curve, condition panel and reminder — see the scroll
+          measurement on ScrollDepthTracker above. This is a deliberate exception
+          to free-first ordering: the reminder still renders, just below. */}
+      <div className="mt-6">
+        <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
+      </div>
+      {/* Half of everyone who clicks through to carVertical is back here within
+          ~72 seconds having declined the price. This is the only thing on the
+          site that acknowledges that — so it stays beside the CTA it answers. */}
+      <PartnerReturnPrompt context="valuation-result-return" />
       {newPrice !== null && age !== null && (
         <DepreciationCurveCard
           newPrice={newPrice}
@@ -342,36 +370,19 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         />
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
-      {/* Free owner action FIRST (free-first), ahead of the paid buyer sells
-          below. Matches the page's "protect its value" framing and captures the
-          MOT reminder inline instead of deflecting to the banner. */}
+      {/* Free owner action — captures the MOT reminder inline instead of
+          deflecting to the banner. */}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
       <SellCarCTA context="valuation-result" regNumber={vrm} />
-      {/* Seller-framed, because that's who is actually here. The buyer-slice
-          assumption this placement was built on turned out to be wrong: 41% of
-          visitors land straight on a valuation page and are valuing a car they
-          already own, and 57% of all our carVertical clicks fire from this
-          screen. Asking "Buying this car?" of an owner is what produced the
-          checkout drop-off carVertical reported on 2026-08-07 — they click out
-          of curiosity, meet a paid checkout for a car they own, and leave.
-          Generously spaced so the sells never bunch together. (BMG servicing
-          intentionally NOT shown on valuation — one sell too many here.) */}
-      <div className="mt-6">
-        <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
-      </div>
       {/* SellingToBuyBridge removed 2026-08-25. It was a SECOND carVertical ask
           on a screen that already carries one, and the two together produced the
           run of consecutive sells flagged during the placement review. Across
           both valuation surfaces the bridge drew 28 clicks to the seller CTA's
           136 — and since we are paid per sale and not per click, the duplicate
-          was costing attention without buying anything. The seller CTA above now
+          was costing attention without buying anything. The seller CTA now
           carries the price and the multi-car pack pitch, so it is the stronger
           of the two to keep. Component retained for /preview/carvertical.
       */}
-      {/* Half of everyone who clicks through to carVertical is back here within
-          ~72 seconds having declined the price. This is the only thing on the
-          site that acknowledges that. */}
-      <PartnerReturnPrompt context="valuation-result-return" />
 
       {/* BuyerInspectionWidget removed 2026-09-06. It offered to send a mechanic
           to inspect a car before purchase, on the screen where someone finds out
