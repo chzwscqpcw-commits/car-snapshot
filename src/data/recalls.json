@@ -12,6 +12,258 @@
     "recallNumber": "R/2026/030"
   },
   {
+    "make": "CADILLAC 2",
+    "models": [
+      "BLS"
+    ],
+    "buildDateStart": "2006-03-22",
+    "buildDateEnd": "2008-10-22",
+    "recallDate": "2026-10-08",
+    "defect": "On affected vehicles the driver air bag inflator may experience an alteration over time which could lead to overaggressive combustion in the event of airbag deployment.  This condition could create excessive internal pressure resulting in the body of the inflator rupturing upon deployment leading to metal fragments passing through the air bag which may cause injury or death to vehicle occupants.",
+    "remedy": "Replace the driver air bag module assembly.",
+    "recallNumber": "R/2026/377"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER T7"
+    ],
+    "buildDateStart": "2026-07-16",
+    "buildDateEnd": "2026-09-11",
+    "recallDate": "2026-10-08",
+    "defect": "For affected vehicles applying excess pressure to open the rear lid to its end position may cause the upper ball socket to detach from the gas strut allowing the rear lid to fall without restraint as one gas strut alone cannot hold it open.",
+    "remedy": "The gas struts of the rear lid will be checked and if necessary replaced.",
+    "recallNumber": "R/2026/384"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TRANSPORTER T7"
+    ],
+    "buildDateStart": "2026-07-16",
+    "buildDateEnd": "2026-09-06",
+    "recallDate": "2026-10-08",
+    "defect": "For affected vehicles applying excess pressure to open the rear lid to its end position may cause the upper ball socket to detach from the gas strut allowing the rear lid to fall without restraint as one gas strut alone cannot hold it open.",
+    "remedy": "The gas struts of the rear lid will be checked and if necessary replaced.",
+    "recallNumber": "R/2026/384"
+  },
+  {
+    "make": "CUPRA",
+    "models": [
+      "TERRAMAR"
+    ],
+    "buildDateStart": "2025-06-21",
+    "buildDateEnd": "2026-07-28",
+    "recallDate": "2026-10-05",
+    "defect": "On affected vehicles driver and / or passenger seat belt may not be correctly secured to the lower anchor point on the B-pillar.",
+    "remedy": "Check the seat belt fastening and replace if necessary.",
+    "recallNumber": "R/2026/372"
+  },
+  {
+    "make": "CUPRA",
+    "models": [
+      "RAVAL"
+    ],
+    "buildDateStart": "2026-07-02",
+    "buildDateEnd": "2026-09-03",
+    "recallDate": "2026-10-05",
+    "defect": "On affected vehicles driver and / or passenger seat belt may not be correctly secured to the lower anchor point on the B-pillar.",
+    "remedy": "Check the seat belt fastening and replace if necessary.",
+    "recallNumber": "R/2026/372"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "3008 V3 MHEV"
+    ],
+    "buildDateStart": "2026-06-29",
+    "buildDateEnd": "2026-07-16",
+    "recallDate": "2026-10-05",
+    "defect": "On affected vehicles air defelectors may have been installed incorrectly to the front bumbper grille which can affect the airflow required for cooling the engine and 48V battery system",
+    "remedy": "Check and remove the defelectors if present.",
+    "recallNumber": "R/2026/364"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SPB"
+    ],
+    "buildDateStart": "2024-12-03",
+    "buildDateEnd": "2026-07-07",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SLB"
+    ],
+    "buildDateStart": "2024-12-03",
+    "buildDateEnd": "2026-07-07",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SGX"
+    ],
+    "buildDateStart": "2024-12-03",
+    "buildDateEnd": "2026-07-07",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SP"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SGX"
+    ],
+    "buildDateStart": "2023-10-09",
+    "buildDateEnd": "2025-11-06",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SLB"
+    ],
+    "buildDateStart": "2023-10-09",
+    "buildDateEnd": "2025-11-06",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 600 SP"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SGX"
+    ],
+    "buildDateStart": "2023-12-13",
+    "buildDateEnd": "2024-05-13",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN MAX 680 SLB"
+    ],
+    "buildDateStart": "2023-12-13",
+    "buildDateEnd": "2024-05-13",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "SUPER TWIN 600 SPB"
+    ],
+    "buildDateStart": "2022-12-21",
+    "buildDateEnd": "2026-07-07",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "SUPER TWIN 700 SGX"
+    ],
+    "buildDateStart": "2022-12-21",
+    "buildDateEnd": "2026-07-07",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "SUPER TWIN MB 700 SGX"
+    ],
+    "buildDateStart": "2026-05-27",
+    "buildDateEnd": "2026-05-28",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SGX"
+    ],
+    "buildDateStart": "2026-06-11",
+    "buildDateEnd": "2026-07-02",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 600 SPB"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
+    "make": "ADRIA CONCESSIONAIRES LTD",
+    "models": [
+      "TWIN 640 SLB"
+    ],
+    "buildDateStart": "",
+    "buildDateEnd": "",
+    "recallDate": "2026-10-01",
+    "defect": "For affected vehicles that following breakage of the outer glass pane of the panoramic roof window the remaining inner pane may lose retention and become detached from the vehicle.",
+    "remedy": "An enhanced retention bracket system will be installed on affected panoramic roof windows. Customers who are unable to immediately present their vehicle for repair will be provided with instructions for an interim precautionary measure.",
+    "recallNumber": "R/2026/313"
+  },
+  {
     "make": "FORD",
     "models": [
       "KUGA"
@@ -130,6 +382,126 @@
     "defect": "On affected vehicles there may be insufficient clearance between a bulkhead bolt and the fuel tank which could cause damage over time and lead to a fuel leak.",
     "remedy": "Replace the bulkhead bolt.",
     "recallNumber": "R/2026/365"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "MINIE 3DR HATCHBACK"
+    ],
+    "buildDateStart": "2026-03-20",
+    "buildDateEnd": "2026-04-09",
+    "recallDate": "2026-09-25",
+    "defect": "For affected vehicles the interior mirror mounting plate may not have been bonded to the windscreen sufficiently. The rear view mirror could become partially or even completely detached from the windshield.",
+    "remedy": "The windscreen (including interior mirror mounting) will be replaced.",
+    "recallNumber": "R/2026/361"
+  },
+  {
+    "make": "MINI",
+    "models": [
+      "MINI ACEMAN"
+    ],
+    "buildDateStart": "2026-04-07",
+    "buildDateEnd": "2026-04-09",
+    "recallDate": "2026-09-25",
+    "defect": "For affected vehicles the interior mirror mounting plate may not have been bonded to the windscreen sufficiently. The rear view mirror could become partially or even completely detached from the windshield.",
+    "remedy": "The windscreen (including interior mirror mounting) will be replaced.",
+    "recallNumber": "R/2026/361"
+  },
+  {
+    "make": "NISSAN",
+    "models": [
+      "CUBE"
+    ],
+    "buildDateStart": "2008-10-10",
+    "buildDateEnd": "2010-09-25",
+    "recallDate": "2026-09-25",
+    "defect": "For affected vehicles the Driver's Airbag module may have been incorrectly assembled during production. In this condition the driver’s airbag inflator module may detach from the steering wheel.",
+    "remedy": "Check and replace driver airbag if necessary.",
+    "recallNumber": "R/2026/164"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2023-10-19",
+    "buildDateEnd": "2023-10-19",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2024-08-07",
+    "buildDateEnd": "2024-09-23",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2023-02-23",
+    "buildDateEnd": "2024-10-08",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2023-06-26",
+    "buildDateEnd": "2023-08-08",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2023-08-21",
+    "buildDateEnd": "2023-12-15",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2024-04-08",
+    "buildDateEnd": "2024-05-30",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2024-05-08",
+    "buildDateEnd": "2024-10-08",
+    "recallDate": "2026-09-23",
+    "defect": "On affected vehicles the rear quarter glass trim moulding can become detached while driving.",
+    "remedy": "The manufacturer is currently working on part availability.  Once available they will inform owners so they can contact their dealer to schedule an appointment.  If owners experience the issue in the meantime they should contact their dealer.",
+    "recallNumber": "R/2026/356"
   },
   {
     "make": "BRP CAN-AM",
@@ -20751,8 +21123,8 @@
     "models": [
       "CRUZE"
     ],
-    "buildDateStart": "2009-01-01",
-    "buildDateEnd": "2017-12-31",
+    "buildDateStart": "2008-12-02",
+    "buildDateEnd": "2017-01-10",
     "recallDate": "2025-02-04",
     "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
     "remedy": "Exchange affected airbag modules as a precautionary measure.",
@@ -20763,8 +21135,8 @@
     "models": [
       "ORLANDO"
     ],
-    "buildDateStart": "2011-01-01",
-    "buildDateEnd": "2017-12-31",
+    "buildDateStart": "2010-06-18",
+    "buildDateEnd": "2016-05-10",
     "recallDate": "2025-02-04",
     "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
     "remedy": "Exchange affected airbag modules as a precautionary measure.",
@@ -20775,8 +21147,8 @@
     "models": [
       "AVEO"
     ],
-    "buildDateStart": "2011-01-01",
-    "buildDateEnd": "2018-12-31",
+    "buildDateStart": "2011-01-26",
+    "buildDateEnd": "2015-06-27",
     "recallDate": "2025-02-04",
     "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
     "remedy": "Exchange affected airbag modules as a precautionary measure.",
@@ -37115,10 +37487,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "POLO"
+      "POLO (9N)"
     ],
-    "buildDateStart": "2010-06-19",
-    "buildDateEnd": "2013-10-31",
+    "buildDateStart": "2006-06-23",
+    "buildDateEnd": "2009-12-09",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37127,10 +37499,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "PASSAT"
+      "FOX (5Z)"
     ],
-    "buildDateStart": "2009-11-11",
-    "buildDateEnd": "2012-05-02",
+    "buildDateStart": "2006-07-25",
+    "buildDateEnd": "2011-07-14",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37139,10 +37511,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "EOS"
+      "PASSAT (3C)"
     ],
-    "buildDateStart": "2010-01-25",
-    "buildDateEnd": "2010-12-12",
+    "buildDateStart": "2004-09-09",
+    "buildDateEnd": "2010-10-28",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37151,10 +37523,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "BEETLE"
+      "PASSAT CC (35)"
     ],
-    "buildDateStart": "2014-04-30",
-    "buildDateEnd": "2015-02-03",
+    "buildDateStart": "2007-08-29",
+    "buildDateEnd": "2016-11-29",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37163,10 +37535,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "PASSAT"
+      "PASSAT (36)"
     ],
-    "buildDateStart": "2013-06-06",
-    "buildDateEnd": "2015-06-02",
+    "buildDateStart": "2010-09-29",
+    "buildDateEnd": "2017-05-11",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37175,10 +37547,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "EOS"
+      "GOLF (5K)"
     ],
-    "buildDateStart": "2013-03-27",
-    "buildDateEnd": "2013-03-27",
+    "buildDateStart": "2008-05-16",
+    "buildDateEnd": "2013-10-28",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37187,10 +37559,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "TIGUAN"
+      "SHARAN (7N)"
     ],
-    "buildDateStart": "2015-02-06",
-    "buildDateEnd": "2015-02-06",
+    "buildDateStart": "2010-02-12",
+    "buildDateEnd": "2015-11-05",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37199,10 +37571,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "CRAFTER"
+      "POLO (6R)"
     ],
-    "buildDateStart": "2006-04-20",
-    "buildDateEnd": "2013-05-24",
+    "buildDateStart": "2009-02-13",
+    "buildDateEnd": "2014-05-05",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37211,10 +37583,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "CRAFTER"
+      "BEETLE (5C)"
     ],
-    "buildDateStart": "2006-05-10",
-    "buildDateEnd": "2013-05-24",
+    "buildDateStart": "2011-05-29",
+    "buildDateEnd": "2018-09-15",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37223,10 +37595,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "TRANSPORTER"
+      "XL1 (6Z)"
     ],
-    "buildDateStart": "2007-05-31",
-    "buildDateEnd": "2018-06-18",
+    "buildDateStart": "2013-01-25",
+    "buildDateEnd": "2015-05-18",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37235,10 +37607,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "TRANSPORTER"
+      "POLO (6S)"
     ],
-    "buildDateStart": "2008-03-09",
-    "buildDateEnd": "2015-04-10",
+    "buildDateStart": "2009-09-04",
+    "buildDateEnd": "2017-07-26",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37247,10 +37619,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "MULTIVAN"
+      "GOLF CABRIO (51)"
     ],
-    "buildDateStart": "2012-03-05",
-    "buildDateEnd": "2015-04-08",
+    "buildDateStart": "2011-05-11",
+    "buildDateEnd": "2015-10-29",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37259,10 +37631,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "POLO"
+      "GOLF PLUS (52)"
     ],
-    "buildDateStart": "2006-11-03",
-    "buildDateEnd": "2009-05-07",
+    "buildDateStart": "2008-10-02",
+    "buildDateEnd": "2013-12-30",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37271,10 +37643,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "FOX"
+      "EOS (1F)"
     ],
-    "buildDateStart": "2006-07-31",
-    "buildDateEnd": "2009-01-31",
+    "buildDateStart": "2008-12-16",
+    "buildDateEnd": "2015-07-09",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37283,10 +37655,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "PASSAT"
+      "US PASSAT (A3)"
     ],
-    "buildDateStart": "2005-02-18",
-    "buildDateEnd": "2013-12-17",
+    "buildDateStart": "2010-07-16",
+    "buildDateEnd": "2015-10-01",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37295,10 +37667,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "GOLF"
+      "TIGUAN (5N)"
     ],
-    "buildDateStart": "2008-07-23",
-    "buildDateEnd": "2013-02-27",
+    "buildDateStart": "2014-11-03",
+    "buildDateEnd": "2017-04-19",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37307,10 +37679,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "SHARAN"
+      "UP! (12)"
     ],
-    "buildDateStart": "2010-08-15",
-    "buildDateEnd": "2015-04-28",
+    "buildDateStart": "2011-05-04",
+    "buildDateEnd": "2016-07-01",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37319,10 +37691,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "POLO"
+      "POLO (60)"
     ],
-    "buildDateStart": "2009-08-03",
-    "buildDateEnd": "2013-10-11",
+    "buildDateStart": "2009-10-08",
+    "buildDateEnd": "2014-08-13",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37331,10 +37703,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "BEETLE"
+      "POLO (61)"
     ],
-    "buildDateStart": "2012-04-13",
-    "buildDateEnd": "2015-04-17",
+    "buildDateStart": "2010-03-30",
+    "buildDateEnd": "2015-06-10",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37343,22 +37715,10 @@
   {
     "make": "VOLKSWAGEN",
     "models": [
-      "XL1"
+      "UP! (BL)"
     ],
-    "buildDateStart": "2014-11-19",
-    "buildDateEnd": "2015-05-08",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "PASSAT"
-    ],
-    "buildDateStart": "2013-06-06",
-    "buildDateEnd": "2015-05-02",
+    "buildDateStart": "2013-10-11",
+    "buildDateEnd": "2016-05-24",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37369,68 +37729,8 @@
     "models": [
       "CRAFTER"
     ],
-    "buildDateStart": "2006-05-26",
-    "buildDateEnd": "2007-07-31",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "GOLF"
-    ],
-    "buildDateStart": "2008-11-06",
-    "buildDateEnd": "2012-11-06",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "SHARAN"
-    ],
-    "buildDateStart": "2010-08-15",
-    "buildDateEnd": "2015-04-28",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "POLO"
-    ],
-    "buildDateStart": "2009-08-03",
-    "buildDateEnd": "2013-10-11",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "PASSAT"
-    ],
-    "buildDateStart": "2006-11-02",
-    "buildDateEnd": "2012-07-18",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "BEETLE"
-    ],
-    "buildDateStart": "2012-04-13",
-    "buildDateEnd": "2015-04-17",
+    "buildDateStart": "2005-08-22",
+    "buildDateEnd": "2016-12-22",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
@@ -37441,80 +37741,8 @@
     "models": [
       "TRANSPORTER"
     ],
-    "buildDateStart": "2007-05-31",
-    "buildDateEnd": "2014-06-18",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "UP!"
-    ],
-    "buildDateStart": "2012-07-16",
-    "buildDateEnd": "2016-04-30",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "GOLF CABRIO"
-    ],
-    "buildDateStart": "2011-02-22",
-    "buildDateEnd": "2013-02-27",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "VIVO"
-    ],
-    "buildDateStart": "2010-06-19",
-    "buildDateEnd": "2013-05-25",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "EOS"
-    ],
-    "buildDateStart": "2010-01-25",
-    "buildDateEnd": "2011-06-07",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "FOX"
-    ],
-    "buildDateStart": "2006-07-28",
-    "buildDateEnd": "2009-01-31",
-    "recallDate": "2023-06-13",
-    "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
-    "remedy": "Replace airbag",
-    "recallNumber": "R/2023/178"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "POLO"
-    ],
-    "buildDateStart": "2006-11-04",
-    "buildDateEnd": "2009-05-07",
+    "buildDateStart": "2007-01-26",
+    "buildDateEnd": "2015-08-19",
     "recallDate": "2023-06-13",
     "defect": "The function of the driver airbag inflators can degrade due to air and moisture ingress.",
     "remedy": "Replace airbag",
