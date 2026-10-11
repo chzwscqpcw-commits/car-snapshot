@@ -86,7 +86,7 @@ Mileage is one of the biggest factors in a used car's value. As a rough guide:
 
 However, a high-mileage car with full [service history](/blog/how-to-check-car-service-history) and clean [MOT results](/mot-check) can be worth more than a low-mileage car with patchy records. Condition and documentation matter as much as the number on the odometer.
 
-If you're curious what a vehicle is worth given its actual mileage, our [free car valuation tool](/car-valuation) factors in mileage automatically.
+If you're curious what a vehicle is worth given its actual mileage, our [free car valuation tool](/value-my-car) factors in mileage automatically.
 
 ## The bottom line
 

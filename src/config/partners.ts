@@ -684,7 +684,7 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
       "used car price",
     ],
     cta: {
-      path: "/car-valuation",
+      path: "/value-my-car",
       label: "Get a free valuation",
       description: "Enter a reg to see an instant estimated value for any UK vehicle.",
     },

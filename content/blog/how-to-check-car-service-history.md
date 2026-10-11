@@ -93,7 +93,7 @@ Some items are age/mileage-specific: timing belt replacement (typically every 5 
 
 ## How service history affects value
 
-Service history has a direct impact on what a car is worth. Use our [free valuation tool](/car-valuation) to get a baseline estimate, then consider:
+Service history has a direct impact on what a car is worth. Use our [free valuation tool](/value-my-car) to get a baseline estimate, then consider:
 
 - **Full dealer service history** — Adds 10–20% to the value versus no history
 - **Full service history (independent garages)** — Adds 5–15%

@@ -119,7 +119,7 @@ The registration number is the key that unlocks a vehicle's entire history. With
 - Current tax status and when it expires
 - Full [MOT history](/mot-check) including passes, failures, advisories, and recorded mileage
 - [ULEZ compliance](/ulez-check) status
-- Estimated [vehicle valuation](/car-valuation)
+- Estimated [vehicle valuation](/value-my-car)
 - [Safety recall](/recall-check) information
 
 All of this is available free on [Free Plate Check](/car-check) — just enter the registration and see everything in seconds. Whether you are buying a used car, checking your own vehicle, or simply curious about that interesting car you spotted in traffic, the plate is your starting point.

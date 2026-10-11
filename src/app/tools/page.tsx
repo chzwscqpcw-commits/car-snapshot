@@ -85,7 +85,7 @@ const CHECKS: Tool[] = [
   {
     title: "Car valuation",
     blurb: "Live market valuation built from real eBay listings and depreciation models.",
-    href: "/car-valuation",
+    href: "/value-my-car",
     icon: PoundSterling,
   },
   {

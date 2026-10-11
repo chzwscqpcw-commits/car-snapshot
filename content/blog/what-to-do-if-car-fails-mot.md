@@ -61,7 +61,7 @@ In practice, appeals are rare and most test results stand. Our guide on [how to 
 
 ### Option 4: Sell or scrap the vehicle
 
-If the repair costs are more than the vehicle is worth, it may make more sense to sell it for salvage or scrap it through an Authorised Treatment Facility. Check our [free car valuation](/car-valuation) to see what the vehicle would be worth in good condition, and weigh that against the repair estimate.
+If the repair costs are more than the vehicle is worth, it may make more sense to sell it for salvage or scrap it through an Authorised Treatment Facility. Check our [free car valuation](/value-my-car) to see what the vehicle would be worth in good condition, and weigh that against the repair estimate.
 
 ## How to keep retest costs down
 

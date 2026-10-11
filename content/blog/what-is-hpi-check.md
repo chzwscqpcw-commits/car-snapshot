@@ -38,7 +38,7 @@ A [free car check](/car-check) queries publicly available DVLA and MOT data. Wit
 - **Mileage history** — The [mileage recorded](/mileage-check) at every MOT test, making it easy to spot odometer tampering
 - **ULEZ compliance** — Whether the vehicle meets [ULEZ requirements](/ulez-check)
 - **Safety recalls** — Any [manufacturer recalls](/recall-check) that may apply to the vehicle
-- **Vehicle valuation** — An estimated [market value](/car-valuation) based on age, mileage, and condition
+- **Vehicle valuation** — An estimated [market value](/value-my-car) based on age, mileage, and condition
 
 This is a substantial amount of information — and it's genuinely free, with no sign-up required.
 
@@ -110,6 +110,6 @@ For these, you need a physical inspection. Consider an independent vehicle inspe
 
 ## The bottom line
 
-A free car check gives you an impressive amount of information at no cost — [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [recall checks](/recall-check), and [valuation](/car-valuation). Use it as your first step on every car you consider.
+A free car check gives you an impressive amount of information at no cost — [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [recall checks](/recall-check), and [valuation](/value-my-car). Use it as your first step on every car you consider.
 
 For any purchase over a few thousand pounds, add a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** (20% off with our link, or code `freeplatecheck`) — to cover finance, damage and stolen status. The combination of free and paid checks gives you the most complete picture of a vehicle's history.

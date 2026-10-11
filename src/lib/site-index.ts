@@ -84,9 +84,9 @@ export const SITE_ITEMS: SiteItem[] = [
   {
     title: "Car valuation",
     subtitle: "Free vehicle valuation",
-    href: "/car-valuation",
+    href: "/value-my-car",
     category: "check",
-    keywords: ["valuation", "value", "worth", "price", "sell"],
+    keywords: ["valuation", "value", "value my car", "worth", "price", "sell"],
     icon: "pound-sterling",
   },
   {

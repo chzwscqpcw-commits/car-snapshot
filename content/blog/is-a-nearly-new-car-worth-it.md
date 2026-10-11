@@ -63,7 +63,7 @@ This is where a bargain either stays a bargain or turns into a problem. Nearly-n
 
 Two checks cover most of it, and they cost nothing to start:
 
-- **Know the fair price.** Run a free [car valuation](/car-valuation) before you talk numbers, so you can tell a genuine plate-change deal from a forecourt markup. It's the difference between negotiating and guessing.
+- **Know the fair price.** Run a free [car valuation](/value-my-car) before you talk numbers, so you can tell a genuine plate-change deal from a forecourt markup. It's the difference between negotiating and guessing.
 - **Run a free history check.** A [free plate check](/car-check) shows you the MOT history, mileage record and key details in a couple of minutes — a quick sanity test before you go further.
 
 For a nearly-new car worth thousands, it's worth going one step further:
@@ -78,4 +78,4 @@ And don't forget the running costs that come with any car — tax, insurance and
 
 A nearly-new car is often the value sweet spot: you get an almost-new car with most of the warranty and tech intact, but you let someone else pay for the brutal first-year depreciation. The weeks after the September plate change stack the odds a little further in your favour, with more stock and more room to haggle.
 
-Just don't let "nearly-new" lull you into skipping the homework. Know what the car is genuinely worth, and know its history, before you sign anything. Start with a free [car valuation](/car-valuation) to fix the fair price in your head — then negotiate from there.
+Just don't let "nearly-new" lull you into skipping the homework. Know what the car is genuinely worth, and know its history, before you sign anything. Start with a free [car valuation](/value-my-car) to fix the fair price in your head — then negotiate from there.

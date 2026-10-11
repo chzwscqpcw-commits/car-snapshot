@@ -31,7 +31,7 @@ The pattern is the same for almost every car. Depreciation is steepest in the fi
 
 After that, the curve flattens considerably. A five-year-old car might lose only 5–10% per year, and by the time it reaches seven or eight years old, annual depreciation is relatively modest. This is precisely why buying a car that is three to five years old is often the sweet spot for value — someone else has absorbed the painful early depreciation, and you get a relatively modern vehicle that will hold its value more steadily from that point.
 
-You can see this pattern clearly by checking a vehicle's [estimated value](/car-valuation) on Free Plate Check and comparing it to the original list price.
+You can see this pattern clearly by checking a vehicle's [estimated value](/value-my-car) on Free Plate Check and comparing it to the original list price.
 
 ## Brands that hold their value best
 
@@ -99,7 +99,7 @@ This is obvious but worth stating: bodywork damage, interior wear, and mechanica
 
 The smartest approach to car ownership, financially speaking, is to buy at the point where the depreciation curve starts to flatten. For most cars, that is somewhere between three and five years old. You avoid the steep early losses, still get a relatively modern vehicle with warranty potential, and benefit from more stable values going forward.
 
-When you are ready to buy, use [Free Plate Check's valuation tool](/car-valuation) to understand what a fair price looks like for any vehicle. Enter the registration to see estimated values alongside the full [MOT history](/mot-check), [tax status](/tax-check), and [mileage records](/mileage-check) — everything you need to judge whether the asking price is fair.
+When you are ready to buy, use [Free Plate Check's valuation tool](/value-my-car) to understand what a fair price looks like for any vehicle. Enter the registration to see estimated values alongside the full [MOT history](/mot-check), [tax status](/tax-check), and [mileage records](/mileage-check) — everything you need to judge whether the asking price is fair.
 
 If you are selling, the same tool helps you set a realistic price. Overpricing based on sentiment rather than market data is one of the most common mistakes private sellers make. Check what the market says, present the car well, and you will get the best possible return.
 

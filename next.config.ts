@@ -52,6 +52,20 @@ const nextConfig: NextConfig = {
       destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price`,
       permanent: true,
     },
+    // Four valuation landing pages ran the same tool with rewritten copy, and
+    // the two that ranked were cannibalising each other on our biggest query
+    // ("free car valuation without email": Google swapped them, combined
+    // clicks −15% in 28 days to 9 Oct 2026). Merged into /value-my-car, which
+    // led on position, clicks and conversion. Next.js carries the query
+    // string through, so old `?vrm=` result links still open the result.
+    // /free-car-valuation never existed but Google shows it at position 1.
+    ...["/car-valuation", "/how-much-is-my-car-worth", "/car-valuation-no-signup", "/free-car-valuation"].map(
+      (source) => ({
+        source,
+        destination: `https://${CANONICAL_HOST}/value-my-car`,
+        permanent: true,
+      }),
+    ),
     {
       source: "/:path*",
       has: [{ type: "host", value: "freeplatecheck.com" }],

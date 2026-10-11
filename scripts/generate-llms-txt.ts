@@ -77,7 +77,7 @@ const CORE_TOOLS = `## Core Tools
 - [Mileage Check](${BASE}/mileage-check): Check a vehicle's recorded mileage history free. See odometer readings from every MOT test to spot clocking and verify genuine mileage.
 - [ULEZ Compliance Check](${BASE}/ulez-check): Check if any UK vehicle is ULEZ compliant. See emission standards, Euro status and whether the vehicle meets London's Ultra Low Emission Zone requirements.
 - [Safety Recall Check](${BASE}/recall-check): Check if any UK vehicle has outstanding safety recalls from the DVSA. Free lookup by registration number.
-- [Free Car Valuation](${BASE}/car-valuation): Get a free estimated valuation for any UK vehicle based on age, mileage and market data. No signup required.
+- [Free Car Valuation](${BASE}/value-my-car): Get a free estimated valuation for any UK vehicle based on age, mileage and market data. No signup required.
 - [Running Costs Calculator](${BASE}/running-costs): Find out how much it costs to run any UK car. Free breakdown of fuel, tax, depreciation, MOT and servicing costs.
 - [Car Servicing Quotes](${BASE}/servicing): Compare car service prices from local garages. Interim and full service quotes in seconds, no booking fees.
 - [MOT Reminder](${BASE}/mot-reminder): Set up a free MOT reminder for any UK vehicle. Get notified 28 days and 7 days before your MOT expires.

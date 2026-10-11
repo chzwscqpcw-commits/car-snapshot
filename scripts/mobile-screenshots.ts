@@ -42,7 +42,7 @@ async function main() {
       "/mileage-check",
       "/ulez-check",
       "/recall-check",
-      "/car-valuation",
+      "/value-my-car",
       "/mot-reminder",
       "/servicing",
       "/running-costs",

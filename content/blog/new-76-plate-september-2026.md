@@ -77,7 +77,7 @@ A new car is not immune from problems. Before driving away from the dealership:
 
 The plate-change period brings more cars to market, but it also attracts sellers trying to shift problematic vehicles among the rush. Protect yourself:
 
-- **Run a full vehicle check.** Enter the registration on [Free Plate Check](/car-check) to see the MOT history, mileage records, tax status, and vehicle details. Our [car valuation tool](/car-valuation) can also help you gauge whether the asking price is fair.
+- **Run a full vehicle check.** Enter the registration on [Free Plate Check](/car-check) to see the MOT history, mileage records, tax status, and vehicle details. Our [car valuation tool](/value-my-car) can also help you gauge whether the asking price is fair.
 - **Check the mileage progression.** MOT records show the mileage at each test. Any drops or suspicious jumps are red flags. Read our guide on [how to spot a clocked car](/blog/how-to-spot-a-clocked-car) to know what to look for.
 - **Verify the V5C.** The registration document should show the seller as the registered keeper. If it does not, ask why. A missing V5C is a warning sign.
 - **Check for outstanding finance.** A car with unpaid finance can be repossessed from you even if you bought it in good faith. This is especially important for nearly-new cars, which are frequently financed.
@@ -92,6 +92,6 @@ Understanding how plates work gives you a practical advantage. You can age any c
 
 ## Ready for the 76 plate?
 
-Whether you are picking up a new car on 1 September or hunting for a used bargain in the plate-change window, preparation is key. Run a [free vehicle check](/car-check) on any car you are considering, check the [MOT history](/mot-check) for hidden problems, and use our [valuation tool](/car-valuation) to make sure the price is right.
+Whether you are picking up a new car on 1 September or hunting for a used bargain in the plate-change window, preparation is key. Run a [free vehicle check](/car-check) on any car you are considering, check the [MOT history](/mot-check) for hidden problems, and use our [valuation tool](/value-my-car) to make sure the price is right.
 
 The 76 plate marks another turn of the cycle. Make sure it works in your favour.

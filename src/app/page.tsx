@@ -4887,7 +4887,7 @@ END:VEVENT
                 so it reads as "verify what's behind this value", not a paywall.
 
                 Seller-framed since 2026-08-14. This is the homepage's own
-                valuation surface — /car-valuation and friends render the shared
+                valuation surface — /value-my-car renders the shared
                 ValuationResult component, but THIS page has its own inline
                 implementation, so the seller reframe shipped in #71 never
                 reached it. The homepage is ~1,415 of ~2,850 weekly valuation
@@ -5690,7 +5690,7 @@ END:VEVENT
           <h2 className="text-xl font-bold text-slate-100 mb-6">What Can You Check?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Top intent — proven top traffic and high commercial value */}
-            <a href="/car-valuation" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+            <a href="/value-my-car" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
               <div className="flex items-center gap-3 mb-2">
                 <PoundSterling className="w-5 h-5 text-blue-400" />
                 <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>

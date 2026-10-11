@@ -120,7 +120,7 @@ Check any vehicle's full history — including tax status, MOT results, and mile
 1. **Check the CO2 figure before you commit.** Different engine options and trim levels on the same model can span multiple VED bands. A configuration that pushes you from 150 g/km to 151 g/km costs an extra **£850** in first-year tax.
 2. **Consider registering before April.** If you're buying a new car in the next few weeks, registering before 1 April 2026 saves you the RPI increase. On a high-emission car, that's up to £200.
 3. **Factor first-year tax into the purchase price.** Dealers often roll the first-year VED into the on-the-road price, so it's easy to overlook. Make sure you know how much of the price is tax.
-4. **Compare total cost of ownership.** Our [car valuation tool](/car-valuation) and [running costs breakdown](/car-check) can help you see the full picture beyond the sticker price.
+4. **Compare total cost of ownership.** Our [car valuation tool](/value-my-car) and [running costs breakdown](/car-check) can help you see the full picture beyond the sticker price.
 
 ## The bottom line
 

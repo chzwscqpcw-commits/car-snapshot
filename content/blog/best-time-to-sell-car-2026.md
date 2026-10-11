@@ -40,7 +40,7 @@ So if you're already leaning towards selling, doing it in **July or August** oft
 
 Before you list — or accept any offer — find out what your car is actually worth. It's the single best protection against a low offer, because instant-buyers and part-ex desks are counting on you not knowing.
 
-A [free online valuation](/car-valuation) takes seconds: enter the registration and you get a realistic market estimate based on the car's age, mileage, make and model. Walk into the sale with that figure in your head and you'll negotiate from strength.
+A [free online valuation](/value-my-car) takes seconds: enter the registration and you get a realistic market estimate based on the car's age, mileage, make and model. Walk into the sale with that figure in your head and you'll negotiate from strength.
 
 ## Choosing how to sell
 
@@ -63,4 +63,4 @@ Whatever route you pick, a little preparation pays:
 
 ## The bottom line
 
-The best time to sell in 2026 is the spring-to-summer window, and ideally **before the September plate change** dents values. Prepare the car, gather the history, and — above all — [check what it's worth](/car-valuation) before you accept a penny. Timing and a realistic number are what turn a quick sale into a good one.
+The best time to sell in 2026 is the spring-to-summer window, and ideally **before the September plate change** dents values. Prepare the car, gather the history, and — above all — [check what it's worth](/value-my-car) before you accept a penny. Timing and a realistic number are what turn a quick sale into a good one.

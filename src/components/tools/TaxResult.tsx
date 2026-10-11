@@ -454,7 +454,7 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
           <QuickPill href={`/recall-check?vrm=${vrm}`} icon={AlertTriangle}>
             Recalls
           </QuickPill>
-          <QuickPill href={`/car-valuation?vrm=${vrm}`} icon={CheckCircle2}>
+          <QuickPill href={`/value-my-car?vrm=${vrm}`} icon={CheckCircle2}>
             Valuation
           </QuickPill>
         </div>

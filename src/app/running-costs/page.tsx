@@ -277,7 +277,7 @@ export default async function RunningCostsPage({
               Purchase price is only part of the story. A car that looks cheap to buy can be expensive to own if it drinks fuel, sits in a high insurance group, or depreciates quickly.
             </p>
             <p className="leading-relaxed">
-              For buyers, total cost of ownership matters more than sticker price. Pair this with the vehicle&apos;s <a href="/car-valuation" className="text-blue-400 hover:text-blue-300">valuation</a> and <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> for the full picture.
+              For buyers, total cost of ownership matters more than sticker price. Pair this with the vehicle&apos;s <a href="/value-my-car" className="text-blue-400 hover:text-blue-300">valuation</a> and <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history</a> for the full picture.
             </p>
           </section>
 
@@ -297,7 +297,7 @@ export default async function RunningCostsPage({
       <div className="max-w-3xl mx-auto px-4 mt-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href="/car-valuation" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <a href="/value-my-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Valuation</p>
             <p className="text-xs text-slate-500 mt-2">Get a market-based valuation estimate for any UK vehicle using just the registration number.</p>
           </a>

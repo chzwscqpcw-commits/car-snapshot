@@ -81,7 +81,7 @@ export default function ValuationResult({ vrm, previewVehicle }: ValuationResult
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Running the valuation model…" />;
   if (state.kind === "error")
-    return <LookupError vrm={vrm} message={state.message} backHref="/car-valuation" />;
+    return <LookupError vrm={vrm} message={state.message} backHref="/value-my-car" />;
   return <Loaded vrm={vrm} vehicle={state.vehicle} />;
 }
 

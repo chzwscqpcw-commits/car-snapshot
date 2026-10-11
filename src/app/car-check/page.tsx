@@ -246,7 +246,7 @@ export default function CarCheckPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Free check vs. paid check</h2>
             <p className="leading-relaxed mb-3">
-              Free Plate Check includes DVLA spec, full MOT history, tax, mileage, ULEZ, recalls, and a <a href="/car-valuation" className="text-blue-400 hover:text-blue-300">valuation estimate</a>. Paid services (HPI, AA, RAC) add data government APIs don&apos;t expose:
+              Free Plate Check includes DVLA spec, full MOT history, tax, mileage, ULEZ, recalls, and a <a href="/value-my-car" className="text-blue-400 hover:text-blue-300">valuation estimate</a>. Paid services (HPI, AA, RAC) add data government APIs don&apos;t expose:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
               <li>Outstanding finance</li>

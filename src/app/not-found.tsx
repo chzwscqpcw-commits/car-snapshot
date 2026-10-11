@@ -141,7 +141,7 @@ export default function NotFound() {
             <ToolTile href="/mileage-check" icon={Gauge} title="Mileage check" sub="Clocking signs" accent="cyan" />
             <ToolTile href="/ulez-check" icon={Wind} title="ULEZ check" sub="Clean-air zones" accent="blue" />
             <ToolTile href="/recall-check" icon={AlertTriangle} title="Recall check" sub="Safety alerts" accent="cyan" />
-            <ToolTile href="/car-valuation" icon={PoundSterling} title="Car valuation" sub="Live market value" accent="blue" />
+            <ToolTile href="/value-my-car" icon={PoundSterling} title="Car valuation" sub="Live market value" accent="blue" />
           </div>
         </section>
 

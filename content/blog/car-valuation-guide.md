@@ -21,7 +21,7 @@ This guide explains how car valuations work, what factors affect your vehicle's 
 
 ## How do car valuations work?
 
-A car valuation estimates what your vehicle is worth on the open market. Most valuation tools — including [Free Plate Check's free valuation](/car-valuation) — use a combination of data points to arrive at a figure:
+A car valuation estimates what your vehicle is worth on the open market. Most valuation tools — including [Free Plate Check's free valuation](/value-my-car) — use a combination of data points to arrive at a figure:
 
 **Depreciation modelling** is the foundation. New cars lose value quickly — typically 15–35% in the first year alone. Depreciation slows as the vehicle ages but never fully stops. The rate varies significantly by make and model. Some brands (Toyota, Porsche, Tesla) hold their value well, while volume brands tend to depreciate faster.
 
@@ -75,7 +75,7 @@ Not all valuations serve the same purpose. Here are the main types:
 
 **Trade-in / part-exchange valuation** — What a dealer would offer you against a new or used car purchase. This is typically the lowest figure because the dealer needs to make a profit when they resell. It's convenient but you'll get less than selling privately.
 
-**Instant online valuation** — A quick estimate based on registration data, depreciation models, and market comparisons. This is what [Free Plate Check](/car-valuation) provides — no signup, no personal data required, just enter a reg and get an instant range. It's a useful starting point for understanding roughly what your car is worth.
+**Instant online valuation** — A quick estimate based on registration data, depreciation models, and market comparisons. This is what [Free Plate Check](/value-my-car) provides — no signup, no personal data required, just enter a reg and get an instant range. It's a useful starting point for understanding roughly what your car is worth.
 
 **Professional / formal valuation** — An in-person inspection by a qualified assessor. This is typically required for insurance claims, finance settlements, or legal disputes. It's the most accurate but costs money and takes time.
 
@@ -91,7 +91,7 @@ If you've decided to sell, a few straightforward steps can help you maximise the
 
 **Clean the car thoroughly** — This sounds basic but it matters. A clean, well-presented car photographs better, shows better in person, and gives the impression of a cared-for vehicle. Clean the engine bay too — buyers who lift the bonnet will notice.
 
-**Price competitively** — Check what similar vehicles are listed for on AutoTrader, eBay Motors, and Facebook Marketplace. Price yours in line with the market rather than based on what you paid or what you feel it's worth. Use our [free valuation tool](/car-valuation) to get a data-driven starting point.
+**Price competitively** — Check what similar vehicles are listed for on AutoTrader, eBay Motors, and Facebook Marketplace. Price yours in line with the market rather than based on what you paid or what you feel it's worth. Use our [free valuation tool](/value-my-car) to get a data-driven starting point.
 
 **Take good photos** — If listing online, clean the car first and photograph it in good light. Include all angles: front, rear, both sides, dashboard, odometer, boot, engine bay, and any imperfections. Honest, detailed photos build trust and attract serious buyers.
 
@@ -105,4 +105,4 @@ A valuation is useful in several situations beyond just selling:
 - **Financial planning** — Understand the current value of your assets
 - **Deciding whether to repair or sell** — If a repair bill is a significant fraction of the car's value, it may be time to move on
 
-You can [check your car's value on Free Plate Check](/car-valuation) for free, instantly, with no signup required. It takes seconds and gives you a realistic range to work with.
+You can [check your car's value on Free Plate Check](/value-my-car) for free, instantly, with no signup required. It takes seconds and gives you a realistic range to work with.

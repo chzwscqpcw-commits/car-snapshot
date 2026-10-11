@@ -165,7 +165,7 @@ The supplement catches a lot of buyers by surprise. The mechanics:
 - It applies regardless of what *you* paid for the car second-hand. If the original list was £42,000, you pay the supplement even if you bought it three years old for £18,000.
 - For EVs registered from 1 April 2025, the supplement applies at the same £40,000 threshold. There is ongoing industry pressure to raise this to £50,000 for EVs, but as of May 2026 no such change has been confirmed.
 
-When checking a used car you're considering, the **original list price** is the number to dig out. Manufacturers' archived brochures, the registration document or our [car valuation](/car-valuation) tool can all help reconstruct it.
+When checking a used car you're considering, the **original list price** is the number to dig out. Manufacturers' archived brochures, the registration document or our [car valuation](/value-my-car) tool can all help reconstruct it.
 
 A common gotcha: a base-spec BMW 3 Series might list at £39,500, but a fully-optioned 320d M Sport with metallic paint, technology pack and adaptive headlights crosses the £40k threshold and locks in five years of supplement. Two near-identical cars on the forecourt can therefore have wildly different VED bills.
 

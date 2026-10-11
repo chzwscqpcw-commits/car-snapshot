@@ -114,7 +114,7 @@ Higher mileage does affect some ownership costs:
 - **Maintenance** — Wear items (brakes, tyres, suspension bushings) are mileage-dependent. A higher-mileage car is more likely to need these soon.
 - **Major services** — Timing belts, gearbox fluid, and coolant changes are all mileage-triggered. Check whether they've been done.
 
-Use our [free car valuation tool](/car-valuation) to see how mileage affects the market value of any specific vehicle.
+Use our [free car valuation tool](/value-my-car) to see how mileage affects the market value of any specific vehicle.
 
 ## The bottom line
 
