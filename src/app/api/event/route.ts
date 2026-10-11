@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 
 function hashIp(ip: string): string {
   const salt = process.env.VRM_SALT || "change-me";
@@ -87,6 +88,10 @@ export async function POST(req: Request) {
     // and the value was always in the logs.
     // An async IIFE rather than .then(): supabase-js returns a PromiseLike,
     // which waitUntil does not accept.
+    // Local and preview deployments acknowledge but don't record — see
+    // analytics-writes.ts. The client ignores the status either way.
+    if (!analyticsWritesEnabled()) return NextResponse.json({ ok: true, recorded: false });
+
     waitUntil(
       (async () => {
         const { error: insertError } = await sb

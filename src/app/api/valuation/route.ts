@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { getMarketCheckValuation } from "@/lib/marketcheck";
 import { isSalvageListing } from "@/lib/valuation";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 
 // ── eBay OAuth token cache ──────────────────────────────────────────────────
 
@@ -658,10 +659,12 @@ export async function GET(
 
     // Track valuation event (fire-and-forget)
     const sb = supabaseServer();
-    sb.from("site_events").insert({
-      event_type: "valuation",
-      metadata: { make, model, year },
-    }).then(() => {}, () => {});
+    if (analyticsWritesEnabled()) {
+      sb.from("site_events").insert({
+        event_type: "valuation",
+        metadata: { make, model, year },
+      }).then(() => {}, () => {});
+    }
 
     // Write to cache asynchronously
     if (ebayResult) {

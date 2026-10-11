@@ -9,6 +9,7 @@ import {
   GO_UNRECOGNISED_CONTEXT,
 } from "@/config/partners";
 import { isPublishedPostSlug } from "@/lib/blog";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { isBotRequest, isSpeculativeRequest } from "@/lib/bots";
 
@@ -140,41 +141,46 @@ export async function GET(
 
   const destination = link.buildLink ? link.buildLink(vrm, context) : link.url;
 
+  // Local and preview deployments redirect exactly the same but record nothing
+  // (analytics-writes.ts) — testing this route used to write real clicks.
+  //
   // Record the click, but never let telemetry cost the user their click —
   // if Supabase is slow or erroring we still redirect.
-  try {
-    const forwarded = req.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-    // `fpc_internal` is set by tracking.ts alongside the owner's localStorage flag.
-    const internal = /(?:^|;\s*)fpc_internal=1(?:;|$)/.test(req.headers.get("cookie") ?? "");
-    const { error } = await supabaseServer()
-      .from("site_events")
-      .insert({
-        event_type: recognised ? "partner_click" : "go_rejected",
-        metadata: {
-          partner_id: entry.partnerKey,
-          click_context: context,
-          // Same key the impression writes, so a placement showing two framings
-          // can be read as impressions-by-variant against clicks-by-variant
-          // without touching the context the partner reports on.
-          ...(variant ? { variant } : {}),
-          // What was actually asked for, so a renamed placement shows up here
-          // instead of vanishing. Already sanitised to [a-z0-9-].
-          ...(recognised ? {} : { requested: slug ? `post:${slug}` : `ctx:${ctxParam}` }),
-          // Same flag the client-side events carry; the dashboards filter it out.
-          ...(internal ? { internal: true } : {}),
-          via: "go_redirect",
-        },
-        ip_hash: ip !== "unknown" ? hashIp(ip) : null,
-      });
-    if (error) {
-      console.error(`[go/${partner}] insert failed:`, error.code, error.message);
+  if (analyticsWritesEnabled()) {
+    try {
+      const forwarded = req.headers.get("x-forwarded-for");
+      const ip = forwarded?.split(",")[0]?.trim() || "unknown";
+      // `fpc_internal` is set by tracking.ts alongside the owner's localStorage flag.
+      const internal = /(?:^|;\s*)fpc_internal=1(?:;|$)/.test(req.headers.get("cookie") ?? "");
+      const { error } = await supabaseServer()
+        .from("site_events")
+        .insert({
+          event_type: recognised ? "partner_click" : "go_rejected",
+          metadata: {
+            partner_id: entry.partnerKey,
+            click_context: context,
+            // Same key the impression writes, so a placement showing two framings
+            // can be read as impressions-by-variant against clicks-by-variant
+            // without touching the context the partner reports on.
+            ...(variant ? { variant } : {}),
+            // What was actually asked for, so a renamed placement shows up here
+            // instead of vanishing. Already sanitised to [a-z0-9-].
+            ...(recognised ? {} : { requested: slug ? `post:${slug}` : `ctx:${ctxParam}` }),
+            // Same flag the client-side events carry; the dashboards filter it out.
+            ...(internal ? { internal: true } : {}),
+            via: "go_redirect",
+          },
+          ip_hash: ip !== "unknown" ? hashIp(ip) : null,
+        });
+      if (error) {
+        console.error(`[go/${partner}] insert failed:`, error.code, error.message);
+      }
+    } catch (err) {
+      console.error(
+        `[go/${partner}] tracking threw:`,
+        err instanceof Error ? err.message : String(err),
+      );
     }
-  } catch (err) {
-    console.error(
-      `[go/${partner}] tracking threw:`,
-      err instanceof Error ? err.message : String(err),
-    );
   }
 
   return NextResponse.redirect(destination, {

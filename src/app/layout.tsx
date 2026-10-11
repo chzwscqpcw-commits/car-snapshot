@@ -10,6 +10,7 @@ import SiteFooter from "@/components/SiteFooter";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import { HomeResultProvider } from "@/components/HomeResultContext";
 import RouteAnalytics from "@/components/RouteAnalytics";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -164,12 +165,18 @@ export default function RootLayout({
         <link rel="alternate" type="application/rss+xml" title="Free Plate Check — Car Guides & MOT Tips" href="https://www.freeplatecheck.co.uk/feed.xml" />
       </head>
       <body>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-LW3HZS1Z5H"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());
+        {/* GA4 only on the production deployment, same rule as site_events
+            (analytics-writes.ts) — local and preview runs were sending real
+            hits. Every gtag call site checks `window.gtag` first, so leaving
+            the script out is a clean no-op. */}
+        {analyticsWritesEnabled() && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-LW3HZS1Z5H"
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());
 // Strip the number plate from anything GA4 receives. A UK reg is personal data
 // (UK GDPR) and our privacy policy promises anonymized analytics + "we don't
 // track which vehicles you look up" — but plates ride in the URL as ?vrm= (and
@@ -177,7 +184,9 @@ export default function RootLayout({
 // page_referrer on hard loads. Scrub both params before GA ever sees them; all
 // other params (utm_*, gclid, …) are preserved so campaign attribution is intact.
 (function(){function scrub(u){try{var x=new URL(u);x.searchParams.delete('vrm');x.searchParams.delete('reg');return x.toString();}catch(e){return u;}}gtag('config','G-LW3HZS1Z5H',{page_location:scrub(location.href),page_referrer:scrub(document.referrer||'')});})();`}
-        </Script>
+            </Script>
+          </>
+        )}
         <RouteAnalytics />
         <RacDemoProvider>
           <CommandPaletteProvider>
