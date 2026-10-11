@@ -83,7 +83,7 @@ const FILE_META: Record<string, FileMeta> = {
     threshold: 180,
     source: "semi-auto",
     refreshHint:
-      "Download bulk MOT data from data.gov.uk → run: npx tsx scripts/process-mot-stats.ts <csv>",
+      "Download + unzip dft_test_result/dft_test_item/lookup from data.gov.uk → run: python scripts/process-mot-bulk.py <dir> <year> (needs duckdb). Writes this and mot-failure-reasons.json. Latest published year as of Oct 2026: 2023.",
     sourceUrl: "https://www.data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f/anonymised-mot-tests-and-results",
   },
   "ncap-ratings.json": {
@@ -120,9 +120,9 @@ const FILE_META: Record<string, FileMeta> = {
   },
   "mot-failure-reasons.json": {
     threshold: 180,
-    source: "curated",
-    refreshHint: "Compile common failure reasons from DVSA MOT statistics publications",
-    sourceUrl: "https://www.gov.uk/government/statistics/mot-testing-data",
+    source: "semi-auto",
+    refreshHint: "Generated alongside mot-pass-rates.json by scripts/process-mot-bulk.py from the DVSA failure-item file",
+    sourceUrl: "https://www.data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f/anonymised-mot-tests-and-results",
   },
   // 365 rather than 180, matching body-types.json. These two describe physical
   // facts about models already built: a 2019 Golf's tyre size and kerb weight

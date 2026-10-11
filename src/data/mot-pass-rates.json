@@ -1,125 +1,490 @@
 {
-  "FORD|FIESTA": [1250000, 78.2],
-  "FORD|FOCUS": [980000, 76.5],
-  "FORD|MONDEO": [320000, 73.8],
-  "FORD|KA": [180000, 74.1],
-  "FORD|GALAXY": [85000, 71.2],
-  "FORD|S-MAX": [75000, 73.5],
-  "FORD|KUGA": [210000, 79.3],
-  "FORD|ECOSPORT": [55000, 81.2],
-  "FORD|PUMA": [42000, 85.1],
-  "FORD|TRANSIT": [520000, 68.5],
-  "VAUXHALL|CORSA": [980000, 76.8],
-  "VAUXHALL|ASTRA": [720000, 75.2],
-  "VAUXHALL|INSIGNIA": [280000, 74.5],
-  "VAUXHALL|MOKKA": [160000, 80.1],
-  "VAUXHALL|CROSSLAND": [65000, 82.3],
-  "VAUXHALL|GRANDLAND": [45000, 83.7],
-  "VAUXHALL|ZAFIRA": [185000, 71.8],
-  "VAUXHALL|MERIVA": [120000, 73.2],
-  "VOLKSWAGEN|GOLF": [680000, 79.5],
-  "VOLKSWAGEN|POLO": [520000, 78.8],
-  "VOLKSWAGEN|PASSAT": [180000, 76.2],
-  "VOLKSWAGEN|TIGUAN": [140000, 81.5],
-  "VOLKSWAGEN|T-ROC": [55000, 84.2],
-  "VOLKSWAGEN|UP": [95000, 80.3],
-  "VOLKSWAGEN|TOURAN": [65000, 77.1],
-  "VOLKSWAGEN|TRANSPORTER": [185000, 70.5],
-  "BMW|1 SERIES": [280000, 80.2],
-  "BMW|2 SERIES": [110000, 81.5],
-  "BMW|3 SERIES": [380000, 78.5],
-  "BMW|4 SERIES": [75000, 80.8],
-  "BMW|5 SERIES": [190000, 77.2],
-  "BMW|X1": [95000, 81.8],
-  "BMW|X3": [85000, 80.5],
-  "BMW|X5": [65000, 76.8],
-  "MERCEDES BENZ|A CLASS": [210000, 79.8],
-  "MERCEDES BENZ|C CLASS": [280000, 77.5],
-  "MERCEDES BENZ|E CLASS": [150000, 76.2],
-  "MERCEDES BENZ|GLA": [55000, 82.1],
-  "MERCEDES BENZ|GLC": [45000, 83.5],
-  "AUDI|A1": [120000, 80.5],
-  "AUDI|A3": [310000, 79.2],
-  "AUDI|A4": [220000, 77.8],
-  "AUDI|A5": [85000, 79.5],
-  "AUDI|A6": [95000, 76.5],
-  "AUDI|Q2": [45000, 83.2],
-  "AUDI|Q3": [65000, 81.8],
-  "AUDI|Q5": [55000, 80.2],
-  "TOYOTA|YARIS": [380000, 83.5],
-  "TOYOTA|COROLLA": [120000, 84.2],
-  "TOYOTA|AURIS": [185000, 82.8],
-  "TOYOTA|C-HR": [75000, 85.1],
-  "TOYOTA|RAV4": [95000, 82.5],
-  "TOYOTA|AYGO": [210000, 82.2],
-  "TOYOTA|PRIUS": [85000, 83.8],
-  "HONDA|CIVIC": [280000, 81.5],
-  "HONDA|JAZZ": [210000, 83.2],
-  "HONDA|CR-V": [120000, 80.8],
-  "HONDA|HR-V": [45000, 83.5],
-  "NISSAN|QASHQAI": [520000, 78.5],
-  "NISSAN|JUKE": [310000, 79.2],
-  "NISSAN|MICRA": [280000, 76.5],
-  "NISSAN|NOTE": [180000, 77.8],
-  "NISSAN|LEAF": [45000, 84.5],
-  "HYUNDAI|I10": [180000, 81.2],
-  "HYUNDAI|I20": [120000, 80.5],
-  "HYUNDAI|I30": [95000, 79.8],
-  "HYUNDAI|TUCSON": [110000, 81.8],
-  "HYUNDAI|KONA": [55000, 83.5],
-  "KIA|PICANTO": [120000, 81.5],
-  "KIA|RIO": [85000, 80.2],
-  "KIA|CEED": [75000, 79.8],
-  "KIA|SPORTAGE": [185000, 80.5],
-  "KIA|NIRO": [55000, 83.8],
-  "PEUGEOT|208": [280000, 77.2],
-  "PEUGEOT|308": [180000, 75.5],
-  "PEUGEOT|2008": [95000, 79.8],
-  "PEUGEOT|3008": [85000, 78.5],
-  "PEUGEOT|107": [120000, 76.8],
-  "CITROEN|C1": [120000, 77.5],
-  "CITROEN|C3": [95000, 76.2],
-  "CITROEN|C4": [65000, 74.8],
-  "CITROEN|BERLINGO": [75000, 72.5],
-  "RENAULT|CLIO": [320000, 75.8],
-  "RENAULT|CAPTUR": [95000, 78.2],
-  "RENAULT|MEGANE": [120000, 74.5],
-  "FIAT|500": [280000, 76.5],
-  "FIAT|PANDA": [55000, 74.8],
-  "MINI|MINI": [280000, 78.8],
-  "MINI|COUNTRYMAN": [65000, 79.5],
-  "SKODA|OCTAVIA": [180000, 79.2],
-  "SKODA|FABIA": [120000, 78.5],
-  "SKODA|SUPERB": [55000, 78.8],
-  "SKODA|KODIAQ": [45000, 82.5],
-  "SKODA|KAROQ": [35000, 83.2],
-  "SEAT|IBIZA": [120000, 78.2],
-  "SEAT|LEON": [95000, 78.8],
-  "SEAT|ARONA": [35000, 82.5],
-  "VOLVO|XC60": [65000, 79.8],
-  "VOLVO|XC40": [35000, 84.2],
-  "VOLVO|V40": [85000, 78.5],
-  "VOLVO|V60": [45000, 79.2],
-  "LAND ROVER|RANGE ROVER EVOQUE": [85000, 72.5],
-  "LAND ROVER|RANGE ROVER SPORT": [45000, 70.8],
-  "LAND ROVER|DISCOVERY SPORT": [55000, 73.2],
-  "LAND ROVER|DISCOVERY": [35000, 69.5],
-  "JAGUAR|XE": [35000, 74.5],
-  "JAGUAR|XF": [45000, 73.2],
-  "JAGUAR|F-PACE": [35000, 75.8],
-  "MAZDA|2": [55000, 82.5],
-  "MAZDA|3": [65000, 81.2],
-  "MAZDA|CX-5": [55000, 82.8],
-  "MAZDA|MX-5": [35000, 83.5],
-  "SUZUKI|SWIFT": [120000, 82.2],
-  "SUZUKI|VITARA": [55000, 81.5],
-  "SUZUKI|IGNIS": [25000, 83.8],
-  "DACIA|SANDERO": [55000, 78.5],
-  "DACIA|DUSTER": [45000, 77.8],
-  "TESLA|MODEL 3": [25000, 86.2],
-  "TESLA|MODEL Y": [15000, 87.5],
-  "MG|ZS": [25000, 81.5],
-  "MG|HS": [15000, 82.8],
-  "PORSCHE|CAYENNE": [25000, 74.5],
-  "PORSCHE|MACAN": [15000, 78.2]
+  "FORD|FIESTA": [
+    1440906,
+    66.4
+  ],
+  "FORD|FOCUS": [
+    986031,
+    68.2
+  ],
+  "FORD|MONDEO": [
+    215234,
+    66.5
+  ],
+  "FORD|KA": [
+    190198,
+    68.2
+  ],
+  "FORD|GALAXY": [
+    65848,
+    63.2
+  ],
+  "FORD|S-MAX": [
+    78239,
+    65.1
+  ],
+  "FORD|KUGA": [
+    273206,
+    79.7
+  ],
+  "FORD|ECOSPORT": [
+    98104,
+    80.8
+  ],
+  "FORD|PUMA": [
+    29923,
+    90.0
+  ],
+  "FORD|TRANSIT": [
+    317600,
+    62.6
+  ],
+  "VAUXHALL|CORSA": [
+    942999,
+    63.9
+  ],
+  "VAUXHALL|ASTRA": [
+    700849,
+    65.4
+  ],
+  "VAUXHALL|INSIGNIA": [
+    217200,
+    68.1
+  ],
+  "VAUXHALL|MOKKA": [
+    220751,
+    74.4
+  ],
+  "VAUXHALL|CROSSLAND": [
+    51580,
+    85.8
+  ],
+  "VAUXHALL|GRANDLAND": [
+    59310,
+    86.6
+  ],
+  "VAUXHALL|ZAFIRA": [
+    227485,
+    61.0
+  ],
+  "VAUXHALL|MERIVA": [
+    101061,
+    62.4
+  ],
+  "VOLKSWAGEN|GOLF": [
+    919273,
+    73.6
+  ],
+  "VOLKSWAGEN|POLO": [
+    624655,
+    67.1
+  ],
+  "VOLKSWAGEN|PASSAT": [
+    206114,
+    70.6
+  ],
+  "VOLKSWAGEN|TIGUAN": [
+    220514,
+    82.3
+  ],
+  "VOLKSWAGEN|T-ROC": [
+    55067,
+    91.0
+  ],
+  "VOLKSWAGEN|UP": [
+    121465,
+    81.6
+  ],
+  "VOLKSWAGEN|TOURAN": [
+    78448,
+    66.7
+  ],
+  "VOLKSWAGEN|TRANSPORTER": [
+    295319,
+    67.8
+  ],
+  "BMW|1 SERIES": [
+    395095,
+    75.9
+  ],
+  "BMW|2 SERIES": [
+    114077,
+    85.0
+  ],
+  "BMW|3 SERIES": [
+    507550,
+    74.6
+  ],
+  "BMW|4 SERIES": [
+    100652,
+    84.7
+  ],
+  "BMW|5 SERIES": [
+    218898,
+    78.5
+  ],
+  "BMW|X1": [
+    100680,
+    83.0
+  ],
+  "BMW|X3": [
+    97781,
+    79.5
+  ],
+  "BMW|X5": [
+    90495,
+    77.9
+  ],
+  "MERCEDES BENZ|A CLASS": [
+    331939,
+    78.9
+  ],
+  "MERCEDES BENZ|C CLASS": [
+    391590,
+    74.8
+  ],
+  "MERCEDES BENZ|E CLASS": [
+    249504,
+    77.8
+  ],
+  "MERCEDES BENZ|GLA": [
+    78888,
+    86.4
+  ],
+  "MERCEDES BENZ|GLC": [
+    72952,
+    88.4
+  ],
+  "AUDI|A1": [
+    209406,
+    78.4
+  ],
+  "AUDI|A3": [
+    422875,
+    74.6
+  ],
+  "AUDI|A4": [
+    267797,
+    72.6
+  ],
+  "AUDI|A5": [
+    124138,
+    78.7
+  ],
+  "AUDI|A6": [
+    129378,
+    79.1
+  ],
+  "AUDI|Q2": [
+    59697,
+    90.5
+  ],
+  "AUDI|Q3": [
+    119886,
+    84.2
+  ],
+  "AUDI|Q5": [
+    100754,
+    83.9
+  ],
+  "TOYOTA|YARIS": [
+    447765,
+    71.6
+  ],
+  "TOYOTA|COROLLA": [
+    105950,
+    71.3
+  ],
+  "TOYOTA|AURIS": [
+    157660,
+    74.0
+  ],
+  "TOYOTA|C-HR": [
+    68273,
+    86.4
+  ],
+  "TOYOTA|RAV4": [
+    91615,
+    79.0
+  ],
+  "TOYOTA|AYGO": [
+    248843,
+    76.4
+  ],
+  "TOYOTA|PRIUS": [
+    156309,
+    78.4
+  ],
+  "HONDA|CIVIC": [
+    297276,
+    67.2
+  ],
+  "HONDA|JAZZ": [
+    333968,
+    74.8
+  ],
+  "HONDA|CR-V": [
+    203583,
+    74.1
+  ],
+  "HONDA|HR-V": [
+    32788,
+    87.5
+  ],
+  "NISSAN|QASHQAI": [
+    554925,
+    70.5
+  ],
+  "NISSAN|JUKE": [
+    297879,
+    70.8
+  ],
+  "NISSAN|MICRA": [
+    255896,
+    64.3
+  ],
+  "NISSAN|NOTE": [
+    157340,
+    65.1
+  ],
+  "NISSAN|LEAF": [
+    37488,
+    81.6
+  ],
+  "HYUNDAI|I10": [
+    241862,
+    74.1
+  ],
+  "HYUNDAI|I20": [
+    125129,
+    73.7
+  ],
+  "HYUNDAI|I30": [
+    106875,
+    66.0
+  ],
+  "HYUNDAI|TUCSON": [
+    121849,
+    82.5
+  ],
+  "HYUNDAI|KONA": [
+    28960,
+    89.3
+  ],
+  "KIA|PICANTO": [
+    179070,
+    71.5
+  ],
+  "KIA|RIO": [
+    98477,
+    69.9
+  ],
+  "KIA|CEED": [
+    121354,
+    67.6
+  ],
+  "KIA|SPORTAGE": [
+    254820,
+    77.3
+  ],
+  "KIA|NIRO": [
+    52206,
+    88.4
+  ],
+  "PEUGEOT|208": [
+    195515,
+    73.5
+  ],
+  "PEUGEOT|308": [
+    141702,
+    65.4
+  ],
+  "PEUGEOT|2008": [
+    115273,
+    75.5
+  ],
+  "PEUGEOT|3008": [
+    133166,
+    71.5
+  ],
+  "PEUGEOT|107": [
+    118767,
+    64.3
+  ],
+  "CITROEN|C1": [
+    168777,
+    70.8
+  ],
+  "CITROEN|C3": [
+    197767,
+    64.9
+  ],
+  "CITROEN|C4": [
+    141919,
+    60.6
+  ],
+  "CITROEN|BERLINGO": [
+    189133,
+    58.5
+  ],
+  "RENAULT|CLIO": [
+    340161,
+    56.8
+  ],
+  "RENAULT|CAPTUR": [
+    146032,
+    79.4
+  ],
+  "RENAULT|MEGANE": [
+    120674,
+    54.4
+  ],
+  "FIAT|500": [
+    324200,
+    69.3
+  ],
+  "FIAT|PANDA": [
+    93036,
+    65.6
+  ],
+  "MINI|MINI": [
+    293454,
+    62.6
+  ],
+  "MINI|COUNTRYMAN": [
+    87887,
+    85.8
+  ],
+  "SKODA|OCTAVIA": [
+    207349,
+    75.8
+  ],
+  "SKODA|FABIA": [
+    236211,
+    71.2
+  ],
+  "SKODA|SUPERB": [
+    63108,
+    78.6
+  ],
+  "SKODA|KODIAQ": [
+    30579,
+    89.4
+  ],
+  "SKODA|KAROQ": [
+    42142,
+    90.3
+  ],
+  "SEAT|IBIZA": [
+    194950,
+    66.3
+  ],
+  "SEAT|LEON": [
+    185889,
+    76.7
+  ],
+  "SEAT|ARONA": [
+    39053,
+    86.1
+  ],
+  "VOLVO|XC60": [
+    104160,
+    80.2
+  ],
+  "VOLVO|XC40": [
+    47465,
+    90.2
+  ],
+  "VOLVO|V40": [
+    100495,
+    73.3
+  ],
+  "VOLVO|V60": [
+    37102,
+    78.4
+  ],
+  "LAND ROVER|RANGE ROVER EVOQUE": [
+    161822,
+    83.6
+  ],
+  "LAND ROVER|RANGE ROVER SPORT": [
+    122382,
+    79.6
+  ],
+  "LAND ROVER|DISCOVERY SPORT": [
+    108450,
+    82.5
+  ],
+  "LAND ROVER|DISCOVERY": [
+    155707,
+    73.0
+  ],
+  "JAGUAR|XE": [
+    44027,
+    81.5
+  ],
+  "JAGUAR|XF": [
+    101835,
+    75.8
+  ],
+  "JAGUAR|F-PACE": [
+    47697,
+    85.3
+  ],
+  "MAZDA|2": [
+    127390,
+    70.2
+  ],
+  "MAZDA|3": [
+    110072,
+    68.4
+  ],
+  "MAZDA|CX-5": [
+    61634,
+    82.0
+  ],
+  "MAZDA|MX-5": [
+    95469,
+    74.0
+  ],
+  "SUZUKI|SWIFT": [
+    133153,
+    71.8
+  ],
+  "SUZUKI|VITARA": [
+    60898,
+    85.3
+  ],
+  "SUZUKI|IGNIS": [
+    27397,
+    78.8
+  ],
+  "DACIA|SANDERO": [
+    99607,
+    70.4
+  ],
+  "DACIA|DUSTER": [
+    64378,
+    74.5
+  ],
+  "TESLA|MODEL 3": [
+    32821,
+    83.4
+  ],
+  "MG|ZS": [
+    29268,
+    83.7
+  ],
+  "MG|HS": [
+    3600,
+    89.9
+  ],
+  "PORSCHE|CAYENNE": [
+    29340,
+    84.1
+  ],
+  "PORSCHE|MACAN": [
+    26751,
+    91.7
+  ]
 }

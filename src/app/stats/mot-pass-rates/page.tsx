@@ -11,14 +11,14 @@ import passRateData from "@/data/mot-pass-rates.json";
 import MotPassRateCharts from "@/components/stats/MotPassRateCharts";
 
 export const metadata: Metadata = {
-  title: "MOT Pass Rates by Make & Model 2025 | UK Statistics",
+  title: "MOT Pass Rates by Make & Model | Real DVSA Test Data",
   description:
     "Interactive UK MOT pass rate statistics by make and model. See national averages, top failure reasons, and find out how your car compares — based on millions of real MOT tests.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/mot-pass-rates",
   },
   openGraph: {
-    title: "MOT Pass Rates by Make & Model 2025 | UK Statistics",
+    title: "MOT Pass Rates by Make & Model | Real DVSA Test Data",
     description:
       "National pass rates and top failure reasons — interactive UK MOT statistics based on millions of tests.",
     url: "https://www.freeplatecheck.co.uk/stats/mot-pass-rates",
@@ -81,7 +81,7 @@ const stats = computeStats();
 const faqItems = [
   {
     question: "What is the national MOT pass rate in the UK?",
-    answer: `The national average MOT first-time pass rate is approximately ${stats.nationalAvg}%, based on data from the 2024/25 DVSA test year. This means roughly 1 in 5 vehicles fails its MOT on the first attempt. Pass rates vary significantly by make, model and vehicle age.`,
+    answer: `The national average MOT first-time pass rate is approximately ${stats.nationalAvg}%, based on 32.8 million initial MOT tests on cars and light vans in 2023 — the most recent year DVSA has published. That means nearly 3 in 10 vehicles fail first time. Pass rates vary significantly by make, model and vehicle age.`,
   },
   {
     question: "Which car make has the highest MOT pass rate?",
@@ -95,7 +95,7 @@ const faqItems = [
   {
     question: "How are MOT pass rates calculated?",
     answer:
-      "Pass rates are calculated from real MOT test results recorded by the DVSA (Driver and Vehicle Standards Agency). The rate represents the percentage of vehicles that pass their MOT on the first attempt within a given test year, without requiring any repair and retest.",
+      "Pass rates are calculated from real MOT test results recorded by the DVSA (Driver and Vehicle Standards Agency). The rate represents the percentage of vehicles that pass their MOT on the first attempt within a given test year, without requiring any repair and retest. Our figures cover every initial class 4 MOT test in 2023 (retests excluded); a fix made during the test (PRS) counts as a fail.",
   },
   {
     question: "Does my car's age affect its MOT pass rate?",
@@ -119,7 +119,7 @@ export default function MotPassRatesPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "MOT Pass Rates by Make & Model 2025",
+              name: "MOT Pass Rates by Make & Model (2023 DVSA data)",
               description:
                 "Interactive UK MOT pass rate statistics by make and model. See national averages, top failure reasons, and find out how your car compares — based on millions of real MOT tests.",
               url: "https://www.freeplatecheck.co.uk/stats/mot-pass-rates",
@@ -130,7 +130,7 @@ export default function MotPassRatesPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2024/2025",
+              temporalCoverage: "2023",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "MOT first-time pass rate percentage by vehicle make and model",
@@ -184,7 +184,7 @@ export default function MotPassRatesPage() {
         {/* Charts */}
         <MotPassRateCharts />
 
-        {/* The page states the DVSA test year its figures COVER (2024/25, in
+        {/* The page states the DVSA test year its figures COVER (calendar 2023, in
             the schema and the prose); this states when our copy of the data was
             last refreshed, which is a different fact and the one a citing
             journalist needs. Both datasets the charts draw on are listed, so

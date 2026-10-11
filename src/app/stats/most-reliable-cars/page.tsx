@@ -76,7 +76,7 @@ export default function MostReliableCarsPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2024/2025",
+              temporalCoverage: "2023",
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Vehicle reliability ranking based on MOT pass rate percentage",

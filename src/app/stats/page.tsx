@@ -159,9 +159,9 @@ export default function StatsIndex() {
             title="MOT Pass Rates"
             description="National first-time pass rates by make, plus the most common failure categories."
             stats={[
-              { value: "84.2%", label: "avg pass", colour: "emerald" },
-              { value: "1 in 5", label: "fail", colour: "red" },
-              { value: "#1", label: "suspension", colour: "amber" },
+              { value: "71.5%", label: "avg pass", colour: "emerald" },
+              { value: "3 in 10", label: "fail", colour: "red" },
+              { value: "#1", label: "lighting", colour: "amber" },
             ]}
             delay={500}
           />
