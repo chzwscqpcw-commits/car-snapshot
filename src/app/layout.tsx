@@ -118,8 +118,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      // The inline script below adds `js` to this element before hydration.
+      suppressHydrationWarning
+    >
       <head>
+        {/* Runs before first paint: marks JS as available so CountUp can hide
+            its server-rendered final value until the count-up starts. Without
+            JS the real number simply stays visible. See CountUp.tsx. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

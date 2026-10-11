@@ -361,3 +361,14 @@ a {
   }
 }
 
+
+/* CountUp: the server renders the real value; with JS on it's hidden until
+   the count-up starts (see src/components/CountUp.tsx). If hydration never
+   happens, reveal it after 3s rather than leaving a blank stat. */
+.js [data-countup="pending"] {
+  visibility: hidden;
+  animation: countup-reveal 0s 3s forwards;
+}
+@keyframes countup-reveal {
+  to { visibility: visible; }
+}
