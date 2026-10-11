@@ -428,7 +428,7 @@ const ALL_PILLS: Record<string, QuickPillDef> = {
   ulez: { href: (v) => `/ulez-check?vrm=${v}`, label: "ULEZ", icon: Wind },
   recall: { href: (v) => `/recall-check?vrm=${v}`, label: "Recalls", icon: AlertTriangle },
   valuation: {
-    href: (v) => `/car-valuation?vrm=${v}`,
+    href: (v) => `/value-my-car?vrm=${v}`,
     label: "Valuation",
     icon: PoundSterling,
   },

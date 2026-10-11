@@ -12,7 +12,7 @@
  *                   dashboard for a visit that never happened. The route
  *                   refuses crawlers itself too (src/lib/bots.ts) — this
  *                   disallow is the polite first line, not the only one.
- * - /*?vrm=       — plate-lookup deep-links (e.g. /car-valuation?vrm=AB12CDE).
+ * - /*?vrm=       — plate-lookup deep-links (e.g. /value-my-car?vrm=AB12CDE).
  *                   `vrm` is the LIVE search param the app reads/writes; keep
  *                   this in lock-step with the router.push targets. These carry
  *                   a number plate (personal data), so they must never be

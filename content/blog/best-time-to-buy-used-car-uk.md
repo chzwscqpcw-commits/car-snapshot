@@ -55,7 +55,7 @@ This is worth knowing even if you are buying from a smaller independent dealer. 
 
 Timing alone will not get you the best price — you need to negotiate effectively as well. Here are some practical tips:
 
-- **Do your research first.** Know the market value of the car you want before you set foot on a forecourt. Use a [free car valuation tool](/car-valuation) to understand what a fair price looks like based on age, mileage, and condition.
+- **Do your research first.** Know the market value of the car you want before you set foot on a forecourt. Use a [free car valuation tool](/value-my-car) to understand what a fair price looks like based on age, mileage, and condition.
 - **Visit late in the month.** The last week of a quarter-end month (especially March and December) is when urgency is highest. Dealers who need one more sale to hit target will find a way to make the numbers work.
 - **Be ready to walk away.** Having a firm idea of your budget — and being willing to leave if the price does not meet it — is the most powerful negotiating tool available to any buyer.
 - **Ask about finance alternatives.** Dealers sometimes make more margin on finance deals than on the car itself. If you are open to dealer finance, they may offer a lower headline price. Just make sure you compare the total cost of the finance against paying cash or arranging your own loan.
@@ -74,7 +74,7 @@ If you drive in or around London, or plan to, check whether the vehicle is [ULEZ
 
 ### Valuation and market position
 
-Use the [valuation tool](/car-valuation) to see how the asking price compares to the current market. A car priced above market value in December might still be more expensive than a fairly priced car in July. The absolute price matters more than the season — timing just gives you extra leverage.
+Use the [valuation tool](/value-my-car) to see how the asking price compares to the current market. A car priced above market value in December might still be more expensive than a fairly priced car in July. The absolute price matters more than the season — timing just gives you extra leverage.
 
 ### Outstanding finance and write-off status
 

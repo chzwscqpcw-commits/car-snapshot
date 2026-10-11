@@ -25,7 +25,7 @@ const URLS = [
   `https://${HOST}/mileage-check`,
   `https://${HOST}/ulez-check`,
   `https://${HOST}/recall-check`,
-  `https://${HOST}/car-valuation`,
+  `https://${HOST}/value-my-car`,
   `https://${HOST}/mot-reminder`,
   `https://${HOST}/cars`,
   `https://${HOST}/stats`,

@@ -257,7 +257,7 @@ export default function ClutchReplacementPage() {
               <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How to spot garage overcharging</p>
               <p className="text-xs text-slate-500 mt-2">Big-ticket jobs are where dodgy garages add phantom work.</p>
             </Link>
-            <Link href="/car-valuation" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <Link href="/value-my-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
               <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Get a free car valuation</p>
               <p className="text-xs text-slate-500 mt-2">If the repair costs more than the car is worth — see what it&apos;s worth.</p>
             </Link>

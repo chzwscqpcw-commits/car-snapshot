@@ -62,6 +62,6 @@ Where there's a big payout, scams follow. Be wary of texts, emails or calls prom
 
 ## The bottom line
 
-Millions of UK drivers are in line for a share of £7.5 billion — and getting it doesn't have to cost you a penny. Dig out who your old car finance was with, complain directly if you want to get ahead of the queue, and ignore anyone trying to charge you for the privilege. While you're thinking about your car's finances, it's also worth knowing [what it's actually worth today](/car-valuation) — a free valuation takes seconds.
+Millions of UK drivers are in line for a share of £7.5 billion — and getting it doesn't have to cost you a penny. Dig out who your old car finance was with, complain directly if you want to get ahead of the queue, and ignore anyone trying to charge you for the privilege. While you're thinking about your car's finances, it's also worth knowing [what it's actually worth today](/value-my-car) — a free valuation takes seconds.
 
 *This article is general information, not financial advice. For the official details, see the FCA's guidance on the motor finance redress scheme.*

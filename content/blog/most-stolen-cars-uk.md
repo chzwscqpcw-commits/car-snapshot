@@ -117,6 +117,6 @@ For a definitive theft check, you'll need a paid vehicle history report such as 
 
 ## Check your vehicle now
 
-Knowing your car's risk profile starts with understanding what you're driving. Run a [free vehicle check](/car-check) to see your car's full details, MOT history, and tax status — or use our [car valuation tool](/car-valuation) to understand what your vehicle is worth to a thief.
+Knowing your car's risk profile starts with understanding what you're driving. Run a [free vehicle check](/car-check) to see your car's full details, MOT history, and tax status — or use our [car valuation tool](/value-my-car) to understand what your vehicle is worth to a thief.
 
 If you're buying a used car, always check the vehicle thoroughly before handing over any money. Our guide to [used car checks before buying](/blog/used-car-checks-before-buying) covers everything you need to know.

@@ -103,4 +103,4 @@ This is different from the rules around outstanding finance, where an innocent b
 
 A stolen vehicle check is one of the few things a free car check can't fully cover, because the PNC database isn't publicly accessible. For peace of mind on any significant purchase, add a paid vehicle history report such as a **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** (20% off with our link, or code `freeplatecheck`).
 
-But always start with a [free car check](/car-check) — it covers vehicle details, [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [safety recalls](/recall-check), and [valuation](/car-valuation). That's a comprehensive first screen that costs nothing and takes 30 seconds.
+But always start with a [free car check](/car-check) — it covers vehicle details, [MOT history](/mot-check), [mileage verification](/mileage-check), [tax status](/tax-check), [ULEZ compliance](/ulez-check), [safety recalls](/recall-check), and [valuation](/value-my-car). That's a comprehensive first screen that costs nothing and takes 30 seconds.

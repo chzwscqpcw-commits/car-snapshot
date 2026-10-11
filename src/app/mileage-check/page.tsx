@@ -301,7 +301,7 @@ export default async function MileageCheckPage({
               Mileage drives a used car&apos;s value, insurance, warranty remaining, and service-cost expectations. Brakes, clutches, suspension, timing belts — most service intervals are mileage-based.
             </p>
             <p className="leading-relaxed">
-              A high-mileage car with full service history beats a low-mileage one that&apos;s been neglected. Pattern matters more than the number on the clock. Pair this with our <a href="/car-valuation" className="text-blue-400 hover:text-blue-300">free valuation</a> to see how mileage affects market value.
+              A high-mileage car with full service history beats a low-mileage one that&apos;s been neglected. Pattern matters more than the number on the clock. Pair this with our <a href="/value-my-car" className="text-blue-400 hover:text-blue-300">free valuation</a> to see how mileage affects market value.
             </p>
           </section>
 

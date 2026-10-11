@@ -107,7 +107,7 @@ Run a [free vehicle check](/car-check) to confirm your MOT expiry date and [tax 
 
 ## Consider your car's emissions and running costs
 
-Winter driving increases fuel consumption — cold starts, heater use, and congested roads all take their toll. If you are concerned about running costs, check your car's [estimated running costs and valuation](/car-valuation) to understand where your money goes.
+Winter driving increases fuel consumption — cold starts, heater use, and congested roads all take their toll. If you are concerned about running costs, check your car's [estimated running costs and valuation](/value-my-car) to understand where your money goes.
 
 If you drive in London, confirm your [ULEZ compliance](/ulez-check) status. The charge applies year-round, and forgetting about it during a winter trip into the zone is an expensive mistake.
 

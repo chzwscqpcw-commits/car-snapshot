@@ -786,7 +786,7 @@ export default async function ModelGuidePage({ params }: PageProps) {
                 </p>
               </a>
               <a
-                href="/car-valuation"
+                href="/value-my-car"
                 className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors"
               >
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">

@@ -90,7 +90,7 @@ Depreciation is typically the largest cost of car ownership, and it varies signi
 - **Hybrid** — strong residual values, particularly for Toyota/Lexus self-charging hybrids. Market confidence is high.
 - **Electric** — historically volatile. Early EVs depreciated rapidly as battery technology improved. Newer models with longer ranges are holding value better, but rapid model cycles still create risk.
 
-If you're buying used, depreciation works in your favour — especially for electric cars where someone else has absorbed the steepest drop. You can [check any car's current market value](/car-valuation) for free to see where it sits.
+If you're buying used, depreciation works in your favour — especially for electric cars where someone else has absorbed the steepest drop. You can [check any car's current market value](/value-my-car) for free to see where it sits.
 
 ## A worked example: Ford Puma petrol vs mild hybrid
 

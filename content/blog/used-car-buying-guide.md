@@ -60,7 +60,7 @@ Enter it into a [free car check](/car-check) and you will see:
 - **[Tax status](/tax-check)** and [ULEZ compliance](/ulez-check)
 - **[Outstanding safety recalls](/recall-check)** that have never been actioned
 - **The DVLA details** — make, model, engine size, fuel type, colour and date of first registration
-- **A [valuation](/car-valuation)** so you know whether the asking price is sensible
+- **A [valuation](/value-my-car)** so you know whether the asking price is sensible
 
 Read the MOT history properly rather than glancing at the pass/fail. You are looking for patterns: the same advisory appearing year after year and never being fixed, a long gap between a failure and the retest, corrosion advisories that escalate in wording, or a sudden change of test centre. Any of these tell you how the car has been treated.
 
@@ -75,7 +75,7 @@ Before you contact anyone, read the advert like a sceptic:
 - **The number plate is blurred, cropped or covered.** Occasionally a privacy preference; more often it prevents you doing the check above. Ask for it directly.
 - **The description is vague.** "Runs and drives", "any inspection welcome", "no time wasters" and little else. Genuine sellers who have looked after a car tend to say so in detail.
 - **No mention of service history.** A missing service book is not automatically fatal on an older car, but it should be reflected in the price and explained.
-- **The price is well below market.** Compare against the [valuation](/car-valuation) for that model, age and mileage. A genuinely cheap car has a reason, and you want to know it before you travel, not after.
+- **The price is well below market.** Compare against the [valuation](/value-my-car) for that model, age and mileage. A genuinely cheap car has a reason, and you want to know it before you travel, not after.
 - **The photos are too few, too small, or taken at night.** Darkness hides paint defects and panel gaps very effectively.
 - **The seller pushes for a fast deposit.** Urgency is the oldest lever in fraud. A real car will still be there tomorrow.
 - **The address or location keeps shifting.** Meeting "somewhere convenient" rather than at the seller's home address is a serious warning sign for a private sale — the V5C should show that address.

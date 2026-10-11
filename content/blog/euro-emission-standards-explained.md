@@ -64,7 +64,7 @@ Vehicles registered after April 2017 pay a flat-rate VED of £200 per year (2026
 
 ### Resale value
 
-Euro standard increasingly affects how easy a car is to sell and what it's worth. A diesel car that doesn't meet Euro 6 is effectively locked out of major cities, which reduces its appeal to a significant portion of buyers. Use our [free valuation](/car-valuation) to see how your car's value compares to the market.
+Euro standard increasingly affects how easy a car is to sell and what it's worth. A diesel car that doesn't meet Euro 6 is effectively locked out of major cities, which reduces its appeal to a significant portion of buyers. Use our [free valuation](/value-my-car) to see how your car's value compares to the market.
 
 ### Future restrictions
 

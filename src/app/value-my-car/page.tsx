@@ -11,11 +11,16 @@ import ValuationResult from "@/components/tools/ValuationResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 
-// Companion page to /car-valuation targeting the "value my car" query
-// cluster — distinct intent (action verb) from the "free car valuation"
-// query cluster that the main valuation page owns. Content is unique to
-// avoid duplicate-content penalties; the underlying tool (ValuationResult)
-// is shared.
+// THE valuation landing page. Until 2026-10-11 the same tool sat on four
+// routes with rewritten copy — /car-valuation, /value-my-car,
+// /how-much-is-my-car-worth, /car-valuation-no-signup — and the two that
+// ranked were cannibalising each other: for "free car valuation without
+// email" (our biggest query) Google swapped them back and forth, and their
+// combined clicks fell 15% in 28 days on an 8% impression drop. This page won
+// on every measure (pos 5.9 vs 14.8, 6.7% vs 4.4% seller-CTA rate, 1.6 vs 1.2
+// searches per visitor), so the other three now 308 here (next.config.ts) and
+// their best sections and FAQs live below. Don't re-split it into keyword
+// pages — that is the mistake this undid.
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -53,6 +58,31 @@ const FAQ_ITEMS: FaqItem[] = [
     answer:
       "As a starting point, yes — provided it draws from live market data, not stale dealer listings. For an insurance write-off claim, a finance settlement, or any legal use, get a paid professional valuation. For a private sale, a free tool is enough to set the price.",
   },
+  {
+    question: "Why do you show a range instead of one number?",
+    answer:
+      "No two used cars are identical. The range covers differences in condition, spec, and local demand we can't see from reg data alone. Use the condition questionnaire to narrow it.",
+  },
+  {
+    question: "Does an MOT advisory or failure affect my car's value?",
+    answer:
+      "Yes. Recent failures and recurring advisories can knock hundreds off the price. A lapsed MOT is worse — harder to sell, no legal test drive, signals neglect. Run an MOT check or set a free reminder from our MOT tools.",
+  },
+  {
+    question: "Why is my car worth less than I thought?",
+    answer:
+      "Three common reasons. (1) Memory bias — the price you paid was inflated by dealer margin; the resale value is closer to what the dealer paid for it, not what they sold it for. (2) Depreciation accelerates in years 3–5 for many models. (3) Mileage above the UK average (~8,000/year) compounds with age. Check your mileage trajectory on our MOT history tool — if it's well above average, that explains a lot.",
+  },
+  {
+    question: "Should I sell to We Buy Any Car or Motorway?",
+    answer:
+      "We Buy Any Car is the fastest and easiest, but typically the lowest offer (often 15–20% below private-sale value). Motorway runs an auction across dealers — usually nets a higher price than We Buy Any Car but still 5–15% below private sale. For a clean, in-demand car, private sale is worth the effort. For older, higher-mileage cars or quick-turnaround needs, Motorway is often the best compromise.",
+  },
+  {
+    question: "How do you make money if it's free and there's no signup?",
+    answer:
+      "We earn a commission when you choose to use one of the partners shown on the page — for example a carVertical history report, a garage booking through BookMyGarage, or short-term insurance from Cuvva. Those offers are labelled, they're the same for everyone, and the valuation works exactly the same if you ignore them. Your details are never sold or passed on.",
+  },
 ];
 
 function cleanReg(raw: string): string {
@@ -60,10 +90,15 @@ function cleanReg(raw: string): string {
 }
 
 export const metadata: Metadata = {
-  title: "Value My Car 2026 — Free Instant UK Valuation, No Email | Free Plate Check",
+  title: "Free Car Valuation 2026 — Value My Car by Reg, No Email | Free Plate Check",
   description:
-    "Value your car in 30 seconds with just your registration. Free, no email, no signup. Live market data plus depreciation modelling for an honest estimate.",
+    "Free car valuation in 30 seconds with just your registration — no email, no signup, no phone calls. Live UK market data plus your real MOT mileage for an honest value range.",
   keywords: [
+    "free car valuation",
+    "free car valuation without email",
+    "car valuation",
+    "car valuation no signup",
+    "how much is my car worth",
     "value my car",
     "value my car uk",
     "value my car free",
@@ -77,9 +112,9 @@ export const metadata: Metadata = {
     canonical: "https://www.freeplatecheck.co.uk/value-my-car",
   },
   openGraph: {
-    title: "Value My Car 2026 — Free Instant UK Valuation, No Email",
+    title: "Free Car Valuation 2026 — Value My Car by Reg, No Email",
     description:
-      "Value your car in 30 seconds with just your registration. Free, no email, no signup.",
+      "Free car valuation in 30 seconds with just your registration. No email, no signup, no phone calls.",
     url: "https://www.freeplatecheck.co.uk/value-my-car",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -87,9 +122,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Value My Car 2026 — Free Instant UK Valuation, No Email",
+    title: "Free Car Valuation 2026 — Value My Car by Reg, No Email",
     description:
-      "Value your car in 30 seconds with just your registration. Free, no email, no signup.",
+      "Free car valuation in 30 seconds with just your registration. No email, no signup, no phone calls.",
   },
 };
 
@@ -124,7 +159,7 @@ export default async function ValueMyCarPage({
   const webAppJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Free Plate Check — Value My Car",
+    name: "Free Plate Check — Free Car Valuation",
     url: "https://www.freeplatecheck.co.uk/value-my-car",
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Web",
@@ -314,6 +349,40 @@ export default async function ValueMyCarPage({
 
               <section>
                 <h2 className="text-2xl font-bold text-slate-100 mb-4">
+                  Three quick tests for spotting a fake &quot;free&quot; valuation
+                </h2>
+                <ol className="list-decimal list-inside space-y-2 ml-2">
+                  <li className="leading-relaxed">
+                    <strong className="text-slate-100">
+                      Does it show the number before the form?
+                    </strong>{" "}
+                    A genuinely free tool produces the value first. If you
+                    have to enter contact details to see anything, your
+                    contact details are the actual product.
+                  </li>
+                  <li className="leading-relaxed">
+                    <strong className="text-slate-100">
+                      Does it ask for your phone number?
+                    </strong>{" "}
+                    Phone numbers exist almost exclusively to enable
+                    outbound calls — i.e. lead resale to buyers and dealers.
+                    There&apos;s no technical reason to need one to value a
+                    car.
+                  </li>
+                  <li className="leading-relaxed">
+                    <strong className="text-slate-100">
+                      Does the privacy policy mention &quot;sharing with
+                      partners&quot;?
+                    </strong>{" "}
+                    Look for &quot;trusted partners&quot;, &quot;dealer
+                    network&quot; or &quot;car-buying services&quot;. Those
+                    phrases are how lead resale is described in legalese.
+                  </li>
+                </ol>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-100 mb-4">
                   How to value your car in three steps
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 ml-2">
@@ -341,6 +410,32 @@ export default async function ValueMyCarPage({
                     asking-price midpoint.
                   </li>
                 </ol>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-100 mb-4">
+                  How our valuation works
+                </h2>
+                <p className="leading-relaxed mb-3">
+                  Three data layers: a UK-calibrated depreciation model (age,
+                  make, mileage), live asking prices pulled in real time from
+                  multiple UK marketplaces for the same make, model and year,
+                  and an accumulating cache of recent valuations. Your
+                  car&apos;s real DVLA-recorded mileage feeds the figure — not
+                  a guess.
+                </p>
+                <p className="leading-relaxed mb-3">
+                  Strong market data means a tighter range and higher
+                  confidence. Limited data means a wider range and more
+                  reliance on the depreciation model. We always show the
+                  confidence level so you know how strong the signal is.
+                </p>
+                <p className="leading-relaxed">
+                  It isn&apos;t a formal valuation. For insurance, finance or
+                  legal purposes get a professional one. This figure is the
+                  starting point for understanding roughly what your car is
+                  worth on the open market.
+                </p>
               </section>
 
               <section>
@@ -493,20 +588,8 @@ export default async function ValueMyCarPage({
 
           {/* Related pages */}
           <div className="max-w-3xl mx-auto px-4 mt-16">
-            <h2 className="text-lg font-semibold text-slate-200 mb-4">More ways to value your car</h2>
+            <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
             <div className="grid gap-4 sm:grid-cols-2">
-              <a href="/car-valuation" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
-                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free car valuation — without email</p>
-                <p className="text-xs text-slate-500 mt-2">The main valuation page — same tool, focused on the &quot;free car valuation&quot; cluster.</p>
-              </a>
-              <a href="/how-much-is-my-car-worth" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
-                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How much is my car worth?</p>
-                <p className="text-xs text-slate-500 mt-2">The valuation framed as a question — covers the methodology behind the number.</p>
-              </a>
-              <a href="/car-valuation-no-signup" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
-                <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car valuation — no signup, no marketing</p>
-                <p className="text-xs text-slate-500 mt-2">Privacy-first framing of the same tool — what other sites do with your details, and why we don&apos;t ask for them.</p>
-              </a>
               <Link href="/blog/car-valuation-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
                 <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Complete car valuation guide</p>
                 <p className="text-xs text-slate-500 mt-2">How valuations work, what affects value, and how to get the best price.</p>

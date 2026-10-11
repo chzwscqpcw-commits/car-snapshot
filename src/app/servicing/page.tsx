@@ -482,7 +482,7 @@ export default function ServicingPage() {
               Two caveats. First, don&apos;t bother with a full service if the car is genuinely at the bottom of the market (under £1,000) — the cost of the service approaches the cost of the car, and buyers in that bracket don&apos;t weight service history heavily. Second, make sure the garage stamps the service book or updates the digital service record. An unrecorded service is essentially invisible at sale time.
             </p>
             <p className="leading-relaxed">
-              Get a current valuation with our <a href="/car-valuation" className="text-blue-400 hover:text-blue-300">free car valuation tool</a>, then <a href="/booking?type=full&source=servicing-page-resale" className="text-blue-400 hover:text-blue-300">book a pre-sale service</a> through the booking wizard.
+              Get a current valuation with our <a href="/value-my-car" className="text-blue-400 hover:text-blue-300">free car valuation tool</a>, then <a href="/booking?type=full&source=servicing-page-resale" className="text-blue-400 hover:text-blue-300">book a pre-sale service</a> through the booking wizard.
             </p>
           </section>
 
@@ -621,7 +621,7 @@ export default function ServicingPage() {
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Running Costs Calculator</p>
             <p className="text-xs text-slate-500 mt-2">Estimate annual fuel, tax, insurance, and servicing costs.</p>
           </a>
-          <a href="/car-valuation" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+          <a href="/value-my-car" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Valuation</p>
             <p className="text-xs text-slate-500 mt-2">Get an instant estimated value based on real market data.</p>
           </a>
