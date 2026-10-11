@@ -2,7 +2,13 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { PARTNER_LINKS, isPartnerConfigured } from "@/config/partners";
+import {
+  PARTNER_LINKS,
+  isPartnerConfigured,
+  isGoContext,
+  GO_UNRECOGNISED_CONTEXT,
+} from "@/config/partners";
+import { isPublishedPostSlug } from "@/lib/blog";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { isBotRequest, isSpeculativeRequest } from "@/lib/bots";
 
@@ -100,7 +106,26 @@ export async function GET(
   // routed through here keeps the exact context (and therefore the exact sub2)
   // it had when it linked straight out. `post` still wins for the prose links
   // already published in rendered HTML.
-  const context = slug ? `blog-inline-${slug}` : ctxParam || "blog-inline";
+  //
+  // Only RECOGNISED values are recorded: a slug must be a live post, a `ctx`
+  // must be in GO_CONTEXTS. Anything else still redirects (a real person on a
+  // stale page is never stranded) but under GO_UNRECOGNISED_CONTEXT, and is
+  // logged as `go_rejected` rather than `partner_click`, so scanners and our
+  // own tests can't write placement rows or mint new sub2 values. Before
+  // 2026-10-11 any value was accepted; 42 junk rows had to be deleted by hand.
+  let context: string;
+  let recognised: boolean;
+  if (slug) {
+    recognised = isPublishedPostSlug(slug);
+    context = recognised ? `blog-inline-${slug}` : GO_UNRECOGNISED_CONTEXT;
+  } else if (ctxParam) {
+    recognised = isGoContext(ctxParam);
+    context = recognised ? ctxParam : GO_UNRECOGNISED_CONTEXT;
+  } else {
+    // Bare /go/<partner> — the original prose-link form, before per-post slugs.
+    recognised = true;
+    context = "blog-inline";
+  }
 
   // Crawlers, scrapers and speculative browser prefetches get a 204: no
   // redirect, so the partner's tracker is never hit and no click is banked.
@@ -120,10 +145,12 @@ export async function GET(
   try {
     const forwarded = req.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";
+    // `fpc_internal` is set by tracking.ts alongside the owner's localStorage flag.
+    const internal = /(?:^|;\s*)fpc_internal=1(?:;|$)/.test(req.headers.get("cookie") ?? "");
     const { error } = await supabaseServer()
       .from("site_events")
       .insert({
-        event_type: "partner_click",
+        event_type: recognised ? "partner_click" : "go_rejected",
         metadata: {
           partner_id: entry.partnerKey,
           click_context: context,
@@ -131,6 +158,11 @@ export async function GET(
           // can be read as impressions-by-variant against clicks-by-variant
           // without touching the context the partner reports on.
           ...(variant ? { variant } : {}),
+          // What was actually asked for, so a renamed placement shows up here
+          // instead of vanishing. Already sanitised to [a-z0-9-].
+          ...(recognised ? {} : { requested: slug ? `post:${slug}` : `ctx:${ctxParam}` }),
+          // Same flag the client-side events carry; the dashboards filter it out.
+          ...(internal ? { internal: true } : {}),
           via: "go_redirect",
         },
         ip_hash: ip !== "unknown" ? hashIp(ip) : null,

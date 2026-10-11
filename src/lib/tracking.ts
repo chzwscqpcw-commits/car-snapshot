@@ -26,10 +26,28 @@ declare global {
 // (handled in RouteAnalytics) or the toggle on /data-health.
 const INTERNAL_TRAFFIC_KEY = "fpc:internal_traffic";
 
+// Server-readable twin of the flag. /go records clicks server-side and cannot
+// see localStorage, so until 2026-10-11 the owner's own partner clicks through
+// it were counted as real. The name is matched literally in src/app/go/[partner]/route.ts.
+const INTERNAL_COOKIE = "fpc_internal";
+
+function writeInternalCookie(on: boolean): void {
+  try {
+    document.cookie = on
+      ? `${INTERNAL_COOKIE}=1; Path=/; Max-Age=31536000; SameSite=Lax; Secure`
+      : `${INTERNAL_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax; Secure`;
+  } catch {
+    /* cookies unavailable — /go just won't know */
+  }
+}
+
 export function isInternalTraffic(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return localStorage.getItem(INTERNAL_TRAFFIC_KEY) === "1";
+    const on = localStorage.getItem(INTERNAL_TRAFFIC_KEY) === "1";
+    // Devices flagged before the cookie existed pick it up on their next event.
+    if (on && !document.cookie.includes(`${INTERNAL_COOKIE}=1`)) writeInternalCookie(true);
+    return on;
   } catch {
     return false;
   }
@@ -40,6 +58,7 @@ export function setInternalTraffic(on: boolean): void {
   try {
     if (on) localStorage.setItem(INTERNAL_TRAFFIC_KEY, "1");
     else localStorage.removeItem(INTERNAL_TRAFFIC_KEY);
+    writeInternalCookie(on);
   } catch {
     /* localStorage unavailable — nothing to persist */
   }

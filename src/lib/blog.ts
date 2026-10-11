@@ -119,6 +119,16 @@ export function getAllPostSlugs(): string[] {
   });
 }
 
+/**
+ * Is `slug` a post that is live today? One file read, for the /go redirect,
+ * which must not credit clicks to a post that doesn't exist (or isn't out
+ * yet). Callers pass an already-sanitised [a-z0-9-] slug.
+ */
+export function isPublishedPostSlug(slug: string): boolean {
+  const meta = getPostMeta(slug);
+  return meta !== null && isPublished(meta.date);
+}
+
 export function getAllPosts(): BlogPostMeta[] {
   const slugs = allSlugs();
   return slugs

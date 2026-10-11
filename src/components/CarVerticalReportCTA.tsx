@@ -9,6 +9,7 @@ import {
   CARVERTICAL_PRICING,
   carVerticalDiscountedSingle,
   goLink,
+  type GoContext,
 } from "@/config/partners";
 import {
   trackEvent,
@@ -26,8 +27,9 @@ type Variant = "report" | "mileage" | "seller" | "anomaly";
 interface CarVerticalReportCTAProps {
   /** Vehicle reg, passed through for the affiliate link / clickref. */
   regNumber?: string;
-  /** click_context + Awin clickref for attribution. */
-  context?: string;
+  /** click_context + carVertical sub2 for attribution. Must be registered in
+   *  GO_CONTEXTS (partners.ts) — /go ignores any other value. */
+  context?: GoContext;
   /** Render even while the partner is still pending — for the password-gated mock-up. */
   preview?: boolean;
   /** Fire a `partner_impression` when this placement is actually scrolled into
