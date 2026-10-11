@@ -8,6 +8,23 @@ const data = theftData as unknown as Record<string, [number, number]>;
 
 const NATIONAL_AVERAGE = 5.5; // thefts per 1,000 registered vehicles
 
+/**
+ * OFF since 2026-10-11. theft-risk.json was never built from a real source:
+ * round estimates added in Feb 2026, its 84 models summing to 88k thefts when
+ * DVLA recorded ~55k for the whole UK in 2025 (RAV4: 420 here vs 1,319 per
+ * DVLA). NATIONAL_AVERAGE above is ~3x the real rate. Every "Theft risk: High"
+ * on a result, report or model guide was derived from it, so the lookup returns
+ * null until the data is real — every caller already handles a null (it's what
+ * an unmatched model returns).
+ *
+ * To turn it back on: obtain DVLA's make/model stolen-vehicle release (FOI
+ * FOIR13058, 2014–2025, answered Feb 2026; DVLA doesn't publish responses, so
+ * request it), divide by DfT VEH0120 licensed stock for the same models,
+ * rewrite theft-risk.json as [thefts, licensed], recompute NATIONAL_AVERAGE,
+ * and flip this flag. /stats/car-theft lost its charts at the same time.
+ */
+const THEFT_DATA_SOURCED = false;
+
 function normalize(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -55,6 +72,7 @@ function buildResult(entry: [number, number]): TheftRiskResult {
  * Uses the same normalize/alias/fuzzy pattern as mot-pass-rate.ts.
  */
 export function lookupTheftRisk(make?: string, model?: string): TheftRiskResult | null {
+  if (!THEFT_DATA_SOURCED) return null;
   if (!make || !model) return null;
 
   const normMake = normalize(make);

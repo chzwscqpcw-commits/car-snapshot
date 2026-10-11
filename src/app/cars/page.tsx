@@ -145,7 +145,7 @@ export default function CarsIndexPage() {
             Each guide pulls together data from official UK sources to give you a
             clear picture of what a model is really like to own. We cover Euro
             NCAP safety ratings, first-time MOT pass rates, estimated running
-            costs, depreciation curves, safety recalls and theft risk — all in
+            costs, depreciation curves and safety recalls — all in
             one place.
           </p>
           <p className="leading-relaxed">

@@ -155,7 +155,7 @@ These have no live source we can scrape. They're hand-maintained JSON files; ref
 | `ncap-ratings.json` | Euro NCAP star ratings | Auto via `scripts/fetch-ncap-ratings.ts` (see semi-auto section below) |
 | `new-prices.json` | New car list prices, ~130 models | Manufacturer websites — annual refresh |
 | `ev-specs.json` | EV battery / range specs | Manufacturer websites — when new EVs launch |
-| `theft-risk.json` | Theft-rate by make/model | Annual police / insurance reports |
+| `theft-risk.json` | Theft-rate by make/model — **UNSOURCED, lookup disabled** | DVLA FOI FOIR13058 ÷ DfT VEH0120 — see `src/lib/theft-risk.ts` |
 | `colour-popularity.json` | Top car colours by year | DfT VEH02 annual release |
 | `mot-failure-reasons.json` | Common MOT failure reasons | DVSA MOT statistics PDF reports |
 | `tyre-sizes.json` | Tyre size by make/model | Tyre manufacturer databases |

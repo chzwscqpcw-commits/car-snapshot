@@ -51,7 +51,7 @@ const STATS: Array<[string, string, string]> = [
   ["Most Popular Cars", "/stats/popular-cars", "Top makes and models on UK roads by fleet size and how best-sellers have changed."],
   ["EV Adoption", "/stats/ev-adoption", "Electric vehicle fleet growth, new sales share and regional EV density across the UK."],
   ["Car Registrations", "/stats/car-registrations", "Annual new car sales since 1990 with fuel type split showing the shift to electric."],
-  ["Car Theft Statistics", "/stats/car-theft", "Most stolen cars ranked by theft rate and national vehicle theft trends."],
+  ["Car Theft Statistics", "/stats/car-theft", "The UK's most stolen cars from DVLA figures, plus keyless-theft prevention advice."],
   ["Road Safety", "/stats/road-safety", "UK road fatalities since 1970, casualties by road user type and key safety milestones."],
 ];
 
