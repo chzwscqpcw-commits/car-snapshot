@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { Resend } from "resend";
 import { supabaseServer, supabaseServerRole } from "@/lib/supabaseServer";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 
 /**
  * Contact form endpoint.
@@ -91,6 +92,7 @@ function logContactEvent(
   eventType: string,
   metadata: Record<string, unknown>,
 ): void {
+  if (!analyticsWritesEnabled()) return;
   sb.from("site_events")
     .insert({ event_type: eventType, metadata })
     .then(

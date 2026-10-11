@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -425,6 +426,7 @@ function recordLookupFailure(meta: {
   status?: number;
   ipHash?: string | null;
 }): void {
+  if (!analyticsWritesEnabled()) return;
   try {
     // waitUntil, not a bare unawaited promise. Vercel can freeze the function
     // the moment the response is returned, which kills in-flight work — so
@@ -525,11 +527,13 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         // is biased toward whichever vehicles miss the cache.
         const cachedMake =
           (cached.data as { make?: string } | null | undefined)?.make ?? null;
-        sb.from("site_events").insert({
-          event_type: "lookup",
-          metadata: { cached: true, make: cachedMake },
-          ip_hash: ipHash,
-        }).then(() => {}, () => {});
+        if (analyticsWritesEnabled()) {
+          sb.from("site_events").insert({
+            event_type: "lookup",
+            metadata: { cached: true, make: cachedMake },
+            ip_hash: ipHash,
+          }).then(() => {}, () => {});
+        }
         return NextResponse.json({
           ok: true,
           data: cached.data,
@@ -596,11 +600,13 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     }
 
     const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
-    sb.from("site_events").insert({
-      event_type: "lookup",
-      metadata: { make: combinedData.make || null, cached: false },
-      ip_hash: ipHash,
-    }).then(() => {}, () => {});
+    if (analyticsWritesEnabled()) {
+      sb.from("site_events").insert({
+        event_type: "lookup",
+        metadata: { make: combinedData.make || null, cached: false },
+        ip_hash: ipHash,
+      }).then(() => {}, () => {});
+    }
 
     return NextResponse.json({
       ok: true,
