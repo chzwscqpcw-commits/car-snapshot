@@ -24,6 +24,16 @@ interface CountUpProps {
  * settles on the exact target. Honours prefers-reduced-motion by snapping
  * straight to the target.
  *
+ * The SERVER renders the real target, not 0. Until 2026-10-11 the initial
+ * state was 0, so every stat box shipped "0" in its HTML — which is what
+ * text-only crawlers, link unfurlers and no-JS visitors read ("~ 0 Vehicle
+ * thefts in 2024" on the live car-theft page). The number is marked
+ * `data-countup="pending"` and the head script in layout.tsx adds `.js` to
+ * <html> before first paint, so with JS on it stays hidden until the effect
+ * below resets it to 0 and starts counting — same look as before, no flash of
+ * the final value. globals.css reveals it after 3s regardless, in case the
+ * bundle never hydrates.
+ *
  * Component owns its own state so the animation does not re-render whatever
  * parent renders it (important when the parent is a large page component).
  */
@@ -35,26 +45,25 @@ export default function CountUp({
   durationMs = 1600,
   locale = "en-GB",
 }: CountUpProps) {
-  const [displayed, setDisplayed] = useState(0);
+  const [displayed, setDisplayed] = useState(target);
+  const [pending, setPending] = useState(true);
 
   useEffect(() => {
-    if (target === 0) {
-      // Drives the count-up animation; snaps to 0 when the target is 0.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDisplayed(0);
-      return;
-    }
-
     const reduceMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
+    if (target === 0 || reduceMotion) {
+      // Nothing to animate: show the real value as soon as we're hydrated.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayed(target);
+      setPending(false);
       return;
     }
 
     let cancelled = false;
     let startTime: number | null = null;
+    setDisplayed(0);
+    setPending(false);
 
     const tick = (now: number) => {
       if (cancelled) return;
@@ -82,11 +91,10 @@ export default function CountUp({
   });
 
   return (
-    <>
+    <span data-countup={pending ? "pending" : undefined}>
       {prefix}
       {formatted}
       {suffix}
-    </>
+    </span>
   );
 }
-
