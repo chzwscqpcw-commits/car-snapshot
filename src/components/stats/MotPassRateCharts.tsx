@@ -317,7 +317,7 @@ export default function MotPassRateCharts() {
       </ChartContainer>
 
       <p className="text-xs text-slate-500 text-right">
-        Source: DVSA MOT testing data (2024/25 test year)
+        Source: DVSA anonymised MOT testing data, initial tests in 2023
       </p>
 
       {/* Mid-page CTA */}
@@ -383,7 +383,7 @@ export default function MotPassRateCharts() {
       </div>
 
       <p className="text-xs text-slate-500 text-right">
-        Source: DVSA MOT testing data (2024/25 test year)
+        Source: DVSA anonymised MOT testing data, initial tests in 2023
       </p>
 
       {/* Failure reasons table */}

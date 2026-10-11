@@ -8,7 +8,9 @@ import motFailureData from "@/data/mot-failure-reasons.json";
 const data = motPassData as unknown as Record<string, [number, number]>;
 const failureData = motFailureData as Record<string, string[]>;
 
-const UK_AVERAGE_PASS_RATE = 72;
+// 2023 DVSA bulk data: 71.45% of 32.8M initial class 4 tests passed outright.
+// Regenerate with scripts/process-mot-bulk.py, which prints the figure.
+const UK_AVERAGE_PASS_RATE = 71.5;
 
 function normalize(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();

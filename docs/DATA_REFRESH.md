@@ -113,36 +113,31 @@ npx tsx scripts/fetch-vca-archive.ts aug2017 sept2018     # specific year tags
 **Requires:** Chrome/Brave/Chromium installed locally.
 **Note:** Vauxhall lookups resolve to Opel via `src/lib/ncap.ts` make alias — Euro NCAP publishes only under Opel.
 
-### 4. `mot-pass-rates.json` — DVSA Anonymised MOT Bulk Data
+### 4. `mot-pass-rates.json` + `mot-failure-reasons.json` — DVSA Anonymised MOT Bulk Data
 
-**Why manual?** The CSV is multi-gigabyte and lives on data.gov.uk behind a per-year archive link.
+**Why manual?** The files are multi-gigabyte zips on data.gov.uk, one per year.
+Both JSON files come out of one run.
 
 **Step by step:**
 
-1. Open **<https://data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f>** in a browser.
-2. Download the most recent annual `dft_test_result_YYYY.csv` (large file — 5+ GB).
-3. Save anywhere convenient (doesn't need to be project root since you'll pass the path):
+1. From **<https://data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f>**
+   download the latest year's `dft_test_result_YYYY.zip` (~1.2 GB) and
+   `dft_test_item_YYYY.zip` (~0.5 GB), plus `lookup.zip`. Unzip all three into
+   one folder (~5.7 GB unzipped). The CSVs are **pipe-delimited**.
+2. One-off: `python3 -m venv .venv && .venv/bin/pip install duckdb`
+3. From the project root:
    ```
-   # e.g. saved to ~/Downloads/dft_test_result_2025.csv
+   .venv/bin/python scripts/process-mot-bulk.py ~/Downloads/mot YYYY
    ```
-4. From the project root, run with the full path:
-   ```
-   npx tsx scripts/process-mot-stats.ts ~/Downloads/dft_test_result_2025.csv
-   ```
-   The script aggregates pass rates per make/model and writes `src/data/mot-pass-rates.json`.
-5. Delete the source CSV (it's huge):
-   ```
-   rm ~/Downloads/dft_test_result_2025.csv
-   ```
-6. Commit and deploy:
-   ```
-   git add src/data/mot-pass-rates.json
-   git commit -m "data: refresh MOT pass rates"
-   npm run deploy
-   ```
+   Keeps the existing curated model keys, folds DVSA naming variants into them
+   (trims, BMW engine codes like "320D", Mercedes "C"/"C-CLASS"), drops
+   models under 1,000 tests, and prints the national first-time pass rate.
+4. Update `UK_AVERAGE_PASS_RATE` in `src/lib/mot-pass-rate.ts` and the year
+   stated on `/stats/mot-pass-rates` (FAQ copy + `temporalCoverage`).
+5. Delete the CSVs, then commit both JSON files.
 
 **Source URL:** <https://data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f>
-**Refresh cadence:** DVSA publishes annually around April. Once a year is enough.
+**Refresh cadence:** Annual, but irregular — as of Oct 2026 the latest published year is 2023 (released Feb 2024); 2024 and 2025 are not out. Check the dataset page each spring.
 
 ---
 
@@ -157,7 +152,7 @@ These have no live source we can scrape. They're hand-maintained JSON files; ref
 | `ev-specs.json` | EV battery / range specs | Manufacturer websites — when new EVs launch |
 | `theft-risk.json` | Theft-rate by make/model | Annual police / insurance reports |
 | `colour-popularity.json` | Top car colours by year | DfT VEH02 annual release |
-| `mot-failure-reasons.json` | Common MOT failure reasons | DVSA MOT statistics PDF reports |
+| `mot-failure-reasons.json` | Top MOT failure areas by model | Generated with mot-pass-rates.json — see section 4 |
 | `tyre-sizes.json` | Tyre size by make/model | Tyre manufacturer databases |
 | `vehicle-dimensions.json` | L/W/H/weight by model | Manufacturer spec sheets |
 | `body-types.json` | Body shape (Hatchback/Saloon/SUV/…) | DfT VEH0220 stopped publishing this in 2026 — no source |
