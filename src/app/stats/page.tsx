@@ -251,10 +251,10 @@ export default function StatsIndex() {
             href="/stats/car-theft"
             icon="🔒"
             title="Car Theft Statistics"
-            description="The most stolen cars ranked by theft rate, plus national vehicle theft trends over time."
+            description="The UK's most stolen cars from DVLA figures, how keyless theft works and what stops it."
             stats={[
-              { value: "105k", label: "thefts/yr", colour: "red" },
-              { value: "Range Rover", label: "most stolen", colour: "red" },
+              { value: "54.8k", label: "stolen in 2025", colour: "red" },
+              { value: "Fiesta", label: "most stolen", colour: "red" },
               { value: "<60s", label: "keyless", colour: "amber" },
             ]}
             delay={850}

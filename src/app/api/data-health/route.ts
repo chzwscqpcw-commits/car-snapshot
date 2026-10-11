@@ -109,7 +109,7 @@ const FILE_META: Record<string, FileMeta> = {
   "theft-risk.json": {
     threshold: 180,
     source: "curated",
-    refreshHint: "Update from insurance industry reports and police theft statistics",
+    refreshHint: "UNSOURCED estimates — lookup disabled in src/lib/theft-risk.ts. Rebuild from DVLA FOI FOIR13058 (stolen by make/model) ÷ DfT VEH0120 licensed stock, then re-enable.",
     sourceUrl: null,
   },
   "colour-popularity.json": {
