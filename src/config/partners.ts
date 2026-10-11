@@ -557,7 +557,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
  */
 export function goLink(
   partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair",
-  context: string,
+  context: GoContext,
   reg?: string,
   variant?: string,
 ): string {
@@ -572,6 +572,47 @@ export function goLink(
   if (variant) params.set("v", variant);
   return `/go/${partner}?${params.toString()}`;
 }
+
+/**
+ * Every component placement allowed to send a click through /go. Anything else
+ * arriving as `ctx` is not recorded as a partner_click (see the route).
+ *
+ * Why an allowlist: /go used to record whatever `ctx` it was given. Between 2
+ * and 11 Oct 2026 that let two automated visitors (37 clicks, labels like
+ * "…abcd" and "…xh3probe9") and our own curl test write partner_click rows —
+ * and pass the junk on as carVertical sub2 values. `goLink` and
+ * CarVerticalReportCTA take a `GoContext`, so a new placement that isn't added
+ * here fails typecheck instead of silently losing its clicks.
+ */
+export const GO_CONTEXTS = [
+  "report-carvertical", // CarVerticalReportCTA's default
+  "blog-carvertical",
+  "money-seller",
+  "valuation-result-seller",
+  "mot-history-anomaly",
+  "mot-history-carvertical",
+  "mileage-carvertical",
+  "mileage-result-carvertical",
+  "mileage-anomaly-carvertical",
+  "model-carvertical",
+  "running-costs",
+  "stats-car-theft",
+  "stats-how-many-left",
+  "stats-uk-mileage",
+] as const;
+export type GoContext = (typeof GO_CONTEXTS)[number];
+
+export function isGoContext(value: string): value is GoContext {
+  return (GO_CONTEXTS as readonly string[]).includes(value);
+}
+
+/**
+ * The context a /go click is attributed under when its label isn't recognised
+ * — a stale page holding a renamed placement, or a scanner. The visitor is
+ * still sent to the partner (a real person is never stranded), but under one
+ * stable tag rather than a new sub2 per junk value.
+ */
+export const GO_UNRECOGNISED_CONTEXT = "go-unrecognised";
 
 export function getPartnerRel(partner: PartnerLink): string {
   if (partner.isAffiliate) return "noopener sponsored nofollow";
