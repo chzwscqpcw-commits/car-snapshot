@@ -202,6 +202,16 @@ jobs:
           echo "no CI run appeared for $BRANCH within 90s"
           echo "approved=absent" >> $GITHUB_OUTPUT
 
+      # --auto merges land after this job ends, so `--delete-branch` above never
+      # gets to delete anything. Sweep up earlier runs' merged branches instead.
+      # Runs every time (even with no data change) and can't fail the job.
+      - name: Delete merged data branches
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/delete-merged-data-branches.sh data-prices/
+
       - name: Summary
         if: always()
         run: |
