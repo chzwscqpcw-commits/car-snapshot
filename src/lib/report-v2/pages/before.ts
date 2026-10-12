@@ -1,7 +1,9 @@
 import type { ReportInput } from "@/lib/generateReport";
-import { html, type Safe } from "../html";
+import { html, raw, type Safe } from "../html";
+import { CARVERTICAL_PRICING, carVerticalDiscountedSingle, goLink } from "@/config/partners";
+import { qrSvg } from "../qr";
 import type { ThemeTokens } from "../theme";
-import { shortDate } from "../format";
+import { formatPlate, shortDate } from "../format";
 import { BODY_HEIGHT, CONTINUED_ROOM, type Block, pageShell, paginate, textHeight } from "./shared";
 
 // Last section · Before you buy: the three role checklists, where the data
@@ -23,6 +25,34 @@ const SOURCES = [
 
 const LIST_W = 300;
 
+const SITE = "https://www.freeplatecheck.co.uk";
+
+/**
+ * The carVertical link for this car: through /go so the click is recorded
+ * (context pdf-carvertical, `v` = the edition), which redirects to
+ * carVertical's tracker with the reg pre-filled and our 20% code applied.
+ */
+export function carVerticalReportLink(reg: string, t: ThemeTokens): string {
+  return SITE + goLink("carvertical", "pdf-carvertical", reg, t.name === "light" ? "print" : "dark");
+}
+
+/** What the free data can't show, and the carVertical report that can: QR + link. */
+function historyPanel(input: ReportInput, t: ThemeTokens): Safe {
+  const plate = formatPlate(input.data.registrationNumber);
+  const href = carVerticalReportLink(input.data.registrationNumber, t);
+  return html`<div class="history" style="border-color:${t.ruleStrong}">
+    <div class="stack-10 history-text">
+      <span class="mono label" style="color:${t.accent}">WHAT THIS REPORT CAN'T SEE</span>
+      <h2 class="display history-title">Finance, write-offs and stolen markers.</h2>
+      <p style="color:${t.soft}">Free government data doesn't show whether ${plate} has outstanding finance, has been written off or is flagged as stolen. A carVertical history report checks those, along with mileage records.</p>
+      <p style="color:${t.soft}"><strong style="color:${t.ink}">£${CARVERTICAL_PRICING.single.toFixed(2)}, or ${carVerticalDiscountedSingle()} with code <span class="mono">freeplatecheck</span></strong> (${CARVERTICAL_PRICING.discountPct}% off, applied automatically through this link).</p>
+      <a class="history-link" href="${href}" style="color:${t.accent}">Check ${plate} on carVertical →</a>
+      <span class="fine" style="color:${t.muted}">Partner link: Free Plate Check earns a commission if you buy, at no extra cost to you.</span>
+    </div>
+    <a class="qr" href="${href}" aria-label="Check ${plate} on carVertical">${raw(qrSvg(href, 132))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
+  </div>`;
+}
+
 export function beforePages(input: ReportInput, t: ThemeTokens, firstFolio: number, now: Date): Safe[] {
   const blocks: Block[] = [];
   for (const list of LISTS) {
@@ -42,19 +72,22 @@ export function beforePages(input: ReportInput, t: ThemeTokens, firstFolio: numb
     });
   }
   blocks.push({
-    h: 280,
-    html: html`<div class="fineprint" style="border-color:${t.ruleStrong}">
+    h: 520,
+    html: html`<div class="closing">
+    ${historyPanel(input, t)}
+    <div class="fineprint" style="border-color:${t.ruleStrong}">
       <div class="stack-6">
         <h2 class="eyebrow">WHERE THIS COMES FROM</h2>
         ${SOURCES.map((s) => html`<p style="color:${t.soft}">${s}</p>`)}
       </div>
       <div class="stack-6">
-        <h2 class="eyebrow">WHAT IT DOESN'T COVER</h2>
-        <p style="color:${t.soft}">This report doesn't check outstanding finance, insurance write-offs, police stolen markers or previous keepers. Don't rely on it alone to buy a car: inspect it, check the V5C matches, and consider a mechanic's inspection.</p>
+        <h2 class="eyebrow">PLEASE NOTE</h2>
+        <p style="color:${t.soft}">Don't rely on any report alone to buy a car: inspect it, check the V5C matches the car and seller, and consider a mechanic's inspection.</p>
         <p style="color:${t.soft}">Government data can lag behind real events. Free Plate Check doesn't guarantee the information is complete or current.</p>
       </div>
     </div>
-    <div class="signoff mono" style="color:${t.muted}"><span>Generated ${shortDate(now)} at ${now.toISOString().slice(11, 16)} UTC</span><span>freeplatecheck.co.uk</span></div>`,
+    <div class="signoff mono" style="color:${t.muted}"><span>Generated ${shortDate(now)} at ${now.toISOString().slice(11, 16)} UTC</span><span>freeplatecheck.co.uk</span></div>
+    </div>`,
   });
 
   const pages = paginate(blocks, BODY_HEIGHT - 64 - 28, CONTINUED_ROOM);

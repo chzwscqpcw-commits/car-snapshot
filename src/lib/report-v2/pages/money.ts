@@ -3,6 +3,7 @@ import { html, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
 import { num, pounds } from "../format";
 import { pageShell } from "./shared";
+import { ASSUMED_ANNUAL_MILES } from "@/lib/fuel-economy";
 
 // 04 · The money: estimated value with its range against live asking prices,
 // the cost to run, repairs to budget for, and the negotiation helper. Any
@@ -66,10 +67,20 @@ function costSection(input: ReportInput, t: ThemeTokens): Safe | null {
   ] as const).filter(([, v]) => v && v > 0) as Array<readonly [string, number, string]>;
   const total = oc.totalAnnual;
   const vsAvg = input.ukAverageCost ? total - input.ukAverageCost : null;
+  // Fuel (and so the total and cost per mile) assumes the UK average mileage,
+  // like every running-cost figure on the site. Say so, and if this car's own
+  // MOT mileage is well off that, show what fuel would cost at its real rate.
+  const own = input.motInsights?.avgMilesPerYear ?? null;
+  const ownDiffers = own !== null && own > 0 && Math.abs(own - ASSUMED_ANNUAL_MILES) / ASSUMED_ANNUAL_MILES >= 0.15;
+  const fuelAtOwn = ownDiffers && b.fuel ? Math.round((b.fuel * own!) / ASSUMED_ANNUAL_MILES / 10) * 10 : null;
+  const mileageNote = `Based on ${num(ASSUMED_ANNUAL_MILES)} miles a year, the UK average (DfT).${
+    ownDiffers ? ` This car has averaged about ${num(Math.round(own! / 100) * 100)} a year between MOTs${fuelAtOwn ? `, so its fuel is more likely about ${pounds(fuelAtOwn)} a year` : ""}.` : ""
+  }`;
   return html`<div class="stack-14">
     <h2 class="eyebrow underline" style="border-color:${t.ruleStrong}">COST TO RUN</h2>
     <div class="cost-hero"><span class="display">${pounds(total)}</span><span style="color:${t.muted}">a year</span></div>
     <span class="small-text" style="color:${t.soft}">${pounds(total / 12)} a month · £${(total / 365).toFixed(2)} a day${oc.costPerMile ? ` · ${Math.round(oc.costPerMile * 100)}p a mile` : ""}</span>
+    <span class="small-text" style="color:${t.muted}">${mileageNote}</span>
     <div class="stack-bar">${parts.map(([, v, c]) => html`<div style="width:${((v / total) * 100).toFixed(1)}%;background:${c}"></div>`)}</div>
     <div>${parts.map(([name, v, c]) => html`<div class="legend-row" style="border-color:${t.rule}"><i style="background:${c}"></i><span>${name}</span><span class="mono">${pounds(v)}</span></div>`)}</div>
     <span class="small-text" style="color:${t.muted}">${vsAvg !== null && input.ukAverageLabel ? `${pounds(Math.abs(vsAvg))} ${vsAvg <= 0 ? "less" : "more"} than a typical ${input.ukAverageLabel.toLowerCase()}. ` : ""}${oc.excludedNote}</span>

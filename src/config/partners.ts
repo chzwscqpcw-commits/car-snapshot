@@ -112,6 +112,9 @@ const CARVERTICAL_SUB2: Record<string, string> = {
   "model-carvertical": "model",
   "running-costs": "runcosts",
   "report-carvertical": "report",
+  // The QR code / link on the last page of the downloaded PDF report. The `v`
+  // param on the /go link says which edition (dark or print) it came from.
+  "pdf-carvertical": "pdf",
   "report-nextsteps": "nextsteps",
   "stats-car-theft": "stats-theft",
   "stats-van-theft": "stats-vans",
@@ -588,6 +591,7 @@ export function goLink(
  */
 export const GO_CONTEXTS = [
   "report-carvertical", // CarVerticalReportCTA's default
+  "pdf-carvertical", // QR code + link in the server-rendered PDF report
   "blog-carvertical",
   "money-seller",
   "valuation-result-seller",

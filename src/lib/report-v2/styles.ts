@@ -140,7 +140,16 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .checklist ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px }
 .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid; font-size: 14px; line-height: 1.45 }
 .box { width: 14px; height: 14px; border: 1.5px solid; border-radius: 3px; margin-top: 3px; flex-shrink: 0 }
-.fineprint { margin-top: auto; padding-top: 20px; border-top: 1px solid; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px }
+.closing { margin-top: auto; display: flex; flex-direction: column }
+.history { display: flex; gap: 32px; align-items: center; padding: 24px 0; border-top: 1px solid; border-bottom: 1px solid; margin-bottom: 24px }
+.history-text { flex: 1 }
+.history-text p { font-size: 14px; line-height: 1.55 }
+.history-title { font-size: 34px; line-height: 1.05 }
+.history-link { font-size: 15px; font-weight: 600; text-decoration: none }
+.qr { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0 }
+.qr svg { display: block; border-radius: 8px }
+.qr span { font-size: 10px; letter-spacing: 0.12em }
+.fineprint { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px }
 .fineprint p { font-size: 12px; line-height: 1.5 }
 .signoff { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.04em; margin-top: 18px }
 `;

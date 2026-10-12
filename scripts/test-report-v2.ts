@@ -46,6 +46,9 @@ function check(label: string, ok: boolean) {
     for (const font of ["Geist", "GeistMono", "InstrumentSerif"]) {
       check(`${font} embedded`, new RegExp(`/FontName\\s*/[A-Z]{6}\\+${font}`).test(raw));
     }
+    const edition = theme === "light" ? "print" : "dark";
+    check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&vrm=AB12CDE&v=${edition})`));
+    check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
     const out = `/tmp/fpc-report-v2-${theme}.pdf`;
     try { writeFileSync(out, pdf); } catch { /* read-only fs is fine */ }
     console.log(`  rendered in ${ms} ms → ${out} (${(pdf.length / 1024).toFixed(0)} KB)`);
