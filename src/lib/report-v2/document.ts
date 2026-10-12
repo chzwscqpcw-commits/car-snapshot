@@ -42,7 +42,7 @@ function sections(input: ReportInput, now: Date): Section[] {
     out.push({ title: "The money", teaser: moneyTeaser ?? "Repairs to budget for", build: (t, f) => [moneyPage(input, t, f)].filter((p): p is Safe => p !== null) });
   }
   out.push({ title: "The details", teaser: "Spec sheet and key facts", build: (t, f) => detailPages(input, t, f) });
-  out.push({ title: "Before you buy", teaser: "Checklists and sources", build: (t, f) => beforePages(input, t, f, now) });
+  out.push({ title: "Next steps", teaser: "Checklists, history check, sources", build: (t, f) => beforePages(input, t, f, now) });
   return out;
 }
 

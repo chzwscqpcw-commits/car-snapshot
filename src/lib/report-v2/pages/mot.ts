@@ -134,7 +134,7 @@ export function motPages(input: ReportInput, t: ThemeTokens, firstFolio: number)
   const quote = recurring.length > 0
     ? `“${recurring[0].text}” has come up at ${recurring[0].count} MOTs. Ask what has been done about it.`
     : latestAdvisories > 0 && latestDate
-      ? `Ask the seller what was done about the ${latestDate.getUTCFullYear()} ${plural(latestAdvisories, "advisory", "advisories")}.`
+      ? `If you're buying, ask the seller what was done about the ${latestDate.getUTCFullYear()} ${plural(latestAdvisories, "advisory", "advisories")}.`
       : null;
   const expiry = parseDate(input.data.motExpiryDate);
   if (quote || expiry) {

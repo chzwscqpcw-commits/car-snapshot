@@ -134,7 +134,7 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .card-title i { width: 8px; height: 8px; border-radius: 4px }
 .card p { font-size: 13px; line-height: 1.45 }
 
-/* Before you buy */
+/* Next steps */
 .checklist { display: flex; flex-direction: column; gap: 10px }
 .check-title { font-size: 30px; line-height: 1.1 }
 .checklist ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px }

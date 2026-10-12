@@ -6,8 +6,9 @@ import type { ThemeTokens } from "../theme";
 import { formatPlate, shortDate } from "../format";
 import { BODY_HEIGHT, CONTINUED_ROOM, type Block, pageShell, paginate, textHeight } from "./shared";
 
-// Last section · Before you buy: the three role checklists, where the data
-// comes from, and what the report doesn't cover. Always printed.
+// Last section · Next steps: checklists for buyers, owners and sellers, the
+// history check the free data can't do, and where the data comes from. Always
+// printed. (Was "Before you buy", which only fitted one of the three readers.)
 
 const LISTS: Array<{ key: "buyer" | "owner" | "seller"; title: string }> = [
   { key: "buyer", title: "If you're buying" },
@@ -92,6 +93,6 @@ export function beforePages(input: ReportInput, t: ThemeTokens, firstFolio: numb
 
   const pages = paginate(blocks, BODY_HEIGHT - 64 - 28, CONTINUED_ROOM);
   return pages.map((content, i) =>
-    pageShell(t, input, "Before you buy", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">Before you buy.</h1>` : html`<h2 class="display h-cont">Before you buy, continued</h2>`}<div class="stack-24 fill">${content}</div>`),
+    pageShell(t, input, "Next steps", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">What to do next.</h1>` : html`<h2 class="display h-cont">Next steps, continued</h2>`}<div class="stack-24 fill">${content}</div>`),
   );
 }

@@ -105,7 +105,7 @@ function negotiationSection(input: ReportInput, t: ThemeTokens): Safe | null {
   const n = input.negotiation;
   if (!n) return null;
   return html`<div class="stack-14">
-    <h2 class="eyebrow underline" style="border-color:${t.ruleStrong}">ROOM TO NEGOTIATE</h2>
+    <h2 class="eyebrow underline" style="border-color:${t.ruleStrong}">IF YOU'RE BUYING: ROOM TO NEGOTIATE</h2>
     <div class="cost-hero"><span class="display">${n.suggestedDiscountPercent.low}–${n.suggestedDiscountPercent.high}%</span><span style="color:${t.muted}">off, about ${pounds(n.estimatedSaving.low)}–${pounds(n.estimatedSaving.high)}</span></div>
     ${n.reasons.slice(0, 4).map((r) => html`<div class="legend-row" style="border-color:${t.rule}"><span>${r}</span></div>`)}
   </div>`;

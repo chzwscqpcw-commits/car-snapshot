@@ -189,6 +189,6 @@ export function detailPages(input: ReportInput, t: ThemeTokens, firstFolio: numb
   if (blocks.length === 0) return [];
   const pages = paginate(blocks, BODY_HEIGHT - 64 - 28, CONTINUED_ROOM);
   return pages.map((content, i) =>
-    pageShell(t, input, "The details", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">On the record.</h1>` : html`<h2 class="display h-cont">The details, continued</h2>`}<div class="stack-0">${content}</div>`),
+    pageShell(t, input, "The details", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">The car in detail.</h1>` : html`<h2 class="display h-cont">The details, continued</h2>`}<div class="stack-0">${content}</div>`),
   );
 }
