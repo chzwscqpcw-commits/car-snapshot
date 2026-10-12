@@ -52,6 +52,48 @@ MIN_RATED_STOCK = 10_000
 # Smallest fleet for the "highest theft rate" league table on /stats/car-theft.
 MIN_TABLE_STOCK = 20_000
 
+# Classes with a page of their own. Vans and bikes have smaller fleets, so the
+# rating threshold is lower; the league tables keep their own floors.
+CLASSES = {
+    # key: (VEH0120 BodyType, min stock to rate, min stock for rate table)
+    "cars": ("Cars", MIN_RATED_STOCK, MIN_TABLE_STOCK),
+    "vans": ("Light goods vehicles", 5_000, 10_000),
+    "motorcycles": ("Motorcycles", 5_000, 10_000),
+}
+# Least-stolen table: only common cars, so "zero thefts" from a tiny fleet
+# can't top it.
+MIN_LEAST_STOCK = 100_000
+
+FUEL_GROUPS = {
+    "PETROL": "Petrol",
+    "DIESEL": "Diesel",
+    "BATTERY ELECTRIC": "Electric",
+    "HYBRID ELECTRIC (PETROL)": "Hybrid",
+    "HYBRID ELECTRIC (DIESEL)": "Hybrid",
+    "PLUG-IN HYBRID ELECTRIC (PETROL)": "Plug-in hybrid",
+    "PLUG-IN HYBRID ELECTRIC (DIESEL)": "Plug-in hybrid",
+    "RANGE EXTENDED ELECTRIC": "Plug-in hybrid",
+}
+
+# Age of the car when stolen, from DVLA's year of manufacture.
+AGE_BANDS = [(0, 3, "0–3 years"), (4, 7, "4–7 years"), (8, 12, "8–12 years"),
+             (13, 20, "13–20 years"), (21, 999, "21+ years")]
+
+# DfT's generic model for a scooter is its type-approval code; readers know the
+# marketing name.
+NAME_OVERRIDES = {
+    "HONDA|WW125": "Honda PCX125",
+    "YAMAHA|GPD": "Yamaha NMAX",
+    "HONDA|NSC": "Honda Vision",
+    "HONDA|NSS": "Honda Forza",
+    "VOLKSWAGEN|UP": "Volkswagen Up",
+    # Generic models that are whole families
+    "YAMAHA|MT": "Yamaha MT range",
+    "YAMAHA|YZF": "Yamaha YZF-R range",
+    "HONDA|CBR": "Honda CBR range",
+    "HONDA|CB": "Honda CB range",
+}
+
 # VEH0120 files most Mercedes under "MERCEDES" (342k C Class) and a few hundred
 # recent cars under "MERCEDES-BENZ", which is how DVLA spells every one.
 # Without folding them together, DVLA's GLC thefts land on a 1-car fleet.
@@ -78,7 +120,10 @@ def display(name: str) -> str:
     def word(w: str) -> str:
         if "-" in w:
             return "-".join(word(p) for p in w.split("-"))
-        if w in UPPER_WORDS or len(w) <= 2 or any(c.isdigit() for c in w):
+        if re.fullmatch(r"I\d+", w):  # Hyundai i10, i30
+            return w.lower()
+        # Model codes: digits, two letters, or no vowels (CBF, YZF, GS)
+        if w in UPPER_WORDS or len(w) <= 2 or any(c.isdigit() for c in w) or not re.search(r"[AEIOU]", w):
             return w
         return w.capitalize()
     return " ".join(word(w) for w in name.split())
@@ -94,7 +139,8 @@ def read_foi(path: str):
                 assert [str(c) for c in row[3:3 + len(YEARS)]] == [str(y) for y in YEARS], row
             continue
         desc = (row[1] or "").strip().upper()
-        rows.append((desc, *[int(v or 0) for v in row[3:3 + len(YEARS)]]))
+        made = int(row[2]) if str(row[2] or "").isdigit() and int(row[2]) > 1900 else None
+        rows.append((desc, made, *[int(v or 0) for v in row[3:3 + len(YEARS)]]))
     if not rows:
         sys.exit("No data rows found under a 'Make/Model Description' header")
     return rows
@@ -103,7 +149,7 @@ def read_foi(path: str):
 def main():
     foi_path, veh_path = sys.argv[1], sys.argv[2]
     con = duckdb.connect()
-    con.execute(f"""create table v as select BodyType body, Make make, GenModel gen, Model model, LicenceStatus status,
+    con.execute(f"""create table v as select BodyType body, Make make, GenModel gen, Model model, Fuel fuel, LicenceStatus status,
         coalesce(try_cast("{STOCK_COL}" as bigint), 0) n
         from read_csv('{veh_path}', header=true, all_varchar=true)""")
 
@@ -112,6 +158,16 @@ def main():
     exact, loose = {}, {}
     prefix = defaultdict(Counter)
     best_exact, best_loose = {}, {}
+    # Fuel isn't part of the match (a model's trims span fuels); it's the
+    # dominant fuel of whatever DfT text the description matched.
+    fuel_of = defaultdict(Counter)
+    for fuel, make, model, n in con.execute(
+        "select upper(fuel), make, model, sum(n) from v group by all"
+    ).fetchall():
+        dm = MAKE_CANON.get(make, make)
+        group = FUEL_GROUPS.get(fuel, "Other")
+        fuel_of[f"{dm} {model}".upper().strip()][group] += n
+        fuel_of[squash(dm + model)][group] += n
     for body, make, gen, model, n in con.execute(
         "select body, make, gen, model, sum(n) from v group by all"
     ).fetchall():
@@ -138,79 +194,111 @@ def main():
                 return key if n / sum(c.values()) >= 0.9 else None
         return None
 
+    def fuel(desc: str) -> str:
+        c = fuel_of.get(desc) or fuel_of.get(squash(desc))
+        return c.most_common(1)[0][0] if c else "Unknown"
+
     foi = read_foi(foi_path)
-    all_by_year = [sum(r[1 + i] for r in foi) for i in range(len(YEARS))]
-    cars = defaultdict(lambda: [0] * len(YEARS))
-    cars_by_year = [0] * len(YEARS)
+    all_by_year = [sum(r[2 + i] for r in foi) for i in range(len(YEARS))]
+    thefts = {c: defaultdict(lambda: [0] * len(YEARS)) for c in CLASSES}
+    by_year = {c: [0] * len(YEARS) for c in CLASSES}
+    car_fuel_thefts, car_age = Counter(), Counter()
+    body_to_class = {body: c for c, (body, _, _) in CLASSES.items()}
     matched_latest, unmatched = 0, Counter()
-    for desc, *counts in foi:
+    for desc, made, *counts in foi:
         key = resolve(desc)
         if key is None:
             unmatched[desc] += counts[-1]
             continue
         matched_latest += counts[-1]
-        if key[0] != "Cars":
+        cls = body_to_class.get(key[0])
+        if cls is None:
             continue
         k = model_key(key[1], key[2])
         for i, c in enumerate(counts):
-            cars[k][i] += c
-            cars_by_year[i] += c
-
-    stock, names = Counter(), {}
-    for make, gen, n in con.execute(
-        "select make, gen, sum(n) from v where body='Cars' and status='Licensed' group by all order by 3"
-    ).fetchall():
-        k = model_key(make, gen)
-        stock[k] += n
-        model = gen[len(make) + 1:] if gen.startswith(make + " ") else gen
-        names[k] = display(f"{MAKE_CANON.get(make, make)} {model}")  # biggest fleet's spelling wins
-    orphans = sorted(((sum(v[-1:]), k) for k, v in cars.items() if not stock.get(k)), reverse=True)
-    total_stock = sum(stock.values())
-    national = round(1000 * cars_by_year[-1] / total_stock, 2)
-
-    models = []
-    for k, n in stock.items():
-        # No cars left at Q4, or DfT's catch-all for an unrecorded model.
-        if n == 0 or "MODEL MISSING" in k or k.startswith("OTHER "):
-            continue
-        thefts = cars.get(k, [0] * len(YEARS))
-        models.append({
-            "key": k,
-            "name": names[k],
-            "thefts": thefts[-1],
-            "previous": thefts[-2],
-            "licensed": n,
-            "per1000": round(1000 * thefts[-1] / n, 2),
-        })
-
-    # Largest fleet first: lookupTheftRisk's fuzzy fallback walks this order.
-    risk = {m["key"]: [m["thefts"], m["licensed"]] for m in sorted(
-        (m for m in models if m["licensed"] >= MIN_RATED_STOCK), key=lambda m: -m["licensed"])}
+            thefts[cls][k][i] += c
+            by_year[cls][i] += c
+        if cls == "cars":
+            car_fuel_thefts[fuel(desc)] += counts[-1]
+            if made is not None:
+                age = LATEST - made
+                band = next((label for lo, hi, label in AGE_BANDS if lo <= age <= hi), None)
+                if band:
+                    car_age[band] += counts[-1]
 
     def row(m):
         return {k: m[k] for k in ("name", "thefts", "previous", "licensed", "per1000")}
 
     stats = {
-        "source": "DVLA FOI FOIR13058 (vehicles recorded as stolen, by make/model and year) ÷ DfT VEH0120 licensed cars",
+        "source": "DVLA FOI FOIR13058 (vehicles recorded as stolen, by make/model and year) ÷ DfT VEH0120 licensed vehicles",
         "year": LATEST,
         "stockQuarter": STOCK_COL,
-        "nationalPer1000": national,
         "allVehiclesByYear": dict(zip(map(str, YEARS), all_by_year)),
-        "carsByYear": dict(zip(map(str, YEARS), cars_by_year)),
         "matchedShare": round(matched_latest / all_by_year[-1], 3),
-        "licensedCars": total_stock,
-        "topByCount": [row(m) for m in sorted(models, key=lambda m: -m["thefts"])[:10]],
-        "topByRate": [row(m) for m in sorted(
-            (m for m in models if m["licensed"] >= MIN_TABLE_STOCK), key=lambda m: -m["per1000"])[:10]],
     }
+    risk_files = {}
+    for cls, (body, min_rated, min_table) in CLASSES.items():
+        stock, names = Counter(), {}
+        for make, gen, n in con.execute(
+            f"select make, gen, sum(n) from v where body='{body}' and status='Licensed' group by all order by 3"
+        ).fetchall():
+            k = model_key(make, gen)
+            stock[k] += n
+            model = gen[len(make) + 1:] if gen.startswith(make + " ") else gen
+            # biggest fleet's spelling wins
+            names[k] = NAME_OVERRIDES.get(k) or display(f"{MAKE_CANON.get(make, make)} {model}")
+        orphans = sorted(((v[-1], k) for k, v in thefts[cls].items() if not stock.get(k)), reverse=True)
+        total_stock = sum(stock.values())
+        national = round(1000 * by_year[cls][-1] / total_stock, 2)
 
-    lines = [f"  {json.dumps(k)}: {json.dumps(v)}" for k, v in risk.items()]
-    (DATA / "theft-risk.json").write_text("{\n" + ",\n".join(lines) + "\n}\n")
+        models = []
+        for k, n in stock.items():
+            # Nothing licensed at Q4, or DfT's catch-all for an unrecorded model.
+            if n == 0 or "MODEL MISSING" in k or k.startswith("OTHER "):
+                continue
+            t = thefts[cls].get(k, [0] * len(YEARS))
+            models.append({"key": k, "name": names[k], "thefts": t[-1], "previous": t[-2],
+                           "licensed": n, "per1000": round(1000 * t[-1] / n, 2)})
+
+        # Largest fleet first: lookupTheftRisk's fuzzy fallback walks this order.
+        risk_files[cls] = {m["key"]: [m["thefts"], m["licensed"]] for m in sorted(
+            (m for m in models if m["licensed"] >= min_rated), key=lambda m: -m["licensed"])}
+
+        section = {
+            "nationalPer1000": national,
+            "byYear": dict(zip(map(str, YEARS), by_year[cls])),
+            "licensed": total_stock,
+            "ratedModels": len(risk_files[cls]),
+            "topByCount": [row(m) for m in sorted(models, key=lambda m: -m["thefts"])[:10]],
+            "topByRate": [row(m) for m in sorted(
+                (m for m in models if m["licensed"] >= min_table), key=lambda m: -m["per1000"])[:10]],
+        }
+        if cls == "cars":
+            section["leastByRate"] = [row(m) for m in sorted(
+                (m for m in models if m["licensed"] >= MIN_LEAST_STOCK), key=lambda m: m["per1000"])[:10]]
+            section["risers"] = [row(m) for m in sorted(
+                (m for m in models if m["thefts"] >= 150), key=lambda m: m["previous"] - m["thefts"])[:10]]
+            fuel_stock = Counter()
+            for f, n in con.execute(
+                "select upper(fuel), sum(n) from v where body='Cars' and status='Licensed' group by all"
+            ).fetchall():
+                fuel_stock[FUEL_GROUPS.get(f, "Other")] += n
+            section["byFuel"] = sorted(
+                ({"fuel": f, "thefts": car_fuel_thefts[f], "licensed": fuel_stock[f],
+                  "per1000": round(1000 * car_fuel_thefts[f] / fuel_stock[f], 2)}
+                 for f in fuel_stock if f != "Other" and fuel_stock[f] >= 100_000),
+                key=lambda r: -r["per1000"])
+            section["byAge"] = [{"band": label, "thefts": car_age[label]} for _, _, label in AGE_BANDS]
+        stats[cls] = section
+        print(f"{cls}: {len(risk_files[cls])} rated; national {national}/1,000; "
+              f"{by_year[cls][-1]:,} stolen; orphans {orphans[:5]}")
+
+    for cls, fname in (("cars", "theft-risk.json"), ("vans", "theft-risk-vans.json")):
+        lines = [f"  {json.dumps(k)}: {json.dumps(v)}" for k, v in risk_files[cls].items()]
+        (DATA / fname).write_text("{\n" + ",\n".join(lines) + "\n}\n")
     (DATA / "theft-stats.json").write_text(json.dumps(stats, indent=2, ensure_ascii=False) + "\n")
-    print("thefts on models with no licensed stock:", orphans[:10])
     print("largest unmatched descriptions:", unmatched.most_common(15))
-    print(f"{len(risk)} rated models; national {national}/1,000; "
-          f"{cars_by_year[-1]:,} cars of {all_by_year[-1]:,} thefts ({stats['matchedShare']:.1%} matched)")
+    print(f"{matched_latest:,} of {all_by_year[-1]:,} thefts matched ({stats['matchedShare']:.1%})")
 
 
 if __name__ == "__main__":

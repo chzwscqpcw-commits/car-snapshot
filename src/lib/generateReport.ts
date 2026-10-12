@@ -145,6 +145,7 @@ export type ReportInput = {
     theftCount: number;
     registeredCount: number;
     nationalAverage: number;
+    fleet: "cars" | "vans";
   } | null;
   evSpecs?: {
     batteryKwh: number;
@@ -1895,7 +1896,7 @@ function renderEnrichedInsights(doc: jsPDF, input: ReportInput, y: number): numb
       accentColor: accent,
       title: `Theft Risk: ${catLabel}`,
       lines: [
-        `${tr.theftsPer1000}/1,000 cars (${tr.rateMultiplier}\u00D7 avg)`,
+        `${tr.theftsPer1000}/1,000 ${tr.fleet} (${tr.rateMultiplier}\u00D7 avg)`,
         `National avg: ${tr.nationalAverage}/1,000`,
       ],
     });

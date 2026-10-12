@@ -19,14 +19,14 @@ import theftStats from "@/data/theft-stats.json";
 const YEAR = theftStats.year;
 const n = (v: number) => v.toLocaleString("en-GB");
 const yearly = theftStats.allVehiclesByYear as Record<string, number>;
-const carsYearly = theftStats.carsByYear as Record<string, number>;
+const carsYearly = theftStats.cars.byYear as Record<string, number>;
 const ALL = yearly[YEAR];
 const ALL_CHANGE = Math.round(((ALL - yearly[YEAR - 1]) / yearly[YEAR - 1]) * 1000) / 10;
 const CARS = carsYearly[YEAR];
 const CARS_CHANGE = Math.round(((CARS - carsYearly[YEAR - 1]) / carsYearly[YEAR - 1]) * 1000) / 10;
-const TOP = theftStats.topByCount[0];
-const RISKIEST = theftStats.topByRate[0];
-const NATIONAL = theftStats.nationalPer1000;
+const TOP = theftStats.cars.topByCount[0];
+const RISKIEST = theftStats.cars.topByRate[0];
+const NATIONAL = theftStats.cars.nationalPer1000;
 const PEAK_YEAR = Object.entries(yearly).sort((a, b) => b[1] - a[1])[0][0];
 
 const DESCRIPTION = `${n(CARS)} cars were stolen in the UK in ${YEAR}, per DVLA records. The ${TOP.name} was stolen most (${n(TOP.thefts)}); the ${RISKIEST.name} is the most likely to be stolen, at ${RISKIEST.per1000} per 1,000. Rates for 300+ models.`;
@@ -132,7 +132,7 @@ export default function CarTheftPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1e293b] text-slate-300">
-              {theftStats.topByCount.map((r, i) => (
+              {theftStats.cars.topByCount.map((r, i) => (
                 <tr key={r.name}>
                   <td className="px-3 py-2 text-slate-500">{i + 1}</td>
                   <td className="px-3 py-2 text-slate-100">{r.name}</td>

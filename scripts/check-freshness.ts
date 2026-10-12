@@ -47,6 +47,7 @@ const FILE_CONFIG: Record<string, { threshold: number; source: "automatable" | "
   "mot-failure-reasons.json":{ threshold: 180, source: "semi-auto" },
   "theft-risk.json":         { threshold: 400, source: "semi-auto" },
   "theft-stats.json":        { threshold: 400, source: "semi-auto" },
+  "theft-risk-vans.json":    { threshold: 400, source: "semi-auto" },
   "colour-popularity.json":  { threshold: 180, source: "curated" },
   "tyre-sizes.json":         { threshold: 180, source: "curated" },
   "vehicle-dimensions.json": { threshold: 180, source: "curated" },

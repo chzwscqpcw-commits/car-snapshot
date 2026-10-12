@@ -11,6 +11,7 @@ import motFailureReasons from "@/data/mot-failure-reasons.json";
 import bodyTypes from "@/data/body-types.json";
 import theftRisk from "@/data/theft-risk.json";
 import theftStats from "@/data/theft-stats.json";
+import theftRiskVans from "@/data/theft-risk-vans.json";
 import colourPopularity from "@/data/colour-popularity.json";
 import tyreSizes from "@/data/tyre-sizes.json";
 import vehicleDimensions from "@/data/vehicle-dimensions.json";
@@ -114,6 +115,12 @@ const FILE_META: Record<string, FileMeta> = {
     sourceUrl: "https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files",
   },
   "theft-stats.json": {
+    threshold: 400,
+    source: "semi-auto",
+    refreshHint: "Generated alongside theft-risk.json by scripts/process-theft-foi.py",
+    sourceUrl: "https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files",
+  },
+  "theft-risk-vans.json": {
     threshold: 400,
     source: "semi-auto",
     refreshHint: "Generated alongside theft-risk.json by scripts/process-theft-foi.py",
@@ -262,6 +269,7 @@ const DATA_FILES: Record<string, unknown> = {
   "body-types.json": bodyTypes,
   "theft-risk.json": theftRisk,
   "theft-stats.json": theftStats,
+  "theft-risk-vans.json": theftRiskVans,
   "colour-popularity.json": colourPopularity,
   "tyre-sizes.json": tyreSizes,
   "vehicle-dimensions.json": vehicleDimensions,

@@ -13,10 +13,10 @@ import {
 import theftStats from "@/data/theft-stats.json";
 import ChartContainer from "@/components/stats/ChartContainer";
 
-type RateRow = (typeof theftStats.topByRate)[number];
+type RateRow = (typeof theftStats.cars.topByRate)[number];
 
-const trend = Object.entries(theftStats.carsByYear).map(([year, cars]) => ({ year, cars }));
-const national = theftStats.nationalPer1000;
+const trend = Object.entries(theftStats.cars.byYear).map(([year, cars]) => ({ year, cars }));
+const national = theftStats.cars.nationalPer1000;
 
 function rateColor(per1000: number): string {
   if (per1000 > national * 3) return "#ef4444"; // red-500: "very high"
@@ -84,7 +84,7 @@ export default function CarTheftCharts() {
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={theftStats.topByRate}
+            data={theftStats.cars.topByRate}
             layout="vertical"
             margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
           >
@@ -110,7 +110,7 @@ export default function CarTheftCharts() {
               cursor={{ fill: "rgba(255,255,255,0.03)" }}
             />
             <Bar dataKey="per1000" name="Per 1,000" radius={[0, 4, 4, 0]}>
-              {theftStats.topByRate.map((r) => (
+              {theftStats.cars.topByRate.map((r) => (
                 <Cell key={r.name} fill={rateColor(r.per1000)} />
               ))}
             </Bar>

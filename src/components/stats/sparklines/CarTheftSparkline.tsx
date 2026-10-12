@@ -3,7 +3,7 @@ import { AreaChart, Area, ResponsiveContainer } from "recharts";
 import theftStats from "@/data/theft-stats.json";
 
 // Cars recorded stolen by the DVLA per year (FOIR13058), oldest first.
-const data = Object.values(theftStats.carsByYear).map((v) => ({ v }));
+const data = Object.values(theftStats.cars.byYear).map((v) => ({ v }));
 
 export default function CarTheftSparkline() {
   return (
