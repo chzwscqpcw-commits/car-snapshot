@@ -2,11 +2,12 @@
 title: "The Most Stolen Cars in the UK — And How to Protect Yours"
 description: "Which cars are stolen most in the UK, why thieves target them, and practical steps you can take right now to protect your vehicle from theft."
 date: "2026-03-27"
+lastModified: "2026-10-12"
 keywords: ["most stolen cars UK", "car theft UK", "keyless car theft", "catalytic converter theft", "how to prevent car theft", "stolen car statistics UK"]
 author: "Free Plate Check"
 faqItems:
   - question: "What is the most stolen car in the UK?"
-    answer: "Ford Fiesta and Range Rover models have consistently topped UK car theft statistics in recent years. The Fiesta is targeted due to sheer numbers on the road, while Range Rovers are high-value targets for organised theft gangs using keyless entry relay attacks."
+    answer: "By number, the Ford Fiesta: DVLA recorded 3,487 stolen in 2025, mostly because there are 1.3 million on the road. By theft rate, the Lexus NX is the most targeted, with 21.5 of every 1,000 stolen in 2025, against a UK average of 1.56."
   - question: "How do thieves steal keyless cars?"
     answer: "Relay theft uses two devices — one held near your front door to pick up the key fob signal, and another near the car to relay that signal and unlock it. The whole process can take under 30 seconds. Keeping your keys in a Faraday pouch or metal tin blocks the signal entirely."
   - question: "Can I check if a car has been stolen before I buy it?"
@@ -19,27 +20,39 @@ faqItems:
     answer: "Yes. Visible deterrents like steering wheel locks, pedal locks, and wheel clamps significantly reduce theft risk. Most opportunistic thieves will move on to an easier target rather than spend time defeating a physical lock."
 ---
 
-Car theft in the UK has been rising steadily, with over 130,000 vehicles stolen in the past year alone. What's changed isn't just the volume — it's the method. Organised gangs now use sophisticated electronic tools to steal cars in seconds, often without even touching a lock.
+DVLA recorded 53,652 cars stolen in the UK in 2025, down 12.9% on 2024. Counting vans, motorbikes and other vehicles, the total was 90,861. Thefts are falling from their 2023 peak, but the method has changed: organised gangs now use electronic tools to take cars in seconds, often without touching a lock.
 
-Understanding which cars are targeted, why, and what you can do about it could save you from becoming a statistic.
+Understanding which cars are targeted, why, and what you can do about it could save you from becoming a statistic. The figures below come from DVLA's own stolen-vehicle records, released under Freedom of Information, matched to DfT licensing statistics. Our [car theft statistics](/stats/car-theft) page has the full tables and a search for your own model.
 
 ## Which cars are stolen most in the UK?
 
-The most-stolen vehicles tend to fall into two camps: popular models that are everywhere, and premium vehicles with high resale value.
+There are two ways to answer this, and they give different lists: the cars stolen in the largest numbers, and the cars most likely to be stolen.
 
-### High-volume targets
+### Stolen in the largest numbers
 
-- **Ford Fiesta** — Consistently the most stolen car in the UK, largely because it's been the best-selling car for over a decade. More cars on the road means more opportunities for thieves and a steady demand for parts.
-- **Ford Focus** — Same logic applies. Hugely popular, with strong demand for second-hand parts.
-- **Volkswagen Golf** — Another mass-market favourite that's easy to strip for parts.
-- **Vauxhall Corsa / Astra** — Commonly targeted by opportunistic thieves, particularly older models with weaker security.
+These are mostly common cars. There are so many on the road that even a modest theft rate adds up.
 
-### High-value targets
+- **Ford Fiesta**: 3,487 stolen in 2025, by far the most. The Fiesta was Britain's best-selling car for years, so there are 1.3 million of them, and demand for parts is steady.
+- **Volkswagen Golf**: 1,611
+- **Ford Focus**: 1,462
+- **Land Rover Discovery**: 1,357
+- **Toyota RAV4**: 1,330
+- **BMW 3 Series**: 1,305
 
-- **Range Rover / Range Rover Sport** — The most stolen premium vehicle in the UK. Targeted by organised gangs for export or cloning.
-- **BMW 3 Series / 5 Series** — Keyless entry models are particularly vulnerable to relay attacks.
-- **Mercedes C-Class / E-Class** — Similarly targeted for relay theft and high resale values.
-- **Land Rover Defender** — The new Defender has become a prime target, with some owners reporting thefts within weeks of purchase.
+### Most likely to be stolen
+
+Divide thefts by the number on the road and a different picture appears. Keyless-entry hybrids and premium SUVs dominate:
+
+- **Lexus NX**: 21.5 per 1,000, nearly 14 times the UK average of 1.56. Thefts more than doubled in a year, from 394 to 945.
+- **Lexus RX**: 16.2 per 1,000
+- **Toyota RAV4**: 9.1 per 1,000
+- **Hyundai Ioniq**: 8.4 per 1,000
+- **Toyota C-HR**: 6.8 per 1,000
+- **Land Rover Discovery**: 5.2 per 1,000, and the **Range Rover Sport**: 4.7 per 1,000
+
+Hybrids as a group were stolen at about twice the rate of petrol cars in 2025. We look at why in [why hybrids are now Britain's most stolen cars](/blog/why-hybrid-cars-are-stolen-most).
+
+At the other end, Teslas, the Dacia Duster and small city cars such as the Volkswagen Up and Hyundai i10 are rarely stolen. See the [least stolen cars](/stats/least-stolen-cars).
 
 ## Why these cars are targeted
 

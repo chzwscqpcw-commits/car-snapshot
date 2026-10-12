@@ -144,19 +144,19 @@ export function TheftCountChart({
   );
 }
 
-/** Per-1,000 rate by fuel type, vertical bars with the average marked. */
-export function TheftFuelChart({
+/** Per-1,000 rate by group (fuel type, age band), vertical bars with the average marked. */
+export function TheftRateColumns({
   rows,
   national,
   title,
   subtitle,
 }: {
-  rows: { fuel: string; thefts: number; licensed: number; per1000: number }[];
+  rows: RateRow[];
   national: number;
   title: string;
   subtitle: string;
 }) {
-  const data = rows.map((r) => ({ ...r, name: r.fuel }));
+  const data = rows;
   return (
     <ChartContainer title={title} subtitle={subtitle}>
       <ResponsiveContainer width="100%" height="100%">
