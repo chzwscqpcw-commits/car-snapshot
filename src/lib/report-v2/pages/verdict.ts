@@ -55,10 +55,14 @@ function lowerName(s: string): string {
 }
 
 export function verdictHeadline(hs: NonNullable<ReportInput["healthScore"]>): { headline: string; deck: string } {
-  const parts = hs.breakdown.map((b) => ({ ...b, share: b.maxScore > 0 ? b.score / b.maxScore : 1 }));
+  // "No NCAP data" (common for bikes, vans and rare cars) scores 0 but isn't a
+  // concern, so items with no data are neither praised nor flagged.
+  const parts = hs.breakdown
+    .filter((b) => !/^no .*\bdata\b/i.test(b.detail))
+    .map((b) => ({ ...b, share: b.maxScore > 0 ? b.score / b.maxScore : 1 }));
   const weak = parts.filter((p) => p.share < 0.6).sort((a, b) => a.share - b.share);
   const strong = parts.filter((p) => p.share >= 1);
-  const headline = weak.length === 0 ? `${hs.label}, with nothing that stands out.` : `${hs.label}, with ${countWord(weak.length).toLowerCase()} ${plural(weak.length, "thing")} to watch.`;
+  const headline = weak.length === 0 ? `${hs.label}, with nothing to flag.` : `${hs.label}, with ${countWord(weak.length).toLowerCase()} ${plural(weak.length, "thing")} to watch.`;
   const sentences: string[] = [];
   if (strong.length > 0) sentences.push(`Full marks for ${strong.slice(0, 3).map((s) => lowerName(s.category)).join(", ").replace(/, ([^,]*)$/, " and $1")}.`);
   for (const w of weak.slice(0, 2)) sentences.push(`${w.category}: ${w.detail.charAt(0).toLowerCase()}${w.detail.slice(1)}.`);

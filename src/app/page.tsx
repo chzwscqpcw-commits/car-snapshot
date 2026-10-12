@@ -142,6 +142,8 @@ import {
   Heart,
   Car,
   FileText,
+  Loader2,
+  Printer,
   ArrowLeftRight,
   Shield,
   Leaf,
@@ -161,6 +163,9 @@ import {
 import { RacDemoInlineBanner, RacDemoSidebarBanner } from "@/components/RacDemoBanner";
 import BoltMark from "@/components/BoltMark";
 import Button from "@/components/Button";
+import type { ReportInput } from "@/lib/generateReport";
+import type { ReportTheme } from "@/lib/report-v2/theme";
+import { fetchServerReport, reportFilename } from "@/lib/report-v2/client";
 import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
@@ -867,6 +872,9 @@ export default function Home() {
   const [showAllInsights, setShowAllInsights] = useState(false);
   // A/B test (pdf_cta_copy_v1): sticky variant + once-per-load impression guard.
   const [pdfCtaVariant, setPdfCtaVariant] = useState<string | null>(null);
+  // Which edition of the PDF report is being prepared (the server render can
+  // take a few seconds), so the buttons can say so and ignore double taps.
+  const [pdfBusy, setPdfBusy] = useState<ReportTheme | null>(null);
   const pdfCtaImpressionFired = useRef(false);
   const [data, setData] = useState<VehicleData | null>(null);
   const { setHasResult } = useHomeResult();
@@ -2961,21 +2969,27 @@ END:VEVENT
     showToast("Text report downloaded!");
   }
 
-  async function downloadPDF() {
-    if (!data) return;
+  /**
+   * Download the PDF report. `theme` picks the edition: "dark" to read on a
+   * screen, "light" to print. The magazine-style report is rendered on the
+   * server (/api/report-pdf); if that's switched off or fails, the jsPDF
+   * report is built in the browser instead, so a download never fails just
+   * because the new renderer did.
+   */
+  async function downloadPDF(theme: ReportTheme = "dark") {
+    if (!data || pdfBusy) return;
+    setPdfBusy(theme);
 
     // Guards a one-shot reload recovery for stale-chunk load failures (below).
     const chunkReloadGuardKey = "fpc-pdf-chunk-reload";
 
     try {
-      const { generateVehicleReport } = await import("@/lib/generateReport");
-
       // Build dynamic checklists for all three roles
       const allChecklists = checklistSignals
         ? buildAllChecklists(checklistSignals)
         : { owner: [], buyer: [], seller: [] };
 
-      const blob = await generateVehicleReport({
+      const reportInput: ReportInput = {
         data,
         motInsights: data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null,
         checklist: allChecklists,
@@ -3047,27 +3061,45 @@ END:VEVENT
         vehicleSegment,
         ukAverageCost: SEGMENT_MEDIAN_COSTS[vehicleSegment]?.cost || undefined,
         ukAverageLabel: SEGMENT_MEDIAN_COSTS[vehicleSegment]?.label,
-      });
+      };
 
-      const reg = data.registrationNumber.replace(/\s+/g, "");
-      const dateStr = new Date().toISOString().slice(0, 10);
-      const filename = `FPC-Report-${reg}-${dateStr}.pdf`;
+      const server = await fetchServerReport(reportInput, theme);
+      let blob: Blob;
+      if (server.ok) {
+        blob = server.blob;
+      } else {
+        const { generateVehicleReport } = await import("@/lib/generateReport");
+        blob = await generateVehicleReport(reportInput);
+      }
+      const engine = server.ok ? "v2" : "v1";
+
+      // The jsPDF report has one edition, so only name the file "-print"
+      // when the print edition was actually produced.
+      const filename = reportFilename(data.registrationNumber, server.ok ? theme : "dark");
       const file = new File([blob], filename, { type: "application/pdf" });
 
       // Best path: Web Share API with file support (iOS 15+, Android Chrome)
       // Opens native share sheet — user can "Save to Files", AirDrop, etc.
       // Stays on the current page — no tab navigation.
+      // Waiting on the server render can use up the tap's "user activation",
+      // and then the share sheet refuses to open (NotAllowedError). In that
+      // case fall through to the plain download below.
+      let shared = false;
       if (isMobileDevice() && navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({ files: [file] });
+          shared = true;
         } catch (shareErr: unknown) {
           // User cancelled the share sheet — not an error
-          if (shareErr instanceof Error && shareErr.name !== "AbortError") {
+          if (shareErr instanceof Error && shareErr.name === "AbortError") {
+            shared = true;
+          } else {
             console.error("Share failed:", shareErr);
           }
         }
-      } else {
-        // Desktop fallback: programmatic <a> download
+      }
+      if (!shared) {
+        // Desktop (and mobile share-refused) fallback: programmatic <a> download
         const blobUrl = URL.createObjectURL(file);
         const link = document.createElement("a");
         link.href = blobUrl;
@@ -3093,8 +3125,14 @@ END:VEVENT
         reg: data.registrationNumber,
         make: data.make ?? null,
         model: data.model ?? null,
-        delivery: isMobileDevice() && navigator.canShare?.({ files: [file] }) ? "web_share" : "anchor",
+        delivery: shared ? "web_share" : "anchor",
         has_mot_history: Array.isArray(data.motTests) && data.motTests.length > 0,
+        // Which report was delivered: v2 = server-rendered magazine report,
+        // v1 = the jsPDF fallback (and why). `theme` is the edition asked for.
+        engine,
+        theme,
+        render_ms: server.ms,
+        fallback_reason: server.ok ? null : server.reason,
       });
 
       // Trigger E — show MOT reminder prompt after PDF download. One calm,
@@ -3142,6 +3180,8 @@ END:VEVENT
       }
 
       showToast("PDF generation failed. Please try the text version.");
+    } finally {
+      setPdfBusy(null);
     }
   }
 
@@ -4048,10 +4088,11 @@ END:VEVENT
                       size="sm"
                       className="ml-auto"
                       title="Download PDF report"
+                      disabled={pdfBusy !== null}
                     >
-                      <FileText className="w-4 h-4" />
-                      <span className="hidden sm:inline">{pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
-                      <span className="sm:hidden">PDF</span>
+                      {pdfBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                      <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
+                      <span className="sm:hidden">{pdfBusy ? "…" : "PDF"}</span>
                     </Button>
                 </div>
               </div>
@@ -5485,14 +5526,21 @@ END:VEVENT
               <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-slate-200">Save this report</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Download a PDF with all vehicle details, MOT history and mileage records.</p>
+                  <p className="text-xs text-slate-400 mt-0.5">A free PDF with the verdict, MOT history, value and running costs. Choose the print version for paper: white background, ink-friendly.</p>
                 </div>
-                <Button
-                  onClick={() => downloadPDF()}
-                  size="sm"
-                >
-                  Download free report
-                </Button>
+                {/* Two editions of the same report: dark to read on a screen,
+                    light to print. The header and QuickNav buttons give the
+                    screen edition in one tap; the choice lives here. */}
+                <div className="flex flex-wrap gap-2 shrink-0">
+                  <Button onClick={() => downloadPDF("dark")} size="sm" disabled={pdfBusy !== null}>
+                    {pdfBusy === "dark" ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                    {pdfBusy === "dark" ? "Preparing…" : "Download report"}
+                  </Button>
+                  <Button onClick={() => downloadPDF("light")} size="sm" variant="secondary" disabled={pdfBusy !== null}>
+                    {pdfBusy === "light" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
+                    {pdfBusy === "light" ? "Preparing…" : "Print version"}
+                  </Button>
+                </div>
               </div>
             </DataReveal>
 

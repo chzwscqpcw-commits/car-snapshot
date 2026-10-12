@@ -1,7 +1,7 @@
 import type { ReportInput } from "@/lib/generateReport";
 import { html, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { num, parseDate, shortDate } from "../format";
+import { num, parseDate, shortDate, vehicleNoun } from "../format";
 import { BODY_HEIGHT, CONTINUED_ROOM, type Block, pageShell, paginate, textHeight } from "./shared";
 
 // 05 · The details: the DVLA spec sheet, then fact cards (tax, fuel, ULEZ,
@@ -65,7 +65,7 @@ function cards(input: ReportInput, t: ThemeTokens): Card[] {
       tone: t.accent,
       lines: [
         `About £${ved.estimatedAnnualRate} a year${ved.estimatedSixMonthRate != null ? ` (£${ved.estimatedSixMonthRate.toFixed(2)} for six months)` : ""}`,
-        ved.band ? `Band ${ved.band}` : "",
+        ved.band ? (/^band\b/i.test(ved.band) ? ved.band : `Band ${ved.band}`) : "",
         ved.details ? `${ved.details.split(".")[0]}.` : "",
       ].filter(Boolean),
     });
@@ -131,7 +131,7 @@ function cards(input: ReportInput, t: ThemeTokens): Card[] {
   }
   const cp = input.colourPopularity;
   if (cp && input.data.colour) {
-    out.push({ title: `Colour: ${input.data.colour.toLowerCase()}`, tone: t.accent, lines: [`${cp.label}: ${cp.share}% of new cars, number ${cp.rank} in the UK`] });
+    out.push({ title: `Colour: ${input.data.colour.toLowerCase()}`, tone: t.accent, lines: [`Number ${cp.rank} in the UK: ${cp.share}% of new cars are ${input.data.colour.toLowerCase()}`] });
   }
   const eco = input.ecoScore;
   if (eco) {
@@ -189,6 +189,6 @@ export function detailPages(input: ReportInput, t: ThemeTokens, firstFolio: numb
   if (blocks.length === 0) return [];
   const pages = paginate(blocks, BODY_HEIGHT - 64 - 28, CONTINUED_ROOM);
   return pages.map((content, i) =>
-    pageShell(t, input, "The details", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">The car in detail.</h1>` : html`<h2 class="display h-cont">The details, continued</h2>`}<div class="stack-0">${content}</div>`),
+    pageShell(t, input, "The details", firstFolio + i, html`${i === 0 ? html`<h1 class="display h-page">The ${vehicleNoun(input.data, input.parsedModel?.bodyStyle)} in detail.</h1>` : html`<h2 class="display h-cont">The details, continued</h2>`}<div class="stack-0">${content}</div>`),
   );
 }

@@ -96,6 +96,27 @@ function check(label: string, ok: boolean) {
   check("long history: MOT story continues", longHtml.includes("The MOT story, continued"));
   try { writeFileSync("/tmp/fpc-report-v2-long.pdf", Buffer.from(await renderPdf(longHtml))); } catch { /* fine */ }
 
+  // A motorbike, shaped like the first real vehicle rendered (a Ducati 1199):
+  // no NCAP data, a low-mileage warning with an emoji, no fuel cost.
+  console.log("\nMotorbike:");
+  const bike = structuredClone(SAMPLE_REPORT_INPUT);
+  Object.assign(bike.data, { make: "DUCATI", model: "1199", wheelplan: "2 WHEEL", typeApproval: "L3" });
+  bike.parsedModel = null;
+  bike.motInsights = { ...bike.motInsights!, avgMilesPerYear: 840, mileageWarnings: ["⚠️ Unusually low annual mileage (under 4,000 miles/year) - verify vehicle usage"] };
+  bike.healthScore = { score: 85, grade: "A", label: "Excellent", breakdown: [
+    { category: "MOT History", score: 23, maxScore: 25, detail: "90% pass rate" },
+    { category: "Safety Rating", score: 0, maxScore: 10, detail: "No NCAP data" },
+  ] };
+  bike.ownershipCost = { ...bike.ownershipCost!, breakdown: { ...bike.ownershipCost!.breakdown, fuel: null } };
+  const bikeHtml = renderReportHtml(bike, { theme: "dark", now });
+  check("called a motorbike, not a car", bikeHtml.includes("petrol motorbike") || bikeHtml.includes("diesel motorbike"));
+  check("details headline says motorbike", bikeHtml.includes("The motorbike in detail."));
+  check("missing NCAP data isn't flagged", bikeHtml.includes("Excellent, with nothing to flag."));
+  check("emoji stripped from MOT warnings", !bikeHtml.includes("⚠") && bikeHtml.includes("Unusually low annual mileage"));
+  check("no mileage note without a fuel cost", !bikeHtml.includes("Based on 7,400 miles a year"));
+  const bikeOverflow = await findOverflowingPages(bikeHtml);
+  check(`motorbike: no page overflows${bikeOverflow.length ? ` (${bikeOverflow.join(", ")})` : ""}`, bikeOverflow.length === 0);
+
   console.log("\nEscaping:");
   const hostile = structuredClone(SAMPLE_REPORT_INPUT);
   hostile.data.model = `<img src=x onerror=alert(1)> SPORT`;

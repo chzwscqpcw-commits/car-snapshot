@@ -141,6 +141,8 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid; font-size: 14px; line-height: 1.45 }
 .box { width: 14px; height: 14px; border: 1.5px solid; border-radius: 3px; margin-top: 3px; flex-shrink: 0 }
 .closing { margin-top: auto; display: flex; flex-direction: column }
+/* Spilled onto a continuation page on its own: sit under the heading, not at the foot. */
+.h-cont + .stack-24 > .closing:first-child { margin-top: 0 }
 .history { display: flex; gap: 32px; align-items: center; padding: 24px 0; border-top: 1px solid; border-bottom: 1px solid; margin-bottom: 24px }
 .history-text { flex: 1 }
 .history-text p { font-size: 14px; line-height: 1.55 }
