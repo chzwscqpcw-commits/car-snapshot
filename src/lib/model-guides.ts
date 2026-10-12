@@ -588,7 +588,7 @@ function generateNarrative(d: ModelGuideData): string[] {
   // Theft risk
   if (d.theftRisk) {
     sentences.push(
-      `Theft risk is rated ${d.theftRisk.riskCategory.replace("-", " ")} at ${d.theftRisk.theftsPer1000} per 1,000 registered vehicles.`,
+      `Theft risk is rated ${d.theftRisk.riskCategory.replace("-", " ")} at ${d.theftRisk.theftsPer1000} per 1,000 licensed cars.`,
     );
   }
 
@@ -639,7 +639,7 @@ function generateFAQ(d: ModelGuideData): FaqItem[] {
   if (d.theftRisk) {
     faq.push({
       question: `Is the ${displayName} likely to be stolen?`,
-      answer: `The ${displayModel} has a theft rate of ${d.theftRisk.theftsPer1000} per 1,000 registered vehicles, which is rated ${d.theftRisk.riskCategory.replace("-", " ")} compared to the national average of ${d.theftRisk.nationalAverage} per 1,000. ${d.theftRisk.riskCategory === "very-high" || d.theftRisk.riskCategory === "high" ? "Extra security measures like tracking devices and steering locks are recommended." : "Standard security precautions should be sufficient."}`,
+      answer: `The ${displayModel} has a theft rate of ${d.theftRisk.theftsPer1000} per 1,000 licensed cars, which is rated ${d.theftRisk.riskCategory.replace("-", " ")} compared to the national average of ${d.theftRisk.nationalAverage} per 1,000. ${d.theftRisk.riskCategory === "very-high" || d.theftRisk.riskCategory === "high" ? "Extra security measures like tracking devices and steering locks are recommended." : "Standard security precautions should be sufficient."}`,
     });
   }
 

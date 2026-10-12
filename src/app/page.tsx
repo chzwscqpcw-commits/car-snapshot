@@ -2068,7 +2068,7 @@ export default function Home() {
       const tone: InsightTone = theftRisk.riskCategory === "very-high" || theftRisk.riskCategory === "high" ? "risk" : theftRisk.riskCategory === "moderate" ? "warn" : "good";
       result.push({
         tone,
-        title: `Theft risk: ${catLabel} (${theftRisk.theftsPer1000} per 1,000 vehicles)`,
+        title: `Theft risk: ${catLabel} (${theftRisk.theftsPer1000} per 1,000 cars)`,
         detail: `${theftRisk.rateMultiplier}× the national average of ${theftRisk.nationalAverage} per 1,000. Consider tracker/immobiliser for higher-risk models.`,
       });
     }
@@ -2751,8 +2751,8 @@ END:VEVENT
       const catLabel = theftRisk.riskCategory === "very-high" ? "Very High" : theftRisk.riskCategory === "high" ? "High" : theftRisk.riskCategory === "moderate" ? "Moderate" : theftRisk.riskCategory === "low" ? "Low" : "Very Low";
       lines.push(sep, "THEFT RISK", sep, "");
       lines.push(`Risk Category:       ${catLabel}`);
-      lines.push(`Rate:                ${theftRisk.theftsPer1000} per 1,000 vehicles (${theftRisk.rateMultiplier}× national average)`);
-      lines.push(`National Average:    ${theftRisk.nationalAverage} per 1,000 vehicles`);
+      lines.push(`Rate:                ${theftRisk.theftsPer1000} per 1,000 cars (${theftRisk.rateMultiplier}× national average)`);
+      lines.push(`National Average:    ${theftRisk.nationalAverage} per 1,000 cars`);
       lines.push("");
     }
 

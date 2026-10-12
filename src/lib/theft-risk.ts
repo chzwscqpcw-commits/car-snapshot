@@ -1,29 +1,25 @@
 // Theft risk rating lookup by make/model
-// Data: aggregated from DVLA FOI, Home Office vehicle theft statistics
-// Format: { "MAKE|MODEL": [theftCount, registeredCount] }
+// Data: DVLA stolen-vehicle records (FOI FOIR13058) ÷ DfT VEH0120 licensed cars,
+// built by scripts/process-theft-foi.py.
+// Format: { "MAKE|MODEL": [cars stolen in the year, cars licensed at its Q4] }
 
 import theftData from "@/data/theft-risk.json";
+import theftStats from "@/data/theft-stats.json";
 
 const data = theftData as unknown as Record<string, [number, number]>;
 
-const NATIONAL_AVERAGE = 5.5; // thefts per 1,000 registered vehicles
+/** Thefts per 1,000 licensed cars across every car DVLA's records match to a model. */
+const NATIONAL_AVERAGE = theftStats.nationalPer1000;
 
 /**
- * OFF since 2026-10-11. theft-risk.json was never built from a real source:
- * round estimates added in Feb 2026, its 84 models summing to 88k thefts when
- * DVLA recorded ~55k for the whole UK in 2025 (RAV4: 420 here vs 1,319 per
- * DVLA). NATIONAL_AVERAGE above is ~3x the real rate. Every "Theft risk: High"
- * on a result, report or model guide was derived from it, so the lookup returns
- * null until the data is real — every caller already handles a null (it's what
- * an unmatched model returns).
- *
- * To turn it back on: obtain DVLA's make/model stolen-vehicle release (FOI
- * FOIR13058, 2014–2025, answered Feb 2026; DVLA doesn't publish responses, so
- * request it), divide by DfT VEH0120 licensed stock for the same models,
- * rewrite theft-risk.json as [thefts, licensed], recompute NATIONAL_AVERAGE,
- * and flip this flag. /stats/car-theft lost its charts at the same time.
+ * Was OFF 2026-10-11 → 2026-10-12. The Feb 2026 theft-risk.json was round
+ * estimates with no source: 84 models summing to 88k thefts against DVLA's
+ * ~54k cars, and a NATIONAL_AVERAGE of 5.5 per 1,000 against a real 1.56. It
+ * was rebuilt from DVLA's own make/model release, so ratings are back on.
+ * Flip this off again if the data ever has to be withdrawn: every caller
+ * already handles a null (it's what an unmatched model returns).
  */
-const THEFT_DATA_SOURCED = false;
+const THEFT_DATA_SOURCED = true;
 
 function normalize(s: string): string {
   return s.toUpperCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
@@ -35,6 +31,27 @@ const MAKE_ALIASES: Record<string, string> = {
   "VW": "VOLKSWAGEN",
   "LANDROVER": "LAND ROVER",
 };
+
+// DfT spells some models differently from the DVLA/MOT feeds and our guides:
+// "ID.3" is ID3, "MAZDA3" is 3, an Evoque can arrive with make "RANGE ROVER".
+// Compared with make prefix, spaces and punctuation removed.
+const squash = (s: string) => s.replace(/[^A-Z0-9]/g, "");
+const SQUASHED = new Map<string, [number, number]>();
+for (const [k, entry] of Object.entries(data)) {
+  const [mk, md] = k.split("|");
+  const sk = `${squash(mk)}|${squash(md)}`;
+  if (!SQUASHED.has(sk)) SQUASHED.set(sk, entry); // JSON is largest fleet first
+}
+function lookupSquashed(make: string, model: string): [number, number] | undefined {
+  let mk = squash(make);
+  let md = squash(model);
+  if (mk === "RANGEROVER") {
+    mk = "LANDROVER";
+    md = `RANGEROVER${md}`;
+  }
+  if (md.startsWith(mk) && md.length > mk.length) md = md.slice(mk.length);
+  return SQUASHED.get(`${mk}|${md}`);
+}
 
 export type TheftRiskResult = {
   theftsPer1000: number;
@@ -89,15 +106,29 @@ export function lookupTheftRisk(make?: string, model?: string): TheftRiskResult 
     if (data[aliasKey]) return buildResult(data[aliasKey]);
   }
 
-  // Fuzzy: model contains lookup key's model or vice versa
+  for (const mk of aliasedMake ? [normMake, aliasedMake] : [normMake]) {
+    const entry = lookupSquashed(mk, normModel);
+    if (entry) return buildResult(entry);
+  }
+
+  // Fuzzy: the lookup model is a trim of a rated model ("FIESTA ZETEC" →
+  // FIESTA), else a rated model extends it. The longest contained key wins so
+  // "RANGE ROVER SPORT HSE" rates as the Sport, not the Range Rover; for the
+  // reverse, the JSON is ordered largest fleet first.
   const tryMakes = aliasedMake ? [normMake, aliasedMake] : [normMake];
   for (const mk of tryMakes) {
+    let best: [string, [number, number]] | null = null;
     for (const [entryKey, entry] of Object.entries(data)) {
       const [entryMake, entryModel] = entryKey.split("|");
       if (entryMake !== mk) continue;
-      if (normModel.includes(entryModel) || entryModel.includes(normModel)) {
-        return buildResult(entry);
+      if (normModel.startsWith(entryModel + " ") && (!best || entryModel.length > best[0].length)) {
+        best = [entryModel, entry];
       }
+    }
+    if (best) return buildResult(best[1]);
+    for (const [entryKey, entry] of Object.entries(data)) {
+      const [entryMake, entryModel] = entryKey.split("|");
+      if (entryMake === mk && entryModel.startsWith(normModel + " ")) return buildResult(entry);
     }
   }
 

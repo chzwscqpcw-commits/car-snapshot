@@ -5,19 +5,41 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import StatsRelated from "@/components/stats/StatsRelated";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
+import CiteThisData from "@/components/stats/CiteThisData";
+import DataAsOf from "@/components/stats/DataAsOf";
+import CarTheftCharts from "@/components/stats/CarTheftCharts";
+import theftStats from "@/data/theft-stats.json";
 
+// Every figure on this page comes from theft-stats.json, built by
+// scripts/process-theft-foi.py from DVLA's make/model stolen-vehicle release
+// (FOI FOIR13058) and DfT VEH0120 licensing stock. Until 2026-10-12 the page
+// quoted What Car?'s summary of the same release ("54,830 vehicles"), which
+// turned out to be roughly the CARS figure; DVLA recorded 90,861 vehicles of
+// all kinds.
+const YEAR = theftStats.year;
+const n = (v: number) => v.toLocaleString("en-GB");
+const yearly = theftStats.allVehiclesByYear as Record<string, number>;
+const carsYearly = theftStats.carsByYear as Record<string, number>;
+const ALL = yearly[YEAR];
+const ALL_CHANGE = Math.round(((ALL - yearly[YEAR - 1]) / yearly[YEAR - 1]) * 1000) / 10;
+const CARS = carsYearly[YEAR];
+const CARS_CHANGE = Math.round(((CARS - carsYearly[YEAR - 1]) / carsYearly[YEAR - 1]) * 1000) / 10;
+const TOP = theftStats.topByCount[0];
+const RISKIEST = theftStats.topByRate[0];
+const NATIONAL = theftStats.nationalPer1000;
+const PEAK_YEAR = Object.entries(yearly).sort((a, b) => b[1] - a[1])[0][0];
+
+const DESCRIPTION = `${n(CARS)} cars were stolen in the UK in ${YEAR}, per DVLA records. The ${TOP.name} was stolen most (${n(TOP.thefts)}); the ${RISKIEST.name} is the most likely to be stolen, at ${RISKIEST.per1000} per 1,000. Rates for 300+ models.`;
 
 export const metadata: Metadata = {
-  title: "Most Stolen Cars in the UK: 2025 DVLA Figures & How to Protect Yours",
-  description:
-    "54,830 vehicles were reported stolen in the UK in 2025, and the Ford Fiesta topped the list. The DVLA figures, plus how keyless relay theft works and what actually stops it.",
+  title: `Most Stolen Cars in the UK: ${YEAR} DVLA Figures & How to Protect Yours`,
+  description: DESCRIPTION,
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/car-theft",
   },
   openGraph: {
-    title: "Most Stolen Cars in the UK: 2025 DVLA Figures & How to Protect Yours",
-    description:
-      "54,830 vehicles were reported stolen in the UK in 2025, and the Ford Fiesta topped the list. The DVLA figures, plus how keyless relay theft works and what actually stops it.",
+    title: `Most Stolen Cars in the UK: ${YEAR} DVLA Figures & How to Protect Yours`,
+    description: DESCRIPTION,
     url: "https://www.freeplatecheck.co.uk/stats/car-theft",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -28,13 +50,15 @@ export const metadata: Metadata = {
 const faqItems = [
   {
     question: "What is the most stolen car in the UK?",
-    answer:
-      "The Ford Fiesta, by a wide margin. DVLA figures obtained by What Car? under Freedom of Information show 3,511 Fiestas reported stolen in 2025 — more than any other model. Raw counts naturally favour cars there are a lot of, and the Fiesta was Britain's best-selling car for years.",
+    answer: `By number, the ${TOP.name}: ${n(TOP.thefts)} were recorded stolen by the DVLA in ${YEAR}, more than any other model. That is mostly because there are so many of them (${n(TOP.licensed)} on the road), so its theft RATE is a more modest ${TOP.per1000} per 1,000. The car most likely to be stolen is the ${RISKIEST.name}, at ${RISKIEST.per1000} per 1,000, about ${Math.round(RISKIEST.per1000 / NATIONAL)} times the UK average of ${NATIONAL}.`,
   },
   {
     question: "How many cars are stolen in the UK each year?",
-    answer:
-      "54,830 vehicles were reported stolen to the DVLA in 2025, according to the same Freedom of Information release — down 11% on 2024. That is still roughly 150 a day.",
+    answer: `${n(CARS)} cars were recorded stolen by the DVLA in ${YEAR}, ${CARS_CHANGE < 0 ? "down" : "up"} ${Math.abs(CARS_CHANGE)}% on ${YEAR - 1}, or about ${Math.round(CARS / 365)} a day. Counting vans, motorbikes and other vehicles, the total was ${n(ALL)}. Thefts peaked in ${PEAK_YEAR}.`,
+  },
+  {
+    question: "How are the theft rates calculated?",
+    answer: `Cars recorded stolen in ${YEAR} (DVLA, released under Freedom of Information as FOIR13058) divided by the number of the same model licensed at the end of ${YEAR} (DfT vehicle licensing statistics), per 1,000. Models with fewer than 10,000 licensed are not rated. A car stolen twice counts twice, and about 3% of DVLA's records name only a make, so can't be assigned to a model.`,
   },
   {
     question: "What is keyless car theft and how does it work?",
@@ -77,29 +101,63 @@ export default function CarTheftPage() {
       />
 
       <div className="mx-auto max-w-3xl px-4 py-10">
-        {/* Stat callouts. Model-by-model theft RATES were removed 2026-10-11:
-            theft-risk.json and the national trend chart were never built from
-            a real source (its 84 models summed to more thefts than the whole
-            UK records). These three figures are DVLA's, via What Car?'s FOI.
-            Rates come back once the DVLA make/model release (FOIR13058) is
-            obtained and joined to DfT licensing stock — see src/lib/theft-risk.ts. */}
         <div className="mb-4 grid gap-4 sm:grid-cols-3">
-          <StatCallout value="54,830" label="Vehicles reported stolen in 2025" color="red" />
-          <StatCallout value="Ford Fiesta" label="Most stolen model — 3,511 in 2025" color="amber" />
-          <StatCallout value="−11%" label="Change in thefts vs 2024" color="emerald" />
+          <StatCallout value={n(CARS)} label={`Cars stolen in ${YEAR}`} color="red" />
+          <StatCallout value={TOP.name} label={`Most stolen model: ${n(TOP.thefts)} in ${YEAR}`} color="amber" />
+          <StatCallout
+            value={`${CARS_CHANGE > 0 ? "+" : "−"}${Math.abs(CARS_CHANGE)}%`}
+            label={`Car thefts vs ${YEAR - 1}`}
+            color="emerald"
+          />
         </div>
         <p className="mb-10 text-xs text-slate-500">
-          Source: DVLA data released under Freedom of Information, reported by{" "}
-          <a
-            href="https://www.whatcar.com/news/the-most-stolen-cars-in-the-uk"
-            className="underline hover:text-slate-300"
-            rel="noopener"
-          >
-            What Car?
-          </a>
-          . We&apos;re rebuilding model-by-model theft rates from the full DVLA
-          release and will publish them here when they&apos;re ready.
+          Source: DVLA stolen-vehicle records, released under Freedom of
+          Information (FOIR13058), and DfT vehicle licensing statistics. All
+          vehicle types: {n(ALL)} stolen in {YEAR} ({ALL_CHANGE > 0 ? "+" : "−"}
+          {Math.abs(ALL_CHANGE)}%).
         </p>
+
+        <h2 className="mb-4 text-xl font-bold text-slate-100">
+          The 10 Most Stolen Cars in {YEAR}
+        </h2>
+        <div className="mb-3 overflow-x-auto rounded-xl border border-[#1e293b]">
+          <table className="w-full text-sm">
+            <thead className="bg-[#0f172a] text-left text-xs text-slate-400">
+              <tr>
+                <th className="px-3 py-2 font-medium">#</th>
+                <th className="px-3 py-2 font-medium">Model</th>
+                <th className="px-3 py-2 text-right font-medium">Stolen</th>
+                <th className="hidden px-3 py-2 text-right font-medium sm:table-cell">{YEAR - 1}</th>
+                <th className="px-3 py-2 text-right font-medium">Per 1,000</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#1e293b] text-slate-300">
+              {theftStats.topByCount.map((r, i) => (
+                <tr key={r.name}>
+                  <td className="px-3 py-2 text-slate-500">{i + 1}</td>
+                  <td className="px-3 py-2 text-slate-100">{r.name}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{n(r.thefts)}</td>
+                  <td className="hidden px-3 py-2 text-right tabular-nums text-slate-500 sm:table-cell">
+                    {n(r.previous)}
+                  </td>
+                  <td
+                    className={`px-3 py-2 text-right tabular-nums ${r.per1000 > NATIONAL * 2 ? "text-red-400" : ""}`}
+                  >
+                    {r.per1000}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mb-10 text-xs text-slate-500">
+          Per 1,000 = cars stolen in {YEAR} for every 1,000 licensed. UK average:{" "}
+          {NATIONAL}. Raw counts favour common cars; the rate shows how likely a
+          particular car is to be taken.
+        </p>
+
+        <CarTheftCharts />
+        <DataAsOf files={["theft-stats.json", "theft-risk.json"]} className="mt-3" />
 
         {/* Insight copy */}
         <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
@@ -113,8 +171,11 @@ export default function CarTheftPage() {
             unlock and start cars without needing the physical key. Premium SUVs
             became prime targets because of their resale and parts value, while
             high-volume older cars like the Fiesta are stolen in the largest
-            numbers simply because there are so many of them. Thefts reported to
-            the DVLA fell 11% in 2025, but organised networks that ship stolen
+            numbers simply because there are so many of them. Per car on the
+            road, Toyota and Lexus hybrids top the table: the {RISKIEST.name}{" "}
+            is stolen at {Math.round(RISKIEST.per1000 / NATIONAL)} times the UK
+            average. Car thefts recorded by the DVLA fell{" "}
+            {Math.abs(CARS_CHANGE)}% in {YEAR}, but organised networks that ship stolen
             vehicles overseas within hours still make recovery difficult once a
             car leaves the country.
           </p>
@@ -167,6 +228,11 @@ export default function CarTheftPage() {
             opportunistic theft.
           </p>
         </div>
+
+        <CiteThisData
+          title={`Most Stolen Cars in the UK: ${YEAR} DVLA Figures`}
+          url="https://www.freeplatecheck.co.uk/stats/car-theft"
+        />
 
         {/* FAQ */}
         <FaqAccordion items={faqItems} />

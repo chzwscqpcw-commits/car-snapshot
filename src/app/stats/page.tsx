@@ -5,6 +5,7 @@ import StatsHubPreviewCard from "@/components/stats/StatsHubPreviewCard";
 import StatsHubCategoryGroup from "@/components/stats/StatsHubCategoryGroup";
 import FuelPricesSparkline from "@/components/stats/sparklines/FuelPricesSparkline";
 import Button from "@/components/Button";
+import theftStats from "@/data/theft-stats.json";
 
 export const metadata: Metadata = {
   title: "UK Motoring Statistics 2025 | Free Plate Check",
@@ -253,7 +254,7 @@ export default function StatsIndex() {
             title="Car Theft Statistics"
             description="The UK's most stolen cars from DVLA figures, how keyless theft works and what stops it."
             stats={[
-              { value: "54.8k", label: "stolen in 2025", colour: "red" },
+              { value: `${(theftStats.carsByYear[String(theftStats.year) as keyof typeof theftStats.carsByYear] / 1000).toFixed(1)}k`, label: `cars stolen in ${theftStats.year}`, colour: "red" },
               { value: "Fiesta", label: "most stolen", colour: "red" },
               { value: "<60s", label: "keyless", colour: "amber" },
             ]}
