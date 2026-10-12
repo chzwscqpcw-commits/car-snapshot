@@ -168,12 +168,20 @@ export function lookupTheftRisk(make?: string, model?: string): TheftRiskResult 
 
 export type TheftModelOption = { key: string; make: string; model: string; fleet: Fleet["kind"] };
 
-/** Every rated model, for the "check your model" search on /stats/car-theft. */
+/**
+ * Every rated model, for the "check your model" search on /stats/car-theft.
+ * A model rated as both (Transporter) appears once, under the fleet
+ * lookupTheftRisk would use for it.
+ */
 export function listRatedModels(): TheftModelOption[] {
-  return FLEETS.flatMap((f) =>
-    Object.keys(f.data).map((key) => {
+  const byKey = new Map<string, TheftModelOption & { n: number }>();
+  for (const f of FLEETS) {
+    for (const [key, [, n]] of Object.entries(f.data)) {
+      const prev = byKey.get(key);
+      if (prev && prev.n >= n) continue;
       const [make, model] = key.split("|");
-      return { key, make, model, fleet: f.kind };
-    })
-  );
+      byKey.set(key, { key, make, model, fleet: f.kind, n });
+    }
+  }
+  return [...byKey.values()].map(({ n: _n, ...o }) => o);
 }

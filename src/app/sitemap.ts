@@ -235,7 +235,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: "https://www.freeplatecheck.co.uk/stats/car-theft",
-      lastModified: new Date("2026-03-07"),
+      lastModified: new Date("2026-10-12"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/stats/least-stolen-cars",
+      lastModified: new Date("2026-10-12"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/stats/van-theft",
+      lastModified: new Date("2026-10-12"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://www.freeplatecheck.co.uk/stats/motorbike-theft",
+      lastModified: new Date("2026-10-12"),
       changeFrequency: "monthly",
       priority: 0.7,
     },
