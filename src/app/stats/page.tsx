@@ -254,7 +254,7 @@ export default function StatsIndex() {
             title="Car Theft Statistics"
             description="The UK's most stolen cars from DVLA figures, how keyless theft works and what stops it."
             stats={[
-              { value: `${(theftStats.carsByYear[String(theftStats.year) as keyof typeof theftStats.carsByYear] / 1000).toFixed(1)}k`, label: `cars stolen in ${theftStats.year}`, colour: "red" },
+              { value: `${(theftStats.cars.byYear[String(theftStats.year) as keyof typeof theftStats.cars.byYear] / 1000).toFixed(1)}k`, label: `cars stolen in ${theftStats.year}`, colour: "red" },
               { value: "Fiesta", label: "most stolen", colour: "red" },
               { value: "<60s", label: "keyless", colour: "amber" },
             ]}

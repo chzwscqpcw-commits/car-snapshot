@@ -697,7 +697,7 @@ export default async function ModelGuidePage({ params }: PageProps) {
                 <strong className="text-slate-100">
                   {data.theftRisk.theftsPer1000} per 1,000
                 </strong>{" "}
-                licensed cars, rated{" "}
+                licensed {data.theftRisk.fleet}, rated{" "}
                 {data.theftRisk.riskCategory.replace("-", " ")} compared to the
                 national average of {data.theftRisk.nationalAverage} per 1,000.
                 {(data.theftRisk.riskCategory === "very-high" ||
