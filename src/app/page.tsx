@@ -166,6 +166,7 @@ import Button from "@/components/Button";
 import type { ReportInput } from "@/lib/generateReport";
 import type { ReportTheme } from "@/lib/report-v2/theme";
 import { fetchServerReport, reportFilename } from "@/lib/report-v2/client";
+import ReportDownloadMenu from "@/components/ReportDownloadMenu";
 import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
@@ -701,7 +702,7 @@ function getToastTone(msg: string) {
 }
 
 // Quick navigation bar for jumping between section groups
-function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
+function QuickNav({ onDownloadPDF }: { onDownloadPDF: (theme: ReportTheme) => void }) {
   const sections = [
     { id: "section-health", label: "Health" },
     { id: "section-money", label: "Money" },
@@ -733,14 +734,23 @@ function QuickNav({ onDownloadPDF }: { onDownloadPDF: () => void }) {
           </button>
         ))}
         <div className="w-px h-5 bg-slate-700/60 shrink-0 mx-0.5" />
-        <button
-          onClick={onDownloadPDF}
-          className="shrink-0 p-2.5 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
-          title="Download PDF report"
-          aria-label="Download PDF report"
-        >
-          <FileText className="w-4 h-4" />
-        </button>
+        <ReportDownloadMenu
+          id="report-menu-quicknav"
+          onPick={onDownloadPDF}
+          placement="up"
+          align="center"
+          closeOnScroll={false}
+          renderTrigger={(p) => (
+            <button
+              {...p}
+              className="shrink-0 p-2.5 rounded-full text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors"
+              title="Download PDF report"
+              aria-label="Download PDF report"
+            >
+              <FileText className="w-4 h-4" />
+            </button>
+          )}
+        />
       </nav>
     </div>
   );
@@ -3965,7 +3975,7 @@ END:VEVENT
 
         {data && !loading && (
           <>
-            <QuickNav onDownloadPDF={() => downloadPDF()} />
+            <QuickNav onDownloadPDF={(theme) => downloadPDF(theme)} />
 
             {/* VEHICLE JSON-LD */}
             <script
@@ -4083,17 +4093,19 @@ END:VEVENT
                     </button>
 
                     {/* Primary PDF button */}
-                    <Button
-                      onClick={() => downloadPDF()}
-                      size="sm"
-                      className="ml-auto"
-                      title="Download PDF report"
-                      disabled={pdfBusy !== null}
-                    >
-                      {pdfBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-                      <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
-                      <span className="sm:hidden">{pdfBusy ? "…" : "PDF"}</span>
-                    </Button>
+                    <div className="ml-auto">
+                      <ReportDownloadMenu
+                        id="report-menu-header"
+                        onPick={(theme) => downloadPDF(theme)}
+                        renderTrigger={(p) => (
+                          <Button {...p} size="sm" title="Download PDF report" disabled={pdfBusy !== null}>
+                            {pdfBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                            <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : pdfCtaVariant === "B" ? "Get my report" : "Free report"}</span>
+                            <span className="sm:hidden">{pdfBusy ? "…" : "PDF"}</span>
+                          </Button>
+                        )}
+                      />
+                    </div>
                 </div>
               </div>
 
@@ -5526,7 +5538,7 @@ END:VEVENT
               <div className="mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-slate-200">Save this report</p>
-                  <p className="text-xs text-slate-400 mt-0.5">A free PDF with the verdict, MOT history, value and running costs. Choose the print version for paper: white background, ink-friendly.</p>
+                  <p className="text-xs text-slate-400 mt-0.5">A free PDF with the verdict, MOT history, value and running costs. Digital is dark, for reading on a screen; Print is white and ink-friendly.</p>
                 </div>
                 {/* Two editions of the same report: dark to read on a screen,
                     light to print. The header and QuickNav buttons give the
@@ -5534,11 +5546,11 @@ END:VEVENT
                 <div className="flex flex-wrap gap-2 shrink-0">
                   <Button onClick={() => downloadPDF("dark")} size="sm" disabled={pdfBusy !== null}>
                     {pdfBusy === "dark" ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-                    {pdfBusy === "dark" ? "Preparing…" : "Download report"}
+                    {pdfBusy === "dark" ? "Preparing…" : "Digital"}
                   </Button>
                   <Button onClick={() => downloadPDF("light")} size="sm" variant="secondary" disabled={pdfBusy !== null}>
                     {pdfBusy === "light" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
-                    {pdfBusy === "light" ? "Preparing…" : "Print version"}
+                    {pdfBusy === "light" ? "Preparing…" : "Print"}
                   </Button>
                 </div>
               </div>
@@ -5944,7 +5956,9 @@ END:VEVENT
 
       {/* SHARE TOAST — first lookup (Moment A) */}
       {shareToastVisible && (
-        <div className={`fixed bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 ${shareToastDismissing ? "animate-slideDownOut" : "animate-slideUpIn"}`}>
+        // Sits above the QuickNav bar (shown with results) instead of over it:
+        // at bottom-6 it covered the bar's buttons, including the report menu.
+        <div className={`fixed ${data && !loading ? "bottom-24" : "bottom-6"} left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 ${shareToastDismissing ? "animate-slideDownOut" : "animate-slideUpIn"}`}>
           <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-slate-200">Know someone buying a car?</p>
@@ -5969,7 +5983,7 @@ END:VEVENT
 
       {/* DOWNLOAD SHARE PROMPT (Moment B) */}
       {downloadSharePrompt && (
-        <div className="fixed bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn">
+        <div className={`fixed ${data && !loading ? "bottom-24" : "bottom-6"} left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn`}>
           <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
             <p className="flex-1 text-sm text-slate-300">
               {isMobileDevice() ? "Finding this useful? Share with a friend!" : "Finding this useful? Know someone buying a car?"}
