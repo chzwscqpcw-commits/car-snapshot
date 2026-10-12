@@ -12,9 +12,14 @@ Inputs:
   - df_VEH0120_UK.csv from
     https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files
 
+  - Optional: df_VEH0124_AM.csv + df_VEH0124_NZ.csv (same page; licensed
+    cars by year of manufacture), for the theft RATE by car age. Without
+    them byAge has counts only, which mostly reflect how many cars of each
+    age there are.
+
 Usage:
   python3 -m venv .venv && .venv/bin/pip install duckdb openpyxl
-  .venv/bin/python scripts/process-theft-foi.py <FOIR13058.xlsx> <df_VEH0120_UK.csv>
+  .venv/bin/python scripts/process-theft-foi.py <FOIR13058.xlsx> <df_VEH0120_UK.csv> [<VEH0124_AM.csv> <VEH0124_NZ.csv>]
 
 Method:
   - DVLA's description is "MAKE MODEL-TRIM" ("FORD FIESTA ZETEC"), the same
@@ -169,7 +174,7 @@ def main():
         fuel_of[f"{dm} {model}".upper().strip()][group] += n
         fuel_of[squash(dm + model)][group] += n
     for body, make, gen, model, n in con.execute(
-        "select body, make, gen, model, sum(n) from v group by all"
+        "select body, make, gen, model, sum(n) from v group by all order by all"  # stable tie-breaks
     ).fetchall():
         key = (body, make, gen)
         dvla_make = MAKE_CANON.get(make, make)  # DVLA spells the make its own way
@@ -289,6 +294,18 @@ def main():
                  for f in fuel_stock if f != "Other" and fuel_stock[f] >= 100_000),
                 key=lambda r: -r["per1000"])
             section["byAge"] = [{"band": label, "thefts": car_age[label]} for _, _, label in AGE_BANDS]
+            if len(sys.argv) > 4:
+                files = ", ".join(f"'{f}'" for f in sys.argv[3:5])
+                age_stock = Counter()
+                for made, n in con.execute(f"""select try_cast(YearManufacture as int), sum(try_cast("{LATEST}" as bigint))
+                    from read_csv([{files}], header=true, all_varchar=true, union_by_name=true)
+                    where BodyType='Cars' and LicenceStatus='Licensed' group by 1""").fetchall():
+                    band = next((label for lo, hi, label in AGE_BANDS if made and lo <= LATEST - made <= hi), None)
+                    if band:
+                        age_stock[band] += n or 0
+                for r in section["byAge"]:
+                    r["licensed"] = age_stock[r["band"]]
+                    r["per1000"] = round(1000 * r["thefts"] / age_stock[r["band"]], 2)
         stats[cls] = section
         print(f"{cls}: {len(risk_files[cls])} rated; national {national}/1,000; "
               f"{by_year[cls][-1]:,} stolen; orphans {orphans[:5]}")

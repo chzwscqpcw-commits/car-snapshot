@@ -10,7 +10,7 @@ import DataAsOf from "@/components/stats/DataAsOf";
 import Link from "next/link";
 import TheftTable from "@/components/stats/TheftTable";
 import TheftModelSearch from "@/components/stats/TheftModelSearch";
-import { TheftRateChart, TheftCountChart, TheftFuelChart } from "@/components/stats/TheftCharts";
+import { TheftRateChart, TheftCountChart, TheftRateColumns } from "@/components/stats/TheftCharts";
 import theftStats from "@/data/theft-stats.json";
 import { theftDatasetSchema } from "@/lib/theft-stats";
 
@@ -36,7 +36,11 @@ const FUEL = theftStats.cars.byFuel;
 const fuelRate = (f: string) => FUEL.find((r) => r.fuel === f)?.per1000 ?? 0;
 const AGE = theftStats.cars.byAge;
 const AGE_TOP = [...AGE].sort((a, b) => b.thefts - a.thefts)[0];
+const AGE_RISKIEST = [...AGE].sort((a, b) => b.per1000 - a.per1000)[0];
 const AGE_NEW = AGE[0];
+const AGE_OLDEST = AGE[AGE.length - 1];
+/** "4–7 years" → "4 to 7-year-old" */
+const ageAdj = (band: string) => band.replace("–", " to ").replace(" years", "-year-old");
 
 const DESCRIPTION = `${n(CARS)} cars were stolen in the UK in ${YEAR}, per DVLA records. The ${TOP.name} was stolen most (${n(TOP.thefts)}); the ${RISKIEST.name} is the most likely to be stolen, at ${RISKIEST.per1000} per 1,000. Rates for 300+ models.`;
 
@@ -75,7 +79,7 @@ const faqItems = [
   },
   {
     question: "Are new cars stolen more than old ones?",
-    answer: `No. In ${YEAR} the biggest group of stolen cars was ${AGE_TOP.band.replace("–", " to ")} old (${n(AGE_TOP.thefts)}), against ${n(AGE_NEW.thefts)} aged ${AGE_NEW.band.replace("–", " to ")}. Older cars are easier to steal and their parts are in demand.`,
+    answer: `Not the newest. Per car on the road, ${ageAdj(AGE_RISKIEST.band)} cars were the most likely to be stolen in ${YEAR} (${AGE_RISKIEST.per1000} per 1,000), against ${AGE_NEW.per1000} for ${ageAdj(AGE_NEW.band)} cars and ${AGE_OLDEST.per1000} for cars ${AGE_OLDEST.band.replace("+ years", " years or older")}. By number, ${ageAdj(AGE_TOP.band)} cars were stolen most (${n(AGE_TOP.thefts)}), mainly because so many cars on the road are that age.`,
   },
   {
     question: "What is keyless car theft and how does it work?",
@@ -161,17 +165,17 @@ export default function CarTheftPage() {
             title="Highest Theft Rates"
             subtitle={`Cars stolen in ${YEAR} per 1,000 licensed (models with 20,000+ on the road). Dashed line: UK average, ${NATIONAL}`}
           />
-          <TheftFuelChart
-            rows={FUEL}
+          <TheftRateColumns
+            rows={FUEL.map((r) => ({ ...r, name: r.fuel }))}
             national={NATIONAL}
             title="Theft Rate by Fuel Type"
             subtitle={`Cars stolen in ${YEAR} per 1,000 licensed. Hybrids are stolen at about twice the rate of petrol cars`}
           />
-          <TheftCountChart
-            data={AGE.map((a) => ({ label: a.band.replace(" years", ""), value: a.thefts }))}
-            title="Age of Stolen Cars"
-            subtitle={`Cars stolen in ${YEAR}, by age in years (from year of manufacture)`}
-            noun="Cars stolen"
+          <TheftRateColumns
+            rows={AGE.map((a) => ({ ...a, name: a.band.replace(" years", "") }))}
+            national={NATIONAL}
+            title="Theft Rate by Car Age"
+            subtitle={`Cars stolen in ${YEAR} per 1,000 licensed, by age in years. Cars ${AGE_RISKIEST.band} old are the most at risk`}
           />
           <TheftCountChart
             data={Object.entries(carsYearly).map(([label, value]) => ({ label, value }))}
