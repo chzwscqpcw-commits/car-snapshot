@@ -13,6 +13,9 @@ const allStats: StatsPage[] = [
   { slug: "mot-pass-rates", title: "MOT Pass Rates", description: "National pass rates & top failure reasons" },
   { slug: "cost-of-motoring", title: "Cost of Motoring", description: "Full annual breakdown of running costs" },
   { slug: "car-theft", title: "Car Theft Statistics", description: "Most stolen cars & theft trends" },
+  { slug: "least-stolen-cars", title: "Least Stolen Cars", description: "The popular cars thieves leave alone" },
+  { slug: "van-theft", title: "Van Theft Statistics", description: "Most stolen vans & pickups" },
+  { slug: "motorbike-theft", title: "Motorbike Theft Statistics", description: "Most stolen motorbikes & scooters" },
   { slug: "fuel-type-comparison", title: "Fuel Type Comparison", description: "Petrol vs diesel vs EV running costs" },
   { slug: "ev-adoption", title: "EV Adoption", description: "Electric vehicle growth & fleet numbers" },
   { slug: "car-registrations", title: "Car Registrations", description: "New car sales & fuel type split" },
@@ -29,7 +32,10 @@ const allStats: StatsPage[] = [
 // Keeps cross-linking topically relevant (helps both UX and internal-link SEO)
 // instead of always surfacing the same three.
 const RELATED: Record<string, string[]> = {
-  "car-theft": ["popular-cars", "how-many-left", "used-car-prices"],
+  "car-theft": ["least-stolen-cars", "van-theft", "motorbike-theft"],
+  "least-stolen-cars": ["car-theft", "most-reliable-cars", "popular-cars"],
+  "van-theft": ["car-theft", "motorbike-theft", "least-stolen-cars"],
+  "motorbike-theft": ["car-theft", "van-theft", "road-safety"],
   "uk-mileage": ["used-car-prices", "cost-of-motoring", "most-reliable-cars"],
   "how-many-left": ["popular-cars", "car-registrations", "used-car-prices"],
   "most-reliable-cars": ["mot-pass-rates", "used-car-prices", "uk-mileage"],

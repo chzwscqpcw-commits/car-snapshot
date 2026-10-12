@@ -261,6 +261,39 @@ export default function StatsIndex() {
             delay={850}
           />
           <StatsHubPreviewCard
+            href="/stats/least-stolen-cars"
+            icon="🛡️"
+            title="Least Stolen Cars"
+            description="The popular cars thieves leave alone, ranked by DVLA theft rate."
+            stats={[
+              { value: theftStats.cars.leastByRate[0].name.replace(/^\S+ /, ""), label: "least stolen", colour: "emerald" },
+              { value: String(theftStats.cars.leastByRate[0].per1000), label: "per 1,000", colour: "emerald" },
+            ]}
+            delay={860}
+          />
+          <StatsHubPreviewCard
+            href="/stats/van-theft"
+            icon="🚐"
+            title="Van Theft Statistics"
+            description="The most stolen vans and pickups, and why vans are taken twice as often as cars."
+            stats={[
+              { value: `${(theftStats.vans.byYear[String(theftStats.year) as keyof typeof theftStats.vans.byYear] / 1000).toFixed(1)}k`, label: `vans stolen in ${theftStats.year}`, colour: "red" },
+              { value: theftStats.vans.topByCount[0].name.replace(/^\S+ /, ""), label: "most stolen", colour: "amber" },
+            ]}
+            delay={870}
+          />
+          <StatsHubPreviewCard
+            href="/stats/motorbike-theft"
+            icon="🏍️"
+            title="Motorbike Theft Statistics"
+            description="The most stolen motorbikes and scooters, from DVLA records."
+            stats={[
+              { value: `${(theftStats.motorcycles.byYear[String(theftStats.year) as keyof typeof theftStats.motorcycles.byYear] / 1000).toFixed(1)}k`, label: `bikes stolen in ${theftStats.year}`, colour: "red" },
+              { value: theftStats.motorcycles.topByCount[0].name.replace(/^\S+ /, ""), label: "most stolen", colour: "amber" },
+            ]}
+            delay={880}
+          />
+          <StatsHubPreviewCard
             href="/stats/road-safety"
             icon="🛡️"
             title="Road Safety"

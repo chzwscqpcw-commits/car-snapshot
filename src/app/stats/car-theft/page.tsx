@@ -7,8 +7,12 @@ import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
 import DataAsOf from "@/components/stats/DataAsOf";
-import CarTheftCharts from "@/components/stats/CarTheftCharts";
+import Link from "next/link";
+import TheftTable from "@/components/stats/TheftTable";
+import TheftModelSearch from "@/components/stats/TheftModelSearch";
+import { TheftRateChart, TheftCountChart, TheftFuelChart } from "@/components/stats/TheftCharts";
 import theftStats from "@/data/theft-stats.json";
+import { theftDatasetSchema } from "@/lib/theft-stats";
 
 // Every figure on this page comes from theft-stats.json, built by
 // scripts/process-theft-foi.py from DVLA's make/model stolen-vehicle release
@@ -28,6 +32,11 @@ const TOP = theftStats.cars.topByCount[0];
 const RISKIEST = theftStats.cars.topByRate[0];
 const NATIONAL = theftStats.cars.nationalPer1000;
 const PEAK_YEAR = Object.entries(yearly).sort((a, b) => b[1] - a[1])[0][0];
+const FUEL = theftStats.cars.byFuel;
+const fuelRate = (f: string) => FUEL.find((r) => r.fuel === f)?.per1000 ?? 0;
+const AGE = theftStats.cars.byAge;
+const AGE_TOP = [...AGE].sort((a, b) => b.thefts - a.thefts)[0];
+const AGE_NEW = AGE[0];
 
 const DESCRIPTION = `${n(CARS)} cars were stolen in the UK in ${YEAR}, per DVLA records. The ${TOP.name} was stolen most (${n(TOP.thefts)}); the ${RISKIEST.name} is the most likely to be stolen, at ${RISKIEST.per1000} per 1,000. Rates for 300+ models.`;
 
@@ -61,6 +70,14 @@ const faqItems = [
     answer: `Cars recorded stolen in ${YEAR} (DVLA, released under Freedom of Information as FOIR13058) divided by the number of the same model licensed at the end of ${YEAR} (DfT vehicle licensing statistics), per 1,000. Models with fewer than 10,000 licensed are not rated. A car stolen twice counts twice, and about 3% of DVLA's records name only a make, so can't be assigned to a model.`,
   },
   {
+    question: "Are hybrid cars more likely to be stolen?",
+    answer: `Yes. Hybrids were stolen at ${fuelRate("Hybrid")} per 1,000 in ${YEAR} and plug-in hybrids at ${fuelRate("Plug-in hybrid")}, roughly twice the rate of petrol cars (${fuelRate("Petrol")}). Fully electric cars were the least stolen at ${fuelRate("Electric")}. Toyota and Lexus hybrids (RAV4, C-HR, NX, RX) dominate the highest-rate list.`,
+  },
+  {
+    question: "Are new cars stolen more than old ones?",
+    answer: `No. In ${YEAR} the biggest group of stolen cars was ${AGE_TOP.band.replace("–", " to ")} old (${n(AGE_TOP.thefts)}), against ${n(AGE_NEW.thefts)} aged ${AGE_NEW.band.replace("–", " to ")}. Older cars are easier to steal and their parts are in demand.`,
+  },
+  {
     question: "What is keyless car theft and how does it work?",
     answer:
       "Keyless (relay) theft involves two devices that amplify the signal from a key fob inside your home to trick the car into thinking the key is nearby. One thief stands near your front door while the other opens and starts the car. The entire process can take under 60 seconds. Faraday pouches and steering wheel locks are the most effective countermeasures.",
@@ -79,6 +96,12 @@ export default function CarTheftPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([
+            theftDatasetSchema(
+              `Most stolen cars in the UK (${YEAR} DVLA data)`,
+              DESCRIPTION,
+              "https://www.freeplatecheck.co.uk/stats/car-theft",
+              "Cars recorded stolen per 1,000 licensed, by make and model",
+            ),
             {
               "@context": "https://schema.org",
               "@type": "FAQPage",
@@ -120,44 +143,61 @@ export default function CarTheftPage() {
         <h2 className="mb-4 text-xl font-bold text-slate-100">
           The 10 Most Stolen Cars in {YEAR}
         </h2>
-        <div className="mb-3 overflow-x-auto rounded-xl border border-[#1e293b]">
-          <table className="w-full text-sm">
-            <thead className="bg-[#0f172a] text-left text-xs text-slate-400">
-              <tr>
-                <th className="px-3 py-2 font-medium">#</th>
-                <th className="px-3 py-2 font-medium">Model</th>
-                <th className="px-3 py-2 text-right font-medium">Stolen</th>
-                <th className="hidden px-3 py-2 text-right font-medium sm:table-cell">{YEAR - 1}</th>
-                <th className="px-3 py-2 text-right font-medium">Per 1,000</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#1e293b] text-slate-300">
-              {theftStats.cars.topByCount.map((r, i) => (
-                <tr key={r.name}>
-                  <td className="px-3 py-2 text-slate-500">{i + 1}</td>
-                  <td className="px-3 py-2 text-slate-100">{r.name}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{n(r.thefts)}</td>
-                  <td className="hidden px-3 py-2 text-right tabular-nums text-slate-500 sm:table-cell">
-                    {n(r.previous)}
-                  </td>
-                  <td
-                    className={`px-3 py-2 text-right tabular-nums ${r.per1000 > NATIONAL * 2 ? "text-red-400" : ""}`}
-                  >
-                    {r.per1000}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <TheftTable rows={theftStats.cars.topByCount} national={NATIONAL} />
         <p className="mb-10 text-xs text-slate-500">
           Per 1,000 = cars stolen in {YEAR} for every 1,000 licensed. UK average:{" "}
           {NATIONAL}. Raw counts favour common cars; the rate shows how likely a
           particular car is to be taken.
         </p>
 
-        <CarTheftCharts />
+        <div className="mb-10">
+          <TheftModelSearch year={YEAR} />
+        </div>
+
+        <div className="space-y-6">
+          <TheftRateChart
+            rows={theftStats.cars.topByRate}
+            national={NATIONAL}
+            title="Highest Theft Rates"
+            subtitle={`Cars stolen in ${YEAR} per 1,000 licensed (models with 20,000+ on the road). Dashed line: UK average, ${NATIONAL}`}
+          />
+          <TheftFuelChart
+            rows={FUEL}
+            national={NATIONAL}
+            title="Theft Rate by Fuel Type"
+            subtitle={`Cars stolen in ${YEAR} per 1,000 licensed. Hybrids are stolen at about twice the rate of petrol cars`}
+          />
+          <TheftCountChart
+            data={AGE.map((a) => ({ label: a.band.replace(" years", ""), value: a.thefts }))}
+            title="Age of Stolen Cars"
+            subtitle={`Cars stolen in ${YEAR}, by age in years (from year of manufacture)`}
+            noun="Cars stolen"
+          />
+          <TheftCountChart
+            data={Object.entries(carsYearly).map(([label, value]) => ({ label, value }))}
+            title="Cars Stolen per Year"
+            subtitle={`Cars recorded stolen by the DVLA, ${Object.keys(carsYearly)[0]}–${YEAR}`}
+            noun="Cars stolen"
+          />
+        </div>
         <DataAsOf files={["theft-stats.json", "theft-risk.json"]} className="mt-3" />
+
+        <div className="mt-10 grid gap-3 sm:grid-cols-3">
+          {[
+            { href: "/stats/least-stolen-cars", title: "Least stolen cars", text: "The models thieves leave alone" },
+            { href: "/stats/van-theft", title: "Most stolen vans", text: "Transits, pickups and the van theft rate" },
+            { href: "/stats/motorbike-theft", title: "Most stolen motorbikes", text: "Why 125cc scooters top the list" },
+          ].map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="rounded-xl border border-[#1e293b] bg-[#0f172a] p-4 transition-colors hover:border-emerald-700/50"
+            >
+              <div className="text-sm font-semibold text-slate-100">{l.title} →</div>
+              <div className="mt-1 text-xs text-slate-400">{l.text}</div>
+            </Link>
+          ))}
+        </div>
 
         {/* Insight copy */}
         <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">
