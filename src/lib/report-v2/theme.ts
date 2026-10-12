@@ -6,6 +6,7 @@
 export type ReportTheme = "dark" | "light";
 
 export type ThemeTokens = {
+  name: ReportTheme;
   bg: string;
   ink: string;
   soft: string;
@@ -25,6 +26,7 @@ export type ThemeTokens = {
 
 export const THEMES: Record<ReportTheme, ThemeTokens> = {
   dark: {
+    name: "dark",
     bg: "#070B14",
     ink: "#F1F5F9",
     soft: "#CBD5E1",
@@ -41,6 +43,7 @@ export const THEMES: Record<ReportTheme, ThemeTokens> = {
     plateShadow: "0 18px 50px rgba(245, 197, 24, 0.18)",
   },
   light: {
+    name: "light",
     bg: "#FFFFFF",
     ink: "#0B1220",
     soft: "#334155",

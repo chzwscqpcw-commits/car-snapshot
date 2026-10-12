@@ -15,10 +15,11 @@
  */
 import { writeFileSync } from "node:fs";
 import { renderReportHtml } from "../src/lib/report-v2/document";
-import { renderPdf } from "../src/lib/report-v2/render";
+import { findOverflowingPages, renderPdf } from "../src/lib/report-v2/render";
 import { SAMPLE_REPORT_INPUT } from "../src/lib/report-v2/sample";
 
-const EXPECTED_PAGES = 1; // cover only, until the inner pages land
+// Cover, verdict, MOT story, money, details, before you buy.
+const EXPECTED_PAGES = 6;
 
 const failures: string[] = [];
 function check(label: string, ok: boolean) {
@@ -45,10 +46,55 @@ function check(label: string, ok: boolean) {
     for (const font of ["Geist", "GeistMono", "InstrumentSerif"]) {
       check(`${font} embedded`, new RegExp(`/FontName\\s*/[A-Z]{6}\\+${font}`).test(raw));
     }
+    const edition = theme === "light" ? "print" : "dark";
+    check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&vrm=AB12CDE&v=${edition})`));
+    check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
+    // The bundled fonts are Google's Latin subset. A character outside it (an
+    // arrow "→" did, Oct 2026) renders as an empty box, so draw it as SVG.
+    const text = html.replace(/<style>[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, "");
+    const inLatinSubset = (c: string) => {
+      const n = c.codePointAt(0)!;
+      return n <= 0xff || (n >= 0x2000 && n <= 0x206f) || [0x131, 0x152, 0x153, 0x2bb, 0x2bc, 0x2c6, 0x2da, 0x2dc, 0x304, 0x308, 0x329, 0x20ac, 0x2122, 0x2191, 0x2193, 0x2212, 0x2215, 0xfeff, 0xfffd].includes(n);
+    };
+    const missing = [...new Set([...text].filter((c) => !inLatinSubset(c)))];
+    check(`every character is in the bundled fonts${missing.length ? ` (missing: ${missing.join(" ")})` : ""}`, missing.length === 0);
     const out = `/tmp/fpc-report-v2-${theme}.pdf`;
     try { writeFileSync(out, pdf); } catch { /* read-only fs is fine */ }
     console.log(`  rendered in ${ms} ms → ${out} (${(pdf.length / 1024).toFixed(0)} KB)`);
   }
+
+  console.log("\nNothing clipped:");
+  const sampleOverflow = await findOverflowingPages(renderReportHtml(SAMPLE_REPORT_INPUT, { theme: "dark", now }));
+  check(`sample: no page overflows${sampleOverflow.length ? ` (${sampleOverflow.join(", ")})` : ""}`, sampleOverflow.length === 0);
+
+  // Stress case: a 14-year-old car with a long, messy MOT history, no
+  // valuation or health score, so sections paginate and others drop out.
+  const long = structuredClone(SAMPLE_REPORT_INPUT);
+  long.healthScore = null;
+  long.valuation = null;
+  long.data.motTests = Array.from({ length: 14 }, (_, i) => ({
+    completedDate: `${2025 - i}-06-0${(i % 9) + 1}T10:00:00.000Z`,
+    testResult: (i % 4 === 1 ? "FAILED" : "PASSED") as "FAILED" | "PASSED",
+    odometer: { value: 140000 - i * 9000, unit: "mi" },
+    motTestNumber: `9999 0000 ${String(i).padStart(4, "0")}`,
+    rfrAndComments: Array.from({ length: (i % 5) + 1 }, (_, j) => ({
+      text: j % 2 === 0
+        ? "Offside rear suspension arm pin or bush worn, close to the limit of wear but still within tolerance at the time of test"
+        : "Nearside front tyre worn close to legal limit",
+      type: (i % 4 === 1 && j === 0 ? "MAJOR" : "ADVISORY") as "ADVISORY",
+    })),
+  }));
+  long.checklist = {
+    buyer: Array.from({ length: 12 }, (_, i) => `Buyer check number ${i + 1}: confirm the documents and history line up with the car`),
+    owner: Array.from({ length: 8 }, (_, i) => `Owner task ${i + 1}`),
+    seller: Array.from({ length: 6 }, (_, i) => `Seller task ${i + 1}`),
+  };
+  const longHtml = renderReportHtml(long, { theme: "light", now });
+  const overflow = await findOverflowingPages(longHtml);
+  check(`long history: no page overflows${overflow.length ? ` (${overflow.join(", ")})` : ""}`, overflow.length === 0);
+  check("long history: no verdict page", !longHtml.includes("THE VERDICT"));
+  check("long history: MOT story continues", longHtml.includes("The MOT story, continued"));
+  try { writeFileSync("/tmp/fpc-report-v2-long.pdf", Buffer.from(await renderPdf(longHtml))); } catch { /* fine */ }
 
   console.log("\nEscaping:");
   const hostile = structuredClone(SAMPLE_REPORT_INPUT);

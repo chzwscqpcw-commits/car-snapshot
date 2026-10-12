@@ -1,7 +1,7 @@
 import type { ReportInput } from "@/lib/generateReport";
 import { html, raw, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { formatPlate, monthYear, num, parseDate, pounds, shortDate, titleCase } from "../format";
+import { formatPlate, monthYear, num, parseDate, shortDate, titleCase } from "../format";
 
 const BOLT_PATH = "M300 0 L40 430 L230 430 L150 760 L480 290 L280 290 L360 0 Z";
 
@@ -88,29 +88,14 @@ function vitals(input: ReportInput, t: ThemeTokens, now: Date): Vital[] {
   return out;
 }
 
-type Line = { title: string; text: string };
+/** A contents entry: the page a section starts on, and a one-line teaser. */
+export type ContentsLine = { page: number; title: string; text: string };
 
-/** Contents, in page order. Only sections the report will actually contain. */
-export function contents(input: ReportInput): Line[] {
-  const lines: Line[] = [];
-  if (input.healthScore) lines.push({ title: "The verdict", text: `Grade ${input.healthScore.grade}, ${input.healthScore.score} out of 100` });
-  const tests = input.data.motTests ?? [];
-  if (tests.length > 0) {
-    const fails = tests.filter((x) => x.testResult === "FAILED").length;
-    lines.push({ title: "The MOT story", text: `${tests.length} test${tests.length === 1 ? "" : "s"}, ${fails === 0 ? "no fails" : `${fails} fail${fails === 1 ? "" : "s"}`}` });
-  }
-  const value = input.valuation?.estimatedValue;
-  if (value) lines.push({ title: "The money", text: `Worth about ${pounds(value)}` });
-  lines.push({ title: "Before you buy", text: "Checklist and sources" });
-  return lines;
-}
-
-export function coverPage(input: ReportInput, t: ThemeTokens, now: Date): Safe {
+export function coverPage(input: ReportInput, t: ThemeTokens, now: Date, lines: ContentsLine[]): Safe {
   const d = input.data;
   const make = titleCase(d.make);
   const modelWords = titleCase(d.model).split(" ").filter(Boolean);
   const [firstModel, ...restModel] = modelWords;
-  const lines = contents(input);
 
   return html`<section class="page" style="background:${t.bg};color:${t.ink}">
   <svg aria-hidden="true" width="445" height="650" viewBox="0 0 520 760" style="position:absolute;right:-125px;top:215px">
@@ -137,8 +122,8 @@ export function coverPage(input: ReportInput, t: ThemeTokens, now: Date): Safe {
 
     <ol class="contents">
       ${lines.map(
-        (l, i) => html`<li>
-        <span class="mono" style="color:${t.accent}">${String(i + 2).padStart(2, "0")}</span>
+        (l) => html`<li>
+        <span class="mono" style="color:${t.accent}">${String(l.page).padStart(2, "0")}</span>
         <div><span class="display contents-title">${l.title}</span><span class="contents-text" style="color:${t.muted}">${l.text}</span></div>
       </li>`,
       )}
