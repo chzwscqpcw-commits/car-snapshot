@@ -1,7 +1,7 @@
 import type { ReportInput } from "@/lib/generateReport";
 import { html, raw, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { formatPlate, monthYear, num, parseDate, shortDate, titleCase } from "../format";
+import { formatPlate, monthYear, num, parseDate, shortDate, titleCase, vehicleNoun } from "../format";
 
 const BOLT_PATH = "M300 0 L40 430 L230 430 L150 760 L480 290 L280 290 L360 0 Z";
 
@@ -21,7 +21,8 @@ export function coverSummary(input: ReportInput, now: Date): string {
   const parts: string[] = [];
   const age = d.yearOfManufacture ? now.getUTCFullYear() - d.yearOfManufacture : null;
   const fuel = d.fuelType ? FUEL_WORDS[d.fuelType.toUpperCase()] ?? d.fuelType.toLowerCase() : null;
-  const body = input.parsedModel?.bodyStyle?.toLowerCase() ?? "car";
+  const noun = vehicleNoun(d, input.parsedModel?.bodyStyle);
+  const body = noun === "car" ? input.parsedModel?.bodyStyle?.toLowerCase() ?? "car" : noun;
   const subject = [age !== null ? `${age}-year-old` : null, fuel, body].filter(Boolean).join(" ");
   parts.push(`A ${subject}`);
 

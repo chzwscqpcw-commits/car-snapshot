@@ -1,7 +1,7 @@
 import type { ReportInput } from "@/lib/generateReport";
 import { html, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { num, pounds } from "../format";
+import { num, pounds, vehicleNoun } from "../format";
 import { pageShell } from "./shared";
 import { ASSUMED_ANNUAL_MILES } from "@/lib/fuel-economy";
 
@@ -31,7 +31,7 @@ function rangeBar(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens): Saf
   </svg>`;
 }
 
-function valueSection(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens): Safe {
+function valueSection(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens, noun: string): Safe {
   const conf = v.confidence.toLowerCase();
   // ± is half the range over the estimate, as on the website's confidence chip.
   const pct = v.estimatedValue ? Math.round(((v.rangeHigh - v.rangeLow) / 2 / v.estimatedValue) * 100) : null;
@@ -51,7 +51,7 @@ function valueSection(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens):
     <div class="stack-6"><span class="mono label" style="color:${t.muted}">ESTIMATED VALUE TODAY</span><span class="display value-hero${v.estimatedValue ? "" : " value-hero-range"}">${hero}</span></div>
     <div class="stack-6 right"><span class="conf" style="color:${confColor}">${conf.charAt(0).toUpperCase()}${conf.slice(1)} confidence${pct ? ` · ±${pct}%` : ""}</span>${v.ebayTotalListings ? html`<span class="small-text" style="color:${t.muted}">${num(v.ebayTotalListings)} similar cars for sale</span>` : ""}</div>
   </div>
-  <figure class="chart tight">${rangeBar(v, t)}<figcaption style="color:${t.muted}">Shaded: typical range for this car.${v.ebayMinPrice && v.ebayMaxPrice ? " Thin line: asking prices for similar cars on sale now." : ""}${notes ? ` ${notes}` : ""}</figcaption></figure>`;
+  <figure class="chart tight">${rangeBar(v, t)}<figcaption style="color:${t.muted}">Shaded: typical range for this ${noun}.${v.ebayMinPrice && v.ebayMaxPrice ? " Thin line: asking prices for similar cars on sale now." : ""}${notes ? ` ${notes}` : ""}</figcaption></figure>`;
 }
 
 function costSection(input: ReportInput, t: ThemeTokens): Safe | null {
@@ -80,7 +80,7 @@ function costSection(input: ReportInput, t: ThemeTokens): Safe | null {
     <h2 class="eyebrow underline" style="border-color:${t.ruleStrong}">COST TO RUN</h2>
     <div class="cost-hero"><span class="display">${pounds(total)}</span><span style="color:${t.muted}">a year</span></div>
     <span class="small-text" style="color:${t.soft}">${pounds(total / 12)} a month · £${(total / 365).toFixed(2)} a day${oc.costPerMile ? ` · ${Math.round(oc.costPerMile * 100)}p a mile` : ""}</span>
-    <span class="small-text" style="color:${t.muted}">${mileageNote}</span>
+    ${b.fuel ? html`<span class="small-text" style="color:${t.muted}">${mileageNote}</span>` : ""}
     <div class="stack-bar">${parts.map(([, v, c]) => html`<div style="width:${((v / total) * 100).toFixed(1)}%;background:${c}"></div>`)}</div>
     <div>${parts.map(([name, v, c]) => html`<div class="legend-row" style="border-color:${t.rule}"><i style="background:${c}"></i><span>${name}</span><span class="mono">${pounds(v)}</span></div>`)}</div>
     <span class="small-text" style="color:${t.muted}">${vsAvg !== null && input.ukAverageLabel ? `${pounds(Math.abs(vsAvg))} ${vsAvg <= 0 ? "less" : "more"} than a typical ${input.ukAverageLabel.toLowerCase()}. ` : ""}${oc.excludedNote}</span>
@@ -131,7 +131,7 @@ export function moneyPage(input: ReportInput, t: ThemeTokens, folio: number): Sa
   const right = [budget, nego].filter(Boolean) as Safe[];
   const cols = [cost, right.length ? html`<div class="stack-32">${right}</div>` : null].filter(Boolean) as Safe[];
   return pageShell(t, input, "The money", folio, html`
-    ${v ? valueSection(v, t) : html`<h1 class="display h-page">${moneyHeadline(input)}</h1>`}
+    ${v ? valueSection(v, t, vehicleNoun(input.data, input.parsedModel?.bodyStyle)) : html`<h1 class="display h-page">${moneyHeadline(input)}</h1>`}
     ${cols.length ? html`<div class="money-cols" style="grid-template-columns:repeat(${cols.length}, minmax(0, 1fr))">${cols}</div>` : ""}
     <div class="grow"></div>
     ${v?.disclaimer ? html`<p class="fine" style="color:${t.muted}">${v.disclaimer}</p>` : ""}`);

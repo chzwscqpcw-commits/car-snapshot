@@ -2,7 +2,7 @@ import type { ReportInput } from "@/lib/generateReport";
 import { odometerMiles } from "@/lib/valuation";
 import { html, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { monthYear, num, parseDate, shortDate } from "../format";
+import { monthYear, num, parseDate, plainText, shortDate } from "../format";
 import { BODY_HEIGHT, CONTINUED_ROOM, type Block, countWord, pageShell, paginate, plural, textHeight } from "./shared";
 
 // 03 · The MOT story: mileage at every MOT as a line (measured readings only,
@@ -114,7 +114,7 @@ export function motHeadline(input: ReportInput): { lead: string; tail: string; t
   const avg = input.motInsights?.avgMilesPerYear;
   const deck = [
     avg ? `The mileage climbs about ${num(avg)} miles a year between tests${warnings.length === 0 ? ", with no drops that would suggest a clocked odometer" : ""}.` : null,
-    warnings.length > 0 ? warnings.join(" ") : null,
+    warnings.length > 0 ? warnings.map((w) => { const p = plainText(w); return /[.!?]$/.test(p) ? p : `${p}.`; }).join(" ") : null,
   ].filter(Boolean).join(" ");
   return { lead, tail, tailRisk: warnings.length > 0, deck };
 }

@@ -36,6 +36,24 @@ export function monthYear(d: Date): string {
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
+/**
+ * What to call the vehicle in copy. DVLA's wheelplan and type approval tell
+ * a motorbike (2 WHEEL / L-category) or a van (N1) from a car. The first real
+ * vehicle rendered was a Ducati 1199, which the report called a "car".
+ */
+export function vehicleNoun(d: { wheelplan?: string; typeApproval?: string }, bodyStyle?: string | null): "car" | "motorbike" | "van" {
+  const wheelplan = (d.wheelplan ?? "").toUpperCase();
+  const approval = (d.typeApproval ?? "").toUpperCase();
+  if (wheelplan.includes("2 WHEEL") || approval.startsWith("L")) return "motorbike";
+  if (approval.startsWith("N1") || /\bvan\b/i.test(bodyStyle ?? "")) return "van";
+  return "car";
+}
+
+/** Strip emoji and pictographs (e.g. "⚠️ " in engine warnings) the fonts can't draw. */
+export function plainText(s: string): string {
+  return s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, "").replace(/\s+-\s+/g, ": ").replace(/\s{2,}/g, " ").trim();
+}
+
 export function num(n: number): string {
   return Math.round(n).toLocaleString("en-GB");
 }
