@@ -101,7 +101,10 @@ const STATS = `## UK Motoring Statistics
 - [Most Popular Cars](${BASE}/stats/popular-cars): Top makes and models on UK roads by fleet size and how best-sellers have changed.
 - [EV Adoption](${BASE}/stats/ev-adoption): Electric vehicle fleet growth, new sales share and regional EV density across the UK.
 - [Car Registrations](${BASE}/stats/car-registrations): Annual new car sales since 1990 with fuel type split showing the shift to electric.
-- [Car Theft Statistics](${BASE}/stats/car-theft): The UK's most stolen cars from DVLA figures, plus keyless-theft prevention advice.
+- [Car Theft Statistics](${BASE}/stats/car-theft): The UK's most stolen cars from DVLA figures, theft rates for 300+ models, plus keyless-theft prevention advice.
+- [Least Stolen Cars](${BASE}/stats/least-stolen-cars): The popular cars with the lowest DVLA theft rates.
+- [Van Theft Statistics](${BASE}/stats/van-theft): The UK's most stolen vans and pickups, with theft rates per 1,000.
+- [Motorbike Theft Statistics](${BASE}/stats/motorbike-theft): The UK's most stolen motorbikes and scooters from DVLA figures.
 - [Road Safety](${BASE}/stats/road-safety): UK road fatalities since 1970, casualties by road user type and key safety milestones.`;
 
 const FOOTER = `## About

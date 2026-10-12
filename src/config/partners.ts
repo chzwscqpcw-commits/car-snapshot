@@ -114,6 +114,8 @@ const CARVERTICAL_SUB2: Record<string, string> = {
   "report-carvertical": "report",
   "report-nextsteps": "nextsteps",
   "stats-car-theft": "stats-theft",
+  "stats-van-theft": "stats-vans",
+  "stats-least-stolen": "stats-least",
   "stats-how-many-left": "stats-hml",
   // A stats article, not the /mileage-check tool — kept out of `mcheck` so that
   // series keeps meaning "the mileage tool" and stays comparable over time.
@@ -597,6 +599,8 @@ export const GO_CONTEXTS = [
   "model-carvertical",
   "running-costs",
   "stats-car-theft",
+  "stats-van-theft",
+  "stats-least-stolen",
   "stats-how-many-left",
   "stats-uk-mileage",
 ] as const;
