@@ -65,3 +65,29 @@ export async function renderPdf(html: string): Promise<Uint8Array> {
     await page.close().catch(() => undefined);
   }
 }
+
+/**
+ * For tests: render the HTML and list pages whose body content overflows (is
+ * clipped). Each entry is "<folio>: <overflow px>". JS stays off; the
+ * measurement runs from the DevTools side.
+ */
+export async function findOverflowingPages(html: string): Promise<string[]> {
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+  try {
+    await page.setJavaScriptEnabled(false);
+    await page.setViewport({ width: 794, height: 1123 });
+    await page.setContent(html, { waitUntil: "load" });
+    await page.emulateMediaType("print");
+    return await page.$$eval(".page", (pages) =>
+      pages.flatMap((p, i) => {
+        const body = p.querySelector(".body") ?? p.querySelector(".pad");
+        if (!body) return [];
+        const over = body.scrollHeight - body.clientHeight;
+        return over > 1 ? [`page ${i + 1}: ${over}px`] : [];
+      }),
+    );
+  } finally {
+    await page.close().catch(() => undefined);
+  }
+}

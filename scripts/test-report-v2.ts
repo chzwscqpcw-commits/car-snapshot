@@ -15,10 +15,11 @@
  */
 import { writeFileSync } from "node:fs";
 import { renderReportHtml } from "../src/lib/report-v2/document";
-import { renderPdf } from "../src/lib/report-v2/render";
+import { findOverflowingPages, renderPdf } from "../src/lib/report-v2/render";
 import { SAMPLE_REPORT_INPUT } from "../src/lib/report-v2/sample";
 
-const EXPECTED_PAGES = 1; // cover only, until the inner pages land
+// Cover, verdict, MOT story, money, details, before you buy.
+const EXPECTED_PAGES = 6;
 
 const failures: string[] = [];
 function check(label: string, ok: boolean) {
@@ -49,6 +50,39 @@ function check(label: string, ok: boolean) {
     try { writeFileSync(out, pdf); } catch { /* read-only fs is fine */ }
     console.log(`  rendered in ${ms} ms → ${out} (${(pdf.length / 1024).toFixed(0)} KB)`);
   }
+
+  console.log("\nNothing clipped:");
+  const sampleOverflow = await findOverflowingPages(renderReportHtml(SAMPLE_REPORT_INPUT, { theme: "dark", now }));
+  check(`sample: no page overflows${sampleOverflow.length ? ` (${sampleOverflow.join(", ")})` : ""}`, sampleOverflow.length === 0);
+
+  // Stress case: a 14-year-old car with a long, messy MOT history, no
+  // valuation or health score, so sections paginate and others drop out.
+  const long = structuredClone(SAMPLE_REPORT_INPUT);
+  long.healthScore = null;
+  long.valuation = null;
+  long.data.motTests = Array.from({ length: 14 }, (_, i) => ({
+    completedDate: `${2025 - i}-06-0${(i % 9) + 1}T10:00:00.000Z`,
+    testResult: (i % 4 === 1 ? "FAILED" : "PASSED") as "FAILED" | "PASSED",
+    odometer: { value: 140000 - i * 9000, unit: "mi" },
+    motTestNumber: `9999 0000 ${String(i).padStart(4, "0")}`,
+    rfrAndComments: Array.from({ length: (i % 5) + 1 }, (_, j) => ({
+      text: j % 2 === 0
+        ? "Offside rear suspension arm pin or bush worn, close to the limit of wear but still within tolerance at the time of test"
+        : "Nearside front tyre worn close to legal limit",
+      type: (i % 4 === 1 && j === 0 ? "MAJOR" : "ADVISORY") as "ADVISORY",
+    })),
+  }));
+  long.checklist = {
+    buyer: Array.from({ length: 12 }, (_, i) => `Buyer check number ${i + 1}: confirm the documents and history line up with the car`),
+    owner: Array.from({ length: 8 }, (_, i) => `Owner task ${i + 1}`),
+    seller: Array.from({ length: 6 }, (_, i) => `Seller task ${i + 1}`),
+  };
+  const longHtml = renderReportHtml(long, { theme: "light", now });
+  const overflow = await findOverflowingPages(longHtml);
+  check(`long history: no page overflows${overflow.length ? ` (${overflow.join(", ")})` : ""}`, overflow.length === 0);
+  check("long history: no verdict page", !longHtml.includes("THE VERDICT"));
+  check("long history: MOT story continues", longHtml.includes("The MOT story, continued"));
+  try { writeFileSync("/tmp/fpc-report-v2-long.pdf", Buffer.from(await renderPdf(longHtml))); } catch { /* fine */ }
 
   console.log("\nEscaping:");
   const hostile = structuredClone(SAMPLE_REPORT_INPUT);
