@@ -4,6 +4,15 @@ const CANONICAL_HOST = "www.freeplatecheck.co.uk";
 
 const nextConfig: NextConfig = {
   compress: true,
+  // Server-rendered PDF report (src/lib/report-v2): keep the headless-browser
+  // packages out of the bundler (they load a native Chromium binary at
+  // runtime), and ship the Chromium build and the report fonts with the two
+  // routes that render it.
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/report-pdf": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**"],
+    "/api/report-pdf/sample": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**"],
+  },
   /**
    * Canonical-host redirects. Previously this was a src/middleware.ts that
    * inspected the Host header on every request and redirected the three
