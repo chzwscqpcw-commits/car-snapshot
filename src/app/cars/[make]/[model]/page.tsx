@@ -5,6 +5,7 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import MotReminderBanner from "@/components/MotReminderBanner";
+import theftStats from "@/data/theft-stats.json";
 import {
   MODEL_REGISTRY,
   findModelEntry,
@@ -696,12 +697,22 @@ export default async function ModelGuidePage({ params }: PageProps) {
                 <strong className="text-slate-100">
                   {data.theftRisk.theftsPer1000} per 1,000
                 </strong>{" "}
-                registered vehicles, rated{" "}
+                licensed cars, rated{" "}
                 {data.theftRisk.riskCategory.replace("-", " ")} compared to the
                 national average of {data.theftRisk.nationalAverage} per 1,000.
                 {(data.theftRisk.riskCategory === "very-high" ||
                   data.theftRisk.riskCategory === "high") &&
                   " Consider additional security measures such as a steering lock or tracking device."}
+              </p>
+              <p className="mt-2 text-xs text-slate-500">
+                {data.theftRisk.theftCount.toLocaleString("en-GB")} stolen in{" "}
+                {theftStats.year} out of{" "}
+                {data.theftRisk.registeredCount.toLocaleString("en-GB")} licensed.
+                Source: DVLA stolen-vehicle records (Freedom of Information) and
+                DfT licensing statistics.{" "}
+                <a href="/stats/car-theft" className="underline hover:text-slate-300">
+                  Most stolen cars
+                </a>
               </p>
             </section>
           )}

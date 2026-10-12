@@ -10,6 +10,7 @@ import motPassRates from "@/data/mot-pass-rates.json";
 import motFailureReasons from "@/data/mot-failure-reasons.json";
 import bodyTypes from "@/data/body-types.json";
 import theftRisk from "@/data/theft-risk.json";
+import theftStats from "@/data/theft-stats.json";
 import colourPopularity from "@/data/colour-popularity.json";
 import tyreSizes from "@/data/tyre-sizes.json";
 import vehicleDimensions from "@/data/vehicle-dimensions.json";
@@ -107,10 +108,16 @@ const FILE_META: Record<string, FileMeta> = {
     sourceUrl: null,
   },
   "theft-risk.json": {
-    threshold: 180,
-    source: "curated",
-    refreshHint: "UNSOURCED estimates — lookup disabled in src/lib/theft-risk.ts. Rebuild from DVLA FOI FOIR13058 (stolen by make/model) ÷ DfT VEH0120 licensed stock, then re-enable.",
-    sourceUrl: null,
+    threshold: 400,
+    source: "semi-auto",
+    refreshHint: "DVLA stolen-vehicle FOI (FOIR13058; request the next year's from foi@dvla.gov.uk) ÷ DfT VEH0120. Run: .venv/bin/python scripts/process-theft-foi.py <foi.xlsx> <df_VEH0120_UK.csv>",
+    sourceUrl: "https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files",
+  },
+  "theft-stats.json": {
+    threshold: 400,
+    source: "semi-auto",
+    refreshHint: "Generated alongside theft-risk.json by scripts/process-theft-foi.py",
+    sourceUrl: "https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files",
   },
   "colour-popularity.json": {
     threshold: 180,
@@ -254,6 +261,7 @@ const DATA_FILES: Record<string, unknown> = {
   "mot-failure-reasons.json": motFailureReasons,
   "body-types.json": bodyTypes,
   "theft-risk.json": theftRisk,
+  "theft-stats.json": theftStats,
   "colour-popularity.json": colourPopularity,
   "tyre-sizes.json": tyreSizes,
   "vehicle-dimensions.json": vehicleDimensions,

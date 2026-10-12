@@ -1,0 +1,180 @@
+{
+  "source": "DVLA FOI FOIR13058 (vehicles recorded as stolen, by make/model and year) ÷ DfT VEH0120 licensed cars",
+  "year": 2025,
+  "stockQuarter": "2025 Q4",
+  "nationalPer1000": 1.56,
+  "allVehiclesByYear": {
+    "2014": 61309,
+    "2015": 62229,
+    "2016": 75618,
+    "2017": 90768,
+    "2018": 101531,
+    "2019": 100659,
+    "2020": 79558,
+    "2021": 82514,
+    "2022": 103546,
+    "2023": 107611,
+    "2024": 102184,
+    "2025": 90861
+  },
+  "carsByYear": {
+    "2014": 29604,
+    "2015": 28842,
+    "2016": 35752,
+    "2017": 45897,
+    "2018": 56689,
+    "2019": 57317,
+    "2020": 46086,
+    "2021": 48261,
+    "2022": 60807,
+    "2023": 64290,
+    "2024": 61614,
+    "2025": 53652
+  },
+  "matchedShare": 0.97,
+  "licensedCars": 34485453,
+  "topByCount": [
+    {
+      "name": "Ford Fiesta",
+      "thefts": 3487,
+      "previous": 4764,
+      "licensed": 1296515,
+      "per1000": 2.69
+    },
+    {
+      "name": "Volkswagen Golf",
+      "thefts": 1611,
+      "previous": 1983,
+      "licensed": 959230,
+      "per1000": 1.68
+    },
+    {
+      "name": "Ford Focus",
+      "thefts": 1462,
+      "previous": 1889,
+      "licensed": 895534,
+      "per1000": 1.63
+    },
+    {
+      "name": "Land Rover Discovery",
+      "thefts": 1357,
+      "previous": 1740,
+      "licensed": 262105,
+      "per1000": 5.18
+    },
+    {
+      "name": "Toyota RAV4",
+      "thefts": 1330,
+      "previous": 1462,
+      "licensed": 145727,
+      "per1000": 9.13
+    },
+    {
+      "name": "BMW 3 Series",
+      "thefts": 1305,
+      "previous": 1516,
+      "licensed": 483387,
+      "per1000": 2.7
+    },
+    {
+      "name": "Nissan Juke",
+      "thefts": 1194,
+      "previous": 1150,
+      "licensed": 412853,
+      "per1000": 2.89
+    },
+    {
+      "name": "Toyota C-HR",
+      "thefts": 963,
+      "previous": 747,
+      "licensed": 142448,
+      "per1000": 6.76
+    },
+    {
+      "name": "Lexus NX",
+      "thefts": 945,
+      "previous": 394,
+      "licensed": 43926,
+      "per1000": 21.51
+    },
+    {
+      "name": "Land Rover Range Rover Evoque",
+      "thefts": 905,
+      "previous": 1204,
+      "licensed": 227079,
+      "per1000": 3.99
+    }
+  ],
+  "topByRate": [
+    {
+      "name": "Lexus NX",
+      "thefts": 945,
+      "previous": 394,
+      "licensed": 43926,
+      "per1000": 21.51
+    },
+    {
+      "name": "Lexus RX",
+      "thefts": 631,
+      "previous": 747,
+      "licensed": 38906,
+      "per1000": 16.22
+    },
+    {
+      "name": "Toyota RAV4",
+      "thefts": 1330,
+      "previous": 1462,
+      "licensed": 145727,
+      "per1000": 9.13
+    },
+    {
+      "name": "Hyundai Ioniq",
+      "thefts": 576,
+      "previous": 646,
+      "licensed": 68837,
+      "per1000": 8.37
+    },
+    {
+      "name": "Lexus UX",
+      "thefts": 205,
+      "previous": 337,
+      "licensed": 25281,
+      "per1000": 8.11
+    },
+    {
+      "name": "Mitsubishi Outlander",
+      "thefts": 482,
+      "previous": 637,
+      "licensed": 67582,
+      "per1000": 7.13
+    },
+    {
+      "name": "Porsche Macan",
+      "thefts": 365,
+      "previous": 268,
+      "licensed": 53683,
+      "per1000": 6.8
+    },
+    {
+      "name": "Toyota C-HR",
+      "thefts": 963,
+      "previous": 747,
+      "licensed": 142448,
+      "per1000": 6.76
+    },
+    {
+      "name": "Audi S3",
+      "thefts": 219,
+      "previous": 227,
+      "licensed": 36558,
+      "per1000": 5.99
+    },
+    {
+      "name": "Abarth 595",
+      "thefts": 121,
+      "previous": 195,
+      "licensed": 20790,
+      "per1000": 5.82
+    }
+  ]
+}

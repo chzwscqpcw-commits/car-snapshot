@@ -1,12 +1,9 @@
 "use client";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
+import theftStats from "@/data/theft-stats.json";
 
-// Decline to 2014 trough, then rising again
-const data = [
-  { v: 110 }, { v: 100 }, { v: 92 }, { v: 85 }, { v: 85 },
-  { v: 87 }, { v: 89 }, { v: 105 }, { v: 114 }, { v: 118 },
-  { v: 108 }, { v: 105 }, { v: 110 }, { v: 108 }, { v: 105 },
-];
+// Cars recorded stolen by the DVLA per year (FOIR13058), oldest first.
+const data = Object.values(theftStats.carsByYear).map((v) => ({ v }));
 
 export default function CarTheftSparkline() {
   return (
