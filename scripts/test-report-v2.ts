@@ -49,6 +49,15 @@ function check(label: string, ok: boolean) {
     const edition = theme === "light" ? "print" : "dark";
     check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&vrm=AB12CDE&v=${edition})`));
     check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
+    // The bundled fonts are Google's Latin subset. A character outside it (an
+    // arrow "→" did, Oct 2026) renders as an empty box, so draw it as SVG.
+    const text = html.replace(/<style>[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, "");
+    const inLatinSubset = (c: string) => {
+      const n = c.codePointAt(0)!;
+      return n <= 0xff || (n >= 0x2000 && n <= 0x206f) || [0x131, 0x152, 0x153, 0x2bb, 0x2bc, 0x2c6, 0x2da, 0x2dc, 0x304, 0x308, 0x329, 0x20ac, 0x2122, 0x2191, 0x2193, 0x2212, 0x2215, 0xfeff, 0xfffd].includes(n);
+    };
+    const missing = [...new Set([...text].filter((c) => !inLatinSubset(c)))];
+    check(`every character is in the bundled fonts${missing.length ? ` (missing: ${missing.join(" ")})` : ""}`, missing.length === 0);
     const out = `/tmp/fpc-report-v2-${theme}.pdf`;
     try { writeFileSync(out, pdf); } catch { /* read-only fs is fine */ }
     console.log(`  rendered in ${ms} ms → ${out} (${(pdf.length / 1024).toFixed(0)} KB)`);

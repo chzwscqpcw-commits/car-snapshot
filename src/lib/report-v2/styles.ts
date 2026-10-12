@@ -145,7 +145,7 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .history-text { flex: 1 }
 .history-text p { font-size: 14px; line-height: 1.55 }
 .history-title { font-size: 34px; line-height: 1.05 }
-.history-link { font-size: 15px; font-weight: 600; text-decoration: none }
+.history-link { font-size: 15px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px }
 .qr { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0 }
 .qr svg { display: block; border-radius: 8px }
 .qr span { font-size: 10px; letter-spacing: 0.12em }

@@ -46,7 +46,7 @@ function historyPanel(input: ReportInput, t: ThemeTokens): Safe {
       <h2 class="display history-title">Finance, write-offs and stolen markers.</h2>
       <p style="color:${t.soft}">Free government data doesn't show whether ${plate} has outstanding finance, has been written off or is flagged as stolen. A carVertical history report checks those, along with mileage records.</p>
       <p style="color:${t.soft}"><strong style="color:${t.ink}">£${CARVERTICAL_PRICING.single.toFixed(2)}, or ${carVerticalDiscountedSingle()} with code <span class="mono">freeplatecheck</span></strong> (${CARVERTICAL_PRICING.discountPct}% off, applied automatically through this link).</p>
-      <a class="history-link" href="${href}" style="color:${t.accent}">Check ${plate} on carVertical →</a>
+      <a class="history-link" href="${href}" style="color:${t.accent}">Check ${plate} on carVertical<svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10"><path d="M1 5h11M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <span class="fine" style="color:${t.muted}">Partner link: Free Plate Check earns a commission if you buy, at no extra cost to you.</span>
     </div>
     <a class="qr" href="${href}" aria-label="Check ${plate} on carVertical">${raw(qrSvg(href, 132))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
