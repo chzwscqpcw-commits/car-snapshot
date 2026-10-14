@@ -1,10 +1,10 @@
 {
   "body-types.json": "2026-02-11T18:00:56Z",
   "colour-popularity.json": "2026-06-08T08:23:53+01:00",
-  "ev-specs.json": "2026-10-07T11:53:35Z",
+  "ev-specs.json": "2026-10-14T10:19:34.739Z",
   "fuel-economy.json": "2026-05-20T13:27:30Z",
-  "fuel-prices-weekly.json": "2026-10-11T10:48:51.832Z",
-  "how-many-left.json": "2026-10-11T10:48:51.832Z",
+  "fuel-prices-weekly.json": "2026-10-14T10:19:34.739Z",
+  "how-many-left.json": "2026-10-14T10:19:34.739Z",
   "mot-failure-reasons.json": "2026-10-11T19:53:30+01:00",
   "mot-pass-rates.json": "2026-10-11T19:53:30+01:00",
   "ncap-ratings.json": "2026-10-11T10:48:51.832Z",

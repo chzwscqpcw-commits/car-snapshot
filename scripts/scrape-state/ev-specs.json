@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-07T11:50:14.170Z",
+  "updatedAt": "2026-10-14T10:19:32.264Z",
   "urls": {
     "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
@@ -320,7 +320,97 @@
     "https://ev-database.org/car/3419/MG-MGS6-EV-Dual-Motor-77-kWh": "2026-10-07T11:50:14.160Z",
     "https://ev-database.org/car/3418/MG-MGS6-EV-RWD-77-kWh": "2026-10-07T11:50:14.160Z",
     "https://ev-database.org/car/3417/Tesla-Model-Y-Long-Range-RWD": "2026-10-07T11:50:14.160Z",
-    "https://ev-database.org/car/3409/Dacia-Spring-Electric-100": "2026-10-07T11:50:14.160Z"
+    "https://ev-database.org/car/3409/Dacia-Spring-Electric-100": "2026-10-07T11:50:14.160Z",
+    "https://ev-database.org/car/3842/Tesla-Model-3-Premium-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3843/Tesla-Model-Y-Premium-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3841/Tesla-Model-3-Performance": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3840/XPENG-G9L-AWD-Performance": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3839/XPENG-G9L-RWD-Long-Range": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3838/Smart-2-358-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3832/Volkswagen-ID-Tiguan-Pro-4MOTION": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3831/Volkswagen-ID-Tiguan-Pro": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3830/Volkswagen-ID-Tiguan-Pure": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3827/BMW-iX4-50-xDrive": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3826/BMW-iX4-40-xDrive": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3825/Volkswagen-ID-Polo-GTI": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3689/Nissan-Ariya-63kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3408/Dacia-Spring-Electric-70": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3407/Mercedes-Benz-GLB-350-4MATIC": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3406/Mercedes-Benz-GLB-250plus": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3404/Tesla-Model-3-Premium-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3405/Tesla-Model-3-Premium-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3402/XPENG-G6-RWD-Standard-Range": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3403/Tesla-Model-3-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3401/Toyota-bZ4X-Touring-AWD-747-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3400/Toyota-bZ4X-Touring-FWD-747-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3399/Porsche-Cayenne-Turbo-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3398/Porsche-Cayenne-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3397/Mercedes-Benz-CLA-Shooting-Brake-350-4MATIC": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3396/Mercedes-Benz-CLA-Shooting-Brake-250plus": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3395/Toyota-C-HRplus-77-kWh-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3394/Toyota-C-HRplus-77-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3393/Toyota-C-HRplus-577-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3391/Alpine-A390-GTS": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3392/Renault-Twingo-E-Tech-275-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3389/KGM-Torres-EVX-806-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3390/Alpine-A390-GT": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3388/Leapmotor-C10-AWD-819-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3387/Leapmotor-C10-RWD-819-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3386/Tesla-Model-X-Plaid": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3385/Tesla-Model-X-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3383/Tesla-Model-S-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3384/Tesla-Model-S-Plaid": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3382/Porsche-Macan-Turbo-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3381/Porsche-Macan-GTS-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3380/Porsche-Macan-4S-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3379/Porsche-Macan-4-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3378/Porsche-Macan-Electric": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3376/Skoda-Enyaq-Coupe-85x": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3377/Skoda-Enyaq-Coupe-RS": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3375/Skoda-Enyaq-RS": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3374/Skoda-Enyaq-85x": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3373/Skoda-Elroq-RS": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3372/Skoda-Elroq-85x": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3371/Cadillac-OPTIQ-500-E4": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3370/Mercedes-Benz-CLA-200": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3369/Changan-Deepal-S07-Standard": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3368/Changan-Deepal-S05-4WD-Max": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3367/Changan-Deepal-S05-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3366/Nissan-LEAF-Extended-Range-75-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3365/Nissan-LEAF-Standard-Range-52-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3364/Opel-Grandland-Electric-97-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3363/Tesla-Model-Y-Premium-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3362/Tesla-Model-Y-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3336/Jaecoo-5-EV": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3335/Mitsubishi-Eclipse-Cross-87-kWh-": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3334/Volkswagen-ID3-Pro-S": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3333/Tesla-Model-Y-Premium-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3332/Tesla-Model-3-Performance": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3331/Tesla-Model-3-Long-Range-AWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3330/Tesla-Model-3-Long-Range-RWD": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3328/Polestar-3-Performance": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3327/Polestar-3-Dual-Motor": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3326/Polestar-3-Rear-Motor": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3325/Volvo-EX90-Twin-Motor-Performance": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3324/Volvo-EX90-Twin-Motor": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3323/Volvo-EX90-Single-Motor": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3322/Peugeot-e-308-SW-58-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3321/Peugeot-e-308-58-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3320/Volkswagen-e-Caravelle-L2-210-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3319/Volkswagen-e-Caravelle-L2-160-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3318/Volkswagen-e-Caravelle-L2-100-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3317/Volkswagen-e-Caravelle-L1-210-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3316/Volkswagen-e-Caravelle-L1-160-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3315/Volkswagen-e-Caravelle-L1-100-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3314/Volkswagen-e-Transporter-Kombi-L2-210-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3313/Volkswagen-e-Transporter-Kombi-L2-160-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3312/Volkswagen-e-Transporter-Kombi-L2-100-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3310/Volkswagen-e-Transporter-Kombi-L1-160-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3311/Volkswagen-e-Transporter-Kombi-L1-210-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3309/Volkswagen-e-Transporter-Kombi-L1-100-kW-64-kWh": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3308/Geely-E5-Pro": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3307/Opel-Mokka-Electric-GSE": "2026-10-14T10:19:32.253Z",
+    "https://ev-database.org/car/3306/TOGG-T10F-Long-Range-AWD": "2026-10-14T10:19:32.253Z"
   },
   "records": {
     "TESLA|MODEL 3": {
@@ -2438,8 +2528,8 @@
       }
     },
     "TESLA|MODEL Y PREMIUM AWD": {
-      "rank": 3742,
-      "scrapedAt": "2026-09-16T10:03:17.700Z",
+      "rank": 3843,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
       "record": {
         "make": "TESLA",
         "model": "MODEL Y PREMIUM AWD",
@@ -6089,6 +6179,1014 @@
         "chargeSlow": "4h30m (6.6 kW AC)",
         "motorKw": 75,
         "driveType": "FWD"
+      }
+    },
+    "TESLA|MODEL 3 PREMIUM AWD": {
+      "rank": 3842,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 PREMIUM AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 345,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 366,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL 3 PERFORMANCE": {
+      "rank": 3841,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 PERFORMANCE",
+        "batteryKwh": 79,
+        "rangeWltp": 326,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 461,
+        "driveType": "AWD"
+      }
+    },
+    "XPENG|G9L AWD PERFORMANCE": {
+      "rank": 3840,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "XPENG",
+        "model": "G9L AWD PERFORMANCE",
+        "batteryKwh": 106,
+        "rangeWltp": 317,
+        "chargeFast": "12 min (540 kW DC)",
+        "chargeSlow": "5h45m (22 kW AC)",
+        "motorKw": 430,
+        "driveType": "AWD"
+      }
+    },
+    "XPENG|G9L RWD LONG RANGE": {
+      "rank": 3839,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "XPENG",
+        "model": "G9L RWD LONG RANGE",
+        "batteryKwh": 106,
+        "rangeWltp": 326,
+        "chargeFast": "12 min (540 kW DC)",
+        "chargeSlow": "5h45m (22 kW AC)",
+        "motorKw": 270,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|2 358 KWH": {
+      "rank": 3838,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "SMART",
+        "model": "2 358 KWH",
+        "batteryKwh": 35,
+        "rangeWltp": 137,
+        "chargeFast": "31 min (65 kW DC)",
+        "chargeSlow": "5h45m (7.4 kW AC)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID TIGUAN PRO 4MOTION": {
+      "rank": 3832,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID TIGUAN PRO 4MOTION",
+        "batteryKwh": 77,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 220,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|ID TIGUAN PRO": {
+      "rank": 3831,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID TIGUAN PRO",
+        "batteryKwh": 77,
+        "rangeWltp": 286,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID TIGUAN PURE": {
+      "rank": 3830,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID TIGUAN PURE",
+        "batteryKwh": 58,
+        "rangeWltp": 221,
+        "chargeFast": "27 min (105 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 140,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|IX4 50 XDRIVE": {
+      "rank": 3827,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX4 50 XDRIVE",
+        "batteryKwh": 108.7,
+        "rangeWltp": 410,
+        "chargeFast": "21 min (400 kW DC)",
+        "chargeSlow": "11h45m (11 kW AC)",
+        "motorKw": 345,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|IX4 40 XDRIVE": {
+      "rank": 3826,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX4 40 XDRIVE",
+        "batteryKwh": 82.6,
+        "rangeWltp": 320,
+        "chargeFast": "21 min (300 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 275,
+        "driveType": "AWD"
+      }
+    },
+    "VOLKSWAGEN|ID POLO GTI": {
+      "rank": 3825,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID POLO GTI",
+        "batteryKwh": 51.7,
+        "rangeWltp": 202,
+        "chargeFast": "24 min (105 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 166,
+        "driveType": "FWD"
+      }
+    },
+    "NISSAN|ARIYA 63KWH": {
+      "rank": 3689,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "ARIYA 63KWH",
+        "batteryKwh": 63,
+        "rangeWltp": 208,
+        "chargeFast": "40 min (130 kW DC)",
+        "chargeSlow": "6h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "DACIA|SPRING ELECTRIC 70": {
+      "rank": 3408,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "DACIA",
+        "model": "SPRING ELECTRIC 70",
+        "batteryKwh": 24,
+        "rangeWltp": 103,
+        "chargeFast": "30 min (40 kW DC)",
+        "chargeSlow": "4h30m (6.6 kW AC)",
+        "motorKw": 52,
+        "driveType": "FWD"
+      }
+    },
+    "MERCEDES-BENZ|GLB 350 4MATIC": {
+      "rank": 3407,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLB 350 4MATIC",
+        "batteryKwh": 85,
+        "rangeWltp": 292,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 260,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|GLB 250PLUS": {
+      "rank": 3406,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "GLB 250PLUS",
+        "batteryKwh": 85,
+        "rangeWltp": 295,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL 3 PREMIUM RWD": {
+      "rank": 3404,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 PREMIUM RWD",
+        "batteryKwh": 79,
+        "rangeWltp": 360,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 235,
+        "driveType": "RWD"
+      }
+    },
+    "XPENG|G6 RWD STANDARD RANGE": {
+      "rank": 3402,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "XPENG",
+        "model": "G6 RWD STANDARD RANGE",
+        "batteryKwh": 67.8,
+        "rangeWltp": 242,
+        "chargeFast": "12 min (382 kW DC)",
+        "chargeSlow": "7h15m (11 kW AC)",
+        "motorKw": 185,
+        "driveType": "RWD"
+      }
+    },
+    "TOYOTA|BZ4X TOURING AWD 747 KWH": {
+      "rank": 3401,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "BZ4X TOURING AWD 747 KWH",
+        "batteryKwh": 71,
+        "rangeWltp": 239,
+        "chargeFast": "29 min (150 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 280,
+        "driveType": "AWD"
+      }
+    },
+    "TOYOTA|BZ4X TOURING FWD 747 KWH": {
+      "rank": 3400,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "BZ4X TOURING FWD 747 KWH",
+        "batteryKwh": 71,
+        "rangeWltp": 249,
+        "chargeFast": "29 min (150 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "FWD"
+      }
+    },
+    "PORSCHE|CAYENNE TURBO ELECTRIC": {
+      "rank": 3399,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "CAYENNE TURBO ELECTRIC",
+        "batteryKwh": 108.7,
+        "rangeWltp": 311,
+        "chargeFast": "17 min (390 kW DC)",
+        "chargeSlow": "11h45m (11 kW AC)",
+        "motorKw": 850,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|CAYENNE ELECTRIC": {
+      "rank": 3398,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "CAYENNE ELECTRIC",
+        "batteryKwh": 108.7,
+        "rangeWltp": 326,
+        "chargeFast": "17 min (390 kW DC)",
+        "chargeSlow": "11h45m (11 kW AC)",
+        "motorKw": 325,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA SHOOTING BRAKE 350 4MATIC": {
+      "rank": 3397,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA SHOOTING BRAKE 350 4MATIC",
+        "batteryKwh": 85,
+        "rangeWltp": 354,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 260,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA SHOOTING BRAKE 250PLUS": {
+      "rank": 3396,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA SHOOTING BRAKE 250PLUS",
+        "batteryKwh": 85,
+        "rangeWltp": 360,
+        "chargeFast": "18 min (353 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "TOYOTA|C HRPLUS 77 KWH AWD": {
+      "rank": 3395,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "C HRPLUS 77 KWH AWD",
+        "batteryKwh": 72,
+        "rangeWltp": 239,
+        "chargeFast": "29 min (150 kW DC)",
+        "chargeSlow": "4 hours (22 kW AC)",
+        "motorKw": 252,
+        "driveType": "AWD"
+      }
+    },
+    "TOYOTA|C HRPLUS 77 KWH": {
+      "rank": 3394,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "C HRPLUS 77 KWH",
+        "batteryKwh": 72,
+        "rangeWltp": 267,
+        "chargeFast": "29 min (150 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "FWD"
+      }
+    },
+    "TOYOTA|C HRPLUS 577 KWH": {
+      "rank": 3393,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOYOTA",
+        "model": "C HRPLUS 577 KWH",
+        "batteryKwh": 54,
+        "rangeWltp": 202,
+        "chargeFast": "28 min (150 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 123,
+        "driveType": "FWD"
+      }
+    },
+    "ALPINE|A390 GTS": {
+      "rank": 3391,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "ALPINE",
+        "model": "A390 GTS",
+        "batteryKwh": 89,
+        "rangeWltp": 292,
+        "chargeFast": "28 min (190 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 345,
+        "driveType": "AWD"
+      }
+    },
+    "RENAULT|TWINGO E TECH 275 KWH": {
+      "rank": 3392,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "RENAULT",
+        "model": "TWINGO E TECH 275 KWH",
+        "batteryKwh": 27.5,
+        "rangeWltp": 115,
+        "chargeFast": "30 min (50 kW DC)",
+        "chargeSlow": "5 hours (6.6 kW AC)",
+        "motorKw": 60,
+        "driveType": "FWD"
+      }
+    },
+    "KGM|TORRES EVX 806 KWH": {
+      "rank": 3389,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "KGM",
+        "model": "TORRES EVX 806 KWH",
+        "batteryKwh": 80.6,
+        "rangeWltp": 255,
+        "chargeFast": "36 min (120 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 152,
+        "driveType": "FWD"
+      }
+    },
+    "ALPINE|A390 GT": {
+      "rank": 3390,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "ALPINE",
+        "model": "A390 GT",
+        "batteryKwh": 89,
+        "rangeWltp": 292,
+        "chargeFast": "33 min (150 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 295,
+        "driveType": "AWD"
+      }
+    },
+    "LEAPMOTOR|C10 AWD 819 KWH": {
+      "rank": 3388,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "C10 AWD 819 KWH",
+        "batteryKwh": 81.9,
+        "rangeWltp": 236,
+        "chargeFast": "30 min (180 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 440,
+        "driveType": "AWD"
+      }
+    },
+    "LEAPMOTOR|C10 RWD 819 KWH": {
+      "rank": 3387,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "C10 RWD 819 KWH",
+        "batteryKwh": 81.9,
+        "rangeWltp": 255,
+        "chargeFast": "30 min (180 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 220,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL X PLAID": {
+      "rank": 3386,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL X PLAID",
+        "batteryKwh": 95,
+        "rangeWltp": 295,
+        "chargeFast": "30 min (250 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 760,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL X AWD": {
+      "rank": 3385,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL X AWD",
+        "batteryKwh": 95,
+        "rangeWltp": 304,
+        "chargeFast": "30 min (250 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 504,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL S AWD": {
+      "rank": 3383,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL S AWD",
+        "batteryKwh": 95,
+        "rangeWltp": 367,
+        "chargeFast": "30 min (250 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 504,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL S PLAID": {
+      "rank": 3384,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL S PLAID",
+        "batteryKwh": 95,
+        "rangeWltp": 351,
+        "chargeFast": "30 min (250 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 760,
+        "driveType": "AWD"
+      }
+    },
+    "CADILLAC|OPTIQ 500 E4": {
+      "rank": 3371,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "CADILLAC",
+        "model": "OPTIQ 500 E4",
+        "batteryKwh": 75,
+        "rangeWltp": 227,
+        "chargeFast": "37 min (110 kW DC)",
+        "chargeSlow": "4 hours (22 kW AC)",
+        "motorKw": 224,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|CLA 200": {
+      "rank": 3370,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA 200",
+        "batteryKwh": 58,
+        "rangeWltp": 249,
+        "chargeFast": "21 min (200 kW DC)",
+        "chargeSlow": "6h15m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "RWD"
+      }
+    },
+    "CHANGAN|DEEPAL S07 STANDARD": {
+      "rank": 3369,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "CHANGAN",
+        "model": "DEEPAL S07 STANDARD",
+        "batteryKwh": 78,
+        "rangeWltp": 255,
+        "chargeFast": "49 min (93 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "CHANGAN|DEEPAL S05 4WD MAX": {
+      "rank": 3368,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "CHANGAN",
+        "model": "DEEPAL S05 4WD MAX",
+        "batteryKwh": 68,
+        "rangeWltp": 227,
+        "chargeFast": "23 min (200 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 320,
+        "driveType": "AWD"
+      }
+    },
+    "CHANGAN|DEEPAL S05 RWD": {
+      "rank": 3367,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "CHANGAN",
+        "model": "DEEPAL S05 RWD",
+        "batteryKwh": 68,
+        "rangeWltp": 239,
+        "chargeFast": "23 min (200 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "NISSAN|LEAF EXTENDED RANGE 75 KWH": {
+      "rank": 3366,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "LEAF EXTENDED RANGE 75 KWH",
+        "batteryKwh": 75.1,
+        "rangeWltp": 283,
+        "chargeFast": "32 min (150 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "NISSAN|LEAF STANDARD RANGE 52 KWH": {
+      "rank": 3365,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "LEAF STANDARD RANGE 52 KWH",
+        "batteryKwh": 52.9,
+        "rangeWltp": 202,
+        "chargeFast": "33 min (105 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 130,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|GRANDLAND ELECTRIC 97 KWH": {
+      "rank": 3364,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "OPEL",
+        "model": "GRANDLAND ELECTRIC 97 KWH",
+        "batteryKwh": 96.9,
+        "rangeWltp": 308,
+        "chargeFast": "32 min (160 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 170,
+        "driveType": "FWD"
+      }
+    },
+    "JAECOO|5 EV": {
+      "rank": 3336,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "JAECOO",
+        "model": "5 EV",
+        "batteryKwh": 58.9,
+        "rangeWltp": 202,
+        "chargeFast": "33 min (130 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 155,
+        "driveType": "FWD"
+      }
+    },
+    "MITSUBISHI|ECLIPSE CROSS 87 KWH ": {
+      "rank": 3335,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "MITSUBISHI",
+        "model": "ECLIPSE CROSS 87 KWH ",
+        "batteryKwh": 87,
+        "rangeWltp": 298,
+        "chargeFast": "40 min (150 kW DC)",
+        "chargeSlow": "9h30m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "VOLKSWAGEN|ID3 PRO S": {
+      "rank": 3334,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID3 PRO S",
+        "batteryKwh": 79,
+        "rangeWltp": 295,
+        "chargeFast": "26 min (185 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 170,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL 3 LONG RANGE AWD": {
+      "rank": 3331,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 LONG RANGE AWD",
+        "batteryKwh": 79,
+        "rangeWltp": 345,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 366,
+        "driveType": "AWD"
+      }
+    },
+    "TESLA|MODEL 3 LONG RANGE RWD": {
+      "rank": 3330,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL 3 LONG RANGE RWD",
+        "batteryKwh": 79,
+        "rangeWltp": 360,
+        "chargeFast": "28 min (250 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 235,
+        "driveType": "RWD"
+      }
+    },
+    "POLESTAR|3 PERFORMANCE": {
+      "rank": 3328,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "3 PERFORMANCE",
+        "batteryKwh": 102,
+        "rangeWltp": 286,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "11 hours (11 kW AC)",
+        "motorKw": 500,
+        "driveType": "AWD"
+      }
+    },
+    "POLESTAR|3 DUAL MOTOR": {
+      "rank": 3327,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "3 DUAL MOTOR",
+        "batteryKwh": 102,
+        "rangeWltp": 308,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "11 hours (11 kW AC)",
+        "motorKw": 400,
+        "driveType": "AWD"
+      }
+    },
+    "POLESTAR|3 REAR MOTOR": {
+      "rank": 3326,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "POLESTAR",
+        "model": "3 REAR MOTOR",
+        "batteryKwh": 88,
+        "rangeWltp": 273,
+        "chargeFast": "23 min (310 kW DC)",
+        "chargeSlow": "9h30m (11 kW AC)",
+        "motorKw": 245,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EX90 TWIN MOTOR PERFORMANCE": {
+      "rank": 3325,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX90 TWIN MOTOR PERFORMANCE",
+        "batteryKwh": 102,
+        "rangeWltp": 289,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "11 hours (11 kW AC)",
+        "motorKw": 500,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EX90 TWIN MOTOR": {
+      "rank": 3324,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX90 TWIN MOTOR",
+        "batteryKwh": 102,
+        "rangeWltp": 298,
+        "chargeFast": "23 min (350 kW DC)",
+        "chargeSlow": "11 hours (11 kW AC)",
+        "motorKw": 335,
+        "driveType": "AWD"
+      }
+    },
+    "VOLVO|EX90 SINGLE MOTOR": {
+      "rank": 3323,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX90 SINGLE MOTOR",
+        "batteryKwh": 88,
+        "rangeWltp": 264,
+        "chargeFast": "23 min (310 kW DC)",
+        "chargeSlow": "9h30m (11 kW AC)",
+        "motorKw": 245,
+        "driveType": "RWD"
+      }
+    },
+    "PEUGEOT|E 308 SW 58 KWH": {
+      "rank": 3322,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E 308 SW 58 KWH",
+        "batteryKwh": 55.4,
+        "rangeWltp": 211,
+        "chargeFast": "33 min (100 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E 308 58 KWH": {
+      "rank": 3321,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E 308 58 KWH",
+        "batteryKwh": 55.4,
+        "rangeWltp": 214,
+        "chargeFast": "33 min (100 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 210 KW 64 KWH": {
+      "rank": 3320,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 210 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 152,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 160 KW 64 KWH": {
+      "rank": 3319,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L2 100 KW 64 KWH": {
+      "rank": 3318,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L2 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 210 KW 64 KWH": {
+      "rank": 3317,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 210 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 160 KW 64 KWH": {
+      "rank": 3316,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E CARAVELLE L1 100 KW 64 KWH": {
+      "rank": 3315,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E CARAVELLE L1 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 210 KW 64 KWH": {
+      "rank": 3314,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 210 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 160 KW 64 KWH": {
+      "rank": 3313,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L2 100 KW 64 KWH": {
+      "rank": 3312,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L2 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 155,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 160 KW 64 KWH": {
+      "rank": 3310,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 158,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 210 KW 64 KWH": {
+      "rank": 3311,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 210 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 158,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|E TRANSPORTER KOMBI L1 100 KW 64 KWH": {
+      "rank": 3309,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "E TRANSPORTER KOMBI L1 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 158,
+        "chargeFast": "38 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "GEELY|E5 PRO": {
+      "rank": 3308,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "GEELY",
+        "model": "E5 PRO",
+        "batteryKwh": 60.2,
+        "rangeWltp": 205,
+        "chargeFast": "28 min (120 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|MOKKA ELECTRIC GSE": {
+      "rank": 3307,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "OPEL",
+        "model": "MOKKA ELECTRIC GSE",
+        "batteryKwh": 50.8,
+        "rangeWltp": 174,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 207,
+        "driveType": "FWD"
+      }
+    },
+    "TOGG|T10F LONG RANGE AWD": {
+      "rank": 3306,
+      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "record": {
+        "make": "TOGG",
+        "model": "T10F LONG RANGE AWD",
+        "batteryKwh": 85,
+        "rangeWltp": 289,
+        "chargeFast": "33 min (180 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 320,
+        "driveType": "AWD"
       }
     }
   }
