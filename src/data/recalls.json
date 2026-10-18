@@ -1656,7 +1656,7 @@
     "recallNumber": "R/2026/314"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "JAECOO 7 ICE"
     ],
@@ -1668,7 +1668,7 @@
     "recallNumber": "R/2026/299"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "JAECOO 7 ICE"
     ],
@@ -1680,7 +1680,7 @@
     "recallNumber": "R/2026/299"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "JAECOO 7 ICE"
     ],
@@ -1692,7 +1692,7 @@
     "recallNumber": "R/2026/299"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "JAECOO 7 ICE PHEV"
     ],
@@ -1704,7 +1704,7 @@
     "recallNumber": "R/2026/299"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "JAECOO 7 ICE PHEV"
     ],
@@ -7145,6 +7145,18 @@
     "recallNumber": "R/2026/054"
   },
   {
+    "make": "JAECOO UK LIMITED",
+    "models": [
+      "JAECOO 7 ICE"
+    ],
+    "buildDateStart": "2025-04-01",
+    "buildDateEnd": "2025-12-08",
+    "recallDate": "2026-03-02",
+    "defect": "We have recently identified an issue concerning the Electronic Control Unit wiring harness clip in a specific batch of vehicles. Our investigation found that the ECU harness clip was not fully engaged during the assembly process. The incomplete engagement of the ECU harness clip may lead to engine warning light and an unexpected engine stall while the vehicle is in motion thereby increasing the risk of a crash.",
+    "remedy": "​​For vehicles within the risk scope a recall will be initiated and provide free inspection and repair for all affected vehicles. The solution includes checking and ensuring the correct installation of the harness fastener and replacing any worn harness if necessary.​",
+    "recallNumber": "R/2026/069"
+  },
+  {
     "make": "JEEP",
     "models": [
       "WRANGLER"
@@ -7155,18 +7167,6 @@
     "defect": "On affected vehicles the Malfunction Indicator Lamp (MIL) may not function as intended in the Instrument Panel Cluster (IPC). This condition will not affect emissions. However in the event of an emission issue that would require illumination of the MIL the driver may not be alerted due to the MIL not illuminating.",
     "remedy": "Install updated software.",
     "recallNumber": "R/2026/060"
-  },
-  {
-    "make": "OMODA AND JAECOO UK LIMITED",
-    "models": [
-      "JAECOO 7 ICE"
-    ],
-    "buildDateStart": "2025-04-01",
-    "buildDateEnd": "2025-12-08",
-    "recallDate": "2026-03-02",
-    "defect": "We have recently identified an issue concerning the Electronic Control Unit wiring harness clip in a specific batch of vehicles. Our investigation found that the ECU harness clip was not fully engaged during the assembly process. The incomplete engagement of the ECU harness clip may lead to engine warning light and an unexpected engine stall while the vehicle is in motion thereby increasing the risk of a crash.",
-    "remedy": "​​For vehicles within the risk scope a recall will be initiated and provide free inspection and repair for all affected vehicles. The solution includes checking and ensuring the correct installation of the harness fastener and replacing any worn harness if necessary.​",
-    "recallNumber": "R/2026/069"
   },
   {
     "make": "FORD",
@@ -8093,7 +8093,7 @@
     "recallNumber": "R/2026/028"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "OMODA E5"
     ],
@@ -8105,7 +8105,7 @@
     "recallNumber": "R/2026/013"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "OMODA 5"
     ],
@@ -8117,7 +8117,7 @@
     "recallNumber": "R/2026/013"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "OMODA 5 HEV"
     ],
@@ -8129,7 +8129,7 @@
     "recallNumber": "R/2026/013"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "OMODA E5"
     ],
@@ -8141,7 +8141,7 @@
     "recallNumber": "R/2026/013"
   },
   {
-    "make": "OMODA AND JAECOO UK LIMITED",
+    "make": "JAECOO UK LIMITED",
     "models": [
       "OMODA 5"
     ],
@@ -11680,6 +11680,114 @@
     "defect": "For certain vehicles the indirect tyre pressure monitoring within the Electronic Stability Control (ESC) software may result in the warning light not illuminating illuminating with a delay or triggering a false warning.",
     "remedy": "Update to the software calibration of the Electronic Stability Control unit (ESC).",
     "recallNumber": "R/2025/447"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2025-01-30",
+    "buildDateEnd": "2025-05-27",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2025-06-04",
+    "buildDateEnd": "2025-08-28",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2025-09-01",
+    "buildDateEnd": "2025-09-05",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2024-09-25",
+    "buildDateEnd": "2023-01-29",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CAPRI"
+    ],
+    "buildDateStart": "2024-10-23",
+    "buildDateEnd": "2025-01-29",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CAPRI"
+    ],
+    "buildDateStart": "2025-03-12",
+    "buildDateEnd": "2025-06-02",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CAPRI"
+    ],
+    "buildDateStart": "2025-09-25",
+    "buildDateEnd": "2025-09-26",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EXPLORER"
+    ],
+    "buildDateStart": "2024-08-16",
+    "buildDateEnd": "2024-09-19",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "CAPRI"
+    ],
+    "buildDateStart": "2025-06-13",
+    "buildDateEnd": "2025-08-29",
+    "recallDate": "2025-11-07",
+    "defect": "On affected vehicles a bolt fixing the front seat back with the seat base may be not have been fitted and secured correctly due to a manufacturing issue.",
+    "remedy": "Check the bolts are present and correctly tightened.",
+    "recallNumber": "R/2025/474"
   },
   {
     "make": "JEEP",

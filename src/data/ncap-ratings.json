@@ -441,6 +441,16 @@
   },
   {
     "make": "BYD",
+    "model": "SHARK",
+    "overallStars": 5,
+    "adultOccupant": 82,
+    "childOccupant": 86,
+    "pedestrian": 82,
+    "safetyAssist": 87,
+    "yearTested": 2025
+  },
+  {
+    "make": "BYD",
     "model": "TANG",
     "overallStars": 5,
     "adultOccupant": 87,
@@ -476,7 +486,7 @@
     "adultOccupant": 95,
     "childOccupant": 87,
     "pedestrian": 95,
-    "safetyAssist": 77,
+    "safetyAssist": 71,
     "yearTested": 2024
   },
   {
@@ -1888,6 +1898,16 @@
     "pedestrian": 86,
     "safetyAssist": 85,
     "yearTested": 2020
+  },
+  {
+    "make": "MAZDA",
+    "model": "2 HYBRID",
+    "overallStars": 4,
+    "adultOccupant": 72,
+    "childOccupant": 84,
+    "pedestrian": 72,
+    "safetyAssist": 72,
+    "yearTested": 2025
   },
   {
     "make": "MAZDA",
