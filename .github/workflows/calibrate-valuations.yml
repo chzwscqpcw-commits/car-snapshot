@@ -1,0 +1,138 @@
+name: Monthly Valuation Calibration
+
+# Rebuilds src/data/model-price-calibration.json from the last 120 days of
+# valuation telemetry (scripts/calibrate-model-prices.ts — the "why" lives
+# there). The calibration is a snapshot: as valuations accrue, more model
+# families clear the evidence bar and existing ones track the market.
+#
+# Unlike refresh-data.yml this does NOT auto-merge. It moves the headline
+# valuation for most visitors, so a person reads the summary first — a family
+# jumping 30%+ in a month is either a real market shift or a data problem,
+# and the workflow can't tell which. CI still runs on the PR, so the tests
+# (calibration sanity, family rules, valuation) gate the merge.
+#
+# Secrets: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY — the
+# public, read-only values the site already ships to every browser.
+
+on:
+  schedule:
+    - cron: '0 5 2 * *' # 2nd of each month, 05:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write # approves this PR's own held CI run — see refresh-data.yml
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild calibration
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          cp src/data/model-price-calibration.json /tmp/calibration-before.json
+          npx tsx scripts/calibrate-model-prices.ts --days=120
+
+      # Same assertions CI will run on the PR, run here first so a broken
+      # calibration never even opens one.
+      - name: Test the new calibration
+        run: |
+          npm run test:model-family
+          npm run test:valuation
+
+      - name: Summarise changes
+        id: diff
+        run: |
+          npx tsx scripts/diff-model-calibration.ts /tmp/calibration-before.json src/data/model-price-calibration.json > /tmp/calibration-diff.md
+          if head -1 /tmp/calibration-diff.md | grep -q NO_FAMILY_CHANGES; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+          cat /tmp/calibration-diff.md
+
+      - name: Open calibration PR
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="calibration/${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/data/model-price-calibration.json
+          git commit -m "data: monthly valuation calibration"
+          git push origin "$BRANCH"
+          {
+            echo "Monthly rebuild of the market-calibrated start prices behind every valuation (\`scripts/calibrate-model-prices.ts\`)."
+            echo ""
+            echo "**Not auto-merging** — this moves headline valuations. Check any family flagged below, then merge."
+            echo ""
+            cat /tmp/calibration-diff.md
+            echo ""
+            echo "Run ${{ github.run_id }}."
+          } > /tmp/pr-body.md
+          gh pr create --title "data: monthly valuation calibration" --body-file /tmp/pr-body.md --base main --head "$BRANCH"
+
+      - name: Approve own CI run
+        id: approve
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="calibration/${{ github.run_id }}"
+          for i in $(seq 1 15); do
+            RID=$(gh run list --workflow=ci.yml --branch "$BRANCH" --limit 1 \
+                    --json databaseId -q '.[0].databaseId // empty')
+            STATE=$(gh run list --workflow=ci.yml --branch "$BRANCH" --limit 1 \
+                    --json status,conclusion -q '.[0] | "\(.status)/\(.conclusion // "-")"')
+            if [ -n "$RID" ]; then
+              case "$STATE" in
+                *action_required*)
+                  gh api -X POST "repos/${{ github.repository }}/actions/runs/$RID/approve" \
+                    && echo "approved=true" >> $GITHUB_OUTPUT && exit 0
+                  echo "approved=false" >> $GITHUB_OUTPUT; exit 0 ;;
+                queued/*|in_progress/*|completed/success)
+                  echo "approved=n/a" >> $GITHUB_OUTPUT; exit 0 ;;
+              esac
+            fi
+            sleep 6
+          done
+          echo "approved=absent" >> $GITHUB_OUTPUT
+
+      - name: Delete merged calibration branches
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/delete-merged-data-branches.sh calibration/
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Monthly Valuation Calibration" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "PR opened for review (not auto-merging). CI self-approval: **${{ steps.approve.outputs.approved || 'unknown' }}**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No family prices changed — nothing to merge." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          [ -f /tmp/calibration-diff.md ] && cat /tmp/calibration-diff.md >> $GITHUB_STEP_SUMMARY || true
