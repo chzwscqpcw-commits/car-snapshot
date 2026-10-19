@@ -1,3 +1,5 @@
+import { withoutPlate } from "@/lib/redact";
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
@@ -385,7 +387,8 @@ export function trackConversion(
   // conversion type so each exposed session counts at most once (≤100% rates).
   attachExposedVariants(payload, conversionType);
 
-  if (window.gtag) window.gtag("event", "conversion", payload);
+  // Never send the plate to Google — it stays in our own (hashed) mirror only.
+  if (window.gtag) window.gtag("event", "conversion", withoutPlate(payload));
 
   // Mirror under the conversion_type so site_events stays queryable by
   // semantic event name (reg_search / mot_reminder) rather than a single
@@ -410,7 +413,7 @@ export function trackEvent(
   // Exposure-gated, de-duped per event name (see attachExposedVariants).
   attachExposedVariants(payload, eventName);
 
-  if (window.gtag) window.gtag("event", eventName, payload);
+  if (window.gtag) window.gtag("event", eventName, withoutPlate(payload));
   mirrorToServer(eventName, payload);
 }
 

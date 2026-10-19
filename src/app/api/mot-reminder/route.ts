@@ -7,6 +7,7 @@ import { PARTNER_LINKS } from "@/config/partners";
 import MOTReminderSet from "@/emails/mot-reminder-set";
 import MOTReminderDue from "@/emails/mot-reminder-due";
 import { sanitizeOffsets, reminderSubject } from "@/lib/mot-reminders";
+import { maskEmail, maskPlate } from "@/lib/redact";
 
 function looksLikeEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -96,7 +97,7 @@ async function sendCatchUpReminders(
       .from("mot_reminders")
       .update({ sent_offsets: reached, updated_at: new Date().toISOString() })
       .eq("id", reminderId);
-    console.log("catchup_sent:", email, vrm, `${daysRemaining}d remaining`, `windows=${reached}`);
+    console.log("catchup_sent:", maskEmail(email), maskPlate(vrm), `${daysRemaining}d remaining`, `windows=${reached}`);
   } else {
     console.error("catchup_error:", result.error);
   }
@@ -132,7 +133,7 @@ async function sendConfirmation(
   if (!result.ok) {
     console.error("confirmation_email_error:", result.error);
   } else {
-    console.log("confirmation_email_sent:", result.id, "to:", email, "vrm:", vrm);
+    console.log("confirmation_email_sent:", result.id, "to:", maskEmail(email), "vrm:", maskPlate(vrm));
   }
 }
 
@@ -158,7 +159,7 @@ export async function POST(req: Request) {
     // Resend email so the real subscribers table stays clean. See the verify
     // skill output and scripts/cleanup-test-reminders.ts for the rationale.
     if (isTestEmail(email)) {
-      console.log("mot_reminder_test_email_skipped:", email, vrm);
+      console.log("mot_reminder_test_email_skipped:", maskEmail(email), maskPlate(vrm));
       return NextResponse.json({ ok: true, test: true });
     }
 
@@ -194,7 +195,7 @@ export async function POST(req: Request) {
           const fresh = `${dvla.make}${dvla.model ? " " + dvla.model : ""}`.trim();
           if (fresh && fresh !== makeModel) {
             console.warn(
-              `mot_reminder_makemodel_drift: client="${makeModel}" → dvla="${fresh}" for vrm=${vrm}`,
+              `mot_reminder_makemodel_drift: client="${makeModel}" → dvla="${fresh}" for vrm=${maskPlate(vrm)}`,
             );
           }
           verifiedMakeModel = fresh;
@@ -202,7 +203,7 @@ export async function POST(req: Request) {
         if (dvla?.motExpiryDate) {
           if (dvla.motExpiryDate !== validExpiry) {
             console.warn(
-              `mot_reminder_expiry_drift: client="${validExpiry}" → dvla="${dvla.motExpiryDate}" for vrm=${vrm}`,
+              `mot_reminder_expiry_drift: client="${validExpiry}" → dvla="${dvla.motExpiryDate}" for vrm=${maskPlate(vrm)}`,
             );
           }
           verifiedExpiry = dvla.motExpiryDate;
@@ -232,7 +233,7 @@ export async function POST(req: Request) {
       .single();
 
     if (!insertError && inserted) {
-      console.log("mot_reminder_created:", email, vrm, `offsets=${offsets}`);
+      console.log("mot_reminder_created:", maskEmail(email), maskPlate(vrm), `offsets=${offsets}`);
       await sendConfirmation(email, vrm, verifiedMakeModel, verifiedExpiry, offsets, inserted.unsubscribe_token);
       await sendCatchUpReminders(email, vrm, verifiedMakeModel, verifiedExpiry, inserted.unsubscribe_token, inserted.id, offsets);
 
@@ -268,7 +269,7 @@ export async function POST(req: Request) {
       }
 
       if (!updated?.unsubscribe_token) {
-        console.error("mot_reminder_update_no_token:", email, vrm);
+        console.error("mot_reminder_update_no_token:", maskEmail(email), maskPlate(vrm));
         return NextResponse.json({
           ok: true,
           status: "updated",
@@ -276,7 +277,7 @@ export async function POST(req: Request) {
         });
       }
 
-      console.log("mot_reminder_updated:", email, vrm, `offsets=${offsets}`);
+      console.log("mot_reminder_updated:", maskEmail(email), maskPlate(vrm), `offsets=${offsets}`);
       await sendConfirmation(email, vrm, verifiedMakeModel, verifiedExpiry, offsets, updated.unsubscribe_token);
       await sendCatchUpReminders(email, vrm, verifiedMakeModel, verifiedExpiry, updated.unsubscribe_token, updated.id, offsets);
 
