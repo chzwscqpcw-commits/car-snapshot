@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import Button from "@/components/Button";
 import { RegPlate } from "@/components/RegPlate";
+import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 
 /* ---------- types ---------- */
 
@@ -203,6 +204,11 @@ export default function ComparePage() {
         }),
       ]);
 
+      // The firewall's 429 isn't our JSON, so check before parsing.
+      if (res1.status === 429 || res2.status === 429) {
+        setError(LOOKUP_RATE_LIMIT_MESSAGE);
+        return;
+      }
       const json1 = await res1.json();
       const json2 = await res2.json();
 

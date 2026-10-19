@@ -15,6 +15,7 @@ import { RegPlate } from "@/components/RegPlate";
 import { calculateVed } from "@/lib/ved";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 interface TaxResultProps {
   vrm: string;
@@ -167,7 +168,7 @@ export default function TaxResult({ vrm, previewVehicle }: TaxResultProps) {
         if (!r.ok) {
           const body = await r.json().catch(() => null);
           throw new Error(
-            body?.error || "Couldn't find that registration — double-check and try again."
+            lookupErrorMessage(r.status, body, "Couldn't find that registration — double-check and try again."),
           );
         }
         const payload = await r.json();

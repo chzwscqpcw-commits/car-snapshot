@@ -18,6 +18,7 @@ import {
   type VehicleSummary,
   type CostEstimate,
 } from "@/lib/repair-cost-calculators";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 interface PersonalisedCostLookupProps {
   slug: RepairCostSlug;
@@ -80,7 +81,7 @@ export default function PersonalisedCostLookup({
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        setError(data?.error || "Couldn’t find that vehicle — check the reg and try again.");
+        setError(lookupErrorMessage(res.status, data, "Couldn’t find that vehicle — check the reg and try again."));
         setSubmitting(false);
         return;
       }
