@@ -5,6 +5,13 @@ import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { analyticsWritesEnabled } from "@/lib/analytics-writes";
+import { stripPlateFromUrl } from "@/lib/redact";
+
+/** Same salt + scheme as /api/lookup's vrm_hash, so the two can be joined. */
+function hashVrm(vrm: string): string {
+  const salt = process.env.VRM_SALT || "change-me";
+  return crypto.createHash("sha256").update(`${salt}:${vrm}`).digest("hex");
+}
 
 function hashIp(ip: string): string {
   const salt = process.env.VRM_SALT || "change-me";
@@ -46,13 +53,23 @@ export async function POST(req: Request) {
           : typeof body.path === "string"
             ? body.path
             : "/";
-      metadata = { path };
-      if (typeof p.referrer === "string") metadata.referrer = p.referrer;
+      metadata = { path: stripPlateFromUrl(path) };
+      // An internal referrer from a result page carried the plate in its query.
+      if (typeof p.referrer === "string") metadata.referrer = stripPlateFromUrl(p.referrer);
       if (typeof p.utm_source === "string" && p.utm_source.length > 0) {
         metadata.utm_source = p.utm_source;
       }
     } else if (body?.payload && typeof body.payload === "object" && !Array.isArray(body.payload)) {
       metadata = body.payload as Record<string, unknown>;
+    }
+
+    // Plates are never stored. A hash keeps "distinct cars checked" countable
+    // (it's the same hash /api/lookup keys its cache on) without keeping the
+    // registration itself, which the /car-check FAQ says we don't retain.
+    if (metadata && typeof metadata.vrm === "string") {
+      const plate = metadata.vrm.replace(/\s+/g, "").toUpperCase();
+      const { vrm: _vrm, ...rest } = metadata;
+      metadata = plate ? { ...rest, vrm_hash: hashVrm(plate) } : rest;
     }
 
     if (metadata && JSON.stringify(metadata).length > MAX_PAYLOAD_BYTES) {

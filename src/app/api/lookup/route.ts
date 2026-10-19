@@ -5,6 +5,7 @@ import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { analyticsWritesEnabled } from "@/lib/analytics-writes";
+import { maskPlate } from "@/lib/redact";
 
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -276,7 +277,7 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
 
     const url = `${MOT_API_URL}/${registrationNumber}`;
 
-    console.log(`[MOT] Fetching MOT history for ${registrationNumber}`);
+    console.log(`[MOT] Fetching MOT history for ${maskPlate(registrationNumber)}`);
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -291,7 +292,7 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.log(`[MOT] Vehicle not found: ${registrationNumber}`);
+        console.log(`[MOT] Vehicle not found: ${maskPlate(registrationNumber)}`);
         return null;
       }
       if (response.status === 401 || response.status === 403) {
@@ -520,7 +521,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
     if (!skipCache && cached?.expires_at && new Date(cached.expires_at) > new Date()) {
       if (!(hasDvlaKey && cached.source === "mock")) {
-        console.log(`[LOOKUP] Using cached data for VRM: ${vrm}`);
+        console.log(`[LOOKUP] Using cached data for VRM: ${maskPlate(vrm)}`);
         const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
         // Pull make off the cached payload too so Top Makes counts both
         // cache hits and fresh fetches — otherwise the dashboard ranking
@@ -546,7 +547,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       }
     }
 
-    console.log(`[LOOKUP] Fetching data for VRM: ${vrm}${skipCache ? " (cache skipped)" : ""}`);
+    console.log(`[LOOKUP] Fetching data for VRM: ${maskPlate(vrm)}${skipCache ? " (cache skipped)" : ""}`);
     const [dvlaResult, motData] = await Promise.all([
       fetchFromDvla(vrm),
       fetchMOTHistory(vrm),
