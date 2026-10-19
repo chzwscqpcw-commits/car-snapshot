@@ -5,10 +5,10 @@ import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import ServicingCTA from "@/components/ServicingCTA";
-import MileageResult from "@/components/tools/MileageResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -38,9 +38,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 export const metadata: Metadata = {
   title: "Free Mileage Check 2026 — Spot Clocking | Free Plate Check",
@@ -74,15 +71,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function MileageCheckPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const rawVrm = params?.vrm;
-  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function MileageCheckPage() {
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -143,21 +132,7 @@ export default async function MileageCheckPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      {hasResult ? (
-        <>
-          <MileageResult vrm={cleanedVrm!} />
-          {/* High-intent: they've just seen the mileage records — offer the full
-              history check (clocking/rollback) right here. */}
-          <div className="mx-auto max-w-3xl px-4 -mt-2 pb-10">
-            <CarVerticalReportCTA
-              variant="mileage"
-              context="mileage-result-carvertical"
-              regNumber={cleanedVrm!}
-            />
-          </div>
-          <MotReminderBanner />
-        </>
-      ) : (
+      <PlateSwitch tool="mileage">
         <>
       <LandingHero
         h1="Free Mileage Check"
@@ -341,7 +316,7 @@ export default async function MileageCheckPage({
       </div>
       <MotReminderBanner />
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

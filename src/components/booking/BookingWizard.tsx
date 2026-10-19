@@ -16,6 +16,7 @@ import {
 } from "@/lib/booking";
 import type { LookupVehicle } from "@/components/tools/shared";
 import { trackEvent } from "@/lib/tracking";
+import { readPlate } from "@/lib/plate-url";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -147,6 +148,13 @@ export default function BookingWizard({
   useEffect(() => {
     restored.current = true;
     if (urlVrm) return;
+    // Links now carry the plate as /booking#vrm=… (src/lib/plate-url.ts),
+    // which the server never sees — so the deep-link is applied here.
+    const hashVrm = readPlate();
+    if (hashVrm) {
+      setState((s) => ({ ...s, vrm: hashVrm, step: s.service ? 3 : 2 }));
+      return;
+    }
     const stored = loadFromStorage();
     if (!stored) return;
     setState((s) => ({
@@ -167,7 +175,7 @@ export default function BookingWizard({
   useEffect(() => {
     trackEvent("booking_wizard_start", {
       source,
-      prefilled_vrm: Boolean(urlVrm),
+      prefilled_vrm: Boolean(urlVrm || readPlate()),
       prefilled_type: urlType ?? null,
       prefilled_postcode: Boolean(urlPostcode),
     });

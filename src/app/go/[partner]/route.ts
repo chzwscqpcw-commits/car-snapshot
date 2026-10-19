@@ -94,7 +94,10 @@ export async function GET(
   const url = new URL(req.url);
   const slug = sanitiseSlug(url.searchParams.get("post"));
   const ctxParam = sanitiseContext(url.searchParams.get("ctx"));
-  const vrm = sanitiseVrm(url.searchParams.get("vrm"));
+  // The plate comes from the short-lived cookie the CTA sets on click (see
+  // setGoPlate in partners.ts); a legacy ?vrm= link still works.
+  const platesCookie = /(?:^|;\s*)fpc_go_vrm=([A-Za-z0-9]{1,8})(?:;|$)/.exec(req.headers.get("cookie") ?? "");
+  const vrm = sanitiseVrm(url.searchParams.get("vrm") ?? platesCookie?.[1] ?? null);
   const variant = sanitiseVariant(url.searchParams.get("v"));
 
   // `blog-inline-<slug>` is both our own click_context and the clickref the
@@ -218,8 +221,11 @@ export async function GET(
     }
   }
 
-  return NextResponse.redirect(destination, {
+  const res = NextResponse.redirect(destination, {
     status: 302,
     headers: { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" },
   });
+  // One use only: the plate has done its job once it's in the partner link.
+  if (platesCookie) res.cookies.set("fpc_go_vrm", "", { path: "/go", maxAge: 0 });
+  return res;
 }

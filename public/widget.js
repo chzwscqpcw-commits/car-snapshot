@@ -326,10 +326,11 @@
         input.focus();
         return;
       }
+      // Plate in the fragment (never sent to a server); campaign tags stay in the query.
       var qs =
-        "?vrm=" + encodeURIComponent(reg) +
-        "&utm_source=widget&utm_medium=embed&utm_content=" +
-        encodeURIComponent(cfg.size + "-" + cfg.accent);
+        "?utm_source=widget&utm_medium=embed&utm_content=" +
+        encodeURIComponent(cfg.size + "-" + cfg.accent) +
+        "#vrm=" + encodeURIComponent(reg);
       window.open(SITE_URL + "/" + qs, "_blank", "noopener");
     });
 

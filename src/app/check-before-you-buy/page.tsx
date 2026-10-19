@@ -1,10 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import LandingHero from "@/components/LandingHero";
-import BuyerReport from "@/components/buyer/BuyerReport";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const PAGE_URL = "https://www.freeplatecheck.co.uk/check-before-you-buy";
 const TITLE = "Check a Used Car Before You Buy — Free Buyer's Check | Free Plate Check";
@@ -66,18 +66,8 @@ export const metadata: Metadata = {
   },
 };
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
-export default async function CheckBeforeYouBuyPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const cleanedVrm = params?.vrm ? cleanReg(params.vrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function CheckBeforeYouBuyPage() {
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -102,9 +92,7 @@ export default async function CheckBeforeYouBuyPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      {hasResult ? (
-        <BuyerReport vrm={cleanedVrm!} />
-      ) : (
+      <PlateSwitch tool="buyer">
         <>
           <LandingHero
             h1="Check a Used Car Before You Buy"
@@ -226,7 +214,7 @@ export default async function CheckBeforeYouBuyPage({
             </div>
           </div>
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

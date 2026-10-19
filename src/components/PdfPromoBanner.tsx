@@ -3,6 +3,7 @@
 import { PoundSterling, ChevronRight, Wrench } from "lucide-react";
 import Button from "@/components/Button";
 import { trackEvent } from "@/lib/tracking";
+import { plateHref } from "@/lib/plate-url";
 
 /**
  * Post-PDF-download promo banner. PDF downloaders are highly engaged, so the
@@ -32,8 +33,7 @@ export default function PdfPromoBanner({
 
   function bookingHref(type: "mot" | "full") {
     const qs = new URLSearchParams({ type, source: "pdf_promo" });
-    if (reg) qs.set("vrm", reg);
-    return `/booking?${qs.toString()}`;
+    return plateHref(`/booking?${qs.toString()}`, reg ?? "");
   }
 
   return (

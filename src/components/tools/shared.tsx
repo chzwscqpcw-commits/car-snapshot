@@ -19,6 +19,7 @@ import { RegPlate } from "@/components/RegPlate";
 import { trackEvent } from "@/lib/tracking";
 import Button from "@/components/Button";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { goToPlate, plateHref } from "@/lib/plate-url";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
 
@@ -302,7 +303,7 @@ export function LookupError({
         setRetryError(lookupErrorMessage(res.status, body, "Still couldn’t find that — double-check the reg."));
         return;
       }
-      router.push(`${pathname}?vrm=${cleaned}`);
+      goToPlate(router, pathname, cleaned);
     } catch {
       setRetryError("Couldn’t reach the lookup — check your connection.");
     } finally {
@@ -420,13 +421,13 @@ interface QuickPillDef {
 }
 
 const ALL_PILLS: Record<string, QuickPillDef> = {
-  mot: { href: (v) => `/mot-check?vrm=${v}`, label: "MOT history", icon: ShieldCheck },
-  tax: { href: (v) => `/tax-check?vrm=${v}`, label: "Tax", icon: Receipt },
-  mileage: { href: (v) => `/mileage-check?vrm=${v}`, label: "Mileage", icon: Gauge },
-  ulez: { href: (v) => `/ulez-check?vrm=${v}`, label: "ULEZ", icon: Wind },
-  recall: { href: (v) => `/recall-check?vrm=${v}`, label: "Recalls", icon: AlertTriangle },
+  mot: { href: (v) => plateHref("/mot-check", v), label: "MOT history", icon: ShieldCheck },
+  tax: { href: (v) => plateHref("/tax-check", v), label: "Tax", icon: Receipt },
+  mileage: { href: (v) => plateHref("/mileage-check", v), label: "Mileage", icon: Gauge },
+  ulez: { href: (v) => plateHref("/ulez-check", v), label: "ULEZ", icon: Wind },
+  recall: { href: (v) => plateHref("/recall-check", v), label: "Recalls", icon: AlertTriangle },
   valuation: {
-    href: (v) => `/value-my-car?vrm=${v}`,
+    href: (v) => plateHref("/value-my-car", v),
     label: "Valuation",
     icon: PoundSterling,
   },

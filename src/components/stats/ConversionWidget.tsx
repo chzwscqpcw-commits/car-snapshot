@@ -7,6 +7,7 @@ import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/part
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 import Button from "@/components/Button";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { goToPlate } from "@/lib/plate-url";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -131,8 +132,7 @@ export default function ConversionWidget({
         target_path: targetPath,
         ...(sourceTag ? { source: sourceTag } : {}),
       });
-      const join = targetPath.includes("?") ? "&" : "?";
-      router.push(`${targetPath}${join}vrm=${cleaned}`);
+      goToPlate(router, targetPath, cleaned);
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
       setRegError(

@@ -75,9 +75,9 @@ export function canAddToCalendar(expiryISO?: string): boolean {
 
 /** Booking page pre-loaded for MOT — the action link the reminder points at. */
 export function motBookingUrl(reg: string): string {
-  return `https://www.freeplatecheck.co.uk/booking?vrm=${encodeURIComponent(
-    reg,
-  )}&type=mot&source=calendar_reminder`;
+  // Plate in the fragment, never sent to a server (see src/lib/plate-url.ts).
+  const plate = reg.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  return `https://www.freeplatecheck.co.uk/booking?type=mot&source=calendar_reminder${plate ? `#vrm=${plate}` : ""}`;
 }
 
 function summary(reg: string, expiryISO: string): string {

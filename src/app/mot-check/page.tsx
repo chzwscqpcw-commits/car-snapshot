@@ -6,10 +6,10 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import HeroRegSearch from "@/components/HeroRegSearch";
 import TrustBar from "@/components/TrustBar";
 import MotReminderBanner from "@/components/MotReminderBanner";
-import MotResult from "@/components/tools/MotResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import SeverityCards from "@/components/SeverityCards";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 // Single source of truth for FAQ content — used both for the visible
 // accordion and the FAQPage JSON-LD below.
@@ -41,9 +41,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 export const metadata: Metadata = {
   title: "Free MOT History Check 2026 — Full MOT Results | Free Plate Check",
@@ -77,15 +74,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function MotCheckPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const rawVrm = params?.vrm;
-  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function MotCheckPage() {
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -146,12 +135,7 @@ export default async function MotCheckPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      {hasResult ? (
-        <>
-          <MotResult vrm={cleanedVrm!} />
-          <MotReminderBanner />
-        </>
-      ) : (
+      <PlateSwitch tool="mot">
         <>
       {/* --- HERO --- */}
       <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
@@ -419,7 +403,7 @@ export default async function MotCheckPage({
       </div>
       <MotReminderBanner />
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }
