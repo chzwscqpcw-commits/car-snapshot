@@ -139,6 +139,38 @@ export async function GET(
     });
   }
 
+  // No visit cookie means no page of ours ran its JS in this browser session —
+  // almost always a link-follower with a browser UA. Answer with a page that
+  // sets the cookie and re-requests this URL: a real browser makes the hop in
+  // milliseconds and is counted on the second pass; a non-JS fetcher stops
+  // here, so the partner's tracker is never hit and no click is recorded.
+  // `_h=1` marks the hop, so a browser that refuses cookies is still sent on
+  // (as `cookieless`) instead of looping.
+  const cookies = req.headers.get("cookie") ?? "";
+  const hasVisitCookie = /(?:^|;\s*)fpc_v=1(?:;|$)/.test(cookies);
+  const hopped = url.searchParams.get("_h") === "1";
+  if (!hasVisitCookie && !hopped) {
+    const retry = new URL(url);
+    retry.searchParams.set("_h", "1");
+    const target = JSON.stringify(retry.pathname + retry.search).replace(/</g, "\\u003c");
+    const html =
+      `<!doctype html><html><head><meta charset="utf-8">` +
+      `<meta name="robots" content="noindex, nofollow"><title>Redirecting…</title></head>` +
+      `<body><script>document.cookie="fpc_v=1; Path=/; SameSite=Lax; Secure";` +
+      `location.replace(${target});</script>` +
+      `<noscript><p>Please enable JavaScript to continue to our partner.</p></noscript>` +
+      `</body></html>`;
+    return new NextResponse(html, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "X-Robots-Tag": "noindex, nofollow",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+  const cookieless = !hasVisitCookie;
+
   const destination = link.buildLink ? link.buildLink(vrm, context) : link.url;
 
   // Local and preview deployments redirect exactly the same but record nothing
@@ -151,7 +183,7 @@ export async function GET(
       const forwarded = req.headers.get("x-forwarded-for");
       const ip = forwarded?.split(",")[0]?.trim() || "unknown";
       // `fpc_internal` is set by tracking.ts alongside the owner's localStorage flag.
-      const internal = /(?:^|;\s*)fpc_internal=1(?:;|$)/.test(req.headers.get("cookie") ?? "");
+      const internal = /(?:^|;\s*)fpc_internal=1(?:;|$)/.test(cookies);
       const { error } = await supabaseServer()
         .from("site_events")
         .insert({
@@ -168,6 +200,9 @@ export async function GET(
             ...(recognised ? {} : { requested: slug ? `post:${slug}` : `ctx:${ctxParam}` }),
             // Same flag the client-side events carry; the dashboards filter it out.
             ...(internal ? { internal: true } : {}),
+            // Ran our JS but refused the cookie. Kept, flagged, so it can be
+            // judged separately if it ever turns out to be a new bot shape.
+            ...(cookieless ? { cookieless: true } : {}),
             via: "go_redirect",
           },
           ip_hash: ip !== "unknown" ? hashIp(ip) : null,

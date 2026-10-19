@@ -7,6 +7,7 @@ const TOOL_LINKS = [
   { href: "/cheap-mot", label: "Cheap MOT prices" },
   { href: "/tax-check", label: "Tax check" },
   { href: "/car-check", label: "Free car check" },
+  { href: "/check-before-you-buy", label: "Buying a used car?" },
   { href: "/value-my-car", label: "Car valuation" },
   { href: "/mileage-check", label: "Mileage check" },
   { href: "/ulez-check", label: "ULEZ check" },
