@@ -469,8 +469,14 @@ export function getModelGuideData(makeSlug: string, modelSlug: string): ModelGui
   );
 
   // EV specs
+  // A model is only "an EV" when no combustion version of it exists. Before
+  // Oct 2026 any match in ev-specs.json made it one, so 27 mostly-petrol and
+  // diesel models (BMW X5 via the xDrive45e, Corsa, Kuga, Range Rover…) had
+  // fuel zeroed out of their running costs and lost their fuel-economy section.
+  // Their electric/plug-in variants are still in `evSpecs` for the page to show.
   const evSpecs = getAllEvVariants(make, model);
-  const isEv = evSpecs.length > 0;
+  const hasCombustionVariant = fuelVariants.some((v) => v.fuelType !== "ELECTRICITY");
+  const isEv = evSpecs.length > 0 && !hasCombustionVariant;
 
   // Segment classification
   const segment = classifyVehicleSegment({

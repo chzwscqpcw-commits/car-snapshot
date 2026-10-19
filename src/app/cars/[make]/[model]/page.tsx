@@ -227,6 +227,19 @@ function FaqSection({ items }: { items: FaqItem[] }) {
   );
 }
 
+/** EV-spec variant names arrive upper-case ("KUGA PHEV", "XC90 RECHARGE").
+ *  Words carrying a digit and known acronyms stay capitalised; the rest are
+ *  title-cased — "Kuga PHEV", "XC90 Recharge", "Range Rover EV450". */
+const VARIANT_ACRONYMS = new Set(["PHEV", "EV", "GT", "GTS", "AMG", "AWD", "RWD", "CLA", "GLA", "GLB", "GLC", "VZ"]);
+function variantName(raw: string): string {
+  return raw
+    .split(/\s+/)
+    .map((w) =>
+      /\d/.test(w) || VARIANT_ACRONYMS.has(w) ? w : w.charAt(0) + w.slice(1).toLowerCase(),
+    )
+    .join(" ");
+}
+
 const CHECK_TONE: Record<BuyingCheckTone, string> = {
   risk: "border-rose-700/40 bg-rose-950/20",
   warn: "border-amber-700/40 bg-amber-950/20",
@@ -662,11 +675,17 @@ export default async function ModelGuidePage({ params }: PageProps) {
           )}
 
           {/* ── EV specs ───────────────────────────────────────────────── */}
-          {data.isEv && data.evSpecs.length > 0 && (
+          {data.evSpecs.length > 0 && (
             <section>
               <h2 className="text-2xl font-bold text-slate-100 mb-4">
-                Electric specifications
+                {data.isEv ? "Electric specifications" : "Plug-in and electric versions"}
               </h2>
+              {!data.isEv && (
+                <p className="mb-4 text-sm text-slate-400">
+                  Most {data.displayModel}s run on petrol or diesel. Figures below are for the{" "}
+                  {variantName(data.evSpecs[0].model)}.
+                </p>
+              )}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                 <StatCard
                   label="Battery"
