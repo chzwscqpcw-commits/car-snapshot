@@ -15,6 +15,10 @@ import {
   trackEvent,
   getSessionRegCount,
   markCarVerticalClick,
+  EXPERIMENTS,
+  assignExperimentVariant,
+  trackExperimentImpression,
+  trackExperimentClick,
 } from "@/lib/tracking";
 import CarVerticalLogo from "@/components/CarVerticalLogo";
 import PartnerTrust from "@/components/PartnerTrust";
@@ -22,7 +26,7 @@ import PartnerTrust from "@/components/PartnerTrust";
 /** The shopping signal can't change while this card is on screen. */
 const NO_SUBSCRIBE = () => () => {};
 
-type Variant = "report" | "mileage" | "seller" | "anomaly";
+type Variant = "report" | "mileage" | "seller" | "seller-trust" | "anomaly";
 
 interface CarVerticalReportCTAProps {
   /** Vehicle reg, passed through for the affiliate link / clickref. */
@@ -160,6 +164,23 @@ const VARIANTS: Record<
     tone: "blue",
     toggle: true,
   },
+  /** Experiment arm of `seller` (seller_trust_copy_v1). Same audience, same
+   *  facts, different job: `seller` invites the owner to check their own car;
+   *  this one frames the report as something to HAND buyers — the "trust
+   *  signal" carVertical's affiliate manager said works for other partners'
+   *  seller traffic. Same copy discipline as `seller`: describes what the
+   *  report covers, never implies the owner's car has a problem. */
+  "seller-trust": {
+    Icon: BadgeCheck,
+    heading: "Selling? Have the history check ready for buyers",
+    value:
+      "Serious buyers check a car's history before they pay. Get the report first and you can hand it over at the viewing — finance, write-off and mileage records in one document — so the question is answered before it can slow the sale down.",
+    cta: "Get the report to show buyers",
+    open: "What's in the report",
+    close: "Hide details",
+    tone: "blue",
+    toggle: true,
+  },
   /** Attached to a detected rollback. Claims here deliberately reuse the wording
    *  already published in the `mileage` variant (National Mileage Register,
    *  European import records) rather than introducing new ones. */
@@ -206,6 +227,18 @@ export default function CarVerticalReportCTA({
 }: CarVerticalReportCTAProps) {
   const [expanded, setExpanded] = useState(false);
 
+  // seller_trust_copy_v1: the seller placements split visitors 50/50 between
+  // the current copy and the trust-signal copy. Assigned once per mount (lazy
+  // initialiser) so the copy can't change under the reader, and sticky across
+  // visits via localStorage. Never on the preview page. These placements only
+  // mount after a client-side lookup, so there is no server render to match.
+  const [arm] = useState<string | null>(() =>
+    variant === "seller" && !preview && typeof window !== "undefined"
+      ? assignExperimentVariant(EXPERIMENTS.SELLER_TRUST, ["control", "trust"])
+      : null,
+  );
+  const shownVariant: Variant = arm === "trust" ? "seller-trust" : variant;
+
   // Is this visitor comparison-shopping? sessionStorage is client-only, so the
   // server snapshot is `false` and the single-report price is what renders until
   // hydration — the safe copy either way. useSyncExternalStore rather than
@@ -226,6 +259,10 @@ export default function CarVerticalReportCTA({
    * 2.68% to 0.95%. Those 2+-plate visitors had been clicking at 4.1% on the
    * seller copy all September — the framing they were already responding to.
    * The shopper signal still picks the price line (pack pricing) below.
+   *
+   * Exception, deliberately random rather than inferred: the seller_trust_copy_v1
+   * A/B test (see `arm` above) swaps `seller` for `seller-trust` for half of
+   * visitors, so the two framings are compared on the same audience.
    */
   // Fire `partner_impression` once, when the card is 50% visible — the same
   // seen-not-just-mounted standard the experiment framework holds exposure to,
@@ -252,8 +289,9 @@ export default function CarVerticalReportCTA({
             trackEvent("partner_impression", {
               partner_id: "carVertical",
               click_context: context,
-              variant,
+              variant: shownVariant,
             });
+            if (arm) trackExperimentImpression(EXPERIMENTS.SELLER_TRUST, arm);
             obs.disconnect();
             break;
           }
@@ -263,12 +301,12 @@ export default function CarVerticalReportCTA({
     );
     obs.observe(node);
     return () => obs.disconnect();
-  }, [trackImpression, preview, context, variant]);
+  }, [trackImpression, preview, context, shownVariant, arm]);
 
   const partner = PARTNER_LINKS.carVertical;
   if (!preview && !isPartnerConfigured(partner)) return null;
 
-  const cfg = VARIANTS[variant];
+  const cfg = VARIANTS[shownVariant];
   const Icon = cfg.Icon;
   const tone = TONES[cfg.tone];
   // Routed through our own /go redirect so crawlers get a 204 instead of
@@ -279,7 +317,7 @@ export default function CarVerticalReportCTA({
   // already excluded from impressions above.
   const href = preview
     ? (partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url)
-    : goLink("carvertical", context, regNumber, variant);
+    : goLink("carvertical", context, regNumber, shownVariant);
 
   return (
     <div ref={cardRef} className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
@@ -350,6 +388,7 @@ export default function CarVerticalReportCTA({
             // it stays. The preview page never reaches /go, and deliberately
             // records nothing either way.
             markCarVerticalClick();
+            if (arm) trackExperimentClick(EXPERIMENTS.SELLER_TRUST, arm);
           }}
           className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors sm:w-auto ${tone.button}`}
         >
@@ -374,7 +413,7 @@ export default function CarVerticalReportCTA({
       {/* Seller reuses the report's comparison table unchanged — it's already
           coordinated copy (agreement 1.1), and "what's in the paid report" is
           the same answer whichever side of the sale you're on. */}
-      {expanded && (variant === "report" || variant === "seller") && (
+      {expanded && (shownVariant === "report" || shownVariant === "seller" || shownVariant === "seller-trust") && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           <div className="grid grid-cols-[1fr_3.5rem_6rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>
