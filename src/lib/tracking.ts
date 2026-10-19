@@ -131,10 +131,11 @@ export function trackPartnerClick(partnerId: string, context: string): void {
 // Currently none running. mobile_search_cue_v1 concluded — variant C (bold
 // block CTA) shipped as the permanent MobileSearchCue.
 export const EXPERIMENTS: Record<string, string> = {
-  // PDF download CTA copy test — control "Free report" vs "Get my report".
-  // Conversion = pdf_download (auto-attributed via trackEvent for exposed
-  // sessions). Note: at current traffic this needs weeks to reach significance.
-  PDF_CTA: "pdf_cta_copy_v1",
+  // pdf_cta_copy_v1 CONCLUDED 2026-10-19 — control "Free report" (A) beat
+  // "Get my report" (B): pdf_download per exposed session 8.54% vs 6.45%
+  // (n=4,354 exposures over 30 days, z=2.62). Both labels were desktop-only
+  // (mobile shows "PDF"), so the desktop gap was larger still. "Free report"
+  // kept as the permanent label. Historical events stay in Supabase.
   // Seller carVertical CTA copy, started 2026-10-19 on BOTH seller placements
   // (valuation-result-seller, money-seller). control = "Selling this car? See
   // what a buyer will find" (self-check); trust = "have the history check
