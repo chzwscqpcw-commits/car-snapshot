@@ -1,8 +1,8 @@
 {
   "generatedAt": "2026-10-19",
   "windowDays": 120,
-  "events": 94565,
-  "observations": 2617,
+  "events": 94584,
+  "observations": 2618,
   "rule": "median(ebayMedian / (deflator x curve x retention)) per family; >=4 obs over >=3 ages, >=3 listings each; applied only within minAge-2..maxAge+2",
   "families": {
     "ABARTH|595": {
@@ -132,8 +132,8 @@
       "maxAge": 19
     },
     "BMW|X5": {
-      "price": 79600,
-      "n": 12,
+      "price": 82350,
+      "n": 11,
       "minAge": 6,
       "maxAge": 23
     },
@@ -318,8 +318,8 @@
       "maxAge": 18
     },
     "JAGUAR|XJ": {
-      "price": 54500,
-      "n": 6,
+      "price": 56650,
+      "n": 7,
       "minAge": 14,
       "maxAge": 21
     },
@@ -546,7 +546,7 @@
       "maxAge": 20
     },
     "NISSAN|QASHQAI": {
-      "price": 22750,
+      "price": 24450,
       "n": 17,
       "minAge": 5,
       "maxAge": 19
