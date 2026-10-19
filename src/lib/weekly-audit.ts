@@ -68,6 +68,35 @@ function topN(map: Map<string, number>, n: number): [string, number][] {
   return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, n);
 }
 
+export interface PlacementStat {
+  context: string;
+  impressions: number;
+  clicks: number; // human clicks only — see isHumanClick
+}
+
+export interface ArmStat {
+  variant: string;
+  impressions: number;
+  clicks: number;
+}
+
+export interface CarVerticalAudit {
+  logged: number; // every carVertical partner_click row
+  human: number; // excluding /go clicks from IPs that never loaded a page
+  cookieless: number; // /go clicks that ran our JS but refused the visit cookie
+  placements: PlacementStat[];
+  sellerTest: { arms: ArmStat[]; z: number | null };
+}
+
+export interface BuyerJourneyAudit {
+  pageViews: number; // /check-before-you-buy page views
+  searchesBySource: [string, number][];
+  homeLinkClicks: number;
+  mismatches: number; // "doesn't match the advert" taps
+  cvImpressions: number;
+  cvClicks: number;
+}
+
 export interface WeeklyAuditData {
   windowStart: string; // ISO date (yyyy-mm-dd) of the 7-day window start
   windowEnd: string; // ISO date (today)
@@ -77,6 +106,37 @@ export interface WeeklyAuditData {
   regSearchSources: [string, number][];
   topPages: [string, number][];
   partnerPerResults: number | null; // partner_click / results_view, %
+  carVertical: CarVerticalAudit;
+  buyerJourney: BuyerJourneyAudit;
+}
+
+/** The two arms of seller_trust_copy_v1 and the placements it runs on. */
+const SELLER_TEST_CONTEXTS = new Set(["valuation-result-seller", "money-seller"]);
+const SELLER_TEST_ARMS = ["seller", "seller-trust"];
+/** When #166 went live. Before it every seller impression was "seller", so
+ *  counting them would hand the current copy a head start of a whole week. */
+const SELLER_TEST_START_MS = Date.parse("2026-10-19T20:30:00Z");
+const BUYER_CHECK_PATH = "/check-before-you-buy";
+
+/**
+ * A carVertical click a person made. In Sep–Oct 2026, 175 of 406 logged
+ * clicks came through /go from IPs that never fired a page_view — link
+ * followers, not readers. #158 stopped most at the door; this keeps the
+ * weekly number honest if any get through.
+ */
+function isHumanClick(r: EventRow, pageViewIps: Set<string>): boolean {
+  if (r.metadata?.via !== "go_redirect") return true; // fired by our own JS
+  return r.ip_hash != null && pageViewIps.has(r.ip_hash);
+}
+
+/** Two-proportion z-score; null when either arm is too small to say anything. */
+function twoProportionZ(a: ArmStat, b: ArmStat): number | null {
+  if (a.impressions < 100 || b.impressions < 100) return null;
+  const pa = a.clicks / a.impressions;
+  const pb = b.clicks / b.impressions;
+  const p = (a.clicks + b.clicks) / (a.impressions + b.impressions);
+  const se = Math.sqrt(p * (1 - p) * (1 / a.impressions + 1 / b.impressions));
+  return se > 0 ? (pb - pa) / se : null;
 }
 
 export async function buildWeeklyAuditData(
@@ -148,6 +208,55 @@ export async function buildWeeklyAuditData(
     );
   }
 
+  // ── carVertical + buyer journey (7d) ─────────────────────────────────────
+  const pageViewIps = new Set(pv.map((r) => r.ip_hash).filter((h): h is string => !!h));
+  const cvClicks = pc.filter((r) => r.metadata?.partner_id === "carVertical");
+  const cvHuman = cvClicks.filter((r) => isHumanClick(r, pageViewIps));
+  const imps = (await pullEvents(sb, "partner_impression", d7)).filter(
+    (r) => r.metadata?.partner_id === "carVertical",
+  );
+
+  const placementMap = new Map<string, PlacementStat>();
+  const placement = (ctx: string) => {
+    const existing = placementMap.get(ctx);
+    if (existing) return existing;
+    const created = { context: ctx, impressions: 0, clicks: 0 };
+    placementMap.set(ctx, created);
+    return created;
+  };
+  for (const r of imps) placement(metaStr(r.metadata, "click_context")).impressions++;
+  for (const r of cvHuman) placement(metaStr(r.metadata, "click_context")).clicks++;
+
+  const arms = new Map<string, ArmStat>(
+    SELLER_TEST_ARMS.map((v) => [v, { variant: v, impressions: 0, clicks: 0 }]),
+  );
+  const inTest = (r: EventRow) =>
+    Date.parse(r.created_at) >= SELLER_TEST_START_MS &&
+    SELLER_TEST_CONTEXTS.has(metaStr(r.metadata, "click_context"));
+  for (const r of imps) {
+    if (!inTest(r)) continue;
+    const arm = arms.get(metaStr(r.metadata, "variant"));
+    if (arm) arm.impressions++;
+  }
+  for (const r of cvHuman) {
+    if (!inTest(r)) continue;
+    const arm = arms.get(metaStr(r.metadata, "variant"));
+    if (arm) arm.clicks++;
+  }
+  const [control, trust] = SELLER_TEST_ARMS.map((v) => arms.get(v)!);
+
+  const buyerSources = new Map<string, number>();
+  for (const r of rs) {
+    if (metaStr(r.metadata, "target_path") !== BUYER_CHECK_PATH) continue;
+    const src = metaStr(r.metadata, "source");
+    buyerSources.set(src, (buyerSources.get(src) ?? 0) + 1);
+  }
+  const [homeLinkClicks, mismatches] = await Promise.all([
+    countEvents(sb, "buyer_check_link_click", d7),
+    countEvents(sb, "buyer_check_mismatch", d7),
+  ]);
+  const buyerBox = placementMap.get("buyer-check-carvertical");
+
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
     headlineCounts.find((h) => h.label === "Partner clicks")?.cur ?? 0;
@@ -161,6 +270,24 @@ export async function buildWeeklyAuditData(
     regSearchSources: topN(bySource, 8),
     topPages: topN(pathCur, 10),
     partnerPerResults: results > 0 ? (100 * partnerClicks) / results : null,
+    carVertical: {
+      logged: cvClicks.length,
+      human: cvHuman.length,
+      cookieless: cvClicks.filter((r) => r.metadata?.cookieless === true).length,
+      placements: [...placementMap.values()]
+        .filter((p) => p.impressions > 0 || p.clicks > 0)
+        .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions)
+        .slice(0, 10),
+      sellerTest: { arms: [control, trust], z: twoProportionZ(control, trust) },
+    },
+    buyerJourney: {
+      pageViews: pathCur.get(BUYER_CHECK_PATH) ?? 0,
+      searchesBySource: topN(buyerSources, 6),
+      homeLinkClicks,
+      mismatches,
+      cvImpressions: buyerBox?.impressions ?? 0,
+      cvClicks: buyerBox?.clicks ?? 0,
+    },
   };
 }
 
@@ -173,6 +300,73 @@ function pctChange(cur: number, prev: number): string {
   const arrow = d > 0 ? "▲" : "▼";
   const colour = d > 0 ? "#16a34a" : "#dc2626";
   return `<span style="color:${colour}">${arrow} ${Math.abs(d)}%</span>`;
+}
+
+const TD = "padding:6px 10px;border:1px solid #e2e8f0";
+const TDR = `${TD};text-align:right;font-variant-numeric:tabular-nums`;
+
+function ctr(clicks: number, impressions: number): string {
+  return impressions > 0 ? `${((100 * clicks) / impressions).toFixed(1)}%` : "—";
+}
+
+/** Plain-English read of the seller copy test, so the email says what it means. */
+function sellerTestVerdict(z: number | null, arms: ArmStat[]): string {
+  if (z === null) return "Too early — fewer than 100 impressions in an arm.";
+  const abs = Math.abs(z);
+  const leader = z > 0 ? "the trust copy" : "the current copy";
+  if (abs >= 1.96) return `<strong>${leader} is ahead, and the gap is unlikely to be chance (z=${z.toFixed(2)}).</strong> One week can mislead — check it holds for a second week before calling it.`;
+  if (abs >= 1.0) return `${leader} is ahead, but not yet clearly (z=${z.toFixed(2)}). Keep running.`;
+  const total = arms.reduce((n, a) => n + a.impressions, 0);
+  return `No real difference yet (z=${z.toFixed(2)}, ${total.toLocaleString("en-GB")} impressions). Keep running.`;
+}
+
+function renderCarVertical(cv: CarVerticalAudit, bj: BuyerJourneyAudit): string {
+  const placementRows =
+    cv.placements.length === 0
+      ? `<tr><td style="${TD};color:#94a3b8" colspan="4">none this week</td></tr>`
+      : cv.placements
+          .map(
+            (p) =>
+              `<tr><td style="${TD}"><code>${p.context}</code></td><td style="${TDR}">${p.impressions.toLocaleString("en-GB")}</td><td style="${TDR}">${p.clicks}</td><td style="${TDR}">${ctr(p.clicks, p.impressions)}</td></tr>`,
+          )
+          .join("");
+  const armRows = cv.sellerTest.arms
+    .map(
+      (a) =>
+        `<tr><td style="${TD}">${a.variant === "seller" ? "Current — “See what a buyer will find”" : "Trust — “Have the history check ready for buyers”"}</td><td style="${TDR}">${a.impressions.toLocaleString("en-GB")}</td><td style="${TDR}">${a.clicks}</td><td style="${TDR}">${ctr(a.clicks, a.impressions)}</td></tr>`,
+    )
+    .join("");
+  const head = (cols: string[]) =>
+    `<tr style="background:#f1f5f9">${cols.map((c, i) => `<th style="${TD};text-align:${i === 0 ? "left" : "right"}">${c}</th>`).join("")}</tr>`;
+
+  return `
+  <h3 style="margin:28px 0 6px;font-size:16px">carVertical</h3>
+  <p style="margin:0 0 10px;font-size:14px">
+    <strong>${cv.human}</strong> clicks from real visitors
+    <span style="color:#64748b">(${cv.logged} logged${cv.logged > cv.human ? `, ${cv.logged - cv.human} from IPs that never loaded a page` : ""}${cv.cookieless ? `, ${cv.cookieless} cookieless` : ""})</span>.
+    Paid per sale, not per click — sales by placement are only in carVertical's dashboard.
+  </p>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 18px">
+    ${head(["Placement", "Seen", "Clicks", "Rate"])}
+    ${placementRows}
+  </table>
+
+  <h3 style="margin:24px 0 6px;font-size:15px">Seller copy test <span style="color:#94a3b8;font-weight:400">(seller_trust_copy_v1, both seller boxes)</span></h3>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
+    ${head(["Version", "Seen", "Clicks", "Rate"])}
+    ${armRows}
+  </table>
+  <p style="margin:0 0 18px;font-size:13px;color:#334155">${sellerTestVerdict(cv.sellerTest.z, cv.sellerTest.arms)}</p>
+
+  <h3 style="margin:24px 0 6px;font-size:15px">Buyer's check <span style="color:#94a3b8;font-weight:400">(/check-before-you-buy)</span></h3>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
+    <tr><td style="${TD}">Page views</td><td style="${TDR}">${bj.pageViews.toLocaleString("en-GB")}</td></tr>
+    <tr><td style="${TD}">Homepage “Check it before you buy” clicks</td><td style="${TDR}">${bj.homeLinkClicks}</td></tr>
+    <tr><td style="${TD}">“Doesn't match the advert” taps</td><td style="${TDR}">${bj.mismatches}</td></tr>
+    <tr><td style="${TD}">carVertical box: seen / clicks / rate</td><td style="${TDR}">${bj.cvImpressions} / ${bj.cvClicks} / ${ctr(bj.cvClicks, bj.cvImpressions)}</td></tr>
+  </table>
+  <p style="margin:6px 0 4px;font-size:13px;color:#64748b">Reg searches into the buyer's check, by source:</p>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(bj.searchesBySource)}</table>`;
 }
 
 function rows(pairs: [string, number][]): string {
@@ -224,6 +418,8 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
 
   <h3 style="margin:24px 0 6px;font-size:15px">Top partner-click placements <span style="color:#94a3b8;font-weight:400">(watch the bridge tags: model-carvertical, blog-carvertical, blog-inline)</span></h3>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.partnerContexts)}</table>
+
+  ${renderCarVertical(d.carVertical, d.buyerJourney)}
 
   <h3 style="margin:24px 0 6px;font-size:15px">Reg searches by source</h3>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.regSearchSources)}</table>
