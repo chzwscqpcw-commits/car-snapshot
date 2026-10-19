@@ -2,8 +2,8 @@
 title: "The Complete Used Car Buying Guide (2026)"
 description: "A step-by-step guide to buying a used car in the UK — what to check before you travel, red flags in the listing, what to inspect in person, how to test drive properly, the paperwork that matters, and the ownership costs the advert never mentions."
 date: "2026-08-07"
-lastModified: "2026-08-07"
-keywords: ["used car buying guide", "buying a used car UK", "how to buy a used car", "used car buyer checklist", "checks before buying a used car", "second hand car buying guide"]
+lastModified: "2026-10-19"
+keywords: ["used car buying guide", "buying a used car UK", "how to buy a used car", "used car buyer checklist", "checks before buying a used car", "second hand car buying guide", "used car checks", "what to check before buying a car", "used car checklist", "second hand car checks"]
 author: "Free Plate Check"
 howToSteps:
   - name: "Set your real budget, not just the purchase price"
@@ -84,15 +84,15 @@ Before you contact anyone, read the advert like a sceptic:
 
 View it in daylight, in dry weather if you can, and at the seller's home address. Rain hides paint defects; darkness hides everything.
 
-**Bodywork.** Crouch at each corner and look down the length of the car. Panel gaps should be even and consistent side to side. Look for colour mismatch between panels, overspray on rubber seals or trim, and paint texture that changes from one panel to the next. Small dents and stone chips are normal wear. A repainted panel means something happened, and you want to know what.
+**Bodywork.** Crouch at each corner and look down the length of the car. Panel gaps should be even and consistent side to side. Look for colour mismatch between panels, overspray on rubber seals or trim, and paint texture that changes from one panel to the next. Small dents and stone chips are normal wear. A repainted panel means something happened, and you want to know what. Run a hand along the panels too — filler and ripples are often easier to feel than to see — and check for rust where it starts: wheel arches, sills, door bottoms and around the windscreen.
 
-**Tyres.** Check all four, and the spare. Tread must be at least 1.6mm across the central three-quarters, but the useful information is *how* they are worn. Wear on one edge only suggests tracking or suspension problems. Four mismatched budget brands on a premium car tells you how the previous owner economised. Two brand-new tyres on one axle can mean a fresh MOT pass — check the MOT record to see whether tyres were an advisory.
+**Tyres.** Check all four, and the spare. Tread must be at least 1.6mm across the central three-quarters, but the useful information is *how* they are worn. Wear on one edge only suggests tracking or suspension problems. Four mismatched budget brands on a premium car tells you how the previous owner economised. Two brand-new tyres on one axle can mean a fresh MOT pass — check the MOT record to see whether tyres were an advisory. Check their age as well as their tread: the four-digit date code on the sidewall (week and year, so "2319" is week 23 of 2019) tells you, and tyres over about five years old are due for replacement whatever the tread. Budget roughly £60–£100 a tyre if they are.
 
-**Under the bonnet.** You do not need to be a mechanic. Look for obvious oil leaks around the engine and on the ground beneath, check the oil on the dipstick is not black sludge or milky (milky suggests a head gasket problem), and check the coolant level and colour. A suspiciously spotless engine bay on an older car can mean a recent steam clean to hide a leak.
+**Under the bonnet.** You do not need to be a mechanic. Look for obvious oil leaks around the engine and on the ground beneath, check the oil on the dipstick is not black sludge or milky (milky suggests a head gasket problem), and check the coolant level and colour. Look at the battery terminals for corrosion and for a date sticker (batteries typically last four to five years), and at the belts and hoses for cracks or fraying. A suspiciously spotless engine bay on an older car can mean a recent steam clean to hide a leak.
 
 **Interior.** Check that wear matches the claimed mileage. A steering wheel worn shiny, a driver's seat bolster collapsed and shiny pedal rubbers on a car showing 40,000 miles do not belong together. Test every electrical item: windows, mirrors, air conditioning, heated seats, infotainment, all the lights.
 
-**Cold start.** Insist the engine is cold when you arrive — ask the seller not to warm it up. A cold start reveals rattles, smoke and starting problems that vanish once the engine is warm. Blue smoke suggests burning oil, white smoke that persists suggests coolant, and black smoke suggests a fuelling problem. A brief puff on a cold diesel is normal; a continuing cloud is not.
+**Cold start.** Insist the engine is cold when you arrive — ask the seller not to warm it up. A cold start reveals rattles, smoke and starting problems that vanish once the engine is warm. Blue smoke suggests burning oil, white smoke that persists suggests coolant, and black smoke suggests a fuelling problem. A brief puff on a cold diesel is normal; a continuing cloud is not. If the engine is already warm when you arrive, ask to come back another day.
 
 ## The test drive
 
@@ -129,7 +129,7 @@ The sensible approach is layered: a [free check](/car-check) on every car you co
 
 ## Consider a professional inspection
 
-For anything expensive, unfamiliar or bought at distance, a pre-purchase inspection by a qualified mechanic is the best money in the process. It covers what a history report cannot: the mechanical condition of the actual car. A report covers the paperwork; an inspection covers the metal. Between them there is very little left to surprise you.
+For anything expensive, unfamiliar or bought at distance, a pre-purchase inspection by a qualified mechanic is the best money in the process. It covers what a history report cannot: the mechanical condition of the actual car. A report covers the paperwork; an inspection covers the metal. Between them there is very little left to surprise you. Expect to pay around £100–£200, and treat a seller who won't allow an inspection as an answer in itself.
 
 ## Paying safely
 

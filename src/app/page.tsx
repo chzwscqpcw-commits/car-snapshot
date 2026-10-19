@@ -5684,9 +5684,9 @@ END:VEVENT
                   <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">How to Check if a Car Is Taxed</p>
                   <p className="text-xs text-slate-500 mt-1">Everything you need to know about vehicle tax status in the UK.</p>
                 </Link>
-                <Link href="/blog/used-car-checks-before-buying" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-                  <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
-                  <p className="text-xs text-slate-500 mt-1">A practical checklist to protect yourself when buying second-hand.</p>
+                <Link href="/blog/used-car-buying-guide" className="block p-3 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+                  <p className="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">The Complete Used Car Buying Guide</p>
+                  <p className="text-xs text-slate-500 mt-1">What to check before you travel, at the viewing, on the test drive and in the paperwork.</p>
                 </Link>
               </div>
             </div>

@@ -295,9 +295,9 @@ export default async function RecallCheckPage({
       <div className="max-w-3xl mx-auto px-4 mt-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/blog/used-car-checks-before-buying" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
-            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">10 Essential Checks Before Buying a Used Car</p>
-            <p className="text-xs text-slate-500 mt-2">A practical checklist — from MOT history to mileage red flags.</p>
+          <Link href="/blog/used-car-buying-guide" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">The Complete Used Car Buying Guide</p>
+            <p className="text-xs text-slate-500 mt-2">From MOT history and mileage red flags to the paperwork that matters.</p>
           </Link>
           <Link href="/blog/first-car-checklist-new-drivers" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">First Car Checklist for New Drivers</p>

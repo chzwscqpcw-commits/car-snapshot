@@ -189,7 +189,7 @@ export default function NotFound() {
             Or read a guide
           </h2>
           <div className="space-y-2">
-            <GuideRow href="/blog/used-car-checks-before-buying" title="10 essential checks before buying a used car" />
+            <GuideRow href="/blog/used-car-buying-guide" title="The complete used car buying guide" />
             <GuideRow href="/blog/what-does-mot-advisory-mean" title="What does an MOT advisory mean?" />
             <GuideRow href="/blog/how-to-check-if-a-car-is-taxed" title="How to check if a car is taxed" />
             <Link

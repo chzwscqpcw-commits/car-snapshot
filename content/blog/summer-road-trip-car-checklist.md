@@ -132,4 +132,4 @@ If anything on the checklist felt out of your depth — brakes that don't feel r
 
 Every item on this list takes minutes to check. The whole checklist can be completed in under an hour, and most of it requires no tools or specialist knowledge. Compare that to the hours you would lose sitting on the hard shoulder waiting for a recovery truck, and the investment is obvious.
 
-Run a [free vehicle check](/car-check) before you go, work through the list, and hit the road with confidence. If you are buying a car specifically for a trip, our guide on [essential checks before buying a used car](/blog/used-car-checks-before-buying) covers everything you need to know.
+Run a [free vehicle check](/car-check) before you go, work through the list, and hit the road with confidence. If you are buying a car specifically for a trip, our guide on [complete guide to buying a used car](/blog/used-car-buying-guide) covers everything you need to know.

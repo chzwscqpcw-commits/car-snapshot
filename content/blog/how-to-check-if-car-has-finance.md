@@ -90,6 +90,6 @@ If you discover you've bought a car with outstanding finance:
 
 ## The bottom line
 
-Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** — is the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
+Outstanding finance is one of the few risks that a free car check cannot fully cover — finance data sits in private databases, not government APIs. For any used car costing more than a few hundred pounds, a paid vehicle history report — such as a **[carVertical report](https://www.carvertical.deal/NCRBZ8/6JHXF/?source_id=AFF&sub1=freeplatecheck&sub2=blog)** — is the cheapest insurance you'll ever buy. For the full buying checklist, see our guide to [complete guide to buying a used car](/blog/used-car-buying-guide).
 
 Start with a [free car check](/car-check) to cover everything else — vehicle details, MOT history, tax status, mileage, ULEZ compliance, and recalls. Then add a paid finance check for complete peace of mind.
