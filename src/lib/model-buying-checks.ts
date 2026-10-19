@@ -22,7 +22,7 @@ export interface BuyingCheck {
 
 type Input = Pick<
   ModelGuideData,
-  "displayModel" | "motPassRate" | "theftRisk" | "recalls" | "rarity" | "isEv"
+  "displayModel" | "motPassRate" | "theftRisk" | "recalls" | "rarity" | "evSpecs"
 >;
 
 function listAnd(items: string[]): string {
@@ -78,12 +78,12 @@ export function buildModelBuyingChecks(d: Input): BuyingCheck[] {
     });
   }
 
-  if (d.isEv) {
+  // Any electric or plug-in variant, not just pure EVs — a used X5 xDrive45e
+  // or Kuga PHEV needs its battery checked as much as a Tesla does.
+  if (d.evSpecs.length > 0) {
     checks.push({
       id: "ev-battery",
       tone: "info",
-      // Worded for plug-in hybrids too: `isEv` is true whenever ev-specs.json
-      // holds ANY variant of the model, so the BMW X5 (xDrive45e) counts.
       title: "Electric or plug-in hybrid? Ask for a battery health report",
       detail:
         "The battery is a big part of the car's value. Ask for a state-of-health report, check the electric range the car actually shows when fully charged, and confirm the charging cable comes with it.",

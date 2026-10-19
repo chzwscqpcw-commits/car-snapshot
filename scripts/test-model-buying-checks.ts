@@ -20,14 +20,14 @@ const BASE = {
   theftRisk: null,
   recalls: [],
   rarity: null,
-  isEv: false,
+  evSpecs: [],
 } as Parameters<typeof buildModelBuyingChecks>[0];
 const ids = (over: Partial<typeof BASE>) => buildModelBuyingChecks({ ...BASE, ...over }).map((c) => c.id);
 
 console.log("\nHand-built inputs:");
 check("bare model still gets the hidden-history check", ids({}).join(","), "hidden-history");
 check("hidden-history is always last",
-  ids({ isEv: true, recalls: [{} as never] }).at(-1), "hidden-history");
+  ids({ evSpecs: [{} as never], recalls: [{} as never] }).at(-1), "hidden-history");
 check("failure areas listed with 'and'",
   buildModelBuyingChecks({ ...BASE, motPassRate: {
     passRate: 70, testCount: 1000, aboveAverage: false, nationalAverage: 71.5,
@@ -43,7 +43,7 @@ check("high theft risk is flagged",
   ids({ theftRisk: { riskCategory: "high", theftsPer1000: 4, rateMultiplier: 2.6 } as never }).includes("theft"), true);
 check("common model gets no rarity note",
   ids({ rarity: { licensed: 50000, sorn: 1000, total: 51000, category: "common" } }).includes("rarity"), false);
-check("EV gets the battery check", ids({ isEv: true }).includes("ev-battery"), true);
+check("EV or plug-in gets the battery check", ids({ evSpecs: [{} as never] }).includes("ev-battery"), true);
 
 console.log("\nEvery registry model:");
 let pages = 0, withAreas = 0, empty = 0, badText = 0;
@@ -62,6 +62,20 @@ check("no page renders an empty section", empty, 0);
 check("no 'undefined'/'NaN'/'null' in any copy, buying FAQ leads", badText, 0);
 check("most pages have DVSA failure areas (>=90)", withAreas >= 90, true);
 console.log(`  (${pages} pages, ${withAreas} with failure areas)`);
+
+console.log("\nEV classification (regression: 27 mixed-fuel models were 'EVs'):");
+const x5 = getModelGuideData("bmw", "x5")!;
+check("BMW X5 is not an EV", x5.isEv, false);
+check("BMW X5 keeps its plug-in variant", x5.evSpecs.length > 0, true);
+check("BMW X5 still gets the battery check",
+  buildModelBuyingChecks(x5).some((c) => c.id === "ev-battery"), true);
+check("Tesla Model 3 is an EV", getModelGuideData("tesla", "model-3")!.isEv, true);
+let mixedAsEv = 0;
+for (const m of MODEL_REGISTRY) {
+  const d = getModelGuideData(m.makeSlug, m.modelSlug);
+  if (d?.isEv && d.fuelVariants.some((v) => v.fuelType !== "ELECTRICITY")) mixedAsEv++;
+}
+check("no model with a petrol/diesel version is classed as an EV", mixedAsEv, 0);
 
 if (failures > 0) {
   console.error(`\n${failures} model-buying-check(s) failed`);
