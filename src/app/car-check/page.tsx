@@ -283,7 +283,7 @@ export default function CarCheckPage() {
               <li><strong className="text-slate-100">Mileage history</strong> — steady increases across MOTs are healthy. Drops or unexplained jumps are red flags.</li>
             </ul>
             <p className="leading-relaxed">
-              For the full pre-purchase checklist see our <Link href="/blog/used-car-checks-before-buying" className="text-blue-400 hover:text-blue-300">buying guide</Link>.
+              For the full pre-purchase checklist see our <Link href="/blog/used-car-buying-guide" className="text-blue-400 hover:text-blue-300">buying guide</Link>.
             </p>
           </section>
 

@@ -46,6 +46,15 @@ const nextConfig: NextConfig = {
     // chasing the same intent as each other and splitting the ranking signal
     // between them; the pillar absorbs all three. 301 because the old URLs are
     // never coming back and we want Google to pass their equity to the pillar.
+    // Absorbed into the pillar 2026-10-19: the same "what to check" intent,
+    // competing with it for the same queries. Its unique details (tyre age,
+    // rust spots, battery/belts, inspection cost) moved into the pillar's
+    // inspection section; the whole-guide intent lands on the top.
+    {
+      source: "/blog/used-car-checks-before-buying",
+      destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide`,
+      permanent: true,
+    },
     {
       source: "/blog/how-to-check-car-before-buying-online",
       destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide`,

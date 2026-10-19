@@ -106,7 +106,7 @@ No vehicle history check — free or paid — can tell you about:
 - **How the car was driven** — Hard driving, track use, or neglectful ownership
 - **Future reliability** — Past history is a guide, not a guarantee
 
-For these, you need a physical inspection. Consider an independent vehicle inspection (around £100–£200) for any significant purchase. Our [complete used car buying checklist](/blog/used-car-checks-before-buying) covers everything to verify before handing over money.
+For these, you need a physical inspection. Consider an independent vehicle inspection (around £100–£200) for any significant purchase. Our [complete used car buying guide](/blog/used-car-buying-guide) covers everything to verify before handing over money.
 
 ## The bottom line
 

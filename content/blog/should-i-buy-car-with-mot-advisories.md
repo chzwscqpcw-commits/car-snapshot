@@ -92,4 +92,4 @@ MOT advisories aren't inherently bad. Every older car accumulates them, and a fe
 
 Before you view any used car, [check its MOT history for free](/mot-check) and read through the advisories carefully. A few minutes of research can save you from an expensive mistake — or give you the confidence to negotiate a better deal.
 
-If you're in the process of buying, our complete [used car checks guide](/blog/used-car-checks-before-buying) covers everything else you should verify before handing over any money.
+If you're in the process of buying, our complete [used car checks guide](/blog/used-car-buying-guide) covers everything else you should verify before handing over any money.

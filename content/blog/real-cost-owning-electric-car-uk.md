@@ -99,7 +99,7 @@ If you cannot charge at home and rely on public rapid chargers, the break-even p
 
 ## What to check before buying a used EV
 
-The used EV market is growing rapidly, and there are genuine bargains to be found. But there are specific things to verify beyond the usual [used car checks](/blog/used-car-checks-before-buying):
+The used EV market is growing rapidly, and there are genuine bargains to be found. But there are specific things to verify beyond the usual [used car checks](/blog/used-car-buying-guide):
 
 - **Battery health:** Ask for the battery health report if available. Degradation below 80% significantly affects range and value.
 - **Charging history:** Frequent rapid charging accelerates battery degradation. A car primarily home-charged is preferable.

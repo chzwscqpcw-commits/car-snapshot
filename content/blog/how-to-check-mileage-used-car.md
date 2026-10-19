@@ -92,4 +92,4 @@ If you're curious what a vehicle is worth given its actual mileage, our [free ca
 
 Checking mileage takes less than a minute and it's one of the most important things you can do before buying a used car. The [mileage history](/mileage-check) from MOT records gives you an independent, tamper-proof timeline of the vehicle's odometer readings over its entire life.
 
-If the numbers add up, you can buy with confidence. If they don't, you've just saved yourself from a potentially very expensive mistake. For the complete buying checklist, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
+If the numbers add up, you can buy with confidence. If they don't, you've just saved yourself from a potentially very expensive mistake. For the complete buying checklist, see our guide to [complete guide to buying a used car](/blog/used-car-buying-guide).

@@ -28,7 +28,7 @@ Start here on every car, because it costs nothing and takes seconds. A [free car
 - **[Tax status](/tax-check)** and whether the car is [ULEZ compliant](/ulez-check)
 - **[Outstanding recalls](/recall-check)** and the basic vehicle details — make, model, engine, colour, fuel
 
-That's a genuinely powerful first screen. If the MOT history is patchy, the mileage jumps around, or the details don't match the advert, you can walk away before spending a penny. For a full walkthrough, see our guide to [essential checks before buying a used car](/blog/used-car-checks-before-buying).
+That's a genuinely powerful first screen. If the MOT history is patchy, the mileage jumps around, or the details don't match the advert, you can walk away before spending a penny. For a full walkthrough, see our guide to [complete guide to buying a used car](/blog/used-car-buying-guide).
 
 But a free check can only show what's in the public record. It cannot see inside the private finance, insurance and police databases — and that's where the most expensive surprises hide.
 
