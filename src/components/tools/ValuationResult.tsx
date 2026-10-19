@@ -132,8 +132,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
 
   const depEstimate = useMemo(() => {
     if (newPrice === null || age === null) return null;
-    return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model);
-  }, [newPrice, age, vehicle.make, vehicle.model]);
+    return calculateDepreciationBaseline(newPrice, age, vehicle.make, vehicle.model, vehicle.fuelType);
+  }, [newPrice, age, vehicle.make, vehicle.model, vehicle.fuelType]);
 
   // The server returns market COMPARABLES (eBay/MarketCheck/cache), which depend
   // on make/model/year — NOT on the user's mileage. So the fetch is keyed on

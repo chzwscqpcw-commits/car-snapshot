@@ -1120,7 +1120,7 @@ export default function Home() {
     }
     const latestMileage = latestRecordedMileage(data.motTests);
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
-    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model);
+    const depEst = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, data.fuelType);
 
     const params = new URLSearchParams({
       make: data.make,
@@ -1557,7 +1557,7 @@ export default function Home() {
     // local baseline can't disagree with the figure it sent to the API.
     const latestMileage = latestRecordedMileage(data.motTests);
 
-    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model);
+    const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, data.fuelType);
     return { newPrice, vehicleAge, latestMileage, depBaseline };
   }, [data, lookupModel]);
 

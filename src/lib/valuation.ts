@@ -1,6 +1,8 @@
 // Vehicle valuation estimator — depreciation model + market data combination
 
 import priceIndexData from "@/data/new-car-price-index.json";
+import calibrationData from "@/data/model-price-calibration.json";
+import { modelFamily } from "@/lib/model-family";
 
 export type ValuationConfidence = "high" | "medium" | "low" | "estimate-only";
 
@@ -567,11 +569,51 @@ export function getListPriceDeflator(vehicleAge: number): number {
  * which is where it always belonged, since neither market query filters on
  * mileage and the comparables therefore describe average-mileage cars.
  */
+// ── Market-calibrated effective price ──────────────────────────────────────
+
+type Calibration = { price: number; n: number; minAge: number; maxAge: number };
+const CALIBRATION = calibrationData.families as Record<string, Calibration>;
+/** Years either side of the observed ages a family's price may stretch to. */
+const CALIBRATION_AGE_MARGIN = 2;
+
+/**
+ * The market-calibrated effective price for this car's model family, or null
+ * when there isn't one to trust. Built by scripts/calibrate-model-prices.ts
+ * from eBay comparables in our own valuation telemetry; see that script for
+ * the evidence (per-car error 39% -> 25% on held-out cars, Oct 2026).
+ *
+ * It replaces the scraped list price as the depreciation START POINT only.
+ * It is not a list price — never show it as "new from £X".
+ *
+ * Skipped for electric cars: families are dominated by their combustion
+ * versions, and pricing an EV off its petrol namesake is the Sept 2026
+ * mispricing in reverse (electric Corsa at £8,575). And skipped outside the
+ * ages the family was observed at, so a classic-era price can't value a new
+ * generation.
+ */
+export function lookupCalibratedPrice(
+  make: string | undefined,
+  model: string | undefined,
+  vehicleAge: number,
+  fuelType?: string | null,
+): number | null {
+  if (!make || !model) return null;
+  if (normalizeStr(fuelType ?? "").startsWith("ELECTRIC")) return null;
+  const fam = modelFamily(make, model);
+  const c = fam ? CALIBRATION[fam] : undefined;
+  if (!c) return null;
+  if (vehicleAge < c.minAge - CALIBRATION_AGE_MARGIN) return null;
+  if (vehicleAge > c.maxAge + CALIBRATION_AGE_MARGIN) return null;
+  return c.price;
+}
+
 export function calculateDepreciationBaseline(
   newPrice: number,
   vehicleAge: number,
   make: string | undefined,
   model: string | undefined,
+  /** DVLA fuel type. Electric cars never use the market calibration. */
+  fuelType?: string | null,
 ): number {
   // Ages are whole calendar years, so "age 0" is a car registered this year —
   // anything from new to ~11 months old — not a car on the forecourt. At 1.0
@@ -590,7 +632,10 @@ export function calculateDepreciationBaseline(
   // Deflate today's list price back to what the car cost when it was new,
   // THEN depreciate. The two are orthogonal: the deflator corrects the
   // starting point, the curve models value lost since.
-  const listPriceWhenNew = newPrice * getListPriceDeflator(vehicleAge);
+  // Start from the market-calibrated price where the model family has one;
+  // the scraped list price is missing or wrong for a third of valuations.
+  const startPrice = lookupCalibratedPrice(make, model, vehicleAge, fuelType) ?? newPrice;
+  const listPriceWhenNew = startPrice * getListPriceDeflator(vehicleAge);
   const baseValue = listPriceWhenNew * depMult * retMult;
 
   return Math.max(roundTo50(baseValue), 250);
