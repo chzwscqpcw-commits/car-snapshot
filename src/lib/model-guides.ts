@@ -20,6 +20,7 @@ import newPricesData from "@/data/new-prices.json";
 import fuelEconomyData from "@/data/fuel-economy.json";
 import recallsData from "@/data/recalls.json";
 import evSpecsData from "@/data/ev-specs.json";
+import { buyingChecksFaqAnswer } from "@/lib/model-buying-checks";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -600,6 +601,13 @@ function generateNarrative(d: ModelGuideData): string[] {
 function generateFAQ(d: ModelGuideData): FaqItem[] {
   const faq: FaqItem[] = [];
   const { displayName, displayModel } = d;
+
+  // Leads the FAQ: it's the question a used-car buyer actually types, and the
+  // page's buyer section answers it from this model's own data.
+  faq.push({
+    question: `What should I check when buying a used ${displayName}?`,
+    answer: buyingChecksFaqAnswer(d),
+  });
 
   // Reliability
   if (d.motPassRate) {

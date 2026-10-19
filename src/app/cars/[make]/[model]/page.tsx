@@ -6,6 +6,7 @@ import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import theftStats from "@/data/theft-stats.json";
+import { buildModelBuyingChecks, type BuyingCheckTone } from "@/lib/model-buying-checks";
 import {
   MODEL_REGISTRY,
   findModelEntry,
@@ -37,7 +38,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const data = getModelGuideData(make, model);
   if (!data) return {};
 
-  const title = `${data.displayName} — Depreciation, Reliability & Running Costs | Free Plate Check`;
+  // Led with "Used" since Oct 2026: these pages are read by people shopping
+  // for a used example (the reg widgets here convert ~0 — readers have no plate
+  // yet), and "used {model} problems / what to check" is what they search.
+  // Reliability stays in the title; depreciation and running costs stay in the
+  // description and body.
+  const title = `Used ${data.displayName}: MOT Problems, Reliability & What to Check | Free Plate Check`;
 
   // Build a compelling, data-rich description (target 120-160 chars)
   const highlights: string[] = [];
@@ -94,6 +100,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: description.replace(/\s+/g, " ").trim(),
     keywords: [
+      `used ${data.displayName}`,
+      `buying a used ${data.displayName}`,
+      `used ${data.displayName} problems`,
+      `what to check when buying a used ${data.displayName}`,
+      `${data.displayName} MOT failures`,
       `${data.displayName} review`,
       `${data.displayName} reliability`,
       `${data.displayName} MOT pass rate`,
@@ -216,6 +227,12 @@ function FaqSection({ items }: { items: FaqItem[] }) {
   );
 }
 
+const CHECK_TONE: Record<BuyingCheckTone, string> = {
+  risk: "border-rose-700/40 bg-rose-950/20",
+  warn: "border-amber-700/40 bg-amber-950/20",
+  info: "border-slate-700/40 bg-slate-900/60",
+};
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ModelGuidePage({ params }: PageProps) {
@@ -251,6 +268,8 @@ export default async function ModelGuidePage({ params }: PageProps) {
           })),
         }
       : null;
+
+  const buyingChecks = buildModelBuyingChecks(data);
 
   const passRateTone: "good" | "warn" | "risk" | "info" = data.motPassRate
     ? data.motPassRate.aboveAverage
@@ -289,10 +308,11 @@ export default async function ModelGuidePage({ params }: PageProps) {
             <span className="text-slate-300">{data.displayModel}</span>
           </div>
           <h1 className="text-3xl font-bold text-slate-100">
-            {data.displayName} — Buyer&apos;s Guide
+            Buying a Used {data.displayName}
           </h1>
           <p className="text-sm text-slate-400 mt-2">
-            Reliability, safety, running costs and what to check before you buy.
+            Where it fails its MOT, theft risk, recalls and what to check before you buy — from
+            DVSA and DVLA data.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <a
@@ -315,10 +335,14 @@ export default async function ModelGuidePage({ params }: PageProps) {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* ── CTA ──────────────────────────────────────────────────────── */}
+        {/* Routed to the buyer check: a model-page reader with a reg is
+            almost always looking at an advert, not their own car. */}
         <ConversionWidget
-          headline={`Check a specific ${data.displayName}`}
-          subtext={`Enter a registration number to see MOT history, tax status, mileage, recalls and more for any ${data.displayName}.`}
+          headline={`Looking at a used ${data.displayName}?`}
+          subtext={`Enter the reg from the advert for a free buyer's check: does it match DVLA's record, its MOT and mileage red flags, and what free data can't show.`}
           reminderHeadline={`Own a ${data.displayName}? Never miss your MOT`}
+          targetPath="/check-before-you-buy"
+          sourceTag="model-buyer-check-top"
         />
 
         <div className="space-y-10 text-slate-300">
@@ -375,6 +399,27 @@ export default async function ModelGuidePage({ params }: PageProps) {
               />
             )}
           </div>
+
+          {/* ── Buying a used one ──────────────────────────────────────── */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">
+              Buying a used {data.displayModel}: what to check
+            </h2>
+            <ul className="space-y-3">
+              {buyingChecks.map((c) => (
+                <li key={c.id} className={`rounded-lg border p-4 ${CHECK_TONE[c.tone]}`}>
+                  <p className="font-semibold text-slate-100">{c.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-300">{c.detail}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-sm">
+              Found one?{" "}
+              <Link href="/check-before-you-buy" className="font-semibold text-cyan-300 hover:text-cyan-200">
+                Run the free buyer&apos;s check on the advert&apos;s reg →
+              </Link>
+            </p>
+          </section>
 
           {/* ── Safety ─────────────────────────────────────────────────── */}
           {data.ncap && (
