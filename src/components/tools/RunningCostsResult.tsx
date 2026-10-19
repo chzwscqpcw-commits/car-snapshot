@@ -28,7 +28,7 @@ import {
   type OwnershipCostResult,
   type VehicleSegment,
 } from "@/lib/ownership-cost";
-import { lookupNewPrice } from "@/lib/valuation";
+import { lookupNewPrice, isValuationSupported } from "@/lib/valuation";
 import { lookupBodyType } from "@/lib/body-type";
 import newPricesData from "@/data/new-prices.json";
 import type { FuelEconomyResult } from "@/lib/fuel-economy";
@@ -56,6 +56,14 @@ const NEW_PRICES = newPricesData as Array<{
   model: string;
   newPrice: number;
 }>;
+
+/** New price for the depreciation line — null for motorbikes, which we don't
+ *  value (isValuationSupported), so the line reads "Not available" instead of
+ *  a car-curve guess. */
+function depreciationNewPrice(vehicle: LookupVehicle): number | null {
+  if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval })) return null;
+  return lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
+}
 
 const UK_AVG_MILES_PER_YEAR = 7400; // DfT 2025
 
@@ -154,7 +162,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     if (!vehicle.yearOfManufacture) return null;
     const vehicleAge = new Date().getFullYear() - vehicle.yearOfManufacture;
     const isOver3Years = vehicleAge > 3;
-    const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
+    const newPrice = depreciationNewPrice(vehicle);
     return calculateOwnershipCost({
       vedAnnualRate: ved.estimatedAnnualRate,
       fuelAnnualCost: scaledFuelCost,
@@ -1004,7 +1012,7 @@ function CostForecastCard({
   const HORIZON = 5;
   const thisYear = new Date().getFullYear();
   const currentAge = thisYear - vehicle.yearOfManufacture;
-  const newPrice = lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
+  const newPrice = depreciationNewPrice(vehicle);
 
   const rows = Array.from({ length: HORIZON }, (_, i) => {
     const offset = i + 1; // next year, 2 years out, etc.

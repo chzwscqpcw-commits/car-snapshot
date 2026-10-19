@@ -39,6 +39,7 @@ import {
   latestRecordedMileage,
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
+  isValuationSupported,
 } from "@/lib/valuation";
 import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
@@ -77,12 +78,31 @@ const NEW_PRICES = newPricesData as Array<{
 
 export default function ValuationResult({ vrm, previewVehicle }: ValuationResultProps) {
   const state = useVehicleLookup(previewVehicle ? "" : vrm);
-  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
-  if (state.kind === "loading")
+  const vehicle = previewVehicle ?? (state.kind === "ok" ? state.vehicle : null);
+  if (!vehicle) {
+    if (state.kind === "error")
+      return <LookupError vrm={vrm} message={state.message} backHref="/value-my-car" />;
     return <LookupSkeleton vrm={vrm} hint="Running the valuation model…" />;
-  if (state.kind === "error")
-    return <LookupError vrm={vrm} message={state.message} backHref="/value-my-car" />;
-  return <Loaded vrm={vrm} vehicle={state.vehicle} />;
+  }
+  if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval }))
+    return <NotValued vrm={vrm} vehicle={vehicle} />;
+  return <Loaded vrm={vrm} vehicle={vehicle} />;
+}
+
+/** Motorbikes: no estimate rather than a car-curve guess (see isValuationSupported). */
+function NotValued({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+  return (
+    <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="valuation">
+      <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-white">We don&apos;t value motorbikes</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-400">
+          Our valuation model is built on car prices, and bikes hold their value very differently
+          — we&apos;d rather show you nothing than a figure we know could be badly wrong. The MOT
+          history, mileage and tax checks below all work for bikes.
+        </p>
+      </section>
+    </ToolResultLayout>
+  );
 }
 
 function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {

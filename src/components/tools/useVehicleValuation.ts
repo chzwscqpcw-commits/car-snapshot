@@ -11,6 +11,7 @@ import {
   latestRecordedMileage,
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
+  isValuationSupported,
 } from "@/lib/valuation";
 import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
@@ -45,6 +46,8 @@ interface ValuationVehicle {
   yearOfManufacture?: number;
   fuelType?: string;
   engineCapacity?: number;
+  wheelplan?: string;
+  typeApproval?: string;
   colour?: string;
   motTests?: Array<{
     completedDate?: string;
@@ -79,10 +82,12 @@ export function useVehicleValuation(
   // matching the full report so the same car finds the same new price.
   const newPrice = useMemo(() => {
     if (!vehicle.make || !vehicle.model) return null;
+    // No new price → no estimate, the existing "can't value" path.
+    if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval })) return null;
     const parsed = parseModel(vehicle.model, vehicle.make);
     const lookupModel = expandBaseModelForLookup(vehicle.make, parsed);
     return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model, vehicle.fuelType);
-  }, [vehicle.make, vehicle.model, vehicle.fuelType]);
+  }, [vehicle.make, vehicle.model, vehicle.fuelType, vehicle.wheelplan, vehicle.typeApproval]);
 
   const age = useMemo(
     () =>

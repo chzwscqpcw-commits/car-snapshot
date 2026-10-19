@@ -569,6 +569,24 @@ export function getListPriceDeflator(vehicleAge: number): number {
  * which is where it always belonged, since neither market query filters on
  * mileage and the comparables therefore describe average-mileage cars.
  */
+// ── What we don't value ────────────────────────────────────────────────────
+
+/**
+ * Can this vehicle be valued at all? Motorbikes (DVLA wheelplan "2 WHEEL", or
+ * type approval L1–L5: two- and three-wheelers) can't: new-prices.json holds
+ * no bikes, so they started from the £18,000 default and ran down the CAR
+ * depreciation curve. A 2014 Ducati 1199 came out at £2,750–£4,500 against a
+ * real market several times that. Founder decision 2026-10-19: no estimate
+ * beats a wrong one. L6/L7 quadricycles (Twizy, Ami) are cars for this purpose.
+ */
+export function isValuationSupported(v: { wheelplan?: unknown; typeApproval?: unknown }): boolean {
+  const wheelplan = typeof v.wheelplan === "string" ? v.wheelplan.toUpperCase() : "";
+  const approval = typeof v.typeApproval === "string" ? v.typeApproval.toUpperCase() : "";
+  if (wheelplan.includes("2 WHEEL")) return false;
+  if (/^L[1-5]/.test(approval)) return false;
+  return true;
+}
+
 // ── Market-calibrated effective price ──────────────────────────────────────
 
 type Calibration = { price: number; n: number; minAge: number; maxAge: number };
