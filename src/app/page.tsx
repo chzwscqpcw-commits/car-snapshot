@@ -206,6 +206,7 @@ import {
   combineValuationLayers,
   latestRecordedMileage,
   odometerMiles,
+  isValuationSupported,
   type ValuationResult,
   type ConditionInputs,
 } from "@/lib/valuation";
@@ -1114,7 +1115,7 @@ export default function Home() {
       return;
     }
     const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
-    if (!newPrice) {
+    if (!newPrice || !isValuationSupported(data)) {
       setValuationServerData(null);
       return;
     }
@@ -1549,7 +1550,8 @@ export default function Home() {
     if (!data?.make || !data?.model || !data?.yearOfManufacture) return null;
 
     const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
-    if (!newPrice) return null;
+    // Motorbikes get no estimate rather than a car-curve guess.
+    if (!newPrice || !isValuationSupported(data)) return null;
 
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
     // Same shared helper as the /api/valuation call above and the standalone
@@ -1663,7 +1665,11 @@ export default function Home() {
     const vehicleAge = new Date().getFullYear() - data.yearOfManufacture;
     const vedAnnual = vedResult?.estimatedAnnualRate ?? null;
     const annualFuelCost = liveAnnualCost ?? fuelEconomy?.estimatedAnnualCost ?? null;
-    const newPrice = lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType);
+    // No new price for motorbikes → the depreciation line reads "not
+    // available" rather than a car-curve guess (isValuationSupported).
+    const newPrice = isValuationSupported(data)
+      ? lookupNewPrice(newPricesData, data.make, lookupModel || data.model, data.fuelType)
+      : null;
     return calculateOwnershipCost({
       vedAnnualRate: vedAnnual,
       fuelAnnualCost: annualFuelCost,

@@ -18,6 +18,7 @@ import {
   calculateDepreciationBaseline,
   combineValuationLayers,
   getDepreciationMultiplier,
+  isValuationSupported,
   expectedTotalMiles,
   getListPriceDeflator,
   getMileageAdjustment,
@@ -184,6 +185,15 @@ const thisYear = calculateDepreciationBaseline(31145, 0, "NISSAN", "QASHQAI");
 const lastYear = calculateDepreciationBaseline(31145, 1, "NISSAN", "QASHQAI");
 check("a current-year car is valued below list", thisYear < 31145 * 0.9, true);
 check("but above a year-older car", thisYear > lastYear, true);
+
+console.log("\nWhat we don't value:");
+// Motorbikes ran down the CAR curve from the £18,000 default — a 2014 Ducati
+// 1199 at £2,750. No estimate beats a wrong one (founder, 2026-10-19).
+check("a 2-wheel bike is not valued", isValuationSupported({ wheelplan: "2 WHEEL", typeApproval: "L3" }), false);
+check("an L3 bike with no wheelplan is not valued", isValuationSupported({ typeApproval: "L3E" }), false);
+check("a car is valued", isValuationSupported({ wheelplan: "2 AXLE RIGID BODY", typeApproval: "M1" }), true);
+check("a quadricycle (L6) is treated as a car", isValuationSupported({ typeApproval: "L6E" }), true);
+check("missing fields default to valued", isValuationSupported({}), true);
 
 console.log("\nSalvage blocklist — must catch non-runners:");
 // Replaces depFloor, which discarded any listing below 35% of our own
