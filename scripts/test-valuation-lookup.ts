@@ -17,6 +17,7 @@ import NEW_PRICES from "../src/data/new-prices.json";
 import {
   calculateDepreciationBaseline,
   combineValuationLayers,
+  getDepreciationMultiplier,
   expectedTotalMiles,
   getListPriceDeflator,
   getMileageAdjustment,
@@ -157,6 +158,32 @@ console.log("\nDepreciation baseline no longer double-counts mileage:");
 check("baseline is mileage-free",
   calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"),
   calculateDepreciationBaseline(20000, 8, "FORD", "FIESTA"));
+
+console.log("\nDepreciation curve — calibrated to market (Oct 2026):");
+// The hand-set curve ran a median 1.57x above eBay market prices (847
+// make/model/years, Aug-Oct 2026), ~1.9x at 14-19 years, and for the 58% of
+// valuations with no market comparables it IS the answer. These bands are the
+// refit's retained share of list price, with room either side; if a change
+// moves outside them, refit from valuation_result events rather than
+// loosening the bounds.
+const keeps = (age: number) => Math.round(getDepreciationMultiplier(age) * 100);
+const between = (label: string, v: number, lo: number, hi: number) =>
+  check(`${label} (${v}%)`, v >= lo && v <= hi, true);
+between("3 years keeps 35-45% of list", keeps(3), 35, 45);
+between("7 years keeps 26-34%", keeps(7), 26, 34);
+between("10 years keeps 19-27%", keeps(10), 19, 27);
+between("15 years keeps 11-17% (was 27%)", keeps(15), 11, 17);
+between("20 years keeps 8-13%", keeps(20), 8, 13);
+let monotonic = true;
+for (let a = 1; a <= 40; a++) if (getDepreciationMultiplier(a) > getDepreciationMultiplier(a - 1)) monotonic = false;
+check("value never rises with age", monotonic, true);
+check("floor holds for very old cars", getDepreciationMultiplier(60) >= 0.08, true);
+// Age 0 = registered this calendar year. It was valued at full list price,
+// so uplifts pushed a 2026 Qashqai above its new price.
+const thisYear = calculateDepreciationBaseline(31145, 0, "NISSAN", "QASHQAI");
+const lastYear = calculateDepreciationBaseline(31145, 1, "NISSAN", "QASHQAI");
+check("a current-year car is valued below list", thisYear < 31145 * 0.9, true);
+check("but above a year-older car", thisYear > lastYear, true);
 
 console.log("\nSalvage blocklist — must catch non-runners:");
 // Replaces depFloor, which discarded any listing below 35% of our own

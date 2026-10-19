@@ -275,18 +275,50 @@ export function isSalvageListing(title: string): boolean {
 
 // ── Depreciation curve ──────────────────────────────────────────────────────
 
+/**
+ * Share of its (deflated) list price a car of this age is worth, before make
+ * retention and mileage.
+ *
+ * Refitted 2026-10-19 against live market data. The previous schedule
+ * (25/15/12/10/8/7/6% then 5% a year forever) was hand-set and ran well above
+ * the market at every age: across 847 make/model/years with 5+ eBay listings
+ * (Aug–Oct 2026, asking prices already discounted 4% to transaction), the
+ * depreciation estimate was a median 1.57× the market, rising to ~1.9× at
+ * 14–19 years. 58% of valuations have no market comparables at all, so for
+ * most visitors this curve IS the valuation.
+ *
+ * Fitted by grid search on half the cars (split by make/model) and checked
+ * on the other half: median ratio 1.57 → 0.97, median per-car error 69% → 35%,
+ * and every age band from 1–25 years lands within 0.93–1.06× of market. The
+ * shape: a steep first three years, a gentle 6%/yr plateau to year 7, then a
+ * steady 9%/yr until the late teens, when surviving cars stop falling
+ * (enthusiast and "good runner" demand) and the curve flattens to 2%/yr.
+ *
+ * What's left of the per-car error is mostly NEW-PRICE lookup, not this
+ * curve: models missing from new-prices.json fall to a make average (every
+ * BMW 116/118/520 at £40,000, Discovery/Freelander at £50,000), and some
+ * entries are stale (Micra £7,995). Fix those before touching these rates
+ * again, and refit from `valuation_result` events — don't hand-tune.
+ */
+const DEPRECIATION_RATES_BY_YEAR = [0.35, 0.25, 0.20, 0.06, 0.06, 0.06, 0.06];
+const DEPRECIATION_RATE_MIDLIFE = 0.09; // years 8–17
+const DEPRECIATION_RATE_LATE = 0.02; // year 18 onwards
+const DEPRECIATION_FLOOR = 0.08;
+
 export function getDepreciationMultiplier(vehicleAge: number): number {
   if (vehicleAge <= 0) return 1;
 
-  // Annual depreciation rates — each year reduces the value by this percentage
-  const rates = [0.25, 0.15, 0.12, 0.10, 0.08, 0.07, 0.06];
   let value = 1;
   for (let y = 0; y < vehicleAge; y++) {
-    const rate = y < rates.length ? rates[y] : 0.05;
-    value *= (1 - rate);
+    const rate =
+      y < DEPRECIATION_RATES_BY_YEAR.length
+        ? DEPRECIATION_RATES_BY_YEAR[y]
+        : y < 17
+          ? DEPRECIATION_RATE_MIDLIFE
+          : DEPRECIATION_RATE_LATE;
+    value *= 1 - rate;
   }
-  // Floor at 5% of original — no car depreciates to zero
-  return Math.max(value, 0.05);
+  return Math.max(value, DEPRECIATION_FLOOR);
 }
 
 // ── Make retention multiplier ───────────────────────────────────────────────
@@ -541,7 +573,18 @@ export function calculateDepreciationBaseline(
   make: string | undefined,
   model: string | undefined,
 ): number {
-  const depMult = getDepreciationMultiplier(vehicleAge);
+  // Ages are whole calendar years, so "age 0" is a car registered this year —
+  // anything from new to ~11 months old — not a car on the forecourt. At 1.0
+  // it was valued at full list price, and with condition/colour uplifts above
+  // it (a 2026 Qashqai at £32,100 against a £31,145 list price). Use the
+  // geometric midpoint between new and calendar-age 1 instead. Not fitted:
+  // no current-year car had market comparables in the Oct 2026 data. Kept
+  // out of getDepreciationMultiplier, whose 1.0 at age 0 ownership-cost.ts
+  // correctly reads as "value when new".
+  const depMult =
+    vehicleAge <= 0
+      ? Math.sqrt(getDepreciationMultiplier(1))
+      : getDepreciationMultiplier(vehicleAge);
   const retMult = getMakeRetentionMultiplier(make, model);
 
   // Deflate today's list price back to what the car cost when it was new,
