@@ -3431,16 +3431,33 @@ END:VEVENT
                   below. This is for the smaller "I already know I need an
                   MOT or service" slice of traffic, plus the SEO benefit
                   of an internal link from the homepage to /booking. */}
-              <a
-                href="/booking?source=homepage_hero"
-                onClick={() => trackEvent("homepage_wizard_cta_click", { placement: "hero" })}
-                className="mt-3 inline-flex items-center gap-1.5 text-xs text-cyan-300/80 hover:text-cyan-200 transition-colors group"
-              >
-                <span>Already know what you need?</span>
-                <span className="font-medium underline underline-offset-2 decoration-cyan-500/40 group-hover:decoration-cyan-300">
-                  Book MOT or service →
-                </span>
-              </a>
+              {/* Buyer's check sits first: the homepage is 30% of landings and
+                  had no route at all to /check-before-you-buy, the one surface
+                  built for people checking a car they don't own (#158). A
+                  link, not a gate — the "are you a buyer?" tap-gate tested in
+                  Sep 2026 added friction for everyone and moved nothing. */}
+              <div className="mt-3 flex flex-col items-start gap-1.5 sm:flex-row sm:flex-wrap sm:gap-x-5">
+                <Link
+                  href="/check-before-you-buy"
+                  onClick={() => trackEvent("buyer_check_link_click", { placement: "home-hero" })}
+                  className="inline-flex items-center gap-1.5 text-xs text-cyan-300/80 hover:text-cyan-200 transition-colors group"
+                >
+                  <span>Buying a used car?</span>
+                  <span className="font-medium underline underline-offset-2 decoration-cyan-500/40 group-hover:decoration-cyan-300">
+                    Check it before you buy →
+                  </span>
+                </Link>
+                <a
+                  href="/booking?source=homepage_hero"
+                  onClick={() => trackEvent("homepage_wizard_cta_click", { placement: "hero" })}
+                  className="inline-flex items-center gap-1.5 text-xs text-cyan-300/80 hover:text-cyan-200 transition-colors group"
+                >
+                  <span>Already know what you need?</span>
+                  <span className="font-medium underline underline-offset-2 decoration-cyan-500/40 group-hover:decoration-cyan-300">
+                    Book MOT or service →
+                  </span>
+                </a>
+              </div>
             </>
           )}
 
