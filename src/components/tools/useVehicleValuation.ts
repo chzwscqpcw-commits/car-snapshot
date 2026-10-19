@@ -100,8 +100,8 @@ export function useVehicleValuation(
 
   const depEstimate = useMemo(() => {
     if (newPrice === null || age === null) return null;
-    return calculateDepreciationBaseline(newPrice, age, vehicle.make!, vehicle.model!);
-  }, [newPrice, age, vehicle.make, vehicle.model]);
+    return calculateDepreciationBaseline(newPrice, age, vehicle.make!, vehicle.model!, vehicle.fuelType);
+  }, [newPrice, age, vehicle.make, vehicle.model, vehicle.fuelType]);
 
   useEffect(() => {
     if (!vehicle.make || !vehicle.model || !vehicle.yearOfManufacture || depEstimate === null) {
