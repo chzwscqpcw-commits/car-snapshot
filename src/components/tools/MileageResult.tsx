@@ -19,12 +19,12 @@ interface MileageResultProps {
   previewVehicle?: LookupVehicle;
 }
 
-interface Reading {
+export interface Reading {
   date: Date;
   value: number; // miles
 }
 
-interface YearlyMileage {
+export interface YearlyMileage {
   /** Calendar year of the end-reading. The "miles driven in 2018" header. */
   year: number;
   /** Miles between the previous reading and the end reading. */
@@ -45,7 +45,7 @@ interface YearlyMileage {
   isEstimated?: boolean;
 }
 
-interface MileageAnalysis {
+export interface MileageAnalysis {
   readings: Reading[];
   current: number | null;
   ageYears: number | null;
@@ -57,7 +57,7 @@ interface MileageAnalysis {
   yearly: YearlyMileage[];
 }
 
-interface ClockingFlag {
+export interface ClockingFlag {
   kind: "rollback" | "implausible_jump";
   message: string;
   fromValue: number;
@@ -470,7 +470,7 @@ function NoReadings() {
   );
 }
 
-function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
+export function analyseMileage(vehicle: LookupVehicle): MileageAnalysis {
   const tests = vehicle.motTests ?? [];
   const readings: Reading[] = tests
     .filter((t): t is MotTest & { odometer: { value: number; unit: string } } =>

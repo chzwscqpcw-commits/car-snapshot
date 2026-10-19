@@ -747,10 +747,13 @@ export default async function ModelGuidePage({ params }: PageProps) {
           )}
 
           {/* ── Second CTA ─────────────────────────────────────────────── */}
+          {/* Buyer framing → the buyer check, not the owner's full report. */}
           <ConversionWidget
             headline={`Found a ${data.displayName} you like?`}
-            subtext={`Enter the registration to check its full MOT history, tax status, mileage, recalls and estimated value — all free.`}
+            subtext={`Enter the reg from the advert for a free buyer's check — does it match DVLA's record, its MOT and mileage red flags, and where ${data.displayName}s most often fail their MOT.`}
             reminderHeadline="Set a free MOT reminder"
+            targetPath="/check-before-you-buy"
+            sourceTag="model-buyer-check"
           />
 
           {/* ── Related models ─────────────────────────────────────────── */}

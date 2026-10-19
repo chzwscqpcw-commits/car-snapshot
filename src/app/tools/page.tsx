@@ -65,6 +65,12 @@ const CHECKS: Tool[] = [
     icon: Receipt,
   },
   {
+    title: "Buyer's check",
+    blurb: "Buying used? Check the car matches its advert, its red flags, and what free data can't show.",
+    href: "/check-before-you-buy",
+    icon: ShieldCheck,
+  },
+  {
     title: "Mileage check",
     blurb: "Every MOT mileage reading plotted — spot clocking and inconsistencies.",
     href: "/mileage-check",

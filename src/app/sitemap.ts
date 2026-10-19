@@ -90,6 +90,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/check-before-you-buy",
+      lastModified: new Date("2026-10-19"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/mileage-check",
       lastModified: new Date("2026-02-14"),
       changeFrequency: "monthly",

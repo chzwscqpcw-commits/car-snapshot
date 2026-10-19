@@ -41,6 +41,25 @@ function writeInternalCookie(on: boolean): void {
   }
 }
 
+// Proof that a browser actually rendered one of our pages and ran its JS.
+// /go checks for it before recording a partner click: in Sep–Oct 2026, 175 of
+// 406 logged carVertical clicks came from IPs that never fired a single
+// page_view — link-following bots with browser-like UAs that bots.ts can't
+// catch. A session cookie (no Max-Age) is enough; it lives as long as the visit.
+// The name is matched literally in src/app/go/[partner]/route.ts.
+export const VISIT_COOKIE = "fpc_v";
+
+export function markHumanVisit(): void {
+  if (typeof document === "undefined") return;
+  try {
+    if (!document.cookie.includes(`${VISIT_COOKIE}=1`)) {
+      document.cookie = `${VISIT_COOKIE}=1; Path=/; SameSite=Lax; Secure`;
+    }
+  } catch {
+    /* cookies unavailable — /go falls back to its JS hop */
+  }
+}
+
 export function isInternalTraffic(): boolean {
   if (typeof window === "undefined") return false;
   try {

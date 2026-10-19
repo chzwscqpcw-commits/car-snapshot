@@ -12,7 +12,6 @@ import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
 import MotBookingInline from "@/components/MotBookingInline";
-import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 
 /**
@@ -285,9 +284,19 @@ export default async function BlogPostPage({ params }: PageProps) {
           const midInject = isMot ? (
             <MotBookingInline clickref="blog-mot-inline" />
           ) : isHistory ? (
-            <div className="my-8">
-              <CarVerticalReportCTA context="blog-carvertical" />
-            </div>
+            // Routed into the buyer check rather than straight to carVertical.
+            // The direct `blog-carvertical` box logged 8 clicks in Sep–Oct 2026,
+            // every one from an IP that never loaded a page — no human clicked
+            // it. A reader of an HPI/finance post is usually looking at a
+            // specific advert; the buyer check pitches carVertical against what
+            // that car's own records show.
+            <ConversionWidget
+              showReminder={false}
+              sourceTag="blog-buyer-check"
+              targetPath="/check-before-you-buy"
+              headline="Looking at a car right now?"
+              subtext="Enter the reg from the advert for a free buyer's check: does it match DVLA's record, red flags in its MOT and mileage history, and what free data can't show."
+            />
           ) : isWarranty ? (
             <div className="my-8">
               <WarrantyCTA context="blog-warranty" />

@@ -123,6 +123,10 @@ const CARVERTICAL_SUB2: Record<string, string> = {
   // A stats article, not the /mileage-check tool — kept out of `mcheck` so that
   // series keeps meaning "the mileage tool" and stays comparable over time.
   "stats-uk-mileage": "stats-mileage",
+  // /check-before-you-buy — the one surface built for visitors who said they're
+  // buying. Its own line so carVertical's sales-by-sub2 can show whether a
+  // declared buyer converts better than the seller placements (Oct 2026).
+  "buyer-check-carvertical": "buyer",
 };
 
 function carVerticalSub2(ctx: string): string {
@@ -607,6 +611,7 @@ export const GO_CONTEXTS = [
   "stats-least-stolen",
   "stats-how-many-left",
   "stats-uk-mileage",
+  "buyer-check-carvertical",
 ] as const;
 export type GoContext = (typeof GO_CONTEXTS)[number];
 

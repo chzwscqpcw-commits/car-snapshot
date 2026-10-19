@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { isInternalTraffic, setInternalTraffic } from "@/lib/tracking";
+import { isInternalTraffic, markHumanVisit, setInternalTraffic } from "@/lib/tracking";
 
 /**
  * Global first-party page-view tracker. Fires a `page_view` to /api/event on
@@ -29,6 +29,9 @@ const INTERNAL_PATH_PREFIXES = ["/data-health", "/preview", "/demo"];
 
 function sendPageView(): void {
   if (typeof window === "undefined") return;
+
+  // Set before any early return: even the owner's preview pages are real visits.
+  markHumanVisit();
 
   // Skip internal/admin pages (owner's own visits) so they don't pollute stats.
   const pathname = window.location.pathname;

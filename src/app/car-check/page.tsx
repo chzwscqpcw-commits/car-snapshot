@@ -207,6 +207,21 @@ export default function CarCheckPage() {
           showLookup={false}
         />
 
+        {/* /car-check is the most buyer-flavoured landing on the site; the
+            people here checking someone else's car get the buyer check. */}
+        <Link
+          href="/check-before-you-buy"
+          className="group mt-6 flex items-center justify-between gap-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4 transition-colors hover:border-cyan-400/50"
+        >
+          <div>
+            <p className="text-sm font-semibold text-slate-100">Checking a car you&apos;re thinking of buying?</p>
+            <p className="mt-0.5 text-xs text-slate-400">
+              Use the buyer&apos;s check: does it match the advert, its red flags, and what free data can&apos;t show.
+            </p>
+          </div>
+          <span className="shrink-0 text-sm font-semibold text-cyan-300 group-hover:text-cyan-200">Start →</span>
+        </Link>
+
         <StatCallouts
           stats={[
             { value: "1 in 3", label: "used cars hide history", tone: "warn" },
