@@ -5,6 +5,7 @@ import { Search, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { trackConversion } from "@/lib/tracking";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 /**
  * Hero reg box — places the reg lookup in the page hero (above the fold) rather
@@ -67,10 +68,13 @@ export default function HeroRegSearch({
       if (!res.ok) {
         const body = await res.json().catch(() => null);
         setError(
-          (body && (body.error || body.message)) ||
-            (res.status === 404
+          lookupErrorMessage(
+            res.status,
+            body,
+            res.status === 404
               ? "We couldn’t find that registration — double-check and try again."
-              : "Lookup failed — please try again in a moment.")
+              : "Lookup failed — please try again in a moment.",
+          ),
         );
         setSubmitting(false);
         return;

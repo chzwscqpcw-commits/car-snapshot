@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackConversion, trackEvent, trackPartnerClick } from "@/lib/tracking";
 import Button from "@/components/Button";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 interface ConversionWidgetProps {
   /** Contextual headline — connect to what the user is reading */
@@ -109,11 +110,13 @@ export default function ConversionWidget({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        const msg =
-          (body && (body.error || body.message)) ||
-          (res.status === 404
+        const msg = lookupErrorMessage(
+          res.status,
+          body,
+          res.status === 404
             ? "We couldn\u2019t find that registration \u2014 double-check and try again."
-            : "Lookup failed \u2014 please try again in a moment.");
+            : "Lookup failed \u2014 please try again in a moment.",
+        );
         setRegError(msg);
         return;
       }

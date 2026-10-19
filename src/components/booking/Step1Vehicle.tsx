@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import type { LookupVehicle } from "@/components/tools/shared";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 interface Props {
   initialVrm: string;
@@ -54,7 +55,7 @@ export default function Step1Vehicle({ initialVrm, onConfirm }: Props) {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        setError(body?.error ?? "Couldn't find that registration — please check and try again.");
+        setError(lookupErrorMessage(res.status, body, "Couldn't find that registration — please check and try again."));
         return;
       }
       const payload = await res.json();

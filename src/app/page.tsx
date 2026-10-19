@@ -224,6 +224,7 @@ import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
+import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 
 type VehicleData = {
   registrationNumber: string;
@@ -2287,6 +2288,11 @@ export default function Home() {
         body: JSON.stringify({ vrm: cleanedReg, skipCache }),
       });
 
+      // The firewall's 429 isn't our JSON, so check before parsing.
+      if (res.status === 429) {
+        setError(LOOKUP_RATE_LIMIT_MESSAGE);
+        return;
+      }
       const json = (await res.json()) as LookupResponse;
 
       if (!json.ok) {

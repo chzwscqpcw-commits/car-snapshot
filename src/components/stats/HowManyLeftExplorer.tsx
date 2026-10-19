@@ -8,6 +8,7 @@ import ModelFact from "@/components/ModelFact";
 import Button from "@/components/Button";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import { trackEvent } from "@/lib/tracking";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -163,7 +164,7 @@ export default function HowManyLeftExplorer() {
       });
       if (!res.ok) {
         const d = await res.json().catch(() => null);
-        setError(d?.error || "Couldn't find that vehicle — check the reg.");
+        setError(lookupErrorMessage(res.status, d, "Couldn't find that vehicle — check the reg."));
         return;
       }
       const payload = await res.json();

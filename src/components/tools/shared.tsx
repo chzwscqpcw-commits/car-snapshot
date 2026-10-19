@@ -18,6 +18,7 @@ import ScanBeamReveal from "@/components/ScanBeamReveal";
 import { RegPlate } from "@/components/RegPlate";
 import { trackEvent } from "@/lib/tracking";
 import Button from "@/components/Button";
+import { lookupErrorMessage } from "@/lib/lookup-errors";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
 
@@ -99,7 +100,7 @@ export function useVehicleLookup(
         if (!r.ok) {
           const body = await r.json().catch(() => null);
           throw new Error(
-            body?.error || "Couldn't find that registration — double-check and try again."
+            lookupErrorMessage(r.status, body, "Couldn't find that registration — double-check and try again."),
           );
         }
         const payload = await r.json();
@@ -298,10 +299,7 @@ export function LookupError({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        setRetryError(
-          (body && (body.error || body.message)) ||
-            "Still couldn’t find that — double-check the reg."
-        );
+        setRetryError(lookupErrorMessage(res.status, body, "Still couldn’t find that — double-check the reg."));
         return;
       }
       router.push(`${pathname}?vrm=${cleaned}`);
