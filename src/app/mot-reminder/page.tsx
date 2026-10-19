@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import MOTReminderSignup from "@/components/MOTReminderSignup";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import PlateReminderSignup from "@/components/PlateReminderSignup";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -83,7 +83,8 @@ export default async function MotReminderPage({
   searchParams: Promise<{ vrm?: string }>;
 }) {
   // Pre-fill the reg when arriving from a results page (e.g. the bottom banner
-  // links here as /mot-reminder?vrm=AB12CDE) so the user doesn't retype it.
+  // links here as /mot-reminder#vrm=AB12CDE) so the user doesn't retype it.
+  // Only legacy ?vrm= links reach the server; PlateReminderSignup reads #vrm=.
   const { vrm } = await searchParams;
   const presetReg =
     typeof vrm === "string"
@@ -195,7 +196,7 @@ export default async function MotReminderPage({
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Primary signup form */}
-        <MOTReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar regNumber={presetReg} />
+        <PlateReminderSignup context="generic" triggerVariant="reminder_page" allowTimingPicker showCalendar presetReg={presetReg} />
 
         <p className="mt-3 text-center text-xs text-slate-500">
           No personal details required. If you give an email, it&apos;s only ever used to send your

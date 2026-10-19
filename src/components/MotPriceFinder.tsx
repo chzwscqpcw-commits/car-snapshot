@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, PoundSterling } from "lucide-react";
 import Button from "@/components/Button";
 import { trackEvent } from "@/lib/tracking";
+import { plateHref } from "@/lib/plate-url";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -49,8 +50,7 @@ export default function MotPriceFinder({
     setError("");
     trackEvent("cheap_mot_compare_click", { has_reg: Boolean(cleaned), source });
     const qs = new URLSearchParams({ type: "mot", source });
-    if (cleaned) qs.set("vrm", cleaned);
-    router.push(`/booking?${qs.toString()}`);
+    router.push(plateHref(`/booking?${qs.toString()}`, cleaned));
   }
 
   return (

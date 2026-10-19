@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import { trackEvent } from "@/lib/tracking";
+import { plateHref } from "@/lib/plate-url";
 
 type Urgency = "expired" | "due-soon" | "far" | "no-record";
 
@@ -146,7 +147,7 @@ export default function MotActionBanner({
   // Route to the internal /booking wizard rather than directly to BMG so we can
   // qualify intent (postcode, flexibility, recommended service) and surface our
   // own price context before hand-off.
-  const bookingHref = `/booking?vrm=${encodeURIComponent(registrationNumber)}&type=mot&source=action_banner_${urgency}`;
+  const bookingHref = plateHref(`/booking?type=mot&source=action_banner_${urgency}`, registrationNumber);
 
   const reminderContext =
     urgency === "expired"

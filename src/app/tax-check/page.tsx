@@ -4,10 +4,10 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
-import TaxResult from "@/components/tools/TaxResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import SeverityCards from "@/components/SeverityCards";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -37,9 +37,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 export const metadata: Metadata = {
   title: "Free Car Tax Check 2026 — Is My Car Taxed? | Free Plate Check",
@@ -73,15 +70,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function TaxCheckPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const rawVrm = params?.vrm;
-  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function TaxCheckPage() {
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -142,20 +131,7 @@ export default async function TaxCheckPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      {hasResult ? (
-        <>
-          <TaxResult vrm={cleanedVrm!} />
-          {/* Slim trust footer below the result */}
-          <div className="border-t border-slate-800/60 bg-slate-900/40">
-            <div className="mx-auto max-w-3xl px-4 py-6 text-center text-xs text-slate-500">
-              Tax status comes from the DVLA&#39;s live VED database. VED rate is
-              estimated from current GOV.UK bands — your renewal letter is the
-              authoritative figure.
-            </div>
-          </div>
-          <MotReminderBanner />
-        </>
-      ) : (
+      <PlateSwitch tool="tax">
         <>
       <LandingHero
         h1="Free Car Tax Check"
@@ -319,7 +295,7 @@ export default async function TaxCheckPage({
       </div>
       <MotReminderBanner />
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

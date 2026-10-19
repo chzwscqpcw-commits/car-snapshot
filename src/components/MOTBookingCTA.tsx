@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PoundSterling, ChevronDown } from 'lucide-react';
 import { trackEvent } from '@/lib/tracking';
 import Button from '@/components/Button';
+import { plateHref } from "@/lib/plate-url";
 
 interface MOTBookingCTAProps {
   regNumber: string;
@@ -132,9 +133,10 @@ export default function MOTBookingCTA({
   // /booking page. That told Google not to follow or pass equity from around
   // a dozen internal placements into the page we most want ranking, including
   // the results page. It's an internal link; it gets internal-link treatment.
-  const href = `/booking?vrm=${encodeURIComponent(regNumber)}${
-    preselectMot ? '&type=mot' : ''
-  }&source=${encodeURIComponent(wizardSource)}`;
+  const href = plateHref(
+    `/booking?${preselectMot ? "type=mot&" : ""}source=${encodeURIComponent(wizardSource)}`,
+    regNumber,
+  );
 
   const { heading, body } = preselectMot ? COPY[context] : OPEN_CHOICE_COPY;
 

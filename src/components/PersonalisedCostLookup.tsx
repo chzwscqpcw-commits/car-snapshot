@@ -19,6 +19,7 @@ import {
   type CostEstimate,
 } from "@/lib/repair-cost-calculators";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { plateHref } from "@/lib/plate-url";
 
 interface PersonalisedCostLookupProps {
   slug: RepairCostSlug;
@@ -249,7 +250,7 @@ export default function PersonalisedCostLookup({
             <p className="mt-5 text-xs text-slate-500">
               Or jump to{" "}
               <a
-                href={`/?vrm=${vehicle.registrationNumber}`}
+                href={plateHref("/", vehicle.registrationNumber)}
                 className="text-blue-400 hover:text-blue-300 transition-colors"
               >
                 See MOT history, tax status, recalls and more &rarr;

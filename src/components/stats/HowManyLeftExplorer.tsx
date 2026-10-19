@@ -9,6 +9,7 @@ import Button from "@/components/Button";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import { trackEvent } from "@/lib/tracking";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { plateHref } from "@/lib/plate-url";
 
 function cleanReg(raw: string): string {
   return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -295,7 +296,7 @@ export default function HowManyLeftExplorer() {
           {/* upsell + share */}
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             {vehicle.reg ? (
-              <Button href={`/?vrm=${vehicle.reg}`} className="flex-1">
+              <Button href={plateHref("/", vehicle.reg)} className="flex-1">
                 See the full check on this car <ArrowRight className="h-4 w-4" />
               </Button>
             ) : (

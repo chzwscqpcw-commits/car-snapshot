@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { trackConversion } from "@/lib/tracking";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { goToPlate } from "@/lib/plate-url";
 
 /**
  * Hero reg box — places the reg lookup in the page hero (above the fold) rather
@@ -86,8 +87,7 @@ export default function HeroRegSearch({
         target_path: targetPath,
         source: "hero",
       });
-      const join = targetPath.includes("?") ? "&" : "?";
-      router.push(`${targetPath}${join}vrm=${cleaned}`);
+      goToPlate(router, targetPath, cleaned);
     } catch {
       setError(
         "Couldn’t reach the lookup service — check your connection and try again."

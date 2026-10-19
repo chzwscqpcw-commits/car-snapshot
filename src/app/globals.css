@@ -372,3 +372,9 @@ a {
 @keyframes countup-reveal {
   to { visibility: visible; }
 }
+
+/* A result link (#vrm=…) hides the tool page's landing content before first
+   paint; PlateSwitch renders the result in its place. See layout.tsx. */
+html[data-plate] [data-plate-landing] {
+  display: none;
+}

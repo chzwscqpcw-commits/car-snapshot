@@ -4,10 +4,10 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import ServicingCTA from "@/components/ServicingCTA";
-import UlezResult from "@/components/tools/UlezResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import SeverityCards from "@/components/SeverityCards";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -42,9 +42,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 export const metadata: Metadata = {
   title: "Free ULEZ Check 2026 — Is My Car ULEZ Compliant? | Free Plate Check",
@@ -79,15 +76,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function UlezCheckPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const rawVrm = params?.vrm;
-  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function UlezCheckPage() {
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -148,12 +137,7 @@ export default async function UlezCheckPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      {hasResult ? (
-        <>
-          <UlezResult vrm={cleanedVrm!} />
-          <MotReminderBanner />
-        </>
-      ) : (
+      <PlateSwitch tool="ulez">
         <>
       <LandingHero
         h1="Free ULEZ Compliance Check"
@@ -315,7 +299,7 @@ export default async function UlezCheckPage({
       </div>
       <MotReminderBanner />
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

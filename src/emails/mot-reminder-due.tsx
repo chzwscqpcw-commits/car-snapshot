@@ -114,7 +114,8 @@ export default function MOTReminderDue({
   bmgAffiliateUrl = "#",
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
 }: MOTReminderDueProps) {
-  const reportUrl = `https://freeplatecheck.co.uk/?vrm=${encodeURIComponent(regNumber)}`;
+  // www host (no redirect hop), plate in the fragment — never sent to a server.
+  const reportUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
   const urgent = daysRemaining <= 7;
   const accent = urgent ? "#ef4444" : "#f59e0b";
 

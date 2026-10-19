@@ -41,6 +41,7 @@ import {
   scoreItem,
   type SiteItem,
 } from "@/lib/site-index";
+import { plateHref } from "@/lib/plate-url";
 
 interface CommandPaletteContext {
   open: () => void;
@@ -297,12 +298,12 @@ function Palette({ onClose }: { onClose: () => void }) {
     (row: Row) => {
       if (row.kind === "reg") {
         rememberVehicle(row.reg);
-        window.location.href = `/?vrm=${encodeURIComponent(row.reg)}`;
+        window.location.href = plateHref("/", row.reg);
         return;
       }
       if (row.kind === "recent") {
         rememberVehicle(row.vehicle.reg, row.vehicle.label);
-        window.location.href = `/?vrm=${encodeURIComponent(row.vehicle.reg)}`;
+        window.location.href = plateHref("/", row.vehicle.reg);
         return;
       }
       window.location.href = row.item.href;

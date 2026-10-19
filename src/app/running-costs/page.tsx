@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
-import RunningCostsResult from "@/components/tools/RunningCostsResult";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import HeroRegSearch from "@/components/HeroRegSearch";
 import TrustBar from "@/components/TrustBar";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -36,9 +36,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 export const metadata: Metadata = {
   title: "Car Running Costs Calculator | Free Plate Check",
@@ -73,15 +70,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RunningCostsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const rawVrm = params?.vrm;
-  const cleanedVrm = rawVrm ? cleanReg(rawVrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function RunningCostsPage() {
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -142,9 +131,7 @@ export default async function RunningCostsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
       />
 
-      {hasResult ? (
-        <RunningCostsResult vrm={cleanedVrm!} />
-      ) : (
+      <PlateSwitch tool="runningCosts">
         <>
       <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-6">
@@ -308,7 +295,7 @@ export default async function RunningCostsPage({
         </div>
       </div>
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

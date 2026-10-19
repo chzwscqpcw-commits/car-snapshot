@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import Button from "@/components/Button";
+import { plateHref } from "@/lib/plate-url";
 
 /**
  * 404 page — designed to get a lost user back into action fast.
@@ -39,7 +40,7 @@ export default function NotFound() {
   function handleLookup() {
     const cleaned = vrm.replace(/\s/g, "").toUpperCase();
     if (!cleaned) return;
-    router.push(`/?vrm=${encodeURIComponent(cleaned)}`);
+    router.push(plateHref("/", cleaned));
   }
 
   return (

@@ -9,6 +9,7 @@ import {
   CARVERTICAL_PRICING,
   carVerticalDiscountedSingle,
   goLink,
+  setGoPlate,
   type GoContext,
 } from "@/config/partners";
 import {
@@ -317,7 +318,7 @@ export default function CarVerticalReportCTA({
   // already excluded from impressions above.
   const href = preview
     ? (partner.buildLink ? partner.buildLink(regNumber ?? "", context) : partner.url)
-    : goLink("carvertical", context, regNumber, shownVariant);
+    : goLink("carvertical", context, shownVariant);
 
   return (
     <div ref={cardRef} className={`rounded-xl border p-4 sm:p-5 ${tone.wrap}`}>
@@ -388,6 +389,8 @@ export default function CarVerticalReportCTA({
             // it stays. The preview page never reaches /go, and deliberately
             // records nothing either way.
             markCarVerticalClick();
+            // The plate travels to /go in a short-lived cookie, not the URL.
+            if (!preview) setGoPlate(regNumber);
             if (arm) trackExperimentClick(EXPERIMENTS.SELLER_TRUST, arm);
           }}
           className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors sm:w-auto ${tone.button}`}

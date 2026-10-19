@@ -134,6 +134,16 @@ export default function RootLayout({
             __html: "document.documentElement.classList.add('js')",
           }}
         />
+        {/* Also before first paint: a result link (#vrm=…, or a legacy ?vrm=)
+            hides the tool page's landing content until PlateSwitch swaps in
+            the result, so the landing page doesn't flash first. See
+            src/lib/plate-url.ts. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(/(^|[#&])vrm=/.test(location.hash)||/[?&]vrm=/.test(location.search))document.documentElement.setAttribute('data-plate','')}catch(e){}",
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -183,7 +193,8 @@ export default function RootLayout({
 // legacy ?reg=), which GA otherwise captures verbatim as page_location /
 // page_referrer on hard loads. Scrub both params before GA ever sees them; all
 // other params (utm_*, gclid, …) are preserved so campaign attribution is intact.
-(function(){function scrub(u){try{var x=new URL(u);x.searchParams.delete('vrm');x.searchParams.delete('reg');return x.toString();}catch(e){return u;}}gtag('config','G-LW3HZS1Z5H',{page_location:scrub(location.href),page_referrer:scrub(document.referrer||'')});})();`}
+// Since Oct 2026 the plate lives in the #vrm= fragment; that's scrubbed too.
+(function(){function scrub(u){try{var x=new URL(u);x.searchParams.delete('vrm');x.searchParams.delete('reg');if(/vrm=/.test(x.hash))x.hash='';return x.toString();}catch(e){return u;}}gtag('config','G-LW3HZS1Z5H',{page_location:scrub(location.href),page_referrer:scrub(document.referrer||'')});})();`}
             </Script>
           </>
         )}

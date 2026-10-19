@@ -14,6 +14,7 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import { RegPlate } from "@/components/RegPlate";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
+import { plateHref } from "@/lib/plate-url";
 
 /* ---------- types ---------- */
 
@@ -528,7 +529,7 @@ export default function ComparePage() {
               {[vehicle1, vehicle2].map((v, i) => (
                 <Link
                   key={i}
-                  href={`/?vrm=${v!.registrationNumber}`}
+                  href={plateHref("/", v!.registrationNumber)}
                   className="block bg-slate-900 border border-slate-800 rounded-xl p-5 text-center hover:border-blue-500/50 transition-colors group"
                 >
                   <p className="text-slate-400 text-sm mb-1">

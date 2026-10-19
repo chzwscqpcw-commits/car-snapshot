@@ -7,6 +7,7 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import PartnerTrust from "@/components/PartnerTrust";
 import Button from "@/components/Button";
+import { plateHref } from "@/lib/plate-url";
 
 interface RepairCostCTAProps {
   /** What the user is reading about — used in CTA copy */
@@ -69,7 +70,7 @@ export default function RepairCostCTA({
       return;
     }
     setRegError("");
-    router.push(`/?vrm=${cleaned}`);
+    router.push(plateHref("/", cleaned));
   }
 
   // Narrow contexts (hideRegLookup): just the affiliate button, no reg entry.

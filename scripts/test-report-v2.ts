@@ -47,7 +47,7 @@ function check(label: string, ok: boolean) {
       check(`${font} embedded`, new RegExp(`/FontName\\s*/[A-Z]{6}\\+${font}`).test(raw));
     }
     const edition = theme === "light" ? "print" : "dark";
-    check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&vrm=AB12CDE&v=${edition})`));
+    check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&v=${edition})`));
     check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
     // The bundled fonts are Google's Latin subset. A character outside it (an
     // arrow "→" did, Oct 2026) renders as an empty box, so draw it as SVG.

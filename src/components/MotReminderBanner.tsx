@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type MouseEvent } from "react";
 import { Bell, X } from "lucide-react";
+import { plateHref } from "@/lib/plate-url";
 
 /**
  * Slim, dismissible bottom banner that slides up after 25% scroll.
@@ -52,7 +53,7 @@ export default function MotReminderBanner() {
       /* ignore */
     }
     e.preventDefault();
-    window.location.href = reg ? `/mot-reminder?vrm=${encodeURIComponent(reg)}` : "/mot-reminder";
+    window.location.href = reg ? plateHref("/mot-reminder", reg) : "/mot-reminder";
   }
 
   if (dismissed) return null;

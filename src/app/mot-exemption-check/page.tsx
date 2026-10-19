@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import LandingHero from "@/components/LandingHero";
-import ExemptionResult from "@/components/tools/ExemptionResult";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import WarrantyCTA from "@/components/WarrantyCTA";
+import PlateSwitch from "@/components/tools/PlateSwitch";
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -38,9 +38,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-function cleanReg(raw: string): string {
-  return raw.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-}
 
 const TITLE = "Is My Car MOT Exempt? Free 40-Year Exemption Check | Free Plate Check";
 const DESCRIPTION =
@@ -74,14 +71,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function MotExemptionCheckPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ vrm?: string }>;
-}) {
-  const params = await searchParams;
-  const cleanedVrm = params?.vrm ? cleanReg(params.vrm) : null;
-  const hasResult = !!cleanedVrm && cleanedVrm.length >= 2 && cleanedVrm.length <= 8;
+export default function MotExemptionCheckPage() {
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -111,18 +101,7 @@ export default async function MotExemptionCheckPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      {hasResult ? (
-        <>
-          <ExemptionResult vrm={cleanedVrm!} />
-          <div className="border-t border-slate-800/60 bg-slate-900/40">
-            <div className="mx-auto max-w-3xl px-4 py-6 text-center text-xs text-slate-500">
-              Dates are calculated from the DVLA build year and first-registration date. Whether a
-              vehicle has been substantially changed is a self-declaration on form V112 — check
-              GOV.UK if you&apos;re unsure.
-            </div>
-          </div>
-        </>
-      ) : (
+      <PlateSwitch tool="exemption">
         <>
           <LandingHero
             h1="Is My Car MOT Exempt?"
@@ -250,7 +229,7 @@ export default async function MotExemptionCheckPage({
             </section>
           </div>
         </>
-      )}
+      </PlateSwitch>
     </div>
   );
 }

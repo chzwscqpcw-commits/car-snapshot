@@ -225,6 +225,7 @@ import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
+import { onPlateChange, plateHref, readPlate } from "@/lib/plate-url";
 
 type VehicleData = {
   registrationNumber: string;
@@ -1284,20 +1285,21 @@ export default function Home() {
     }
   }, []);
 
-  // Auto-lookup from ?vrm= query param (used by 404 page)
+  // Auto-lookup from a plate in the address — /#vrm=AB12CDE, or a legacy
+  // /?vrm= link (old reminder emails, the partner widget). Also on a later
+  // in-page change: a #vrm= change doesn't reload the page the way ?vrm= did
+  // (the command palette, the 404 page). The address is then reset to "/" so
+  // the plate doesn't sit in history — results persist via recent lookups.
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const reg = params.get("vrm");
-      if (reg) {
-        const cleaned = reg.replace(/\s/g, "").toUpperCase();
-        if (cleaned) {
-          setVrm(cleaned);
-          performLookup(cleaned);
-          window.history.replaceState({}, "", "/");
-        }
-      }
-    }
+    const run = () => {
+      const plate = readPlate();
+      if (!plate) return;
+      setVrm(plate);
+      performLookup(plate);
+      window.history.replaceState(null, "", "/");
+    };
+    run();
+    return onPlateChange(run);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -3174,12 +3176,16 @@ END:VEVENT
 
       if (isChunkLoadError && !alreadyReloaded && typeof window !== "undefined") {
         // One-shot recovery: set the guard (so we never loop), tell the user,
-        // then reload with the reg in the URL so the vehicle auto-restores.
+        // then reload with the reg in the address (#vrm=, which the homepage
+        // reads on load) so the vehicle auto-restores.
         sessionStorage.setItem(chunkReloadGuardKey, "1");
         showToast("A new version was just released — refreshing so your PDF can download…");
         const cleanedReg = data.registrationNumber.replace(/\s+/g, "");
         setTimeout(() => {
-          window.location.assign(`/?vrm=${encodeURIComponent(cleanedReg)}`);
+          // Only the fragment differs from "/", which wouldn't reload on its
+          // own — set it, then force the reload the new chunks need.
+          window.location.assign(plateHref("/", cleanedReg));
+          window.location.reload();
         }, 1200);
         return;
       }

@@ -29,18 +29,20 @@ const LIST_W = 300;
 const SITE = "https://www.freeplatecheck.co.uk";
 
 /**
- * The carVertical link for this car: through /go so the click is recorded
- * (context pdf-carvertical, `v` = the edition), which redirects to
- * carVertical's tracker with the reg pre-filled and our 20% code applied.
+ * The carVertical link: through /go so the click is recorded (context
+ * pdf-carvertical, `v` = the edition), which redirects to carVertical's
+ * tracker with our 20% code applied. No plate in it (Oct 2026): a printed or
+ * scanned link can't hand one over except in the URL, and a plate in a /go URL
+ * lands in server logs — the reader types it into carVertical instead.
  */
-export function carVerticalReportLink(reg: string, t: ThemeTokens): string {
-  return SITE + goLink("carvertical", "pdf-carvertical", reg, t.name === "light" ? "print" : "dark");
+export function carVerticalReportLink(t: ThemeTokens): string {
+  return SITE + goLink("carvertical", "pdf-carvertical", t.name === "light" ? "print" : "dark");
 }
 
 /** What the free data can't show, and the carVertical report that can: QR + link. */
 function historyPanel(input: ReportInput, t: ThemeTokens): Safe {
   const plate = formatPlate(input.data.registrationNumber);
-  const href = carVerticalReportLink(input.data.registrationNumber, t);
+  const href = carVerticalReportLink(t);
   return html`<div class="history" style="border-color:${t.ruleStrong}">
     <div class="stack-10 history-text">
       <span class="mono label" style="color:${t.accent}">WHAT THIS REPORT CAN'T SEE</span>

@@ -559,20 +559,18 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
  * the ad-blockers that eat a `sendBeacon`. Callers therefore must NOT also fire
  * `trackPartnerClick`, or every click counts twice.
  *
- * The plate rides as `?vrm=`, the same param the rest of the site uses, so it
- * stays inside the existing crawl-block (`robots.ts` disallows `/*?vrm=`) and
- * the gtag scrub — see the plate-in-URL mitigation. /go is `no-store` and
- * `noindex, nofollow` on top of that.
+ * The plate is NOT in this URL (Oct 2026). A /go request is a real server
+ * request, so `?vrm=` put every plate clicked out on into Vercel's logs. The
+ * CTA instead hands the plate over in a 60-second cookie scoped to /go
+ * (setGoPlate below), which /go reads for the partner's pre-fill and clears.
+ * The route still accepts a legacy ?vrm= for links already out there.
  */
 export function goLink(
   partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair",
   context: GoContext,
-  reg?: string,
   variant?: string,
 ): string {
   const params = new URLSearchParams({ ctx: context });
-  const plate = (reg ?? "").replace(/\s+/g, "").toUpperCase();
-  if (plate) params.set("vrm", plate);
   // `v` rides ALONGSIDE the context and never feeds sub2. The same placement
   // can now show two different framings, and we need to tell their clicks apart
   // — but the partner's sub2 series is the only per-placement history either
@@ -593,6 +591,22 @@ export function goLink(
  * CarVerticalReportCTA take a `GoContext`, so a new placement that isn't added
  * here fails typecheck instead of silently losing its clicks.
  */
+/** Cookie that carries the plate to /go for the partner's pre-fill. The name is
+ *  matched literally in src/app/go/[partner]/route.ts. */
+export const GO_PLATE_COOKIE = "fpc_go_vrm";
+
+/** Call in a /go link's onClick: hands the plate to /go without a URL. */
+export function setGoPlate(reg?: string): void {
+  if (typeof document === "undefined") return;
+  const plate = (reg ?? "").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 8);
+  if (!plate) return;
+  try {
+    document.cookie = `${GO_PLATE_COOKIE}=${plate}; Path=/go; Max-Age=60; SameSite=Lax; Secure`;
+  } catch {
+    /* cookies blocked — the partner just won't pre-fill the plate */
+  }
+}
+
 export const GO_CONTEXTS = [
   "report-carvertical", // CarVerticalReportCTA's default
   "pdf-carvertical", // QR code + link in the server-rendered PDF report

@@ -16,6 +16,7 @@ import { calculateVed } from "@/lib/ved";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
+import { plateHref } from "@/lib/plate-url";
 
 interface TaxResultProps {
   vrm: string;
@@ -443,19 +444,19 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
           Or run a different check on {vrm}
         </p>
         <div className="flex flex-wrap gap-2">
-          <QuickPill href={`/mot-check?vrm=${vrm}`} icon={CheckCircle2}>
+          <QuickPill href={plateHref("/mot-check", vrm)} icon={CheckCircle2}>
             MOT history
           </QuickPill>
-          <QuickPill href={`/mileage-check?vrm=${vrm}`} icon={Calendar}>
+          <QuickPill href={plateHref("/mileage-check", vrm)} icon={Calendar}>
             Mileage
           </QuickPill>
-          <QuickPill href={`/ulez-check?vrm=${vrm}`} icon={CheckCircle2}>
+          <QuickPill href={plateHref("/ulez-check", vrm)} icon={CheckCircle2}>
             ULEZ
           </QuickPill>
-          <QuickPill href={`/recall-check?vrm=${vrm}`} icon={AlertTriangle}>
+          <QuickPill href={plateHref("/recall-check", vrm)} icon={AlertTriangle}>
             Recalls
           </QuickPill>
-          <QuickPill href={`/value-my-car?vrm=${vrm}`} icon={CheckCircle2}>
+          <QuickPill href={plateHref("/value-my-car", vrm)} icon={CheckCircle2}>
             Valuation
           </QuickPill>
         </div>

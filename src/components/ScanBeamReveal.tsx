@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import BoltMark from "@/components/BoltMark";
+import { goToPlate } from "@/lib/plate-url";
 
 interface ScanBeamRevealProps {
   /** Reg plate to navigate to when the scan completes. */
@@ -40,7 +41,8 @@ export default function ScanBeamReveal({
 
   // Prefetch the destination so the navigation feels instant after the scan.
   useEffect(() => {
-    router.prefetch(`${destination}?vrm=${encodeURIComponent(vrm)}`);
+    // The page itself — the plate rides in the fragment, which isn't fetched.
+    router.prefetch(destination);
   }, [router, destination, vrm]);
 
   const onClick = () => {
@@ -58,7 +60,7 @@ export default function ScanBeamReveal({
     // Navigate just before the beam reaches the bottom — feels like the beam
     // "reveals" the new page below it.
     window.setTimeout(() => {
-      router.push(`${destination}?vrm=${encodeURIComponent(vrm)}`);
+      goToPlate(router, destination, vrm);
     }, 650);
   };
 

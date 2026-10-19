@@ -75,7 +75,8 @@ export default function MOTReminderSet({
   offsets = DEFAULT_OFFSETS,
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
 }: MOTReminderSetProps) {
-  const reportUrl = `https://freeplatecheck.co.uk/?vrm=${encodeURIComponent(regNumber)}`;
+  // www host (no redirect hop), plate in the fragment — never sent to a server.
+  const reportUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
   const sorted = [...offsets].sort((a, b) => b - a);
 
   return (
