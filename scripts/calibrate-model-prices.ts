@@ -2,7 +2,8 @@
  * Builds src/data/model-price-calibration.json — a market-calibrated
  * "effective new price" per model family, from our own valuation telemetry.
  *
- * Usage (needs .env.local with the Supabase URL + anon key, as for analytics):
+ * Usage (needs the Supabase URL + anon key — from the environment, else
+ * .env.local; monthly in CI via .github/workflows/calibrate-valuations.yml):
  *   npx tsx scripts/calibrate-model-prices.ts               # last 120 days
  *   npx tsx scripts/calibrate-model-prices.ts --days=180
  *
@@ -62,6 +63,14 @@ type Obs = {
 };
 
 function readEnv(): Record<string, string> {
+  // CI passes these as secrets; locally they live in .env.local. Both are the
+  // public, read-only values the site already ships to every browser.
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    };
+  }
   const raw = fs.readFileSync(path.join(ROOT, ".env.local"), "utf8");
   return Object.fromEntries(
     raw
