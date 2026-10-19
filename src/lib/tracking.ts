@@ -135,6 +135,18 @@ export const EXPERIMENTS: Record<string, string> = {
   // Conversion = pdf_download (auto-attributed via trackEvent for exposed
   // sessions). Note: at current traffic this needs weeks to reach significance.
   PDF_CTA: "pdf_cta_copy_v1",
+  // Seller carVertical CTA copy, started 2026-10-19 on BOTH seller placements
+  // (valuation-result-seller, money-seller). control = "Selling this car? See
+  // what a buyer will find" (self-check); trust = "have the history check
+  // ready to show buyers" — the trust-signal framing carVertical's affiliate
+  // manager said converts for other partners' seller audiences (2026-08-07).
+  // Clicks go through /go, so they're split by the rendered variant on the
+  // `v` param ("seller" vs "seller-trust"): CTR per arm = partner_click ÷
+  // partner_impression grouped by metadata.variant. ~5,400 impressions/mo
+  // between the two placements — expect 4+ weeks for a readable answer, and
+  // judge on clicks per impression, not totals (valuations fell ~28% the same
+  // day, #161).
+  SELLER_TRUST: "seller_trust_copy_v1",
   // valuation_hero_reg_v1 CONCLUDED 2026-06-21 — treatment "b" (reg box in the
   // hero, above the fold) beat control "a" decisively: reg_search conversion
   // 39.0% → 52.8% (+35% relative, z=4.74, n=1,181 exposures). Variant b was
