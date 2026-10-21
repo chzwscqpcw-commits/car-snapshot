@@ -64,10 +64,12 @@ const WBAC_PROGRAM_ID = "PENDING_WEBGAINS";
 
 /**
  * The query parameter webuyanycar.com pre-fills its reg box from, or null to
- * send no plate. Null until someone has seen it work in a real browser: their
- * site blocks headless browsers, so it couldn't be tested here (Oct 2026), and
- * a plate in a URL that doesn't pre-fill is a plate shared for nothing — as
- * Warrantywise's quote page turned out to be (none of 10 names worked).
+ * send no plate. NULL — THERE ISN'T ONE (checked 21 Oct 2026; don't re-try):
+ * `?vrm=AB12CDE` leaves the box empty in a real browser, and their homepage
+ * bundle reads exactly one query parameter (`force-brand`); the reg box is
+ * only ever filled from their own session after a lookup on their site. A
+ * plate in a URL that doesn't pre-fill is a plate shared for nothing. Set
+ * this only if WBAC/Webgains supply an affiliate deep link that does.
  */
 const WBAC_PREFILL_PARAM: string | null = null;
 
