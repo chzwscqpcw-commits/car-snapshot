@@ -69,18 +69,19 @@ const UK_AVG_MILES_PER_YEAR = 7400; // 2025 DfT figure for cars
 
 export default function MileageResult({ vrm, previewVehicle }: MileageResultProps) {
   const state = useVehicleLookup(previewVehicle ? "" : vrm);
-  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} />;
+  if (previewVehicle) return <Loaded vrm={vrm} vehicle={previewVehicle} reportCta={false} />;
   if (state.kind === "loading")
     return <LookupSkeleton vrm={vrm} hint="Reading every MOT mileage record…" />;
   if (state.kind === "error")
     return <LookupError vrm={vrm} message={state.message} backHref="/mileage-check" />;
-  return <Loaded vrm={vrm} vehicle={state.vehicle} />;
+  return <Loaded vrm={vrm} vehicle={state.vehicle} reportCta />;
 }
 
-function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+function Loaded({ vrm, vehicle, reportCta }: { vrm: string; vehicle: LookupVehicle; reportCta: boolean }) {
   const analysis = useMemo(() => analyseMileage(vehicle), [vehicle]);
 
   return (
+    <>
     <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="mileage">
       <MileageHero analysis={analysis} />
       {analysis.readings.length >= 2 && (
@@ -113,6 +114,21 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       )}
       {analysis.readings.length === 0 && <NoReadings />}
     </ToolResultLayout>
+    {/* High-intent: they've just seen the mileage records — offer the full
+        history check (clocking/rollback) right here. Lives here rather than in
+        PlateSwitch so it knows the vehicle (a bike gets the motorbike copy);
+        not on the preview pages, which never showed it. */}
+    {reportCta && (
+      <div className="mx-auto max-w-3xl px-4 -mt-2 pb-10">
+        <CarVerticalReportCTA
+          variant="mileage"
+          context="mileage-result-carvertical"
+          regNumber={vrm}
+          motorbike={isMotorbike(vehicle)}
+        />
+      </div>
+    )}
+    </>
   );
 }
 
