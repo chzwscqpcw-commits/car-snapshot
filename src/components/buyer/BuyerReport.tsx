@@ -153,7 +153,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       </Step>
 
       <Step n={3} title="What the free records can't show">
-        <HiddenRisks reg={reg} />
+        <HiddenRisks reg={reg} noun={noun} />
       </Step>
 
       <Step n={4} title="On the day you view it">
@@ -393,22 +393,23 @@ function MileageLine({
 /* ─── Step 3: what the free records can't show ───────────────────────── */
 
 /** Keep factual (carVertical agreement 3.1) — these describe the risk, not the
- *  report's findings. */
-const HIDDEN: { Icon: typeof Banknote; title: string; why: string }[] = [
+ *  report's findings. Worded for the vehicle in front of them: the same risks
+ *  apply to a bike or a van. */
+const hiddenRisks = (noun: string): { Icon: typeof Banknote; title: string; why: string }[] => [
   {
     Icon: Banknote,
     title: "Outstanding finance",
-    why: "If the seller still owes on a finance deal, the lender can take the car back from you.",
+    why: `If the seller still owes on a finance deal, the lender can take the ${noun} back from you.`,
   },
   {
     Icon: FileWarning,
     title: "Insurance write-off",
-    why: "A Cat S or N car can be legal to drive, but it's worth far less and some insurers won't cover it.",
+    why: `A Cat S or N ${noun} can be legal to drive, but it's worth far less and some insurers won't cover it.`,
   },
   {
     Icon: ShieldAlert,
     title: "Stolen or cloned",
-    why: "A stolen car is returned to its owner — and you lose what you paid.",
+    why: `A stolen ${noun} is returned to its owner — and you lose what you paid.`,
   },
   {
     Icon: Users,
@@ -423,11 +424,11 @@ const HIDDEN: { Icon: typeof Banknote; title: string; why: string }[] = [
   {
     Icon: KeyRound,
     title: "Plate changes",
-    why: "A private plate can hide a car's original registration and its history.",
+    why: `A private plate can hide a ${noun}'s original registration and its history.`,
   },
 ];
 
-function HiddenRisks({ reg }: { reg: string }) {
+function HiddenRisks({ reg, noun }: { reg: string; noun: string }) {
   const [askingRaw, setAskingRaw] = useState("");
   const asking = Number(askingRaw.replace(/[^0-9.]/g, ""));
   const reportPrice = CARVERTICAL_PRICING.single * (1 - CARVERTICAL_PRICING.discountPct / 100);
@@ -441,7 +442,7 @@ function HiddenRisks({ reg }: { reg: string }) {
           No free check — ours included — can see these. They&apos;re the most expensive things to get wrong.
         </p>
         <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-          {HIDDEN.map(({ Icon, title, why }) => (
+          {hiddenRisks(noun).map(({ Icon, title, why }) => (
             <li key={title} className="flex items-start gap-2.5">
               <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[#7da2ff]" />
               <div>
@@ -481,7 +482,7 @@ function HiddenRisks({ reg }: { reg: string }) {
       </div>
 
       <div id="full-history" className="scroll-mt-24">
-        <CarVerticalReportCTA context="buyer-check-carvertical" variant="report" regNumber={reg} />
+        <CarVerticalReportCTA context="buyer-check-carvertical" variant="report" regNumber={reg} motorbike={noun === "motorbike"} />
       </div>
     </div>
   );

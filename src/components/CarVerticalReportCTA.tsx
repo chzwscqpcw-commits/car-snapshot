@@ -27,7 +27,7 @@ import PartnerTrust from "@/components/PartnerTrust";
 /** The shopping signal can't change while this card is on screen. */
 const NO_SUBSCRIBE = () => () => {};
 
-type Variant = "report" | "mileage" | "seller" | "seller-trust" | "anomaly";
+type Variant = "report" | "mileage" | "seller" | "seller-trust" | "anomaly" | "motorbike";
 
 interface CarVerticalReportCTAProps {
   /** Vehicle reg, passed through for the affiliate link / clickref. */
@@ -66,6 +66,11 @@ interface CarVerticalReportCTAProps {
    *  for owners valuing their own car; `anomaly` = resolution CTA attached to a
    *  detected mileage rollback. */
   variant?: Variant;
+  /** The vehicle is a motorbike. Replaces whichever variant the placement asked
+   *  for with `motorbike`, whose copy only promises what carVertical says its
+   *  motorcycle report holds — the car copy leads with finance and write-offs,
+   *  which carVertical's motorcycle page doesn't list. */
+  motorbike?: boolean;
 }
 
 /** Free vs carVertical comparison rows (report variant). `free` = also covered by
@@ -82,6 +87,20 @@ const ROWS: { label: string; free: boolean }[] = [
   { label: "Mileage anomalies", free: false },
   { label: "Damage records", free: false },
   { label: "Import / export history", free: false },
+];
+
+/** Comparison rows for a motorbike. The paid rows are taken from carVertical's
+ *  own motorcycle page (carvertical.com/gb/motorcycle-vin-check, Oct 2026):
+ *  mileage rollbacks, theft records, damages, owner changes. No finance or
+ *  write-off row — that page doesn't claim them for bikes. */
+const MOTORBIKE_ROWS: { label: string; free: boolean }[] = [
+  { label: "MOT history & advisories", free: true },
+  { label: "Tax & mileage record", free: true },
+  { label: "Recalls", free: true },
+  { label: "Mileage rollbacks", free: false },
+  { label: "Theft records", free: false },
+  { label: "Damage records", free: false },
+  { label: "Owner changes", free: false },
 ];
 
 /** Mileage variant detail. Lead with the mileage/odometer items (highlighted —
@@ -196,6 +215,17 @@ const VARIANTS: Record<
     tone: "rose",
     toggle: false,
   },
+  motorbike: {
+    Icon: ShieldCheck,
+    heading: "Buying this motorbike? Get the full history",
+    value:
+      "Mileage rollbacks, theft records, damage and owner changes your free check can't show.",
+    cta: "Get a carVertical report",
+    open: "Compare with free",
+    close: "Hide comparison",
+    tone: "blue",
+    toggle: true,
+  },
   mileage: {
     Icon: Gauge,
     heading: "Worried this car's been clocked?",
@@ -225,6 +255,7 @@ export default function CarVerticalReportCTA({
   preview = false,
   variant = "report",
   trackImpression = true,
+  motorbike = false,
 }: CarVerticalReportCTAProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -234,11 +265,12 @@ export default function CarVerticalReportCTA({
   // visits via localStorage. Never on the preview page. These placements only
   // mount after a client-side lookup, so there is no server render to match.
   const [arm] = useState<string | null>(() =>
-    variant === "seller" && !preview && typeof window !== "undefined"
+    // Bikes stay out of the test: they see the motorbike copy, not either arm.
+    variant === "seller" && !motorbike && !preview && typeof window !== "undefined"
       ? assignExperimentVariant(EXPERIMENTS.SELLER_TRUST, ["control", "trust"])
       : null,
   );
-  const shownVariant: Variant = arm === "trust" ? "seller-trust" : variant;
+  const shownVariant: Variant = motorbike ? "motorbike" : arm === "trust" ? "seller-trust" : variant;
 
   // Is this visitor comparison-shopping? sessionStorage is client-only, so the
   // server snapshot is `false` and the single-report price is what renders until
@@ -308,6 +340,7 @@ export default function CarVerticalReportCTA({
   if (!preview && !isPartnerConfigured(partner)) return null;
 
   const cfg = VARIANTS[shownVariant];
+  const rows = shownVariant === "motorbike" ? MOTORBIKE_ROWS : ROWS;
   const Icon = cfg.Icon;
   const tone = TONES[cfg.tone];
   // Routed through our own /go redirect so crawlers get a 204 instead of
@@ -347,20 +380,20 @@ export default function CarVerticalReportCTA({
       <p className="mt-2.5 text-xs text-slate-300 sm:text-[13px]">
         {shopper ? (
           <>
-            Checking a few cars?{" "}
+            Checking a few {motorbike ? "bikes" : "cars"}?{" "}
             <strong className="font-semibold text-white">
               £{CARVERTICAL_PRICING.packOf3PerReport.toFixed(2)} per report
             </strong>{" "}
             in a three-report pack, or £{CARVERTICAL_PRICING.single.toFixed(2)} for a single
-            car.
+            {motorbike ? " motorbike" : " car"}.
           </>
         ) : (
           <>
             <strong className="font-semibold text-white">
               £{CARVERTICAL_PRICING.single.toFixed(2)}
             </strong>{" "}
-            for one report — {carVerticalDiscountedSingle()} with your code. Cheaper per car
-            in a pack (£{CARVERTICAL_PRICING.packOf3PerReport.toFixed(2)} each for three).
+            for one report — {carVerticalDiscountedSingle()} with your code. Cheaper per{" "}
+            {motorbike ? "bike" : "car"} in a pack (£{CARVERTICAL_PRICING.packOf3PerReport.toFixed(2)} each for three).
           </>
         )}
       </p>
@@ -416,7 +449,7 @@ export default function CarVerticalReportCTA({
       {/* Seller reuses the report's comparison table unchanged — it's already
           coordinated copy (agreement 1.1), and "what's in the paid report" is
           the same answer whichever side of the sale you're on. */}
-      {expanded && (shownVariant === "report" || shownVariant === "seller" || shownVariant === "seller-trust") && (
+      {expanded && (shownVariant === "report" || shownVariant === "seller" || shownVariant === "seller-trust" || shownVariant === "motorbike") && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           <div className="grid grid-cols-[1fr_3.5rem_6rem] text-xs">
             <div className="bg-slate-800/70 px-3 py-2 font-medium text-slate-300">What you get</div>
@@ -424,8 +457,8 @@ export default function CarVerticalReportCTA({
             <div className="bg-[#1b54ff]/15 px-1 py-2 text-center">
               <CarVerticalLogo className="text-[10px]" />
             </div>
-            {ROWS.map((r, i) => {
-              const firstExtra = !r.free && (ROWS[i - 1]?.free ?? false);
+            {rows.map((r, i) => {
+              const firstExtra = !r.free && (rows[i - 1]?.free ?? false);
               const rowBg = r.free ? (i % 2 ? "bg-slate-900/40" : "") : "bg-[#1b54ff]/[0.07]";
               return (
                 <Fragment key={r.label}>
@@ -452,7 +485,7 @@ export default function CarVerticalReportCTA({
         </div>
       )}
 
-      {expanded && variant === "mileage" && (
+      {expanded && shownVariant === "mileage" && (
         <div className="mt-3 overflow-hidden rounded-lg border border-slate-700/50">
           {/* Highlighted — the mileage/odometer cross-checks */}
           <div className="bg-[#1b54ff]/[0.10] p-3">
