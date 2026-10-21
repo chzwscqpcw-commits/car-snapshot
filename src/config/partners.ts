@@ -59,6 +59,32 @@ function bmgDestination(path: string, reg: string): string {
   return encodeURIComponent(plate ? `${base}?vrm=${plate}` : base);
 }
 
+const WBAC_CAMPAIGN_ID = "PENDING_WEBGAINS";
+const WBAC_PROGRAM_ID = "PENDING_WEBGAINS";
+
+/**
+ * The query parameter webuyanycar.com pre-fills its reg box from, or null to
+ * send no plate. Null until someone has seen it work in a real browser: their
+ * site blocks headless browsers, so it couldn't be tested here (Oct 2026), and
+ * a plate in a URL that doesn't pre-fill is a plate shared for nothing — as
+ * Warrantywise's quote page turned out to be (none of 10 names worked).
+ */
+const WBAC_PREFILL_PARAM: string | null = null;
+
+/** Whether a We Buy Any Car click should hand the plate to /go at all. */
+export const WBAC_PREFILLS_PLATE = WBAC_PREFILL_PARAM !== null;
+
+/** Webgains tracker → webuyanycar.com, with the placement as `clickref`. */
+function wbacLink(reg: string, clickref?: string): string {
+  const plate = reg.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  const dest =
+    WBAC_PREFILL_PARAM && plate
+      ? `https://www.webuyanycar.com/?${WBAC_PREFILL_PARAM}=${plate}`
+      : "https://www.webuyanycar.com/";
+  const base = `https://track.webgains.com/click.html?wgcampaignid=${WBAC_CAMPAIGN_ID}&wgprogramid=${WBAC_PROGRAM_ID}&wgtarget=${encodeURIComponent(dest)}`;
+  return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
+}
+
 export function isPartnerConfigured(partner: PartnerLink): boolean {
   // Any PENDING_* placeholder (PENDING_AWINMID, PENDING_WEBGAINS) means the
   // tracking IDs aren't provisioned yet — render nothing.
@@ -364,22 +390,19 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     },
   },
   // We Buy Any Car — sell-your-car instant offer. NOTE: Webgains, NOT Awin.
-  // Applied 2026-06-07; pending Webgains account + programme approval. Webgains
-  // tracker format:
-  //   https://track.webgains.com/click.html?wgcampaignid=<YOUR_CAMPAIGN_ID>&wgprogramid=<WBAC_PROGRAM_ID>&wgtarget=<encoded dest>
-  // Fill both IDs from the Webgains dashboard on approval, then flip pending:false.
+  // Webgains declined us in Feb and again on 8 Jun 2026 (traffic: their bar is
+  // 10k unique monthly visitors for 3 months); reapplied 21 Oct 2026 with
+  // Aug–Oct GA4 over the bar. ON APPROVAL: put the two IDs from the Webgains
+  // dashboard in WBAC_CAMPAIGN_ID / WBAC_PROGRAM_ID below and flip pending:false.
+  // Clicks go through /go/webuyanycar (bot filter, server-side click record).
   weBuyAnyCar: {
-    url: "https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=https%3A%2F%2Fwww.webuyanycar.com%2F",
+    url: wbacLink(""),
     name: "We Buy Any Car",
     isAffiliate: true,
     pending: true,
     description: "Get a free instant offer to sell your car",
     shortDescription: "Instant offer",
-    buildLink: (reg: string, clickref?: string) => {
-      const destination = encodeURIComponent(`https://www.webuyanycar.com/?vrm=${reg}`);
-      const base = `https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=${destination}`;
-      return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
-    },
+    buildLink: (reg: string, clickref?: string) => wbacLink(reg, clickref),
   },
   // Carwow "Sell my Car" — sell-car / valuation audience. CORRECTION (2026-06-08):
   // Carwow's Awin UK programme is CLOSED. The live UK networks are Impact.com /
@@ -566,7 +589,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
  * The route still accepts a legacy ?vrm= for links already out there.
  */
 export function goLink(
-  partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair",
+  partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair" | "webuyanycar",
   context: GoContext,
   variant?: string,
 ): string {
@@ -626,6 +649,8 @@ export const GO_CONTEXTS = [
   "stats-how-many-left",
   "stats-uk-mileage",
   "buyer-check-carvertical",
+  "valuation-result-wbac", // We Buy Any Car under the valuation tool's result
+  "money-wbac", // We Buy Any Car under the homepage's own valuation
 ] as const;
 export type GoContext = (typeof GO_CONTEXTS)[number];
 

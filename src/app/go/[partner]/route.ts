@@ -42,6 +42,8 @@ const GO_PARTNERS: Record<string, { partnerKey: keyof typeof PARTNER_LINKS }> = 
   bookmygarage: { partnerKey: "bookMyGarage" },
   "bookmygarage-service": { partnerKey: "bookMyGarageService" },
   "bookmygarage-repair": { partnerKey: "bookMyGarageRepair" },
+  // Component CTA only (SellCarCTA) — never in post prose.
+  webuyanycar: { partnerKey: "weBuyAnyCar" },
 };
 
 /** Post slugs are our own; keep the value tight before it reaches a URL. */
