@@ -409,7 +409,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {/* Free owner action — captures the MOT reminder inline instead of
           deflecting to the banner. */}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
-      <SellCarCTA context="valuation-result-wbac" regNumber={vrm} />
+      <SellCarCTA context="valuation-result-wbac" regNumber={vrm} className="mt-6" />
       {/* SellingToBuyBridge removed 2026-08-25. It was a SECOND carVertical ask
           on a screen that already carries one, and the two together produced the
           run of consecutive sells flagged during the placement review. Across
