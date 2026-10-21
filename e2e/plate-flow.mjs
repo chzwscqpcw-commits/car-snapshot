@@ -196,7 +196,9 @@ await check("carVertical", async (page) => {
     if (res.url().includes("/go/carvertical") && res.status() === 302) redirects.push(res.headers()["location"] ?? "");
   });
   await page.goto(`${BASE}/mileage-check#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
-  const sel = 'a[href^="/go/carvertical"]';
+  // The result's own box — the hidden landing content has a carVertical link
+  // too (ctx=mileage-carvertical), which disappears when the result mounts.
+  const sel = 'a[href^="/go/carvertical"][href*="ctx=mileage-result-carvertical"]';
   const has = await until(page, (s) => !!document.querySelector(s), 15000, sel);
   const href = has ? await page.$eval(sel, (a) => a.getAttribute("href")) : null;
   report("/go link has no plate in it", !!href && !href.includes(PLATE) && !/vrm=/i.test(href), String(href));
