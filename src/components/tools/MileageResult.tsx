@@ -13,6 +13,7 @@ import {
 } from "@/components/tools/shared";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
+import { isMotorbike } from "@/lib/report-v2/format";
 
 interface MileageResultProps {
   vrm: string;
@@ -105,6 +106,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
               variant="anomaly"
               context="mileage-anomaly-carvertical"
               regNumber={vrm}
+              motorbike={isMotorbike(vehicle)}
             />
           </div>
         </>

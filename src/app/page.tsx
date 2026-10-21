@@ -226,6 +226,7 @@ import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 import { onPlateChange, plateHref, readPlate } from "@/lib/plate-url";
+import { isMotorbike } from "@/lib/report-v2/format";
 
 type VehicleData = {
   registrationNumber: string;
@@ -4971,6 +4972,7 @@ END:VEVENT
                   regNumber={data.registrationNumber}
                   context="money-seller"
                   variant="seller"
+                  motorbike={isMotorbike(data)}
                 />
               </div>
             </DataReveal>
@@ -5519,12 +5521,14 @@ END:VEVENT
                           regNumber={data.registrationNumber}
                           context="mot-history-anomaly"
                           variant="anomaly"
+                          motorbike={isMotorbike(data)}
                         />
                       ) : (
                         <CarVerticalReportCTA
                           regNumber={data.registrationNumber}
                           context="mot-history-carvertical"
                           variant="mileage"
+                          motorbike={isMotorbike(data)}
                         />
                       );
                     })()}

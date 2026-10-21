@@ -49,6 +49,17 @@ export function vehicleNoun(d: { wheelplan?: string; typeApproval?: string }, bo
   return "car";
 }
 
+/** For components holding a raw lookup record, whose DVLA fields are untyped. */
+export function isMotorbike(v: object): boolean {
+  const { wheelplan, typeApproval } = v as { wheelplan?: unknown; typeApproval?: unknown };
+  return (
+    vehicleNoun({
+      wheelplan: typeof wheelplan === "string" ? wheelplan : undefined,
+      typeApproval: typeof typeApproval === "string" ? typeApproval : undefined,
+    }) === "motorbike"
+  );
+}
+
 /** Strip emoji and pictographs (e.g. "⚠️ " in engine warnings) the fonts can't draw. */
 export function plainText(s: string): string {
   return s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, "").replace(/\s+-\s+/g, ": ").replace(/\s{2,}/g, " ").trim();

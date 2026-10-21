@@ -45,6 +45,7 @@ import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import Button from "@/components/Button";
+import { isMotorbike } from "@/lib/report-v2/format";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -257,7 +258,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       />
       {/* Running costs are a "should I buy this car?" signal — offer the full
           history check (finance/write-off/stolen/mileage) at that buyer intent. */}
-      <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" />
+      <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" motorbike={isMotorbike(vehicle)} />
       {/* Repairs are the one line this page forecasts least well — everything
           else here (fuel, tax, insurance, servicing) is modellable, a failed
           gearbox isn't. That gap is the honest case for a warranty, so the
