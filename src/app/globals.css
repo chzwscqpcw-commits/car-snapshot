@@ -7,6 +7,15 @@
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* slate-500 is the site's secondary-text colour (557 uses). Tailwind's
+   #62748e reaches only 3.7-4.2:1 on our near-black backgrounds — under the
+   4.5:1 WCAG AA minimum for small text, and Lighthouse's top accessibility
+   failure on every page audited (Oct 2026). #7486a0 is the smallest lift that
+   clears 4.5:1 on all of them (4.8:1 on slate-900). */
+@theme {
+  --color-slate-500: #7486a0;
+}
+
 /* Landing-page example-card scaling. CSS `zoom` shrinks both the visual size
    AND the bounding box (unlike `transform: scale`), so the card collapses
    correctly on mobile without leaving empty vertical space below it. Uses CSS
@@ -155,14 +164,19 @@ a {
   font-weight: 600;
 }
 
+/* Underlined: colour alone (blue-400 on slate-300 is 1.7:1) doesn't mark a
+   link for anyone who can't tell the two apart. */
 .blog-content a {
   color: #60a5fa; /* blue-400 */
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: rgb(96 165 250 / 0.4);
+  text-underline-offset: 3px;
   transition: color 0.15s;
 }
 
 .blog-content a:hover {
   color: #93c5fd; /* blue-300 */
+  text-decoration-color: currentColor;
 }
 
 .blog-content ul,

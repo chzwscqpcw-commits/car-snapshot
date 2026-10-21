@@ -89,7 +89,7 @@ export default function SiteFooter() {
           <p>
             Always verify details with the seller and official documents before making any decisions.
           </p>
-          <p className="text-slate-600">
+          <p className="text-slate-500">
             Free Plate Check may earn a commission from partner links. This doesn&apos;t affect our recommendations or the data we show.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-3">
@@ -111,7 +111,7 @@ export default function SiteFooter() {
               />
             </a>
           </div>
-          <p className="text-slate-600 pt-1">Made in 🇬🇧</p>
+          <p className="text-slate-500 pt-1">Made in 🇬🇧</p>
         </div>
       </div>
     </footer>
