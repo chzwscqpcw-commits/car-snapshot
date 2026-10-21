@@ -221,6 +221,7 @@ import InspectionCTA from "@/components/InspectionCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
+import SellCarCTA from "@/components/SellCarCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
@@ -4976,6 +4977,17 @@ END:VEVENT
                 />
               </div>
             </DataReveal>
+
+            {/* We Buy Any Car — the sell-your-car offer for owners who've just
+                valued their car. Below the carVertical seller box, never above
+                it (see SellCarCTA). Only where we gave a valuation: no figure,
+                no "now you know what it's worth". Renders nothing until the
+                Webgains approval is in. */}
+            {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && (
+              <DataReveal delay={398}>
+                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} className="mb-8" />
+              </DataReveal>
+            )}
 
             {/* SellingToBuyBridge removed 2026-08-25 — see the matching note in
                 ValuationResult. It was the second carVertical ask on a screen

@@ -177,6 +177,10 @@ await check("booking", async (page) => {
   const before = lookups.length;
   await page.goto(`${BASE}/booking?type=mot&source=e2e#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
   const atStep3 = await until(page, () => !!document.querySelector('input[placeholder^="e.g. SW1A"]'));
+  // The lookup is a background fetch after step 3 renders — wait for it rather
+  // than reading the list the instant step 3 appears (a race on fast runners).
+  const deadline = Date.now() + 10000;
+  while (!lookups.slice(before).includes(PLATE) && Date.now() < deadline) await new Promise((r) => setTimeout(r, 200));
   const looked = lookups.slice(before).includes(PLATE);
   report("booking pre-fills the plate (skips to step 3)", atStep3 && looked, JSON.stringify({ atStep3, looked }));
 });
