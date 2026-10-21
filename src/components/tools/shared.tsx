@@ -20,6 +20,7 @@ import { trackEvent } from "@/lib/tracking";
 import Button from "@/components/Button";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
 import { goToPlate, plateHref } from "@/lib/plate-url";
+import { isValuationSupported } from "@/lib/valuation";
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
 
@@ -380,9 +381,17 @@ export function LookupError({
   );
 }
 
+/** What the full report holds. Motorbikes and pickups get no valuation
+ *  (isValuationSupported), so they aren't promised one. */
+export function revealPitchFor(valued: boolean): string {
+  return valued
+    ? "MOT history, recalls, ULEZ, valuation, running costs, owner negotiation helpers — every piece of data we hold, on one page."
+    : "MOT history, recalls, ULEZ, running costs, owner negotiation helpers — every piece of data we hold, on one page.";
+}
+
 export function RevealCTA({
   vrm,
-  pitch = "MOT history, recalls, ULEZ, valuation, running costs, owner negotiation helpers — every piece of data we hold, on one page.",
+  pitch = revealPitchFor(true),
 }: {
   vrm: string;
   pitch?: string;
@@ -492,12 +501,15 @@ export function ToolResultLayout({
 }) {
   const displayReg = vehicle.registrationNumber || vrm;
   const label = vehicleLabel(vehicle);
+  const valued = isValuationSupported(vehicle);
   return (
     <div className="mx-auto max-w-3xl px-4 pt-6 pb-10 sm:pt-8 sm:pb-14">
       <VehiclePill reg={displayReg} label={label} />
       {children}
-      <RevealCTA vrm={displayReg} pitch={revealPitch} />
-      <QuickPillRail vrm={displayReg} exclude={[excludePill]} />
+      <RevealCTA vrm={displayReg} pitch={revealPitch ?? revealPitchFor(valued)} />
+      {/* No Valuation pill for a vehicle we don't value — it would only lead
+          to the "we don't value these" panel. */}
+      <QuickPillRail vrm={displayReg} exclude={valued ? [excludePill] : [excludePill, "valuation"]} />
     </div>
   );
 }

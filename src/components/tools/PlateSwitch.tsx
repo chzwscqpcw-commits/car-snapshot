@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 import { usePlate } from "@/lib/plate-url";
 import MotReminderBanner from "@/components/MotReminderBanner";
-import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 
 // Each result loads only on the page that shows it — a static import of all
 // nine here would put every tool's code on every tool page.
@@ -32,12 +31,8 @@ const RESULTS = {
   ),
   mileage: (vrm: string) => (
     <>
+      {/* MileageResult renders its own carVertical box, once it knows the vehicle. */}
       <MileageResult vrm={vrm} />
-      {/* High-intent: they've just seen the mileage records — offer the full
-          history check (clocking/rollback) right here. */}
-      <div className="mx-auto max-w-3xl px-4 -mt-2 pb-10">
-        <CarVerticalReportCTA variant="mileage" context="mileage-result-carvertical" regNumber={vrm} />
-      </div>
       <MotReminderBanner />
     </>
   ),

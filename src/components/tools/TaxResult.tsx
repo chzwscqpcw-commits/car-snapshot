@@ -17,6 +17,8 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { lookupErrorMessage } from "@/lib/lookup-errors";
 import { plateHref } from "@/lib/plate-url";
+import { isValuationSupported } from "@/lib/valuation";
+import { revealPitchFor } from "@/components/tools/shared";
 
 interface TaxResultProps {
   vrm: string;
@@ -424,8 +426,7 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
             Pull the full DVLA report for {vrm}
           </h3>
           <p className="mt-2 text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-            MOT history, recalls, ULEZ, valuation, running costs, owner negotiation
-            helpers — every piece of data we hold, on one page.
+            {revealPitchFor(isValuationSupported(vehicle))}
           </p>
           <div className="mt-5 flex justify-center">
             <ScanBeamReveal
@@ -456,9 +457,11 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
           <QuickPill href={plateHref("/recall-check", vrm)} icon={AlertTriangle}>
             Recalls
           </QuickPill>
-          <QuickPill href={plateHref("/value-my-car", vrm)} icon={CheckCircle2}>
-            Valuation
-          </QuickPill>
+          {isValuationSupported(vehicle) && (
+            <QuickPill href={plateHref("/value-my-car", vrm)} icon={CheckCircle2}>
+              Valuation
+            </QuickPill>
+          )}
         </div>
       </section>
     </div>
