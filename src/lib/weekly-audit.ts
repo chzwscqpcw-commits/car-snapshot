@@ -64,6 +64,28 @@ async function pullEvents(
   return rows;
 }
 
+/** valuation_result rows in a window, optionally only long DVLA model names
+ *  (3+ words) and/or only those that found eBay comparables. Count-only, so
+ *  no paging through ~12k rows a week. */
+async function countValuations(
+  sb: SupabaseClient,
+  gteISO: string,
+  ltISO: string | undefined,
+  opts: { long?: boolean; withMarket?: boolean },
+): Promise<number> {
+  let q = sb
+    .from("site_events")
+    .select("*", { count: "exact", head: true })
+    .eq("event_type", "valuation_result")
+    .gte("created_at", gteISO)
+    .or(NOT_INTERNAL);
+  if (ltISO) q = q.lt("created_at", ltISO);
+  if (opts.long) q = q.like("metadata->>model", "% % %");
+  if (opts.withMarket) q = q.not("metadata->>ebayMedian", "is", null);
+  const { count } = await q;
+  return count ?? 0;
+}
+
 function topN(map: Map<string, number>, n: number): [string, number][] {
   return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, n);
 }
@@ -97,6 +119,12 @@ export interface BuyerJourneyAudit {
   cvClicks: number;
 }
 
+/** Valuations that found eBay comparables, as [with market data, total]. */
+export interface MarketDataAudit {
+  cur: { all: [number, number]; long: [number, number] };
+  prev: { all: [number, number]; long: [number, number] };
+}
+
 export interface WeeklyAuditData {
   windowStart: string; // ISO date (yyyy-mm-dd) of the 7-day window start
   windowEnd: string; // ISO date (today)
@@ -108,6 +136,7 @@ export interface WeeklyAuditData {
   partnerPerResults: number | null; // partner_click / results_view, %
   carVertical: CarVerticalAudit;
   buyerJourney: BuyerJourneyAudit;
+  marketData: MarketDataAudit;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -208,6 +237,18 @@ export async function buildWeeklyAuditData(
     );
   }
 
+  // ── Valuations with market data (7d vs prior 7d) ─────────────────────────
+  const marketWindow = async (gte: string, lt?: string) => {
+    const [all, allM, long, longM] = await Promise.all([
+      countValuations(sb, gte, lt, {}),
+      countValuations(sb, gte, lt, { withMarket: true }),
+      countValuations(sb, gte, lt, { long: true }),
+      countValuations(sb, gte, lt, { long: true, withMarket: true }),
+    ]);
+    return { all: [allM, all] as [number, number], long: [longM, long] as [number, number] };
+  };
+  const [mdCur, mdPrev] = await Promise.all([marketWindow(d7), marketWindow(d14, d7)]);
+
   // ── carVertical + buyer journey (7d) ─────────────────────────────────────
   const pageViewIps = new Set(pv.map((r) => r.ip_hash).filter((h): h is string => !!h));
   const cvClicks = pc.filter((r) => r.metadata?.partner_id === "carVertical");
@@ -288,6 +329,7 @@ export async function buildWeeklyAuditData(
       cvImpressions: buyerBox?.impressions ?? 0,
       cvClicks: buyerBox?.clicks ?? 0,
     },
+    marketData: { cur: mdCur, prev: mdPrev },
   };
 }
 
@@ -369,6 +411,28 @@ function renderCarVertical(cv: CarVerticalAudit, bj: BuyerJourneyAudit): string 
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(bj.searchesBySource)}</table>`;
 }
 
+function share([n, total]: [number, number]): string {
+  return total > 0
+    ? `${((100 * n) / total).toFixed(1)}% <span style="color:#94a3b8">(${n.toLocaleString("en-GB")} / ${total.toLocaleString("en-GB")})</span>`
+    : "—";
+}
+
+function renderMarketData(md: MarketDataAudit): string {
+  const short = (w: MarketDataAudit["cur"]): [number, number] => [w.all[0] - w.long[0], w.all[1] - w.long[1]];
+  const row = (label: string, cur: [number, number], prev: [number, number]) =>
+    `<tr><td style="${TD}">${label}</td><td style="${TDR}">${share(cur)}</td><td style="${TDR}">${share(prev)}</td></tr>`;
+  return `
+  <h3 style="margin:28px 0 6px;font-size:16px">Valuations with market data</h3>
+  <p style="margin:0 0 10px;font-size:14px">Share of valuations that found eBay comparables; the rest are priced on the depreciation curve alone.</p>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
+    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Model name</th><th style="${TD};text-align:right">This week</th><th style="${TD};text-align:right">Prior week</th></tr>
+    ${row("All valuations", md.cur.all, md.prev.all)}
+    ${row("Short (1–2 words, e.g. “FOCUS”)", short(md.cur), short(md.prev))}
+    ${row("Long (3+ words, e.g. “ZS TROPHY HEV AUTO”)", md.cur.long, md.prev.long)}
+  </table>
+  <p style="margin:0 0 20px;font-size:13px;color:#64748b">Long names found comparables 1.7% of the time until #176 (21 Oct 2026). Young cars stay low whatever we do — eBay UK lists few 1–3-year-old cars.</p>`;
+}
+
 function rows(pairs: [string, number][]): string {
   if (pairs.length === 0)
     return `<tr><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#94a3b8" colspan="2">none this week</td></tr>`;
@@ -420,6 +484,8 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.partnerContexts)}</table>
 
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
+
+  ${renderMarketData(d.marketData)}
 
   <h3 style="margin:24px 0 6px;font-size:15px">Reg searches by source</h3>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.regSearchSources)}</table>
