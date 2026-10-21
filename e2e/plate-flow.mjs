@@ -50,7 +50,7 @@ const browser = await puppeteer.launch({
   args: ["--no-sandbox"],
 });
 
-/** Every request to our own server whose URL carried the plate. */
+/** Every request to our own server whose URL — or Referer — carried the plate. */
 const leaks = [];
 /** Plates sent to /api/lookup (in the POST body, where they belong). */
 const lookups = [];
@@ -75,6 +75,10 @@ async function newPage() {
     // Chrome reports the URL with its fragment, but never sends that part.
     const sent = url.split("#")[0];
     if (sent.includes(PLATE)) leaks.push(sent.slice(BASE.length));
+    // A ?vrm= address leaks mostly through Referer: every request the page
+    // makes sends it. (Browsers strip the fragment from Referer.)
+    const referer = req.headers()["referer"] ?? "";
+    if (referer.includes(PLATE)) leaks.push(`referer ${referer.replace(BASE, "")} -> ${sent.slice(BASE.length)}`);
     const path = new URL(url).pathname;
     if (path === "/api/lookup") {
       lookups.push(JSON.parse(req.postData() ?? "{}").vrm);
@@ -207,9 +211,11 @@ await check("carVertical", async (page) => {
 });
 
 // The point of #174: no request to our server ever carried the plate in its
-// URL, except the legacy-link page loads this run makes on purpose.
-const unexpected = leaks.filter((u) => u !== `/ulez-check?vrm=${PLATE}` && u !== `/?vrm=${PLATE}`);
-report("no request URL to our server contained the plate", unexpected.length === 0, JSON.stringify(unexpected));
+// URL or Referer — except the legacy-link pages this run opens on purpose,
+// which load with ?vrm= (and send it as Referer) until they rewrite it.
+const LEGACY = [`/ulez-check?vrm=${PLATE}`, `/?vrm=${PLATE}`];
+const unexpected = leaks.filter((l) => !LEGACY.some((u) => l === u || l.startsWith(`referer ${u} ->`)));
+report("no request to our server carried the plate in its URL or Referer", unexpected.length === 0, JSON.stringify(unexpected.slice(0, 5)));
 
 await browser.close();
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll plate-flow checks passed");
