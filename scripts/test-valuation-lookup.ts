@@ -194,6 +194,12 @@ check("an L3 bike with no wheelplan is not valued", isValuationSupported({ typeA
 check("a car is valued", isValuationSupported({ wheelplan: "2 AXLE RIGID BODY", typeApproval: "M1" }), true);
 check("a quadricycle (L6) is treated as a car", isValuationSupported({ typeApproval: "L6E" }), true);
 check("missing fields default to valued", isValuationSupported({}), true);
+check("a Ford Ranger pickup is not valued", isValuationSupported({ make: "FORD", model: "RANGER WILDTRAK ECOBLUE A" }), false);
+check("an Isuzu D-Max (hyphenated) is not valued", isValuationSupported({ make: "ISUZU", model: "D-MAX UTAH" }), false);
+check("a Mercedes X-Class pickup is not valued", isValuationSupported({ make: "MERCEDES-BENZ", model: "X 250 D POWER 4MATIC" }), false);
+check("a Range Rover is still valued (Ranger is Ford-only)", isValuationSupported({ make: "LAND ROVER", model: "RANGE ROVER SPORT" }), true);
+check("a Transit van is still valued", isValuationSupported({ make: "FORD", model: "TRANSIT 350 LEADER" }), true);
+check("a BMW X5 is still valued", isValuationSupported({ make: "BMW", model: "X5 XDRIVE30D" }), true);
 
 console.log("\nSalvage blocklist — must catch non-runners:");
 // Replaces depFloor, which discarded any listing below 35% of our own

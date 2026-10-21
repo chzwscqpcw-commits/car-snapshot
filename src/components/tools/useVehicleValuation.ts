@@ -83,7 +83,15 @@ export function useVehicleValuation(
   const newPrice = useMemo(() => {
     if (!vehicle.make || !vehicle.model) return null;
     // No new price → no estimate, the existing "can't value" path.
-    if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval })) return null;
+    if (
+      !isValuationSupported({
+        make: vehicle.make,
+        model: vehicle.model,
+        wheelplan: vehicle.wheelplan,
+        typeApproval: vehicle.typeApproval,
+      })
+    )
+      return null;
     const parsed = parseModel(vehicle.model, vehicle.make);
     const lookupModel = expandBaseModelForLookup(vehicle.make, parsed);
     return lookupNewPrice(NEW_PRICES, vehicle.make, lookupModel || vehicle.model, vehicle.fuelType);

@@ -572,19 +572,66 @@ export function getListPriceDeflator(vehicleAge: number): number {
 // ── What we don't value ────────────────────────────────────────────────────
 
 /**
- * Can this vehicle be valued at all? Motorbikes (DVLA wheelplan "2 WHEEL", or
- * type approval L1–L5: two- and three-wheelers) can't: new-prices.json holds
- * no bikes, so they started from the £18,000 default and ran down the CAR
- * depreciation curve. A 2014 Ducati 1199 came out at £2,750–£4,500 against a
- * real market several times that. Founder decision 2026-10-19: no estimate
- * beats a wrong one. L6/L7 quadricycles (Twizy, Ami) are cars for this purpose.
+ * Pickups, by make and model — DVLA has no pickup wheelplan, and type approval
+ * N1 also covers ordinary vans, which value well enough to keep. The make is
+ * part of the match so a name can't collide with a car's. Keys and patterns
+ * are in normalizeStr form: upper case, hyphens as spaces.
  */
-export function isValuationSupported(v: { wheelplan?: unknown; typeApproval?: unknown }): boolean {
+const PICKUPS: Record<string, RegExp> = {
+  FORD: /^RANGER\b/,
+  MITSUBISHI: /^(L ?200|TRITON)\b/,
+  NISSAN: /^(NAVARA|NP300)\b/,
+  TOYOTA: /^HILUX\b/,
+  VOLKSWAGEN: /^AMAROK\b/,
+  ISUZU: /^(D ?MAX|RODEO)\b/,
+  SSANGYONG: /^(MUSSO|ACTYON SPORTS?)\b/,
+  KGM: /^MUSSO\b/,
+  "MERCEDES BENZ": /^X ?(CLASS|\d{3})/,
+  MERCEDES: /^X ?(CLASS|\d{3})/,
+  FIAT: /^FULLBACK\b/,
+  MAXUS: /^T[69]0\b/,
+  "GREAT WALL": /^(STEED|POER)\b/,
+  GWM: /^(STEED|POER)\b/,
+  JEEP: /^GLADIATOR\b/,
+};
+
+/**
+ * Why this vehicle can't be valued, or null when it can.
+ *
+ * Motorbikes (DVLA wheelplan "2 WHEEL", or type approval L1–L5: two- and
+ * three-wheelers): new-prices.json holds no bikes, so they started from the
+ * £18,000 default and ran down the CAR depreciation curve. A 2014 Ducati 1199
+ * came out at £2,750–£4,500 against a real market several times that.
+ * L6/L7 quadricycles (Twizy, Ami) are cars for this purpose.
+ *
+ * Pickups: no list price of their own (a Ranger starts from Ford's £24,000
+ * make average; new ones cost £35–50k) and they hold value far better than
+ * cars. In the 120 days to 21 Oct 2026, 16 of 21 with eBay comparables came
+ * out under 0.6× market, median 0.39× — a 2018 Ranger at £5,100 against
+ * £25,080. Ordinary vans were nearer (median ~0.9×) and are still valued.
+ *
+ * Founder decisions 2026-10-19 (bikes) and 2026-10-21 (pickups): no estimate
+ * beats a wrong one.
+ */
+export function valuationUnsupportedReason(v: {
+  wheelplan?: unknown;
+  typeApproval?: unknown;
+  make?: unknown;
+  model?: unknown;
+}): "motorbike" | "pickup" | null {
   const wheelplan = typeof v.wheelplan === "string" ? v.wheelplan.toUpperCase() : "";
   const approval = typeof v.typeApproval === "string" ? v.typeApproval.toUpperCase() : "";
-  if (wheelplan.includes("2 WHEEL")) return false;
-  if (/^L[1-5]/.test(approval)) return false;
-  return true;
+  if (wheelplan.includes("2 WHEEL")) return "motorbike";
+  if (/^L[1-5]/.test(approval)) return "motorbike";
+  const make = typeof v.make === "string" ? normalizeStr(v.make) : "";
+  const model = typeof v.model === "string" ? normalizeStr(v.model) : "";
+  const pickup = PICKUPS[make];
+  if (pickup && pickup.test(model)) return "pickup";
+  return null;
+}
+
+export function isValuationSupported(v: Parameters<typeof valuationUnsupportedReason>[0]): boolean {
+  return valuationUnsupportedReason(v) === null;
 }
 
 // ── Market-calibrated effective price ──────────────────────────────────────

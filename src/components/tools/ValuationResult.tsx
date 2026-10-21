@@ -39,7 +39,7 @@ import {
   latestRecordedMileage,
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
-  isValuationSupported,
+  valuationUnsupportedReason,
 } from "@/lib/valuation";
 import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
@@ -84,22 +84,38 @@ export default function ValuationResult({ vrm, previewVehicle }: ValuationResult
       return <LookupError vrm={vrm} message={state.message} backHref="/value-my-car" />;
     return <LookupSkeleton vrm={vrm} hint="Running the valuation model…" />;
   }
-  if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval }))
-    return <NotValued vrm={vrm} vehicle={vehicle} />;
+  const unsupported = valuationUnsupportedReason(vehicle);
+  if (unsupported) return <NotValued vrm={vrm} vehicle={vehicle} reason={unsupported} />;
   return <Loaded vrm={vrm} vehicle={vehicle} />;
 }
 
-/** Motorbikes: no estimate rather than a car-curve guess (see isValuationSupported). */
-function NotValued({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+const NOT_VALUED: Record<"motorbike" | "pickup", { heading: string; body: string }> = {
+  motorbike: {
+    heading: "We don't value motorbikes",
+    body: "Our valuation model is built on car prices, and bikes hold their value very differently — we'd rather show you nothing than a figure we know could be badly wrong. The MOT history, mileage and tax checks below all work for bikes.",
+  },
+  pickup: {
+    heading: "We don't value pickups",
+    body: "Our valuation model is built on car prices, and pickups hold their value far better than cars do — our figures came out well below what they actually sell for. We'd rather show you nothing than a number that low. The MOT history, mileage and tax checks below all work for pickups.",
+  },
+};
+
+/** No estimate rather than a car-curve guess (see valuationUnsupportedReason). */
+function NotValued({
+  vrm,
+  vehicle,
+  reason,
+}: {
+  vrm: string;
+  vehicle: LookupVehicle;
+  reason: "motorbike" | "pickup";
+}) {
+  const copy = NOT_VALUED[reason];
   return (
     <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="valuation">
       <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-white">We don&apos;t value motorbikes</h2>
-        <p className="mt-2 text-sm leading-relaxed text-slate-400">
-          Our valuation model is built on car prices, and bikes hold their value very differently
-          — we&apos;d rather show you nothing than a figure we know could be badly wrong. The MOT
-          history, mileage and tax checks below all work for bikes.
-        </p>
+        <h2 className="text-lg font-semibold text-white">{copy.heading}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-400">{copy.body}</p>
       </section>
     </ToolResultLayout>
   );

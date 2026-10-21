@@ -62,7 +62,7 @@ const NEW_PRICES = newPricesData as Array<{
  *  value (isValuationSupported), so the line reads "Not available" instead of
  *  a car-curve guess. */
 function depreciationNewPrice(vehicle: LookupVehicle): number | null {
-  if (!isValuationSupported({ wheelplan: vehicle.wheelplan, typeApproval: vehicle.typeApproval })) return null;
+  if (!isValuationSupported(vehicle)) return null;
   return lookupNewPrice(NEW_PRICES, vehicle.make, vehicle.model, vehicle.fuelType);
 }
 
