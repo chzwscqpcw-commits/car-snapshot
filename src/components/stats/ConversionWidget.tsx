@@ -295,9 +295,11 @@ export default function ConversionWidget({
           <div className="flex items-start gap-3">
             <Bell className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
             <div className="min-w-0 flex-1">
-              <h4 className="text-base font-semibold text-slate-100">
+              {/* h2: a standalone section, valid after the page's h1 or
+                  between other h2 sections (h4 skipped two levels). */}
+              <h2 className="text-base font-semibold text-slate-100">
                 {reminderHeadline}
-              </h4>
+              </h2>
               <p className="mt-1 text-sm text-slate-400">
                 Get a free email reminder in good time before your MOT is due —
                 with help to book, often below the £54.85 cap.
@@ -332,7 +334,7 @@ export default function ConversionWidget({
                 <button
                   type="submit"
                   disabled={reminderSubmitting}
-                  className="h-10 whitespace-nowrap rounded-md bg-emerald-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="h-10 whitespace-nowrap rounded-md bg-emerald-700 px-5 text-sm font-semibold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {reminderSubmitting ? (
                     <>
