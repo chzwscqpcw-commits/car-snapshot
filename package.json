@@ -19,6 +19,7 @@
     "test:model-buying": "npx tsx scripts/test-model-buying-checks.ts",
     "test:model-family": "npx tsx scripts/test-model-family.ts",
     "test:redact": "npx tsx scripts/test-redact.ts",
+    "test:e2e": "node e2e/plate-flow.mjs",
     "typecheck": "tsc --noEmit",
     "validate-data": "npx tsx scripts/validate-data.ts",
     "check-freshness": "npx tsx scripts/check-freshness.ts",
