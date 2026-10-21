@@ -13,6 +13,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
 | Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
+| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL. Locally: `npm run build && npx next start -p 3123`, then run it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
