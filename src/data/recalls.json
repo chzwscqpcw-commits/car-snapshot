@@ -14,6 +14,691 @@
   {
     "make": "CADILLAC 2",
     "models": [
+      "LYRIQ"
+    ],
+    "buildDateStart": "2025-05-21",
+    "buildDateEnd": "2025-06-20",
+    "recallDate": "2026-10-21",
+    "defect": "Affected vehicles may not illuminate the telltale indicating that the Attention Assist feature is blocked or malfunctioning.",
+    "remedy": "Reprogram the radio.",
+    "recallNumber": "R/2026/402"
+  },
+  {
+    "make": "CHEVROLET",
+    "models": [
+      "CORVETTE"
+    ],
+    "buildDateStart": "2025-03-07",
+    "buildDateEnd": "2026-01-22",
+    "recallDate": "2026-10-21",
+    "defect": "On affected vehicles drivers may not be notified of a rear turn-signal lamp failure.  If a driver is not notified of a failed rear turn-signal there is an increased risk of a crash.",
+    "remedy": "Update software calibrations in the vehicle’s exterior lighting control module.  An Over The Air update is available for applicable owner's.",
+    "recallNumber": "R/2026/394"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "EX30"
+    ],
+    "buildDateStart": "2023-09-04",
+    "buildDateEnd": "2026-07-16",
+    "recallDate": "2026-10-21",
+    "defect": "On affected vehicles there is a potential issue with insufficient fastenings on the front seat head cushions.  This means that there is a risk that in the event of an impact the head cushions may not perform as expected and could pose a risk of injury.",
+    "remedy": "Reinforce the head restraint cushion attachment.",
+    "recallNumber": "R/2026/386"
+  },
+  {
+    "make": "VOLVO",
+    "models": [
+      "EX30CC"
+    ],
+    "buildDateStart": "2025-03-05",
+    "buildDateEnd": "2026-09-02",
+    "recallDate": "2026-10-21",
+    "defect": "On affected vehicles there is a potential issue with insufficient fastenings on the front seat head cushions.  This means that there is a risk that in the event of an impact the head cushions may not perform as expected and could pose a risk of injury.",
+    "remedy": "Reinforce the head restraint cushion attachment.",
+    "recallNumber": "R/2026/386"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "CLA"
+    ],
+    "buildDateStart": "2026-02-02",
+    "buildDateEnd": "2026-03-05",
+    "recallDate": "2026-10-19",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 178 platform) GLB   (244 platform) and GLC (540 platform) vehicles the emergency call function  within the communication module might not be enabled.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will   update the software of the communication module on the affected vehicles.",
+    "recallNumber": "R/2026/380"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLB"
+    ],
+    "buildDateStart": "2025-12-20",
+    "buildDateEnd": "2026-03-10",
+    "recallDate": "2026-10-19",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 178 platform) GLB   (244 platform) and GLC (540 platform) vehicles the emergency call function  within the communication module might not be enabled.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will   update the software of the communication module on the affected vehicles.",
+    "recallNumber": "R/2026/380"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "GLC"
+    ],
+    "buildDateStart": "2026-02-06",
+    "buildDateEnd": "2026-02-06",
+    "recallDate": "2026-10-19",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 178 platform) GLB   (244 platform) and GLC (540 platform) vehicles the emergency call function  within the communication module might not be enabled.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will   update the software of the communication module on the affected vehicles.",
+    "recallNumber": "R/2026/380"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 CARRERA GTS CABRIOLET"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "718 SPYDER RS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 CARRERA 4 GTS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 CARRERA 4 GTS CABRIOLET"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 GT3 RS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 TARGA 4 GTS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 TURBO"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 CARRERA GTS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 TURBO S"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "718 CAYMAN GT4 RS"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 S",
+      "T"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "PORSCHE",
+    "models": [
+      "911 GT3"
+    ],
+    "buildDateStart": "2024-06-07",
+    "buildDateEnd": "2024-07-19",
+    "recallDate": "2026-10-19",
+    "defect": "STOP DRIVE RECALL DO NOT USE THE VEHICLE UNTIL FURTHER NOTICE TO PREVENT A POSSIBLE HAZARD. The wheel mounting with central screw connection may not meet the required specifications which can lead to damage and breakage of the central lock bolt. The wheel mounting can loosen which can result in a loss of the wheel and a loss of control over the vehicle.",
+    "remedy": "The central screw connections must be checked and replaced if necessary.",
+    "recallNumber": "R/2026/395"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "ATECA"
+    ],
+    "buildDateStart": "2017-01-28",
+    "buildDateEnd": "2023-11-15",
+    "recallDate": "2026-10-16",
+    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
+    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
+    "recallNumber": "R/2026/362"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "TARRACO"
+    ],
+    "buildDateStart": "2019-02-18",
+    "buildDateEnd": "2019-02-18",
+    "recallDate": "2026-10-16",
+    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
+    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
+    "recallNumber": "R/2026/362"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TOURAN"
+    ],
+    "buildDateStart": "2015-11-13",
+    "buildDateEnd": "2020-07-08",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2016-11-07",
+    "buildDateEnd": "2020-07-07",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2021-04-28",
+    "buildDateEnd": "2022-10-18",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2017-09-22",
+    "buildDateEnd": "2017-11-27",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "GOLF"
+    ],
+    "buildDateStart": "2014-05-10",
+    "buildDateEnd": "2019-06-17",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "GOLF"
+    ],
+    "buildDateStart": "2018-09-03",
+    "buildDateEnd": "2019-12-20",
+    "recallDate": "2026-10-16",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "RELAY"
+    ],
+    "buildDateStart": "2025-12-02",
+    "buildDateEnd": "2026-07-31",
+    "recallDate": "2026-10-15",
+    "defect": "Affected vehicles may experience a diesel fuel leak from the fuel pressure damper.",
+    "remedy": "Replace the lower section of the fuel pipe including the damper.",
+    "recallNumber": "R/2026/401"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "BOXER"
+    ],
+    "buildDateStart": "2025-12-02",
+    "buildDateEnd": "2026-08-17",
+    "recallDate": "2026-10-15",
+    "defect": "Affected vehicles may experience a diesel fuel leak from the fuel pressure damper.",
+    "remedy": "Replace the lower section of the fuel pipe including the damper.",
+    "recallNumber": "R/2026/400"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "MOVANO"
+    ],
+    "buildDateStart": "2026-02-03",
+    "buildDateEnd": "2026-07-29",
+    "recallDate": "2026-10-15",
+    "defect": "Affected vehicles may experience a diesel fuel leak from the fuel pressure damper.",
+    "remedy": "Replace the lower section of the fuel pipe including the damper.",
+    "recallNumber": "R/2026/399"
+  },
+  {
+    "make": "CUPRA",
+    "models": [
+      "BORN"
+    ],
+    "buildDateStart": "2022-09-12",
+    "buildDateEnd": "2024-05-16",
+    "recallDate": "2026-10-14",
+    "defect": "In CUPRA Born vehicles equipped with high-voltage batteries of a  certain type there is a suspicion that manufacturing problems may  have occurred in certain components of the high-voltage battery on  the part of the supplier.",
+    "remedy": "In an initial phase customers whose vehicles are equipped with  high-voltage batteries from the affected batch will receive a recall  letter including warning labels to attach to the charging socket and  the dashboard as well as the instruction to not charge above 80%  (Battery Care Mode) for safety reasons.    Furthermore where technical requirements exist we will limit the  maximum available charging capacity of your vehicle to 80% (Battery  Care Mode) via the system.",
+    "recallNumber": "R/2026/396"
+  },
+  {
+    "make": "MERCEDES-BENZ",
+    "models": [
+      "CLA"
+    ],
+    "buildDateStart": "2026-06-12",
+    "buildDateEnd": "2026-06-15",
+    "recallDate": "2026-10-14",
+    "defect": "Mercedes-Benz AG has determined that on certain CLA (174 178 platform) vehicles the seatbelt end fitting of the left front seat might not be mounted correctly.",
+    "remedy": "As a remedy Mercedes-Benz AG via its Mercedes-Benz service partners will check the mounting of the seat belt end fitting on the affected vehicles and rework it if necessary.",
+    "recallNumber": "R/2026/382"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "27 EXHAUST MANIFOLD GASKET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "42 INLET MANIFOLD GASKET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "43 INTAKE MANIFOLD GASKET SET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "318 CYLINDER HEAD GASKET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "319 CYLINDER HEAD GASKET SET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "321 VALVE COVER GASKET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "455 OIL PAN GASKET"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "560 SEAL KIT (MOTOR)"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "RIDEX GMBH",
+    "models": [
+      "979 GASKET SET CYLINDER HEAD COVER"
+    ],
+    "buildDateStart": "2019-01-01",
+    "buildDateEnd": "2026-01-31",
+    "recallDate": "2026-10-14",
+    "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
+    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "recallNumber": "R/2026/371"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID.4"
+    ],
+    "buildDateStart": "2024-01-15",
+    "buildDateEnd": "2024-09-17",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "As part of the workshop visit an ODIS diagnostic log is created that  includes information on the condition and functionality of the high voltage battery. Based on this data a check of the battery status is  undertaken.    If the analysis shows that the high-voltage battery is not abnormal  the currently valid charging restriction to 80 % is lifted after  successful evaluation of the data. This has the prerequisite that the  ODIS diagnostic log be fully uploaded.    However if irregularities are found on the high-voltage battery the  charging restriction remains in place until replacement of the  affected battery modules. In this case check whether the required  warning stickers are already attached to the instrument panel and  the charging socket. If the warning stickers are not there these must  be attached to the vehicle according to the work instruction.  Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.    To increase safety where technically possible the maximum  available charging capacity of the vehicle has already been  temporarily restricted to 80 % on the system side.    Taking these requirements into account the vehicle can continue to  be used.    Maintaining the charging restriction and attaching the warning  stickers are important prerequisites in order to minimise possible  risks until the final check of the high-voltage battery.",
+    "recallNumber": "R/2026/398"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID.7"
+    ],
+    "buildDateStart": "2023-09-18",
+    "buildDateEnd": "2025-06-27",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "As part of the workshop visit an ODIS diagnostic log is created that  includes information on the condition and functionality of the high voltage battery. Based on this data a check of the battery status is  undertaken.    If the analysis shows that the high-voltage battery is not abnormal  the currently valid charging restriction to 80 % is lifted after  successful evaluation of the data. This has the prerequisite that the  ODIS diagnostic log be fully uploaded.    However if irregularities are found on the high-voltage battery the  charging restriction remains in place until replacement of the  affected battery modules. In this case check whether the required  warning stickers are already attached to the instrument panel and  the charging socket. If the warning stickers are not there these must  be attached to the vehicle according to the work instruction.  Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.    To increase safety where technically possible the maximum  available charging capacity of the vehicle has already been  temporarily restricted to 80 % on the system side.    Taking these requirements into account the vehicle can continue to  be used.    Maintaining the charging restriction and attaching the warning  stickers are important prerequisites in order to minimise possible  risks until the final check of the high-voltage battery.",
+    "recallNumber": "R/2026/398"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID.3"
+    ],
+    "buildDateStart": "2022-09-12",
+    "buildDateEnd": "2024-05-15",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
+    "recallNumber": "R/2026/397"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID.4"
+    ],
+    "buildDateStart": "2022-11-21",
+    "buildDateEnd": "2024-10-29",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
+    "recallNumber": "R/2026/397"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID BUZZ CARGO"
+    ],
+    "buildDateStart": "2022-09-21",
+    "buildDateEnd": "2023-08-23",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
+    "recallNumber": "R/2026/397"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID BUZZ"
+    ],
+    "buildDateStart": "2022-09-05",
+    "buildDateEnd": "2024-06-20",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
+    "recallNumber": "R/2026/397"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ID.7"
+    ],
+    "buildDateStart": "2023-12-06",
+    "buildDateEnd": "2025-03-27",
+    "recallDate": "2026-10-14",
+    "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
+    "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
+    "recallNumber": "R/2026/397"
+  },
+  {
+    "make": "AUDI",
+    "models": [
+      "Q3"
+    ],
+    "buildDateStart": "2019-11-29",
+    "buildDateEnd": "2021-07-23",
+    "recallDate": "2026-10-12",
+    "defect": "On Audi Q3 and Q6 (MQB China only) models manufactured within a  specific period corrosion may occur on a bolted connection  securing the steering rack due to moisture entering in combination  with significant exposure to road salt. Gradual corrosion can impair  the secure attachment of the steering rack and lead to it no longer  being possible to steer the vehicle increasing the risk of an accident.",
+    "remedy": "The bolted connection for the steering rack will be replaced on all  affected vehicles.",
+    "recallNumber": "R/2026/359"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "LYRIQ"
+    ],
+    "buildDateStart": "2024-10-31",
+    "buildDateEnd": "2024-11-25",
+    "recallDate": "2026-10-12",
+    "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
+    "remedy": "Reprogram the body control module.",
+    "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "LYRIQ"
+    ],
+    "buildDateStart": "2022-08-24",
+    "buildDateEnd": "2024-09-20",
+    "recallDate": "2026-10-12",
+    "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
+    "remedy": "Reprogram the body control module.",
+    "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "CT5"
+    ],
+    "buildDateStart": "2023-05-18",
+    "buildDateEnd": "2023-05-18",
+    "recallDate": "2026-10-12",
+    "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
+    "remedy": "Reprogram the body control module.",
+    "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "ESCALADE"
+    ],
+    "buildDateStart": "2021-10-06",
+    "buildDateEnd": "2024-09-04",
+    "recallDate": "2026-10-12",
+    "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
+    "remedy": "Reprogram the body control module.",
+    "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "ESCALADE ESV"
+    ],
+    "buildDateStart": "2021-04-20",
+    "buildDateEnd": "2024-09-03",
+    "recallDate": "2026-10-12",
+    "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
+    "remedy": "Reprogram the body control module.",
+    "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "ASTRA H"
+    ],
+    "buildDateStart": "2005-01-03",
+    "buildDateEnd": "2014-06-11",
+    "recallDate": "2026-10-09",
+    "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle when safe to do so until the recall action has been completed. Affected vehicles will have the airbag modules replaced.",
+    "recallNumber": "R/2026/404"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "VECTRA C"
+    ],
+    "buildDateStart": "2003-07-04",
+    "buildDateEnd": "2008-10-10",
+    "recallDate": "2026-10-09",
+    "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle when safe to do so until the recall action has been completed. Affected vehicles will have the airbag modules replaced.",
+    "recallNumber": "R/2026/404"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "SIGNUM"
+    ],
+    "buildDateStart": "2005-02-16",
+    "buildDateEnd": "2008-06-19",
+    "recallDate": "2026-10-09",
+    "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle when safe to do so until the recall action has been completed. Affected vehicles will have the airbag modules replaced.",
+    "recallNumber": "R/2026/404"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
       "BLS"
     ],
     "buildDateStart": "2006-03-22",
@@ -82,6 +767,54 @@
     "defect": "On affected vehicles air defelectors may have been installed incorrectly to the front bumbper grille which can affect the airflow required for cooling the engine and 48V battery system",
     "remedy": "Check and remove the defelectors if present.",
     "recallNumber": "R/2026/364"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "208 V2"
+    ],
+    "buildDateStart": "2026-02-17",
+    "buildDateEnd": "2026-03-05",
+    "recallDate": "2026-10-05",
+    "defect": "On affected vehicles the coolant used does not meet material and technical compatibility requirements.  Over time this may cause corrosion clogging deterioration of hoses and seals and coolant leakage resulting in reduced vehicle performance loss of propulsion assistance or an electrical short-circuit.",
+    "remedy": "Drain the cooling circuit and re-fill with the correct coolant liquid.",
+    "recallNumber": "R/2026/390"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2026-07-16",
+    "buildDateEnd": "2026-09-23",
+    "recallDate": "2026-10-02",
+    "defect": "Affected vehicles may have a liftgate gas strut connection head which can become detached when the liftgate is pushed upwards after reaching fully open position.",
+    "remedy": "Check and replace the liftgate strut if necessary.",
+    "recallNumber": "R/2026/374"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2026-07-16",
+    "buildDateEnd": "2026-09-05",
+    "recallDate": "2026-10-02",
+    "defect": "Affected vehicles may have a liftgate gas strut connection head which can become detached when the liftgate is pushed upwards after reaching fully open position.",
+    "remedy": "Check and replace the liftgate strut if necessary.",
+    "recallNumber": "R/2026/374"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO COURIER"
+    ],
+    "buildDateStart": "2026-09-06",
+    "buildDateEnd": "2026-09-06",
+    "recallDate": "2026-10-02",
+    "defect": "Affected vehicles may have a liftgate gas strut connection head which can become detached when the liftgate is pushed upwards after reaching fully open position.",
+    "remedy": "Check and replace the liftgate strut if necessary.",
+    "recallNumber": "R/2026/374"
   },
   {
     "make": "ADRIA CONCESSIONAIRES LTD",
@@ -730,6 +1463,42 @@
     "defect": "Affected vehicles may have a touch condition between a fixing screw and push nut to the Instrument Panel (IP) wiring harness.    If the vehicle’s wiring is damaged different warning messages may appear depending on which wire is affected. These could include warnings for the airbag system eCall stability control or driver assistance features such as Lane Keeping Aid or Pre-Collision Assist.  The airbags will not deploy by accident but if an airbag warning is ignored the airbags may not work correctly in a crash.  In some cases the vehicle could lose power while driving and display a “Stop safely now” message. If this happens braking and steering will still work so the driver can safely bring the vehicle to a stop.  Damaged wiring could also cause a short circuit which may increase the risk of fire.",
     "remedy": "Inspect and reposition wiring harness to increase clearance and protect surfaces and if necessary repair or replace the instrument panel wiring harness.",
     "recallNumber": "R/2026/355"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2023-04-20",
+    "buildDateEnd": "2023-04-20",
+    "recallDate": "2026-09-16",
+    "defect": "On affected vehicles in the event of a curtain airbag deployment the curtain airbag may not deploy fully as intended increasing the risk of injury to the occupants.",
+    "remedy": "Remove and replace the B-Pillar trim.",
+    "recallNumber": "R/2026/352"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2024-03-28",
+    "buildDateEnd": "2024-03-28",
+    "recallDate": "2026-09-16",
+    "defect": "On affected vehicles in the event of a curtain airbag deployment the curtain airbag may not deploy fully as intended increasing the risk of injury to the occupants.",
+    "remedy": "Remove and replace the B-Pillar trim.",
+    "recallNumber": "R/2026/352"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2026-03-28",
+    "buildDateEnd": "2026-06-24",
+    "recallDate": "2026-09-16",
+    "defect": "On affected vehicles in the event of a curtain airbag deployment the curtain airbag may not deploy fully as intended increasing the risk of injury to the occupants.",
+    "remedy": "Remove and replace the B-Pillar trim.",
+    "recallNumber": "R/2026/352"
   },
   {
     "make": "HYUNDAI",
@@ -4522,6 +5291,18 @@
     "defect": "Affected helmets do not meet the requirements of ECE 22.05 and present a danger to users.",
     "remedy": "Affected helmets will be replaced and scrapped.",
     "recallNumber": "R/2026/307"
+  },
+  {
+    "make": "QUADZILLA LTD",
+    "models": [
+      "CF700-9F"
+    ],
+    "buildDateStart": "2023-12-17",
+    "buildDateEnd": "2024-01-20",
+    "recallDate": "2026-04-30",
+    "defect": "CFMOTO has become aware of a safety-related issue affecting the rear tire on some 700MT motorcycles. This tyre may be inadequate for some severe off-road conditions. Damage from intense impacts or extended riding with low tire pressure could lead to tire failure during riding a potentially hazardous situation. Therefore CFMOTO is issuing a Safety Recall to address this concern",
+    "remedy": "A newly optimized tire has been developed featuring higher-strength steel cord and enhanced toughness. All on-hand (affected) inventory must have this rear tire replaced prior to sale or delivery to customers. Owners of sold (affected) units must be contacted as soon as possible to replace the rear tire.",
+    "recallNumber": "R/2026/294"
   },
   {
     "make": "FORD",
@@ -24955,8 +25736,8 @@
     "buildDateStart": "2010-02-02",
     "buildDateEnd": "2018-05-20",
     "recallDate": "2024-11-01",
-    "defect": "On affected vehicles the Driver and Passenger front airbags may not deploy properly in the event of a collision",
-    "remedy": "On affected vehicles the Driver and Passenger front air bags will be replaced",
+    "defect": "On affected vehicles the chemicals in the Takata airbags may deteriorate over time which may cause the inflator to rupture and lead to serious injury.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle when safe to do so until the recall action has been completed.  Affected vehicles will have the airbag modules replaced.",
     "recallNumber": "R/2024/447"
   },
   {
