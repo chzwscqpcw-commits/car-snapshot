@@ -60,6 +60,24 @@ export function isMotorbike(v: object): boolean {
   );
 }
 
+/**
+ * For the same raw records: an N1 van, or a body style that says "van". We Buy
+ * Any Car's affiliate programme covers cars only (WBAC, 28 Oct 2026), so its
+ * offer must not show for one.
+ */
+export function isVan(v: object, bodyStyle?: string | null): boolean {
+  const { wheelplan, typeApproval } = v as { wheelplan?: unknown; typeApproval?: unknown };
+  return (
+    vehicleNoun(
+      {
+        wheelplan: typeof wheelplan === "string" ? wheelplan : undefined,
+        typeApproval: typeof typeApproval === "string" ? typeApproval : undefined,
+      },
+      bodyStyle,
+    ) === "van"
+  );
+}
+
 /** Strip emoji and pictographs (e.g. "⚠️ " in engine warnings) the fonts can't draw. */
 export function plainText(s: string): string {
   return s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, "").replace(/\s+-\s+/g, ": ").replace(/\s{2,}/g, " ").trim();

@@ -227,7 +227,7 @@ import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 import { onPlateChange, plateHref, readPlate } from "@/lib/plate-url";
-import { isMotorbike } from "@/lib/report-v2/format";
+import { isMotorbike, isVan } from "@/lib/report-v2/format";
 
 type VehicleData = {
   registrationNumber: string;
@@ -4981,11 +4981,11 @@ END:VEVENT
             {/* We Buy Any Car — the sell-your-car offer for owners who've just
                 valued their car. Below the carVertical seller box, never above
                 it (see SellCarCTA). Only where we gave a valuation: no figure,
-                no "now you know what it's worth". Renders nothing until the
-                Webgains approval is in. */}
+                no "now you know what it's worth". Never for vans — WBAC's
+                programme is cars only. */}
             {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && (
               <DataReveal delay={398}>
-                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} className="mb-8" />
+                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} className="mb-8" />
               </DataReveal>
             )}
 

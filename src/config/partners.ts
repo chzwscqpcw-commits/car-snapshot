@@ -59,32 +59,31 @@ function bmgDestination(path: string, reg: string): string {
   return encodeURIComponent(plate ? `${base}?vrm=${plate}` : base);
 }
 
-const WBAC_CAMPAIGN_ID = "PENDING_WEBGAINS";
-const WBAC_PROGRAM_ID = "PENDING_WEBGAINS";
+/**
+ * Rakuten Advertising text link for We Buy Any Car (MID 54121, link ID 2, our
+ * SID 4767724) — the tracker lands on webuyanycar.com's homepage, which is
+ * where WBAC asked us to send people (28 Oct 2026). `id` is our publisher
+ * token; it's in every link we publish, so it isn't a secret.
+ */
+const WBAC_RAKUTEN_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=2128398.2&type=3&subid=0";
 
 /**
- * The query parameter webuyanycar.com pre-fills its reg box from, or null to
- * send no plate. NULL — THERE ISN'T ONE (checked 21 Oct 2026; don't re-try):
- * `?vrm=AB12CDE` leaves the box empty in a real browser, and their homepage
- * bundle reads exactly one query parameter (`force-brand`); the reg box is
- * only ever filled from their own session after a lookup on their site. A
- * plate in a URL that doesn't pre-fill is a plate shared for nothing. Set
- * this only if WBAC/Webgains supply an affiliate deep link that does.
+ * Whether a We Buy Any Car click should hand the plate to /go at all. FALSE —
+ * webuyanycar.com has no pre-fill parameter (checked 21 Oct 2026; don't
+ * re-try): `?vrm=AB12CDE` leaves the box empty in a real browser, and their
+ * homepage bundle reads only `force-brand`. A plate in a URL that doesn't
+ * pre-fill is a plate shared for nothing.
  */
-const WBAC_PREFILL_PARAM: string | null = null;
+export const WBAC_PREFILLS_PLATE = false;
 
-/** Whether a We Buy Any Car click should hand the plate to /go at all. */
-export const WBAC_PREFILLS_PLATE = WBAC_PREFILL_PARAM !== null;
-
-/** Webgains tracker → webuyanycar.com, with the placement as `clickref`. */
-function wbacLink(reg: string, clickref?: string): string {
-  const plate = reg.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-  const dest =
-    WBAC_PREFILL_PARAM && plate
-      ? `https://www.webuyanycar.com/?${WBAC_PREFILL_PARAM}=${plate}`
-      : "https://www.webuyanycar.com/";
-  const base = `https://track.webgains.com/click.html?wgcampaignid=${WBAC_CAMPAIGN_ID}&wgprogramid=${WBAC_PROGRAM_ID}&wgtarget=${encodeURIComponent(dest)}`;
-  return clickref ? `${base}&clickref=${encodeURIComponent(clickref)}` : base;
+/**
+ * Rakuten tracker → webuyanycar.com, with the placement as `u1` — Rakuten's
+ * sub-ID, passed through to the transaction report, so a sale says which
+ * placement earned it.
+ */
+function wbacLink(_reg: string, clickref?: string): string {
+  return clickref ? `${WBAC_RAKUTEN_LINK}&u1=${encodeURIComponent(clickref)}` : WBAC_RAKUTEN_LINK;
 }
 
 export function isPartnerConfigured(partner: PartnerLink): boolean {
@@ -391,17 +390,18 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       );
     },
   },
-  // We Buy Any Car — sell-your-car instant offer. NOTE: Webgains, NOT Awin.
-  // Webgains declined us in Feb and again on 8 Jun 2026 (traffic: their bar is
-  // 10k unique monthly visitors for 3 months); reapplied 21 Oct 2026 with
-  // Aug–Oct GA4 over the bar. ON APPROVAL: put the two IDs from the Webgains
-  // dashboard in WBAC_CAMPAIGN_ID / WBAC_PROGRAM_ID below and flip pending:false.
-  // Clicks go through /go/webuyanycar (bot filter, server-side click record).
+  // We Buy Any Car — sell-your-car instant offer. NOTE: Rakuten Advertising
+  // (MID 54121), NOT Awin. Live 28 Oct 2026 after
+  // Webgains declined us and then lost the programme. Pays £45 only when WBAC
+  // BUYS the car: valued + booked within 24h of the click (1-day cookie),
+  // bought within 4 days of booking, and the reg/email unseen by WBAC in the
+  // prior 60 days. Cars only — WBAC asked us not to show it for vans (see
+  // SellCarCTA). Clicks go through /go/webuyanycar (bot filter, server-side
+  // click record).
   weBuyAnyCar: {
     url: wbacLink(""),
     name: "We Buy Any Car",
     isAffiliate: true,
-    pending: true,
     description: "Get a free instant offer to sell your car",
     shortDescription: "Instant offer",
     buildLink: (reg: string, clickref?: string) => wbacLink(reg, clickref),
