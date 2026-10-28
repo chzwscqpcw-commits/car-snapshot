@@ -20,6 +20,21 @@ export function titleCase(s: string | undefined): string {
   return (s ?? "").trim().split(/\s+/).filter(Boolean).map(titleWord).join(" ");
 }
 
+/**
+ * "Ford Focus" from a make and a full model string — just the model's first
+ * word (two for "3 SERIES"), since DVLA/MOT models run to "GOLF MATCH TSI
+ * BLUEMOTION TECH". Undefined
+ * when the make is unknown.
+ */
+export function shortVehicleName(make: string | undefined | null, model: string | undefined | null): string | undefined {
+  const m = titleCase(make ?? undefined);
+  if (!m) return undefined;
+  // "3 SERIES", "A 180": a one- or two-character first word needs the next.
+  const words = (model ?? "").trim().split(/\s+/).filter(Boolean);
+  const first = titleCase(words.slice(0, (words[0]?.length ?? 0) <= 2 ? 2 : 1).join(" "));
+  return first && first.toLowerCase() !== m.toLowerCase() ? `${m} ${first}` : m;
+}
+
 export function parseDate(s: string | undefined | null): Date | null {
   if (!s) return null;
   const d = new Date(s);

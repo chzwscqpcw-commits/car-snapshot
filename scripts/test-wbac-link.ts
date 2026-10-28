@@ -6,7 +6,7 @@
  * programme is cars only).
  */
 import { PARTNER_LINKS, WBAC_PREFILLS_PLATE, isPartnerConfigured } from "../src/config/partners";
-import { isVan } from "../src/lib/report-v2/format";
+import { isVan, shortVehicleName } from "../src/lib/report-v2/format";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = ""): void {
@@ -32,6 +32,18 @@ check("N1 type approval is a van", isVan({ typeApproval: "N1" }));
 check("a 'Panel Van' body style is a van", isVan({}, "Panel Van"));
 check("an M1 car is not", !isVan({ typeApproval: "M1" }, "Hatchback"));
 check("no data is not a van", !isVan({}));
+
+console.log("\nVehicle name in the heading:");
+for (const [make, model, want] of [
+  ["FORD", "FOCUS ZETEC", "Ford Focus"],
+  ["VOLKSWAGEN", "GOLF MATCH TSI BLUEMOTION TECH", "Volkswagen Golf"],
+  ["BMW", "3 SERIES", "BMW 3 Series"],
+  ["TOYOTA", "", "Toyota"],
+  ["", "FOCUS", undefined],
+] as const) {
+  const got = shortVehicleName(make, model);
+  check(`${make || "(no make)"} ${model} → ${want ?? "none"}`, got === want, String(got));
+}
 
 console.log(failures ? `\n${failures} failure(s)` : "\nAll We Buy Any Car link checks passed");
 process.exit(failures ? 1 : 0);

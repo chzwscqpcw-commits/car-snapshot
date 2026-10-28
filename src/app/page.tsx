@@ -227,7 +227,7 @@ import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 import { onPlateChange, plateHref, readPlate } from "@/lib/plate-url";
-import { isMotorbike, isVan } from "@/lib/report-v2/format";
+import { isMotorbike, isVan, shortVehicleName } from "@/lib/report-v2/format";
 
 type VehicleData = {
   registrationNumber: string;
@@ -4985,7 +4985,7 @@ END:VEVENT
                 programme is cars only. */}
             {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && (
               <DataReveal delay={398}>
-                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} className="mb-8" />
+                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} vehicleName={shortVehicleName(data.make, data.model)} className="mb-8" />
               </DataReveal>
             )}
 

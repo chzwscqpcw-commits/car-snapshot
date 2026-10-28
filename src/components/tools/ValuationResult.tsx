@@ -21,7 +21,7 @@ import {
 import { usePathname } from "next/navigation";
 import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import SellCarCTA from "@/components/SellCarCTA";
-import { isVan } from "@/lib/report-v2/format";
+import { isVan, shortVehicleName } from "@/lib/report-v2/format";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import MOTReminderSignup from "@/components/MOTReminderSignup";
@@ -397,6 +397,18 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           ~72 seconds having declined the price. This is the only thing on the
           site that acknowledges that — so it stays beside the CTA it answers. */}
       <PartnerReturnPrompt context="valuation-result-return" />
+      {/* We Buy Any Car, straight under the carVertical seller box: someone who
+          came looking for a valuation is the likeliest seller on the site.
+          Until 2026-10-28 it sat below the condition panel and reminder, ~2,000px
+          down, and in its first evening drew 0 views here against 13 on the
+          homepage. Never ABOVE the seller box — see SellCarCTA. */}
+      <SellCarCTA
+        context="valuation-result-wbac"
+        regNumber={vrm}
+        isVan={isVan(vehicle)}
+        vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+        className="mt-6"
+      />
       {newPrice !== null && age !== null && (
         <DepreciationCurveCard
           newPrice={newPrice}
@@ -410,7 +422,6 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       {/* Free owner action — captures the MOT reminder inline instead of
           deflecting to the banner. */}
       <ReminderHook vrm={vrm} vehicle={vehicle} />
-      <SellCarCTA context="valuation-result-wbac" regNumber={vrm} isVan={isVan(vehicle)} className="mt-6" />
       {/* SellingToBuyBridge removed 2026-08-25. It was a SECOND carVertical ask
           on a screen that already carries one, and the two together produced the
           run of consecutive sells flagged during the placement review. Across
