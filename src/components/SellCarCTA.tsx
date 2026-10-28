@@ -22,6 +22,8 @@ interface SellCarCTAProps {
   /** WBAC's affiliate programme is cars only — they asked us not to show the
    *  offer for vans (28 Oct 2026). Required so no new placement forgets it. */
   isVan: boolean;
+  /** "Ford Focus" — names the car in the heading. Omit when unknown. */
+  vehicleName?: string;
   /** Render even while the partner is pending — for the preview page. */
   preview?: boolean;
   className?: string;
@@ -43,7 +45,7 @@ interface SellCarCTAProps {
  * a run of fake clicks — and rebuilds the tracker link from partners.ts. So no
  * trackPartnerClick here, or every click would count twice.
  */
-export default function SellCarCTA({ context, regNumber, isVan, preview = false, className = "" }: SellCarCTAProps) {
+export default function SellCarCTA({ context, regNumber, isVan, vehicleName, preview = false, className = "" }: SellCarCTAProps) {
   const live = isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && !isVan;
 
   // `partner_impression` once, when half the card is on screen — the same
@@ -74,21 +76,32 @@ export default function SellCarCTA({ context, regNumber, isVan, preview = false,
   return (
     <div
       ref={cardRef}
-      className={`rounded-xl border border-emerald-800/40 bg-gradient-to-br from-emerald-950/30 to-slate-900/30 p-5 sm:p-6 ${className}`}
+      className={`rounded-xl border border-emerald-600/40 bg-gradient-to-br from-emerald-900/40 via-emerald-950/30 to-slate-900/30 p-5 sm:p-6 shadow-lg shadow-emerald-950/30 ${className}`}
     >
       <div className="flex items-start gap-3 mb-3">
         <Banknote className="h-5 w-5 text-emerald-400 mt-0.5 shrink-0" />
         <h3 className="flex-1 text-base sm:text-lg font-semibold text-white">
-          Thinking of selling? Get an instant offer
+          {vehicleName ? `Selling your ${vehicleName}?` : "Thinking of selling?"}
         </h3>
         <WbacLogo className="shrink-0 text-xs" />
       </div>
 
-      <p className="text-sm text-slate-300 leading-relaxed mb-4 ml-8">
-        Now you know what it&apos;s worth, see what you&apos;d actually be offered. <strong className="text-slate-100">We Buy Any Car</strong> gives a free online valuation in minutes — a useful second opinion even if you&apos;re not ready to sell yet.
+      {/* Claims about WBAC stay within their own approved link text ("Get Your
+          Free 30 Second Car Valuation") — the Rakuten agreement (2.5) bars any
+          others. Never imply they'll pay our figure: theirs is a trade offer. */}
+      <p className="text-sm text-slate-300 leading-relaxed mb-3 ml-8">
+        Our figure is a guide to what it&apos;s worth. To see what you could sell it for today, get a free online valuation from <strong className="text-slate-100">We Buy Any Car</strong>.
       </p>
 
-      <div className="ml-8 flex flex-col sm:flex-row sm:items-center gap-3">
+      <ul className="ml-8 mb-4 flex flex-wrap gap-2 text-xs text-emerald-200">
+        {["Free", "About 30 seconds", "Online"].map((t) => (
+          <li key={t} className="rounded-full border border-emerald-700/50 bg-emerald-900/30 px-2.5 py-1">
+            {t}
+          </li>
+        ))}
+      </ul>
+
+      <div className="ml-8">
         <a
           href={goLink("webuyanycar", context)}
           target="_blank"
@@ -96,13 +109,10 @@ export default function SellCarCTA({ context, regNumber, isVan, preview = false,
           onClick={() => {
             if (WBAC_PREFILLS_PLATE) setGoPlate(regNumber);
           }}
-          className="inline-flex items-center justify-center px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg transition-colors"
+          className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg transition-colors"
         >
-          Get an instant offer &mdash; We Buy Any Car &#8599;
+          Get my free valuation &#8599;
         </a>
-        <span className="text-xs text-slate-500">
-          Free online valuation
-        </span>
       </div>
 
       <p className="text-xs text-slate-500 mt-3 ml-8">

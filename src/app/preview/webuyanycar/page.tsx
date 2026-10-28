@@ -17,7 +17,7 @@ export default function WeBuyAnyCarPreviewPage() {
             Shown under the carVertical seller box on the valuation tool and the homepage
             valuation, for cars we value. Never shown for vans.
           </p>
-          <SellCarCTA context="valuation-result-wbac" regNumber="AB12CDE" isVan={false} preview />
+          <SellCarCTA context="valuation-result-wbac" regNumber="AB12CDE" isVan={false} vehicleName="Ford Focus" preview />
         </div>
       </main>
     </PreviewGate>
