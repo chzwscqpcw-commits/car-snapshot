@@ -293,14 +293,24 @@ export default function HowManyLeftExplorer() {
             </div>
           )}
 
-          {/* upsell + share */}
+          {/* upsell + share. The click is tracked because the full check is
+              where partner offers actually convert, and the reg_search it
+              leads to carries no record of coming from here (28 Oct 2026). */}
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             {vehicle.reg ? (
-              <Button href={plateHref("/", vehicle.reg)} className="flex-1">
+              <Button
+                href={plateHref("/", vehicle.reg)}
+                onClick={() => trackEvent("hml_full_check_click", { mode: "reg", year: vehicle.year ?? null })}
+                className="flex-1"
+              >
                 See the full check on this car <ArrowRight className="h-4 w-4" />
               </Button>
             ) : (
-              <Button href="/" className="flex-1">
+              <Button
+                href="/"
+                onClick={() => trackEvent("hml_full_check_click", { mode: "model", year: null })}
+                className="flex-1"
+              >
                 Got one? Check it by reg <ArrowRight className="h-4 w-4" />
               </Button>
             )}
