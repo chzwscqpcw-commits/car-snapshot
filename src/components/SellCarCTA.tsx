@@ -11,6 +11,7 @@ import {
   type GoContext,
 } from "@/config/partners";
 import { trackEvent } from "@/lib/tracking";
+import WbacLogo from "@/components/WbacLogo";
 
 interface SellCarCTAProps {
   /** click_context, and the Rakuten `u1` sub-ID the sale is attributed under. */
@@ -77,9 +78,10 @@ export default function SellCarCTA({ context, regNumber, isVan, preview = false,
     >
       <div className="flex items-start gap-3 mb-3">
         <Banknote className="h-5 w-5 text-emerald-400 mt-0.5 shrink-0" />
-        <h3 className="text-base sm:text-lg font-semibold text-white">
+        <h3 className="flex-1 text-base sm:text-lg font-semibold text-white">
           Thinking of selling? Get an instant offer
         </h3>
+        <WbacLogo className="shrink-0 text-xs" />
       </div>
 
       <p className="text-sm text-slate-300 leading-relaxed mb-4 ml-8">
