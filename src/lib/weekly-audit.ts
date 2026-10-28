@@ -121,6 +121,8 @@ export interface BuyerJourneyAudit {
   pageViews: number; // /check-before-you-buy page views
   searchesBySource: [string, number][];
   homeLinkClicks: number;
+  hmlLookups: number; // How Many Left lookups (7d)
+  hmlFullCheckClicks: number; // "See the full check on this car" taps from How Many Left
   mismatches: number; // "doesn't match the advert" taps
   cvImpressions: number;
   cvClicks: number;
@@ -299,9 +301,11 @@ export async function buildWeeklyAuditData(
     const src = metaStr(r.metadata, "source");
     buyerSources.set(src, (buyerSources.get(src) ?? 0) + 1);
   }
-  const [homeLinkClicks, mismatches] = await Promise.all([
+  const [homeLinkClicks, mismatches, hmlLookups, hmlFullCheckClicks] = await Promise.all([
     countEvents(sb, "buyer_check_link_click", d7),
     countEvents(sb, "buyer_check_mismatch", d7),
+    countEvents(sb, "hml_lookup", d7),
+    countEvents(sb, "hml_full_check_click", d7),
   ]);
   const buyerBox = placementMap.get("buyer-check-carvertical");
 
@@ -353,6 +357,8 @@ export async function buildWeeklyAuditData(
       pageViews: pathCur.get(BUYER_CHECK_PATH) ?? 0,
       searchesBySource: topN(buyerSources, 6),
       homeLinkClicks,
+      hmlLookups,
+      hmlFullCheckClicks,
       mismatches,
       cvImpressions: buyerBox?.impressions ?? 0,
       cvClicks: buyerBox?.clicks ?? 0,
@@ -459,7 +465,13 @@ function renderCarVertical(cv: CarVerticalAudit, bj: BuyerJourneyAudit): string 
     <tr><td style="${TD}">carVertical box: seen / clicks / rate</td><td style="${TDR}">${bj.cvImpressions} / ${bj.cvClicks} / ${ctr(bj.cvClicks, bj.cvImpressions)}</td></tr>
   </table>
   <p style="margin:6px 0 4px;font-size:13px;color:#64748b">Reg searches into the buyer's check, by source:</p>
-  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(bj.searchesBySource)}</table>`;
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(bj.searchesBySource)}</table>
+
+  <h3 style="margin:24px 0 6px;font-size:15px">How Many Left → full check <span style="color:#94a3b8;font-weight:400">(/stats/how-many-left)</span></h3>
+  <p style="margin:0 0 20px;font-size:14px">
+    <strong>${bj.hmlFullCheckClicks}</strong> taps on “See the full check” from <strong>${bj.hmlLookups.toLocaleString("en-GB")}</strong> lookups
+    (${ctr(bj.hmlFullCheckClicks, bj.hmlLookups)}). If this is high, the button earns a more prominent spot; the classic warranty offer there converts at ~0.3%.
+  </p>`;
 }
 
 function share([n, total]: [number, number]): string {
