@@ -80,6 +80,7 @@ const MARK_ONLY_HOSTS = new Set([
   "awin1.com",
   "www.awin1.com",
   "track.webgains.com",
+  "click.linksynergy.com",
   "tidd.ly",
   "clickmechanic.com",
   "www.clickmechanic.com",

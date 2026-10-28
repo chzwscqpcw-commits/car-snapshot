@@ -4,9 +4,8 @@ import PreviewGate from "@/components/preview/PreviewGate";
 import SellCarCTA from "@/components/SellCarCTA";
 
 /**
- * The We Buy Any Car offer as it will appear once Webgains approves us —
- * SellCarCTA renders nothing on the live pages until then. The link goes to
- * /go/webuyanycar, which sends visitors home while the partner is pending.
+ * The We Buy Any Car offer as it appears on the live valuation pages (Rakuten
+ * Advertising, live 28 Oct 2026). The link goes to /go/webuyanycar.
  */
 export default function WeBuyAnyCarPreviewPage() {
   return (
@@ -16,9 +15,9 @@ export default function WeBuyAnyCarPreviewPage() {
           <h1 className="text-xl font-semibold text-white">We Buy Any Car — preview</h1>
           <p className="text-sm text-slate-400">
             Shown under the carVertical seller box on the valuation tool and the homepage
-            valuation, for cars we value. Hidden until the Webgains approval is in.
+            valuation, for cars we value. Never shown for vans.
           </p>
-          <SellCarCTA context="valuation-result-wbac" regNumber="AB12CDE" preview />
+          <SellCarCTA context="valuation-result-wbac" regNumber="AB12CDE" isVan={false} preview />
         </div>
       </main>
     </PreviewGate>
