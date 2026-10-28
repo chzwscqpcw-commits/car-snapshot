@@ -203,6 +203,8 @@ async function gatherDigest(): Promise<Digest> {
     { name: "carVertical", match: (p: string) => p.startsWith("carvertical") },
     { name: "BookMyGarage", match: (p: string) => p.startsWith("bookmygarage") },
     { name: "ClickMechanic", match: (p: string) => p.startsWith("clickmechanic") },
+    { name: "Warrantywise", match: (p: string) => p.startsWith("warrantywise") },
+    { name: "We Buy Any Car", match: (p: string) => p.startsWith("webuyanycar") },
   ];
   const affCounts = new Map<string, number>(AFFILIATES.map((a) => [a.name, 0]));
   for (const row of partnerRows.data ?? []) {
@@ -280,7 +282,7 @@ function buildPrompt(d: Digest): string {
     "  • visitors today vs last 7 days, in one line;",
     "  • the single most notable thing about where people came from or what they looked at;",
     "  • PARTNER PERFORMANCE — lead with the affiliate-link clicks by partner (carVertical, BookMyGarage,",
-    "    ClickMechanic), since these earn money, plus the MOT-reminder sign-ups;",
+    "    ClickMechanic, Warrantywise, We Buy Any Car), since these earn money, plus the MOT-reminder sign-ups;",
     "  • end with the ONE standout insight or gentle suggestion.",
     "If a partner has zero clicks, it's fine to skip it. Think 'quick snapshot', not a report.",
     "",

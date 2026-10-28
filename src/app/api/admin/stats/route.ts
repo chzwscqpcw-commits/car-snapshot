@@ -394,7 +394,7 @@ export type AffiliateStat = {
   topContexts: PartnerContextCount[];
 };
 
-// Non-affiliate partner clicks (We Buy Any Car, Cuvva, …) — the long tail not
+// Non-affiliate partner clicks (Cuvva, …) — the long tail not
 // covered by the affiliate cards.
 export type OtherPartnerStat = { partner: string; today: number; last7d: number };
 
@@ -405,6 +405,8 @@ const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boole
   // Live affiliate since 2026-08-23 — promoted out of the "other partners" long
   // tail so its placement breakdown is visible here, not only in Awin.
   { key: "warrantywise", name: "Warrantywise", match: (p) => p.startsWith("warrantywise") },
+  // Live on Rakuten Advertising since 2026-10-28.
+  { key: "weBuyAnyCar", name: "We Buy Any Car", match: (p) => p.startsWith("webuyanycar") },
 ];
 
 /**

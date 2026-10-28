@@ -110,6 +110,13 @@ export interface CarVerticalAudit {
   sellerTest: { arms: ArmStat[]; z: number | null };
 }
 
+/** We Buy Any Car (Rakuten, live 2026-10-28): seen vs clicked per placement. */
+export interface WbacAudit {
+  logged: number; // every weBuyAnyCar partner_click row
+  human: number; // see isHumanClick
+  placements: PlacementStat[];
+}
+
 export interface BuyerJourneyAudit {
   pageViews: number; // /check-before-you-buy page views
   searchesBySource: [string, number][];
@@ -135,6 +142,7 @@ export interface WeeklyAuditData {
   topPages: [string, number][];
   partnerPerResults: number | null; // partner_click / results_view, %
   carVertical: CarVerticalAudit;
+  weBuyAnyCar: WbacAudit;
   buyerJourney: BuyerJourneyAudit;
   marketData: MarketDataAudit;
 }
@@ -253,9 +261,8 @@ export async function buildWeeklyAuditData(
   const pageViewIps = new Set(pv.map((r) => r.ip_hash).filter((h): h is string => !!h));
   const cvClicks = pc.filter((r) => r.metadata?.partner_id === "carVertical");
   const cvHuman = cvClicks.filter((r) => isHumanClick(r, pageViewIps));
-  const imps = (await pullEvents(sb, "partner_impression", d7)).filter(
-    (r) => r.metadata?.partner_id === "carVertical",
-  );
+  const allImps = await pullEvents(sb, "partner_impression", d7);
+  const imps = allImps.filter((r) => r.metadata?.partner_id === "carVertical");
 
   const placementMap = new Map<string, PlacementStat>();
   const placement = (ctx: string) => {
@@ -298,6 +305,22 @@ export async function buildWeeklyAuditData(
   ]);
   const buyerBox = placementMap.get("buyer-check-carvertical");
 
+  // ── We Buy Any Car (7d) ──────────────────────────────────────────────────
+  const wbacClicks = pc.filter((r) => r.metadata?.partner_id === "weBuyAnyCar");
+  const wbacHuman = wbacClicks.filter((r) => isHumanClick(r, pageViewIps));
+  const wbacPlacements = new Map<string, PlacementStat>();
+  const wbacPlacement = (ctx: string) => {
+    const existing = wbacPlacements.get(ctx);
+    if (existing) return existing;
+    const created = { context: ctx, impressions: 0, clicks: 0 };
+    wbacPlacements.set(ctx, created);
+    return created;
+  };
+  for (const r of allImps) {
+    if (r.metadata?.partner_id === "weBuyAnyCar") wbacPlacement(metaStr(r.metadata, "click_context")).impressions++;
+  }
+  for (const r of wbacHuman) wbacPlacement(metaStr(r.metadata, "click_context")).clicks++;
+
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
     headlineCounts.find((h) => h.label === "Partner clicks")?.cur ?? 0;
@@ -320,6 +343,11 @@ export async function buildWeeklyAuditData(
         .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions)
         .slice(0, 10),
       sellerTest: { arms: [control, trust], z: twoProportionZ(control, trust) },
+    },
+    weBuyAnyCar: {
+      logged: wbacClicks.length,
+      human: wbacHuman.length,
+      placements: [...wbacPlacements.values()].sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions),
     },
     buyerJourney: {
       pageViews: pathCur.get(BUYER_CHECK_PATH) ?? 0,
@@ -360,6 +388,29 @@ function sellerTestVerdict(z: number | null, arms: ArmStat[]): string {
   if (abs >= 1.0) return `${leader} is ahead, but not yet clearly (z=${z.toFixed(2)}). Keep running.`;
   const total = arms.reduce((n, a) => n + a.impressions, 0);
   return `No real difference yet (z=${z.toFixed(2)}, ${total.toLocaleString("en-GB")} impressions). Keep running.`;
+}
+
+function renderWbac(w: WbacAudit): string {
+  const rows =
+    w.placements.length === 0
+      ? `<tr><td style="${TD};color:#94a3b8" colspan="4">none this week</td></tr>`
+      : w.placements
+          .map(
+            (p) =>
+              `<tr><td style="${TD}"><code>${p.context}</code></td><td style="${TDR}">${p.impressions.toLocaleString("en-GB")}</td><td style="${TDR}">${p.clicks}</td><td style="${TDR}">${ctr(p.clicks, p.impressions)}</td></tr>`,
+          )
+          .join("");
+  return `
+  <h3 style="margin:28px 0 6px;font-size:16px">We Buy Any Car</h3>
+  <p style="margin:0 0 10px;font-size:14px">
+    <strong>${w.human}</strong> clicks from real visitors
+    <span style="color:#64748b">(${w.logged} logged${w.logged > w.human ? `, ${w.logged - w.human} from IPs that never loaded a page` : ""})</span>.
+    £45 only when WBAC buys the car (booked within 24h of the click, bought within 4 days) — sales by placement (<code>u1</code>) are in Rakuten's transaction report.
+  </p>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 18px">
+    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Placement</th><th style="${TDR}">Seen</th><th style="${TDR}">Clicks</th><th style="${TDR}">Rate</th></tr>
+    ${rows}
+  </table>`;
 }
 
 function renderCarVertical(cv: CarVerticalAudit, bj: BuyerJourneyAudit): string {
@@ -484,6 +535,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.partnerContexts)}</table>
 
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
+  ${renderWbac(d.weBuyAnyCar)}
 
   ${renderMarketData(d.marketData)}
 
