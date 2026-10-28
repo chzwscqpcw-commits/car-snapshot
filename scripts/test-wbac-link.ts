@@ -32,12 +32,33 @@ check("N1 type approval is a van", isVan({ typeApproval: "N1" }));
 check("a 'Panel Van' body style is a van", isVan({}, "Panel Van"));
 check("an M1 car is not", !isVan({ typeApproval: "M1" }, "Hatchback"));
 check("no data is not a van", !isVan({}));
+check("a Transit with no type approval is a van", isVan({ model: "TRANSIT CUSTOM 280 LIMITED" }));
+check("a Sprinter is a van", isVan({ model: "SPRINTER 314 CDI" }));
+check("a Transit-name car isn't caught by accident: Focus", !isVan({ model: "FOCUS" }));
+check("a Caddy (also an MPV) is left to type approval", !isVan({ model: "CADDY MAXI LIFE" }));
+check("a Tourneo (passenger Transit) is not a van", !isVan({ model: "TOURNEO CUSTOM" }));
 
 console.log("\nVehicle name in the heading:");
 for (const [make, model, want] of [
+  // Real make/model pairs from valuation_result, 30 days to 28 Oct 2026.
   ["FORD", "FOCUS ZETEC", "Ford Focus"],
-  ["VOLKSWAGEN", "GOLF MATCH TSI BLUEMOTION TECH", "Volkswagen Golf"],
+  ["VOLKSWAGEN", "GOLF R-LINE ETSI S-A", "Volkswagen Golf"],
   ["BMW", "3 SERIES", "BMW 3 Series"],
+  ["MG", "ZS EXCLUSIVE VTI-TECH", "MG ZS"],
+  ["TESLA", "MODEL 3 LONG RANGE AWD", "Tesla Model 3"],
+  ["LAND ROVER", "R ROVER EVOQUE RDYN SE DMHEV A", "Range Rover Evoque"],
+  ["LAND ROVER", "RANGE ROVER", "Range Rover"],
+  ["MERCEDES-BENZ", "E", "Mercedes-Benz E-Class"],
+  ["MERCEDES-BENZ", "GLC", "Mercedes-Benz GLC"],
+  ["MAZDA", "MAZDA 2 HYBRID HOMURA CVT", "Mazda 2"],
+  ["POLESTAR", "POLESTAR 2 EV FWD", "Polestar 2"],
+  ["MINI", "MINI", "Mini"],
+  ["MINI", "MINI (R58)", "Mini"],
+  ["PORSCHE", "macan", "Porsche Macan"],
+  ["VOLKSWAGEN", "T-ROC", "Volkswagen T-ROC"], // short parts stay as DVLA writes them (C-MAX, CX-30)
+  ["FORD", "GRAND C-MAX", "Ford Grand C-MAX"],
+  ["DODGE (USA)", "RAM", "Dodge RAM"],
+  ["FERRARI", "N/A", "Ferrari"],
   ["TOYOTA", "", "Toyota"],
   ["", "FOCUS", undefined],
 ] as const) {

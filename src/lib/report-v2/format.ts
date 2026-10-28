@@ -20,19 +20,49 @@ export function titleCase(s: string | undefined): string {
   return (s ?? "").trim().split(/\s+/).filter(Boolean).map(titleWord).join(" ");
 }
 
+/** Title-case each hyphen-separated part ("F-PACE" → "F-Pace"); parts of 3 or fewer letters stay as written ("CX-30", "C-MAX"). */
+function nameWord(w: string): string {
+  return w.split("-").map((part) => titleCase(part)).join("-");
+}
+
+/** Model words that are only half a name: "MODEL 3", "GRAND C-MAX", "SANTA FE". */
+const JOINERS = new Set(["MODEL", "GRAND", "SANTA", "LAND"]);
+const MERCEDES_CLASSES = new Set(["A", "B", "C", "E", "S", "G"]);
+
 /**
- * "Ford Focus" from a make and a full model string — just the model's first
- * word (two for "3 SERIES"), since DVLA/MOT models run to "GOLF MATCH TSI
- * BLUEMOTION TECH". Undefined
- * when the make is unknown.
+ * "Ford Focus" from a make and the full model string DVLA/MOT hand us, which
+ * runs to "ZS EXCLUSIVE VTI-TECH" or "R ROVER EVOQUE RDYN SE DMHEV A". Keeps
+ * the model's name and drops the trim. Rules came from the 2,355 make/model
+ * pairs valued in the 30 days to 28 Oct 2026 — see test-wbac-link.ts.
+ * Undefined when the make is unknown.
  */
 export function shortVehicleName(make: string | undefined | null, model: string | undefined | null): string | undefined {
-  const m = titleCase(make ?? undefined);
-  if (!m) return undefined;
-  // "3 SERIES", "A 180": a one- or two-character first word needs the next.
-  const words = (model ?? "").trim().split(/\s+/).filter(Boolean);
-  const first = titleCase(words.slice(0, (words[0]?.length ?? 0) <= 2 ? 2 : 1).join(" "));
-  return first && first.toLowerCase() !== m.toLowerCase() ? `${m} ${first}` : m;
+  const makeWords = (make ?? "").toUpperCase().replace(/\(.*?\)/g, "").trim().split(/\s+/).filter(Boolean);
+  if (makeWords.length === 0) return undefined;
+  const makeName = makeWords.map(nameWord).join(" ");
+
+  let words = (model ?? "").toUpperCase().replace(/\(.*?\)/g, "").trim().split(/\s+/).filter(Boolean);
+  if (words.join(" ") === "N/A" || words.some((w) => w.includes("CARAVAN"))) words = [];
+  // "MAZDA 2 HYBRID", "POLESTAR 2", "MINI COOPER": the make repeated.
+  if (words[0] === makeWords[makeWords.length - 1]) words = words.slice(1);
+  if (words.length === 0) return makeName;
+
+  let name: string[];
+  if (words[0] === "R" && words[1] === "ROVER") words = ["RANGE", ...words.slice(1)];
+  if (words[0] === "RANGE" && words[1] === "ROVER") {
+    // Said without the make: "Range Rover Evoque", not "Land Rover Range Rover".
+    const sub = /^(EVOQUE|VELAR|SPORT)$/.test(words[2] ?? "") ? ` ${nameWord(words[2])}` : "";
+    return `Range Rover${sub}`;
+  } else if (makeWords[0].startsWith("MERCEDES") && MERCEDES_CLASSES.has(words[0])) {
+    return `${makeName} ${words[0]}-Class`;
+  } else if (JOINERS.has(words[0]) && words[1]) {
+    name = words.slice(0, 2);
+  } else if (/^(SERIES|CLASS)$/.test(words[1] ?? "")) {
+    name = words.slice(0, 2);
+  } else {
+    name = words.slice(0, 1);
+  }
+  return `${makeName} ${name.map(nameWord).join(" ")}`;
 }
 
 export function parseDate(s: string | undefined | null): Date | null {
@@ -76,12 +106,14 @@ export function isMotorbike(v: object): boolean {
 }
 
 /**
- * For the same raw records: an N1 van, or a body style that says "van". We Buy
- * Any Car's affiliate programme covers cars only (WBAC, 28 Oct 2026), so its
- * offer must not show for one.
+ * For the same raw records: an N1 van, a body style that says "van", or a
+ * model that only comes as a van. DVLA's type approval is often missing on
+ * older vehicles, hence the model list. We Buy Any Car's affiliate programme
+ * covers cars only (WBAC, 28 Oct 2026), so its offer must not show for one.
  */
 export function isVan(v: object, bodyStyle?: string | null): boolean {
-  const { wheelplan, typeApproval } = v as { wheelplan?: unknown; typeApproval?: unknown };
+  const { wheelplan, typeApproval, model } = v as { wheelplan?: unknown; typeApproval?: unknown; model?: unknown };
+  if (typeof model === "string" && VAN_ONLY_MODELS.test(model.trim())) return true;
   return (
     vehicleNoun(
       {
@@ -92,6 +124,15 @@ export function isVan(v: object, bodyStyle?: string | null): boolean {
     ) === "van"
   );
 }
+
+/**
+ * Models sold only (or almost only) as vans. Deliberately leaves out names
+ * that also come as cars — Caddy, Berlingo, Partner, Doblo, Combo, Kangoo,
+ * Transporter (Caravelle/Shuttle are passenger versions under the same name in
+ * some records) — so a family MPV is never denied the offer.
+ */
+const VAN_ONLY_MODELS =
+  /^(TRANSIT( (CUSTOM|CONNECT|COURIER))?|E-TRANSIT|CRAFTER|E-CRAFTER|VIVARO|MOVANO|TRAFIC|MASTER|SPRINTER|E-SPRINTER|CITAN|BOXER|RELAY|DUCATO|SCUDO|DISPATCH|PROACE|HIACE|NV200|NV300|NV400|PRIMASTAR|INTERSTAR|TALENTO|DAILY)\b/i;
 
 /** Strip emoji and pictographs (e.g. "⚠️ " in engine warnings) the fonts can't draw. */
 export function plainText(s: string): string {
