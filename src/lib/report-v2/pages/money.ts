@@ -71,14 +71,17 @@ function wbacLogoDataUri(): string {
 /**
  * We Buy Any Car under the valuation, as on the website: QR code for a
  * printed or desktop copy, a tap-able link for a phone. Through /go (context
- * pdf-wbac, `v` = edition) so clicks are counted. Cars only: WBAC's programme
+ * pdf-wbac, `v` = edition) so clicks are counted; the address inside the QR
+ * code adds "-qr" so scans and taps are counted apart. Cars only: WBAC's programme
  * excludes vans, and motorbikes aren't what they buy. Wording sticks to WBAC's
  * approved creative ("Get Your Free 30 Second Car Valuation").
  */
 function sellPanel(input: ReportInput, t: ThemeTokens): Safe | null {
   const bodyStyle = input.parsedModel?.bodyStyle;
   if (!isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) || isVan(input.data, bodyStyle) || isMotorbike(input.data)) return null;
-  const href = SITE + goLink("webuyanycar", "pdf-wbac", t.name === "light" ? "print" : "dark");
+  const edition = t.name === "light" ? "print" : "dark";
+  const href = SITE + goLink("webuyanycar", "pdf-wbac", edition);
+  const scanHref = SITE + goLink("webuyanycar", "pdf-wbac", `${edition}-qr`);
   const name = shortVehicleName(input.data.make, input.data.model);
   return html`<div class="sell" style="border-color:${t.ruleStrong}">
     <div class="stack-6 sell-text">
@@ -87,7 +90,7 @@ function sellPanel(input: ReportInput, t: ThemeTokens): Safe | null {
       <a class="history-link" href="${href}" style="color:${t.accent}">Get my free valuation<svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10"><path d="M1 5h11M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <span class="fine" style="color:${t.muted}">Partner link: Free Plate Check may earn a commission, at no cost to you.</span>
     </div>
-    <a class="qr" href="${href}" aria-label="Get a free valuation from We Buy Any Car">${raw(qrSvg(href, 96))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
+    <a class="qr" href="${href}" aria-label="Get a free valuation from We Buy Any Car">${raw(qrSvg(scanHref, 96))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
   </div>`;
 }
 

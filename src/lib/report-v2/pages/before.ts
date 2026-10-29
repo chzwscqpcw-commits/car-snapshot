@@ -34,9 +34,13 @@ const SITE = "https://www.freeplatecheck.co.uk";
  * tracker with our 20% code applied. No plate in it (Oct 2026): a printed or
  * scanned link can't hand one over except in the URL, and a plate in a /go URL
  * lands in server logs — the reader types it into carVertical instead.
+ *
+ * `qr` marks the address encoded IN the QR code (v=dark-qr / print-qr), so a
+ * scan and a tap on the link are counted apart. Tapping the QR image itself
+ * uses the plain link: that's a tap. `v` never reaches the partner.
  */
-export function carVerticalReportLink(t: ThemeTokens): string {
-  return SITE + goLink("carvertical", "pdf-carvertical", t.name === "light" ? "print" : "dark");
+export function carVerticalReportLink(t: ThemeTokens, qr = false): string {
+  return SITE + goLink("carvertical", "pdf-carvertical", `${t.name === "light" ? "print" : "dark"}${qr ? "-qr" : ""}`);
 }
 
 /** What the free data can't show, and the carVertical report that can: QR + link. */
@@ -52,7 +56,7 @@ function historyPanel(input: ReportInput, t: ThemeTokens): Safe {
       <a class="history-link" href="${href}" style="color:${t.accent}">Check ${plate} on carVertical<svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10"><path d="M1 5h11M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <span class="fine" style="color:${t.muted}">Partner link: Free Plate Check earns a commission if you buy, at no extra cost to you.</span>
     </div>
-    <a class="qr" href="${href}" aria-label="Check ${plate} on carVertical">${raw(qrSvg(href, 132))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
+    <a class="qr" href="${href}" aria-label="Check ${plate} on carVertical">${raw(qrSvg(carVerticalReportLink(t, true), 132))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
   </div>`;
 }
 
