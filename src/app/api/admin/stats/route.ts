@@ -407,6 +407,13 @@ const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boole
   { key: "warrantywise", name: "Warrantywise", match: (p) => p.startsWith("warrantywise") },
   // Live on Rakuten Advertising since 2026-10-28.
   { key: "weBuyAnyCar", name: "We Buy Any Car", match: (p) => p.startsWith("webuyanycar") },
+  // Prepared 2026-10-29 for RVU (confused.com / Uswitch / Tempcover) and the
+  // pending Awin insurers; shows nothing until one is live.
+  {
+    key: "insurance",
+    name: "Insurance",
+    match: (p) => ["rvu", "gocompare", "tempcover", "cuvva"].some((k) => p.startsWith(k)),
+  },
 ];
 
 /**

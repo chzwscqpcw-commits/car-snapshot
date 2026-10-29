@@ -222,6 +222,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import SellCarCTA from "@/components/SellCarCTA";
+import InsuranceCTA from "@/components/InsuranceCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
 import Reveal from "@/components/Reveal";
@@ -1818,22 +1819,9 @@ export default function Home() {
     //    right context: the advisories are right above it). See the
     //    `warrantyEligible` block near the section-health SectionGroup.
 
-    // 4. Car insurance comparison (low priority — only if space). Gated on
-    //    isPartnerConfigured so it appears only once Confused.com (Awin) is
-    //    approved — replaces the old non-affiliate Parkers insurance-group leak.
-    if (prompts.length < 3 && isPartnerConfigured(PARTNER_LINKS.goCompare)) {
-      const makeModel = data.make && data.model ? `${data.make} ${data.model}` : "this car";
-      prompts.push({
-        variant: "subtle",
-        icon: <Shield className="w-5 h-5 text-slate-400" />,
-        title: "Compare car insurance quotes",
-        description: `Insurance is a big running cost (groups 1–50 affect your premium). Compare quotes for ${makeModel} from 170+ insurance brands.`,
-        linkText: "Compare quotes — GoCompare",
-        linkHref: PARTNER_LINKS.goCompare.buildLink?.(data.registrationNumber, "action-insurance") ?? PARTNER_LINKS.goCompare.url,
-        partnerId: "goCompare",
-        trackingContext: "action-insurance",
-      });
-    }
+    // 4. Insurance moved out of the action prompts (29 Oct 2026) to an
+    //    InsuranceCTA under the running-costs card, which says it excludes
+    //    insurance. One insurance ask per page.
 
     return prompts.slice(0, 3);
   }, [data, isOver3Years, motDaysUntilExpiry, latestAdvisoryCount]);
@@ -5108,6 +5096,18 @@ END:VEVENT
                   <p className="text-xs text-slate-400 mt-3">{ownershipCost.excludedNote} {ownershipCost.disclaimer}</p>
                 </div>
               </DataReveal>
+            )}
+
+            {/* Insurance — the cost the card above leaves out. Whichever
+                insurance partner is live (src/config/insurance.ts); nothing
+                while none is. Replaced the never-live GoCompare action prompt. */}
+            {ownershipCost && (
+              <InsuranceCTA
+                context="money-insurance"
+                kind={isMotorbike(data) ? "motorbike" : isVan(data, bodyStyle) ? "van" : "car"}
+                vehicleName={shortVehicleName(data.make, data.model)}
+                className="mb-8"
+              />
             )}
 
             {/* NEGOTIATION HELPER CARD */}
