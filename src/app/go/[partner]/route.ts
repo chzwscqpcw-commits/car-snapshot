@@ -44,6 +44,14 @@ const GO_PARTNERS: Record<string, { partnerKey: keyof typeof PARTNER_LINKS }> = 
   "bookmygarage-repair": { partnerKey: "bookMyGarageRepair" },
   // Component CTA only (SellCarCTA) — never in post prose.
   webuyanycar: { partnerKey: "weBuyAnyCar" },
+  // Insurance CTAs (InsuranceCTA, TempInsuranceCTA) — never in post prose.
+  // Pending partners redirect home until their links are in partners.ts.
+  "rvu-car": { partnerKey: "rvuCarInsurance" },
+  "rvu-van": { partnerKey: "rvuVanInsurance" },
+  "rvu-bike": { partnerKey: "rvuBikeInsurance" },
+  gocompare: { partnerKey: "goCompare" },
+  tempcover: { partnerKey: "tempcover" },
+  cuvva: { partnerKey: "cuvva" },
 };
 
 /** Post slugs are our own; keep the value tight before it reaches a URL. */

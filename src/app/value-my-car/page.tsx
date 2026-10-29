@@ -564,9 +564,8 @@ export default function ValueMyCarPage() {
           {/* Cuvva affiliate */}
           <div className="max-w-3xl mx-auto px-4 mt-12">
             <TempInsuranceCTA
-              context="value-my-car"
+              context="value-my-car-temp-cover"
               headline="Buying or selling this car? Sort the test-drive insurance."
-              body="Cuvva offers hourly, daily and weekly cover bought in 90 seconds — ideal for the test-drive moment, or for driving a just-bought car home before your annual policy starts."
             />
           </div>
 

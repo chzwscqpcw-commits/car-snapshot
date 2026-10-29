@@ -30,6 +30,7 @@ import MotJourneyTimeline from "@/components/tools/MotJourneyTimeline";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import InspectionCTA from "@/components/InspectionCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
+import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import { buildBuyerFlags, type BuyerFlag, type FlagSeverity } from "@/lib/buyer-flags";
 import { lookupTheftRisk } from "@/lib/theft-risk";
 import { lookupMotPassRate } from "@/lib/mot-pass-rate";
@@ -165,6 +166,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         {!isBike && (
           <div className="mt-4 space-y-4">
             <InspectionCTA context="buyer-check-inspection" regNumber={reg} />
+            {/* The checklist above ends with the test drive. */}
+            <TempInsuranceCTA context="buyer-check-temp-cover" headline="Insured for the test drive?" />
             {age !== null && age >= 3 && (
               <WarrantyCTA context="buyer-check-warranty" regNumber={reg} variant="report" layout="inline" />
             )}

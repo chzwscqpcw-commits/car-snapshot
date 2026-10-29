@@ -78,6 +78,28 @@ const WBAC_RAKUTEN_LINK =
 export const WBAC_PREFILLS_PLATE = false;
 
 /**
+ * A Rakuten Advertising tracker with the placement as `u1`, Rakuten's sub-ID:
+ * it comes back on every order in the Signature Orders report, so a sale says
+ * which placement earned it.
+ */
+function rakutenLink(base: string, clickref?: string): string {
+  return clickref ? `${base}&u1=${encodeURIComponent(clickref)}` : base;
+}
+
+/**
+ * RVU's insurance programmes on Rakuten (confused.com, Uswitch, Tempcover).
+ * RVU approached us on 29 Oct 2026 (Anu Uthayarajan, Rakuten) wanting CPA on
+ * car, van and bike insurance plus Tempcover; terms not yet agreed. When the
+ * links arrive, paste each one here in place of the placeholder (and set the
+ * brand name below if it's Uswitch rather than confused.com) and the
+ * placements in src/config/insurance.ts switch on by themselves.
+ */
+const RVU_CAR_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_CAR";
+const RVU_VAN_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_VAN";
+const RVU_BIKE_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_BIKE";
+const TEMPCOVER_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_TEMPCOVER";
+
+/**
  * Rakuten tracker → webuyanycar.com, with the placement as `u1` — Rakuten's
  * sub-ID, passed through to the transaction report, so a sale says which
  * placement earned it.
@@ -319,6 +341,41 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
         clickref,
       );
     },
+  },
+  // RVU insurance on Rakuten — see RVU_CAR_LINK above. Pending until the
+  // links arrive; brand names may change to Uswitch per product.
+  rvuCarInsurance: {
+    url: RVU_CAR_LINK,
+    name: "confused.com",
+    isAffiliate: true,
+    pending: true,
+    shortDescription: "Car insurance quotes",
+    buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_CAR_LINK, clickref),
+  },
+  rvuVanInsurance: {
+    url: RVU_VAN_LINK,
+    name: "confused.com",
+    isAffiliate: true,
+    pending: true,
+    shortDescription: "Van insurance quotes",
+    buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_VAN_LINK, clickref),
+  },
+  rvuBikeInsurance: {
+    url: RVU_BIKE_LINK,
+    name: "confused.com",
+    isAffiliate: true,
+    pending: true,
+    shortDescription: "Bike insurance quotes",
+    buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_BIKE_LINK, clickref),
+  },
+  // Tempcover (RVU, Rakuten MID 53032) — applied 23 Oct 2026; RVU keen 29 Oct.
+  tempcover: {
+    url: TEMPCOVER_LINK,
+    name: "Tempcover",
+    isAffiliate: true,
+    pending: true,
+    shortDescription: "Temporary insurance",
+    buildLink: (_reg: string, clickref?: string) => rakutenLink(TEMPCOVER_LINK, clickref),
   },
   // Pay-as-you-go temporary insurance (Awin) — applied 2026-05-17, pending approval
   cuvva: {
@@ -590,8 +647,19 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
  * (setGoPlate below), which /go reads for the partner's pre-fill and clears.
  * The route still accepts a legacy ?vrm= for links already out there.
  */
+export type GoPartner =
+  | "carvertical"
+  | "bookmygarage"
+  | "bookmygarage-service"
+  | "bookmygarage-repair"
+  | "webuyanycar"
+  | InsuranceGoPartner;
+
+/** /go keys for the insurance partners (src/config/insurance.ts picks one). */
+export type InsuranceGoPartner = "rvu-car" | "rvu-van" | "rvu-bike" | "gocompare" | "tempcover" | "cuvva";
+
 export function goLink(
-  partner: "carvertical" | "bookmygarage" | "bookmygarage-service" | "bookmygarage-repair" | "webuyanycar",
+  partner: GoPartner,
   context: GoContext,
   variant?: string,
 ): string {
@@ -654,6 +722,12 @@ export const GO_CONTEXTS = [
   "valuation-result-wbac", // We Buy Any Car under the valuation tool's result
   "money-wbac", // We Buy Any Car under the homepage's own valuation
   "pdf-wbac", // We Buy Any Car QR code + link under the PDF report's valuation
+  // Insurance (src/config/insurance.ts) — whichever partner is live
+  "money-insurance", // homepage, under the running-costs card ("excludes insurance")
+  "running-costs-insurance", // /running-costs, under the insurance estimate
+  "buyer-check-temp-cover", // buyer's checklist step 4, by the test drive
+  "car-check-temp-cover", // TempInsuranceCTA on /car-check
+  "value-my-car-temp-cover", // TempInsuranceCTA on /value-my-car
 ] as const;
 export type GoContext = (typeof GO_CONTEXTS)[number];
 

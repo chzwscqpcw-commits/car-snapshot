@@ -45,7 +45,8 @@ import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
 import Button from "@/components/Button";
-import { isMotorbike } from "@/lib/report-v2/format";
+import { isMotorbike, isVan, shortVehicleName } from "@/lib/report-v2/format";
+import InsuranceCTA from "@/components/InsuranceCTA";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -255,6 +256,13 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         inputs={insuranceInputs}
         setInputs={setInsuranceInputs}
         insurance={insurance}
+      />
+      {/* The estimate above is a guide; a quote is the real figure. */}
+      <InsuranceCTA
+        context="running-costs-insurance"
+        kind={isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car"}
+        vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+        className="mt-4"
       />
       {/* Running costs are a "should I buy this car?" signal — offer the full
           history check (finance/write-off/stolen/mileage) at that buyer intent. */}
