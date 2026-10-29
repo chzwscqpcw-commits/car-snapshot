@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, Flag, Phone, Play, RotateCcw, Share2, Trophy, Truck } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Flag, Phone, Play, RotateCcw, Share2, Trophy, Truck } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 
 /**
@@ -14,8 +14,8 @@ import { trackEvent } from "@/lib/tracking";
  * Nothing moves until the visitor presses Start (so prefers-reduced-motion
  * is respected by default and the page costs nothing to load). Arrow keys
  * only drive while a run is on and are released when it ends; on touch
- * screens the car accelerates itself and two buttons steer. Pauses when
- * scrolled away or the tab is hidden.
+ * screens, accelerate and brake sit under the left thumb and steering under
+ * the right. Pauses when scrolled away or the tab is hidden.
  *
  * The road is drawn by projecting short road segments, each with a curve and
  * a height, from a camera behind the car, nearest last-clipped first.
@@ -536,7 +536,7 @@ export default function WrongTurnGame() {
       g.position += dt * g.speed;
 
       const k = keys.current;
-      const accelerating = k.up || (touch && !k.down);
+      const accelerating = k.up && !k.down;
       if (k.left) g.playerX -= dx;
       else if (k.right) g.playerX += dx;
       g.playerX -= dx * speedPct * playerSeg.curve * CENTRIFUGAL;
@@ -833,7 +833,7 @@ export default function WrongTurnGame() {
       cancelAnimationFrame(raf);
       window.removeEventListener("fpc:wrong-turn-phase", onPhase);
     };
-  }, [setPhaseBoth, touch]);
+  }, [setPhaseBoth]);
 
   useEffect(() => {
     window.dispatchEvent(new Event("fpc:wrong-turn-phase"));
@@ -931,8 +931,8 @@ export default function WrongTurnGame() {
     }
   }
 
-  const steer = (dir: "left" | "right", on: boolean) => {
-    keys.current[dir] = on;
+  const press = (key: "left" | "right" | "up" | "down", on: boolean) => {
+    keys.current[key] = on;
   };
 
   return (
@@ -953,7 +953,7 @@ export default function WrongTurnGame() {
               <Play className="h-4 w-4" />
               Start driving
             </button>
-            <p className="mt-2 text-xs text-slate-400">{touch ? "Hold ◀ ▶ to steer" : "Arrow keys or WASD to drive"}</p>
+            <p className="mt-2 text-xs text-slate-400">{touch ? "Left thumb: go and brake. Right thumb: steer." : "Arrow keys or WASD to drive"}</p>
           </div>
         )}
 
@@ -1025,29 +1025,52 @@ export default function WrongTurnGame() {
         )}
 
         {touch && (phase === "racing" || phase === "countdown") && (
-          <div className="absolute inset-x-0 bottom-0 flex justify-between p-2">
-            {(["left", "right"] as const).map((dir) => (
-              <button
-                key={dir}
-                type="button"
-                aria-label={`Steer ${dir}`}
-                onPointerDown={(e) => {
-                  e.currentTarget.setPointerCapture(e.pointerId);
-                  steer(dir, true);
-                }}
-                onPointerUp={() => steer(dir, false)}
-                onPointerCancel={() => steer(dir, false)}
-                onContextMenu={(e) => e.preventDefault()}
-                className="flex h-14 w-20 touch-none select-none items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur active:bg-white/25"
-              >
-                {dir === "left" ? <ArrowLeft className="h-6 w-6" /> : <ArrowRight className="h-6 w-6" />}
-              </button>
-            ))}
+          // Like a games controller: pedals under the left thumb, steering
+          // under the right. Each button holds its own pointer, so both
+          // thumbs work at once.
+          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-2">
+            <div className="flex flex-col gap-1.5">
+              <TouchButton label="Accelerate" onPress={(on) => press("up", on)} tone="go">
+                <ChevronUp className="h-6 w-6" />
+              </TouchButton>
+              <TouchButton label="Brake" onPress={(on) => press("down", on)} tone="brake">
+                <ChevronDown className="h-6 w-6" />
+              </TouchButton>
+            </div>
+            <div className="flex gap-1.5">
+              <TouchButton label="Steer left" onPress={(on) => press("left", on)}>
+                <ArrowLeft className="h-6 w-6" />
+              </TouchButton>
+              <TouchButton label="Steer right" onPress={(on) => press("right", on)}>
+                <ArrowRight className="h-6 w-6" />
+              </TouchButton>
+            </div>
           </div>
         )}
       </div>
       <League result={phase === "finished" ? result : null} runToken={runToken} />
     </div>
+  );
+}
+
+function TouchButton({ label, onPress, tone, children }: { label: string; onPress: (on: boolean) => void; tone?: "go" | "brake"; children: React.ReactNode }) {
+  const colours =
+    tone === "go" ? "bg-emerald-500/20 active:bg-emerald-500/45" : tone === "brake" ? "bg-red-500/20 active:bg-red-500/45" : "bg-white/10 active:bg-white/25";
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onPointerDown={(e) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        onPress(true);
+      }}
+      onPointerUp={() => onPress(false)}
+      onPointerCancel={() => onPress(false)}
+      onContextMenu={(e) => e.preventDefault()}
+      className={`flex h-12 w-14 touch-none select-none items-center justify-center rounded-xl text-white backdrop-blur ${colours}`}
+    >
+      {children}
+    </button>
   );
 }
 
