@@ -653,6 +653,7 @@ export const GO_CONTEXTS = [
   "buyer-check-carvertical",
   "valuation-result-wbac", // We Buy Any Car under the valuation tool's result
   "money-wbac", // We Buy Any Car under the homepage's own valuation
+  "pdf-wbac", // We Buy Any Car QR code + link under the PDF report's valuation
 ] as const;
 export type GoContext = (typeof GO_CONTEXTS)[number];
 
