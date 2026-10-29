@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   // routes that render it.
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
   outputFileTracingIncludes: {
-    "/api/report-pdf": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**"],
-    "/api/report-pdf/sample": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**"],
+    "/api/report-pdf": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**", "./src/lib/report-v2/assets/**"],
+    "/api/report-pdf/sample": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**", "./src/lib/report-v2/assets/**"],
   },
   /**
    * Canonical-host redirects. Previously this was a src/middleware.ts that

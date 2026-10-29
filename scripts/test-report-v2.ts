@@ -48,6 +48,8 @@ function check(label: string, ok: boolean) {
     }
     const edition = theme === "light" ? "print" : "dark";
     check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&v=${edition})`));
+    check(`clickable We Buy Any Car link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/webuyanycar?ctx=pdf-wbac&v=${edition})`));
+    check("We Buy Any Car logo inlined", html.includes('class="sell-logo" src="data:image/png;base64,'));
     check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
     // The bundled fonts are Google's Latin subset. A character outside it (an
     // arrow "→" did, Oct 2026) renders as an empty box, so draw it as SVG.
@@ -110,6 +112,7 @@ function check(label: string, ok: boolean) {
   bike.ownershipCost = { ...bike.ownershipCost!, breakdown: { ...bike.ownershipCost!.breakdown, fuel: null } };
   const bikeHtml = renderReportHtml(bike, { theme: "dark", now });
   check("called a motorbike, not a car", bikeHtml.includes("petrol motorbike") || bikeHtml.includes("diesel motorbike"));
+  check("no We Buy Any Car offer for a motorbike", !bikeHtml.includes("pdf-wbac"));
   check("details headline says motorbike", bikeHtml.includes("The motorbike in detail."));
   check("missing NCAP data isn't flagged", bikeHtml.includes("Excellent, with nothing to flag."));
   check("emoji stripped from MOT warnings", !bikeHtml.includes("⚠") && bikeHtml.includes("Unusually low annual mileage"));
@@ -123,7 +126,8 @@ function check(label: string, ok: boolean) {
   hostile.data.registrationNumber = `"><script>alert(1)</script>`;
   const html = renderReportHtml(hostile, { theme: "dark", now });
   check("no injected <script>", !html.includes("<script>"));
-  check("no injected <img", !html.includes("<img"));
+  // The only real <img> is WBAC's inlined logo.
+  check("no injected <img", !html.includes("<img src=x") && !/<img(?![^>]*class="sell-logo")/.test(html));
   check("hostile text kept, escaped", html.includes("&lt;img") && html.includes("&lt;script&gt;"));
 
   if (failures.length) {

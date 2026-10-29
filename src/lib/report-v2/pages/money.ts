@@ -1,9 +1,13 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import type { ReportInput } from "@/lib/generateReport";
-import { html, type Safe } from "../html";
+import { html, raw, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
-import { num, pounds, vehicleNoun } from "../format";
+import { isMotorbike, isVan, num, pounds, shortVehicleName, vehicleNoun } from "../format";
+import { qrSvg } from "../qr";
 import { pageShell } from "./shared";
 import { ASSUMED_ANNUAL_MILES } from "@/lib/fuel-economy";
+import { goLink, isPartnerConfigured, PARTNER_LINKS } from "@/config/partners";
 
 // 04 · The money: estimated value with its range against live asking prices,
 // the cost to run, repairs to budget for, and the negotiation helper. Any
@@ -52,6 +56,39 @@ function valueSection(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens, 
     <div class="stack-6 right"><span class="conf" style="color:${confColor}">${conf.charAt(0).toUpperCase()}${conf.slice(1)} confidence${pct ? ` · ±${pct}%` : ""}</span>${v.ebayTotalListings ? html`<span class="small-text" style="color:${t.muted}">${num(v.ebayTotalListings)} similar cars for sale</span>` : ""}</div>
   </div>
   <figure class="chart tight">${rangeBar(v, t)}<figcaption style="color:${t.muted}">Shaded: typical range for this ${noun}.${v.ebayMinPrice && v.ebayMaxPrice ? " Thin line: asking prices for similar cars on sale now." : ""}${notes ? ` ${notes}` : ""}</figcaption></figure>`;
+}
+
+const SITE = "https://www.freeplatecheck.co.uk";
+
+let wbacLogo: string | null = null;
+
+/** WBAC's own logo (from their Rakuten creative), inlined: the renderer allows no network. */
+function wbacLogoDataUri(): string {
+  wbacLogo ??= `data:image/png;base64,${readFileSync(path.join(process.cwd(), "src", "lib", "report-v2", "assets", "wbac-logo.png")).toString("base64")}`;
+  return wbacLogo;
+}
+
+/**
+ * We Buy Any Car under the valuation, as on the website: QR code for a
+ * printed or desktop copy, a tap-able link for a phone. Through /go (context
+ * pdf-wbac, `v` = edition) so clicks are counted. Cars only: WBAC's programme
+ * excludes vans, and motorbikes aren't what they buy. Wording sticks to WBAC's
+ * approved creative ("Get Your Free 30 Second Car Valuation").
+ */
+function sellPanel(input: ReportInput, t: ThemeTokens): Safe | null {
+  const bodyStyle = input.parsedModel?.bodyStyle;
+  if (!isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) || isVan(input.data, bodyStyle) || isMotorbike(input.data)) return null;
+  const href = SITE + goLink("webuyanycar", "pdf-wbac", t.name === "light" ? "print" : "dark");
+  const name = shortVehicleName(input.data.make, input.data.model);
+  return html`<div class="sell" style="border-color:${t.ruleStrong}">
+    <div class="stack-6 sell-text">
+      <div class="sell-head"><span class="mono label" style="color:${t.accent}">${name ? `SELLING YOUR ${name.toUpperCase()}?` : "THINKING OF SELLING?"}</span><img class="sell-logo" src="${wbacLogoDataUri()}" alt="We Buy Any Car" width="96" height="24"></div>
+      <p style="color:${t.soft}">Our figure is a guide to what it's worth. To see what you could sell it for today, get your free 30 second car valuation from We Buy Any Car.</p>
+      <a class="history-link" href="${href}" style="color:${t.accent}">Get my free valuation<svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10"><path d="M1 5h11M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <span class="fine" style="color:${t.muted}">Partner link: Free Plate Check may earn a commission, at no cost to you.</span>
+    </div>
+    <a class="qr" href="${href}" aria-label="Get a free valuation from We Buy Any Car">${raw(qrSvg(href, 96))}<span class="mono" style="color:${t.muted}">SCAN OR TAP</span></a>
+  </div>`;
 }
 
 function costSection(input: ReportInput, t: ThemeTokens): Safe | null {
@@ -132,6 +169,7 @@ export function moneyPage(input: ReportInput, t: ThemeTokens, folio: number): Sa
   const cols = [cost, right.length ? html`<div class="stack-32">${right}</div>` : null].filter(Boolean) as Safe[];
   return pageShell(t, input, "The money", folio, html`
     ${v ? valueSection(v, t, vehicleNoun(input.data, input.parsedModel?.bodyStyle)) : html`<h1 class="display h-page">${moneyHeadline(input)}</h1>`}
+    ${v ? sellPanel(input, t) : ""}
     ${cols.length ? html`<div class="money-cols" style="grid-template-columns:repeat(${cols.length}, minmax(0, 1fr))">${cols}</div>` : ""}
     <div class="grow"></div>
     ${v?.disclaimer ? html`<p class="fine" style="color:${t.muted}">${v.disclaimer}</p>` : ""}`);

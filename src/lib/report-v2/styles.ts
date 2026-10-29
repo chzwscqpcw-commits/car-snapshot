@@ -151,6 +151,11 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .qr { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0 }
 .qr svg { display: block; border-radius: 8px }
 .qr span { font-size: 10px; letter-spacing: 0.12em }
+.sell { display: flex; gap: 24px; align-items: center; margin-top: 10px; padding: 14px 0; border-top: 1px solid; border-bottom: 1px solid }
+.sell-text { flex: 1 }
+.sell-text p { font-size: 13px; line-height: 1.5 }
+.sell-head { display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.sell-logo { display: block; height: 24px; width: auto; background: #FFFFFF; border-radius: 4px; padding: 3px 6px }
 .fineprint { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px }
 .fineprint p { font-size: 12px; line-height: 1.5 }
 .signoff { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.04em; margin-top: 18px }
