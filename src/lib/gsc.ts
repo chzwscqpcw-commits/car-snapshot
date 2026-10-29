@@ -6,28 +6,9 @@ import {
 } from "@/lib/google-auth";
 import { supabaseServerRole } from "@/lib/supabaseServer";
 
-/**
- * The commercial query cluster we actually care about — the "free car valuation
- * without email" family that drives /car-valuation + /value-my-car, our breakout
- * organic entry pages. Site-wide "average position" is a vanity metric dominated
- * by low-ranking long-tail/blog impressions; THESE are the rankings that convert.
- *
- * Edit this list to add/remove tracked terms — the dashboard + weekly snapshot
- * follow it automatically.
- */
-export const KEY_QUERIES: string[] = [
-  "free car valuation without email",
-  "free car valuation without email uk",
-  "car valuation without email",
-  "car valuation without personal details",
-  "free car valuation without personal details",
-  "how much is my car worth uk without email",
-  "car valuation no email required",
-  "value my car no sign up",
-  "free car valuation",
-  "free plate check",
-  "freeplatecheck",
-];
+// The tracked terms live in gsc-queries.ts so the dashboard can group by them.
+import { KEY_QUERIES, TOP_QUERIES } from "@/lib/gsc-queries";
+export { KEY_QUERIES };
 
 const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 
@@ -52,6 +33,8 @@ export interface GscSnapshot {
   startDate: string;
   endDate: string;
   queries: QueryPosition[]; // the tracked KEY_QUERIES (0-position when no data)
+  /** The top queries by clicks, tracked or not (from 30 Oct 2026; absent before). */
+  topQueries?: QueryPosition[];
   totals: { clicks: number; impressions: number; position: number };
 }
 
@@ -154,6 +137,17 @@ export async function fetchKeyQueryPositions(): Promise<GscResult> {
     };
   });
 
+  const topQueries: QueryPosition[] = [...rows]
+    .sort((a, b) => b.clicks - a.clicks)
+    .slice(0, TOP_QUERIES)
+    .map((r) => ({
+      query: r.keys[0] || "",
+      position: Math.round(r.position * 10) / 10,
+      clicks: r.clicks,
+      impressions: r.impressions,
+      ctr: r.ctr,
+    }));
+
   // Site-wide totals across ALL queries in the window (context, not the headline).
   let clicks = 0;
   let impressions = 0;
@@ -176,6 +170,7 @@ export async function fetchKeyQueryPositions(): Promise<GscResult> {
       startDate: ymd(start),
       endDate: ymd(end),
       queries,
+      topQueries,
       totals,
     },
   };
