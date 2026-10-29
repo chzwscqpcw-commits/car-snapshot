@@ -21,8 +21,8 @@ export function maskEmail(email: unknown): string {
 const PLATE_PARAMS = ["vrm", "reg"];
 
 /**
- * A URL with any plate removed — from the query string and from a `#vrm=`
- * fragment. Returns the input unchanged if it isn't a parseable URL.
+ * A URL with any plate removed — from the query string, a `#vrm=` fragment,
+ * or a path segment. Returns the input unchanged if it isn't a parseable URL.
  */
 export function stripPlateFromUrl(raw: string): string {
   if (!raw) return raw;
@@ -30,6 +30,8 @@ export function stripPlateFromUrl(raw: string): string {
     const u = new URL(raw, "https://www.freeplatecheck.co.uk");
     for (const p of PLATE_PARAMS) u.searchParams.delete(p);
     if (/(^|[#&])(vrm|reg)=/i.test(u.hash)) u.hash = "";
+    // A plate typed into the path (/reg/AB12CDE) reaches us via the 404 page.
+    u.pathname = stripPlateFromPath(u.pathname);
     // Preserve relative paths as relative.
     return /^[a-z]+:\/\//i.test(raw) ? u.toString() : `${u.pathname}${u.search}${u.hash}`;
   } catch {
@@ -41,4 +43,38 @@ export function stripPlateFromUrl(raw: string): string {
 export function withoutPlate<T extends Record<string, unknown>>(payload: T): Omit<T, "vrm"> {
   const { vrm: _vrm, ...rest } = payload;
   return rest;
+}
+
+/**
+ * Dated UK formats only — current (AB12CDE), prefix (A123BCD) and suffix
+ * (ABC123D). Dateless plates ("A1", "ABC 1") look too much like ordinary URL
+ * words to guess from a path.
+ */
+const DATED_PLATE = /^([A-Z]{2}\d{2}[A-Z]{3}|[A-Z]\d{1,3}[A-Z]{3}|[A-Z]{3}\d{1,3}[A-Z])$/;
+
+function pathSegments(pathname: string): string[] {
+  return pathname.split("/").map((s) => {
+    try {
+      return decodeURIComponent(s).replace(/\s+/g, "").toUpperCase();
+    } catch {
+      return "";
+    }
+  });
+}
+
+/**
+ * The plate in a path someone typed, like /reg/KY19KVK or /check/ky19 kvk.
+ * Most real visitors who reach our 404 got there this way (Oct 2026).
+ */
+export function plateInPath(pathname: string): string | null {
+  return pathSegments(pathname).reverse().find((s) => DATED_PLATE.test(s)) ?? null;
+}
+
+/** "/reg/KY19KVK" -> "/reg/:plate", for stored page views. */
+export function stripPlateFromPath(pathname: string): string {
+  const segs = pathSegments(pathname);
+  return pathname
+    .split("/")
+    .map((s, i) => (DATED_PLATE.test(segs[i]) ? ":plate" : s))
+    .join("/");
 }
