@@ -17,6 +17,7 @@ import { writeFileSync } from "node:fs";
 import { renderReportHtml } from "../src/lib/report-v2/document";
 import { findOverflowingPages, renderPdf } from "../src/lib/report-v2/render";
 import { SAMPLE_REPORT_INPUT } from "../src/lib/report-v2/sample";
+import { qrSvg } from "../src/lib/report-v2/qr";
 
 // Cover, verdict, MOT story, money, details, before you buy.
 const EXPECTED_PAGES = 6;
@@ -50,6 +51,10 @@ function check(label: string, ok: boolean) {
     check(`clickable carVertical link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/carvertical?ctx=pdf-carvertical&v=${edition})`));
     check(`clickable We Buy Any Car link (v=${edition})`, raw.includes(`/URI (https://www.freeplatecheck.co.uk/go/webuyanycar?ctx=pdf-wbac&v=${edition})`));
     check("We Buy Any Car logo inlined", html.includes('class="sell-logo" src="data:image/png;base64,'));
+    // Taps use the plain link; the QR codes encode the -qr address, so scans count apart.
+    const site = "https://www.freeplatecheck.co.uk";
+    check(`carVertical QR encodes v=${edition}-qr`, html.includes(qrSvg(`${site}/go/carvertical?ctx=pdf-carvertical&v=${edition}-qr`, 132)));
+    check(`We Buy Any Car QR encodes v=${edition}-qr`, html.includes(qrSvg(`${site}/go/webuyanycar?ctx=pdf-wbac&v=${edition}-qr`, 96)));
     check("running costs state the mileage they assume", html.includes("Based on 7,400 miles a year"));
     // The bundled fonts are Google's Latin subset. A character outside it (an
     // arrow "→" did, Oct 2026) renders as an empty box, so draw it as SVG.

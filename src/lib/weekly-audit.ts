@@ -117,6 +117,12 @@ export interface WbacAudit {
   placements: PlacementStat[];
 }
 
+/** The downloaded PDF report: its partner panels, scans of the QR vs taps on the link. */
+export interface PdfReportAudit {
+  downloads: number;
+  partners: { name: string; scans: number; taps: number }[];
+}
+
 export interface BuyerJourneyAudit {
   pageViews: number; // /check-before-you-buy page views
   searchesBySource: [string, number][];
@@ -145,6 +151,7 @@ export interface WeeklyAuditData {
   partnerPerResults: number | null; // partner_click / results_view, %
   carVertical: CarVerticalAudit;
   weBuyAnyCar: WbacAudit;
+  pdfReport: PdfReportAudit;
   buyerJourney: BuyerJourneyAudit;
   marketData: MarketDataAudit;
 }
@@ -325,6 +332,17 @@ export async function buildWeeklyAuditData(
   }
   for (const r of wbacHuman) wbacPlacement(metaStr(r.metadata, "click_context")).clicks++;
 
+  // ── PDF report (7d) ──────────────────────────────────────────────────────
+  // The QR codes encode v=<edition>-qr (from 29 Oct 2026); the tap links
+  // don't. Reports downloaded before then have an unmarked QR, so for a while
+  // a few scans will count as taps.
+  const pdfDownloads = await countEvents(sb, "pdf_download", d7);
+  const pdfSplit = (name: string, ctx: string, clicks: EventRow[]) => {
+    const fromPdf = clicks.filter((r) => metaStr(r.metadata, "click_context") === ctx);
+    const scans = fromPdf.filter((r) => metaStr(r.metadata, "variant").endsWith("-qr")).length;
+    return { name, scans, taps: fromPdf.length - scans };
+  };
+
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
     headlineCounts.find((h) => h.label === "Partner clicks")?.cur ?? 0;
@@ -352,6 +370,10 @@ export async function buildWeeklyAuditData(
       logged: wbacClicks.length,
       human: wbacHuman.length,
       placements: [...wbacPlacements.values()].sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions),
+    },
+    pdfReport: {
+      downloads: pdfDownloads,
+      partners: [pdfSplit("carVertical", "pdf-carvertical", cvHuman), pdfSplit("We Buy Any Car", "pdf-wbac", wbacHuman)],
     },
     buyerJourney: {
       pageViews: pathCur.get(BUYER_CHECK_PATH) ?? 0,
@@ -415,6 +437,25 @@ function renderWbac(w: WbacAudit): string {
   </p>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 18px">
     <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Placement</th><th style="${TDR}">Seen</th><th style="${TDR}">Clicks</th><th style="${TDR}">Rate</th></tr>
+    ${rows}
+  </table>`;
+}
+
+function renderPdfReport(r: PdfReportAudit): string {
+  const rows = r.partners
+    .map(
+      (p) =>
+        `<tr><td style="${TD}">${p.name}</td><td style="${TDR}">${p.scans}</td><td style="${TDR}">${p.taps}</td><td style="${TDR}">${ctr(p.scans + p.taps, r.downloads)}</td></tr>`,
+    )
+    .join("");
+  return `
+  <h3 style="margin:28px 0 6px;font-size:16px">Downloaded report</h3>
+  <p style="margin:0 0 10px;font-size:14px">
+    <strong>${r.downloads.toLocaleString("en-GB")}</strong> PDF downloads. Clicks from the report's partner panels, split by how:
+    a <em>scan</em> is the QR code (a computer or a printout), a <em>tap</em> is the link (reading on a phone).
+  </p>
+  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 18px">
+    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Partner</th><th style="${TDR}">Scans</th><th style="${TDR}">Taps</th><th style="${TDR}">Per download</th></tr>
     ${rows}
   </table>`;
 }
@@ -548,6 +589,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
 
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
   ${renderWbac(d.weBuyAnyCar)}
+  ${renderPdfReport(d.pdfReport)}
 
   ${renderMarketData(d.marketData)}
 
