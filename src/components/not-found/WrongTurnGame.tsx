@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Flag, Play, RotateCcw, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Flag, Phone, Play, RotateCcw, Share2, Trophy, Truck } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 
 /**
@@ -45,6 +45,31 @@ const CAR_WORLD = 480; // car width, world units
 const CAR_W = CAR_WORLD / ROAD_W; // in road half-widths
 const TOP_MPH = 70; // law-abiding
 const BEST_KEY = "fpc:wrong_turn_best";
+const RECOVERY_SECONDS = 3.2;
+const TOAST_SECONDS = 3.4;
+
+// From a made-up insurer, for shunting other cars. In order, then round again.
+const INSURER = "Wrong Turn Mutual";
+const INSURER_LINES = [
+  "That was a two-millimetre gap. We recommend two seconds.",
+  "Bumper to bumper is a type of warranty, not a driving style.",
+  "Your no-claims bonus has left the chat.",
+  "\u201CThey braked suddenly\u201D doesn't work when you're the one behind.",
+  "The other cars are not power-ups. Please stop collecting them.",
+  "Our underwriters have seen your driving. They need a sit down.",
+  "Serious bit: on real roads, keep your distance. Right, carry on.",
+  "Premium update: yes.",
+  "The Highway Code is free to read. So is this advice: brake.",
+  "We've added you to our Christmas card list. And our high-risk list.",
+];
+// When the recovery truck comes out for a lamp post or sign.
+const RECOVERY_LINES = [
+  "Recovery's on its way. They've seen worse. Not much worse.",
+  "Lamp posts don't move. That's their whole thing.",
+  "Sit tight. The recovery driver is already writing this up for the group chat.",
+  "Off-road is a lifestyle choice. Not for this car.",
+  "Good news: the sign's fine.",
+];
 
 type Point = { world: { y: number; z: number }; camera: { x: number; y: number; z: number }; screen: { x: number; y: number; w: number; scale: number } };
 type Sprite = { kind: "lamp" | "sign"; offset: number; text?: string };
@@ -203,7 +228,26 @@ function drawSegment(ctx: CanvasRenderingContext2D, s: Segment, fog: number) {
 }
 
 /** A car seen from behind, centred on (x, bottom y), `w` pixels wide. */
-function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, colour: string, opts: { braking?: boolean; plate?: string; lean?: number } = {}) {
+let boltPath: Path2D | null = null;
+
+/** The Free Plate Check bolt (BoltMark's path, 24×32) at (x, y), `h` pixels tall. */
+function drawBolt(ctx: CanvasRenderingContext2D, x: number, y: number, h: number) {
+  boltPath ??= new Path2D("M 15 0 L 5 17 L 12 17 L 10 32 L 19 15 L 12 15 Z");
+  const k = h / 32;
+  ctx.save();
+  ctx.translate(x - 12 * k, y);
+  ctx.scale(k, k);
+  const g = ctx.createLinearGradient(0, 0, 24, 32);
+  g.addColorStop(0, "#22d3ee");
+  g.addColorStop(1, "#3b82f6");
+  ctx.fillStyle = g;
+  ctx.shadowColor = "#22d3ee";
+  ctx.shadowBlur = 6;
+  ctx.fill(boltPath);
+  ctx.restore();
+}
+
+function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, colour: string, opts: { braking?: boolean; plate?: string; lean?: number; bolt?: boolean } = {}) {
   const h = w * 0.62;
   const left = x - w / 2;
   const top = y - h;
@@ -237,6 +281,7 @@ function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, w: number,
   ctx.lineTo(left + w * 0.8 + lean, top + h * 0.36);
   ctx.closePath();
   ctx.fill();
+  if (opts.bolt) drawBolt(ctx, x + lean, top + h * 0.085, h * 0.26);
   // tail lights
   ctx.fillStyle = opts.braking ? "#ff3b3b" : "#b91c1c";
   if (opts.braking) {
@@ -257,6 +302,74 @@ function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, w: number,
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(opts.plate, x, top + h * 0.66 + ph / 2 + 1);
+  }
+}
+
+/** A recovery truck from behind, amber beacons flashing, centred on (x, bottom y). */
+function drawTruck(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, flash: boolean) {
+  const h = w * 0.8;
+  const left = x - w / 2;
+  const top = y - h;
+  ctx.fillStyle = "rgba(0,0,0,0.45)";
+  ctx.beginPath();
+  ctx.ellipse(x, y, w * 0.55, h * 0.08, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#020617";
+  ctx.fillRect(left + w * 0.04, y - h * 0.16, w * 0.2, h * 0.16);
+  ctx.fillRect(left + w * 0.76, y - h * 0.16, w * 0.2, h * 0.16);
+  // cab
+  ctx.fillStyle = "#e2e8f0";
+  ctx.beginPath();
+  ctx.roundRect(left + w * 0.12, top + h * 0.08, w * 0.76, h * 0.42, w * 0.05);
+  ctx.fill();
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(left + w * 0.2, top + h * 0.16, w * 0.6, h * 0.16);
+  // light bar
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(left + w * 0.18, top, w * 0.64, h * 0.08);
+  ctx.fillStyle = flash ? "#fbbf24" : "#92400e";
+  if (flash) {
+    ctx.shadowColor = "#fbbf24";
+    ctx.shadowBlur = w * 0.25;
+  }
+  ctx.fillRect(left + w * 0.2, top + h * 0.01, w * 0.18, h * 0.06);
+  ctx.fillStyle = flash ? "#92400e" : "#fbbf24";
+  ctx.shadowColor = "#fbbf24";
+  ctx.shadowBlur = flash ? 0 : w * 0.25;
+  ctx.fillRect(left + w * 0.62, top + h * 0.01, w * 0.18, h * 0.06);
+  ctx.shadowBlur = 0;
+  // rear: chevrons
+  const by = top + h * 0.5;
+  const bh = h * 0.36;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(left, by, w, bh);
+  ctx.clip();
+  ctx.fillStyle = "#facc15";
+  ctx.fillRect(left, by, w, bh);
+  ctx.fillStyle = "#dc2626";
+  for (let i = -6; i < 12; i++) {
+    const sx = left + (i * w) / 8;
+    ctx.beginPath();
+    ctx.moveTo(sx, by + bh);
+    ctx.lineTo(sx + w / 16, by + bh);
+    ctx.lineTo(sx + w / 16 + bh, by);
+    ctx.lineTo(sx + bh, by);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+  // RECOVERY panel
+  const pw = w * 0.6;
+  const ph = bh * 0.42;
+  ctx.fillStyle = "#f8fafc";
+  ctx.fillRect(x - pw / 2, by + (bh - ph) / 2, pw, ph);
+  if (pw > 50) {
+    ctx.fillStyle = "#0f172a";
+    ctx.font = `bold ${Math.round(ph * 0.7)}px system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("RECOVERY", x, by + bh / 2 + 1, pw * 0.92);
   }
 }
 
@@ -330,10 +443,12 @@ export default function WrongTurnGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<Phase>("title");
-  const [result, setResult] = useState<{ time: number; best: number | null; newBest: boolean } | null>(null);
+  const [result, setResult] = useState<{ time: number; best: number | null; newBest: boolean; claims: number; recoveries: number } | null>(null);
   const [exitOffer, setExitOffer] = useState<Gantry | null>(null);
   const [touch, setTouch] = useState(false);
   const [shared, setShared] = useState(false);
+  const [toast, setToast] = useState<{ title: string; text: string; kind: "insurer" | "recovery" } | null>(null);
+  const runToken = useRef<string | null>(null);
   const phaseRef = useRef<Phase>("title");
   const keys = useRef({ left: false, right: false, up: false, down: false });
   const game = useRef<ReturnType<typeof newGame> | null>(null);
@@ -350,6 +465,12 @@ export default function WrongTurnGame() {
       skyOffset: 0,
       stars: Array.from({ length: 60 }, (_, i) => [(i * 211) % W, (i * 89) % (H / 2 - 30), i % 5 === 0 ? 2 : 1]),
       exitTimer: 0,
+      claims: 0,
+      lastClaimAt: -10,
+      recoveries: 0,
+      toastTimer: 0,
+      insurerLine: Math.floor(Math.random() * INSURER_LINES.length),
+      recovery: null as null | { t: number; fromX: number; toX: number },
     };
   }
 
@@ -395,6 +516,19 @@ export default function WrongTurnGame() {
       if (ph !== "racing") return;
 
       g.time += dt;
+      if (g.toastTimer > 0) {
+        g.toastTimer -= dt;
+        if (g.toastTimer <= 0) setToast(null);
+      }
+      // Being recovered: the clock runs, nothing else does.
+      if (g.recovery) {
+        const r = g.recovery;
+        r.t += dt;
+        const move = Math.min(1, Math.max(0, (r.t - 1.4) / 0.9));
+        g.playerX = easeInOut(r.fromX, r.toX, move);
+        if (r.t >= RECOVERY_SECONDS) g.recovery = null;
+        return;
+      }
       const playerSeg = findSegment(g.position + PLAYER_Z);
       const speedPct = g.speed / MAX_SPEED;
       const dx = dt * 2 * speedPct;
@@ -414,13 +548,16 @@ export default function WrongTurnGame() {
 
       if (Math.abs(g.playerX) > 1) {
         if (g.speed > OFF_ROAD_LIMIT) g.speed += OFF_ROAD_DECEL * dt;
-        // Clipping a lamp post or sign: slow right down and bounce back
-        // towards the road, rather than pinning the car in place.
+        // Hitting a lamp post or sign: the recovery truck winches the car
+        // back onto the road, and the clock keeps running while it does.
         for (const sp of playerSeg.sprites) {
           if (Math.abs(g.playerX - sp.offset) < 0.25) {
-            g.speed = Math.min(g.speed, MAX_SPEED / 5);
-            g.playerX -= Math.sign(g.playerX) * 0.3;
-            break;
+            g.speed = 0;
+            g.recovery = { t: 0, fromX: g.playerX, toX: Math.sign(g.playerX) * (2 / 3) };
+            g.recoveries++;
+            setToast({ kind: "recovery", title: "Recovery", text: RECOVERY_LINES[(g.recoveries - 1) % RECOVERY_LINES.length] });
+            g.toastTimer = TOAST_SECONDS;
+            return;
           }
         }
       }
@@ -428,6 +565,13 @@ export default function WrongTurnGame() {
         if (g.speed > car.speed && Math.abs(g.playerX - car.offset) < CAR_W * 0.8) {
           g.speed = car.speed * (car.speed / g.speed);
           g.position = car.z - PLAYER_Z;
+          // One claim per shunt, not one per frame spent nudging its bumper.
+          if (g.time - g.lastClaimAt > 1.5) {
+            g.claims++;
+            setToast({ kind: "insurer", title: `${INSURER} · claim #${g.claims}`, text: INSURER_LINES[g.insurerLine++ % INSURER_LINES.length] });
+            g.toastTimer = TOAST_SECONDS;
+          }
+          g.lastClaimAt = g.time;
           break;
         }
       }
@@ -477,10 +621,11 @@ export default function WrongTurnGame() {
             // best time is a nicety
           }
         }
-        setResult({ time, best: newBest ? time : prev, newBest });
+        setResult({ time, best: newBest ? time : prev, newBest, claims: g.claims, recoveries: g.recoveries });
         setExitOffer(null);
+        setToast(null);
         setPhaseBoth("finished");
-        trackEvent("wrong_turn_finish", { seconds: time });
+        trackEvent("wrong_turn_finish", { seconds: time, claims: g.claims, recoveries: g.recoveries });
       }
     };
 
@@ -578,11 +723,46 @@ export default function WrongTurnGame() {
       const ph = phaseRef.current;
       const bounce = Math.abs(g.playerX) > 1 && g.speed > 0 ? (Math.random() - 0.5) * 4 : 0;
       const pu = ((CAMERA_DEPTH / PLAYER_Z) * W) / 2;
-      drawCar(ctx, W / 2, H - 10 + bounce, pu * CAR_WORLD, "#0891b2", {
-        braking: ph === "racing" && k.down,
-        plate: "L0 5T",
-        lean: ph === "racing" ? (k.left ? -1 : k.right ? 1 : 0) : 0,
-      });
+      const carW = pu * CAR_WORLD;
+      const r = g.recovery;
+      // Recovery: truck pulls up on the road side (0–1s), lifts the car
+      // (1–1.4s), winches it across (1.4–2.3s), sets it down, then drives off.
+      let lift = 0;
+      if (r) {
+        lift = r.t < 1 ? 0 : r.t < 1.4 ? (r.t - 1) / 0.4 : r.t < 2.3 ? 1 : r.t < 2.6 ? 1 - (r.t - 2.3) / 0.3 : 0;
+        lift *= 16;
+        const side = Math.sign(r.fromX) || 1;
+        const parkX = W / 2 - side * carW * 1.2;
+        const enterFrom = side > 0 ? -carW : W + carW;
+        let tx = r.t < 1 ? lerp(enterFrom, parkX, easeInOut(0, 1, r.t)) : parkX;
+        let ty = H - 6;
+        let tw = carW * 1.25;
+        if (r.t > 2.6) {
+          const away = Math.min(1, (r.t - 2.6) / 0.6);
+          tx = lerp(parkX, W / 2 - side * carW * 0.3, away);
+          ty = lerp(H - 6, H * 0.62, away);
+          tw = lerp(tw, tw * 0.25, away);
+        }
+        const flash = Math.floor(r.t * 6) % 2 === 0;
+        if (r.t > 2.6) drawTruck(ctx, tx, ty, tw, flash);
+        drawCar(ctx, W / 2, H - 10 - lift, carW, "#0891b2", { plate: "L0 5T", bolt: true });
+        if (r.t >= 1 && r.t <= 2.6) {
+          ctx.strokeStyle = "#cbd5e1";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(tx + side * tw * 0.3, ty - tw * 0.75);
+          ctx.lineTo(W / 2 - side * carW * 0.3, H - 10 - lift - carW * 0.55);
+          ctx.stroke();
+        }
+        if (r.t <= 2.6) drawTruck(ctx, tx, ty, tw, flash);
+      } else {
+        drawCar(ctx, W / 2, H - 10 + bounce, carW, "#0891b2", {
+          braking: ph === "racing" && k.down,
+          plate: "L0 5T",
+          lean: ph === "racing" ? (k.left ? -1 : k.right ? 1 : 0) : 0,
+          bolt: true,
+        });
+      }
 
       // HUD
       if (ph === "racing" || ph === "paused" || ph === "countdown") {
@@ -719,8 +899,17 @@ export default function WrongTurnGame() {
     if (process.env.NODE_ENV !== "production") (window as unknown as { __wrongTurn?: unknown }).__wrongTurn = game.current;
     setResult(null);
     setExitOffer(null);
+    setToast(null);
     setShared(false);
     setPhaseBoth("countdown");
+    // A signed start time, needed to enter the weekly league.
+    runToken.current = null;
+    fetch("/api/wrong-turn/start", { method: "POST" })
+      .then((r) => r.json())
+      .then((d: { token?: string }) => {
+        runToken.current = d.token ?? null;
+      })
+      .catch(() => {});
     trackEvent("wrong_turn_start");
     wrapRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
@@ -747,88 +936,248 @@ export default function WrongTurnGame() {
   };
 
   return (
-    <div ref={wrapRef} className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-[0_0_60px_-20px_rgba(34,211,238,0.35)]">
-      <canvas ref={canvasRef} className="block aspect-[16/10] w-full" aria-hidden="true" />
+    <div className="space-y-3">
+      <div ref={wrapRef} className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-[0_0_60px_-20px_rgba(34,211,238,0.35)]">
+        <canvas ref={canvasRef} className="block aspect-[16/10] w-full" aria-hidden="true" />
 
-      {phase === "title" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/55 px-4 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">While you&apos;re here</p>
-          <p className="mt-1 text-xl font-bold text-white sm:text-2xl">Drive back to Free Plate Check HQ</p>
-          <p className="mt-1 hidden text-sm text-slate-300 sm:block">Pass the traffic, mind the verges. Drive under an exit sign to jump to that page.</p>
+        {phase === "title" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/55 px-4 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">While you&apos;re here</p>
+            <p className="mt-1 text-xl font-bold text-white sm:text-2xl">Drive back to Free Plate Check HQ</p>
+            <p className="mt-1 hidden text-sm text-slate-300 sm:block">Pass the traffic, mind the verges. Drive under an exit sign to jump to that page.</p>
+            <button
+              type="button"
+              onClick={start}
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-400"
+            >
+              <Play className="h-4 w-4" />
+              Start driving
+            </button>
+            <p className="mt-2 text-xs text-slate-400">{touch ? "Hold ◀ ▶ to steer" : "Arrow keys or WASD to drive"}</p>
+          </div>
+        )}
+
+        {phase === "paused" && (
           <button
             type="button"
-            onClick={start}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-400"
+            onClick={() => setPhaseBoth("racing")}
+            className="absolute inset-0 flex items-center justify-center bg-slate-950/60 text-lg font-semibold text-white"
           >
-            <Play className="h-4 w-4" />
-            Start driving
+            Paused, tap to carry on
           </button>
-          <p className="mt-2 text-xs text-slate-400">{touch ? "Hold ◀ ▶ to steer" : "Arrow keys or WASD to drive"}</p>
-        </div>
-      )}
+        )}
 
-      {phase === "paused" && (
-        <button
-          type="button"
-          onClick={() => setPhaseBoth("racing")}
-          className="absolute inset-0 flex items-center justify-center bg-slate-950/60 text-lg font-semibold text-white"
-        >
-          Paused, tap to carry on
-        </button>
-      )}
-
-      {phase === "finished" && result && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 px-4 text-center">
-          <Flag className="h-6 w-6 text-cyan-300" />
-          <p className="mt-1 text-lg font-bold text-white sm:text-2xl">
-            Back at HQ in {formatTime(result.time)}
-          </p>
-          <p className="text-xs text-slate-300 sm:text-sm">
-            {result.newBest ? "Your best yet." : `Your best: ${formatTime(result.best ?? result.time)}`} Now, about that page you wanted…
-          </p>
-          <div className="mt-3 flex flex-wrap justify-center gap-2">
-            <button type="button" onClick={start} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-white hover:border-slate-400 sm:text-sm">
-              <RotateCcw className="h-4 w-4" /> Drive again
-            </button>
-            <button type="button" onClick={share} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-white hover:border-slate-400 sm:text-sm">
-              <Share2 className="h-4 w-4" /> {shared ? "Copied" : "Share your time"}
-            </button>
-            <Link href="/" className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-2 text-xs font-semibold text-white sm:text-sm">
-              Check a car <ArrowRight className="h-4 w-4" />
-            </Link>
+        {phase === "finished" && result && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 px-4 text-center">
+            <Flag className="hidden h-6 w-6 text-cyan-300 sm:block" />
+            <p className="text-lg font-bold text-white sm:mt-1 sm:text-2xl">
+              Back at HQ in {formatTime(result.time)}
+            </p>
+            <p className="text-xs text-slate-300 sm:text-sm">
+              {result.newBest ? "Your best yet." : `Your best: ${formatTime(result.best ?? result.time)}`}
+              <span className="hidden sm:inline"> Now, about that page you wanted…</span>
+            </p>
+            <p className="mt-1 text-[11px] text-amber-200/90 sm:text-xs">
+              {result.claims === 0 && result.recoveries === 0
+                ? `Not a scratch. ${INSURER} would like a word, out of suspicion.`
+                : `Claims: ${result.claims} · Recovery call-outs: ${result.recoveries} · No-claims bonus: ${result.claims > 0 ? "gone" : "somehow intact"}`}
+            </p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              <button type="button" onClick={start} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-white hover:border-slate-400 sm:text-sm">
+                <RotateCcw className="h-4 w-4" /> Drive again
+              </button>
+              <button type="button" onClick={share} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-white hover:border-slate-400 sm:text-sm">
+                <Share2 className="h-4 w-4" /> {shared ? "Copied" : "Share your time"}
+              </button>
+              <Link href="/" className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-2 text-xs font-semibold text-white sm:text-sm">
+                Check a car <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {exitOffer && phase === "racing" && (
-        <Link
-          href={exitOffer.href}
-          onClick={() => trackEvent("wrong_turn_exit_click", { exit: exitOffer.label })}
-          className="absolute left-1/2 top-3 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white shadow-lg ring-2 ring-white/80 sm:text-sm"
-        >
-          Exit: {exitOffer.label} <ArrowRight className="h-4 w-4" />
-        </Link>
-      )}
+        {phase === "racing" && (toast || exitOffer) && (
+          <div className="pointer-events-none absolute inset-x-0 top-14 flex flex-col items-center gap-2 px-3 sm:top-16">
+            {toast && (
+              <div
+                role="status"
+                className={`max-w-sm rounded-xl border px-3 py-2 text-left shadow-lg backdrop-blur ${
+                  toast.kind === "insurer" ? "border-amber-300/50 bg-amber-950/85" : "border-yellow-400/60 bg-slate-950/85"
+                }`}
+              >
+                <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300 sm:text-[11px]">
+                  {toast.kind === "insurer" ? <Phone className="h-3 w-3" /> : <Truck className="h-3 w-3" />}
+                  {toast.title}
+                </p>
+                <p className="mt-0.5 text-xs leading-snug text-white sm:text-sm">{toast.text}</p>
+              </div>
+            )}
+            {exitOffer && (
+              <Link
+                href={exitOffer.href}
+                onClick={() => trackEvent("wrong_turn_exit_click", { exit: exitOffer.label })}
+                className="pointer-events-auto inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white shadow-lg ring-2 ring-white/80 sm:text-sm"
+              >
+                Exit: {exitOffer.label} <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
+        )}
 
-      {touch && (phase === "racing" || phase === "countdown") && (
-        <div className="absolute inset-x-0 bottom-0 flex justify-between p-2">
-          {(["left", "right"] as const).map((dir) => (
-            <button
-              key={dir}
-              type="button"
-              aria-label={`Steer ${dir}`}
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId);
-                steer(dir, true);
-              }}
-              onPointerUp={() => steer(dir, false)}
-              onPointerCancel={() => steer(dir, false)}
-              onContextMenu={(e) => e.preventDefault()}
-              className="flex h-14 w-20 touch-none select-none items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur active:bg-white/25"
-            >
-              {dir === "left" ? <ArrowLeft className="h-6 w-6" /> : <ArrowRight className="h-6 w-6" />}
-            </button>
-          ))}
+        {touch && (phase === "racing" || phase === "countdown") && (
+          <div className="absolute inset-x-0 bottom-0 flex justify-between p-2">
+            {(["left", "right"] as const).map((dir) => (
+              <button
+                key={dir}
+                type="button"
+                aria-label={`Steer ${dir}`}
+                onPointerDown={(e) => {
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  steer(dir, true);
+                }}
+                onPointerUp={() => steer(dir, false)}
+                onPointerCancel={() => steer(dir, false)}
+                onContextMenu={(e) => e.preventDefault()}
+                className="flex h-14 w-20 touch-none select-none items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur active:bg-white/25"
+              >
+                {dir === "left" ? <ArrowLeft className="h-6 w-6" /> : <ArrowRight className="h-6 w-6" />}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <League result={phase === "finished" ? result : null} runToken={runToken} />
+    </div>
+  );
+}
+
+// ---- Weekly league -----------------------------------------------------------
+
+type LeagueEntry = { initials: string; seconds: number };
+
+/**
+ * This week's fastest times, entered with three initials. Resets every Monday
+ * (UK time). Hidden entirely if the league isn't available (e.g. the table
+ * hasn't been created yet).
+ */
+function League({ result, runToken }: { result: { time: number } | null; runToken: React.RefObject<string | null> }) {
+  const [top, setTop] = useState<LeagueEntry[] | null>(null);
+  const [open, setOpen] = useState(false);
+  const [initials, setInitials] = useState("");
+  const [entered, setEntered] = useState<{ initials: string; rank: number; time: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/wrong-turn/league")
+      .then((r) => r.json())
+      .then((d: { available?: boolean; top?: LeagueEntry[] }) => {
+        if (d.available) setTop(d.top ?? []);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!result) return;
+    setOpen(true);
+    setError(null);
+  }, [result]);
+
+  if (top === null) return null;
+
+  const canEnter = result && entered?.time !== result.time;
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!result || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/wrong-turn/league", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ initials, seconds: result.time, token: runToken.current }),
+      });
+      const d = (await res.json()) as { ok?: boolean; error?: string; rank?: number; top?: LeagueEntry[] };
+      if (!d.ok) {
+        setError(d.error ?? "That didn't go in. Try again.");
+        return;
+      }
+      setTop(d.top ?? []);
+      setEntered({ initials, rank: d.rank ?? 0, time: result.time });
+      trackEvent("wrong_turn_league_entry", { rank: d.rank ?? null });
+    } catch {
+      setError("That didn't go in. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/50">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 px-4 py-3 text-left"
+      >
+        <Trophy className="h-4 w-4 text-amber-300" />
+        <span className="text-sm font-semibold text-white">This week&apos;s league</span>
+        <span className="ml-auto truncate font-mono text-xs text-slate-400">
+          {top[0] ? `${top[0].initials} ${formatTime(top[0].seconds)}` : "No times yet"}
+        </span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="border-t border-slate-800 px-4 pb-4 pt-3">
+          {canEnter && (
+            <form onSubmit={submit} className="mb-3 flex flex-wrap items-center gap-2">
+              <label htmlFor="wrong-turn-initials" className="text-sm text-slate-300">
+                Add your {formatTime(result.time)}:
+              </label>
+              <input
+                id="wrong-turn-initials"
+                value={initials}
+                onChange={(e) => setInitials(e.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))}
+                placeholder="ABC"
+                maxLength={3}
+                autoComplete="off"
+                className="w-20 rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-center font-mono text-lg tracking-[0.3em] text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/60"
+              />
+              <button
+                type="submit"
+                disabled={initials.length !== 3 || busy}
+                className="rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-2 text-sm font-semibold text-white disabled:opacity-40"
+              >
+                {busy ? "Adding…" : "Enter"}
+              </button>
+              {error && <p className="w-full text-xs text-red-300">{error}</p>}
+            </form>
+          )}
+          {entered && (
+            <p className="mb-3 text-sm text-cyan-300">
+              {entered.rank > 0 ? `${entered.initials}, you're #${entered.rank} this week.` : "You're on the board."}
+            </p>
+          )}
+          {top.length === 0 ? (
+            <p className="text-sm text-slate-400">Nobody&apos;s set a time this week. Yours could be first.</p>
+          ) : (
+            <ol className="space-y-1">
+              {top.map((row, i) => (
+                <li
+                  key={row.initials}
+                  className={`flex items-center gap-3 rounded-lg px-2 py-1 font-mono text-sm ${
+                    entered?.initials === row.initials ? "bg-cyan-500/15 text-cyan-200" : "text-slate-300"
+                  }`}
+                >
+                  <span className="w-6 text-right text-slate-500">{i + 1}</span>
+                  <span className="tracking-[0.2em]">{row.initials}</span>
+                  <span className="ml-auto">{formatTime(row.seconds)}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+          <p className="mt-3 text-xs text-slate-500">Resets every Monday. Fastest time per initials.</p>
         </div>
       )}
     </div>
