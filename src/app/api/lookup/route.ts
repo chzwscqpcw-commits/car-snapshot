@@ -116,7 +116,11 @@ type MOTHistoryData = {
   model?: string;
   variant?: string;
   colour?: string;
+  primaryColour?: string;
   firstUsedDate?: string;
+  registrationDate?: string;
+  manufactureDate?: string;
+  engineSize?: string;
   fuelType?: string;
   motTests?: MOTTest[];
 };
@@ -148,12 +152,14 @@ type VehicleData = {
   variant?: string;
   motTests?: MOTTest[];
   motTestsLastUpdated?: string;
+  /** DVLA was down; built from MOT data alone. See vehicleFromMot. */
+  dvlaUnavailable?: boolean;
 };
 
 type CombinedResponse = {
   ok: true;
   data: VehicleData;
-  source: "dvla" | "mock";
+  source: "dvla" | "mot" | "mock";
   motSource?: "api" | "dvla" | "none";
   cached: boolean;
   vrmHash: string;
@@ -339,6 +345,38 @@ async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryDa
   }
 }
 
+const DVLA_DOWN_MESSAGE = "DVLA's vehicle service is briefly unavailable. Please try again in a few minutes.";
+const INVALID_REG_MESSAGE = "That registration doesn't look right. Check it and try again.";
+
+const MOT_FUEL_TO_DVLA: Record<string, string> = { ELECTRIC: "ELECTRICITY" };
+
+/**
+ * A vehicle record from MOT history alone, for when DVLA's VES API is down
+ * (DVLA scheduled maintenance for 3–4 Nov 2026). The MOT API is run by DVSA
+ * separately, so it usually still answers. It has no tax status, CO2, Euro
+ * status or type approval; the page says tax is unavailable rather than
+ * failing the whole lookup. Cars under about three years old have no MOT
+ * record, so those still fail.
+ */
+function vehicleFromMot(vrm: string, mot: MOTHistoryData): VehicleData {
+  const firstReg = mot.firstUsedDate || mot.registrationDate;
+  const year = Number((mot.manufactureDate || firstReg || "").slice(0, 4));
+  const engine = parseInt(mot.engineSize ?? "", 10);
+  const fuel = mot.fuelType?.toUpperCase().replace(/\s*\(.*\)\s*/g, "").trim();
+  return {
+    registrationNumber: vrm,
+    make: mot.make?.toUpperCase(),
+    model: mot.model?.toUpperCase(),
+    colour: (mot.primaryColour || mot.colour)?.toUpperCase(),
+    fuelType: fuel ? MOT_FUEL_TO_DVLA[fuel] ?? fuel : undefined,
+    engineCapacity: Number.isFinite(engine) && engine > 0 ? engine : undefined,
+    yearOfManufacture: year > 1900 ? year : undefined,
+    monthOfFirstRegistration: firstReg?.slice(0, 7),
+    taxStatus: "Unavailable",
+    dvlaUnavailable: true,
+  };
+}
+
 async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | { error: string; status: number } | null> {
   const endpoint =
     process.env.DVLA_ENV === "uat"
@@ -354,7 +392,7 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
   // won't help and would make 429 worse.
   const MAX_ATTEMPTS = 2;
   let transient: { error: string; status: number } = {
-    error: "DVLA service error. Try again.",
+    error: DVLA_DOWN_MESSAGE,
     status: 503,
   };
 
@@ -381,15 +419,19 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
       // Non-transient outcomes: return immediately, no retry.
       if (resp.status === 404) return { error: "Vehicle not found.", status: 404 };
       if (resp.status === 429) return { error: "Too many requests. Try again later.", status: 429 };
+      // DVLA rejects a registration it can't parse with 400. That was showing
+      // as "DVLA service error. Try again" and logging as an outage: 475 of
+      // the 482 lookup errors in the two weeks to 28 Oct 2026 were this.
+      if (resp.status === 400) return { error: INVALID_REG_MESSAGE, status: 400 };
 
       // Transient (5xx / other): remember it and retry if attempts remain.
-      transient = { error: "DVLA service error. Try again.", status: resp.status };
+      transient = { error: DVLA_DOWN_MESSAGE, status: resp.status };
     } catch (err: unknown) {
       clearTimeout(timeout);
       transient =
         (err as Error).name === "AbortError"
-          ? { error: "DVLA request timed out. Please try again.", status: 504 }
-          : { error: "Network error contacting DVLA. Please try again.", status: 503 };
+          ? { error: DVLA_DOWN_MESSAGE, status: 504 }
+          : { error: DVLA_DOWN_MESSAGE, status: 503 };
     }
 
     if (attempt < MAX_ATTEMPTS) {
@@ -564,16 +606,41 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const updatedAt = new Date().toISOString();
 
     if (dvlaResult && "error" in dvlaResult) {
-      // 404 = plate not registered. A normal outcome, not a fault — see the
-      // note on recordLookupFailure. Everything else is a real service problem,
-      // including 429: rate limiting is the failure most likely to creep up on
-      // us as traffic grows, and the one we'd currently never see.
-      if (dvlaResult.status !== 404) {
+      // 404 = plate not registered, 400 = not a registration DVLA can parse.
+      // Normal outcomes, not faults — see the note on recordLookupFailure.
+      // Everything else is a real service problem, including 429: rate
+      // limiting is the failure most likely to creep up on us as traffic
+      // grows, and the one we'd currently never see.
+      const isOutage = dvlaResult.status !== 404 && dvlaResult.status !== 400;
+      if (isOutage) {
         recordLookupFailure({
           stage: "dvla",
           reason: dvlaResult.status === 429 ? "rate_limited" : "service_error",
           status: dvlaResult.status,
           ipHash: ip !== "unknown" ? hashVrm(ip) : null,
+        });
+      }
+      // DVLA down but the MOT service answered: show what MOT data has. Not
+      // cached, so the next lookup of this plate gets the full DVLA record.
+      // Not for 429, which is our own rate limit with DVLA, not an outage.
+      if (isOutage && dvlaResult.status !== 429 && motData?.make) {
+        const fallback = combineVehicleData(vehicleFromMot(vrm, motData), motData);
+        if (analyticsWritesEnabled()) {
+          sb.from("site_events").insert({
+            event_type: "lookup",
+            metadata: { make: fallback.make || null, cached: false, dvla_unavailable: true },
+            ip_hash: ip !== "unknown" ? hashVrm(ip) : null,
+          }).then(() => {}, () => {});
+        }
+        return NextResponse.json({
+          ok: true,
+          data: fallback,
+          source: "mot",
+          motSource: "api",
+          cached: false,
+          vrmHash,
+        } as CombinedResponse, {
+          headers: { "Cache-Control": "no-store" },
         });
       }
       return NextResponse.json(

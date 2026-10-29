@@ -36,6 +36,8 @@ interface LookupVehicle {
   monthOfFirstRegistration?: string;
   taxStatus?: string;
   taxDueDate?: string;
+  /** DVLA was down; the lookup came from MOT data alone. */
+  dvlaUnavailable?: boolean;
   motStatus?: string;
   motExpiryDate?: string;
 }
@@ -75,6 +77,13 @@ function deriveStatus(v: LookupVehicle): StatusVisual {
   const due = v.taxDueDate ? new Date(v.taxDueDate) : null;
   const days = due ? daysBetween(new Date(), due) : null;
 
+  if (v.dvlaUnavailable) {
+    return {
+      label: "Unavailable",
+      tone: "info",
+      helper: "DVLA's vehicle service is briefly down, so we can't show the tax status right now. Check again in a few minutes.",
+    };
+  }
   if (raw.includes("sorn")) {
     return {
       label: "SORN",
@@ -307,9 +316,13 @@ function Loaded({ vehicle, vrm }: { vehicle: LookupVehicle; vrm: string }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               <span>Tax status</span>
-              <span className="text-slate-700">·</span>
-              <span className="font-mono text-slate-400">DVLA live</span>
-              <span className={`h-1 w-1 rounded-full ${tone.dot} animate-pulse`} />
+              {!vehicle.dvlaUnavailable && (
+                <>
+                  <span className="text-slate-700">·</span>
+                  <span className="font-mono text-slate-400">DVLA live</span>
+                  <span className={`h-1 w-1 rounded-full ${tone.dot} animate-pulse`} />
+                </>
+              )}
             </div>
             <div className="mt-2 flex flex-wrap items-baseline gap-3">
               <span

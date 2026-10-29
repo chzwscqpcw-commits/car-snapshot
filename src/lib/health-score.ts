@@ -44,6 +44,8 @@ export function calculateHealthScore(params: {
   ncapStars?: number;
   recallCount?: number;
   taxCurrent?: boolean;
+  /** DVLA was down, so tax status is unknown, not expired. */
+  taxUnknown?: boolean;
   motCurrent?: boolean;
   motNoRecord?: boolean;
   ulezCompliant?: boolean;
@@ -188,9 +190,13 @@ export function calculateHealthScore(params: {
   // test, so don't dock points or claim "expired" (factually wrong).
   const motUnknown = !!params.motNoRecord && !motExempt;
   const effectiveMotCurrent = params.motCurrent || motExempt || motUnknown;
-  if (params.taxCurrent && effectiveMotCurrent) currencyScore = 5;
-  else if (params.taxCurrent || effectiveMotCurrent) currencyScore = 3;
-  const currencyDetail = motExempt
+  // Same for tax when DVLA was unreachable and the result came from MOT data.
+  const effectiveTaxCurrent = params.taxCurrent || !!params.taxUnknown;
+  if (effectiveTaxCurrent && effectiveMotCurrent) currencyScore = 5;
+  else if (effectiveTaxCurrent || effectiveMotCurrent) currencyScore = 3;
+  const currencyDetail = params.taxUnknown
+    ? `Tax status unavailable, ${motExempt ? "MOT not yet required" : motUnknown ? "no MOT on record" : params.motCurrent ? "MOT current" : "MOT expired"}`
+    : motExempt
     ? (params.taxCurrent ? "Tax current, MOT not yet required" : "Tax expired, MOT not yet required")
     : motUnknown
       ? (params.taxCurrent ? "Tax current, no MOT on record" : "Tax expired, no MOT on record")
