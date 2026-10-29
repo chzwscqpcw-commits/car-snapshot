@@ -5,7 +5,7 @@ import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { analyticsWritesEnabled } from "@/lib/analytics-writes";
-import { stripPlateFromUrl } from "@/lib/redact";
+import { stripPlateFromUrl, plateIn, withoutPlate } from "@/lib/redact";
 
 /** Same salt + scheme as /api/lookup's vrm_hash, so the two can be joined. */
 function hashVrm(vrm: string): string {
@@ -66,10 +66,11 @@ export async function POST(req: Request) {
     // Plates are never stored. A hash keeps "distinct cars checked" countable
     // (it's the same hash /api/lookup keys its cache on) without keeping the
     // registration itself, which the /car-check FAQ says we don't retain.
-    if (metadata && typeof metadata.vrm === "string") {
-      const plate = metadata.vrm.replace(/\s+/g, "").toUpperCase();
-      const { vrm: _vrm, ...rest } = metadata;
-      metadata = plate ? { ...rest, vrm_hash: hashVrm(plate) } : rest;
+    // Under whatever key it came (see PLATE_KEYS).
+    if (metadata) {
+      const plate = plateIn(metadata);
+      metadata = withoutPlate(metadata);
+      if (plate) metadata.vrm_hash = hashVrm(plate);
     }
 
     if (metadata && JSON.stringify(metadata).length > MAX_PAYLOAD_BYTES) {
