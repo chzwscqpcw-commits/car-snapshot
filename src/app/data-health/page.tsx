@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import InternalTrafficToggle from "@/components/InternalTrafficToggle";
+import { KEY_QUERY_GROUPS, queryGroup } from "@/lib/gsc-queries";
 import {
   Activity,
   Bell,
@@ -264,6 +265,7 @@ type GscSnapshot = {
   startDate: string;
   endDate: string;
   queries: GscQueryPosition[];
+  topQueries?: GscQueryPosition[];
   totals: { clicks: number; impressions: number; position: number };
 };
 type GscData = {
@@ -327,7 +329,15 @@ function SearchRankingsCard({
   const prevPos = new Map<string, number>();
   if (prev) for (const q of prev.queries) prevPos.set(q.query, q.position);
 
-  const rows = [...snap.queries].sort((a, b) => (a.position || 999) - (b.position || 999));
+  // Tracked terms by group (gsc-queries.ts), busiest first within each. A
+  // snapshot taken before a term was added just doesn't list it yet.
+  const groups = KEY_QUERY_GROUPS.map((g) => ({
+    label: g.label,
+    rows: snap.queries
+      .filter((q) => g.queries.includes(q.query.toLowerCase()))
+      .sort((a, b) => b.clicks - a.clicks || (a.position || 999) - (b.position || 999)),
+  })).filter((g) => g.rows.length > 0);
+  const top = snap.topQueries ?? [];
 
   const fmtRange = (s: string) =>
     new Date(s).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
@@ -346,61 +356,89 @@ function SearchRankingsCard({
           {refreshBtn}
         </div>
       </div>
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
-        {rows.map((q, i) => {
-          const before = prevPos.get(q.query);
-          const delta =
-            before != null && before > 0 && q.position > 0 ? before - q.position : null;
-          return (
-            <div
-              key={q.query}
-              className={`px-4 py-2.5 flex items-center justify-between gap-3 ${
-                i < rows.length - 1 ? "border-b border-slate-800/60" : ""
-              }`}
-            >
-              <div className="min-w-0">
-                <p className="text-sm text-slate-200 truncate">{q.query}</p>
-                <p className="text-[11px] text-slate-500 mt-0.5 font-mono">
-                  {q.impressions.toLocaleString()} impr · {q.clicks} clicks ·{" "}
-                  {(q.ctr * 100).toFixed(1)}% CTR
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {delta != null && Math.abs(delta) >= 0.1 && (
-                  <span
-                    className={`inline-flex items-center gap-0.5 text-[11px] ${
-                      delta > 0 ? "text-emerald-400" : "text-red-400"
-                    }`}
-                    title="position change vs previous snapshot"
-                  >
-                    {delta > 0 ? (
-                      <TrendingUp className="h-3 w-3" />
-                    ) : (
-                      <TrendingDown className="h-3 w-3" />
-                    )}
-                    {Math.abs(delta).toFixed(1)}
-                  </span>
-                )}
-                <span
-                  className={`font-mono font-bold text-lg tabular-nums ${
-                    q.position === 0
-                      ? "text-slate-600"
-                      : q.position <= 3
-                        ? "text-emerald-300"
-                        : q.position <= 10
-                          ? "text-cyan-300"
-                          : "text-amber-300"
+      <div className="space-y-3">
+        {groups.map((g) => (
+          <div key={g.label} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <p className="px-4 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              {g.label} · {g.rows.reduce((n, q) => n + q.clicks, 0).toLocaleString()} clicks
+            </p>
+            {g.rows.map((q, i) => {
+              const before = prevPos.get(q.query);
+              const delta =
+                before != null && before > 0 && q.position > 0 ? before - q.position : null;
+              return (
+                <div
+                  key={q.query}
+                  className={`px-4 py-2.5 flex items-center justify-between gap-3 ${
+                    i < g.rows.length - 1 ? "border-b border-slate-800/60" : ""
                   }`}
                 >
-                  {q.position > 0 ? q.position.toFixed(1) : "—"}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+                  <div className="min-w-0">
+                    <p className="text-sm text-slate-200 truncate">{q.query}</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5 font-mono">
+                      {q.impressions.toLocaleString()} impr · {q.clicks} clicks ·{" "}
+                      {(q.ctr * 100).toFixed(1)}% CTR
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {delta != null && Math.abs(delta) >= 0.1 && (
+                      <span
+                        className={`inline-flex items-center gap-0.5 text-[11px] ${
+                          delta > 0 ? "text-emerald-400" : "text-red-400"
+                        }`}
+                        title="position change vs previous snapshot"
+                      >
+                        {delta > 0 ? (
+                          <TrendingUp className="h-3 w-3" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3" />
+                        )}
+                        {Math.abs(delta).toFixed(1)}
+                      </span>
+                    )}
+                    <span
+                      className={`font-mono font-bold text-lg tabular-nums ${
+                        q.position === 0
+                          ? "text-slate-600"
+                          : q.position <= 3
+                            ? "text-emerald-300"
+                            : q.position <= 10
+                              ? "text-cyan-300"
+                              : "text-amber-300"
+                      }`}
+                    >
+                      {q.position > 0 ? q.position.toFixed(1) : "—"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
+      {top.length > 0 && (
+        <details className="mt-3 bg-slate-900 border border-slate-800 rounded-xl">
+          <summary className="cursor-pointer px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            Top {top.length} queries by clicks · <span className="text-amber-300 normal-case">new</span> = not tracked yet
+          </summary>
+          <div className="border-t border-slate-800">
+            {top.map((q) => (
+              <div key={q.query} className="px-4 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 last:border-b-0">
+                <p className="text-sm text-slate-300 truncate">
+                  {q.query}
+                  {!queryGroup(q.query) && <span className="ml-2 text-[10px] font-semibold uppercase text-amber-300">new</span>}
+                </p>
+                <p className="text-[11px] text-slate-500 font-mono flex-shrink-0">
+                  {q.clicks} clicks · pos {q.position.toFixed(1)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
       <p className="text-[11px] text-slate-600 mt-2 px-1 leading-relaxed">
-        28-day avg position per query. Green ≤3, cyan ≤10, amber deeper. Δ vs last week&apos;s
+        28-day avg position per query, grouped by what the searcher wants (edit the groups in
+        src/lib/gsc-queries.ts). Green ≤3, cyan ≤10, amber deeper. Δ vs last week&apos;s
         snapshot (▲ = moved up). Site-wide average is deliberately not the headline — these
         conversion queries are.
       </p>
