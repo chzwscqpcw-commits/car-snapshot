@@ -239,6 +239,8 @@ type VehicleData = {
   yearOfManufacture?: number;
   taxStatus?: string;
   taxDueDate?: string;
+  /** Set by /api/lookup when DVLA was down and the result came from MOT data alone. */
+  dvlaUnavailable?: boolean;
   motStatus?: string;
   motExpiryDate?: string;
   monthOfFirstRegistration?: string;
@@ -1453,6 +1455,7 @@ export default function Home() {
       ncapStars: ncapRating?.overallStars,
       recallCount: recalls.length,
       taxCurrent: data.taxStatus === "Taxed",
+      taxUnknown: data.dvlaUnavailable === true,
       motCurrent: data.motStatus === "Valid",
       motNoRecord: !data.motStatus || data.motStatus === "No details held by DVLA",
       ulezCompliant: ulezResult?.status === "compliant" || ulezResult?.status === "exempt",
@@ -4266,6 +4269,12 @@ END:VEVENT
                     );
                   })()}
                 </div>
+                {data.dvlaUnavailable && (
+                  <p className="mb-3 text-xs text-slate-400">
+                    DVLA&apos;s vehicle service is briefly down, so tax status isn&apos;t available. The MOT history
+                    below is complete. Search again in a few minutes for the full DVLA details.
+                  </p>
+                )}
 
                 {/* Specs-placement MOTBookingCTA removed (Phase 2 CTA de-dup) —
                     it sat directly under the status-aware MotActionBanner above,
