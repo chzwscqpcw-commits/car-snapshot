@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -20,6 +20,9 @@ import {
 import BoltMark from "@/components/BoltMark";
 import Button from "@/components/Button";
 import { plateHref } from "@/lib/plate-url";
+import { plateInPath } from "@/lib/redact";
+import { formatPlate } from "@/lib/report-v2/format";
+import { trackEvent } from "@/lib/tracking";
 
 /**
  * 404 page — designed to get a lost user back into action fast.
@@ -35,7 +38,25 @@ import { plateHref } from "@/lib/plate-url";
  */
 export default function NotFound() {
   const [vrm, setVrm] = useState("");
+  // A plate typed into the address, like /reg/KY19KVK: most real visitors who
+  // land here came that way (Oct 2026). Read after mount — the server render
+  // of a 404 doesn't know the path.
+  const [typedPlate, setTypedPlate] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const plate = plateInPath(window.location.pathname);
+    if (!plate) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the path is only readable on the client
+    setTypedPlate(plate);
+    trackEvent("not_found_plate_offer");
+  }, []);
+
+  function checkTypedPlate() {
+    if (!typedPlate) return;
+    trackEvent("not_found_plate_click");
+    router.push(plateHref("/", typedPlate));
+  }
 
   function handleLookup() {
     const cleaned = vrm.replace(/\s/g, "").toUpperCase();
@@ -63,6 +84,25 @@ export default function NotFound() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12 space-y-10">
+        {/* THE PLATE THEY TYPED INTO THE ADDRESS */}
+        {typedPlate && (
+          <section className="rounded-2xl border border-cyan-500/40 bg-cyan-950/30 p-5 sm:p-6 text-center">
+            <p className="text-sm text-slate-300">Looking for this vehicle?</p>
+            <div className="mt-3 inline-block rounded-lg bg-yellow-400 px-4 py-1.5 font-mono text-2xl font-bold tracking-[0.12em] text-slate-950">
+              {formatPlate(typedPlate)}
+            </div>
+            <div className="mt-4 flex justify-center">
+              <Button onClick={checkTypedPlate} size="lg" className="w-full sm:w-auto">
+                Check {formatPlate(typedPlate)} now
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              Free: MOT history, tax, mileage, valuation and more.
+            </p>
+          </section>
+        )}
+
         {/* PRIMARY ACTION: REG LOOKUP */}
         <section>
           <div className="relative">
