@@ -927,8 +927,8 @@ export default function Home() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   // The example result card's button: back up to the search box, ready to type.
-  const tryOwnCar = (placement: "rail" | "inline") => {
-    trackEvent("home_sample_click", { placement });
+  const tryOwnCar = (placement: "rail" | "inline", car: string) => {
+    trackEvent("home_sample_click", { placement, car });
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.setTimeout(() => searchInputRef.current?.focus({ preventScroll: true }), 450);
   };
@@ -3388,7 +3388,7 @@ END:VEVENT
             html/body overflow-x: hidden in globals.css stops sticky working.) */}
         {!data && !loading && (
           <div className="hidden xl:block absolute top-12 right-7 w-[340px]">
-            <SampleResultCard onTry={() => tryOwnCar("rail")} />
+            <SampleResultCard onTry={(car) => tryOwnCar("rail", car)} />
           </div>
         )}
         {/* HEADER WITH BRAND */}
@@ -3963,7 +3963,7 @@ END:VEVENT
           )}
 
           {!data && !loading && (
-            <SampleResultCard onTry={() => tryOwnCar("inline")} className="xl:hidden mt-6" />
+            <SampleResultCard onTry={(car) => tryOwnCar("inline", car)} className="xl:hidden mt-6" />
           )}
 
           {/* SECONDARY NAVIGATION (moved out of header for hero compression) */}
