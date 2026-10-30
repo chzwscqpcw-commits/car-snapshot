@@ -3215,7 +3215,7 @@ END:VEVENT
   const totalCount = checklist.length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-clip">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative overflow-hidden">
       {/* Structured data */}
       <script
         type="application/ld+json"
@@ -3382,14 +3382,13 @@ END:VEVENT
       `}</style>
 
       <div className={`mx-auto w-full max-w-3xl px-5 sm:px-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10 ${data ? "pt-3 sm:pt-6" : "pt-8 sm:pt-12"} ${!data && !loading ? "xl:max-w-[1180px] xl:pr-[400px]" : ""}`}>
-        {/* Wide screens, before a search: an example result in a sticky rail
-            beside the page, so the empty right half shows what a check gets
-            you. Narrower screens get the same card once, below the search. */}
+        {/* Wide screens, before a search: an example result beside the hero,
+            so the empty right half shows what a check gets you. Narrower
+            screens get the same card once, below the search. (Not sticky:
+            html/body overflow-x: hidden in globals.css stops sticky working.) */}
         {!data && !loading && (
-          <div className="hidden xl:block absolute top-0 bottom-0 right-7 w-[340px] pt-12">
-            <div className="sticky top-24">
-              <SampleResultCard onTry={() => tryOwnCar("rail")} />
-            </div>
+          <div className="hidden xl:block absolute top-12 right-7 w-[340px]">
+            <SampleResultCard onTry={() => tryOwnCar("rail")} />
           </div>
         )}
         {/* HEADER WITH BRAND */}
