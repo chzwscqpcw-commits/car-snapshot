@@ -29,12 +29,14 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.freeplatecheck.co.uk"),
-  title: "Free Plate Check — Free UK Vehicle Check | MOT, Tax, Valuation & More",
+  title: "Free Number Plate Checker — MOT, Tax & Value | Free Plate Check",
   description:
-    "Everything DVLA knows about any UK car — free, in seconds. MOT history, tax status, mileage, ULEZ compliance, safety recalls, valuation, running costs, NCAP ratings and a full PDF report. Free, no signup needed.",
+    "Free number plate check for any UK car or van. Enter a reg to see MOT history, tax, mileage, valuation, ULEZ and recalls from official DVLA data. No signup, no email.",
   keywords: [
     "free car check",
     "number plate check",
+    "number plate checker",
+    "plate checker",
     "vehicle reg check",
     "MOT check",
     "MOT history check",

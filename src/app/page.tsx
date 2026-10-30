@@ -1179,7 +1179,7 @@ export default function Home() {
       }
       robots.setAttribute("content", "noindex, follow");
     } else {
-      document.title = "Free Plate Check — Free UK Vehicle Check | MOT, Tax, Valuation & More";
+      document.title = "Free Number Plate Checker — MOT, Tax & Value | Free Plate Check";
       const robots = document.querySelector('meta[name="robots"]');
       if (robots) robots.setAttribute("content", "index, follow");
     }
@@ -3393,7 +3393,7 @@ END:VEVENT
                 </h1>
               </div>
               <p className="text-slate-300 text-lg font-medium leading-snug max-w-xl">
-                Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
+                <span className="text-white">The free number plate checker.</span> Everything DVLA knows about any UK car. MOT, tax, valuation, ULEZ, recalls, running costs — in seconds.
               </p>
               {/* Trust strip — visually anchored, more confident than the
                   previous one-liner. The live dot signals real-time data
