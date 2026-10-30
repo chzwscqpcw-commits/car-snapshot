@@ -173,6 +173,7 @@ import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult } from "@/lib/tracking";
 import SampleResultCard from "@/components/home/SampleResultCard";
+import InstallCard from "@/components/pwa/InstallCard";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -4386,6 +4387,10 @@ END:VEVENT
             <RacDemoInlineBanner />
 
             {/* ═══ GROUP 2: HEALTH & SAFETY ═══ */}
+            {/* Add to home screen — phones only, after the main details,
+                hidden once installed or for 30 days after "Not now". */}
+            <InstallCard className="mb-8" />
+
             <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety" id="section-health">
 
             {/* VEHICLE HEALTH SCORE */}

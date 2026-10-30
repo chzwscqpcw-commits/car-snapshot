@@ -105,6 +105,12 @@ const nextConfig: NextConfig = {
   ],
   headers: async () => [
     {
+      // The service worker must never be served stale, or a fix to it could
+      // take a day to reach installed copies.
+      source: "/sw.js",
+      headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }],
+    },
+    {
       source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp)",
       headers: [
         {
