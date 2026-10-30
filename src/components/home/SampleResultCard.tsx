@@ -287,7 +287,7 @@ export default function SampleResultCard({
         <Row
           icon={<Wind className="w-4 h-4 text-sky-400" />}
           label="Tax & ULEZ"
-          value={car.ulez ? "Taxed · ULEZ compliant" : "Taxed · Not ULEZ compliant"}
+          value={car.ulez ? "Taxed · ULEZ compliant" : "Taxed · Fails ULEZ"}
           note={car.taxNote}
           delay={450}
           extra={<TaxUlezChips ulez={car.ulez} />}
