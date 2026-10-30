@@ -26,6 +26,9 @@ export const KEY_QUERY_GROUPS: QueryGroup[] = [
       "registration plate check",
       "license plate lookup",
       "license plate check",
+      "licence plate check",
+      "car plate check",
+      "license plate checker",
     ],
   },
   {
@@ -37,6 +40,7 @@ export const KEY_QUERY_GROUPS: QueryGroup[] = [
       "value my car without signing up",
       "car valuation without email",
       "free car valuation",
+      "car value check no email",
     ],
   },
   {
