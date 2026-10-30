@@ -6,6 +6,7 @@ import { RacDemoProvider } from "@/components/RacDemoContext";
 import { RacDemoFloatingBadge, RacDemoBottomBar } from "@/components/RacDemoBanner";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
 import SiteNav from "@/components/SiteNav";
+import PwaSetup from "@/components/pwa/PwaSetup";
 import SiteFooter from "@/components/SiteFooter";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import { HomeResultProvider } from "@/components/HomeResultContext";
@@ -174,6 +175,9 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#0f172a" />
         <meta name="apple-mobile-web-app-title" content="Free Plate Check" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <link rel="alternate" type="application/rss+xml" title="Free Plate Check — Car Guides & MOT Tips" href="https://www.freeplatecheck.co.uk/feed.xml" />
       </head>
       <body>
@@ -205,6 +209,7 @@ export default function RootLayout({
           <CommandPaletteProvider>
             <HomeResultProvider>
               <SiteBackdrop />
+              <PwaSetup />
               <SiteNav />
               {children}
               <SiteFooter />

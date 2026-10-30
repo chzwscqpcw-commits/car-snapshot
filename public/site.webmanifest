@@ -1,19 +1,26 @@
 {
+  "id": "/",
   "name": "Free Plate Check",
-  "short_name": "FreePlateCheck",
-  "icons": [
-    {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
+  "short_name": "Plate Check",
+  "description": "Free UK number plate checker: MOT history, tax, mileage, valuation, ULEZ and recalls for any car or van.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#0f172a",
   "background_color": "#020617",
-  "display": "standalone"
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["utilities", "lifestyle", "travel"],
+  "icons": [
+    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/maskable-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Value my car", "url": "/value-my-car", "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }] },
+    { "name": "MOT history", "url": "/mot-check", "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }] },
+    { "name": "Check before you buy", "url": "/check-before-you-buy", "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }] }
+  ]
 }
