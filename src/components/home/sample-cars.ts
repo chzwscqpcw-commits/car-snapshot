@@ -2,6 +2,8 @@
 // different story (an open recall, a ULEZ fail, a retest) so the card shows
 // what a check can turn up, not just a clean bill of health. Plates are
 // placeholders in the AB12 CDE style; the card is labelled "Example result".
+// The earliest "valid until" date is 30 Jan 2027: refresh the dates (and add a
+// test to each history) before then.
 
 export type MotResult = "pass" | "retest";
 
@@ -88,9 +90,9 @@ export const SAMPLE_CARS: SampleCar[] = [
     title: "2015 Vauxhall Corsa SRi",
     spec: "1.4 · Petrol · Red",
     score: 68,
-    motUntil: "21 Nov 2026",
-    mot: ["pass", "pass", "retest", "pass", "pass", "retest", "pass", "pass"],
-    mileage: [18400, 26100, 33700, 40200, 46900, 52800, 58100, 63500],
+    motUntil: "18 Mar 2027",
+    mot: ["pass", "pass", "retest", "pass", "pass", "retest", "pass", "pass", "pass"],
+    mileage: [18400, 26100, 33700, 40200, 46900, 52800, 58100, 63500, 68200],
     mileageNote: "No signs of clocking",
     value: "£3,100 – £3,900",
     valuePos: 0.6,
