@@ -72,8 +72,13 @@ export default function InstallToast({
   const install = async () => {
     trackEvent("pwa_prompt_click", { platform });
     if (platform === "ios") {
-      setBrowser(iosBrowser());
+      const b = iosBrowser();
+      setBrowser(b);
       setShowSteps(true);
+      // Safari's share menu, opened from the page, includes "Add to Home
+      // Screen" (confirmed on an iPhone, Oct 2026), so open it on this same
+      // tap and leave the banner saying which item to choose.
+      if (b !== "chrome" && b !== "other" && canShareSheet) void openShareSheet(b);
       return;
     }
     const e = getDeferredPrompt();
@@ -85,12 +90,11 @@ export default function InstallToast({
     onDismiss();
   };
 
-  // Safari can open its share sheet straight from the page, sparing the hunt
-  // for the Share button (whether "Add to Home Screen" is offered there is
-  // what pwa_share_sheet measures).
+  // Safari can open its share menu straight from the page, so nobody has to
+  // hunt for the Share button (it moved behind a menu in Safari 26).
   const canShareSheet = typeof navigator !== "undefined" && typeof navigator.share === "function";
-  const openShareSheet = async () => {
-    trackEvent("pwa_share_sheet", { browser });
+  const openShareSheet = async (b: IosBrowser = browser) => {
+    trackEvent("pwa_share_sheet", { browser: b });
     try {
       await navigator.share({ title: "Free Plate Check", url: location.origin + "/" });
     } catch {
@@ -140,7 +144,7 @@ export default function InstallToast({
               onClick={install}
               className="px-3.5 py-1.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-semibold rounded-full transition-colors whitespace-nowrap"
             >
-              {platform === "ios" ? "Show me" : "Add"}
+              Add
             </button>
           )}
           <button
@@ -172,32 +176,22 @@ export default function InstallToast({
 
         {showSteps && browser !== "other" && (
           <ol className="mt-3 grid gap-2 text-[13px] text-slate-300">
-            {canShareSheet && browser !== "chrome"
-              ? step(
-                  1,
-                  <>
-                    <button
-                      type="button"
-                      onClick={openShareSheet}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-white hover:bg-slate-700 transition-colors"
-                    >
-                      <Share className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
-                      Open the share menu
-                    </button>
-                    <span className="text-slate-500">or</span>
-                    {browser === "safari-new" ? (
-                      <>
-                        tap <AlignLeft className="w-4 h-4 text-cyan-400" aria-label="the menu button" /> or{" "}
-                        <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> by the address bar, then {strong("Share")}
-                      </>
-                    ) : (
-                      <>
-                        tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom
-                      </>
-                    )}
-                  </>,
-                )
-              : step(
+            {canShareSheet && browser !== "chrome" ? (
+              <li className="grid gap-1.5">
+                <span className="flex items-center gap-2 flex-wrap">
+                  In the menu that opened, choose <SquarePlus className="w-4 h-4 text-cyan-400" aria-hidden="true" />{" "}
+                  {strong("Add to Home Screen")}
+                </span>
+                <span className="text-slate-500">
+                  Scroll the menu if it&apos;s hidden.{" "}
+                  <button type="button" onClick={() => openShareSheet()} className="text-cyan-400 underline underline-offset-2">
+                    Open the menu again
+                  </button>
+                </span>
+              </li>
+            ) : (
+              <>
+                {step(
                   1,
                   browser === "chrome" ? (
                     <>
@@ -214,7 +208,9 @@ export default function InstallToast({
                     </>
                   ),
                 )}
-            {addStep}
+                {addStep}
+              </>
+            )}
           </ol>
         )}
       </div>
