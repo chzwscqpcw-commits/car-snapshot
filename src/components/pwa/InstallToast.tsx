@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Ellipsis, Share, SquarePlus, X } from "lucide-react";
+import { AlignLeft, Copy, Ellipsis, Share, SquarePlus, X } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import { trackEvent } from "@/lib/tracking";
 import { getDeferredPrompt, installPlatform, setDeferredPrompt, subscribeInstall, type InstallPlatform } from "@/components/pwa/pwa-store";
@@ -11,6 +11,25 @@ function offer(): InstallPlatform {
   if (typeof window === "undefined") return "none";
   if (!window.matchMedia?.("(pointer: coarse)").matches) return "none";
   return installPlatform();
+}
+
+type IosBrowser = "safari-new" | "safari" | "chrome" | "other";
+
+/**
+ * Which iPhone browser, so the steps match what's on screen. Safari 26 moved
+ * Share behind the menu button by the address bar; Chrome keeps it in the
+ * address bar; Brave (whose user agent is identical to Safari's, but which
+ * exposes navigator.brave), Firefox and the rest can't make a proper
+ * home-screen app, so they're sent to Safari.
+ */
+function iosBrowser(): IosBrowser {
+  const ua = navigator.userAgent;
+  if ((navigator as Navigator & { brave?: unknown }).brave) return "other";
+  if (/CriOS/.test(ua)) return "chrome";
+  if (/FxiOS|EdgiOS|OPiOS|DuckDuckGo|GSA\//.test(ua)) return "other";
+  const safari = ua.match(/Version\/(\d+)/);
+  if (!safari) return "other";
+  return Number(safari[1]) >= 26 ? "safari-new" : "safari";
 }
 
 /** "prompt" (Android/Chrome), "ios" (Share sheet steps) or "none" (desktop, installed). */
@@ -35,6 +54,8 @@ export default function InstallToast({
   className?: string;
 }) {
   const [showSteps, setShowSteps] = useState(false);
+  const [browser, setBrowser] = useState<IosBrowser>("safari");
+  const [copied, setCopied] = useState(false);
   const seen = useRef(false);
 
   useEffect(() => {
@@ -51,6 +72,7 @@ export default function InstallToast({
   const install = async () => {
     trackEvent("pwa_prompt_click", { platform });
     if (platform === "ios") {
+      setBrowser(iosBrowser());
       setShowSteps(true);
       return;
     }
@@ -62,6 +84,44 @@ export default function InstallToast({
     setDeferredPrompt(null); // the browser only lets us prompt once
     onDismiss();
   };
+
+  // Safari can open its share sheet straight from the page, sparing the hunt
+  // for the Share button (whether "Add to Home Screen" is offered there is
+  // what pwa_share_sheet measures).
+  const canShareSheet = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const openShareSheet = async () => {
+    trackEvent("pwa_share_sheet", { browser });
+    try {
+      await navigator.share({ title: "Free Plate Check", url: location.origin + "/" });
+    } catch {
+      // Closed without choosing: nothing to do.
+    }
+  };
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(location.origin + "/");
+      setCopied(true);
+      trackEvent("pwa_copy_for_safari");
+    } catch {
+      // Clipboard refused: the address is shown on screen to copy by hand.
+    }
+  };
+
+  const step = (n: number, body: React.ReactNode) => (
+    <li className="flex items-center gap-2 flex-wrap">
+      <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">{n}</span>
+      {body}
+    </li>
+  );
+  const strong = (t: string) => <span className="font-medium text-white">{t}</span>;
+  const addStep = step(
+    2,
+    <>
+      Choose <SquarePlus className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Add to Home Screen")}
+      <span className="text-slate-500">(scroll the list if it&apos;s hidden)</span>
+    </>,
+  );
 
   return (
     <div className={`fixed left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn ${className}`}>
@@ -93,19 +153,68 @@ export default function InstallToast({
           </button>
         </div>
 
-        {showSteps && (
+        {showSteps && browser === "other" && (
+          <div className="mt-3 grid gap-2 text-[13px] text-slate-300">
+            <p>
+              This browser can&apos;t add it as an app. Open {strong("freeplatecheck.co.uk")} in {strong("Safari")}, then
+              add it from there.
+            </p>
+            <button
+              type="button"
+              onClick={copyLink}
+              className="justify-self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-700 text-xs font-semibold text-slate-200 hover:bg-slate-800 transition-colors"
+            >
+              <Copy className="w-3.5 h-3.5" />
+              {copied ? "Link copied" : "Copy link for Safari"}
+            </button>
+          </div>
+        )}
+
+        {showSteps && browser !== "other" && (
           <ol className="mt-3 grid gap-2 text-[13px] text-slate-300">
-            <li className="flex items-center gap-2 flex-wrap">
-              <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">1</span>
-              Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> <span className="font-medium text-white">Share</span>
-              <span className="text-slate-500">or</span>
-              <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> then <span className="font-medium text-white">Share</span>
-            </li>
-            <li className="flex items-center gap-2 flex-wrap">
-              <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">2</span>
-              Choose <SquarePlus className="w-4 h-4 text-cyan-400" aria-hidden="true" /> <span className="font-medium text-white">Add to Home Screen</span>
-              <span className="text-slate-500">(scroll the list if it&apos;s hidden)</span>
-            </li>
+            {canShareSheet && browser !== "chrome"
+              ? step(
+                  1,
+                  <>
+                    <button
+                      type="button"
+                      onClick={openShareSheet}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-white hover:bg-slate-700 transition-colors"
+                    >
+                      <Share className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+                      Open the share menu
+                    </button>
+                    <span className="text-slate-500">or</span>
+                    {browser === "safari-new" ? (
+                      <>
+                        tap <AlignLeft className="w-4 h-4 text-cyan-400" aria-label="the menu button" /> or{" "}
+                        <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> by the address bar, then {strong("Share")}
+                      </>
+                    ) : (
+                      <>
+                        tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom
+                      </>
+                    )}
+                  </>,
+                )
+              : step(
+                  1,
+                  browser === "chrome" ? (
+                    <>
+                      Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} in the address bar
+                    </>
+                  ) : browser === "safari-new" ? (
+                    <>
+                      Tap <AlignLeft className="w-4 h-4 text-cyan-400" aria-label="the menu button" /> or{" "}
+                      <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> by the address bar, then {strong("Share")}
+                    </>
+                  ) : (
+                    <>
+                      Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom of the screen
+                    </>
+                  ),
+                )}
+            {addStep}
           </ol>
         )}
       </div>
