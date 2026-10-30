@@ -114,7 +114,7 @@ export default function InstallCard({ className = "" }: { className?: string }) 
         <ol className="mt-3 grid gap-2 text-[13px] text-slate-300">
           <li className="flex items-center gap-2">
             <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">1</span>
-            Tap <Share className="w-4 h-4 text-cyan-400" aria-label="Share" /> <span className="font-medium text-white">Share</span> in Safari&apos;s toolbar
+            Tap <Share className="w-4 h-4 text-cyan-400" aria-label="Share" /> <span className="font-medium text-white">Share</span> in your browser
           </li>
           <li className="flex items-center gap-2">
             <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">2</span>
