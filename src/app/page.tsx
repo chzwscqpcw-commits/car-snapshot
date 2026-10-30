@@ -172,6 +172,7 @@ import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult } from "@/lib/tracking";
+import SampleResultCard from "@/components/home/SampleResultCard";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -924,6 +925,13 @@ export default function Home() {
   const shareSentinelMidRef = useRef<HTMLDivElement | null>(null);
   const shareSentinelBottomRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // The example result card's button: back up to the search box, ready to type.
+  const tryOwnCar = (placement: "rail" | "inline", car: string) => {
+    trackEvent("home_sample_click", { placement, car });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.setTimeout(() => searchInputRef.current?.focus({ preventScroll: true }), 450);
+  };
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showLogoReveal, setShowLogoReveal] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
@@ -3373,7 +3381,16 @@ END:VEVENT
         }
       `}</style>
 
-      <div className={`mx-auto w-full max-w-3xl px-5 sm:px-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10 ${data ? "pt-3 sm:pt-6" : "pt-8 sm:pt-12"}`}>
+      <div className={`mx-auto w-full max-w-3xl px-5 sm:px-7 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pb-[max(3rem,env(safe-area-inset-bottom))] relative z-10 ${data ? "pt-3 sm:pt-6" : "pt-8 sm:pt-12"} ${!data && !loading ? "xl:max-w-[1180px] xl:pr-[400px]" : ""}`}>
+        {/* Wide screens, before a search: an example result beside the hero,
+            so the empty right half shows what a check gets you. Narrower
+            screens get the same card once, below the search. (Not sticky:
+            html/body overflow-x: hidden in globals.css stops sticky working.) */}
+        {!data && !loading && (
+          <div className="hidden xl:block absolute top-12 right-7 w-[340px]">
+            <SampleResultCard onTry={(car) => tryOwnCar("rail", car)} />
+          </div>
+        )}
         {/* HEADER WITH BRAND */}
         {/*
           Only shown in entry state. Once `data` is populated, SiteNav
@@ -3943,6 +3960,10 @@ END:VEVENT
             <p className="mt-2 text-xs text-slate-500">
               Free MOT history, tax status, ULEZ check &mdash; and free MOT reminders by email.
             </p>
+          )}
+
+          {!data && !loading && (
+            <SampleResultCard onTry={(car) => tryOwnCar("inline", car)} wide className="xl:hidden mt-6 max-w-md mx-auto md:max-w-none" />
           )}
 
           {/* SECONDARY NAVIGATION (moved out of header for hero compression) */}
@@ -5747,36 +5768,36 @@ END:VEVENT
         <div className="mt-10">
           <h2 className="text-xl font-bold text-slate-100 mb-2">UK Motoring by the Numbers</h2>
           <p className="text-sm text-slate-400 mb-6">Interactive data and charts on every aspect of owning a car in the UK.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <a href="/stats/fuel-prices" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-emerald-400">{latestFuelWeek.petrol}p</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">UK Fuel Prices</div>
-              <div className="text-xs text-slate-500 mt-0.5">Latest UK average petrol price per litre</div>
+          <div className="grid grid-cols-2 gap-3">
+            <a href="/stats/fuel-prices" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-emerald-400">{latestFuelWeek.petrol}p</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">UK Fuel Prices</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Latest UK average petrol price per litre</div>
             </a>
-            <a href="/stats/most-reliable-cars" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-emerald-400">83.5%</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Most Reliable Cars</div>
-              <div className="text-xs text-slate-500 mt-0.5">Toyota Yaris tops MOT pass rates</div>
+            <a href="/stats/most-reliable-cars" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-emerald-400">83.5%</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Most Reliable Cars</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Toyota Yaris tops MOT pass rates</div>
             </a>
-            <a href="/stats/cost-of-motoring" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-amber-400">&pound;6,980</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Cost of Motoring</div>
-              <div className="text-xs text-slate-500 mt-0.5">Average annual UK running cost</div>
+            <a href="/stats/cost-of-motoring" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-amber-400">&pound;6,980</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Cost of Motoring</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Average annual UK running cost</div>
             </a>
-            <a href="/stats/car-theft" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-red-400">105k</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Car Theft Statistics</div>
-              <div className="text-xs text-slate-500 mt-0.5">Vehicles stolen in the UK (2024)</div>
+            <a href="/stats/car-theft" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-red-400">105k</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Car Theft Statistics</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Vehicles stolen in the UK (2024)</div>
             </a>
-            <a href="/stats/ev-adoption" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-sky-400">1.58M</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">EV Adoption</div>
-              <div className="text-xs text-slate-500 mt-0.5">Battery electric vehicles on UK roads</div>
+            <a href="/stats/ev-adoption" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-sky-400">1.58M</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">EV Adoption</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Battery electric vehicles on UK roads</div>
             </a>
-            <a href="/stats/used-car-prices" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
-              <div className="text-2xl font-bold text-amber-400">113.2</div>
-              <div className="text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Used Car Prices</div>
-              <div className="text-xs text-slate-500 mt-0.5">Price index still 13% above pre-COVID</div>
+            <a href="/stats/used-car-prices" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-700/50 transition-colors group">
+              <div className="text-xl sm:text-2xl font-bold text-amber-400">113.2</div>
+              <div className="text-[13px] sm:text-sm font-medium text-slate-100 mt-1 group-hover:text-emerald-400 transition-colors">Used Car Prices</div>
+              <div className="hidden sm:block text-xs text-slate-500 mt-0.5">Price index still 13% above pre-COVID</div>
             </a>
           </div>
           <div className="mt-4 text-center">
@@ -5791,109 +5812,109 @@ END:VEVENT
           {/* Share prompt sentinel — bottom of results */}
           <div ref={shareSentinelBottomRef} className="h-0" aria-hidden="true" />
           <h2 className="text-xl font-bold text-slate-100 mb-6">What Can You Check?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {/* Top intent — proven top traffic and high commercial value */}
-            <a href="/value-my-car" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <PoundSterling className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>
+            <a href="/value-my-car" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <PoundSterling className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Car Valuation</h3>
               </div>
-              <p className="text-sm text-slate-400">Free instant valuation based on age, mileage and market data. Plus a negotiation helper for buyers.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Free instant valuation based on age, mileage and market data. Plus a negotiation helper for buyers.</p>
             </a>
-            <a href="/mot-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Search className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">MOT History Check</h3>
+            <a href="/mot-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">MOT History Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Full MOT history since 2005 — pass/fail results, advisories, failures and mileage readings.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Full MOT history since 2005 — pass/fail results, advisories, failures and mileage readings.</p>
             </a>
-            <a href="/cheap-mot" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <PoundSterling className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Cheap MOT Prices</h3>
+            <a href="/cheap-mot" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <PoundSterling className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Cheap MOT Prices</h3>
               </div>
-              <p className="text-sm text-slate-400">Compare local garage MOT prices — many beat the £54.85 legal maximum. Free, no signup.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Compare local garage MOT prices — many beat the £54.85 legal maximum. Free, no signup.</p>
             </a>
-            <a href="/mot-reminder" className="p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Bell className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">Free MOT Reminder</h3>
+            <a href="/mot-reminder" className="p-3 sm:p-4 bg-gradient-to-r from-cyan-950/20 to-blue-950/20 border border-cyan-800/30 rounded-lg hover:border-cyan-700/50 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-cyan-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-cyan-400 transition-colors">Free MOT Reminder</h3>
               </div>
-              <p className="text-sm text-slate-400">Get a free email reminder before your MOT expires. Never miss it, never get fined.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Get a free email reminder before your MOT expires. Never miss it, never get fined.</p>
             </a>
-            <a href="/repair-costs" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Wrench className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Repair Cost Guides</h3>
+            <a href="/repair-costs" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Wrench className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Repair Cost Guides</h3>
               </div>
-              <p className="text-sm text-slate-400">Free UK price guides for cambelt, DPF, aircon, brakes, battery and clutch — plus local quotes.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Free UK price guides for cambelt, DPF, aircon, brakes, battery and clutch — plus local quotes.</p>
             </a>
-            <a href="/servicing" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Wrench className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Servicing</h3>
+            <a href="/servicing" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Wrench className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Car Servicing</h3>
               </div>
-              <p className="text-sm text-slate-400">Compare car service prices from local garages — interim and full service quotes in seconds.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Compare car service prices from local garages — interim and full service quotes in seconds.</p>
             </a>
-            <a href="/car-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle2 className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Check</h3>
+            <a href="/car-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Free Car Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Vehicle specs, health score, NCAP safety rating, dimensions, running costs and a full PDF report.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Vehicle specs, health score, NCAP safety rating, dimensions, running costs and a full PDF report.</p>
             </a>
 
             {/* Mid-priority — useful utilities */}
-            <a href="/running-costs" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <PoundSterling className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Running Costs</h3>
+            <a href="/running-costs" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <PoundSterling className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Running Costs</h3>
               </div>
-              <p className="text-sm text-slate-400">See what any car costs to run — fuel, tax, insurance and servicing estimates at a glance.</p>
+              <p className="hidden sm:block text-sm text-slate-400">See what any car costs to run — fuel, tax, insurance and servicing estimates at a glance.</p>
             </a>
-            <a href="/compare" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <ArrowLeftRight className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Compare Vehicles</h3>
+            <a href="/compare" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <ArrowLeftRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Compare Vehicles</h3>
               </div>
-              <p className="text-sm text-slate-400">Compare two vehicles side by side — specs, costs, MOT history, valuation and more.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Compare two vehicles side by side — specs, costs, MOT history, valuation and more.</p>
             </a>
-            <a href="/tax-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Calendar className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Car Tax Check</h3>
+            <a href="/tax-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Car Tax Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Check if a vehicle is taxed, SORN&apos;d or untaxed, with the due date and VED band estimate.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Check if a vehicle is taxed, SORN&apos;d or untaxed, with the due date and VED band estimate.</p>
             </a>
-            <a href="/mileage-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Gauge className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Mileage Check</h3>
+            <a href="/mileage-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Gauge className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Mileage Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Track odometer readings across every MOT test to spot clocking or unusual mileage jumps.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Track odometer readings across every MOT test to spot clocking or unusual mileage jumps.</p>
             </a>
 
             {/* Niche / regional — lower in priority */}
-            <a href="/ulez-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Leaf className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">ULEZ Check</h3>
+            <a href="/ulez-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Leaf className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">ULEZ Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Check if a vehicle meets ULEZ standards based on its Euro emission class and fuel type.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Check if a vehicle meets ULEZ standards based on its Euro emission class and fuel type.</p>
             </a>
-            <a href="/recall-check" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Shield className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Recall Check</h3>
+            <a href="/recall-check" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Recall Check</h3>
               </div>
-              <p className="text-sm text-slate-400">Search DVSA safety recalls for any UK car model. Outstanding recalls mean free repairs at dealers.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Search DVSA safety recalls for any UK car model. Outstanding recalls mean free repairs at dealers.</p>
             </a>
-            <Link href="/clean-air-zones" className="p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
-              <div className="flex items-center gap-3 mb-2">
-                <Leaf className="w-5 h-5 text-blue-400" />
-                <h3 className="text-base font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Clean Air Zones</h3>
+            <Link href="/clean-air-zones" className="p-3 sm:p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors group">
+              <div className="flex items-center gap-2 sm:gap-3 sm:mb-2">
+                <Leaf className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-blue-400" />
+                <h3 className="text-sm sm:text-base font-semibold leading-snug text-slate-100 group-hover:text-blue-400 transition-colors">Clean Air Zones</h3>
               </div>
-              <p className="text-sm text-slate-400">Check Clean Air Zone charges by city — see which zones your vehicle can enter for free.</p>
+              <p className="hidden sm:block text-sm text-slate-400">Check Clean Air Zone charges by city — see which zones your vehicle can enter for free.</p>
             </Link>
           </div>
         </div>
