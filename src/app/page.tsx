@@ -173,7 +173,7 @@ import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
 import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult } from "@/lib/tracking";
 import SampleResultCard from "@/components/home/SampleResultCard";
-import InstallCard from "@/components/pwa/InstallCard";
+import InstallToast, { useInstallOffer } from "@/components/pwa/InstallToast";
 import { triggerShare, isMobileDevice } from "@/lib/share";
 import { calculateUlezCompliance, type UlezResult } from "@/lib/ulez";
 import { calculateVed } from "@/lib/ved";
@@ -920,6 +920,9 @@ export default function Home() {
   const [shareToastDismissing, setShareToastDismissing] = useState(false);
   const [downloadSharePrompt, setDownloadSharePrompt] = useState(false);
   const [sharePromptDismissed, setSharePromptDismissed] = useState(false);
+  // Phones that can install the site get the add-to-home-screen ask in the
+  // scroll prompt's place; everyone else keeps the share ask.
+  const installOffer = useInstallOffer();
   const [downloadShareCopied, setDownloadShareCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const shareToastTimer = useRef<NodeJS.Timeout | null>(null);
@@ -4387,10 +4390,6 @@ END:VEVENT
             <RacDemoInlineBanner />
 
             {/* ═══ GROUP 2: HEALTH & SAFETY ═══ */}
-            {/* Add to home screen — phones only, after the main details,
-                hidden once installed or for 30 days after "Not now". */}
-            <InstallCard className="mb-8" />
-
             <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety" id="section-health">
 
             {/* VEHICLE HEALTH SCORE */}
@@ -6050,8 +6049,16 @@ END:VEVENT
         </div>
       )}
 
-      {/* DOWNLOAD SHARE PROMPT (Moment B) */}
-      {downloadSharePrompt && (
+      {/* DOWNLOAD SHARE PROMPT (Moment B) — or, on a phone that can
+          install the site, the add-to-home-screen prompt instead. */}
+      {downloadSharePrompt && installOffer !== "none" && (
+        <InstallToast
+          platform={installOffer}
+          onDismiss={dismissSharePrompt}
+          className={data && !loading ? "bottom-24" : "bottom-6"}
+        />
+      )}
+      {downloadSharePrompt && installOffer === "none" && (
         <div className={`fixed ${data && !loading ? "bottom-24" : "bottom-6"} left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn`}>
           <div className="p-4 bg-slate-900 border border-slate-700/80 rounded-lg shadow-lg flex items-center gap-3">
             <p className="flex-1 text-sm text-slate-300">
