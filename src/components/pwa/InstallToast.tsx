@@ -75,10 +75,6 @@ export default function InstallToast({
       const b = iosBrowser();
       setBrowser(b);
       setShowSteps(true);
-      // Safari's share menu, opened from the page, includes "Add to Home
-      // Screen" (confirmed on an iPhone, Oct 2026), so open it on this same
-      // tap and leave the banner saying which item to choose.
-      if (b !== "chrome" && b !== "other" && canShareSheet) void openShareSheet(b);
       return;
     }
     const e = getDeferredPrompt();
@@ -90,17 +86,10 @@ export default function InstallToast({
     onDismiss();
   };
 
-  // Safari can open its share menu straight from the page, so nobody has to
-  // hunt for the Share button (it moved behind a menu in Safari 26).
-  const canShareSheet = typeof navigator !== "undefined" && typeof navigator.share === "function";
-  const openShareSheet = async (b: IosBrowser = browser) => {
-    trackEvent("pwa_share_sheet", { browser: b });
-    try {
-      await navigator.share({ title: "Free Plate Check", url: location.origin + "/" });
-    } catch {
-      // Closed without choosing: nothing to do.
-    }
-  };
+  // There's no shortcut on iPhone: a page can open a share menu
+  // (navigator.share), but it's the generic one, without Safari's own "Add to
+  // Home Screen" (checked on an iPhone, Oct 2026). So the steps point at
+  // Safari's own buttons.
 
   const copyLink = async () => {
     try {
@@ -144,7 +133,7 @@ export default function InstallToast({
               onClick={install}
               className="px-3.5 py-1.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-semibold rounded-full transition-colors whitespace-nowrap"
             >
-              Add
+              {platform === "ios" ? "Show me" : "Add"}
             </button>
           )}
           <button
@@ -176,41 +165,24 @@ export default function InstallToast({
 
         {showSteps && browser !== "other" && (
           <ol className="mt-3 grid gap-2 text-[13px] text-slate-300">
-            {canShareSheet && browser !== "chrome" ? (
-              <li className="grid gap-1.5">
-                <span className="flex items-center gap-2 flex-wrap">
-                  In the menu that opened, choose <SquarePlus className="w-4 h-4 text-cyan-400" aria-hidden="true" />{" "}
-                  {strong("Add to Home Screen")}
-                </span>
-                <span className="text-slate-500">
-                  Scroll the menu if it&apos;s hidden.{" "}
-                  <button type="button" onClick={() => openShareSheet()} className="text-cyan-400 underline underline-offset-2">
-                    Open the menu again
-                  </button>
-                </span>
-              </li>
-            ) : (
-              <>
-                {step(
-                  1,
-                  browser === "chrome" ? (
-                    <>
-                      Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} in the address bar
-                    </>
-                  ) : browser === "safari-new" ? (
-                    <>
-                      Tap <AlignLeft className="w-4 h-4 text-cyan-400" aria-label="the menu button" /> or{" "}
-                      <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> by the address bar, then {strong("Share")}
-                    </>
-                  ) : (
-                    <>
-                      Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom of the screen
-                    </>
-                  ),
-                )}
-                {addStep}
-              </>
+            {step(
+              1,
+              browser === "chrome" ? (
+                <>
+                  Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} in the address bar
+                </>
+              ) : browser === "safari-new" ? (
+                <>
+                  Tap the <AlignLeft className="w-4 h-4 text-cyan-400" aria-hidden="true" /> or{" "}
+                  <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> button by the address bar, then {strong("Share")}
+                </>
+              ) : (
+                <>
+                  Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom of the screen
+                </>
+              ),
             )}
+            {addStep}
           </ol>
         )}
       </div>
