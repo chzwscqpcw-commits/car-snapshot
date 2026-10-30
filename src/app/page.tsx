@@ -3963,7 +3963,7 @@ END:VEVENT
           )}
 
           {!data && !loading && (
-            <SampleResultCard onTry={(car) => tryOwnCar("inline", car)} className="xl:hidden mt-6" />
+            <SampleResultCard onTry={(car) => tryOwnCar("inline", car)} wide className="xl:hidden mt-6 max-w-md mx-auto md:max-w-none" />
           )}
 
           {/* SECONDARY NAVIGATION (moved out of header for hero compression) */}

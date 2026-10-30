@@ -172,7 +172,7 @@ function Row({
   extra?: React.ReactNode;
 }) {
   return (
-    <div className="sample-row flex items-center gap-3 py-2" style={{ animationDelay: `${delay}ms` }}>
+    <div className="sample-row flex items-center gap-3 py-2 border-t border-slate-800/80" style={{ animationDelay: `${delay}ms` }}>
       <div className="w-8 h-8 rounded-lg bg-slate-800/80 flex items-center justify-center shrink-0">{icon}</div>
       <div className="min-w-0 flex-1">
         <div className="text-[11px] uppercase tracking-wider text-slate-500">{label}</div>
@@ -197,9 +197,12 @@ function motNote(mot: MotResult[]): string {
 export default function SampleResultCard({
   onTry,
   className = "",
+  wide = false,
 }: {
   onTry: (car: string) => void;
   className?: string;
+  /** Inline copy: two columns of rows from md up, so it never stretches thin. */
+  wide?: boolean;
 }) {
   // The server renders the first car; the visitor's car is picked after
   // mount (deferred, as useScrollReveal does), while everything is still
@@ -259,7 +262,7 @@ export default function SampleResultCard({
         </div>
       </div>
 
-      <div className="mt-3 divide-y divide-slate-800/80">
+      <div className={`mt-3 ${wide ? "md:grid md:grid-cols-2 md:gap-x-6" : ""}`}>
         <Row
           icon={<Check className="w-4 h-4 text-emerald-400" />}
           label="MOT"
