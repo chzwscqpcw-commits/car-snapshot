@@ -269,7 +269,7 @@ export default function SampleResultCard({ onTry, className = "" }: { onTry: () 
           icon={<ShieldCheck className="w-4 h-4 text-emerald-400" />}
           label="Recalls"
           value="None outstanding"
-          note="Checked against DVSA records"
+          note="Checked with DVSA"
           delay={550}
           extra={<RecallBadge />}
         />
@@ -277,7 +277,7 @@ export default function SampleResultCard({ onTry, className = "" }: { onTry: () 
           icon={<Wrench className="w-4 h-4 text-violet-400" />}
           label="Running costs"
           value="About £1,640 a year"
-          note="Fuel, tax, insurance and servicing"
+          note="Fuel, insurance and more"
           delay={650}
           extra={<CostSplit />}
         />
