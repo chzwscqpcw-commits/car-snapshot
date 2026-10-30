@@ -5739,7 +5739,7 @@ END:VEVENT
         {/* ABOUT — descriptive paragraph for SEO */}
         <div className="mt-10">
           <p className="text-sm text-slate-400 leading-relaxed">
-            Free Plate Check is a comprehensive, free UK vehicle check. Enter any registration number to see DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, a free car valuation, estimated running costs, Euro NCAP safety ratings, vehicle dimensions, and a health score. Set up a free MOT reminder and we&apos;ll email you before your MOT expires. Compare two vehicles side by side or download a detailed PDF report. No signup, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
+            Free Plate Check is a free number plate checker for any UK car or van. Enter a reg to see DVLA data, full MOT history since 2005, tax status, mileage records, ULEZ compliance, safety recalls, a free car valuation, estimated running costs, Euro NCAP safety ratings, vehicle dimensions, and a health score. Set up a free MOT reminder and we&apos;ll email you before your MOT expires. Compare two vehicles side by side or download a detailed PDF report. No signup, no payment — just enter a reg and get results in seconds. All data comes from official government sources including the DVLA Vehicle Enquiry Service and the MOT History API.
           </p>
         </div>
 
