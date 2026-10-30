@@ -3962,6 +3962,10 @@ END:VEVENT
             </p>
           )}
 
+          {!data && !loading && (
+            <SampleResultCard onTry={() => tryOwnCar("inline")} className="xl:hidden mt-6" />
+          )}
+
           {/* SECONDARY NAVIGATION (moved out of header for hero compression) */}
           {!data && !loading && (
             <div className="mt-8 pt-6 border-t border-slate-800/60 space-y-5">
@@ -5751,10 +5755,6 @@ END:VEVENT
             {/* RAC demo — second banner after all result sections */}
             <RacDemoSidebarBanner />
           </>
-        )}
-
-        {!data && !loading && (
-          <SampleResultCard onTry={() => tryOwnCar("inline")} className="xl:hidden mt-8" />
         )}
 
         {/* ABOUT — descriptive paragraph for SEO */}
