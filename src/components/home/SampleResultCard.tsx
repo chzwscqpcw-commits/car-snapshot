@@ -16,7 +16,7 @@ function Sparkline() {
   const max = MILEAGE[MILEAGE.length - 1];
   const points = MILEAGE.map((m, i) => `${(i / (MILEAGE.length - 1)) * w},${h - (m / max) * (h - 4) - 2}`).join(" ");
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-24 h-7" aria-hidden="true">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-16 h-6 shrink-0" aria-hidden="true">
       <polyline
         points={points}
         fill="none"
@@ -71,7 +71,7 @@ function Row({
   extra?: React.ReactNode;
 }) {
   return (
-    <div className="sample-row flex items-center gap-3 py-2.5" style={{ animationDelay: `${delay}ms` }}>
+    <div className="sample-row flex items-center gap-3 py-2" style={{ animationDelay: `${delay}ms` }}>
       <div className="w-8 h-8 rounded-lg bg-slate-800/80 flex items-center justify-center shrink-0">{icon}</div>
       <div className="min-w-0 flex-1">
         <div className="text-[11px] uppercase tracking-wider text-slate-500">{label}</div>
@@ -141,7 +141,7 @@ export default function SampleResultCard({ onTry, className = "" }: { onTry: () 
           icon={<Gauge className="w-4 h-4 text-cyan-400" />}
           label="Mileage"
           value="41,250 miles"
-          note="Steady, no signs of clocking"
+          note="No signs of clocking"
           delay={250}
           extra={<Sparkline />}
         />
