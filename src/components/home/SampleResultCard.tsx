@@ -4,30 +4,25 @@ import { ArrowUp, Check, Gauge, PoundSterling, ShieldCheck, Wind, Wrench } from 
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 
 // What a lookup returns, shown on the homepage before anyone has searched: a
-// made-up example car, clearly labelled as one. Desktop puts it in a sticky
-// rail beside the hero; mobile shows it once, below the search box.
+// made-up example car, clearly labelled as one. Wide screens show it beside
+// the hero; narrower ones show it once, below the search box.
 
 const MILEAGE = [8200, 15600, 22900, 29400, 35800, 41250]; // one reading per MOT
 const SCORE = 86;
 
-function Sparkline() {
-  const w = 120;
-  const h = 32;
+/** One bar per MOT reading, growing left to right: mileage climbing steadily. */
+function MileageBars() {
   const max = MILEAGE[MILEAGE.length - 1];
-  const points = MILEAGE.map((m, i) => `${(i / (MILEAGE.length - 1)) * w},${h - (m / max) * (h - 4) - 2}`).join(" ");
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-16 h-6 shrink-0" aria-hidden="true">
-      <polyline
-        points={points}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="sample-draw text-cyan-400"
-        pathLength={1}
-      />
-    </svg>
+    <div className="flex items-end gap-[3px] h-7 shrink-0" aria-hidden="true">
+      {MILEAGE.map((m, i) => (
+        <span
+          key={i}
+          className="sample-bar block w-[5px] rounded-sm bg-cyan-400/80"
+          style={{ height: `${Math.max(18, (m / max) * 100)}%`, animationDelay: `${500 + i * 70}ms` }}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -96,16 +91,16 @@ export default function SampleResultCard({ onTry, className = "" }: { onTry: () 
       <style>{`
         .sample-card .sample-row { opacity: 0; transform: translateY(6px); }
         .sample-card.is-shown .sample-row { animation: sampleRowIn 0.45s ease-out forwards; }
-        .sample-card .sample-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-        .sample-card.is-shown .sample-draw { animation: sampleDraw 1.2s ease-out 0.5s forwards; }
+        .sample-card .sample-bar { transform: scaleY(0); transform-origin: bottom; }
+        .sample-card.is-shown .sample-bar { animation: sampleBar 0.4s ease-out forwards; }
         .sample-card .sample-ring { stroke-dashoffset: ${2 * Math.PI * 22}; }
         .sample-card.is-shown .sample-ring { animation: sampleRing 1.2s ease-out 0.2s forwards; }
         @keyframes sampleRowIn { to { opacity: 1; transform: none; } }
-        @keyframes sampleDraw { to { stroke-dashoffset: 0; } }
+        @keyframes sampleBar { to { transform: scaleY(1); } }
         @keyframes sampleRing { to { stroke-dashoffset: var(--ring-to); } }
         @media (prefers-reduced-motion: reduce) {
           .sample-card .sample-row, .sample-card.is-shown .sample-row { animation: none; opacity: 1; transform: none; }
-          .sample-card .sample-draw, .sample-card.is-shown .sample-draw { animation: none; stroke-dashoffset: 0; }
+          .sample-card .sample-bar, .sample-card.is-shown .sample-bar { animation: none; transform: none; }
           .sample-card .sample-ring, .sample-card.is-shown .sample-ring { animation: none; stroke-dashoffset: var(--ring-to); }
         }
       `}</style>
@@ -143,7 +138,7 @@ export default function SampleResultCard({ onTry, className = "" }: { onTry: () 
           value="41,250 miles"
           note="No signs of clocking"
           delay={250}
-          extra={<Sparkline />}
+          extra={<MileageBars />}
         />
         <Row
           icon={<PoundSterling className="w-4 h-4 text-amber-400" />}
