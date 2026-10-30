@@ -39,10 +39,31 @@ export function stripPlateFromUrl(raw: string): string {
   }
 }
 
+/**
+ * Payload keys a plate travels under. `vrm` is the house name, but the PDF
+ * download and save-vehicle events sent `reg` — which nothing stripped, so
+ * until 30 Oct 2026 those plates were stored in plain text and sent to GA4.
+ * Every key here is treated as a plate wherever payloads are cleaned.
+ */
+export const PLATE_KEYS = ["vrm", "reg", "registration", "registrationNumber", "plate"] as const;
+
 /** A copy of an analytics payload with no plate in it, for third parties. */
-export function withoutPlate<T extends Record<string, unknown>>(payload: T): Omit<T, "vrm"> {
-  const { vrm: _vrm, ...rest } = payload;
-  return rest;
+export function withoutPlate<T extends Record<string, unknown>>(payload: T): Omit<T, (typeof PLATE_KEYS)[number]> {
+  const rest: Record<string, unknown> = { ...payload };
+  for (const k of PLATE_KEYS) delete rest[k];
+  return rest as Omit<T, (typeof PLATE_KEYS)[number]>;
+}
+
+/** The plate in a payload, under any of PLATE_KEYS, normalised; null if none. */
+export function plateIn(payload: Record<string, unknown>): string | null {
+  for (const k of PLATE_KEYS) {
+    const v = payload[k];
+    if (typeof v === "string") {
+      const plate = v.replace(/\s+/g, "").toUpperCase();
+      if (plate) return plate;
+    }
+  }
+  return null;
 }
 
 /**

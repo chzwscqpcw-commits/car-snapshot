@@ -2,7 +2,7 @@
  * Assertions for src/lib/redact.ts — what keeps plates and emails out of
  * logs, Google Analytics and stored analytics rows.
  */
-import { maskPlate, maskEmail, plateInPath, stripPlateFromUrl, withoutPlate } from "../src/lib/redact";
+import { maskPlate, maskEmail, plateIn, plateInPath, stripPlateFromUrl, withoutPlate } from "../src/lib/redact";
 
 let failures = 0;
 function check(label: string, actual: unknown, expected: unknown): void {
@@ -42,6 +42,11 @@ console.log("\nAnalytics payloads:");
 const p = withoutPlate({ vrm: "AB12CDE", flow: "hero" });
 check("plate dropped for Google", "vrm" in p, false);
 check("rest kept", (p as { flow?: string }).flow, "hero");
+const pdf = withoutPlate({ reg: "AB12CDE", make: "FORD" });
+check("reg dropped too (the PDF download event used it)", "reg" in pdf, false);
+check("plate found under reg", plateIn({ reg: "ab12 cde" }), "AB12CDE");
+check("plate found under vrm", plateIn({ vrm: "AB12CDE" }), "AB12CDE");
+check("no plate", plateIn({ make: "FORD" }), null);
 
 if (failures > 0) {
   console.error(`\n${failures} redact check(s) failed`);
