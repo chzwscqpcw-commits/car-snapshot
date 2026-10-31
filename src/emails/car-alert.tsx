@@ -1,91 +1,62 @@
-import { Html, Head, Body, Container, Section, Text, Preview } from "@react-email/components";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { CTAButton } from "./components/CTAButton";
-import { EmailRegPlate } from "./components/RegPlate";
+import { Html, Body, Container, Preview } from "@react-email/components";
+import { Action, Deck, Fine, Foot, Headline, Masthead, Plate, ReportHead, Vitals, page, sheet, type Vital } from "./components/report";
 
-// One template for every saved-car alert (MOT due, tax due, a new recall,
-// the monthly value check): the words come from src/lib/car-alerts.ts so
-// email and push always say the same thing.
-
-const body: React.CSSProperties = {
-  backgroundColor: "#0a0a0a",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0",
-  padding: "0",
-};
-
-const container: React.CSSProperties = {
-  backgroundColor: "#111111",
-  maxWidth: "600px",
-  margin: "0 auto",
-};
-
-const content: React.CSSProperties = {
-  backgroundColor: "#111111",
-  padding: "32px 32px 8px",
-};
-
-const heading: React.CSSProperties = {
-  color: "#ffffff",
-  fontSize: "22px",
-  fontWeight: 700,
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0 0 12px",
-  textAlign: "center" as const,
-};
-
-const subtext: React.CSSProperties = {
-  color: "#e5e5e5",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.6",
-  margin: "0 0 24px",
-};
-
-const note: React.CSSProperties = {
-  color: "#9ca3af",
-  fontSize: "13px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.5",
-  margin: "0 0 16px",
-};
+// One alert about a saved car: MOT due, tax due, a new recall, or the monthly
+// value check. The cron builds the words (alertMessage in lib/car-alerts.ts);
+// this is only the page, styled as the PDF report (components/report.tsx).
 
 interface CarAlertProps {
   regNumber: string;
+  /** The subject line, used for the preview text too. */
   title: string;
+  /** The display headline: "{lead} <em>{accent}</em>". */
+  lead?: string;
+  accent?: string;
   body: string;
   cta: string;
   url: string;
+  /** The vitals strip under the headline. */
+  facts?: Vital[];
   /** An extra line under the button, e.g. the GOV.UK tax link. */
   note?: string;
   manageUrl: string;
+  /** The running head's kicker, e.g. "MOT alert". */
+  kicker?: string;
+  /** The day it was sent, "1 Dec 2026", for the foot. */
+  sentOn?: string;
 }
 
 export default function CarAlert({
   regNumber = "AB12CDE",
   title = "MOT due in 7 days — AB12 CDE",
+  lead = "MOT due",
+  accent = "in 7 days",
   body: bodyText = "Your Ford Focus's MOT runs out in 7 days. Compare local garage prices and book now.",
   cta = "Compare prices and book",
   url = "https://www.freeplatecheck.co.uk/booking?type=mot#vrm=AB12CDE",
+  facts = [
+    { label: "MOT due", value: "8 Dec 2026", sub: "7 days away", tone: "warn" },
+    { label: "Car", value: "Ford Focus", sub: "2019" },
+  ],
   note: noteText,
   manageUrl = "https://www.freeplatecheck.co.uk/api/unsubscribe?token=test",
+  kicker = "MOT alert",
+  sentOn,
 }: CarAlertProps) {
   return (
     <Html lang="en">
-      <Head />
-      <Preview>{bodyText}</Preview>
-      <Body style={body}>
-        <Container style={container}>
-          <Header />
-          <Section style={content}>
-            <EmailRegPlate reg={regNumber} />
-            <Text style={heading}>{title}</Text>
-            <Text style={subtext}>{bodyText}</Text>
-            <CTAButton href={url}>{cta}</CTAButton>
-            {noteText && <Text style={note}>{noteText}</Text>}
-          </Section>
-          <Footer unsubscribeUrl={manageUrl} reason="You saved this car for alerts on" />
+      <ReportHead />
+      <Preview>{title}</Preview>
+      <Body style={page}>
+        <Container style={sheet}>
+          <Masthead kicker={kicker} />
+          <Plate reg={regNumber} />
+          <Headline lead={lead} accent={accent} />
+          <Deck>{bodyText}</Deck>
+          {facts.length > 0 && <Vitals items={facts} />}
+          <Action href={url}>{cta}</Action>
+          {noteText && <Fine>{noteText}</Fine>}
+          <Foot stopUrl={manageUrl} date={sentOn} reason="You saved this car for alerts on freeplatecheck.co.uk." />
         </Container>
       </Body>
     </Html>

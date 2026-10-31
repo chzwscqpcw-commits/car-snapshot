@@ -190,6 +190,11 @@ async function deliver(
     react: CarAlert({
       regNumber: car.vrm,
       title: msg.title,
+      lead: msg.lead,
+      accent: msg.accent,
+      kicker: msg.kicker,
+      sentOn: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
+      facts: msg.facts,
       body: msg.body,
       cta: msg.cta,
       url: msg.url,
