@@ -19,7 +19,7 @@ const HEIGHT = 92;
 
 // A bold face for the plate: fetched once per instance from Google Fonts (the
 // bundled default is regular weight only). Without it the plate still draws,
-// just lighter.
+// just lighter. Bounded, so a slow font host can never hold the image up.
 let fontPromise: Promise<ArrayBuffer | null> | null = null;
 function boldFont(): Promise<ArrayBuffer | null> {
   if (!fontPromise) {
@@ -27,10 +27,11 @@ function boldFont(): Promise<ArrayBuffer | null> {
       try {
         const css = await fetch("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap", {
           headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:21.0) Gecko/20100101 Firefox/21.0" },
+          signal: AbortSignal.timeout(4000),
         }).then((r) => r.text());
         const url = css.match(/src: url\((https:[^)]+\.ttf)\)/)?.[1];
         if (!url) return null;
-        const res = await fetch(url);
+        const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
         return res.ok ? res.arrayBuffer() : null;
       } catch {
         return null;
@@ -52,33 +53,27 @@ export async function GET(req: Request) {
   if (!plate) return new NextResponse("Not found", { status: 404, headers: { "Cache-Control": "no-store" } });
 
   const font = await boldFont();
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#F5C518",
-          borderRadius: 16,
-          color: "#111111",
-          fontSize: 54,
-          fontWeight: 700,
-          letterSpacing: 3,
-          fontFamily: font ? "Inter" : undefined,
-        }}
-      >
-        {displayPlate(plate)}
-      </div>
-    ),
-    {
-      width: WIDTH,
-      height: HEIGHT,
-      fonts: font ? [{ name: "Inter", data: font, weight: 700, style: "normal" }] : undefined,
-      // A token's plate never changes.
-      headers: { "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable" },
-    },
-  );
+  // Satori reads every style key it is given, so the family is only set when
+  // the face actually loaded; without it the bundled default draws the plate.
+  const style: React.CSSProperties = {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F5C518",
+    borderRadius: 16,
+    color: "#111111",
+    fontSize: 54,
+    fontWeight: 700,
+    letterSpacing: 3,
+    ...(font ? { fontFamily: "Inter" } : {}),
+  };
+  return new ImageResponse(<div style={style}>{displayPlate(plate)}</div>, {
+    width: WIDTH,
+    height: HEIGHT,
+    ...(font ? { fonts: [{ name: "Inter", data: font, weight: 700 as const, style: "normal" as const }] } : {}),
+    // A token's plate never changes.
+    headers: { "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable" },
+  });
 }
