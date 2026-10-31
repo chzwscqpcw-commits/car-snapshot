@@ -118,6 +118,21 @@ export default function PrivacyPage() {
               This data is only used for delivering reminders and is never shared for marketing purposes.
             </p>
 
+            <h3 className="text-lg font-semibold text-slate-100 mt-6 mb-3">Saved Cars and Alerts</h3>
+            <p className="mb-3">
+              If you save a car and switch on alerts (MOT due, tax due, a new recall, or a monthly value check), we store
+              the same information as for an MOT reminder &mdash; your email address, the registration number, the make and
+              model, the MOT expiry and tax due dates &mdash; plus what you told us about the car (selling, keeping or
+              thinking about it), which only decides whether you get the value check. Alerts come by email, or by
+              notification if you choose that on a device that supports it (in which case we store the notification
+              address your browser gives us instead of an email).
+            </p>
+            <p className="mb-3">
+              Every alert carries a &ldquo;stop alerts&rdquo; link. Stopping marks the car inactive, and inactive records are
+              deleted after 12 months. Saving a car to &ldquo;My Cars&rdquo; without alerts stores nothing on our servers
+              &mdash; the list lives only in your browser.
+            </p>
+
             <p className="mt-4 bg-slate-900 border-l-4 border-blue-500 p-4 rounded">
               <strong>Privacy-First Approach:</strong> We collect only what&#39;s necessary to provide the Service.
               Vehicle lookups are anonymous — we do not store which vehicles you look up. MOT reminder data is stored only

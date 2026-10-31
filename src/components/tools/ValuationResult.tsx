@@ -21,6 +21,7 @@ import {
 import { usePathname } from "next/navigation";
 import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import SellCarCTA from "@/components/SellCarCTA";
+import SaveCarCard from "@/components/SaveCarCard";
 import { isVan, shortVehicleName } from "@/lib/report-v2/format";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
@@ -407,6 +408,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         regNumber={vrm}
         isVan={isVan(vehicle)}
         vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+        className="mt-6"
+      />
+      {/* "Track this car's value": save the car and get a monthly value check
+          (for owners who say selling / thinking) plus MOT, tax and recall
+          alerts. Straight after the sell offer — the figure is fresh and the
+          question "what will it be worth next month?" is the natural one. */}
+      <SaveCarCard
+        variant="value"
+        surface="valuation-result"
+        vrm={vrm}
+        make={vehicle.make}
+        model={vehicle.model}
+        motExpiryDate={vehicle.motExpiryDate}
+        taxDueDate={vehicle.taxDueDate}
         className="mt-6"
       />
       {newPrice !== null && age !== null && (

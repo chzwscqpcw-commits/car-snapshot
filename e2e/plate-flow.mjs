@@ -54,6 +54,8 @@ const browser = await puppeteer.launch({
 const leaks = [];
 /** Plates sent to /api/lookup (in the POST body, where they belong). */
 const lookups = [];
+/** Plates sent to /api/saved-cars (POST body too). */
+const saves = [];
 let failures = 0;
 
 function report(name, ok, detail = "") {
@@ -83,6 +85,10 @@ async function newPage() {
     if (path === "/api/lookup") {
       lookups.push(JSON.parse(req.postData() ?? "{}").vrm);
       return req.respond({ status: 200, contentType: "application/json", body: LOOKUP });
+    }
+    if (path === "/api/saved-cars") {
+      saves.push(JSON.parse(req.postData() ?? "{}").vrm);
+      return req.respond({ status: 200, contentType: "application/json", body: '{"ok":true,"status":"created"}' });
     }
     if (path === "/api/event") return req.respond({ status: 204 });
     return req.continue();
@@ -190,6 +196,27 @@ await check("mot reminder", async (page) => {
   const ok = await until(page, (plate) =>
     [...document.querySelectorAll("input")].some((i) => i.value.replace(/\s/g, "").toUpperCase() === plate), 15000, PLATE);
   report("MOT reminder pre-fills the plate", ok);
+});
+
+// 5b. Save a car for alerts: one tap, then an email. The plate travels to
+//     /api/saved-cars in the POST body, never in the address.
+await check("save car", async (page) => {
+  await page.goto(`${BASE}/#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
+  const sel = '[data-save-card="results"] button';
+  const has = await until(page, (s) => !!document.querySelector(s), 20000, sel);
+  report("save card renders on the result", has);
+  if (!has) return;
+  // DOM clicks, not coordinate clicks: on a phone-sized viewport the card
+  // scrolls in under the bottom share/install toast, and a coordinate click
+  // lands on the toast instead (it did, on CI).
+  await page.$eval(sel, (b) => b.click());
+  const asks = await until(page, () => !!document.querySelector('[data-save-card="results"] input[type="email"]'));
+  report("one tap saves, then asks where alerts go", asks);
+  if (!asks) return;
+  await page.type('[data-save-card="results"] input[type="email"]', "e2e@example.com");
+  await page.$eval('[data-save-card="results"] button[type="submit"]', (b) => b.click());
+  const done = await until(page, () => /Alerts on for/i.test(document.querySelector('[data-save-card="results"]')?.textContent ?? ""));
+  report("alerts switched on, plate sent in the POST body", done && saves.includes(PLATE), JSON.stringify({ done, saves }));
 });
 
 // 6. carVertical hand-off: the link carries no plate; clicking it puts the

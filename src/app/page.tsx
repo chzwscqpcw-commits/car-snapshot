@@ -224,6 +224,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import SellCarCTA from "@/components/SellCarCTA";
+import SaveCarCard from "@/components/SaveCarCard";
 import InsuranceCTA from "@/components/InsuranceCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
@@ -4226,6 +4227,29 @@ END:VEVENT
                   daysUntilExpiry={motDaysUntilExpiry}
                   registrationNumber={data.registrationNumber}
                   makeModel={data ? `${data.make} ${data.model}` : undefined}
+                  reminder={false}
+                />
+              </DataReveal>
+            )}
+
+            {/* SAVE THIS CAR AND GET ALERTS — the one-tap save (what "My Car"
+                does) followed by the alerts ask. Up here because 65% of lookups
+                are cars whose MOT is months away: there's nothing for them to
+                do today, and the save is the only thing that brings them back
+                on the day it matters. The homepage owns the My Cars list, so
+                the local save goes through addToMyVehicles. */}
+            {data && (
+              <DataReveal delay={60}>
+                <SaveCarCard
+                  surface="results"
+                  vrm={data.registrationNumber}
+                  make={data.make}
+                  model={data.model}
+                  trim={data.variant}
+                  motExpiryDate={data.motExpiryDate}
+                  taxDueDate={data.taxDueDate}
+                  onLocalSave={addToMyVehicles}
+                  className="mb-8"
                 />
               </DataReveal>
             )}
@@ -5008,6 +5032,27 @@ END:VEVENT
             {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && (
               <DataReveal delay={398}>
                 <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} vehicleName={shortVehicleName(data.make, data.model)} className="mb-8" />
+              </DataReveal>
+            )}
+
+            {/* "Track this car's value" — the save card again, led by the
+                monthly value check, for the owner who has just seen a figure.
+                Hides itself once the car has alerts (e.g. saved from the card
+                at the top), so the page never asks twice. */}
+            {valuationResult && isValuationSupported(data) && (
+              <DataReveal delay={399}>
+                <SaveCarCard
+                  variant="value"
+                  surface="home-valuation"
+                  vrm={data.registrationNumber}
+                  make={data.make}
+                  model={data.model}
+                  trim={data.variant}
+                  motExpiryDate={data.motExpiryDate}
+                  taxDueDate={data.taxDueDate}
+                  onLocalSave={addToMyVehicles}
+                  className="mb-8"
+                />
               </DataReveal>
             )}
 

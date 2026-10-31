@@ -7,6 +7,7 @@ import { Suspense } from "react";
 function UnsubscribeContent() {
   const params = useSearchParams();
   const status = params.get("status");
+  const alerts = params.get("what") === "alerts";
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
@@ -18,9 +19,11 @@ function UnsubscribeContent() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-xl font-semibold text-white mb-2">Unsubscribed</h1>
+            <h1 className="text-xl font-semibold text-white mb-2">{alerts ? "Alerts stopped" : "Unsubscribed"}</h1>
             <p className="text-slate-400 text-sm mb-6">
-              You&apos;ve been removed from MOT reminders for this vehicle. You won&apos;t receive any more emails.
+              {alerts
+                ? "We won\u2019t send any more alerts for this car. Save it again from its result page if you change your mind."
+                : "You\u2019ve been removed from MOT reminders for this vehicle. You won\u2019t receive any more emails."}
             </p>
             <Link
               href="/"
