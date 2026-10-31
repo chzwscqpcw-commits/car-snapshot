@@ -1,89 +1,57 @@
-import { Html, Head, Body, Container, Section, Text, Preview } from "@react-email/components";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
-import { CTAButton } from "./components/CTAButton";
-import { EmailRegPlate } from "./components/RegPlate";
+import { Html, Body, Container, Preview } from "@react-email/components";
+import { Action, Deck, Foot, Headline, Masthead, Plate, ReportHead, Vitals, page, sheet } from "./components/report";
 
-// Sent once, when a car is saved with email alerts. Confirms what will be
-// sent and when, and carries the only "stop alerts" link the owner has.
-
-const body: React.CSSProperties = {
-  backgroundColor: "#0a0a0a",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0",
-  padding: "0",
-};
-
-const container: React.CSSProperties = {
-  backgroundColor: "#111111",
-  maxWidth: "600px",
-  margin: "0 auto",
-};
-
-const content: React.CSSProperties = {
-  backgroundColor: "#111111",
-  padding: "32px 32px 8px",
-};
-
-const heading: React.CSSProperties = {
-  color: "#ffffff",
-  fontSize: "22px",
-  fontWeight: 700,
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0 0 12px",
-  textAlign: "center" as const,
-};
-
-const subtext: React.CSSProperties = {
-  color: "#e5e5e5",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.6",
-  margin: "0 0 24px",
-};
+// Sent once, when a car is saved with email alerts. Confirms what will be sent
+// and when, and carries the only "stop alerts" link the owner has. Styled as
+// the first page of the PDF report (components/report.tsx).
 
 interface CarSavedProps {
   regNumber: string;
   makeModel: string | null;
-  /** dd/mm/yyyy, or null when DVLA holds no date. */
+  /** "8 Dec 2026", or null when DVLA holds no date. */
   motExpiry: string | null;
   taxDue: string | null;
   /** The alerts sentence from alertsDescription(). */
   alerts: string;
   manageUrl: string;
+  /** Where the plate image is; the inline attachment unless a preview says otherwise. */
+  plateSrc?: string;
+  /** The day it was sent, "31 Oct 2026", for the foot. */
+  sentOn?: string;
 }
 
 export default function CarSaved({
   regNumber = "AB12CDE",
   makeModel = "FORD FOCUS",
-  motExpiry = "15/04/2027",
-  taxDue = "01/03/2027",
+  motExpiry = "15 Apr 2027",
+  taxDue = "1 Mar 2027",
   alerts = "5 weeks and 1 week before the MOT is due, when the tax is due, and if a recall is issued",
   manageUrl = "https://www.freeplatecheck.co.uk/api/unsubscribe?token=test",
+  plateSrc,
+  sentOn,
 }: CarSavedProps) {
   // Plate in the fragment: the browser never sends it to a server.
   const carUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
+  const name = makeModel ? makeModel.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()) : null;
   return (
     <Html lang="en">
-      <Head />
+      <ReportHead />
       <Preview>Alerts are on for {regNumber}. We&apos;ll email you when something about it changes.</Preview>
-      <Body style={body}>
-        <Container style={container}>
-          <Header />
-          <Section style={content}>
-            <EmailRegPlate reg={regNumber} />
-            <Text style={heading}>Alerts on{makeModel ? ` for your ${makeModel}` : ""}</Text>
-            <Text style={subtext}>We&apos;ll email you {alerts}. Nothing else, and never marketing.</Text>
-            <InfoCard>
-              <Text style={labelStyle}>MOT due</Text>
-              <Text style={valueStyle}>{motExpiry ?? "No date held — we'll tell you when one appears"}</Text>
-              <Text style={labelStyle}>Tax due</Text>
-              <Text style={{ ...valueStyle, margin: "0" }}>{taxDue ?? "No date held"}</Text>
-            </InfoCard>
-            <CTAButton href={carUrl}>See this car&apos;s full check</CTAButton>
-          </Section>
-          <Footer unsubscribeUrl={manageUrl} reason="You saved this car for alerts on" />
+      <Body style={page}>
+        <Container style={sheet}>
+          <Masthead kicker="Alerts on" />
+          <Plate reg={regNumber} src={plateSrc} />
+          <Headline lead="Alerts" accent="on" tail={name ? `for your ${name}` : "for this car"} />
+          <Deck>We&apos;ll email you {alerts}. Nothing else, and never marketing.</Deck>
+          <Vitals
+            items={[
+              { label: "MOT due", value: motExpiry ?? "No date", sub: motExpiry ? "5 weeks and 1 week before" : "We'll say when one appears", tone: motExpiry ? "ink" : "warn" },
+              { label: "Tax due", value: taxDue ?? "No date", sub: taxDue ? "A week before" : "Not held by DVLA", tone: taxDue ? "ink" : "warn" },
+              { label: "Alerts by", value: "Email", sub: "Stop any time" },
+            ]}
+          />
+          <Action href={carUrl}>See this car&apos;s full check</Action>
+          <Foot stopUrl={manageUrl} date={sentOn} reason="You saved this car for alerts on freeplatecheck.co.uk." />
         </Container>
       </Body>
     </Html>

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { supabaseServerRole } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
 import CarSaved from "@/emails/car-saved";
+import { plateAttachment } from "@/lib/plate-image";
 import { maskEmail, maskPlate } from "@/lib/redact";
 import { pushConfigured, sendPush } from "@/lib/push-server";
 import {
@@ -39,11 +40,12 @@ function cleanSubscription(input: unknown): { endpoint: string; keys: { p256dh: 
   return { endpoint, keys: { p256dh, auth } };
 }
 
-function formatDateDDMMYYYY(iso: string | null): string | null {
+/** "8 Dec 2026", the form the alert emails use. */
+function formatDateShort(iso: string | null): string | null {
   if (!iso) return null;
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
-  return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 /**
@@ -222,16 +224,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, status, delivered: hello.ok }, { headers: NO_STORE });
   }
 
+  const plate = await plateAttachment(vrm);
   const result = await sendEmail({
     to: email as string,
     subject: `Alerts on for ${vrm}${makeModel ? ` (${makeModel})` : ""}`,
+    attachments: plate ? [plate] : undefined,
     react: CarSaved({
       regNumber: vrm,
       makeModel: makeModel || null,
-      motExpiry: formatDateDDMMYYYY(motExpiry),
-      taxDue: formatDateDDMMYYYY(taxDue),
+      motExpiry: formatDateShort(motExpiry),
+      taxDue: formatDateShort(taxDue),
       alerts: alertsDescription(intent),
       manageUrl,
+      sentOn: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
     }),
     unsubscribeUrl: manageUrl,
   });

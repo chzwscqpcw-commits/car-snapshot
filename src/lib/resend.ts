@@ -26,6 +26,8 @@ interface SendEmailParams {
   subject: string;
   react: React.ReactElement;
   unsubscribeUrl: string;
+  /** Inline images the HTML references as cid:<contentId>. */
+  attachments?: Array<{ filename: string; content: Buffer; contentType: string; contentId: string }>;
 }
 
 export async function sendEmail({
@@ -33,6 +35,7 @@ export async function sendEmail({
   subject,
   react,
   unsubscribeUrl,
+  attachments,
 }: SendEmailParams): Promise<SendEmailResult> {
   const resend = getResend();
   if (!resend) {
@@ -45,6 +48,7 @@ export async function sendEmail({
       to,
       subject,
       react,
+      ...(attachments && attachments.length > 0 ? { attachments } : {}),
       headers: {
         "List-Unsubscribe": `<${unsubscribeUrl}>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",

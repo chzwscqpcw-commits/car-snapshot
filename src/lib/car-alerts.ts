@@ -123,14 +123,28 @@ export function dueAlerts(car: SavedCarRow, now: Date, currentRecallCount: numbe
   return due;
 }
 
+/** One cell of the email's vitals strip. */
+export interface AlertFact {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: "ink" | "accent" | "good" | "warn" | "risk";
+}
+
 export interface AlertMessage {
   title: string;
+  /** The email's display headline, "{lead} <em>{accent}</em>". */
+  lead: string;
+  accent: string;
   body: string;
   /** Absolute URL. Plate in the fragment only. */
   url: string;
   cta: string;
   /** The `source` / `src` the link carries, for alert_open. */
   source: string;
+  /** The email's running-head kicker, e.g. "MOT alert". */
+  kicker: string;
+  facts: AlertFact[];
 }
 
 const SITE = "https://www.freeplatecheck.co.uk";
@@ -143,6 +157,11 @@ export function displayPlate(vrm: string): string {
 function niceName(car: SavedCarRow): string {
   const n = (car.make_model ?? "").trim();
   return n ? n.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()) : "your car";
+}
+
+/** "8 Dec 2026" from an ISO date. */
+function shortDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 function formatDate(iso: string): string {
@@ -161,6 +180,7 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
   const name = niceName(car);
   const source = `car-alert-${alert.kind.replace("_", "-")}-${channel}`;
   const hash = `#vrm=${car.vrm}`;
+  const carFact: AlertFact = { label: "Car", value: name, sub: car.year_of_manufacture ? String(car.year_of_manufacture) : undefined };
   switch (alert.kind) {
     case "mot_35":
     case "mot_7": {
@@ -168,6 +188,13 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
       const when = days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`;
       return {
         title: `MOT due ${when} — ${plate}`,
+        lead: "MOT due",
+        accent: when,
+        kicker: "MOT alert",
+        facts: [
+          { label: "MOT due", value: car.mot_expiry ? shortDate(car.mot_expiry) : "—", sub: days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"} away`, tone: alert.kind === "mot_7" ? "risk" : "warn" },
+          carFact,
+        ],
         body:
           alert.kind === "mot_7"
             ? `${name}'s MOT runs out ${when}. Driving without one risks a fine and your insurance. Compare local garage prices and book now.`
@@ -182,6 +209,13 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
       const when = days === 0 ? "today" : days === 1 ? "tomorrow" : `on ${formatDate(car.tax_due ?? "")}`;
       return {
         title: `Tax due ${when} — ${plate}`,
+        lead: "Tax due",
+        accent: when,
+        kicker: "Tax alert",
+        facts: [
+          { label: "Tax due", value: car.tax_due ? shortDate(car.tax_due) : "—", sub: days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"} away`, tone: "warn" },
+          carFact,
+        ],
         body: `${name}'s vehicle tax is due ${when}. Tax it on GOV.UK, or check whether it's worth declaring SORN instead.`,
         url: `${SITE}/?src=${source}${hash}`,
         cta: "See this car's tax status",
@@ -191,6 +225,13 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
     case "recall":
       return {
         title: `New safety recall — ${plate}`,
+        lead: "A new safety",
+        accent: "recall",
+        kicker: "Recall alert",
+        facts: [
+          { label: "Recalls", value: String(Math.max(1, car.recall_count ?? 1)), sub: "on record for this model", tone: "risk" },
+          carFact,
+        ],
         body: `A new manufacturer recall has been issued that may affect ${name}. Recall work is free at a main dealer.`,
         url: `${SITE}/?src=${source}${hash}`,
         cta: "See the recall details",
@@ -199,6 +240,13 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
     case "value":
       return {
         title: `What's ${name} worth this month?`,
+        lead: `What's your ${name} worth`,
+        accent: "this month?",
+        kicker: "Value check",
+        facts: [
+          carFact,
+          { label: "Checked", value: new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }), sub: "Free, no email needed" },
+        ],
         body: `Prices move with the season and the market. Here's an updated free valuation for ${plate}, with no email needed.`,
         url: `${SITE}/value-my-car?src=${source}${hash}`,
         cta: "See its value now",

@@ -10,6 +10,7 @@ import { maskPlate } from "@/lib/redact";
 import { findRecalls, type Recall } from "@/lib/recalls";
 import recallsData from "@/data/recalls.json";
 import CarAlert from "@/emails/car-alert";
+import { plateAttachment } from "@/lib/plate-image";
 import { alertMessage, dueAlerts, needsRefresh, type DueAlert, type SavedCarRow } from "@/lib/car-alerts";
 import { cleanIsoDate, makeModelLabel, type SaveChannel } from "@/lib/saved-cars";
 
@@ -184,12 +185,19 @@ async function deliver(
   }
 
   if (!car.email) return "retired";
+  const plate = await plateAttachment(car.vrm);
   const result = await sendEmail({
     to: car.email,
     subject: msg.title,
+    attachments: plate ? [plate] : undefined,
     react: CarAlert({
       regNumber: car.vrm,
       title: msg.title,
+      lead: msg.lead,
+      accent: msg.accent,
+      kicker: msg.kicker,
+      sentOn: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
+      facts: msg.facts,
       body: msg.body,
       cta: msg.cta,
       url: msg.url,
