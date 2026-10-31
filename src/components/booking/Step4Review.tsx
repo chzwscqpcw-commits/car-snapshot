@@ -32,6 +32,8 @@ interface Props {
   postcode: string;
   date: string;
   flexibility: FlexibilityChip;
+  /** Which CTA (or alert) sent the visitor here — see bmgClickref. */
+  source?: string;
   onEdit: () => void;
 }
 
@@ -130,6 +132,7 @@ export default function Step4Review({
   postcode,
   date,
   flexibility,
+  source,
   onEdit,
 }: Props) {
   const region = resolveRegion(postcode);
@@ -141,7 +144,7 @@ export default function Step4Review({
   const saving = savingsFor(service, category, region);
   const meta = serviceMeta(service);
   const route = bmgRouteFor(vrm, postcode);
-  const clickref = bmgClickref(service, route);
+  const clickref = bmgClickref(service, route, source);
   const handoffUrl = buildBmgHandoffUrl(service, vrm, postcode, clickref, route);
 
   function handleHandoffClick() {
