@@ -206,12 +206,15 @@ await check("save car", async (page) => {
   const has = await until(page, (s) => !!document.querySelector(s), 20000, sel);
   report("save card renders on the result", has);
   if (!has) return;
-  await page.click(sel);
+  // DOM clicks, not coordinate clicks: on a phone-sized viewport the card
+  // scrolls in under the bottom share/install toast, and a coordinate click
+  // lands on the toast instead (it did, on CI).
+  await page.$eval(sel, (b) => b.click());
   const asks = await until(page, () => !!document.querySelector('[data-save-card="results"] input[type="email"]'));
   report("one tap saves, then asks where alerts go", asks);
   if (!asks) return;
   await page.type('[data-save-card="results"] input[type="email"]', "e2e@example.com");
-  await page.click('[data-save-card="results"] button[type="submit"]');
+  await page.$eval('[data-save-card="results"] button[type="submit"]', (b) => b.click());
   const done = await until(page, () => /Alerts on for/i.test(document.querySelector('[data-save-card="results"]')?.textContent ?? ""));
   report("alerts switched on, plate sent in the POST body", done && saves.includes(PLATE), JSON.stringify({ done, saves }));
 });
