@@ -83,7 +83,7 @@ Not all valuations serve the same purpose. Here are the main types:
 
 If you've decided to sell, a few straightforward steps can help you maximise the price:
 
-**Get an MOT before selling** — Even if the current MOT has months left, a fresh test gives the buyer confidence and removes one objection. Knowing [how much an MOT costs](/blog/how-much-does-mot-cost) helps you budget for this. If there are minor advisories, consider addressing them before the test.
+**Get an MOT before selling** — Even if the current MOT has months left, a fresh test gives the buyer confidence and removes one objection. Knowing [how much an MOT costs](/cheap-mot#how-much-should-an-mot-cost) helps you budget for this. If there are minor advisories, consider addressing them before the test.
 
 **Gather your paperwork** — Full service history, MOT certificates, receipts for work done, the V5C logbook, and any warranty documentation. The more paperwork you can show, the more confidence the buyer has.
 

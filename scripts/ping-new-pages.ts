@@ -20,10 +20,6 @@ const INDEXNOW_KEY = "708b35d8306c4b2db2c61ad5a418dc62";
 // recent additions — older pages are already in the sitemap and indexed.
 const NEW_PATHS = [
   "/cheap-mot",
-  "/blog/how-to-get-a-cheaper-mot",
-  "/blog/are-cheap-mot-deals-worth-it",
-  "/blog/cheapest-place-to-get-mot",
-  "/blog/free-mot-how-to-get-one",
 ];
 
 const NEW_PAGES = NEW_PATHS.map((p) => `https://${HOST}${p}`);

@@ -8,11 +8,24 @@ import SeverityCards from "@/components/SeverityCards";
 
 // Single source of truth for FAQ content — used both for the visible
 // accordion and the FAQPage JSON-LD below.
+//
+// This page is the pillar for the whole cheap-MOT cluster. Until 31 Oct 2026
+// five blog posts (how much an MOT costs, how to get a cheaper MOT, the
+// cheapest place to get one, whether cheap deals are worth it, free MOTs)
+// competed with it for the same queries at 1–23 views a month each, while
+// this page converted 76% of its landers into a booking start. Their content
+// now lives in the sections below and the old URLs redirect here
+// (next.config.ts), section by section where one matches.
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What is the cheapest an MOT can be?",
     answer:
       "There's no legal minimum — only a maximum of £54.85 for a Class 4 car. Independent garages often charge £30–£45, and some chains run promotional MOTs as low as £20–£25 to win your business (hoping you'll book repairs or a service with them too). Comparing local garages is the only way to see who's cheapest near you.",
+  },
+  {
+    question: "How much does an MOT cost in 2026?",
+    answer:
+      "The maximum fee for a Class 4 vehicle (most cars) is £54.85, set by the DVSA and unchanged for years. Many garages charge below it — typically £25 to £50 depending on your area. Motorcycles are capped lower (£29.65) and larger vans (Class 7) higher (£58.60).",
   },
   {
     question: "Why are some MOTs so cheap?",
@@ -25,14 +38,34 @@ const FAQ_ITEMS: FaqItem[] = [
       "No. Every MOT follows the same DVSA inspection manual and the tester records the result on the same government system. A garage cannot legally do a 'lighter' test for less money. What varies is repair labour rates if your car fails — so it's worth checking those too, not just the headline test price.",
   },
   {
-    question: "Can I get a free MOT?",
+    question: "Where is the cheapest place to get an MOT?",
     answer:
-      "Sometimes. Garages offer free MOTs as a promotion, often bundled with a paid service. You may also qualify for a free partial retest if your car fails and you fix the faults within 10 working days. Always confirm what's included before booking a 'free' MOT — the saving can disappear if it's tied to expensive add-ons.",
+      "There's no single cheapest option — it varies by area. Council-run test centres and high-volume independents are often the cheapest because they don't profit from repairs, while national chains run frequent promotions that can undercut everyone. The only reliable way to find the cheapest is to compare local prices for your reg.",
   },
   {
-    question: "How much does an MOT cost in 2026?",
+    question: "Are council MOT test centres cheaper?",
     answer:
-      "The maximum fee for a Class 4 vehicle (most cars) is £54.85, set by the DVSA and unchanged for years. Many garages charge below it. Motorcycles are capped lower (£29.65) and larger vans (Class 7) higher (£58.60).",
+      "Often, yes. Council-run test centres are 'non-trading' stations that only test — they don't carry out repairs, so they have no incentive to fail your car for work. They aren't available everywhere, but where they exist they're frequently among the cheapest and most impartial options.",
+  },
+  {
+    question: "Is Halfords or Kwik Fit cheaper for an MOT?",
+    answer:
+      "Both national chains run regular MOT promotions and online discount codes, so the cheaper one changes week to week and by location. Their standard prices are similar; the deciding factor is usually whichever has a live offer in your area when you book.",
+  },
+  {
+    question: "Can I get a free MOT?",
+    answer:
+      "Sometimes. The most common way is a free MOT bundled with a paid service, which many garages and chains offer. You may also qualify for a free or reduced-fee partial retest if your car fails and you fix the faults within 10 working days at the same centre. Genuinely no-strings free MOTs are rare and usually time-limited promotions — always confirm what's required to qualify.",
+  },
+  {
+    question: "Do you have to pay for an MOT retest if your car fails?",
+    answer:
+      "Not always. If the repairs are done at the same testing station, a partial retest is usually free if completed within 10 working days. If you take the car elsewhere for repair and return for a full retest, you may need to pay again. It's standard practice rather than a legal right, so confirm the terms before you leave the car.",
+  },
+  {
+    question: "When is the cheapest time to book an MOT?",
+    answer:
+      "Weekdays tend to be cheaper than weekends, and booking in advance often gets you a better price than a walk-in. January and February are typically quieter months for garages, so you may find more competitive offers then. March and September are the busiest, as plate-change cars all come due together.",
   },
   {
     question: "Does booking through Free Plate Check cost more?",
@@ -44,7 +77,7 @@ const FAQ_ITEMS: FaqItem[] = [
 export const metadata: Metadata = {
   title: "Cheap MOT Near You — Compare Local Garage Prices 2026 | Free Plate Check",
   description:
-    "Find a cheap MOT near you. Compare local garage prices in seconds — many charge well below the £54.85 legal maximum. Free comparison, no signup, no email.",
+    "Find a cheap MOT near you. Compare local garage prices in seconds — many charge well below the £54.85 legal maximum. What an MOT costs, where it's cheapest, free MOTs and retests. No signup, no email.",
   keywords: [
     "cheap MOT",
     "cheap MOT near me",
@@ -52,6 +85,10 @@ export const metadata: Metadata = {
     "MOT prices",
     "compare MOT prices",
     "MOT cost near me",
+    "how much does an MOT cost",
+    "MOT cost 2026",
+    "cheapest place to get MOT",
+    "free MOT",
     "MOT deals",
     "cheapest MOT",
     "MOT offers",
@@ -76,6 +113,19 @@ export const metadata: Metadata = {
       "Compare local MOT prices in seconds — many garages charge well below the £54.85 legal maximum.",
   },
 };
+
+/** The on-page sections — also the anchors the redirected blog posts land on. */
+const SECTIONS = [
+  { id: "how-much-should-an-mot-cost", label: "What an MOT costs" },
+  { id: "how-to-get-a-cheaper-mot", label: "9 ways to pay less" },
+  { id: "cheapest-place-to-get-an-mot", label: "Where it's cheapest" },
+  { id: "are-cheap-mot-deals-worth-it", label: "Are cheap deals worth it?" },
+  { id: "free-mot", label: "Free MOTs" },
+  { id: "free-retests", label: "Free retests" },
+  { id: "mot-prices-in-your-area", label: "Prices by area" },
+] as const;
+
+const linkClass = "text-blue-400 hover:text-blue-300";
 
 export default function CheapMotPage() {
   const breadcrumbJsonLd = {
@@ -204,42 +254,107 @@ export default function CheapMotPage() {
           ]}
         />
 
-        <div className="space-y-8 text-slate-300">
-          <section>
+        {/* On this page — the guide below is long because it now carries the
+            whole cheap-MOT cluster; a jump list keeps the comparison box one
+            scroll away. */}
+        <nav aria-label="On this page" className="mb-8 flex flex-wrap gap-2">
+          {SECTIONS.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className="inline-flex items-center rounded-full border border-slate-800 bg-slate-900/50 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:text-blue-300"
+            >
+              {s.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="space-y-10 text-slate-300">
+          {/* ---------- 1. What an MOT costs ---------- */}
+          <section id="how-much-should-an-mot-cost" className="scroll-mt-24">
             <h2 className="text-2xl font-bold text-slate-100 mb-4">How much should an MOT cost?</h2>
             <p className="leading-relaxed mb-3">
               The MOT fee is capped, not fixed. The DVSA sets a{" "}
               <strong className="text-slate-100">maximum of &pound;54.85</strong>{" "}
               for a Class 4 vehicle (most cars and small vans), and garages are
-              free to charge anything up to that. In practice, plenty charge well
-              below it &mdash; independents are often &pound;30&ndash;&pound;45,
-              and some test centres run promotional MOTs as low as
-              &pound;20&ndash;&pound;25.
+              free to charge anything up to that. No garage in the UK can charge
+              more than the cap for the test itself; plenty charge well below it.
             </p>
+            <div className="overflow-x-auto mb-4">
+              <table className="w-full text-sm border border-slate-800 rounded-lg overflow-hidden">
+                <thead className="bg-slate-900/80 text-slate-200">
+                  <tr>
+                    <th scope="col" className="text-left px-3 py-2 font-semibold">Vehicle</th>
+                    <th scope="col" className="text-right px-3 py-2 font-semibold">Legal maximum</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {[
+                    ["Cars, motorhomes and vans up to 3,000kg (Class 4)", "£54.85"],
+                    ["Larger vans, 3,000–3,500kg (Class 7)", "£58.60"],
+                    ["Motorcycles (Class 1 and 2)", "£29.65"],
+                    ["Three-wheeled vehicles up to 450kg", "£37.80"],
+                  ].map(([v, p]) => (
+                    <tr key={v}>
+                      <td className="px-3 py-2 text-slate-300">{v}</td>
+                      <td className="px-3 py-2 text-right font-semibold text-slate-100">{p}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="leading-relaxed mb-3">
+              These are test-only fees. They don&apos;t cover repairs, advisory
+              work, or any extra inspection the garage offers alongside.
+            </p>
+            <h3 className="text-lg font-semibold text-slate-100 mb-2">What most people actually pay</h3>
+            <p className="leading-relaxed mb-3">
+              Very few garages charge the full &pound;54.85. Competition between
+              independents, chains and council test centres pulls prices down,
+              so across the UK in 2026 a car MOT typically costs{" "}
+              <strong className="text-slate-100">&pound;25&ndash;&pound;50</strong>.
+              National chains run promotional MOTs in the &pound;20&ndash;&pound;35
+              range; independents mostly sit at &pound;35&ndash;&pound;50, though
+              many match or beat the chains; council-run test centres, where they
+              exist, are often among the cheapest of all.
+            </p>
+            <h3 className="text-lg font-semibold text-slate-100 mb-2">Why the same test costs different amounts</h3>
+            <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
+              <li><strong className="text-slate-100">Loss-leader pricing.</strong> Many garages price the test low (sometimes below cost) to get cars through the door, knowing a share will fail and need repairs. The margin is in the follow-on work, not the fee.</li>
+              <li><strong className="text-slate-100">Overheads.</strong> A city-centre garage with high rent charges more than a rural workshop; so does one paying off new test equipment.</li>
+              <li><strong className="text-slate-100">Extras.</strong> A low headline price padded with a &ldquo;seasonal inspection&rdquo; or a health check. Usually free, occasionally used to nudge the bill up &mdash; confirm what you&apos;re paying for.</li>
+            </ul>
             <p className="leading-relaxed">
-              Other classes are capped differently: motorcycles at &pound;29.65,
-              and larger vans (Class 7) at &pound;58.60. For the full breakdown,
-              see our guide to{" "}
-              <Link href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs</Link>.
+              Where you live matters too: London and the South East sit at the
+              top of the range, the North, Wales and Scotland well below it. See{" "}
+              <a href="#mot-prices-in-your-area" className={linkClass}>prices by area</a>{" "}
+              below, or enter your reg above to see what garages near you charge
+              right now.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">How to find a cheap MOT near you</h2>
+          {/* ---------- 2. How to get a cheaper MOT ---------- */}
+          <section id="how-to-get-a-cheaper-mot" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">How to get a cheaper MOT: 9 ways to pay less</h2>
             <p className="leading-relaxed mb-3">
               The single biggest saving comes from comparing, not from any one
-              trick &mdash; prices for the exact same test vary by &pound;30+
-              between garages a mile apart. Beyond that:
+              trick &mdash; prices for the exact same test vary by &pound;20&ndash;&pound;30
+              between garages a mile apart. In rough order of how much each saves:
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
-              <li><strong className="text-slate-100">Use independents, not just chains.</strong> Local garages often undercut the big names and aren&apos;t targeting upsells.</li>
-              <li><strong className="text-slate-100">Combine MOT and service.</strong> Booking both together usually unlocks a discounted or free MOT.</li>
-              <li><strong className="text-slate-100">Avoid the plate-change rush.</strong> March and September are MOT peaks (cars first registered then come due) &mdash; quieter weeks can be cheaper.</li>
-              <li><strong className="text-slate-100">Test up to a month early.</strong> You keep your renewal date and have breathing room to shop around rather than booking in a panic.</li>
-            </ul>
+            <ol className="list-decimal list-inside space-y-2.5 ml-2 mb-3">
+              <li><strong className="text-slate-100">Compare local garages first.</strong> Five minutes of comparison beats every other tip on this list combined. Enter your reg above to see local prices with your car pre-loaded.</li>
+              <li><strong className="text-slate-100">Bundle the MOT with a service.</strong> If a service is due anyway, booking both together almost always unlocks a discounted or free MOT. Check the combined price is genuinely lower than the two apart &mdash; it usually is. Our guide to{" "}<Link href="/blog/mot-vs-service" className={linkClass}>MOT vs service</Link> explains what each covers.</li>
+              <li><strong className="text-slate-100">Use independents, not just the big chains.</strong> Local garages often quietly undercut the national names and aren&apos;t targeting upsells. A recognisable brand doesn&apos;t mean a better price &mdash; check both.</li>
+              <li><strong className="text-slate-100">Fix the cheap, common fails yourself.</strong> A blown bulb, worn wiper blades, empty screenwash or soft tyres are among the{" "}<Link href="/blog/most-common-mot-failures" className={linkClass}>most common MOT failures</Link> and cost a couple of pounds to sort in the driveway &mdash; against a part markup, labour and a retest if the garage finds them.</li>
+              <li><strong className="text-slate-100">Know your free-retest rights.</strong> Fix the failed items at the same centre within 10 working days and the retest is usually free or reduced &mdash; details <a href="#free-retests" className={linkClass}>below</a>.</li>
+              <li><strong className="text-slate-100">Book early and online.</strong> Garages often discount online bookings over walk-ins, and booking ahead gets you the quieter, cheaper slots. You can{" "}<Link href="/blog/can-you-get-mot-done-early" className={linkClass}>test up to a month early</Link> and keep your renewal date, so there&apos;s breathing room to shop around.</li>
+              <li><strong className="text-slate-100">Avoid the plate-change rush.</strong> March and September are the busiest MOT months (cars first registered then all come due together, every year after). Prices firm up and slots vanish; a quieter week is often cheaper. See{" "}<Link href="/blog/spring-mot-rush-beat-the-queues" className={linkClass}>how to beat the spring MOT rush</Link>.</li>
+              <li><strong className="text-slate-100">Look for vouchers and seasonal offers.</strong> Chains run regular promotions, particularly in January and February. Check what&apos;s bundled &mdash; a &ldquo;free&rdquo; MOT tied to an expensive add-on may not be the saving it looks like.</li>
+              <li><strong className="text-slate-100">Don&apos;t pay for things you don&apos;t need.</strong> Confirm exactly what&apos;s included before you agree to a low price with extras attached.</li>
+            </ol>
             <p className="leading-relaxed">
-              Enter your reg above to compare what garages near you are actually
-              charging right now.
+              Do that and you&apos;ll routinely pay &pound;25&ndash;&pound;40 for a
+              test the maximum says could cost &pound;54.85.
             </p>
           </section>
 
@@ -247,53 +362,145 @@ export default function CheapMotPage() {
             <MOTBookingCTA regNumber="" context="neutral" placement="cheap-mot-mid" />
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-100 mb-4">Are cheap MOT deals worth it?</h2>
-            <p className="leading-relaxed mb-3">
-              Almost always &mdash; with one thing to watch. The test is
-              identical wherever you go, so a cheap MOT is a genuine saving, not a
-              corner cut. A garage cannot legally do a &ldquo;lighter&rdquo; test
-              for less money.
+          {/* ---------- 3. Cheapest place ---------- */}
+          <section id="cheapest-place-to-get-an-mot" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">Where is the cheapest place to get an MOT?</h2>
+            <p className="leading-relaxed mb-4">
+              People want a single name. The honest answer is that it depends on
+              where you live and who&apos;s running an offer that week &mdash; but
+              the <em>types</em> of test centre price very differently, and knowing
+              how each one makes its money tells you where to look.
             </p>
+            <SeverityCards
+              cards={[
+                { tone: "info", title: "National chains (Halfords, Kwik Fit and similar)", description: "Frequent promotions and discount codes, often well below the cap; convenient and consistent. Watch for upsell pressure on advisories and repairs — the test is standardised, the recommended work afterwards is where the margin lives." },
+                { tone: "good", title: "Independent local garages", description: "Vary the most, and many quietly undercut the chains on reputation and repeat custom. Often lower labour rates on any repairs too. Lean on reviews — a cheap test from a well-reviewed independent is hard to beat." },
+                { tone: "good", title: "Council-run test centres", description: "‘Non-trading’ stations that only test and never repair, so there's no incentive to fail a car for work. Frequently the cheapest and most impartial option — but not every area has one, and a fail means a trip elsewhere." },
+                { tone: "default", title: "Mobile and while-you-wait testers", description: "Fast and convenient, and competitive in a quiet slot. The same rule applies as everywhere: check the labour rate if repairs are likely." },
+              ]}
+            />
+            <h3 className="text-lg font-semibold text-slate-100 mt-5 mb-2">Why &ldquo;cheapest&rdquo; keeps changing</h3>
             <p className="leading-relaxed mb-3">
-              The catch is what happens <em>after</em> a fail. A &pound;20 MOT is
-              no bargain if the garage&apos;s repair labour rate is high and they
-              find work to do. So compare two things, not one:
+              Most centres treat the MOT as marketing rather than a profit
+              centre, so the headline price moves with promotions, location and
+              demand. The same chain can be cheapest in one town and mid-priced
+              in the next; a council centre is unbeatable where it exists and
+              irrelevant where it doesn&apos;t. &ldquo;Always go to X&rdquo; never
+              holds &mdash; comparing what&apos;s actually available near you, for
+              your car, right now, does.
+            </p>
+            <h3 className="text-lg font-semibold text-slate-100 mb-2">The price you see isn&apos;t the whole price</h3>
+            <p className="leading-relaxed mb-2">
+              Two centres quoting the same &pound;30 MOT can cost very different
+              amounts overall:
+            </p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong className="text-slate-100">Repair labour rate.</strong> This varies far more than the test fee. On an older car likely to need work, a slightly dearer test at a garage with a lower labour rate can be cheaper overall.</li>
+              <li><strong className="text-slate-100">Advisory handling.</strong> Some centres flag a long list and quote to fix it all; others tell you what genuinely needs doing now. Our guide to{" "}<Link href="/blog/what-does-mot-advisory-mean" className={linkClass}>MOT advisories</Link> explains which ones matter.</li>
+              <li><strong className="text-slate-100">Bundled extras.</strong> A &ldquo;free&rdquo; MOT tied to a service may or may not be the saving it appears. Check the all-in total.</li>
+            </ul>
+          </section>
+
+          {/* ---------- 4. Are cheap deals worth it ---------- */}
+          <section id="are-cheap-mot-deals-worth-it" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">Are cheap MOT deals worth it? &pound;20 MOTs explained</h2>
+            <p className="leading-relaxed mb-3">
+              Almost always &mdash; with one thing to watch. Every MOT follows
+              the same DVSA inspection manual: the tester works through an
+              identical checklist (brakes, lights, tyres, suspension, emissions,
+              structure) and records the result on the same government database
+              whether you paid &pound;20 or &pound;54.85. A garage{" "}
+              <strong className="text-slate-100">cannot legally do a &ldquo;lighter&rdquo; test for less money</strong>,
+              so a cheap MOT is a genuine saving, not a corner cut.
+            </p>
+            <h3 className="text-lg font-semibold text-slate-100 mb-2">So why would anyone charge &pound;20?</h3>
+            <ul className="list-disc list-inside space-y-2 ml-2 mb-4">
+              <li><strong className="text-slate-100">It&apos;s a loss-leader.</strong> The test gets your car in. A share of cars fail, and many owners pay for the repairs there and then rather than shop around with a failure hanging over them.</li>
+              <li><strong className="text-slate-100">It builds a relationship.</strong> A good first experience brings you back for servicing, tyres and next year&apos;s test &mdash; cheaper and better targeted than advertising.</li>
+              <li><strong className="text-slate-100">Volume and overheads.</strong> High-throughput centres, council stations and low-overhead independents can run on a thinner margin per test.</li>
+            </ul>
+            <p className="leading-relaxed mb-3">
+              The catch is what happens <em>after</em> a fail. A &pound;20 MOT is a
+              brilliant deal if your car passes; if it fails, the garage that
+              tested it cheaply is also the one quoting for the repairs, and
+              you&apos;re in a weak spot to negotiate. A &pound;20 test at
+              &pound;90 an hour can work out dearer than a &pound;45 test at
+              &pound;55 an hour once any work is needed. So compare two things,
+              not one:
             </p>
             <SeverityCards
               cards={[
                 { tone: "good", title: "The test fee", description: "The headline price — cap is £54.85, often much less." },
-                { tone: "warn", title: "Repair labour rate", description: "What you'll pay per hour if it fails — varies far more than the test." },
+                { tone: "warn", title: "Repair labour rate", description: "What you'll pay per hour if it fails — varies far more than the test. Ask before you book, especially on an older car." },
                 { tone: "info", title: "What's bundled", description: "‘Free’ MOTs are often tied to a paid service — check the total." },
               ]}
             />
+            <p className="leading-relaxed mt-4">
+              One question &mdash; &ldquo;what&apos;s your hourly labour rate if it
+              fails?&rdquo; &mdash; tells you whether the bargain is real. Add a
+              glance at the garage&apos;s reviews, and a budget MOT becomes a
+              no-brainer rather than a gamble.
+            </p>
           </section>
 
-          <section>
+          {/* ---------- 5. Free MOTs ---------- */}
+          <section id="free-mot" className="scroll-mt-24">
+            <h2 className="text-2xl font-bold text-slate-100 mb-4">Free MOT: how to get one (and where the catch is)</h2>
+            <p className="leading-relaxed mb-3">
+              Free MOTs are real, but almost every one comes with a condition
+              attached. There are three legitimate kinds:
+            </p>
+            <ul className="list-disc list-inside space-y-2.5 ml-2 mb-4">
+              <li><strong className="text-slate-100">Bundled with a paid service.</strong> By far the most common. Once you&apos;re paying for a service, the test costs the garage very little to throw in. Good value <em>if a service was due anyway</em>; if you&apos;re buying a service you didn&apos;t need to unlock the &ldquo;free&rdquo; test, you&apos;ve spent more, not less.</li>
+              <li><strong className="text-slate-100">A free retest.</strong> Fail, fix the items at the same centre within 10 working days, and the retest is usually free &mdash; see <a href="#free-retests" className={linkClass}>free retests</a> below.</li>
+              <li><strong className="text-slate-100">A promotion.</strong> Chains and garages occasionally run genuine no-strings free MOTs, often in January and February or to launch a new branch. Real, but time- and capacity-limited, so they book up fast.</li>
+            </ul>
+            <h3 className="text-lg font-semibold text-slate-100 mb-2">Offers that look free but aren&apos;t</h3>
+            <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
+              <li>A &ldquo;free MOT&rdquo; that&apos;s really a voucher needing a future booking or spend.</li>
+              <li>A free test padded with add-ons &mdash; a seasonal check, a health inspection, a wash &mdash; that nudge the total up.</li>
+              <li>Free test, premium repair prices. The work quoted afterwards more than makes up for it.</li>
+              <li>&ldquo;Free after cashback&rdquo; &mdash; read how the discount is actually applied.</li>
+            </ul>
+            <p className="leading-relaxed">
+              None of these are scams exactly; they&apos;re marketing. But free
+              should mean free, so confirm the total you&apos;ll actually pay and
+              the labour rate if it fails. A free MOT is exactly as valid as a
+              paid one &mdash; same manual, same database &mdash; and sometimes a
+              &pound;25 test at a trusted garage with a low labour rate is the
+              better deal.
+            </p>
+          </section>
+
+          {/* ---------- 6. Free retests ---------- */}
+          <section id="free-retests" className="scroll-mt-24">
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Free retests &mdash; don&apos;t pay twice</h2>
             <p className="leading-relaxed mb-3">
               If your car fails, you may not need to pay for a second full test.
-              Leave it at the test centre for repair and the retest is free.
-              Take it away and bring it back within{" "}
-              <strong className="text-slate-100">10 working days</strong>, and
-              many failure items qualify for a free or reduced-fee partial
-              retest.
+              The rules depend on where and when the repairs are done:
             </p>
+            <ul className="list-disc list-inside space-y-2 ml-2 mb-3">
+              <li><strong className="text-slate-100">Repairs at the same centre, retested the same or next working day</strong> &mdash; the retest on the failed items is usually free.</li>
+              <li><strong className="text-slate-100">Repairs at the same centre within 10 working days</strong> &mdash; a partial retest (only the failed items) is typically free or heavily discounted.</li>
+              <li><strong className="text-slate-100">Repairs elsewhere, or a retest after 10 working days</strong> &mdash; you&apos;ll usually pay for a full test again.</li>
+            </ul>
             <p className="leading-relaxed">
-              Always ask the garage to confirm the retest terms before you collect
-              the car &mdash; it can save the whole test fee again. More on what to
-              do in our guide to{" "}
-              <Link href="/blog/what-to-do-if-car-fails-mot" className="text-blue-400 hover:text-blue-300">what to do if your car fails its MOT</Link>.
+              These are standard industry practice, not a legal right, so ask the
+              question before you leave the car: &ldquo;If it fails, what does the
+              retest cost?&rdquo; It can save the whole test fee again. More in our
+              guide to{" "}
+              <Link href="/blog/what-to-do-if-car-fails-mot" className={linkClass}>what to do if your car fails its MOT</Link>.
             </p>
           </section>
 
-          <section>
+          {/* ---------- 7. Prices by area ---------- */}
+          <section id="mot-prices-in-your-area" className="scroll-mt-24">
             <h2 className="text-2xl font-bold text-slate-100 mb-4">MOT prices in your area</h2>
             <p className="leading-relaxed mb-3">
               What you&apos;ll pay varies by region &mdash; London and the South
               East run near the &pound;54.85 cap, while the North, Wales and
               Scotland sit well below. See{" "}
-              <Link href="/mot-prices" className="text-blue-400 hover:text-blue-300">typical MOT prices for your town</Link>, or jump straight to a few popular areas:
+              <Link href="/mot-prices" className={linkClass}>typical MOT prices for your town</Link>, or jump straight to a few popular areas:
             </p>
             <div className="flex flex-wrap gap-2">
               {[
@@ -317,21 +524,31 @@ export default function CheapMotPage() {
             </div>
           </section>
 
+          {/* ---------- 8. Check before you book ---------- */}
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">Check before you book</h2>
             <p className="leading-relaxed mb-3">
               Before paying for a test, it&apos;s worth a 10-second check of the
               vehicle&apos;s record. Our free{" "}
-              <a href="/mot-check" className="text-blue-400 hover:text-blue-300">MOT history check</a>{" "}
+              <a href="/mot-check" className={linkClass}>MOT history check</a>{" "}
               shows past advisories so you know what a tester is likely to flag,
               and{" "}
-              <a href="/tax-check" className="text-blue-400 hover:text-blue-300">tax status</a>{" "}
+              <a href="/tax-check" className={linkClass}>tax status</a>{" "}
               confirms the car is legal to drive to the test in the first place.
+            </p>
+            <p className="leading-relaxed mb-3">
+              Remember what the MOT doesn&apos;t do, too: it&apos;s a minimum
+              safety and emissions check on the day, and says nothing about the
+              engine, gearbox or clutch. If you&apos;re buying a used car, a cheap
+              pass certificate tells you very little &mdash; read the full history
+              and our guide to{" "}
+              <Link href="/blog/how-to-read-mot-history" className={linkClass}>how to read it</Link>.
             </p>
             <p className="leading-relaxed">
               Not sure when yours is due? Set a free{" "}
-              <a href="/mot-reminder" className="text-blue-400 hover:text-blue-300">MOT reminder</a>{" "}
-              and we&apos;ll email you in good time before it expires — you choose when.
+              <a href="/mot-reminder" className={linkClass}>MOT reminder</a>{" "}
+              and we&apos;ll tell you in good time &mdash; so you can wait for the
+              right offer instead of booking in a panic.
             </p>
           </section>
 
@@ -350,9 +567,9 @@ export default function CheapMotPage() {
       <div className="max-w-3xl mx-auto px-4 mt-16 pb-16">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Related guides</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/blog/how-much-does-mot-cost" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
-            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">How Much Does an MOT Cost in 2026?</p>
-            <p className="text-xs text-slate-500 mt-2">The maximum fee, typical garage prices, free retests, and practical ways to save.</p>
+          <Link href="/blog/most-common-mot-failures" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
+            <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">The Most Common MOT Failures</p>
+            <p className="text-xs text-slate-500 mt-2">What cars fail on most — and the cheap fixes you can do before the test.</p>
           </Link>
           <Link href="/blog/spring-mot-rush-beat-the-queues" className="group block p-4 bg-slate-900/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors">
             <p className="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Spring MOT Rush: How to Beat the Queues</p>

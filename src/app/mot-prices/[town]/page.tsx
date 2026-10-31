@@ -211,7 +211,7 @@ export default async function MotPricesTownPage({ params }: Props) {
               the same national rules &mdash; so the difference between the
               cheapest and dearest test for the same car comes down to which
               garage you choose. For the full national picture, see{" "}
-              <Link href="/blog/how-much-does-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs in 2026</Link>.
+              <Link href="/cheap-mot#how-much-should-an-mot-cost" className="text-blue-400 hover:text-blue-300">how much an MOT costs in 2026</Link>.
             </p>
           </section>
 
@@ -227,7 +227,7 @@ export default async function MotPricesTownPage({ params }: Props) {
               The test is identical at every garage, so a cheaper {town.name} MOT
               is a genuine saving, not a corner cut &mdash; more on that in our
               guide to whether{" "}
-              <Link href="/blog/are-cheap-mot-deals-worth-it" className="text-blue-400 hover:text-blue-300">cheap MOT deals are worth it</Link>.
+              <Link href="/cheap-mot#are-cheap-mot-deals-worth-it" className="text-blue-400 hover:text-blue-300">cheap MOT deals are worth it</Link>.
             </p>
           </section>
 
