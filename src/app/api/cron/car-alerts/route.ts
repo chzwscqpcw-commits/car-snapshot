@@ -200,6 +200,7 @@ async function deliver(
       url: msg.url,
       note: alert.kind === "tax" ? "Tax it at gov.uk/vehicle-tax — you'll need the 11-digit reference from your V5C or the reminder letter." : undefined,
       manageUrl,
+      plateUrl: `${SITE}/api/alerts/plate?t=${car.manage_token}`,
     }),
     unsubscribeUrl: manageUrl,
   });

@@ -1,24 +1,27 @@
-import { Column, Head, Link, Row, Section, Text } from "@react-email/components";
+import { Column, Head, Img, Link, Row, Section, Text } from "@react-email/components";
 
 /**
- * The PDF report's look (src/lib/report-v2), for email: the same dark page,
- * yellow plate, serif display headline with one italic cyan word, a vitals
- * strip and a mono running head and foot. Colours are the report's "dark"
- * theme tokens. Email clients can't take the report's inlined fonts, so the
- * serif comes from Google Fonts where a client allows web fonts (Apple Mail,
- * iOS Mail) and falls back to Georgia elsewhere; the sans falls back to the
- * system font.
+ * The PDF report's look (src/lib/report-v2), for email: the yellow plate, a
+ * serif display headline with one italic accent word, a vitals strip and a
+ * mono running head and foot. Colours are the report's "light" (print)
+ * edition, not the dark one: mail clients' dark modes rewrite colours, and a
+ * light page is the one thing every client transforms predictably (Outlook
+ * turned the dark edition's page grey and its plate olive, and ignored every
+ * override). The plate is an image (api/alerts/plate) for the same reason.
+ * Email clients can't take the report's inlined fonts, so the serif comes from
+ * Google Fonts where a client allows web fonts (Apple Mail, iOS Mail) and
+ * falls back to Georgia elsewhere; the sans falls back to the system font.
  */
 
-export const INK = "#F1F5F9";
-export const SOFT = "#CBD5E1";
-export const MUTED = "#94A3B8";
-export const RULE = "#1E293B";
-export const ACCENT = "#22D3EE";
-export const GOOD = "#34D399";
-export const WARN = "#FBBF24";
-export const RISK = "#F87171";
-export const PAGE = "#070B14";
+export const INK = "#0B1220";
+export const SOFT = "#334155";
+export const MUTED = "#475569";
+export const RULE = "#E2E8F0";
+export const ACCENT = "#0E7490";
+export const GOOD = "#047857";
+export const WARN = "#B45309";
+export const RISK = "#B91C1C";
+export const PAGE = "#FFFFFF";
 
 export const SANS = "'Geist', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
 export const MONO = "'Geist Mono', 'SF Mono', Menlo, Consolas, 'Courier New', monospace";
@@ -37,43 +40,11 @@ const mono = (size: number, color: string): React.CSSProperties => ({
   lineHeight: 1.3,
 });
 
-/**
- * Fonts, and the dark-mode guards. The page is already dark, so a client's
- * dark mode has nothing useful to do; some do it anyway. Outlook.com and the
- * new Outlook (Windows and Mac) recolour and mark each element they touched
- * with data-ogsb (background) or data-ogsc (text); the rules below put the
- * report's colours back on those. Outlook for iOS and the older Mac Outlook
- * recolour too but honour a dark-mode media query, which re-asserts the same.
- * The gradient backgrounds on the plate and the button are for Gmail's app,
- * which recolours plain backgrounds but leaves background images alone. The
- * overrides sit in their own style block so a client that drops @import does
- * not drop them with it.
- */
+/** The display serif, where a client allows web fonts. */
 export function ReportHead() {
   return (
     <Head>
-      <meta name="color-scheme" content="dark" />
-      <meta name="supported-color-schemes" content="dark" />
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');`}</style>
-      <style>{`
-        :root { color-scheme: dark; supported-color-schemes: dark; }
-        [data-ogsb] .fpc-page, .fpc-page[data-ogsb], [data-ogsb] .fpc-sheet, .fpc-sheet[data-ogsb] { background-color: #070B14 !important; }
-        [data-ogsb] .fpc-plate, .fpc-plate[data-ogsb] { background-color: #F5C518 !important; }
-        [data-ogsc] .fpc-plate, .fpc-plate[data-ogsc] { color: #111111 !important; }
-        [data-ogsb] .fpc-action, .fpc-action[data-ogsb] { background-color: #22D3EE !important; }
-        [data-ogsc] .fpc-action, .fpc-action[data-ogsc] { color: #070B14 !important; }
-        [data-ogsc] .fpc-ink, .fpc-ink[data-ogsc] { color: #F1F5F9 !important; }
-        [data-ogsc] .fpc-soft, .fpc-soft[data-ogsc] { color: #CBD5E1 !important; }
-        [data-ogsc] .fpc-accent, .fpc-accent[data-ogsc] { color: #22D3EE !important; }
-        @media (prefers-color-scheme: dark) {
-          .fpc-page, .fpc-sheet { background-color: #070B14 !important; }
-          .fpc-plate { background-color: #F5C518 !important; color: #111111 !important; }
-          .fpc-action { background-color: #22D3EE !important; color: #070B14 !important; }
-          .fpc-ink { color: #F1F5F9 !important; }
-          .fpc-soft { color: #CBD5E1 !important; }
-          .fpc-accent { color: #22D3EE !important; }
-        }
-      `}</style>
     </Head>
   );
 }
@@ -110,35 +81,17 @@ export function Masthead({ kicker }: { kicker: string }) {
 export function Rule({ gap = "0", strong = false }: { gap?: string; strong?: boolean }) {
   return (
     <Section style={{ margin: gap }}>
-      <Text style={{ margin: 0, fontSize: 0, lineHeight: "1px", height: "1px", backgroundColor: strong ? "#334155" : RULE }}>&nbsp;</Text>
+      <Text style={{ margin: 0, fontSize: 0, lineHeight: "1px", height: "1px", backgroundColor: strong ? "#94A3B8" : RULE }}>&nbsp;</Text>
     </Section>
   );
 }
 
-/** The report's yellow plate. */
-export function Plate({ reg }: { reg: string }) {
+/** The report's yellow plate, as an image so no dark mode can recolour it. */
+export function Plate({ reg, src }: { reg: string; src: string }) {
   const shown = /^[A-Z]{2}\d{2}[A-Z]{3}$/i.test(reg) ? `${reg.slice(0, 4)} ${reg.slice(4)}` : reg;
   return (
     <Section style={{ margin: "0 0 22px" }}>
-      <Text
-        className="fpc-plate"
-        style={{
-          display: "inline-block",
-          backgroundColor: "#F5C518",
-          backgroundImage: "linear-gradient(#F5C518, #F5C518)",
-          color: "#111111",
-          borderRadius: "8px",
-          padding: "9px 18px",
-          fontFamily: SANS,
-          fontWeight: 700,
-          fontSize: "26px",
-          letterSpacing: "0.06em",
-          lineHeight: 1,
-          margin: 0,
-        }}
-      >
-        {shown.toUpperCase()}
-      </Text>
+      <Img src={src} width="180" height="46" alt={shown.toUpperCase()} style={{ display: "block", borderRadius: "8px", border: 0 }} />
     </Section>
   );
 }
@@ -146,9 +99,9 @@ export function Plate({ reg }: { reg: string }) {
 /** The display headline: "{lead} <em>{accent}</em> {tail}", the accent italic and cyan. */
 export function Headline({ lead, accent, tail }: { lead: string; accent: string; tail?: string }) {
   return (
-    <Text className="fpc-ink" style={{ margin: "0 0 14px", fontFamily: DISPLAY, fontWeight: 400, fontSize: "40px", lineHeight: 1.02, letterSpacing: "-0.01em", color: INK }}>
+    <Text style={{ margin: "0 0 14px", fontFamily: DISPLAY, fontWeight: 400, fontSize: "40px", lineHeight: 1.02, letterSpacing: "-0.01em", color: INK }}>
       {lead}{" "}
-      <em className="fpc-accent" style={{ fontStyle: "italic", color: ACCENT }}>
+      <em style={{ fontStyle: "italic", color: ACCENT }}>
         {accent}
       </em>
       {tail ? ` ${tail}` : ""}
@@ -157,7 +110,7 @@ export function Headline({ lead, accent, tail }: { lead: string; accent: string;
 }
 
 export function Deck({ children }: { children: React.ReactNode }) {
-  return <Text className="fpc-soft" style={{ margin: "0 0 26px", fontFamily: SANS, fontSize: "16px", lineHeight: 1.6, color: SOFT }}>{children}</Text>;
+  return <Text style={{ margin: "0 0 26px", fontFamily: SANS, fontSize: "16px", lineHeight: 1.6, color: SOFT }}>{children}</Text>;
 }
 
 export interface Vital {
@@ -178,7 +131,7 @@ export function Vitals({ items }: { items: Vital[] }) {
         {items.map((v) => (
           <Column key={v.label} style={{ verticalAlign: "top", padding: "14px 12px 14px 0", width: `${Math.floor(100 / items.length)}%` }}>
             <Text style={{ ...mono(11, MUTED), margin: "0 0 6px" }}>{v.label}</Text>
-            <Text className={v.tone && v.tone !== "ink" ? undefined : "fpc-ink"} style={{ margin: "0 0 4px", fontFamily: SANS, fontSize: "20px", fontWeight: 600, lineHeight: 1.1, color: TONES[v.tone ?? "ink"] }}>{v.value}</Text>
+            <Text style={{ margin: "0 0 4px", fontFamily: SANS, fontSize: "20px", fontWeight: 600, lineHeight: 1.1, color: TONES[v.tone ?? "ink"] }}>{v.value}</Text>
             {v.sub && <Text style={{ margin: 0, fontFamily: SANS, fontSize: "12px", lineHeight: 1.4, color: MUTED }}>{v.sub}</Text>}
           </Column>
         ))}
@@ -187,18 +140,16 @@ export function Vitals({ items }: { items: Vital[] }) {
   );
 }
 
-/** One action: the report's accent as a solid button, dark text on cyan. */
+/** One action: the report's accent as a solid button. */
 export function Action({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Section style={{ margin: "0 0 22px" }}>
       <Link
         href={href}
-        className="fpc-action"
         style={{
           display: "inline-block",
           backgroundColor: ACCENT,
-          backgroundImage: `linear-gradient(${ACCENT}, ${ACCENT})`,
-          color: "#070B14",
+          color: "#FFFFFF",
           fontFamily: SANS,
           fontSize: "15px",
           fontWeight: 600,

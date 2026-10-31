@@ -233,6 +233,7 @@ export async function POST(req: Request) {
       taxDue: formatDateShort(taxDue),
       alerts: alertsDescription(intent),
       manageUrl,
+      plateUrl: `${SITE}/api/alerts/plate?t=${saved.manage_token}`,
       sentOn: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
     }),
     unsubscribeUrl: manageUrl,
