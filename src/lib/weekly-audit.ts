@@ -140,6 +140,18 @@ export interface MarketDataAudit {
   prev: { all: [number, number]; long: [number, number] };
 }
 
+/** "My Cars" with alerts (Move 3, live from 2026-11): saves, opt-ins, what was sent and opened. */
+export interface SavedCarsAudit {
+  saves: { cur: number; prev: number };
+  cardViews: number;
+  /** Per surface: card views and saves (the opt-in rate's two halves). */
+  bySurface: { surface: string; views: number; saves: number }[];
+  byChannel: [string, number][];
+  byIntent: [string, number][];
+  /** Per alert kind: sent and opened this week. */
+  alerts: { kind: string; sent: number; opened: number }[];
+}
+
 export interface WeeklyAuditData {
   windowStart: string; // ISO date (yyyy-mm-dd) of the 7-day window start
   windowEnd: string; // ISO date (today)
@@ -154,6 +166,7 @@ export interface WeeklyAuditData {
   pdfReport: PdfReportAudit;
   buyerJourney: BuyerJourneyAudit;
   marketData: MarketDataAudit;
+  savedCars: SavedCarsAudit;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -199,6 +212,7 @@ export async function buildWeeklyAuditData(
     { key: "results_view", label: "Results views" },
     { key: "partner_click", label: "Partner clicks" },
     { key: "mot_reminder", label: "MOT signups" },
+    { key: "car_saved", label: "Cars saved (alerts on)" },
   ];
 
   const headlineCounts = await Promise.all(
@@ -343,6 +357,39 @@ export async function buildWeeklyAuditData(
     return { name, scans, taps: fromPdf.length - scans };
   };
 
+  // ── My Cars with alerts (7d, saves vs prior 7d) ──────────────────────────
+  const saved14 = await pullEvents(sb, "car_saved", d14);
+  const savedCur = saved14.filter((r) => Date.parse(r.created_at) >= d7ms);
+  const cardViews = await pullEvents(sb, "save_card_view", d7);
+  const surfaces = new Map<string, { surface: string; views: number; saves: number }>();
+  const surfaceOf = (ctx: string) => {
+    const existing = surfaces.get(ctx);
+    if (existing) return existing;
+    const created = { surface: ctx, views: 0, saves: 0 };
+    surfaces.set(ctx, created);
+    return created;
+  };
+  for (const r of cardViews) surfaceOf(metaStr(r.metadata, "surface")).views++;
+  const byChannel = new Map<string, number>();
+  const byIntent = new Map<string, number>();
+  for (const r of savedCur) {
+    surfaceOf(metaStr(r.metadata, "surface")).saves++;
+    byChannel.set(metaStr(r.metadata, "channel"), (byChannel.get(metaStr(r.metadata, "channel")) ?? 0) + 1);
+    const intent = metaStr(r.metadata, "intent");
+    byIntent.set(intent === "(none)" ? "not said" : intent, (byIntent.get(intent === "(none)" ? "not said" : intent) ?? 0) + 1);
+  }
+  const [alertsSent, alertsOpened] = await Promise.all([pullEvents(sb, "alert_sent", d7), pullEvents(sb, "alert_open", d7)]);
+  const alertKinds = new Map<string, { kind: string; sent: number; opened: number }>();
+  const kindOf = (k: string) => {
+    const existing = alertKinds.get(k);
+    if (existing) return existing;
+    const created = { kind: k, sent: 0, opened: 0 };
+    alertKinds.set(k, created);
+    return created;
+  };
+  for (const r of alertsSent) kindOf(metaStr(r.metadata, "kind")).sent++;
+  for (const r of alertsOpened) kindOf(metaStr(r.metadata, "kind")).opened++;
+
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
     headlineCounts.find((h) => h.label === "Partner clicks")?.cur ?? 0;
@@ -386,6 +433,14 @@ export async function buildWeeklyAuditData(
       cvClicks: buyerBox?.clicks ?? 0,
     },
     marketData: { cur: mdCur, prev: mdPrev },
+    savedCars: {
+      saves: { cur: savedCur.length, prev: saved14.length - savedCur.length },
+      cardViews: cardViews.length,
+      bySurface: [...surfaces.values()].sort((a, b) => b.saves - a.saves || b.views - a.views),
+      byChannel: topN(byChannel, 4),
+      byIntent: topN(byIntent, 4),
+      alerts: [...alertKinds.values()].sort((a, b) => b.sent - a.sent),
+    },
   };
 }
 
@@ -537,6 +592,44 @@ function renderMarketData(md: MarketDataAudit): string {
   <p style="margin:0 0 20px;font-size:13px;color:#64748b">Long names found comparables 1.7% of the time until #176 (21 Oct 2026). Young cars stay low whatever we do — eBay UK lists few 1–3-year-old cars.</p>`;
 }
 
+function renderSavedCars(sc: SavedCarsAudit): string {
+  const surfaceRows = sc.bySurface
+    .map(
+      (p) =>
+        `<tr><td style="padding:6px 10px;border:1px solid #e2e8f0">${p.surface}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">${p.views.toLocaleString("en-GB")}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">${p.saves.toLocaleString("en-GB")}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right;font-weight:600">${ctr(p.saves, p.views)}</td></tr>`,
+    )
+    .join("");
+  const alertRows = sc.alerts
+    .map(
+      (a) =>
+        `<tr><td style="padding:6px 10px;border:1px solid #e2e8f0">${a.kind}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">${a.sent.toLocaleString("en-GB")}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">${a.opened.toLocaleString("en-GB")}</td>
+         <td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right;font-weight:600">${ctr(a.opened, a.sent)}</td></tr>`,
+    )
+    .join("");
+  const pairs = (xs: [string, number][]) => xs.map(([k, n]) => `${k} ${n}`).join(" · ") || "none";
+  return `
+  <h3 style="margin:24px 0 6px;font-size:15px">My Cars with alerts</h3>
+  <p style="margin:0 0 10px;font-size:14px">
+    <strong>${sc.saves.cur.toLocaleString("en-GB")}</strong> cars saved with alerts on
+    (prior week ${sc.saves.prev.toLocaleString("en-GB")}, ${pctChange(sc.saves.cur, sc.saves.prev)}) ·
+    channel: ${pairs(sc.byChannel)} · plans: ${pairs(sc.byIntent)}
+  </p>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;margin:0 0 12px">
+    <tr style="background:#f1f5f9"><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:left">Surface</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Card seen</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Saved</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Opt-in</th></tr>
+    ${surfaceRows || '<tr><td colspan="4" style="padding:6px 10px;border:1px solid #e2e8f0;color:#94a3b8">No card views yet</td></tr>'}
+  </table>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;margin:0 0 6px">
+    <tr style="background:#f1f5f9"><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:left">Alert</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Sent</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Opened</th><th style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right">Open rate</th></tr>
+    ${alertRows || '<tr><td colspan="4" style="padding:6px 10px;border:1px solid #e2e8f0;color:#94a3b8">Nothing sent this week</td></tr>'}
+  </table>
+  <p style="color:#94a3b8;font-size:12px;margin:0 0 8px">Opt-in = car_saved ÷ save_card_view per surface. Opened = alert_open (the link's src=car-alert-…); push opens that only show the notification aren't counted. Go/no-go for a native app after 6–8 weeks: a few hundred opt-ins, or a clearly higher return rate among installs.</p>`;
+}
+
 function rows(pairs: [string, number][]): string {
   if (pairs.length === 0)
     return `<tr><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#94a3b8" colspan="2">none this week</td></tr>`;
@@ -590,6 +683,8 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
   ${renderWbac(d.weBuyAnyCar)}
   ${renderPdfReport(d.pdfReport)}
+
+  ${renderSavedCars(d.savedCars)}
 
   ${renderMarketData(d.marketData)}
 

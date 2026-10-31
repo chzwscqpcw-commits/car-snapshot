@@ -2,7 +2,7 @@
  * The rules the daily car-alerts cron sends by — src/lib/car-alerts.ts.
  * Dates are fixed so the checks don't drift with the calendar.
  */
-import { alertMessage, daysUntil, dueAlerts, needsRefresh, type SavedCarRow } from "../src/lib/car-alerts";
+import { alertMessage, daysUntil, dueAlerts, needsRefresh, parseAlertSource, type SavedCarRow } from "../src/lib/car-alerts";
 import { bmgClickref } from "../src/lib/booking";
 
 let failures = 0;
@@ -89,6 +89,14 @@ const v = alertMessage({ kind: "value", key: "k", alsoMark: [] }, car({ intent: 
 check("value check links to the valuation, no partner link", v.url, "https://www.freeplatecheck.co.uk/value-my-car?src=car-alert-value-email#vrm=AB12CDE");
 check("alert hand-offs get their own BMG clickref", bmgClickref("mot", "results", "car-alert-mot-7-push"), "booking-flow-mot-alert");
 check("ordinary bookings keep theirs", bmgClickref("mot", "results", "results-banner"), "booking-flow-mot");
+
+console.log("\nOpening an alert link:");
+check("push MOT alert", parseAlertSource("car-alert-mot-7-push"), { kind: "mot_7", channel: "push" });
+check("email value check", parseAlertSource("car-alert-value-email"), { kind: "value", channel: "email" });
+check("welcome notification", parseAlertSource("car-saved-push"), { kind: "saved", channel: "push" });
+check("the message's own source round-trips", parseAlertSource(m7.source), { kind: "mot_7", channel: "push" });
+check("an ordinary CTA source is not an alert", parseAlertSource("results-banner"), null);
+check("missing is null", parseAlertSource(null), null);
 
 if (failures) {
   console.error(`\n${failures} check(s) failed`);

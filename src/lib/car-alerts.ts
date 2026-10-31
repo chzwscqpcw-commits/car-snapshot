@@ -206,3 +206,17 @@ export function alertMessage(alert: DueAlert, car: SavedCarRow, channel: SaveCha
       };
   }
 }
+
+/**
+ * The other end of `source`: "car-alert-mot-7-push" -> { kind: "mot_7",
+ * channel: "push" }, and the welcome notification's "car-saved-push" ->
+ * { kind: "saved", channel: "push" }. Anything else is not an alert link.
+ */
+export function parseAlertSource(value: string | null | undefined): { kind: string; channel: SaveChannel } | null {
+  if (!value) return null;
+  const m = value.match(/^car-(alert|saved)(?:-([a-z0-9-]+?))?-(push|email)$/);
+  if (!m) return null;
+  const kind = m[1] === "saved" ? "saved" : (m[2] ?? "").replace(/-/g, "_");
+  if (!kind) return null;
+  return { kind, channel: m[3] as SaveChannel };
+}

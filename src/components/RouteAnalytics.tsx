@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { isInternalTraffic, markHumanVisit, setInternalTraffic } from "@/lib/tracking";
+import { isInternalTraffic, markHumanVisit, setInternalTraffic, trackEvent } from "@/lib/tracking";
+import { parseAlertSource } from "@/lib/car-alerts";
 
 /**
  * Global first-party page-view tracker. Fires a `page_view` to /api/event on
@@ -40,8 +41,12 @@ function sendPageView(): void {
   }
 
   let utmSource: string | undefined;
+  let alertOpen: { kind: string; channel: string } | null = null;
   try {
     const params = new URLSearchParams(window.location.search);
+    // A saved-car alert (push or email) links back with src=car-alert-… (or
+    // source= on the booking wizard); that visit is the alert being opened.
+    alertOpen = parseAlertSource(params.get("src") ?? params.get("source"));
     // Owner self-exclusion toggle: ?internal=1 sets the flag, ?internal=0
     // clears it. Processed before building the payload so this very page_view
     // is tagged correctly on the hit that flips it on.
@@ -59,6 +64,8 @@ function sendPageView(): void {
   };
   if (utmSource) payload.utm_source = utmSource;
   if (isInternalTraffic()) payload.internal = true;
+
+  if (alertOpen) trackEvent("alert_open", alertOpen);
 
   const body = JSON.stringify({ type: "page_view", payload });
 
