@@ -37,6 +37,7 @@ export default function MOTReminderDue({
   const reportUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
   const urgent = daysRemaining <= 7;
   const name = `${make} ${model}`.trim().toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+  const plateText = /^[A-Z]{2}\d{2}[A-Z]{3}$/i.test(regNumber) ? `${regNumber.slice(0, 4)} ${regNumber.slice(4)}`.toUpperCase() : regNumber;
   const when = daysRemaining <= 0 ? "today" : daysRemaining === 1 ? "tomorrow" : `in ${daysRemaining} days`;
   const preview = urgent
     ? `Your MOT runs out ${when} — book now to stay legal.`
@@ -63,7 +64,7 @@ export default function MOTReminderDue({
           />
           <Action href={bmgAffiliateUrl}>Compare prices and book</Action>
           <Fine>
-            We&apos;ve pre-loaded {regNumber}. Local garages often charge well below the &pound;54.85 legal maximum.
+            We&apos;ve pre-loaded {plateText}. Local garages often charge well below the &pound;54.85 legal maximum.
             {urgent ? " Driving without a valid MOT can mean a fine of up to £1,000 and can invalidate your insurance." : ""}{" "}
             Or{" "}
             <Link href={reportUrl} style={{ color: SOFT, textDecoration: "underline", textUnderlineOffset: "2px" }}>
