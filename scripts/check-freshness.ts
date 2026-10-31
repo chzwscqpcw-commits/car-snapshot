@@ -45,6 +45,9 @@ const FILE_CONFIG: Record<string, { threshold: number; source: "automatable" | "
   "ev-specs.json":           { threshold: 180, source: "curated" },
   "mot-pass-rates.json":     { threshold: 180, source: "curated" },
   "mot-failure-reasons.json":{ threshold: 180, source: "semi-auto" },
+  // One annual drop (each year's bulk data lands the following May), rebuilt
+  // by hand with scripts/process-mot-areas.py; 400 days flags a missed year.
+  "mot-areas.json":          { threshold: 400, source: "semi-auto" },
   "theft-risk.json":         { threshold: 400, source: "semi-auto" },
   "theft-stats.json":        { threshold: 400, source: "semi-auto" },
   "theft-risk-vans.json":    { threshold: 400, source: "semi-auto" },
