@@ -171,6 +171,7 @@ export default function SaveCarCard({
     setBusy(true);
     setChannel("email");
     setError(null);
+    trackEvent("alert_opt_in", { channel: "email", surface });
     try {
       if (await save({ email: clean }, "email")) {
         try {
@@ -191,6 +192,7 @@ export default function SaveCarCard({
     setBusy(true);
     setChannel("push");
     setError(null);
+    trackEvent("alert_opt_in", { channel: "push", surface });
     try {
       const subscription = await subscribeToPush();
       if (!subscription) {

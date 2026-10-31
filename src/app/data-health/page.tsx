@@ -6,6 +6,7 @@ import { KEY_QUERY_GROUPS, queryGroup } from "@/lib/gsc-queries";
 import {
   Activity,
   Bell,
+  BellRing,
   Calculator,
   ChevronDown,
   Database,
@@ -119,6 +120,16 @@ type StatsData = {
   topPages: TopPage[];
   trafficSources: TrafficSource[];
   reminderByTrigger: ReminderTriggerFunnel[];
+  savedCars?: {
+    active: number;
+    activeEmail: number;
+    activePush: number;
+    savesToday: number;
+    saves7d: number;
+    bySurface7d: { surface: string; views: number; saves: number }[];
+    byChannel7d: { channel: string; optIns: number; saves: number }[];
+    alerts7d: { kind: string; sent: number; opened: number }[];
+  };
 };
 
 type DataFileEntry = {
@@ -487,6 +498,98 @@ function ReminderFunnelCard({ stats }: { stats: StatsData | null }) {
           Email signups = mot_reminder events (incl. reactivations, so can exceed new subscriber
           rows). Calendar adds = no-email mot_reminder_calendar_add (Google/Outlook/.ics).
         </p>
+      </div>
+    </Section>
+  );
+}
+
+// ── My Cars with alerts (save card → opt-in → alerts sent → opened, 7d) ──────
+
+function SavedCarsCard({ stats }: { stats: StatsData | null }) {
+  const sc = stats?.savedCars;
+  if (!sc) return null;
+  const pct = (num: number, den: number) => (den > 0 ? `${((num / den) * 100).toFixed(1)}%` : "—");
+  const th = "px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500";
+  const td = "px-3 py-2 font-mono text-sm tabular-nums text-slate-200";
+  const KIND_LABEL: Record<string, string> = {
+    mot_35: "MOT · 5 weeks",
+    mot_7: "MOT · 1 week",
+    tax: "Tax due",
+    recall: "New recall",
+    value: "Value check",
+    saved: "Welcome (push)",
+  };
+  return (
+    <Section
+      title="My Cars with alerts"
+      hint={`${sc.active.toLocaleString()} active (${sc.activeEmail} email · ${sc.activePush} push) · ${sc.saves7d} saved last 7d`}
+    >
+      <div className="grid gap-3 lg:grid-cols-2">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+          <p className="px-3 pt-3 text-[11px] uppercase tracking-wider text-slate-500">Opt-in by surface · 7d</p>
+          <table className="w-full mt-1">
+            <thead>
+              <tr className="border-b border-slate-800">
+                <th className={th}>Surface</th>
+                <th className={`${th} text-right`}>Card seen</th>
+                <th className={`${th} text-right`}>Saved</th>
+                <th className={`${th} text-right`}>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sc.bySurface7d.length === 0 ? (
+                <tr><td colSpan={4} className="px-3 py-3 text-sm text-slate-500">No card views yet.</td></tr>
+              ) : (
+                sc.bySurface7d.map((r) => (
+                  <tr key={r.surface} className="border-b border-slate-800/60 last:border-0">
+                    <td className="px-3 py-2 text-sm text-slate-300">{r.surface}</td>
+                    <td className={`${td} text-right`}>{r.views.toLocaleString()}</td>
+                    <td className={`${td} text-right`}>{r.saves.toLocaleString()}</td>
+                    <td className={`${td} text-right text-cyan-300`}>{pct(r.saves, r.views)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          <p className="px-3 pb-3 pt-2 text-[11px] text-slate-600">
+            Channel taps → saved:{" "}
+            {sc.byChannel7d.length === 0
+              ? "none yet"
+              : sc.byChannel7d.map((c) => `${c.channel} ${c.saves}/${c.optIns}`).join(" · ")}
+            {" "}(a gap on push = permission refused or blocked).
+          </p>
+        </div>
+        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+          <p className="px-3 pt-3 text-[11px] uppercase tracking-wider text-slate-500">Alerts · 7d</p>
+          <table className="w-full mt-1">
+            <thead>
+              <tr className="border-b border-slate-800">
+                <th className={th}>Alert</th>
+                <th className={`${th} text-right`}>Sent</th>
+                <th className={`${th} text-right`}>Opened</th>
+                <th className={`${th} text-right`}>Open rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sc.alerts7d.length === 0 ? (
+                <tr><td colSpan={4} className="px-3 py-3 text-sm text-slate-500">Nothing sent this week.</td></tr>
+              ) : (
+                sc.alerts7d.map((a) => (
+                  <tr key={a.kind} className="border-b border-slate-800/60 last:border-0">
+                    <td className="px-3 py-2 text-sm text-slate-300">{KIND_LABEL[a.kind] ?? a.kind}</td>
+                    <td className={`${td} text-right`}>{a.sent.toLocaleString()}</td>
+                    <td className={`${td} text-right`}>{a.opened.toLocaleString()}</td>
+                    <td className={`${td} text-right text-cyan-300`}>{pct(a.opened, a.sent)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          <p className="px-3 pb-3 pt-2 text-[11px] text-slate-600">
+            Opened = alert_open from the link&apos;s src=car-alert-… (a push that was only glanced at isn&apos;t counted).
+            Daily cron: /api/cron/car-alerts, 08:30.
+          </p>
+        </div>
       </div>
     </Section>
   );
@@ -1129,6 +1232,25 @@ export default function DataHealthPage() {
                   sub="active subscribers"
                   tone="violet"
                 />
+                {stats.savedCars && (
+                  <KpiCard
+                    icon={BellRing}
+                    label="Saved cars"
+                    value={stats.savedCars.active}
+                    delta={
+                      stats.savedCars.saves7d > 0 ? (
+                        <span className="inline-flex items-center gap-0.5 text-emerald-400">
+                          <TrendingUp className="h-3 w-3" />
+                          {stats.savedCars.saves7d} this week
+                        </span>
+                      ) : (
+                        <span className="text-slate-500">—</span>
+                      )
+                    }
+                    sub={`${stats.savedCars.activeEmail} email · ${stats.savedCars.activePush} push`}
+                    tone="violet"
+                  />
+                )}
                 <KpiCard
                   icon={Eye}
                   label="Page views today"
@@ -1174,6 +1296,7 @@ export default function DataHealthPage() {
 
             {/* ── REMINDER FUNNEL (prompt → form → signup, 7d) ── */}
             <ReminderFunnelCard stats={stats} />
+            <SavedCarsCard stats={stats} />
 
             {/* ── HOW PEOPLE GOT HERE ── */}
             {stats && (

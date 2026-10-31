@@ -382,6 +382,74 @@ async function groupByMetadataField(
   return counts;
 }
 
+// ── My Cars with alerts ──────────────────────────────────────────────────────
+// Saves, opt-ins, alerts sent and opened (Move 3, 2026-11). Table counts go
+// through the service role (saved_cars has RLS on, no policies); events come
+// from site_events like everything else. A missing table (migration not run
+// yet) just reads as zeros.
+export type SavedCarsStats = {
+  active: number;
+  activeEmail: number;
+  activePush: number;
+  savesToday: number;
+  saves7d: number;
+  bySurface7d: { surface: string; views: number; saves: number }[];
+  byChannel7d: { channel: string; optIns: number; saves: number }[];
+  alerts7d: { kind: string; sent: number; opened: number }[];
+};
+
+async function countSavedCars(sbRead: ReturnType<typeof supabaseServerRole>, channel?: "email" | "push"): Promise<number> {
+  let q = sbRead.from("saved_cars").select("*", { count: "exact", head: true }).eq("active", true);
+  if (channel) q = q.eq("channel", channel);
+  const { count, error } = await q;
+  if (error) {
+    if (error.code !== "42P01") console.error("[STATS] Error counting saved_cars:", error.message);
+    return 0;
+  }
+  return count ?? 0;
+}
+
+async function fetchSavedCarsStats(
+  sb: ReturnType<typeof supabaseServer>,
+  sbRead: ReturnType<typeof supabaseServerRole>,
+  sevenDaysAgo: Date,
+  todayStart: Date,
+): Promise<SavedCarsStats> {
+  const [active, activeEmail, activePush, savesToday, saves7d, viewsBySurface, savesBySurface, optInsByChannel, savesByChannel, sentByKind, openedByKind] =
+    await Promise.all([
+      countSavedCars(sbRead),
+      countSavedCars(sbRead, "email"),
+      countSavedCars(sbRead, "push"),
+      countEvents(sb, "car_saved", todayStart),
+      countEvents(sb, "car_saved", sevenDaysAgo),
+      groupByMetadataField(sb, "save_card_view", "surface", sevenDaysAgo),
+      groupByMetadataField(sb, "car_saved", "surface", sevenDaysAgo),
+      groupByMetadataField(sb, "alert_opt_in", "channel", sevenDaysAgo),
+      groupByMetadataField(sb, "car_saved", "channel", sevenDaysAgo),
+      groupByMetadataField(sb, "alert_sent", "kind", sevenDaysAgo),
+      groupByMetadataField(sb, "alert_open", "kind", sevenDaysAgo),
+    ]);
+  const surfaces = new Set([...viewsBySurface.keys(), ...savesBySurface.keys()]);
+  const channels = new Set([...optInsByChannel.keys(), ...savesByChannel.keys()]);
+  const kinds = new Set([...sentByKind.keys(), ...openedByKind.keys()]);
+  return {
+    active,
+    activeEmail,
+    activePush,
+    savesToday,
+    saves7d,
+    bySurface7d: [...surfaces]
+      .map((surface) => ({ surface, views: viewsBySurface.get(surface) ?? 0, saves: savesBySurface.get(surface) ?? 0 }))
+      .sort((a, b) => b.saves - a.saves || b.views - a.views),
+    byChannel7d: [...channels]
+      .map((channel) => ({ channel, optIns: optInsByChannel.get(channel) ?? 0, saves: savesByChannel.get(channel) ?? 0 }))
+      .sort((a, b) => b.saves - a.saves),
+    alerts7d: [...kinds]
+      .map((kind) => ({ kind, sent: sentByKind.get(kind) ?? 0, opened: openedByKind.get(kind) ?? 0 }))
+      .sort((a, b) => b.sent - a.sent),
+  };
+}
+
 // ── Affiliate roll-up ────────────────────────────────────────────────────────
 // Group partner_click events by AFFILIATE (carVertical / BookMyGarage /
 // ClickMechanic), not just by placement context. BMG fires under three ids
@@ -626,6 +694,8 @@ export async function GET(req: Request): Promise<NextResponse> {
 
   const todayStart = startOfUtcDay(now);
   const yesterdayStart = new Date(todayStart.getTime() - 24 * 60 * 60 * 1000);
+
+  const savedCarsPromise = fetchSavedCarsStats(sb, sbRead, sevenDaysAgo, todayStart);
 
   const [
     lookups1h,
@@ -931,5 +1001,6 @@ export async function GET(req: Request): Promise<NextResponse> {
     },
     topPages: pageViewAggregates.topPages,
     trafficSources: pageViewAggregates.trafficSources,
+    savedCars: await savedCarsPromise,
   });
 }
