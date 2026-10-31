@@ -20,6 +20,14 @@ interface Props {
   daysUntilExpiry: number;
   registrationNumber: string;
   makeModel?: string;
+  /**
+   * Show the inline reminder ask (far / no-record states). Off when the
+   * save-this-car card sits right under the banner — since 2026-10-31 that
+   * card is the reminder ask on results, and two email boxes in a row is
+   * the wall of asks the strategy review warned about. The banner then keeps
+   * only the headline and the next-MOT date.
+   */
+  reminder?: boolean;
 }
 
 function getUrgency(motStatus: string | undefined, days: number): Urgency | null {
@@ -68,6 +76,7 @@ export default function MotActionBanner({
   daysUntilExpiry,
   registrationNumber,
   makeModel,
+  reminder = true,
 }: Props) {
   const urgency = getUrgency(motStatus, daysUntilExpiry);
 
@@ -106,10 +115,12 @@ export default function MotActionBanner({
     urgency === "expired"
       ? "Driving without a valid MOT is illegal — fines up to £1,000 and invalidated insurance. Book a test today to get back on the road."
       : urgency === "no-record"
-        ? "DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). Set a free reminder so it never catches you out."
+        ? `DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). ${reminder ? "Set a free reminder so it never catches you out." : "Save the car below and we'll tell you when the first test is due."}`
         : urgency === "due-soon"
           ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Compare prices below and book before it lapses."
-          : "A clean, unbroken MOT record helps hold your car's value — save a free reminder so its next test never catches you out.";
+          : reminder
+          ? "A clean, unbroken MOT record helps hold your car's value — save a free reminder so its next test never catches you out."
+          : "A clean, unbroken MOT record helps hold your car's value. Save the car below and we'll tell you when the test is due.";
 
   const Icon =
     urgency === "expired" ? AlertTriangle : urgency === "due-soon" ? Clock : Calendar;
@@ -208,7 +219,7 @@ export default function MotActionBanner({
           framing that drives the valuation placement's signups — the email form
           stays as the fallback beneath. `no-record` has no expiry to add to a
           calendar, so it keeps the email field. */}
-      {!showBmg && (
+      {!showBmg && reminder && (
         <div className="mt-4">
           <div className="mb-2 flex items-center gap-2">
             <Bell className={`h-3.5 w-3.5 shrink-0 ${palette.icon}`} aria-hidden="true" />
