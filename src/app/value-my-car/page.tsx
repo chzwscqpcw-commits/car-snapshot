@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import Image from "next/image";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import HeroRegSearch from "@/components/HeroRegSearch";
 import TrustBar from "@/components/TrustBar";
@@ -10,6 +9,7 @@ import TempInsuranceCTA from "@/components/TempInsuranceCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import PlateSwitch from "@/components/tools/PlateSwitch";
+import ValuationSampleCard from "@/components/home/ValuationSampleCard";
 
 // THE valuation landing page. Until 2026-10-11 the same tool sat on four
 // routes with rewritten copy — /car-valuation, /value-my-car,
@@ -199,33 +199,16 @@ export default function ValueMyCarPage() {
                 &larr; Back to all tools
               </a>
 
-              {/* MOBILE LAYOUT */}
+              {/* MOBILE LAYOUT. The example valuation sits below the reg box
+                  (the same arrangement as the homepage), not as a thumbnail
+                  beside the title as the old screenshot did. */}
               <div className="lg:hidden">
-                <div className="grid gap-3 grid-cols-[1fr_110px] sm:grid-cols-[1fr_135px] items-start">
-                  <div className="min-w-0">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
-                      Value your car in 30 seconds
-                    </h1>
-                    <p className="mt-2 text-sm font-medium text-emerald-300">
-                      Reg only · No email · No signup
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <div className="relative">
-                      <Image
-                        src="/previews/car-valuation.png"
-                        alt="Sample car valuation result"
-                        width={110}
-                        height={145}
-                        className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
-                        style={{ width: 110, height: 145 }}
-                      />
-                      <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                        Sample
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
+                  Value your car in 30 seconds
+                </h1>
+                <p className="mt-2 text-sm font-medium text-emerald-300">
+                  Reg only · No email · No signup
+                </p>
                 <p className="mt-4 text-base text-slate-300 leading-relaxed">
                   Enter your reg below. We pull live UK market data, your
                   actual MOT-recorded mileage, and a calibrated depreciation
@@ -265,18 +248,12 @@ export default function ValueMyCarPage() {
                     </li>
                   </ul>
                 </div>
-                <div className="relative w-fit mx-auto lg:mx-0">
-                  <Image
-                    src="/previews/car-valuation.png"
-                    alt="Sample valuation result"
-                    width={280}
-                    height={365}
-                    className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top -rotate-2"
-                    style={{ width: 280, height: 365 }}
-                  />
-                  <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                    Sample
-                  </span>
+                {/* The example valuation, live rather than a screenshot: the
+                    same card the homepage shows beside its hero, in its
+                    valuation form. A random car first, then the next one on
+                    each visit. */}
+                <div className="w-full max-w-[380px] lg:ml-auto">
+                  <ValuationSampleCard placement="rail" />
                 </div>
               </div>
 
@@ -285,6 +262,7 @@ export default function ValueMyCarPage() {
                   duplicate lookup (showLookup={false}). */}
               <HeroRegSearch targetPath="/value-my-car" ctaLabel="Value my car free" />
               <TrustBar className="mt-6" />
+              <ValuationSampleCard placement="inline" wide className="lg:hidden mt-6 max-w-md mx-auto md:max-w-none" />
             </div>
           </div>
 

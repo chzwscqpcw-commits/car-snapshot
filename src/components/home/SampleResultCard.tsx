@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { ArrowUp, Check, Gauge, PoundSterling, ShieldCheck, Wind, Wrench, X } from "lucide-react";
+import { ArrowUp, BarChart3, Check, CircleCheck, Gauge, PoundSterling, ShieldCheck, Sparkles, TrendingDown, Wind, Wrench, X } from "lucide-react";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
-import { SAMPLE_CARS, pageSampleIndex, type MotResult, type SampleCar } from "@/components/home/sample-cars";
+import { REF_YEAR, SAMPLE_CARS, pageSampleIndex, type MotResult, type SampleCar } from "@/components/home/sample-cars";
 
-// What a lookup returns, shown on the homepage before anyone has searched: one
-// of a handful of made-up example cars (sample-cars.ts), clearly labelled as
-// such. Wide screens show it beside the hero; narrower ones show it once,
-// below the search box.
+// What a lookup returns, shown before anyone has searched: one of a handful of
+// made-up example cars (sample-cars.ts), clearly labelled as such. The "check"
+// variant is the homepage's full report; the "valuation" variant is what
+// /value-my-car shows (the figure, its range, mileage, the drop since new, the
+// listings behind it). Wide screens show the card beside the hero; narrower
+// ones show it once, below the search box.
 
 // Each row's graphic sits in the same 72px slot on the right and animates in
 // with the row: sample-pop (scale up), sample-grow-x (wipe from the left).
@@ -76,6 +78,89 @@ function ValueRange({ pos }: { pos: number }) {
         className="sample-pop absolute w-3 h-3 -ml-1.5 rounded-full bg-white border-2 border-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"
         style={{ left: `${left}%`, animationDelay: "950ms" }}
       />
+    </div>
+  );
+}
+
+/** The valuation card's headline: the figure, its range, and the band it sits in. */
+function ValueHeadline({ car }: { car: SampleCar }) {
+  const high = car.listings >= 40;
+  return (
+    <div className="sample-row mt-3 rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/25 via-slate-900/80 to-slate-950 p-4" style={{ animationDelay: "100ms" }}>
+      <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+        <Sparkles className="h-3 w-3 text-cyan-400" />
+        Estimated market value
+      </div>
+      <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <span className="text-3xl font-bold text-white tracking-tight tabular-nums">£{car.valueMid.toLocaleString("en-GB")}</span>
+        <span
+          className={`sample-pop inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
+            high ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
+          }`}
+          style={{ animationDelay: "700ms" }}
+        >
+          <CircleCheck className="h-3 w-3" />
+          {high ? "High" : "Medium"} confidence
+        </span>
+      </div>
+      <div className="mt-0.5 text-xs text-slate-400">
+        Typical range <span className="font-semibold text-slate-200 tabular-nums">{car.value}</span>
+      </div>
+      <div className="relative mt-3 h-2 w-full rounded-full bg-slate-700/80">
+        <div
+          className="sample-grow-x absolute inset-y-0 rounded-full bg-gradient-to-r from-amber-500/70 to-amber-300"
+          style={{ left: "22%", width: "56%", animationDelay: "500ms" }}
+        />
+        <span
+          className="sample-pop absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 -ml-[7px] rounded-full bg-white border-2 border-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+          style={{ left: `${22 + car.valuePos * 56}%`, animationDelay: "900ms" }}
+        />
+      </div>
+      <div className="mt-1 flex justify-between text-[10px] text-slate-500 tabular-nums">
+        <span>Trade offer</span>
+        <span>Private sale</span>
+      </div>
+    </div>
+  );
+}
+
+/** What the car was worth each year since new, and where it is heading. */
+function DepreciationCurve({ car }: { car: SampleCar }) {
+  const w = SLOT;
+  const h = 28;
+  const age = Math.max(1, REF_YEAR - car.year);
+  const ratio = Math.pow(car.valueMid / car.newPrice, 1 / age);
+  const years = age + 2;
+  const pt = (y: number): [number, number] => [(y / years) * (w - 4) + 2, h - 3 - Math.pow(ratio, y) * (h - 8)];
+  const history = Array.from({ length: age + 1 }, (_, y) => pt(y));
+  const future = Array.from({ length: 3 }, (_, i) => pt(age + i));
+  const [tx, ty] = pt(age);
+  const line = (pts: [number, number][]) => pts.map(([x, y]) => `${x},${y}`).join(" ");
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-[72px] h-7 overflow-visible">
+      <g className="sample-grow-x" style={{ animationDelay: "550ms" }}>
+        <polygon points={`2,${h} ${line(history)} ${tx},${h}`} fill="rgb(251 191 36)" fillOpacity="0.18" />
+        <polyline points={line(history)} fill="none" stroke="rgb(251 191 36)" strokeWidth="1.75" strokeLinejoin="round" strokeLinecap="round" />
+        <polyline points={line(future)} fill="none" stroke="rgb(251 191 36)" strokeOpacity="0.5" strokeWidth="1.5" strokeDasharray="2 2" strokeLinecap="round" />
+      </g>
+      <circle cx={tx} cy={ty} r="3" fill="rgb(251 191 36)" stroke="rgb(15 23 42)" strokeWidth="1.5" className="sample-pop" style={{ animationDelay: "1000ms" }} />
+    </svg>
+  );
+}
+
+/** The asking prices behind the figure, as six bands; the busiest is lit. */
+function ListingBars({ bars }: { bars: SampleCar["listingBars"] }) {
+  const max = Math.max(...bars);
+  const peak = bars.indexOf(max);
+  return (
+    <div className="flex h-7 w-[72px] items-end gap-[3px]" aria-hidden="true">
+      {bars.map((b, i) => (
+        <span
+          key={i}
+          className={`sample-grow-y block flex-1 rounded-sm ${i === peak ? "bg-cyan-300" : "bg-cyan-400/40"}`}
+          style={{ height: `${Math.max(12, (b / max) * 100)}%`, animationDelay: `${600 + i * 60}ms` }}
+        />
+      ))}
     </div>
   );
 }
@@ -194,15 +279,27 @@ function motNote(mot: MotResult[]): string {
   return first === mot.length ? `${tests} · all passed first time` : `${tests} · passed ${first} first time`;
 }
 
+function mileageVsAverage(car: SampleCar): string {
+  const miles = car.mileage[car.mileage.length - 1];
+  const expected = Math.max(1, REF_YEAR - car.year) * 8000;
+  const diff = (miles - expected) / expected;
+  if (diff < -0.12) return "Below average for its age";
+  if (diff > 0.12) return "Above average for its age";
+  return "About average for its age";
+}
+
 export default function SampleResultCard({
   onTry,
   className = "",
   wide = false,
+  variant = "check",
 }: {
   onTry: (car: string) => void;
   className?: string;
   /** Inline copy: two columns of rows from md up, so it never stretches thin. */
   wide?: boolean;
+  /** "check" = the homepage's full report; "valuation" = /value-my-car's result. */
+  variant?: "check" | "valuation";
 }) {
   // The server renders the first car; the visitor's car is picked after
   // mount (deferred, as useScrollReveal does), while everything is still
@@ -213,6 +310,7 @@ export default function SampleResultCard({
     return () => cancelAnimationFrame(raf);
   }, []);
   const car = SAMPLE_CARS[index];
+  const valuation = variant === "valuation";
 
   // Play the entrance once, when the card is actually on screen.
   const { ref, revealed: shown } = useScrollReveal(0.25);
@@ -229,23 +327,27 @@ export default function SampleResultCard({
         .sample-card.is-shown .sample-pop { animation: samplePop 0.35s cubic-bezier(.34,1.56,.64,1) forwards; }
         .sample-card .sample-grow-x { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; }
         .sample-card.is-shown .sample-grow-x { animation: sampleGrowX 0.6s ease-out forwards; }
+        .sample-card .sample-grow-y { transform: scaleY(0); transform-origin: center bottom; }
+        .sample-card.is-shown .sample-grow-y { animation: sampleGrowY 0.5s ease-out forwards; }
         .sample-card .sample-ring { stroke-dashoffset: ${RING_C}; }
         .sample-card.is-shown .sample-ring { animation: sampleRing 1.2s ease-out 0.2s forwards; }
         @keyframes sampleRowIn { to { opacity: 1; transform: none; } }
         @keyframes samplePop { to { opacity: 1; transform: none; } }
         @keyframes sampleGrowX { to { transform: none; } }
+        @keyframes sampleGrowY { to { transform: none; } }
         @keyframes sampleRing { to { stroke-dashoffset: var(--ring-to); } }
         @media (prefers-reduced-motion: reduce) {
           .sample-card .sample-row, .sample-card.is-shown .sample-row { animation: none; opacity: 1; transform: none; }
           .sample-card .sample-pop, .sample-card.is-shown .sample-pop,
-          .sample-card .sample-grow-x, .sample-card.is-shown .sample-grow-x { animation: none; opacity: 1; transform: none; }
+          .sample-card .sample-grow-x, .sample-card.is-shown .sample-grow-x,
+          .sample-card .sample-grow-y, .sample-card.is-shown .sample-grow-y { animation: none; opacity: 1; transform: none; }
           .sample-card .sample-ring, .sample-card.is-shown .sample-ring { animation: none; stroke-dashoffset: var(--ring-to); }
         }
       `}</style>
 
       <div className="flex items-center justify-between mb-3">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">What you&apos;ll see</span>
-        <span className="text-[11px] text-slate-500">Example result</span>
+        <span className="text-[11px] text-slate-500">{valuation ? "Example valuation" : "Example result"}</span>
       </div>
 
       <div className="sample-row flex items-center gap-3">
@@ -256,13 +358,54 @@ export default function SampleResultCard({
           <div className="mt-1.5 text-base font-semibold text-white truncate">{car.title}</div>
           <div className="text-xs text-slate-400">{car.spec}</div>
         </div>
-        <div className="text-center">
-          <ScoreRing score={car.score} />
-          <div className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">Health</div>
-        </div>
+        {!valuation && (
+          <div className="text-center">
+            <ScoreRing score={car.score} />
+            <div className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">Health</div>
+          </div>
+        )}
       </div>
 
+      {valuation && <ValueHeadline car={car} />}
+
       <div className={`mt-3 ${wide ? "md:grid md:grid-cols-2 md:gap-x-6" : ""}`}>
+        {valuation ? (
+          <>
+            <Row
+              icon={<Gauge className="w-4 h-4 text-cyan-400" />}
+              label="Mileage"
+              value={`${car.mileage[car.mileage.length - 1].toLocaleString("en-GB")} miles`}
+              note={mileageVsAverage(car)}
+              delay={250}
+              extra={<MileageChart mileage={car.mileage} />}
+            />
+            <Row
+              icon={<TrendingDown className="w-4 h-4 text-amber-400" />}
+              label="Since new"
+              value={`£${car.newPrice.toLocaleString("en-GB")} new · ${Math.round((car.valueMid / car.newPrice) * 100)}% kept`}
+              note={`${REF_YEAR - car.year} years on its curve`}
+              delay={350}
+              extra={<DepreciationCurve car={car} />}
+            />
+            <Row
+              icon={<BarChart3 className="w-4 h-4 text-cyan-300" />}
+              label="Market data"
+              value={`${car.listings} live listings`}
+              note="Asking prices, adjusted to sale"
+              delay={450}
+              extra={<ListingBars bars={car.listingBars} />}
+            />
+            <Row
+              icon={<Check className="w-4 h-4 text-emerald-400" />}
+              label="MOT"
+              value={`Valid until ${car.motUntil}`}
+              note={motNote(car.mot)}
+              delay={550}
+              extra={<MotMarks results={car.mot} />}
+            />
+          </>
+        ) : (
+          <>
         <Row
           icon={<Check className="w-4 h-4 text-emerald-400" />}
           label="MOT"
@@ -311,6 +454,8 @@ export default function SampleResultCard({
           delay={650}
           extra={<CostSplit split={car.costSplit} />}
         />
+          </>
+        )}
       </div>
 
       <button
@@ -319,7 +464,7 @@ export default function SampleResultCard({
         className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors"
       >
         <ArrowUp className="w-4 h-4 text-cyan-400" />
-        Check your own car, free
+        {valuation ? "Value your own car, free" : "Check your own car, free"}
       </button>
     </div>
   );
