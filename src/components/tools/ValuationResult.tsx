@@ -9,7 +9,6 @@ import {
   Loader2,
   TrendingDown,
   Gauge,
-  Bell,
 } from "lucide-react";
 import {
   useVehicleLookup,
@@ -25,7 +24,6 @@ import SaveCarCard from "@/components/SaveCarCard";
 import { isVan, shortVehicleName } from "@/lib/report-v2/format";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
-import MOTReminderSignup from "@/components/MOTReminderSignup";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
@@ -435,9 +433,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         />
       )}
       <ConditionPanel condition={condition} setCondition={setCondition} />
-      {/* Free owner action — captures the MOT reminder inline instead of
-          deflecting to the banner. */}
-      <ReminderHook vrm={vrm} vehicle={vehicle} />
+      {/* ReminderHook (email MOT reminder) removed 2026-10-31: the SaveCarCard
+          above now carries the owner ask (MOT, tax, recall and value alerts by
+          push or email), and two asks on one screen split the response. */}
       {/* SellingToBuyBridge removed 2026-08-25. It was a SECOND carVertical ask
           on a screen that already carries one, and the two together produced the
           run of consecutive sells flagged during the placement review. Across
@@ -997,48 +995,6 @@ function ConditionField({
 }
 
 /* ─── Free MOT reminder capture ───────────────────────────────────────── */
-
-/**
- * Free email MOT-reminder capture on the valuation result — /car-valuation is
- * the #1 organic page and its landing hero already frames reminders as "protect
- * its value", but the RESULT view previously offered no inline capture (only the
- * deflecting MotReminderBanner). The reg is known, so this is an email-only
- * (`hideReg`) one-tap ask with a no-email "add to calendar" fallback, placed as
- * the free owner action ahead of the paid buyer sells. Fires mot_reminder tagged
- * triggerVariant="valuation_result" so this surface is measurable in Supabase.
- */
-function ReminderHook({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
-  const makeModel = vehicle.make
-    ? `${vehicle.make}${vehicle.model ? ` ${vehicle.model}` : ""}`
-    : undefined;
-  return (
-    <section className="mt-6 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-slate-900/70 to-slate-900 p-5 sm:p-6">
-      <div className="flex items-start gap-3">
-        <Bell className="h-5 w-5 flex-shrink-0 text-emerald-300 mt-0.5" />
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-white">
-            Own {vrm}? Protect its value — never miss its MOT
-          </h3>
-          <p className="mt-1 mb-3 text-xs text-slate-400 leading-relaxed">
-            A clean, unbroken MOT record helps hold a car&apos;s value. Get a free
-            email reminder in good time before it&apos;s due — no signup,
-            unsubscribe any time.
-          </p>
-          <MOTReminderSignup
-            context="post-lookup"
-            triggerVariant="valuation_result"
-            regNumber={vrm}
-            motExpiryDate={vehicle.motExpiryDate}
-            makeModel={makeModel}
-            compact
-            hideReg
-            showCalendar
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── Disclaimer ──────────────────────────────────────────────────────── */
 
