@@ -2,10 +2,13 @@
  * Data for the programmatic /mot-prices/[town] pages.
  *
  * Differentiation strategy (important — these must NOT be thin doorway pages):
- * each town page is anchored to genuinely real, region-level MOT price
+ * since 31 Oct 2026 each town page is built on the DVSA's own MOT results for
+ * the town's postcode area (tests a year, first-time pass rate against the
+ * UK, what fails most there, how old and how far-driven the cars are, the
+ * busiest month — src/lib/mot-areas.ts), on top of the region-level price
  * variation (London/South East run near the £54.85 cap; the North, Wales and
- * Scotland sit well below), plus town-specific framing (county, population
- * tier) and per-region internal links. The town set is deliberately LIMITED
+ * Scotland sit well below), town-specific framing (county, population tier)
+ * and per-region internal links. The town set is deliberately LIMITED
  * to high-value GB towns/cities and rolled out in stages — not mass-generated.
  *
  * Northern Ireland is intentionally excluded: NI MOTs are carried out at
@@ -34,6 +37,12 @@ export type MotTown = {
   county: string;
   /** Approximate urban population — framed as "around" on the page. */
   population: number;
+  /**
+   * The postcode area(s) whose DVSA MOT results stand for this town
+   * (src/lib/mot-areas.ts). A town is usually one area (Birmingham = B);
+   * London spans the inner areas. Any area missing from the data is ignored.
+   */
+  postcodeAreas: string[];
 };
 
 export const MOT_REGIONS: Record<string, MotRegion> = {
@@ -117,52 +126,52 @@ export const MOT_REGIONS: Record<string, MotRegion> = {
 };
 
 export const MOT_TOWNS: MotTown[] = [
-  { slug: "london", name: "London", region: "london", county: "Greater London", population: 8900000 },
-  { slug: "birmingham", name: "Birmingham", region: "west-midlands", county: "West Midlands", population: 1140000 },
-  { slug: "manchester", name: "Manchester", region: "north-west", county: "Greater Manchester", population: 550000 },
-  { slug: "liverpool", name: "Liverpool", region: "north-west", county: "Merseyside", population: 500000 },
-  { slug: "leeds", name: "Leeds", region: "yorkshire-humber", county: "West Yorkshire", population: 790000 },
-  { slug: "sheffield", name: "Sheffield", region: "yorkshire-humber", county: "South Yorkshire", population: 580000 },
-  { slug: "bradford", name: "Bradford", region: "yorkshire-humber", county: "West Yorkshire", population: 540000 },
-  { slug: "bristol", name: "Bristol", region: "south-west", county: "Bristol", population: 470000 },
-  { slug: "coventry", name: "Coventry", region: "west-midlands", county: "West Midlands", population: 370000 },
-  { slug: "leicester", name: "Leicester", region: "east-midlands", county: "Leicestershire", population: 370000 },
-  { slug: "nottingham", name: "Nottingham", region: "east-midlands", county: "Nottinghamshire", population: 330000 },
-  { slug: "newcastle", name: "Newcastle upon Tyne", region: "north-east", county: "Tyne and Wear", population: 300000 },
-  { slug: "sunderland", name: "Sunderland", region: "north-east", county: "Tyne and Wear", population: 275000 },
-  { slug: "brighton", name: "Brighton", region: "south-east", county: "East Sussex", population: 290000 },
-  { slug: "hull", name: "Hull", region: "yorkshire-humber", county: "East Riding of Yorkshire", population: 260000 },
-  { slug: "plymouth", name: "Plymouth", region: "south-west", county: "Devon", population: 260000 },
-  { slug: "stoke-on-trent", name: "Stoke-on-Trent", region: "west-midlands", county: "Staffordshire", population: 260000 },
-  { slug: "wolverhampton", name: "Wolverhampton", region: "west-midlands", county: "West Midlands", population: 260000 },
-  { slug: "derby", name: "Derby", region: "east-midlands", county: "Derbyshire", population: 260000 },
-  { slug: "southampton", name: "Southampton", region: "south-east", county: "Hampshire", population: 250000 },
-  { slug: "portsmouth", name: "Portsmouth", region: "south-east", county: "Hampshire", population: 240000 },
-  { slug: "reading", name: "Reading", region: "south-east", county: "Berkshire", population: 230000 },
-  { slug: "milton-keynes", name: "Milton Keynes", region: "south-east", county: "Buckinghamshire", population: 230000 },
-  { slug: "northampton", name: "Northampton", region: "east-midlands", county: "Northamptonshire", population: 220000 },
-  { slug: "peterborough", name: "Peterborough", region: "east-of-england", county: "Cambridgeshire", population: 215000 },
-  { slug: "luton", name: "Luton", region: "east-of-england", county: "Bedfordshire", population: 215000 },
-  { slug: "york", name: "York", region: "yorkshire-humber", county: "North Yorkshire", population: 210000 },
-  { slug: "bolton", name: "Bolton", region: "north-west", county: "Greater Manchester", population: 200000 },
-  { slug: "bournemouth", name: "Bournemouth", region: "south-west", county: "Dorset", population: 200000 },
-  { slug: "norwich", name: "Norwich", region: "east-of-england", county: "Norfolk", population: 200000 },
-  { slug: "aberdeen", name: "Aberdeen", region: "scotland", county: "Aberdeenshire", population: 200000 },
-  { slug: "swindon", name: "Swindon", region: "south-west", county: "Wiltshire", population: 185000 },
-  { slug: "middlesbrough", name: "Middlesbrough", region: "north-east", county: "North Yorkshire", population: 175000 },
-  { slug: "slough", name: "Slough", region: "south-east", county: "Berkshire", population: 165000 },
-  { slug: "oxford", name: "Oxford", region: "south-east", county: "Oxfordshire", population: 160000 },
-  { slug: "newport", name: "Newport", region: "wales", county: "Gwent", population: 160000 },
-  { slug: "preston", name: "Preston", region: "north-west", county: "Lancashire", population: 150000 },
-  { slug: "dundee", name: "Dundee", region: "scotland", county: "Angus", population: 150000 },
-  { slug: "ipswich", name: "Ipswich", region: "east-of-england", county: "Suffolk", population: 145000 },
-  { slug: "cambridge", name: "Cambridge", region: "east-of-england", county: "Cambridgeshire", population: 145000 },
-  { slug: "blackpool", name: "Blackpool", region: "north-west", county: "Lancashire", population: 140000 },
-  { slug: "exeter", name: "Exeter", region: "south-west", county: "Devon", population: 130000 },
-  { slug: "cardiff", name: "Cardiff", region: "wales", county: "South Glamorgan", population: 365000 },
-  { slug: "swansea", name: "Swansea", region: "wales", county: "West Glamorgan", population: 245000 },
-  { slug: "glasgow", name: "Glasgow", region: "scotland", county: "Lanarkshire", population: 635000 },
-  { slug: "edinburgh", name: "Edinburgh", region: "scotland", county: "Midlothian", population: 530000 },
+  { slug: "london", name: "London", region: "london", county: "Greater London", population: 8900000, postcodeAreas: ["E", "EC", "N", "NW", "SE", "SW", "W", "WC"] },
+  { slug: "birmingham", name: "Birmingham", region: "west-midlands", county: "West Midlands", population: 1140000, postcodeAreas: ["B"] },
+  { slug: "manchester", name: "Manchester", region: "north-west", county: "Greater Manchester", population: 550000, postcodeAreas: ["M"] },
+  { slug: "liverpool", name: "Liverpool", region: "north-west", county: "Merseyside", population: 500000, postcodeAreas: ["L"] },
+  { slug: "leeds", name: "Leeds", region: "yorkshire-humber", county: "West Yorkshire", population: 790000, postcodeAreas: ["LS"] },
+  { slug: "sheffield", name: "Sheffield", region: "yorkshire-humber", county: "South Yorkshire", population: 580000, postcodeAreas: ["S"] },
+  { slug: "bradford", name: "Bradford", region: "yorkshire-humber", county: "West Yorkshire", population: 540000, postcodeAreas: ["BD"] },
+  { slug: "bristol", name: "Bristol", region: "south-west", county: "Bristol", population: 470000, postcodeAreas: ["BS"] },
+  { slug: "coventry", name: "Coventry", region: "west-midlands", county: "West Midlands", population: 370000, postcodeAreas: ["CV"] },
+  { slug: "leicester", name: "Leicester", region: "east-midlands", county: "Leicestershire", population: 370000, postcodeAreas: ["LE"] },
+  { slug: "nottingham", name: "Nottingham", region: "east-midlands", county: "Nottinghamshire", population: 330000, postcodeAreas: ["NG"] },
+  { slug: "newcastle", name: "Newcastle upon Tyne", region: "north-east", county: "Tyne and Wear", population: 300000, postcodeAreas: ["NE"] },
+  { slug: "sunderland", name: "Sunderland", region: "north-east", county: "Tyne and Wear", population: 275000, postcodeAreas: ["SR"] },
+  { slug: "brighton", name: "Brighton", region: "south-east", county: "East Sussex", population: 290000, postcodeAreas: ["BN"] },
+  { slug: "hull", name: "Hull", region: "yorkshire-humber", county: "East Riding of Yorkshire", population: 260000, postcodeAreas: ["HU"] },
+  { slug: "plymouth", name: "Plymouth", region: "south-west", county: "Devon", population: 260000, postcodeAreas: ["PL"] },
+  { slug: "stoke-on-trent", name: "Stoke-on-Trent", region: "west-midlands", county: "Staffordshire", population: 260000, postcodeAreas: ["ST"] },
+  { slug: "wolverhampton", name: "Wolverhampton", region: "west-midlands", county: "West Midlands", population: 260000, postcodeAreas: ["WV"] },
+  { slug: "derby", name: "Derby", region: "east-midlands", county: "Derbyshire", population: 260000, postcodeAreas: ["DE"] },
+  { slug: "southampton", name: "Southampton", region: "south-east", county: "Hampshire", population: 250000, postcodeAreas: ["SO"] },
+  { slug: "portsmouth", name: "Portsmouth", region: "south-east", county: "Hampshire", population: 240000, postcodeAreas: ["PO"] },
+  { slug: "reading", name: "Reading", region: "south-east", county: "Berkshire", population: 230000, postcodeAreas: ["RG"] },
+  { slug: "milton-keynes", name: "Milton Keynes", region: "south-east", county: "Buckinghamshire", population: 230000, postcodeAreas: ["MK"] },
+  { slug: "northampton", name: "Northampton", region: "east-midlands", county: "Northamptonshire", population: 220000, postcodeAreas: ["NN"] },
+  { slug: "peterborough", name: "Peterborough", region: "east-of-england", county: "Cambridgeshire", population: 215000, postcodeAreas: ["PE"] },
+  { slug: "luton", name: "Luton", region: "east-of-england", county: "Bedfordshire", population: 215000, postcodeAreas: ["LU"] },
+  { slug: "york", name: "York", region: "yorkshire-humber", county: "North Yorkshire", population: 210000, postcodeAreas: ["YO"] },
+  { slug: "bolton", name: "Bolton", region: "north-west", county: "Greater Manchester", population: 200000, postcodeAreas: ["BL"] },
+  { slug: "bournemouth", name: "Bournemouth", region: "south-west", county: "Dorset", population: 200000, postcodeAreas: ["BH"] },
+  { slug: "norwich", name: "Norwich", region: "east-of-england", county: "Norfolk", population: 200000, postcodeAreas: ["NR"] },
+  { slug: "aberdeen", name: "Aberdeen", region: "scotland", county: "Aberdeenshire", population: 200000, postcodeAreas: ["AB"] },
+  { slug: "swindon", name: "Swindon", region: "south-west", county: "Wiltshire", population: 185000, postcodeAreas: ["SN"] },
+  { slug: "middlesbrough", name: "Middlesbrough", region: "north-east", county: "North Yorkshire", population: 175000, postcodeAreas: ["TS"] },
+  { slug: "slough", name: "Slough", region: "south-east", county: "Berkshire", population: 165000, postcodeAreas: ["SL"] },
+  { slug: "oxford", name: "Oxford", region: "south-east", county: "Oxfordshire", population: 160000, postcodeAreas: ["OX"] },
+  { slug: "newport", name: "Newport", region: "wales", county: "Gwent", population: 160000, postcodeAreas: ["NP"] },
+  { slug: "preston", name: "Preston", region: "north-west", county: "Lancashire", population: 150000, postcodeAreas: ["PR"] },
+  { slug: "dundee", name: "Dundee", region: "scotland", county: "Angus", population: 150000, postcodeAreas: ["DD"] },
+  { slug: "ipswich", name: "Ipswich", region: "east-of-england", county: "Suffolk", population: 145000, postcodeAreas: ["IP"] },
+  { slug: "cambridge", name: "Cambridge", region: "east-of-england", county: "Cambridgeshire", population: 145000, postcodeAreas: ["CB"] },
+  { slug: "blackpool", name: "Blackpool", region: "north-west", county: "Lancashire", population: 140000, postcodeAreas: ["FY"] },
+  { slug: "exeter", name: "Exeter", region: "south-west", county: "Devon", population: 130000, postcodeAreas: ["EX"] },
+  { slug: "cardiff", name: "Cardiff", region: "wales", county: "South Glamorgan", population: 365000, postcodeAreas: ["CF"] },
+  { slug: "swansea", name: "Swansea", region: "wales", county: "West Glamorgan", population: 245000, postcodeAreas: ["SA"] },
+  { slug: "glasgow", name: "Glasgow", region: "scotland", county: "Lanarkshire", population: 635000, postcodeAreas: ["G"] },
+  { slug: "edinburgh", name: "Edinburgh", region: "scotland", county: "Midlothian", population: 530000, postcodeAreas: ["EH"] },
 ];
 
 export function getMotTown(slug: string): MotTown | undefined {

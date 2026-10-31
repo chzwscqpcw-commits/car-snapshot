@@ -356,6 +356,53 @@ export function validateMotPassRates(): ValidationResult {
   return result(file, keys.length, errors, warnings);
 }
 
+export function validateMotAreas(): ValidationResult {
+  const file = "mot-areas.json";
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  let data: unknown;
+  try {
+    data = loadJSON(file);
+  } catch (e: unknown) {
+    return result(file, 0, [(e as Error).message], []);
+  }
+
+  const d = data as {
+    year?: unknown;
+    national?: { tests?: unknown; passes?: unknown };
+    areas?: Record<string, { tests?: unknown; passes?: unknown; months?: unknown; sections?: unknown }>;
+  };
+  if (typeof d.year !== "number" || d.year < 2023) errors.push("year missing or implausible");
+  const nat = d.national;
+  if (!nat || typeof nat.tests !== "number" || nat.tests < 25_000_000) {
+    errors.push("national.tests missing or below 25M (a partial or duplicated read)");
+  } else if (typeof nat.passes === "number") {
+    const rate = (100 * nat.passes) / nat.tests;
+    // 2023: 71.45%, 2024: 71.72%. Outside this band the definitions have slipped.
+    if (rate < 65 || rate > 80) errors.push(`national first-time pass rate ${rate.toFixed(1)}% is outside 65–80%`);
+  }
+  const areas = d.areas ?? {};
+  const keys = Object.keys(areas);
+  if (keys.length < 100) errors.push(`only ${keys.length} postcode areas (expected 110+)`);
+  let bad = 0;
+  for (const k of keys) {
+    const a = areas[k];
+    if (
+      typeof a.tests !== "number" || a.tests < 20_000 ||
+      typeof a.passes !== "number" || a.passes > a.tests ||
+      !Array.isArray(a.months) || a.months.length !== 12 ||
+      !Array.isArray(a.sections) || a.sections.length === 0
+    ) bad++;
+  }
+  if (bad > 0) errors.push(`${bad} areas have missing or implausible fields`);
+  for (const must of ["B", "M", "LS", "G", "EH", "CF", "SW"]) {
+    if (!areas[must]) errors.push(`postcode area ${must} missing — a town page would fall back to national figures`);
+  }
+
+  return result(file, keys.length, errors, warnings);
+}
+
 export function validateMotFailureReasons(): ValidationResult {
   const file = "mot-failure-reasons.json";
   const errors: string[] = [];
@@ -614,6 +661,7 @@ export const ALL_VALIDATORS = [
   validateHowManyLeft,
   validateMotPassRates,
   validateMotFailureReasons,
+  validateMotAreas,
   validateBodyTypes,
   validateTheftRisk,
   validateColourPopularity,

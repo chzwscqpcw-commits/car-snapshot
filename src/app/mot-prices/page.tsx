@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import MotPriceFinder from "@/components/MotPriceFinder";
 import { MOT_TOWNS, MOT_REGIONS, formatGBP } from "@/data/mot-locations";
+import { areaStats, nationalStats, MOT_AREAS_YEAR } from "@/lib/mot-areas";
 
 export const metadata: Metadata = {
   title: "Cheap MOT Prices Near You — Compare by Town 2026 | Free Plate Check",
@@ -36,10 +37,11 @@ export default function MotPricesHubPage() {
   // Group towns under their region, preserving the region declaration order.
   const byRegion = Object.values(MOT_REGIONS).map((region) => ({
     region,
-    towns: MOT_TOWNS.filter((t) => t.region === region.key).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    ),
+    towns: MOT_TOWNS.filter((t) => t.region === region.key)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((t) => ({ ...t, stats: areaStats(t.postcodeAreas) })),
   }));
+  const uk = nationalStats();
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -83,8 +85,11 @@ export default function MotPricesHubPage() {
               <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed">
                 MOT prices vary by region &mdash; London and the South East run
                 near the <strong className="text-slate-100">&pound;54.85</strong>{" "}
-                cap, while the North, Wales and Scotland sit well below. Pick your
-                town below, or enter your reg to compare local garages now.
+                cap, while the North, Wales and Scotland sit well below. So do
+                pass rates: {uk.passRate.toFixed(1)}% of car MOTs passed first time
+                across the UK in {MOT_AREAS_YEAR}, and each town page shows how its
+                own area compares. Pick your town below, or enter your reg to
+                compare local garages now.
               </p>
             </div>
             <div className="mt-6 lg:mt-0">
@@ -112,6 +117,13 @@ export default function MotPricesHubPage() {
                     className="block rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-slate-700 hover:text-blue-400"
                   >
                     {t.name}
+                    {t.stats && (
+                      <span
+                        className={`mt-0.5 block text-xs font-normal tabular-nums ${t.stats.passRateVsUk >= 0 ? "text-emerald-400/80" : "text-amber-400/80"}`}
+                      >
+                        {t.stats.passRate.toFixed(1)}% pass first time
+                      </span>
+                    )}
                   </a>
                 ))}
               </div>
