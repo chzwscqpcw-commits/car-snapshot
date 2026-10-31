@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
     "/api/report-pdf/sample": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**", "./src/lib/report-v2/assets/**"],
     "/api/saved-cars": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
     "/api/cron/car-alerts": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
+    "/api/mot-reminder": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
+    "/api/cron/mot-reminders": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
   },
   /**
    * Canonical-host redirects. Previously this was a src/middleware.ts that

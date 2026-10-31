@@ -172,7 +172,17 @@ export function Fine({ children }: { children: React.ReactNode }) {
 }
 
 /** The running foot: a rule, the wordmark and the date, the honest line about the plate, and the stop link. */
-export function Foot({ stopUrl, reason, date }: { stopUrl: string; reason: string; date?: string }) {
+export function Foot({
+  stopUrl,
+  reason,
+  date,
+  stopLabel = "Stop alerts for this car",
+}: {
+  stopUrl: string;
+  reason: string;
+  date?: string;
+  stopLabel?: string;
+}) {
   const small: React.CSSProperties = { margin: "0 0 8px", fontFamily: SANS, fontSize: "12px", lineHeight: 1.6, color: MUTED };
   return (
     <>
@@ -193,11 +203,11 @@ export function Foot({ stopUrl, reason, date }: { stopUrl: string; reason: strin
       </Row>
       <Text style={small}>{reason}</Text>
       <Text style={small}>
-        We keep this car&apos;s registration only to send these alerts, never share it, and delete it 12 months after you stop them.
+        We keep this car&apos;s registration and your email only to send these, and never share them.
       </Text>
       <Text style={{ ...small, margin: 0 }}>
         <Link href={stopUrl} style={{ color: SOFT, textDecoration: "underline", textUnderlineOffset: "2px" }}>
-          Stop alerts for this car
+          {stopLabel}
         </Link>
       </Text>
     </>

@@ -4,6 +4,7 @@ export const maxDuration = 10;
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
+import { plateAttachment } from "@/lib/plate-image";
 import { PARTNER_LINKS } from "@/config/partners";
 import MOTReminderDue from "@/emails/mot-reminder-due";
 import { DEFAULT_OFFSETS, MAX_OFFSET_DAYS, reminderSubject } from "@/lib/mot-reminders";
@@ -21,13 +22,13 @@ interface MotReminder {
   unsubscribe_token: string;
 }
 
-function formatDateDDMMYYYY(iso: string): string {
+/** "8 Dec 2026", the form every email uses. */
+function formatDateShort(iso: string): string {
   const d = new Date(iso);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
+const SENT_ON = () => new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
 function parseMakeModel(makeModel: string): { make: string; model: string } {
   const parts = (makeModel || "").split(" ");
@@ -93,6 +94,7 @@ export async function GET(req: Request) {
     const clickref = daysRemaining <= 7 ? "email-mot-reminder-7d" : "email-mot-reminder-early";
     const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm, clickref);
 
+    const plate = await plateAttachment(reminder.vrm);
     const result = await sendEmail({
       to: reminder.email,
       subject: reminderSubject(daysRemaining, reminder.vrm, make, model),
@@ -100,12 +102,14 @@ export async function GET(req: Request) {
         make,
         model,
         regNumber: reminder.vrm,
-        expiryDate: formatDateDDMMYYYY(reminder.mot_expiry),
+        expiryDate: formatDateShort(reminder.mot_expiry),
         daysRemaining,
         bmgAffiliateUrl: bmgUrl,
         unsubscribeUrl,
+        sentOn: SENT_ON(),
       }),
       unsubscribeUrl,
+      attachments: plate ? [plate] : undefined,
     });
 
     if (result.ok) {
