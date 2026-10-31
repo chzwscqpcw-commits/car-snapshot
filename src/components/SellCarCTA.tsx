@@ -34,10 +34,13 @@ interface SellCarCTAProps {
  * has just valued a car they own is exactly who an instant-offer buyer wants.
  * Renders null for vans, and while the partner is pending.
  *
- * Sits BELOW the carVertical seller box on both valuation surfaces, never above
- * it: that box is the site's best converter (6.9% on the valuation result,
- * Sep–Oct 2026), and pushing it down to make room for an untested offer is how
- * a proven placement gets lost.
+ * The FIRST offer under the valuation on both surfaces since 31 Oct 2026, with
+ * the carVertical seller box second. It launched below that box (the site's
+ * best converter, 6.9% on the valuation result, Sep–Oct 2026) so an untested
+ * offer could not cost a proven one; after its first days it was clearly the
+ * stronger of the two for the seller audience, so the order swapped. Both sit
+ * under a "selling it, or keeping it?" chip (SellerIntentChip): a keeper sees
+ * neither. Judge the swap on clicks per valuation for both offers, not CTR.
  *
  * Clicks go through /go/webuyanycar, like carVertical's: the route records the
  * click server-side (ad-blockers can't drop it), turns away bots before the

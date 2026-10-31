@@ -224,6 +224,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import BuyerInspectionWidget from "@/components/BuyerInspectionWidget";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import SellCarCTA from "@/components/SellCarCTA";
+import SellerIntentChip, { useCarIntent } from "@/components/SellerIntentChip";
 import SaveCarCard from "@/components/SaveCarCard";
 import InsuranceCTA from "@/components/InsuranceCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
@@ -932,6 +933,8 @@ export default function Home() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   // The example result card's button: back up to the search box, ready to type.
+  // Selling or keeping? Shared with the save card; a keeper gets no sells.
+  const keepingCar = useCarIntent(data?.registrationNumber ?? "") === "keeping";
   const tryOwnCar = (placement: "rail" | "inline", car: string) => {
     trackEvent("home_sample_click", { placement, car });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -5001,6 +5004,27 @@ END:VEVENT
               </DataReveal>
             )}
 
+            {/* One tap first: selling it, or keeping it? A keeper sees no
+                selling offer at all; anyone else (or nobody yet) sees both,
+                We Buy Any Car first. The answer also pre-fills the save card.
+                Only where we gave a valuation. */}
+            {valuationResult && isValuationSupported(data) && (
+              <DataReveal delay={394}>
+                <SellerIntentChip vrm={data.registrationNumber} surface="home-valuation" className="mb-8" />
+              </DataReveal>
+            )}
+
+            {/* We Buy Any Car — the sell-your-car offer for owners who've just
+                valued their car. First since 2026-10-31, ahead of the
+                carVertical seller box (see SellCarCTA for why). Only where we
+                gave a valuation: no figure, no "now you know what it's worth".
+                Never for vans — WBAC's programme is cars only. */}
+            {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && !keepingCar && (
+              <DataReveal delay={395}>
+                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} vehicleName={shortVehicleName(data.make, data.model)} className="mb-8" />
+              </DataReveal>
+            )}
+
             {/* carVertical full-history CTA lifted into section-money — the
                 highest-reach section (~1,555 views vs ~437 for the old
                 Next-Steps slot; revenue audit 2026-07). Sits after the valuation
@@ -5013,26 +5037,18 @@ END:VEVENT
                 reached it. The homepage is ~1,415 of ~2,850 weekly valuation
                 views, so half the audience kept seeing "Buying this car?" on a
                 page where 41% of them are valuing a car they already own. Same
-                reasoning as ValuationResult; see the note there. */}
-            <DataReveal delay={395}>
-              <div className="mb-8">
-                <CarVerticalReportCTA
-                  regNumber={data.registrationNumber}
-                  context="money-seller"
-                  variant="seller"
-                  motorbike={isMotorbike(data)}
-                />
-              </div>
-            </DataReveal>
-
-            {/* We Buy Any Car — the sell-your-car offer for owners who've just
-                valued their car. Below the carVertical seller box, never above
-                it (see SellCarCTA). Only where we gave a valuation: no figure,
-                no "now you know what it's worth". Never for vans — WBAC's
-                programme is cars only. */}
-            {valuationResult && isValuationSupported(data) && isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && (
+                reasoning as ValuationResult; see the note there. Hidden for a
+                car its owner said they are keeping. */}
+            {!keepingCar && (
               <DataReveal delay={398}>
-                <SellCarCTA context="money-wbac" regNumber={data.registrationNumber} isVan={isVan(data, bodyStyle)} vehicleName={shortVehicleName(data.make, data.model)} className="mb-8" />
+                <div className="mb-8">
+                  <CarVerticalReportCTA
+                    regNumber={data.registrationNumber}
+                    context="money-seller"
+                    variant="seller"
+                    motorbike={isMotorbike(data)}
+                  />
+                </div>
               </DataReveal>
             )}
 

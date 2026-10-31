@@ -8,11 +8,13 @@
  * is the record.
  */
 
-import type { SaveChannel, SaveIntent } from "@/lib/saved-cars";
+import { SAVE_INTENTS, type SaveChannel, type SaveIntent } from "@/lib/saved-cars";
 
 const MY_CARS_KEY = "fpc-my-vehicles";
 const ALERTS_KEY = "fpc-car-alerts";
 const CHANGE_EVENT = "fpc:car-alerts";
+const INTENT_KEY = "fpc-car-intent";
+const INTENT_EVENT = "fpc:car-intent";
 
 export interface LocalCar {
   registrationNumber: string;
@@ -93,6 +95,45 @@ export function onAlertsChange(cb: () => void): () => void {
   window.addEventListener("storage", cb);
   return () => {
     window.removeEventListener(CHANGE_EVENT, cb);
+    window.removeEventListener("storage", cb);
+  };
+}
+
+// ── Selling or keeping? ──────────────────────────────────────────────────
+// What the owner told us about a car, from the chip above the seller offers
+// or the save card's own "plans for it?" row. One answer per plate, shared by
+// every surface on the page, so nobody is asked twice.
+
+type IntentMap = Record<string, SaveIntent>;
+
+/** The plan this device gave for a car, if any. */
+export function carIntent(vrm: string): SaveIntent | null {
+  if (typeof window === "undefined") return null;
+  const map = read<IntentMap>(INTENT_KEY, {});
+  const value = map && typeof map === "object" ? map[vrm] : undefined;
+  return typeof value === "string" && (SAVE_INTENTS as readonly string[]).includes(value) ? value : null;
+}
+
+export function rememberIntent(vrm: string, intent: SaveIntent | null): void {
+  if (typeof window === "undefined") return;
+  const map = read<IntentMap>(INTENT_KEY, {});
+  const next: IntentMap = { ...(map && typeof map === "object" ? map : {}) };
+  if (intent) next[vrm] = intent;
+  else delete next[vrm];
+  try {
+    localStorage.setItem(INTENT_KEY, JSON.stringify(next));
+  } catch {
+    // Storage blocked: the chip still works for this page view.
+  }
+  window.dispatchEvent(new Event(INTENT_EVENT));
+}
+
+/** Run `cb` when a car's plan changes anywhere on this page. */
+export function onIntentChange(cb: () => void): () => void {
+  window.addEventListener(INTENT_EVENT, cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    window.removeEventListener(INTENT_EVENT, cb);
     window.removeEventListener("storage", cb);
   };
 }
