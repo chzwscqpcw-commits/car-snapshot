@@ -102,7 +102,7 @@ The MOT tests your vehicle against a set of minimum safety and environmental sta
 - **Seatbelts** — All fitted belts must work correctly
 - **Mirrors** — Must be present and in usable condition
 
-The test takes around [45–60 minutes](/blog/how-long-does-mot-take) and the maximum fee is [£54.85 for a car](/blog/how-much-does-mot-cost) (though many garages charge less).
+The test takes around [45–60 minutes](/blog/how-long-does-mot-take) and the maximum fee is [£54.85 for a car](/cheap-mot#how-much-should-an-mot-cost) (though many garages charge less).
 
 You can see exactly what was checked, passed, and flagged at every previous test by looking at the [full MOT history](/mot-check) for any vehicle.
 

@@ -56,7 +56,7 @@ Not sure when yours is due? Enter your registration on our [MOT check](/mot-chec
 
 ## Compare prices while you're at it
 
-Booking early doesn't just save time — it gives you room to shop around. The MOT test is capped at £54.85 for a car, but plenty of garages charge less to win your business, and a cheaper test is not a lighter one. The checks are standardised, so you're paying less for the identical inspection. See what's available near you with our [cheap MOT](/cheap-mot) comparison, and for the full breakdown of what you should expect to pay, read [how much an MOT costs in 2026](/blog/how-much-does-mot-cost).
+Booking early doesn't just save time — it gives you room to shop around. The MOT test is capped at £54.85 for a car, but plenty of garages charge less to win your business, and a cheaper test is not a lighter one. The checks are standardised, so you're paying less for the identical inspection. See what's available near you with our [cheap MOT](/cheap-mot) comparison, and for the full breakdown of what you should expect to pay, read [how much an MOT costs in 2026](/cheap-mot#how-much-should-an-mot-cost).
 
 ## The bottom line
 
