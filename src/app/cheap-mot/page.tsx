@@ -371,14 +371,30 @@ export default function CheapMotPage() {
               the <em>types</em> of test centre price very differently, and knowing
               how each one makes its money tells you where to look.
             </p>
-            <SeverityCards
-              cards={[
-                { tone: "info", title: "National chains (Halfords, Kwik Fit and similar)", description: "Frequent promotions and discount codes, often well below the cap; convenient and consistent. Watch for upsell pressure on advisories and repairs — the test is standardised, the recommended work afterwards is where the margin lives." },
-                { tone: "good", title: "Independent local garages", description: "Vary the most, and many quietly undercut the chains on reputation and repeat custom. Often lower labour rates on any repairs too. Lean on reviews — a cheap test from a well-reviewed independent is hard to beat." },
-                { tone: "good", title: "Council-run test centres", description: "‘Non-trading’ stations that only test and never repair, so there's no incentive to fail a car for work. Frequently the cheapest and most impartial option — but not every area has one, and a fail means a trip elsewhere." },
-                { tone: "default", title: "Mobile and while-you-wait testers", description: "Fast and convenient, and competitive in a quiet slot. The same rule applies as everywhere: check the labour rate if repairs are likely." },
-              ]}
-            />
+            {/* Four centre types with a paragraph each: stacked, not the
+                three-up SeverityCards grid, which squeezes long text into
+                phone-width columns. */}
+            <ul className="space-y-3 sm:grid sm:grid-cols-2 sm:gap-3 sm:space-y-0">
+              {[
+                { tone: "border-blue-800/50 bg-blue-950/20", dot: "bg-blue-400", title: "National chains (Halfords, Kwik Fit and similar)", pros: "Frequent promotions and discount codes, often well below the cap; convenient and consistent.", watch: "Upsell pressure on advisories and repairs — the test is standardised, the recommended work afterwards is where the margin lives." },
+                { tone: "border-emerald-800/50 bg-emerald-950/20", dot: "bg-emerald-400", title: "Independent local garages", pros: "Vary the most, and many quietly undercut the chains on reputation and repeat custom. Often lower labour rates on repairs too.", watch: "Quality varies — lean on reviews. A cheap test from a well-reviewed independent is hard to beat." },
+                { tone: "border-emerald-800/50 bg-emerald-950/20", dot: "bg-emerald-400", title: "Council-run test centres", pros: "‘Non-trading’ stations that only test and never repair, so there's no incentive to fail a car for work. Often the cheapest and most impartial option.", watch: "Not every area has one, and a fail means a trip elsewhere for the repair." },
+                { tone: "border-slate-700/60 bg-slate-900/40", dot: "bg-slate-400", title: "Mobile and while-you-wait testers", pros: "Fast and convenient, and competitive in a quiet slot.", watch: "The same rule as everywhere: check the labour rate if repairs are likely." },
+              ].map((c) => (
+                <li key={c.title} className={`rounded-lg border p-4 ${c.tone}`}>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${c.dot}`} aria-hidden="true" />
+                    <h3 className="text-sm font-semibold text-slate-100">{c.title}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-300">
+                    <span className="font-semibold text-emerald-300">Pros: </span>{c.pros}
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
+                    <span className="font-semibold text-amber-300">Watch for: </span>{c.watch}
+                  </p>
+                </li>
+              ))}
+            </ul>
             <h3 className="text-lg font-semibold text-slate-100 mt-5 mb-2">Why &ldquo;cheapest&rdquo; keeps changing</h3>
             <p className="leading-relaxed mb-3">
               Most centres treat the MOT as marketing rather than a profit
@@ -431,7 +447,7 @@ export default function CheapMotPage() {
             <SeverityCards
               cards={[
                 { tone: "good", title: "The test fee", description: "The headline price — cap is £54.85, often much less." },
-                { tone: "warn", title: "Repair labour rate", description: "What you'll pay per hour if it fails — varies far more than the test. Ask before you book, especially on an older car." },
+                { tone: "warn", title: "Repair labour rate", description: "What you'll pay per hour if it fails — varies far more than the test." },
                 { tone: "info", title: "What's bundled", description: "‘Free’ MOTs are often tied to a paid service — check the total." },
               ]}
             />
