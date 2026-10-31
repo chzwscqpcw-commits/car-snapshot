@@ -1,185 +1,79 @@
-import {
-  Html,
-  Head,
-  Body,
-  Container,
-  Section,
-  Text,
-  Link,
-  Preview,
-} from "@react-email/components";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
-import { CTAButton } from "./components/CTAButton";
-import { EmailRegPlate } from "./components/RegPlate";
+import { Html, Body, Container, Link, Preview } from "@react-email/components";
+import { Action, Deck, Fine, Foot, Headline, Masthead, Plate, ReportHead, SOFT, Vitals, page, sheet } from "./components/report";
 
-const body: React.CSSProperties = {
-  backgroundColor: "#0a0a0a",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0",
-  padding: "0",
-};
-
-const container: React.CSSProperties = {
-  backgroundColor: "#111111",
-  maxWidth: "600px",
-  margin: "0 auto",
-};
-
-const content: React.CSSProperties = {
-  backgroundColor: "#111111",
-  padding: "32px 32px 8px",
-};
-
-const subtext: React.CSSProperties = {
-  color: "#e5e5e5",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.6",
-  margin: "0 0 24px",
-};
-
-const affiliateCard: React.CSSProperties = {
-  backgroundColor: "#1a1a2e",
-  borderRadius: "8px",
-  padding: "16px 20px",
-  margin: "0 0 24px",
-};
-
-const affiliateHeading: React.CSSProperties = {
-  color: "#e5e5e5",
-  fontSize: "15px",
-  fontWeight: 600,
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0 0 4px",
-};
-
-const affiliateBody: React.CSSProperties = {
-  color: "#9ca3af",
-  fontSize: "13px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.5",
-  margin: "0 0 10px",
-};
-
-const affiliateLink: React.CSSProperties = {
-  color: "#06b6d4",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  fontWeight: 600,
-  textDecoration: "underline",
-  textUnderlineOffset: "2px",
-};
-
-const disclaimer: React.CSSProperties = {
-  color: "#6b7280",
-  fontSize: "11px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "8px 0 0",
-  lineHeight: "1.4",
-};
-
-const legalNote: React.CSSProperties = {
-  color: "#9ca3af",
-  fontSize: "12px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.5",
-  margin: "0 0 8px",
-  fontStyle: "italic",
-};
+// One reminder email for any lead time, styled as the PDF report
+// (components/report.tsx). The tone follows the urgency: inside a week the
+// date is red and the legal line appears; earlier it is amber and the pitch
+// is "test early and keep the renewal date". Either way the action is our
+// booking wizard at the MOT step, which is how the reminder pays for itself.
 
 interface MOTReminderDueProps {
   make: string;
   model: string;
   regNumber: string;
+  /** "15 Apr 2027". */
   expiryDate: string;
   daysRemaining: number;
-  bmgAffiliateUrl: string;
+  /** Our booking wizard at the MOT step, plate in the fragment. */
+  bookingUrl: string;
   unsubscribeUrl: string;
+  /** The day it was sent, "1 Dec 2026", for the foot. */
+  sentOn?: string;
+  /** Where the plate image is; the inline attachment unless a preview says otherwise. */
+  plateSrc?: string;
 }
 
-/**
- * One parametric reminder email for any lead time. Tone adapts to urgency:
- *   - urgent (<= 7 days): red, legal warning, "book now"
- *   - early (> 7 days): amber, "test early and keep your renewal date"
- * Every variant sells the value: we help you book, often below the £54.85 cap.
- */
 export default function MOTReminderDue({
   make = "FORD",
   model = "FOCUS",
   regNumber = "AB12CDE",
-  expiryDate = "15/04/2026",
+  expiryDate = "15 Apr 2027",
   daysRemaining = 35,
-  bmgAffiliateUrl = "#",
+  bookingUrl = "https://www.freeplatecheck.co.uk/booking?type=mot&source=mot-reminder-7d-email#vrm=AB12CDE",
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
+  sentOn,
+  plateSrc,
 }: MOTReminderDueProps) {
   // www host (no redirect hop), plate in the fragment — never sent to a server.
   const reportUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
   const urgent = daysRemaining <= 7;
-  const accent = urgent ? "#ef4444" : "#f59e0b";
-
-  const heading: React.CSSProperties = {
-    color: accent,
-    fontSize: "24px",
-    fontWeight: 600,
-    fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-    margin: "0 0 8px",
-    lineHeight: "1.3",
-  };
-
-  const headingText = urgent ? "Your MOT expires this week" : "Time to book your MOT";
+  const name = `${make} ${model}`.trim().toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+  const plateText = /^[A-Z]{2}\d{2}[A-Z]{3}$/i.test(regNumber) ? `${regNumber.slice(0, 4)} ${regNumber.slice(4)}`.toUpperCase() : regNumber;
+  const when = daysRemaining <= 0 ? "today" : daysRemaining === 1 ? "tomorrow" : `in ${daysRemaining} days`;
   const preview = urgent
-    ? `Your MOT expires in ${daysRemaining} days — book now to stay legal.`
-    : `Your MOT is due in ${daysRemaining} days — book early, keep your renewal date, and pay less.`;
+    ? `Your MOT runs out ${when} — book now to stay legal.`
+    : `Your MOT is due ${when} — book early, keep your renewal date, and pay less.`;
   const intro = urgent
-    ? `The MOT for your ${make} ${model} expires on ${expiryDate}. Book now to avoid driving without a valid MOT.`
-    : `The MOT for your ${make} ${model} is due on ${expiryDate}. You can get it tested now and keep the same renewal date — so booking early costs you nothing and often saves you money.`;
+    ? `Your ${name}'s MOT runs out on ${expiryDate}. Book now: driving without one risks a fine and your insurance.`
+    : `Your ${name}'s MOT is due on ${expiryDate}. Have it tested now and you keep the same renewal date, so booking early costs nothing and often saves money.`;
 
   return (
     <Html lang="en">
-      <Head />
+      <ReportHead />
       <Preview>{preview}</Preview>
-      <Body style={body}>
-        <Container style={container}>
-          <Header />
-          <Section style={content}>
-            <EmailRegPlate reg={regNumber} />
-            <Text style={heading}>{headingText}</Text>
-            <Text style={subtext}>{intro}</Text>
-            <InfoCard>
-              <Text style={labelStyle}>Days Remaining</Text>
-              <Text style={{ ...valueStyle, color: accent, fontSize: "28px" }}>
-                {daysRemaining} day{daysRemaining !== 1 ? "s" : ""}
-              </Text>
-              <Text style={labelStyle}>MOT Expiry Date</Text>
-              <Text style={{ ...valueStyle, margin: "0" }}>{expiryDate}</Text>
-            </InfoCard>
-
-            <Section style={{ ...affiliateCard, border: urgent ? "1px solid #374151" : "1px dashed #374151" }}>
-              <Text style={affiliateHeading}>Book your MOT — and compare prices first</Text>
-              <Text style={affiliateBody}>
-                We&apos;ve pre-loaded {regNumber}. Local garages often charge well below the
-                &pound;54.85 legal maximum — compare and book in a couple of taps.
-              </Text>
-              <Link href={bmgAffiliateUrl} style={affiliateLink}>
-                Compare MOT prices &amp; book &rarr;
-              </Link>
-              <Text style={disclaimer}>
-                Free Plate Check may earn a commission from partner links, at no cost to you.
-              </Text>
-            </Section>
-
-            <CTAButton href={reportUrl}>View full vehicle report</CTAButton>
-
-            {urgent && (
-              <Text style={legalNote}>
-                Driving without a valid MOT can result in a fine of up to &pound;1,000 and can
-                invalidate your insurance.
-              </Text>
-            )}
-          </Section>
-          <Footer unsubscribeUrl={unsubscribeUrl} />
+      <Body style={page}>
+        <Container style={sheet}>
+          <Masthead kicker="MOT reminder" />
+          <Plate reg={regNumber} src={plateSrc} />
+          <Headline lead="MOT due" accent={when} />
+          <Deck>{intro}</Deck>
+          <Vitals
+            items={[
+              { label: "MOT due", value: expiryDate, sub: daysRemaining <= 0 ? "Today" : `${daysRemaining} day${daysRemaining === 1 ? "" : "s"} away`, tone: urgent ? "risk" : "warn" },
+              { label: "Car", value: name },
+            ]}
+          />
+          <Action href={bookingUrl}>Compare prices and book</Action>
+          <Fine>
+            We&apos;ve pre-loaded {plateText}. Local garages often charge well below the &pound;54.85 legal maximum.
+            {urgent ? " Driving without a valid MOT can mean a fine of up to £1,000 and can invalidate your insurance." : ""}{" "}
+            Or{" "}
+            <Link href={reportUrl} style={{ color: SOFT, textDecoration: "underline", textUnderlineOffset: "2px" }}>
+              see this car&apos;s full check
+            </Link>
+            . Free Plate Check may earn a commission when you book through the garages we show, at no cost to you.
+          </Fine>
+          <Foot stopUrl={unsubscribeUrl} date={sentOn} reason="You set an MOT reminder for this car on freeplatecheck.co.uk." stopLabel="Stop reminders for this car" />
         </Container>
       </Body>
     </Html>

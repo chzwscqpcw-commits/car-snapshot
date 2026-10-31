@@ -1,115 +1,68 @@
-import {
-  Html,
-  Head,
-  Body,
-  Container,
-  Section,
-  Text,
-  Preview,
-} from "@react-email/components";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { InfoCard, labelStyle, valueStyle } from "./components/InfoCard";
-import { CTAButton } from "./components/CTAButton";
-import { EmailRegPlate } from "./components/RegPlate";
+import { Html, Body, Container, Preview } from "@react-email/components";
+import { Action, Deck, Foot, Headline, Masthead, Plate, ReportHead, Vitals, page, sheet } from "./components/report";
 import { DEFAULT_OFFSETS, offsetLabel } from "@/lib/mot-reminders";
 
-const body: React.CSSProperties = {
-  backgroundColor: "#0a0a0a",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0",
-  padding: "0",
-};
-
-const container: React.CSSProperties = {
-  backgroundColor: "#111111",
-  maxWidth: "600px",
-  margin: "0 auto",
-  borderRadius: "0",
-};
-
-const content: React.CSSProperties = {
-  backgroundColor: "#111111",
-  padding: "32px 32px 8px",
-};
-
-const heading: React.CSSProperties = {
-  color: "#10b981",
-  fontSize: "24px",
-  fontWeight: 600,
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  margin: "0 0 8px",
-  lineHeight: "1.3",
-};
-
-const subtext: React.CSSProperties = {
-  color: "#e5e5e5",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.6",
-  margin: "0 0 24px",
-};
-
-const bulletText: React.CSSProperties = {
-  color: "#f5f5f5",
-  fontSize: "15px",
-  fontFamily: "'Segoe UI', Helvetica, Arial, sans-serif",
-  lineHeight: "1.6",
-  margin: "0 0 4px",
-};
+// Sent once, when an MOT reminder is set. Says when the reminders will come
+// and carries the only "stop" link the owner has. Styled as the PDF report
+// (components/report.tsx), like the saved-car emails.
 
 interface MOTReminderSetProps {
   make: string;
   model: string;
   regNumber: string;
+  /** "15 Apr 2027". */
   expiryDate: string;
   offsets?: number[];
   unsubscribeUrl: string;
+  /** The day it was sent, "31 Oct 2026", for the foot. */
+  sentOn?: string;
+  /** Where the plate image is; the inline attachment unless a preview says otherwise. */
+  plateSrc?: string;
+}
+
+function joinWords(words: string[]): string {
+  if (words.length <= 1) return words[0] ?? "";
+  return `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}`;
 }
 
 export default function MOTReminderSet({
   make = "FORD",
   model = "FOCUS",
   regNumber = "AB12CDE",
-  expiryDate = "15/04/2026",
+  expiryDate = "15 Apr 2027",
   offsets = DEFAULT_OFFSETS,
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
+  sentOn,
+  plateSrc,
 }: MOTReminderSetProps) {
   // www host (no redirect hop), plate in the fragment — never sent to a server.
   const reportUrl = `https://www.freeplatecheck.co.uk/#vrm=${regNumber.replace(/[^A-Za-z0-9]/g, "").toUpperCase()}`;
   const sorted = [...offsets].sort((a, b) => b - a);
+  const when = joinWords(sorted.map(offsetLabel));
+  const name = `${make} ${model}`.trim().toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
 
   return (
     <Html lang="en">
-      <Head />
-      <Preview>MOT reminder confirmed for {regNumber} — we&apos;ll email you before it expires.</Preview>
-      <Body style={body}>
-        <Container style={container}>
-          <Header />
-          <Section style={content}>
-            <EmailRegPlate reg={regNumber} />
-            <Text style={heading}>MOT reminder set</Text>
-            <Text style={subtext}>
-              You&apos;re all set for your {make} {model}. We&apos;ll email you before the MOT runs
-              out — and each reminder includes a one-tap link to compare local garage prices and
-              book, often well below the &pound;54.85 legal maximum.
-            </Text>
-            <InfoCard>
-              <Text style={labelStyle}>MOT Expiry Date</Text>
-              <Text style={valueStyle}>{expiryDate}</Text>
-              <Text style={{ ...labelStyle, marginBottom: "8px" }}>You&apos;ll be reminded</Text>
-              {sorted.map((d, i) => (
-                <Text
-                  key={d}
-                  style={i === sorted.length - 1 ? { ...bulletText, margin: "0" } : bulletText}
-                >
-                  &bull; {offsetLabel(d)} before expiry
-                </Text>
-              ))}
-            </InfoCard>
-            <CTAButton href={reportUrl}>View full vehicle report</CTAButton>
-          </Section>
-          <Footer unsubscribeUrl={unsubscribeUrl} />
+      <ReportHead />
+      <Preview>MOT reminder set for {regNumber}. We&apos;ll email you {when} before it runs out.</Preview>
+      <Body style={page}>
+        <Container style={sheet}>
+          <Masthead kicker="Reminder set" />
+          <Plate reg={regNumber} src={plateSrc} />
+          <Headline lead="Reminder" accent="set" tail={`for your ${name}`} />
+          <Deck>
+            We&apos;ll email you {when} before the MOT runs out, each with a one-tap link to compare local garage prices
+            and book, often well below the &pound;54.85 legal maximum. Nothing else, and never marketing.
+          </Deck>
+          <Vitals
+            items={[
+              { label: "MOT due", value: expiryDate },
+              { label: "Reminders", value: sorted.map(offsetLabel).join(" · "), sub: "before it runs out" },
+              { label: "By", value: "Email", sub: "Stop any time" },
+            ]}
+          />
+          <Action href={reportUrl}>See this car&apos;s full check</Action>
+          <Foot stopUrl={unsubscribeUrl} date={sentOn} reason="You set an MOT reminder for this car on freeplatecheck.co.uk." stopLabel="Stop reminders for this car" />
         </Container>
       </Body>
     </Html>

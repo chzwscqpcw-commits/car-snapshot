@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
-import { PARTNER_LINKS } from "@/config/partners";
+import { plateAttachment } from "@/lib/plate-image";
 import MOTReminderSet from "@/emails/mot-reminder-set";
 import MOTReminderDue from "@/emails/mot-reminder-due";
 import { sanitizeOffsets, reminderSubject } from "@/lib/mot-reminders";
@@ -33,13 +33,13 @@ function isTestEmail(email: string): boolean {
   return false;
 }
 
-function formatDateDDMMYYYY(iso: string): string {
+/** "8 Dec 2026", the form every email uses. */
+function formatDateShort(iso: string): string {
   const d = new Date(iso);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
+const SENT_ON = () => new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
 /**
  * If the user signs up and one or more of their chosen reminder windows has
@@ -72,11 +72,13 @@ async function sendCatchUpReminders(
   const make = parts[0] || "Your";
   const model = parts.slice(1).join(" ") || "vehicle";
   const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${unsubscribeToken}`;
-  // "email-reminder-catchup" keeps commission attribution distinct from the
-  // scheduled cron emails.
-  const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(vrm, "email-reminder-catchup");
+  // The button lands on our own booking wizard at the MOT step (see the cron
+  // for why); "catchup" keeps this send apart from the scheduled ones in the
+  // funnel, and the hand-off carries booking-flow-mot-reminder.
+  const bookingUrl = `https://www.freeplatecheck.co.uk/booking?type=mot&source=mot-reminder-catchup-email#vrm=${vrm}`;
   const sb = supabaseServer();
 
+  const plate = await plateAttachment(vrm);
   const result = await sendEmail({
     to: email,
     subject: reminderSubject(daysRemaining, vrm, make, model),
@@ -84,12 +86,14 @@ async function sendCatchUpReminders(
       make,
       model,
       regNumber: vrm,
-      expiryDate: formatDateDDMMYYYY(motExpiry),
+      expiryDate: formatDateShort(motExpiry),
       daysRemaining,
-      bmgAffiliateUrl: bmgUrl,
+      bookingUrl,
       unsubscribeUrl,
+      sentOn: SENT_ON(),
     }),
     unsubscribeUrl,
+    attachments: plate ? [plate] : undefined,
   });
 
   if (result.ok) {
@@ -116,6 +120,7 @@ async function sendConfirmation(
   const make = parts[0] || "Your";
   const model = parts.slice(1).join(" ") || "vehicle";
 
+  const plate = await plateAttachment(vrm);
   const result = await sendEmail({
     to: email,
     subject: `MOT reminder set — ${vrm}`,
@@ -123,11 +128,13 @@ async function sendConfirmation(
       make,
       model,
       regNumber: vrm,
-      expiryDate: formatDateDDMMYYYY(motExpiry),
+      expiryDate: formatDateShort(motExpiry),
       offsets,
       unsubscribeUrl,
+      sentOn: SENT_ON(),
     }),
     unsubscribeUrl,
+    attachments: plate ? [plate] : undefined,
   });
 
   if (!result.ok) {
