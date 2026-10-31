@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { supabaseServerRole } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
 import CarSaved from "@/emails/car-saved";
+import { plateAttachment } from "@/lib/plate-image";
 import { maskEmail, maskPlate } from "@/lib/redact";
 import { pushConfigured, sendPush } from "@/lib/push-server";
 import {
@@ -223,9 +224,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, status, delivered: hello.ok }, { headers: NO_STORE });
   }
 
+  const plate = await plateAttachment(vrm);
   const result = await sendEmail({
     to: email as string,
     subject: `Alerts on for ${vrm}${makeModel ? ` (${makeModel})` : ""}`,
+    attachments: plate ? [plate] : undefined,
     react: CarSaved({
       regNumber: vrm,
       makeModel: makeModel || null,
@@ -233,7 +236,6 @@ export async function POST(req: Request) {
       taxDue: formatDateShort(taxDue),
       alerts: alertsDescription(intent),
       manageUrl,
-      plateUrl: `${SITE}/api/alerts/plate?t=${saved.manage_token}`,
       sentOn: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }),
     }),
     unsubscribeUrl: manageUrl,

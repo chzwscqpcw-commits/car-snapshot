@@ -10,6 +10,7 @@ import { maskPlate } from "@/lib/redact";
 import { findRecalls, type Recall } from "@/lib/recalls";
 import recallsData from "@/data/recalls.json";
 import CarAlert from "@/emails/car-alert";
+import { plateAttachment } from "@/lib/plate-image";
 import { alertMessage, dueAlerts, needsRefresh, type DueAlert, type SavedCarRow } from "@/lib/car-alerts";
 import { cleanIsoDate, makeModelLabel, type SaveChannel } from "@/lib/saved-cars";
 
@@ -184,9 +185,11 @@ async function deliver(
   }
 
   if (!car.email) return "retired";
+  const plate = await plateAttachment(car.vrm);
   const result = await sendEmail({
     to: car.email,
     subject: msg.title,
+    attachments: plate ? [plate] : undefined,
     react: CarAlert({
       regNumber: car.vrm,
       title: msg.title,
@@ -200,7 +203,6 @@ async function deliver(
       url: msg.url,
       note: alert.kind === "tax" ? "Tax it at gov.uk/vehicle-tax — you'll need the 11-digit reference from your V5C or the reminder letter." : undefined,
       manageUrl,
-      plateUrl: `${SITE}/api/alerts/plate?t=${car.manage_token}`,
     }),
     unsubscribeUrl: manageUrl,
   });

@@ -20,8 +20,8 @@ interface CarAlertProps {
   /** An extra line under the button, e.g. the GOV.UK tax link. */
   note?: string;
   manageUrl: string;
-  /** The plate image (api/alerts/plate?t=<manage token>). */
-  plateUrl: string;
+  /** Where the plate image is; the inline attachment unless a preview says otherwise. */
+  plateSrc?: string;
   /** The running head's kicker, e.g. "MOT alert". */
   kicker?: string;
   /** The day it was sent, "1 Dec 2026", for the foot. */
@@ -42,7 +42,7 @@ export default function CarAlert({
   ],
   note: noteText,
   manageUrl = "https://www.freeplatecheck.co.uk/api/unsubscribe?token=test",
-  plateUrl = "https://www.freeplatecheck.co.uk/api/alerts/plate?t=sample",
+  plateSrc,
   kicker = "MOT alert",
   sentOn,
 }: CarAlertProps) {
@@ -53,7 +53,7 @@ export default function CarAlert({
       <Body style={page}>
         <Container style={sheet}>
           <Masthead kicker={kicker} />
-          <Plate reg={regNumber} src={plateUrl} />
+          <Plate reg={regNumber} src={plateSrc} />
           <Headline lead={lead} accent={accent} />
           <Deck>{bodyText}</Deck>
           {facts.length > 0 && <Vitals items={facts} />}

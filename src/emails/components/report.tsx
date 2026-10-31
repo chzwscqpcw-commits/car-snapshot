@@ -7,7 +7,8 @@ import { Column, Head, Img, Link, Row, Section, Text } from "@react-email/compon
  * edition, not the dark one: mail clients' dark modes rewrite colours, and a
  * light page is the one thing every client transforms predictably (Outlook
  * turned the dark edition's page grey and its plate olive, and ignored every
- * override). The plate is an image (api/alerts/plate) for the same reason.
+ * override). The plate is an image for the same reason, attached inline
+ * (lib/plate-image.tsx) so it shows without an "external images" prompt.
  * Email clients can't take the report's inlined fonts, so the serif comes from
  * Google Fonts where a client allows web fonts (Apple Mail, iOS Mail) and
  * falls back to Georgia elsewhere; the sans falls back to the system font.
@@ -86,8 +87,9 @@ export function Rule({ gap = "0", strong = false }: { gap?: string; strong?: boo
   );
 }
 
-/** The report's yellow plate, as an image so no dark mode can recolour it. */
-export function Plate({ reg, src }: { reg: string; src: string }) {
+/** The report's yellow plate, as an image so no dark mode can recolour it.
+ *  `src` is the inline attachment by default; a preview can point it at a file. */
+export function Plate({ reg, src = "cid:plate" }: { reg: string; src?: string }) {
   const shown = /^[A-Z]{2}\d{2}[A-Z]{3}$/i.test(reg) ? `${reg.slice(0, 4)} ${reg.slice(4)}` : reg;
   return (
     <Section style={{ margin: "0 0 22px" }}>

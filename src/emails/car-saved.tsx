@@ -14,8 +14,8 @@ interface CarSavedProps {
   /** The alerts sentence from alertsDescription(). */
   alerts: string;
   manageUrl: string;
-  /** The plate image (api/alerts/plate?t=<manage token>). */
-  plateUrl: string;
+  /** Where the plate image is; the inline attachment unless a preview says otherwise. */
+  plateSrc?: string;
   /** The day it was sent, "31 Oct 2026", for the foot. */
   sentOn?: string;
 }
@@ -27,7 +27,7 @@ export default function CarSaved({
   taxDue = "1 Mar 2027",
   alerts = "5 weeks and 1 week before the MOT is due, when the tax is due, and if a recall is issued",
   manageUrl = "https://www.freeplatecheck.co.uk/api/unsubscribe?token=test",
-  plateUrl = "https://www.freeplatecheck.co.uk/api/alerts/plate?t=sample",
+  plateSrc,
   sentOn,
 }: CarSavedProps) {
   // Plate in the fragment: the browser never sends it to a server.
@@ -40,7 +40,7 @@ export default function CarSaved({
       <Body style={page}>
         <Container style={sheet}>
           <Masthead kicker="Alerts on" />
-          <Plate reg={regNumber} src={plateUrl} />
+          <Plate reg={regNumber} src={plateSrc} />
           <Headline lead="Alerts" accent="on" tail={name ? `for your ${name}` : "for this car"} />
           <Deck>We&apos;ll email you {alerts}. Nothing else, and never marketing.</Deck>
           <Vitals

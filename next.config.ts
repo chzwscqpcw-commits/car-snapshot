@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/report-pdf": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**", "./src/lib/report-v2/assets/**"],
     "/api/report-pdf/sample": ["./node_modules/@sparticuz/chromium/bin/**", "./src/lib/report-v2/fonts/**", "./src/lib/report-v2/assets/**"],
-    "/api/alerts/plate": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
+    "/api/saved-cars": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
+    "/api/cron/car-alerts": ["./src/lib/report-v2/fonts/Geist-Bold.ttf"],
   },
   /**
    * Canonical-host redirects. Previously this was a src/middleware.ts that
