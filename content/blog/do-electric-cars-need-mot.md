@@ -89,7 +89,7 @@ The maximum fee for a standard car MOT is **£54.85**, and this applies to elect
 
 In practice, many garages charge less than the maximum. Some offer MOTs from around £30 to £40, and you can often find deals if you combine the MOT with a service or tyre check.
 
-The test itself may be marginally quicker for an EV because there's no emissions test to run, but this doesn't typically translate to a lower price. For tips on finding the best deal, see our guide on [how much an MOT costs](/blog/how-much-does-mot-cost).
+The test itself may be marginally quicker for an EV because there's no emissions test to run, but this doesn't typically translate to a lower price. For tips on finding the best deal, see our guide on [how much an MOT costs](/cheap-mot#how-much-should-an-mot-cost).
 
 ## Can any garage MOT an electric car?
 

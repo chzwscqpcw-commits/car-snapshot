@@ -74,6 +74,24 @@ const nextConfig: NextConfig = {
       destination: `https://${CANONICAL_HOST}/blog/used-car-buying-guide#start-with-the-real-budget-not-the-sticker-price`,
       permanent: true,
     },
+    // The cheap-MOT cluster, consolidated 2026-10-31. Five posts (1–23 views a
+    // month each) competed with /cheap-mot for the same queries while
+    // /cheap-mot converted 76% of its landers into a booking start. Each post's
+    // content now lives in a section of /cheap-mot and lands on its anchor;
+    // 301 so Google passes their equity to the page that converts.
+    ...(
+      [
+        ["how-much-does-mot-cost", "how-much-should-an-mot-cost"],
+        ["how-to-get-a-cheaper-mot", "how-to-get-a-cheaper-mot"],
+        ["cheapest-place-to-get-mot", "cheapest-place-to-get-an-mot"],
+        ["are-cheap-mot-deals-worth-it", "are-cheap-mot-deals-worth-it"],
+        ["free-mot-how-to-get-one", "free-mot"],
+      ] as const
+    ).map(([slug, anchor]) => ({
+      source: `/blog/${slug}`,
+      destination: `https://${CANONICAL_HOST}/cheap-mot#${anchor}`,
+      permanent: true,
+    })),
     // Four valuation landing pages ran the same tool with rewritten copy, and
     // the two that ranked were cannibalising each other on our biggest query
     // ("free car valuation without email": Google swapped them, combined

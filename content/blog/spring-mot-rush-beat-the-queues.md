@@ -88,7 +88,7 @@ Do not drive it, except directly to a test you have already booked.
 
 Driving without a valid certificate risks a fine of up to **£1,000**, and more importantly it gives your insurer grounds to decline a claim or to settle a third party's claim and recover the cost from you. The test costs at most £54.85; the exposure if something happens is open-ended.
 
-Many garages hold back same-day or next-day slots for exactly this situation, so calling round is worth the twenty minutes. Our guide to [how much an MOT costs](/blog/how-much-does-mot-cost) covers what you should expect to pay when you have no time to shop around.
+Many garages hold back same-day or next-day slots for exactly this situation, so calling round is worth the twenty minutes. Our guide to [how much an MOT costs](/cheap-mot#how-much-should-an-mot-cost) covers what you should expect to pay when you have no time to shop around.
 
 ## Set the reminder once
 
