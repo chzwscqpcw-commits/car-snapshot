@@ -242,10 +242,13 @@ export function bmgRouteFor(vrm: string, postcode: string): BmgRoute {
  */
 export function bmgClickref(service: ServiceType, route: BmgRoute, source?: string): string {
   // A saved-car alert (push or email, src/lib/car-alerts.ts) lands on the
-  // wizard with source=car-alert-…; its hand-offs get their own clickref so
-  // Awin can show what the alerts earn, apart from the reminder emails
-  // (email-mot-reminder-*) and the organic booking flow.
+  // wizard with source=car-alert-…, and an MOT reminder email with
+  // source=mot-reminder-…; each gets its own clickref so Awin can show what
+  // the alerts and the reminders earn, apart from the organic booking flow.
+  // (Until 31 Oct 2026 the reminder emails linked straight to Awin as
+  // email-mot-reminder-*; that series ends there.)
   if (source?.startsWith("car-alert")) return `booking-flow-${service}-alert`;
+  if (source?.startsWith("mot-reminder")) return `booking-flow-${service}-reminder`;
   return route === "results" ? `booking-flow-${service}` : `booking-flow-${service}-search`;
 }
 

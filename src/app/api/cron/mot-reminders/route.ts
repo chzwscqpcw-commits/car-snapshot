@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
 import { plateAttachment } from "@/lib/plate-image";
-import { PARTNER_LINKS } from "@/config/partners";
 import MOTReminderDue from "@/emails/mot-reminder-due";
 import { DEFAULT_OFFSETS, MAX_OFFSET_DAYS, reminderSubject } from "@/lib/mot-reminders";
 
@@ -91,8 +90,12 @@ export async function GET(req: Request) {
 
     const { make, model } = parseMakeModel(reminder.make_model || "");
     const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${reminder.unsubscribe_token}`;
-    const clickref = daysRemaining <= 7 ? "email-mot-reminder-7d" : "email-mot-reminder-early";
-    const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(reminder.vrm, clickref);
+    // The button lands on our own booking wizard at the MOT step, plate in the
+    // fragment and the price shown, like the saved-car alerts; the hand-off to
+    // BookMyGarage then carries the booking-flow-mot-reminder clickref
+    // (bmgClickref). Until 31 Oct 2026 this linked straight to Awin.
+    const source = daysRemaining <= 7 ? "mot-reminder-7d-email" : "mot-reminder-early-email";
+    const bookingUrl = `https://www.freeplatecheck.co.uk/booking?type=mot&source=${source}#vrm=${reminder.vrm}`;
 
     const plate = await plateAttachment(reminder.vrm);
     const result = await sendEmail({
@@ -104,7 +107,7 @@ export async function GET(req: Request) {
         regNumber: reminder.vrm,
         expiryDate: formatDateShort(reminder.mot_expiry),
         daysRemaining,
-        bmgAffiliateUrl: bmgUrl,
+        bookingUrl,
         unsubscribeUrl,
         sentOn: SENT_ON(),
       }),

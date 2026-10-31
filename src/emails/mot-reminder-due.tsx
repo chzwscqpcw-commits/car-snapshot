@@ -4,8 +4,8 @@ import { Action, Deck, Fine, Foot, Headline, Masthead, Plate, ReportHead, SOFT, 
 // One reminder email for any lead time, styled as the PDF report
 // (components/report.tsx). The tone follows the urgency: inside a week the
 // date is red and the legal line appears; earlier it is amber and the pitch
-// is "test early and keep the renewal date". Either way the action is the
-// booking link, which is how the reminder pays for itself.
+// is "test early and keep the renewal date". Either way the action is our
+// booking wizard at the MOT step, which is how the reminder pays for itself.
 
 interface MOTReminderDueProps {
   make: string;
@@ -14,7 +14,8 @@ interface MOTReminderDueProps {
   /** "15 Apr 2027". */
   expiryDate: string;
   daysRemaining: number;
-  bmgAffiliateUrl: string;
+  /** Our booking wizard at the MOT step, plate in the fragment. */
+  bookingUrl: string;
   unsubscribeUrl: string;
   /** The day it was sent, "1 Dec 2026", for the foot. */
   sentOn?: string;
@@ -28,7 +29,7 @@ export default function MOTReminderDue({
   regNumber = "AB12CDE",
   expiryDate = "15 Apr 2027",
   daysRemaining = 35,
-  bmgAffiliateUrl = "#",
+  bookingUrl = "https://www.freeplatecheck.co.uk/booking?type=mot&source=mot-reminder-7d-email#vrm=AB12CDE",
   unsubscribeUrl = "https://freeplatecheck.co.uk/api/unsubscribe?token=test",
   sentOn,
   plateSrc,
@@ -62,7 +63,7 @@ export default function MOTReminderDue({
               { label: "Car", value: name },
             ]}
           />
-          <Action href={bmgAffiliateUrl}>Compare prices and book</Action>
+          <Action href={bookingUrl}>Compare prices and book</Action>
           <Fine>
             We&apos;ve pre-loaded {plateText}. Local garages often charge well below the &pound;54.85 legal maximum.
             {urgent ? " Driving without a valid MOT can mean a fine of up to £1,000 and can invalidate your insurance." : ""}{" "}
@@ -70,7 +71,7 @@ export default function MOTReminderDue({
             <Link href={reportUrl} style={{ color: SOFT, textDecoration: "underline", textUnderlineOffset: "2px" }}>
               see this car&apos;s full check
             </Link>
-            . Free Plate Check may earn a commission from the booking link, at no cost to you.
+            . Free Plate Check may earn a commission when you book through the garages we show, at no cost to you.
           </Fine>
           <Foot stopUrl={unsubscribeUrl} date={sentOn} reason="You set an MOT reminder for this car on freeplatecheck.co.uk." stopLabel="Stop reminders for this car" />
         </Container>

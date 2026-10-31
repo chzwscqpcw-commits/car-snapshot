@@ -146,6 +146,9 @@ console.log("\nClickref: the deep-link keeps the existing name, the new route is
     bmgClickref("mot", "search"));
   check("deep-link full service is unchanged", bmgClickref("full", "results") === "booking-flow-full");
   check("search full service is suffixed", bmgClickref("full", "search") === "booking-flow-full-search");
+  check("a saved-car alert gets its own clickref", bmgClickref("mot", "results", "car-alert-mot-7-email") === "booking-flow-mot-alert");
+  check("an MOT reminder email gets its own clickref", bmgClickref("mot", "results", "mot-reminder-7d-email") === "booking-flow-mot-reminder");
+  check("a reminder on the search route keeps the reminder clickref", bmgClickref("mot", "search", "mot-reminder-catchup-email") === "booking-flow-mot-reminder");
   for (const service of ["mot", "interim", "full", "diagnostic"] as const) {
     for (const route of ["results", "search"] as const) {
       check(

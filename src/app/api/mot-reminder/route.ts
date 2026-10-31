@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { sendEmail } from "@/lib/resend";
 import { plateAttachment } from "@/lib/plate-image";
-import { PARTNER_LINKS } from "@/config/partners";
 import MOTReminderSet from "@/emails/mot-reminder-set";
 import MOTReminderDue from "@/emails/mot-reminder-due";
 import { sanitizeOffsets, reminderSubject } from "@/lib/mot-reminders";
@@ -73,9 +72,10 @@ async function sendCatchUpReminders(
   const make = parts[0] || "Your";
   const model = parts.slice(1).join(" ") || "vehicle";
   const unsubscribeUrl = `https://freeplatecheck.co.uk/api/unsubscribe?token=${unsubscribeToken}`;
-  // "email-reminder-catchup" keeps commission attribution distinct from the
-  // scheduled cron emails.
-  const bmgUrl = PARTNER_LINKS.bookMyGarage.buildLink!(vrm, "email-reminder-catchup");
+  // The button lands on our own booking wizard at the MOT step (see the cron
+  // for why); "catchup" keeps this send apart from the scheduled ones in the
+  // funnel, and the hand-off carries booking-flow-mot-reminder.
+  const bookingUrl = `https://www.freeplatecheck.co.uk/booking?type=mot&source=mot-reminder-catchup-email#vrm=${vrm}`;
   const sb = supabaseServer();
 
   const plate = await plateAttachment(vrm);
@@ -88,7 +88,7 @@ async function sendCatchUpReminders(
       regNumber: vrm,
       expiryDate: formatDateShort(motExpiry),
       daysRemaining,
-      bmgAffiliateUrl: bmgUrl,
+      bookingUrl,
       unsubscribeUrl,
       sentOn: SENT_ON(),
     }),
