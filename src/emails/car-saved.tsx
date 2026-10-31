@@ -34,8 +34,8 @@ export default function CarSaved({
     <Html lang="en">
       <ReportHead />
       <Preview>Alerts are on for {regNumber}. We&apos;ll email you when something about it changes.</Preview>
-      <Body style={page}>
-        <Container style={sheet}>
+      <Body className="fpc-page" style={page}>
+        <Container className="fpc-sheet" style={sheet}>
           <Masthead kicker="Alerts on" />
           <Plate reg={regNumber} />
           <Headline lead="Alerts" accent="on" tail={name ? `for your ${name}` : "for this car"} />

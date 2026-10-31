@@ -47,8 +47,8 @@ export default function CarAlert({
     <Html lang="en">
       <ReportHead />
       <Preview>{title}</Preview>
-      <Body style={page}>
-        <Container style={sheet}>
+      <Body className="fpc-page" style={page}>
+        <Container className="fpc-sheet" style={sheet}>
           <Masthead kicker={kicker} />
           <Plate reg={regNumber} />
           <Headline lead={lead} accent={accent} />

@@ -37,16 +37,42 @@ const mono = (size: number, color: string): React.CSSProperties => ({
   lineHeight: 1.3,
 });
 
-/** Fonts, and a guard so Outlook's dark mode leaves the yellow plate alone. */
+/**
+ * Fonts, and the dark-mode guards. The page is already dark, so a client's
+ * dark mode has nothing useful to do; some do it anyway. Outlook.com and the
+ * new Outlook (Windows and Mac) recolour and mark each element they touched
+ * with data-ogsb (background) or data-ogsc (text); the rules below put the
+ * report's colours back on those. Outlook for iOS and the older Mac Outlook
+ * recolour too but honour a dark-mode media query, which re-asserts the same.
+ * The gradient backgrounds on the plate and the button are for Gmail's app,
+ * which recolours plain backgrounds but leaves background images alone. The
+ * overrides sit in their own style block so a client that drops @import does
+ * not drop them with it.
+ */
 export function ReportHead() {
   return (
     <Head>
       <meta name="color-scheme" content="dark" />
       <meta name="supported-color-schemes" content="dark" />
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');`}</style>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
-        [data-ogsc] .fpc-plate, [data-ogsb] .fpc-plate { background-color: #F5C518 !important; color: #111111 !important; }
-        [data-ogsc] .fpc-accent { color: #22D3EE !important; }
+        :root { color-scheme: dark; supported-color-schemes: dark; }
+        [data-ogsb] .fpc-page, .fpc-page[data-ogsb], [data-ogsb] .fpc-sheet, .fpc-sheet[data-ogsb] { background-color: #070B14 !important; }
+        [data-ogsb] .fpc-plate, .fpc-plate[data-ogsb] { background-color: #F5C518 !important; }
+        [data-ogsc] .fpc-plate, .fpc-plate[data-ogsc] { color: #111111 !important; }
+        [data-ogsb] .fpc-action, .fpc-action[data-ogsb] { background-color: #22D3EE !important; }
+        [data-ogsc] .fpc-action, .fpc-action[data-ogsc] { color: #070B14 !important; }
+        [data-ogsc] .fpc-ink, .fpc-ink[data-ogsc] { color: #F1F5F9 !important; }
+        [data-ogsc] .fpc-soft, .fpc-soft[data-ogsc] { color: #CBD5E1 !important; }
+        [data-ogsc] .fpc-accent, .fpc-accent[data-ogsc] { color: #22D3EE !important; }
+        @media (prefers-color-scheme: dark) {
+          .fpc-page, .fpc-sheet { background-color: #070B14 !important; }
+          .fpc-plate { background-color: #F5C518 !important; color: #111111 !important; }
+          .fpc-action { background-color: #22D3EE !important; color: #070B14 !important; }
+          .fpc-ink { color: #F1F5F9 !important; }
+          .fpc-soft { color: #CBD5E1 !important; }
+          .fpc-accent { color: #22D3EE !important; }
+        }
       `}</style>
     </Head>
   );
@@ -99,6 +125,7 @@ export function Plate({ reg }: { reg: string }) {
         style={{
           display: "inline-block",
           backgroundColor: "#F5C518",
+          backgroundImage: "linear-gradient(#F5C518, #F5C518)",
           color: "#111111",
           borderRadius: "8px",
           padding: "9px 18px",
@@ -119,7 +146,7 @@ export function Plate({ reg }: { reg: string }) {
 /** The display headline: "{lead} <em>{accent}</em> {tail}", the accent italic and cyan. */
 export function Headline({ lead, accent, tail }: { lead: string; accent: string; tail?: string }) {
   return (
-    <Text style={{ margin: "0 0 14px", fontFamily: DISPLAY, fontWeight: 400, fontSize: "40px", lineHeight: 1.02, letterSpacing: "-0.01em", color: INK }}>
+    <Text className="fpc-ink" style={{ margin: "0 0 14px", fontFamily: DISPLAY, fontWeight: 400, fontSize: "40px", lineHeight: 1.02, letterSpacing: "-0.01em", color: INK }}>
       {lead}{" "}
       <em className="fpc-accent" style={{ fontStyle: "italic", color: ACCENT }}>
         {accent}
@@ -130,7 +157,7 @@ export function Headline({ lead, accent, tail }: { lead: string; accent: string;
 }
 
 export function Deck({ children }: { children: React.ReactNode }) {
-  return <Text style={{ margin: "0 0 26px", fontFamily: SANS, fontSize: "16px", lineHeight: 1.6, color: SOFT }}>{children}</Text>;
+  return <Text className="fpc-soft" style={{ margin: "0 0 26px", fontFamily: SANS, fontSize: "16px", lineHeight: 1.6, color: SOFT }}>{children}</Text>;
 }
 
 export interface Vital {
@@ -151,7 +178,7 @@ export function Vitals({ items }: { items: Vital[] }) {
         {items.map((v) => (
           <Column key={v.label} style={{ verticalAlign: "top", padding: "14px 12px 14px 0", width: `${Math.floor(100 / items.length)}%` }}>
             <Text style={{ ...mono(11, MUTED), margin: "0 0 6px" }}>{v.label}</Text>
-            <Text style={{ margin: "0 0 4px", fontFamily: SANS, fontSize: "20px", fontWeight: 600, lineHeight: 1.1, color: TONES[v.tone ?? "ink"] }}>{v.value}</Text>
+            <Text className={v.tone && v.tone !== "ink" ? undefined : "fpc-ink"} style={{ margin: "0 0 4px", fontFamily: SANS, fontSize: "20px", fontWeight: 600, lineHeight: 1.1, color: TONES[v.tone ?? "ink"] }}>{v.value}</Text>
             {v.sub && <Text style={{ margin: 0, fontFamily: SANS, fontSize: "12px", lineHeight: 1.4, color: MUTED }}>{v.sub}</Text>}
           </Column>
         ))}
@@ -166,9 +193,11 @@ export function Action({ href, children }: { href: string; children: React.React
     <Section style={{ margin: "0 0 22px" }}>
       <Link
         href={href}
+        className="fpc-action"
         style={{
           display: "inline-block",
           backgroundColor: ACCENT,
+          backgroundImage: `linear-gradient(${ACCENT}, ${ACCENT})`,
           color: "#070B14",
           fontFamily: SANS,
           fontSize: "15px",
