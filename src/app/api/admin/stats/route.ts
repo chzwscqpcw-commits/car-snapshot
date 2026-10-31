@@ -475,6 +475,8 @@ const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boole
   { key: "warrantywise", name: "Warrantywise", match: (p) => p.startsWith("warrantywise") },
   // Live on Rakuten Advertising since 2026-10-28.
   { key: "weBuyAnyCar", name: "We Buy Any Car", match: (p) => p.startsWith("webuyanycar") },
+  // Awin 18184, placed on the site from 2026-10-31 (fixter / fixterMot).
+  { key: "fixter", name: "Fixter", match: (p) => p.startsWith("fixter") },
   // Prepared 2026-10-29 for RVU (confused.com / Uswitch / Tempcover) and the
   // pending Awin insurers; shows nothing until one is live.
   {

@@ -5,6 +5,7 @@ import MotPriceFinder from "@/components/MotPriceFinder";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
+import FixterCollectCTA from "@/components/FixterCollectCTA";
 import {
   MOT_TOWNS,
   MOT_REGIONS,
@@ -433,8 +434,12 @@ export default async function MotPricesTownPage({ params }: Props) {
             </p>
           </section>
 
-          <section>
+          <section className="space-y-4">
             <MOTBookingCTA regNumber="" context="neutral" placement="mot-prices-town" />
+            {/* Every town here is a city, which is where Fixter collects. The
+                MOT itself stays on BookMyGarage above; this is the second door
+                for the visitor who'd rather not drive to the test centre. */}
+            <FixterCollectCTA job="mot" placement="mot-town" town={town.name} />
           </section>
 
           <section>

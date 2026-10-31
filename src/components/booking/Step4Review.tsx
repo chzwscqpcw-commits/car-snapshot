@@ -6,6 +6,7 @@ import { ExternalLink, Edit3, ShieldCheck } from "lucide-react";
 import Button from "@/components/Button";
 import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
+import FixterCollectCTA from "@/components/FixterCollectCTA";
 import {
   bmgClickref,
   bmgRouteFor,
@@ -284,6 +285,14 @@ export default function Step4Review({
           Compare prices on BookMyGarage
           <ExternalLink className="h-4 w-4" />
         </Button>
+        {/* For a service (not a bare MOT) the visitor can have the car
+            collected instead: Fixter, under its own clickref
+            (fixter-booking-flow-<service>) so Awin shows the two routes apart.
+            Services have never converted on BookMyGarage hand-offs, so a second
+            door is cheap to try; the MOT keeps the single proven route. */}
+        {service !== "mot" && (
+          <FixterCollectCTA job="service" placement={`booking-flow-${service}`} variant="inline" className="pt-1" />
+        )}
         <Button
           type="button"
           variant="secondary"

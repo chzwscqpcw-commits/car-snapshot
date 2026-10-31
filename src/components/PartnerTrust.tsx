@@ -11,7 +11,7 @@ export default function PartnerTrust({
   partner,
   className = "",
 }: {
-  partner: "bookMyGarage" | "carVertical";
+  partner: "bookMyGarage" | "carVertical" | "fixter";
   className?: string;
 }) {
   const label =
@@ -19,6 +19,8 @@ export default function PartnerTrust({
       <>
         <span className="font-semibold text-slate-400">4.8/5</span> on Trustpilot · 9,000+ reviews
       </>
+    ) : partner === "fixter" ? (
+      <>Collected from your door · vetted garages · 12-month warranty on all work</>
     ) : (
       <>Cross-checks 1,000+ data sources across 45+ countries</>
     );
