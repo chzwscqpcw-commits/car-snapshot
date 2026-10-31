@@ -525,6 +525,11 @@ function combineVehicleData(dvlaData: VehicleData, motData: MOTHistoryData | nul
 
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
+    // Our own crons (saved-car alert refreshes) and the owner's browser
+    // (fpc_internal cookie, see tracking.ts) are tagged so the dashboard's
+    // lookup counts stay about visitors.
+    const internal =
+      req.headers.get("x-fpc-internal") === "1" || /(^|;\s*)fpc_internal=1(;|$)/.test(req.headers.get("cookie") ?? "");
     const forwarded = req.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";
 
@@ -573,7 +578,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         if (analyticsWritesEnabled()) {
           sb.from("site_events").insert({
             event_type: "lookup",
-            metadata: { cached: true, make: cachedMake },
+            metadata: { ...(internal ? { internal: true } : {}), cached: true, make: cachedMake },
             ip_hash: ipHash,
           }).then(() => {}, () => {});
         }
@@ -628,7 +633,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         if (analyticsWritesEnabled()) {
           sb.from("site_events").insert({
             event_type: "lookup",
-            metadata: { make: fallback.make || null, cached: false, dvla_unavailable: true },
+            metadata: { ...(internal ? { internal: true } : {}), make: fallback.make || null, cached: false, dvla_unavailable: true },
             ip_hash: ip !== "unknown" ? hashVrm(ip) : null,
           }).then(() => {}, () => {});
         }
@@ -671,7 +676,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     if (analyticsWritesEnabled()) {
       sb.from("site_events").insert({
         event_type: "lookup",
-        metadata: { make: combinedData.make || null, cached: false },
+        metadata: { ...(internal ? { internal: true } : {}), make: combinedData.make || null, cached: false },
         ip_hash: ipHash,
       }).then(() => {}, () => {});
     }

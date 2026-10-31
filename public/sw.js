@@ -31,3 +31,43 @@ self.addEventListener("fetch", (event) => {
     fetch(event.request).catch(() => caches.match(OFFLINE_URL).then((r) => r || Response.error())),
   );
 });
+
+// Saved-car alerts (MOT due, tax due, a new recall, the monthly value check)
+// arrive here as push messages: { title, body, url, tag, stop }. The plate is
+// in the url's fragment, which never leaves the device. "Stop alerts" calls
+// the same link the emails carry.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { body: event.data ? event.data.text() : "" };
+  }
+  const options = {
+    body: data.body || "",
+    icon: "/android-chrome-192x192.png",
+    badge: "/android-chrome-192x192.png",
+    tag: data.tag || undefined,
+    renotify: Boolean(data.tag),
+    data: { url: data.url || "/", stop: data.stop || null },
+    actions: data.stop ? [{ action: "open", title: "Open" }, { action: "stop", title: "Stop alerts" }] : [],
+  };
+  event.waitUntil(self.registration.showNotification(data.title || "Free Plate Check", options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const { url, stop } = event.notification.data || {};
+  if (event.action === "stop" && stop) {
+    event.waitUntil(fetch(stop, { credentials: "omit" }).catch(() => {}));
+    return;
+  }
+  const target = new URL(url || "/", self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      const open = list.find((c) => "focus" in c);
+      if (open && "navigate" in open) return open.navigate(target).then((c) => c && c.focus());
+      return self.clients.openWindow(target);
+    }),
+  );
+});

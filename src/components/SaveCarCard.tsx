@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { BellRing, Car, Check, Loader2, Mail, TrendingUp } from "lucide-react";
+import { BellRing, Car, Check, Loader2, Mail, Smartphone, TrendingUp } from "lucide-react";
 import Button from "@/components/Button";
 import { trackEvent } from "@/lib/tracking";
 import {
@@ -14,6 +14,7 @@ import {
   type SaveSurface,
 } from "@/lib/saved-cars";
 import { addLocalCar, alertsFor, isLocalCar, onAlertsChange, rememberAlerts } from "@/lib/my-cars";
+import { pushAvailability, subscribeToPush, type PushAvailability } from "@/lib/push-client";
 
 /**
  * "Save this car and get alerts" — the one-tap save that turns the local My
@@ -26,8 +27,10 @@ import { addLocalCar, alertsFor, isLocalCar, onAlertsChange, rememberAlerts } fr
  * so the only way to be useful to them is to be there when the date comes.
  *
  * Shape: one tap saves locally at once (exactly what "My Car" does), then the
- * card asks where alerts should go. Email for now; push joins it in PR 2, and
- * is only ever asked for AFTER a save, never on page load. A device that has
+ * card asks where alerts should go: a notification on this device where the
+ * browser can do it (Android/Chrome, desktop, an installed iPhone app), or an
+ * email. Permission is only ever asked for AFTER a save, never on page load,
+ * and only when the visitor taps "Notify me". A device that has
  * switched alerts on for this car sees a quiet "Alerts on" line instead of
  * the ask (and the value variant disappears), so nobody is asked twice.
  */
@@ -45,6 +48,8 @@ interface SaveCarCardProps {
   trim?: string;
   motExpiryDate?: string;
   taxDueDate?: string;
+  /** Lets the recall alert match the car's build years. */
+  year?: number;
   /**
    * The homepage keeps its own My Cars state, so it saves locally itself
    * (and fires vehicle_saved as its "My Car" button does). Elsewhere the card
@@ -65,6 +70,7 @@ export default function SaveCarCard({
   trim,
   motExpiryDate,
   taxDueDate,
+  year,
   onLocalSave,
   className = "",
 }: SaveCarCardProps) {
@@ -74,6 +80,8 @@ export default function SaveCarCard({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
+  const [push, setPush] = useState<PushAvailability>({ kind: "unsupported" });
+  const [channel, setChannel] = useState<"email" | "push" | null>(null);
   const name = makeModelLabel(make, model);
   const plate = vrm.replace(/\s+/g, "").toUpperCase();
 
@@ -85,6 +93,7 @@ export default function SaveCarCard({
       const known = alertsFor(plate);
       if (known) {
         setIntent(known.intent);
+        setChannel(known.channel);
         setStep("done");
         // The value card on the same page as the alerts card: once either
         // has done its job, the other goes.
@@ -94,6 +103,7 @@ export default function SaveCarCard({
       if (isLocalCar(plate)) setStep((s) => (s === "idle" ? "channel" : s));
     };
     sync();
+    setPush(pushAvailability());
     try {
       setEmail((e) => e || localStorage.getItem(EMAIL_MEMORY_KEY) || "");
     } catch {
@@ -133,6 +143,24 @@ export default function SaveCarCard({
     setStep("channel");
   };
 
+  const save = async (body: Record<string, unknown>, via: "email" | "push"): Promise<boolean> => {
+    const res = await fetch("/api/saved-cars", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vrm: plate, make, model, year, motExpiry: motExpiryDate, taxDue: taxDueDate, intent, surface, channel: via, ...body }),
+    });
+    const json = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+    if (!res.ok || !json?.ok) {
+      setError(json?.error || "Something went wrong — please try again.");
+      return false;
+    }
+    trackEvent("car_saved", { surface, channel: via, intent, vrm: plate });
+    rememberAlerts(plate, { channel: via, intent });
+    setChannel(via);
+    setStep("done");
+    return true;
+  };
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     const clean = cleanEmail(email);
@@ -141,28 +169,38 @@ export default function SaveCarCard({
       return;
     }
     setBusy(true);
+    setChannel("email");
     setError(null);
     try {
-      const res = await fetch("/api/saved-cars", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vrm: plate, email: clean, make, model, motExpiry: motExpiryDate, taxDue: taxDueDate, intent, surface, channel: "email" }),
-      });
-      const json = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-      if (!res.ok || !json?.ok) {
-        setError(json?.error || "Something went wrong — please try again.");
-        return;
+      if (await save({ email: clean }, "email")) {
+        try {
+          localStorage.setItem(EMAIL_MEMORY_KEY, clean);
+        } catch {
+          // Fine without it.
+        }
       }
-      try {
-        localStorage.setItem(EMAIL_MEMORY_KEY, clean);
-      } catch {
-        // Fine without it.
-      }
-      trackEvent("car_saved", { surface, channel: "email", intent, vrm: plate });
-      rememberAlerts(plate, { channel: "email", intent });
-      setStep("done");
     } catch {
       setError("Couldn't reach the server — check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // The permission prompt, and only now: after a save, on a tap.
+  const notify = async () => {
+    setBusy(true);
+    setChannel("push");
+    setError(null);
+    try {
+      const subscription = await subscribeToPush();
+      if (!subscription) {
+        setPush(pushAvailability());
+        setError("Notifications were blocked on this device — email works just as well.");
+        return;
+      }
+      await save({ subscription }, "push");
+    } catch {
+      setError("Couldn't switch notifications on — try email instead.");
     } finally {
       setBusy(false);
     }
@@ -225,7 +263,7 @@ export default function SaveCarCard({
               </p>
               <h3 className="mt-1 text-base font-semibold text-white">Where should alerts go?</h3>
               <p className="mt-1 text-sm leading-relaxed text-slate-400">
-                We&apos;ll email you {alertsDescription(intent)}. Nothing else.
+                We&apos;ll tell you {alertsDescription(intent)}. Nothing else.
               </p>
 
               <fieldset className="mt-3.5">
@@ -252,7 +290,26 @@ export default function SaveCarCard({
                 </div>
               </fieldset>
 
-              <div className="mt-3.5 flex flex-col gap-2 sm:flex-row">
+              {push.kind === "ready" && (
+                <div className="mt-3.5">
+                  <Button type="button" onClick={notify} disabled={busy} size="md" className="w-full sm:w-auto sm:min-w-[14rem]">
+                    {busy && channel === "push" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Smartphone className="h-4 w-4" />}
+                    Notify me on this device
+                  </Button>
+                  <div className="my-3 flex items-center gap-3 text-[11px] uppercase tracking-widest text-slate-600">
+                    <span className="h-px flex-1 bg-slate-800" />
+                    or by email
+                    <span className="h-px flex-1 bg-slate-800" />
+                  </div>
+                </div>
+              )}
+              {push.kind === "ios-install" && (
+                <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                  <Smartphone className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-slate-400" />
+                  On iPhone, notifications work once Free Plate Check is on your Home Screen. Email works everywhere.
+                </p>
+              )}
+              <div className={`${push.kind === "ready" ? "" : "mt-3.5"} flex flex-col gap-2 sm:flex-row`}>
                 <label className="relative flex-1">
                   <span className="sr-only">Email address</span>
                   <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -270,9 +327,9 @@ export default function SaveCarCard({
                     className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900/70 pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
                   />
                 </label>
-                <Button type="submit" disabled={busy} size="md" className="sm:min-w-[9.5rem]">
-                  {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <BellRing className="h-4 w-4" />}
-                  {busy ? "Saving…" : "Turn on alerts"}
+                <Button type="submit" disabled={busy} variant={push.kind === "ready" ? "secondary" : "primary"} size="md" className="sm:min-w-[9.5rem]">
+                  {busy && channel === "email" ? <Loader2 className="h-4 w-4 animate-spin" /> : <BellRing className="h-4 w-4" />}
+                  {busy && channel === "email" ? "Saving…" : push.kind === "ready" ? "Email me" : "Turn on alerts"}
                 </Button>
               </div>
               {error ? (
@@ -289,7 +346,7 @@ export default function SaveCarCard({
                 Alerts on for <span className="font-mono tracking-wide">{spaced(plate)}</span>
               </h3>
               <p className="mt-1 text-sm leading-relaxed text-slate-400">
-                We&apos;ll email you {alertsDescription(intent)}.
+                We&apos;ll {channel === "push" ? "notify you on this device" : "email you"} {alertsDescription(intent)}.
                 {intent && <> You said you&apos;re <span className="text-slate-200">{INTENT_LABELS[intent].toLowerCase()}</span>.</>}
               </p>
             </div>

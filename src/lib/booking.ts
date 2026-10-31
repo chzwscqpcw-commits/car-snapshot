@@ -240,7 +240,12 @@ export function bmgRouteFor(vrm: string, postcode: string): BmgRoute {
  * instead. Note the historical figure is a blend of both — it only becomes
  * purely deep-link from this change onwards.
  */
-export function bmgClickref(service: ServiceType, route: BmgRoute): string {
+export function bmgClickref(service: ServiceType, route: BmgRoute, source?: string): string {
+  // A saved-car alert (push or email, src/lib/car-alerts.ts) lands on the
+  // wizard with source=car-alert-…; its hand-offs get their own clickref so
+  // Awin can show what the alerts earn, apart from the reminder emails
+  // (email-mot-reminder-*) and the organic booking flow.
+  if (source?.startsWith("car-alert")) return `booking-flow-${service}-alert`;
   return route === "results" ? `booking-flow-${service}` : `booking-flow-${service}-search`;
 }
 

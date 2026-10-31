@@ -4248,6 +4248,7 @@ END:VEVENT
                   trim={data.variant}
                   motExpiryDate={data.motExpiryDate}
                   taxDueDate={data.taxDueDate}
+                  year={data.yearOfManufacture}
                   onLocalSave={addToMyVehicles}
                   className="mb-8"
                 />
@@ -5050,6 +5051,7 @@ END:VEVENT
                   trim={data.variant}
                   motExpiryDate={data.motExpiryDate}
                   taxDueDate={data.taxDueDate}
+                  year={data.yearOfManufacture}
                   onLocalSave={addToMyVehicles}
                   className="mb-8"
                 />

@@ -422,6 +422,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         model={vehicle.model}
         motExpiryDate={vehicle.motExpiryDate}
         taxDueDate={vehicle.taxDueDate}
+        year={vehicle.yearOfManufacture}
         className="mt-6"
       />
       {newPrice !== null && age !== null && (
