@@ -20,6 +20,7 @@ import {
 import { usePathname } from "next/navigation";
 import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import SellCarCTA from "@/components/SellCarCTA";
+import SellerIntentChip, { useCarIntent } from "@/components/SellerIntentChip";
 import SaveCarCard from "@/components/SaveCarCard";
 import { isVan, shortVehicleName } from "@/lib/report-v2/format";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
@@ -125,6 +126,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   // Five routes render this result; the scroll series is only useful if it says
   // which one it came from.
   const pathname = usePathname();
+  // Selling or keeping? Shared with the save card; a keeper gets no sells.
+  const keeping = useCarIntent(vrm) === "keeping";
   const [serverData, setServerData] = useState<ServerValuation | null>(null);
   const [serverState, setServerState] = useState<"loading" | "ok" | "skipped">(
     "loading"
@@ -389,25 +392,34 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           depreciation curve, condition panel and reminder — see the scroll
           measurement on ScrollDepthTracker above. This is a deliberate exception
           to free-first ordering: the reminder still renders, just below. */}
-      <div className="mt-6">
-        <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
-      </div>
+      {/* One tap first: selling it, or keeping it? A keeper sees no selling
+          offer at all; anyone else (or nobody yet) sees both, We Buy Any Car
+          first. The answer also pre-fills the save card below. */}
+      <SellerIntentChip vrm={vrm} surface="valuation-result" className="mt-6" />
+      {/* We Buy Any Car first since 2026-10-31: someone who came looking for a
+          valuation is the likeliest seller on the site, and this is the offer
+          built for them. Until 2026-10-28 it sat below the condition panel and
+          reminder, ~2,000px down (0 views in its first evening against 13 on
+          the homepage); then second, under carVertical; now first. See
+          SellCarCTA for why, and judge the order on clicks per valuation. */}
+      {!keeping && (
+        <SellCarCTA
+          context="valuation-result-wbac"
+          regNumber={vrm}
+          isVan={isVan(vehicle)}
+          vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+          className="mt-6"
+        />
+      )}
+      {!keeping && (
+        <div className="mt-6">
+          <CarVerticalReportCTA variant="seller" context="valuation-result-seller" regNumber={vrm} />
+        </div>
+      )}
       {/* Half of everyone who clicks through to carVertical is back here within
           ~72 seconds having declined the price. This is the only thing on the
           site that acknowledges that — so it stays beside the CTA it answers. */}
       <PartnerReturnPrompt context="valuation-result-return" />
-      {/* We Buy Any Car, straight under the carVertical seller box: someone who
-          came looking for a valuation is the likeliest seller on the site.
-          Until 2026-10-28 it sat below the condition panel and reminder, ~2,000px
-          down, and in its first evening drew 0 views here against 13 on the
-          homepage. Never ABOVE the seller box — see SellCarCTA. */}
-      <SellCarCTA
-        context="valuation-result-wbac"
-        regNumber={vrm}
-        isVan={isVan(vehicle)}
-        vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
-        className="mt-6"
-      />
       {/* "Track this car's value": save the car and get a monthly value check
           (for owners who say selling / thinking) plus MOT, tax and recall
           alerts. Straight after the sell offer — the figure is fresh and the

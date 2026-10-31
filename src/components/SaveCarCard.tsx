@@ -13,7 +13,7 @@ import {
   type SaveIntent,
   type SaveSurface,
 } from "@/lib/saved-cars";
-import { addLocalCar, alertsFor, isLocalCar, onAlertsChange, rememberAlerts } from "@/lib/my-cars";
+import { addLocalCar, alertsFor, carIntent, isLocalCar, onAlertsChange, onIntentChange, rememberAlerts, rememberIntent } from "@/lib/my-cars";
 import { pushAvailability, subscribeToPush, type PushAvailability } from "@/lib/push-client";
 
 /**
@@ -84,6 +84,16 @@ export default function SaveCarCard({
   const [channel, setChannel] = useState<"email" | "push" | null>(null);
   const name = makeModelLabel(make, model);
   const plate = vrm.replace(/\s+/g, "").toUpperCase();
+
+  // "Selling it, or keeping it?" is asked once per page (SellerIntentChip);
+  // the answer pre-fills this card's row, and a pick here is kept the same way.
+  useEffect(() => {
+    const sync = () => {
+      if (step !== "done") setIntent(carIntent(plate));
+    };
+    sync();
+    return onIntentChange(sync);
+  }, [plate, step]);
 
   // What this device already knows: alerts on → done; in My Cars → straight
   // to the channel step. Read after mount (localStorage), so the server and
@@ -278,7 +288,10 @@ export default function SaveCarCard({
                         key={i}
                         type="button"
                         aria-pressed={on}
-                        onClick={() => setIntent(on ? null : i)}
+                        onClick={() => {
+                          setIntent(on ? null : i);
+                          rememberIntent(plate, on ? null : i);
+                        }}
                         className={`rounded-full border px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
                           on
                             ? "border-cyan-400/60 bg-cyan-500/15 text-cyan-200 shadow-[0_0_0_3px_rgba(34,211,238,0.12)]"
