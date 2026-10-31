@@ -249,9 +249,25 @@ export function bmgClickref(service: ServiceType, route: BmgRoute, source?: stri
   // email-mot-reminder-*; that series ends there.)
   if (source?.startsWith("car-alert")) return `booking-flow-${service}-alert`;
   if (source?.startsWith("mot-reminder")) return `booking-flow-${service}-reminder`;
+  // The due-now booking on the first screen of a result (MotActionBanner,
+  // source=due-now-expired / due-now-soon, from 31 Oct 2026): the visitor was
+  // told the price before they tapped, so Awin can show whether that moment
+  // sells differently from the rest of the organic flow.
+  if (source?.startsWith("due-now")) return `booking-flow-${service}-due-now`;
   return route === "results" ? `booking-flow-${service}` : `booking-flow-${service}-search`;
 }
 
+
+/**
+ * The regulated MOT price band, for surfaces that quote a price before the
+ * wizard: the typical floor garages charge and the DVSA legal maximum. The
+ * MOT is the one service whose price never moves with region or vehicle, so
+ * this needs no postcode and no category — which is what lets a results-page
+ * banner state a price honestly without asking for either.
+ */
+export function motPriceBand(): PriceRange {
+  return priceRangeFor("mot", "medium_petrol", { key: "default", label: "UK average", multiplier: 1 });
+}
 
 // ── Garage density estimate (Step 3 social proof) ────────────────────────────
 

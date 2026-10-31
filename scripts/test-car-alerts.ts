@@ -89,6 +89,8 @@ const v = alertMessage({ kind: "value", key: "k", alsoMark: [] }, car({ intent: 
 check("value check links to the valuation, no partner link", v.url, "https://www.freeplatecheck.co.uk/value-my-car?src=car-alert-value-email#vrm=AB12CDE");
 check("alert hand-offs get their own BMG clickref", bmgClickref("mot", "results", "car-alert-mot-7-push"), "booking-flow-mot-alert");
 check("ordinary bookings keep theirs", bmgClickref("mot", "results", "results-banner"), "booking-flow-mot");
+check("the due-now result banner gets its own", bmgClickref("mot", "results", "due-now-soon"), "booking-flow-mot-due-now");
+check("…whichever route it takes", bmgClickref("mot", "search", "due-now-expired"), "booking-flow-mot-due-now");
 
 console.log("\nOpening an alert link:");
 check("push MOT alert", parseAlertSource("car-alert-mot-7-push"), { kind: "mot_7", channel: "push" });

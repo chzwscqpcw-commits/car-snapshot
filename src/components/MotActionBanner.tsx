@@ -11,6 +11,7 @@ import {
 import MOTReminderSignup from "@/components/MOTReminderSignup";
 import { trackEvent } from "@/lib/tracking";
 import { plateHref } from "@/lib/plate-url";
+import { formatSaving, motPriceBand } from "@/lib/booking";
 
 type Urgency = "expired" | "due-soon" | "far" | "no-record";
 
@@ -117,7 +118,7 @@ export default function MotActionBanner({
       : urgency === "no-record"
         ? `DVLA holds no MOT details for this vehicle — usually because it's too new to have needed one (the first MOT falls due 3 years after registration). ${reminder ? "Set a free reminder so it never catches you out." : "Save the car below and we'll tell you when the first test is due."}`
         : urgency === "due-soon"
-          ? "You can test up to a month early and keep your renewal date — and local garages are often cheaper than the chains. Compare prices below and book before it lapses."
+          ? "You can test up to a month early and keep your renewal date — book now and the clock doesn't move."
           : reminder
           ? "A clean, unbroken MOT record helps hold your car's value — save a free reminder so its next test never catches you out."
           : "A clean, unbroken MOT record helps hold your car's value. Save the car below and we'll tell you when the test is due.";
@@ -153,12 +154,26 @@ export default function MotActionBanner({
           };
 
   const showBmg = urgency === "expired" || urgency === "due-soon";
-  const bmgLabel = urgency === "expired" ? "Book MOT now" : "Compare MOT prices";
+
+  // The due-now moment is a booking with the price on it. Until 31 Oct 2026
+  // the button said "Compare MOT prices" and named no figure; the wizard then
+  // opened on the price. Saying it here first (the typical floor and the
+  // legal cap — the MOT is regulated, so this is honest without a postcode)
+  // is the same fix that lifted Step 3 in September, moved one tap earlier.
+  const band = motPriceBand();
+  const priceFrom = formatSaving(band.min);
+  const priceCap = formatSaving(band.max);
+  const bmgLabel = urgency === "expired" ? `Book an MOT now · from ${priceFrom}` : `Book an MOT from ${priceFrom}`;
 
   // Route to the internal /booking wizard rather than directly to BMG so we can
   // qualify intent (postcode, flexibility, recommended service) and surface our
-  // own price context before hand-off.
-  const bookingHref = plateHref(`/booking?type=mot&source=action_banner_${urgency}`, registrationNumber);
+  // own price context before hand-off. The plate rides in the fragment and the
+  // wizard opens at the MOT step with the price showing. `due-now-*` is this
+  // surface's own source: the funnel reads it by prefix and the hand-off turns
+  // it into the booking-flow-mot-due-now clickref (src/lib/booking.ts), so
+  // Awin can see what the first-screen booking earns on its own.
+  const bookingSource = urgency === "expired" ? "due-now-expired" : "due-now-soon";
+  const bookingHref = plateHref(`/booking?type=mot&source=${bookingSource}`, registrationNumber);
 
   const reminderContext =
     urgency === "expired"
@@ -197,15 +212,21 @@ export default function MotActionBanner({
       </div>
 
       {showBmg && (
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4">
           <a
             href={bookingHref}
-            onClick={() => trackEvent("action_banner_booking_click", { urgency })}
+            onClick={() => trackEvent("action_banner_booking_click", { urgency, source: bookingSource })}
             className={`inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors sm:w-auto ${palette.primary}`}
           >
             {bmgLabel}
             <ChevronRight className="h-3.5 w-3.5" />
           </a>
+          <p className="text-xs leading-snug text-slate-400">
+            Local garages charge{" "}
+            <span className="font-semibold tabular-nums text-slate-200">{priceFrom}–{priceCap}</span>{" "}
+            for the same DVSA test — the cap is the law, the floor is who you pick.
+            Compare and book in two taps.
+          </p>
         </div>
       )}
 
