@@ -1,34 +1,23 @@
 import type { Metadata } from "next";
+import { createElement } from "react";
 import Link from "next/link";
-import {
-  ShieldCheck,
-  Receipt,
-  Gauge,
-  Wind,
-  AlertTriangle,
-  PoundSterling,
-  GitCompare,
-  Bell,
-  Calculator,
-  Wrench,
-  Code,
-  ArrowRight,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, Wrench } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
 import Button from "@/components/Button";
+import { siteIcon } from "@/components/site-icons";
+import { toolsPageItems, type SiteItem } from "@/lib/site-index";
 
 export const metadata: Metadata = {
   title: "Free UK Vehicle Tools — MOT, Tax, Valuation & More | Free Plate Check",
   description:
-    "Every free UK vehicle tool in one place: MOT check, tax check, mileage check, ULEZ compliance, recall lookup, free valuation, repair-cost calculators and the free MOT reminder service. No signup, no fees.",
+    "Every free UK vehicle tool in one place: MOT check, tax check, mileage check, ULEZ compliance, recall lookup, free valuation, repair-cost calculators, MOT booking and free MOT, tax and recall alerts. No signup, no fees.",
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/tools",
   },
   openGraph: {
     title: "Free UK Vehicle Tools — Everything in one place",
     description:
-      "Every free UK vehicle tool: MOT, tax, mileage, ULEZ, recalls, valuation, repair costs, and free MOT reminders.",
+      "Every free UK vehicle tool: MOT, tax, mileage, ULEZ, recalls, valuation, repair costs, MOT booking and free alerts.",
     url: "https://www.freeplatecheck.co.uk/tools",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -36,110 +25,12 @@ export const metadata: Metadata = {
   },
 };
 
-interface Tool {
-  title: string;
-  blurb: string;
-  href: string;
-  icon: LucideIcon;
-  badge?: string;
-}
-
-const CHECKS: Tool[] = [
-  {
-    title: "MOT check",
-    blurb: "Pass/fail history, expiry date, advisories and a clocking-check on mileage.",
-    href: "/mot-check",
-    icon: ShieldCheck,
-    badge: "Most popular",
-  },
-  {
-    title: "MOT exemption check",
-    blurb: "Is your car over 40 and exempt from the MOT? See the exact date — and when the historic tax class starts, which isn't the same day.",
-    href: "/mot-exemption-check",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Tax check",
-    blurb: "Current tax status, expiry date and the annual VED rate for your reg.",
-    href: "/tax-check",
-    icon: Receipt,
-  },
-  {
-    title: "Buyer's check",
-    blurb: "Buying used? Check the car matches its advert, its red flags, and what free data can't show.",
-    href: "/check-before-you-buy",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Mileage check",
-    blurb: "Every MOT mileage reading plotted — spot clocking and inconsistencies.",
-    href: "/mileage-check",
-    icon: Gauge,
-  },
-  {
-    title: "ULEZ check",
-    blurb: "Instant compliance check for London ULEZ and every UK clean-air zone.",
-    href: "/ulez-check",
-    icon: Wind,
-  },
-  {
-    title: "Recall check",
-    blurb: "Match your vehicle against every open DVSA safety recall.",
-    href: "/recall-check",
-    icon: AlertTriangle,
-  },
-  {
-    title: "Car valuation",
-    blurb: "Live market valuation built from real eBay listings and depreciation models.",
-    href: "/value-my-car",
-    icon: PoundSterling,
-  },
-  {
-    title: "Compare two cars",
-    blurb: "Side-by-side report for two saved vehicles — perfect for shortlisting.",
-    href: "/compare",
-    icon: GitCompare,
-  },
-];
-
-const UTILITIES: Tool[] = [
-  {
-    title: "Cheap MOT — compare prices",
-    blurb: "Compare local garage MOT prices — many beat the £54.85 legal maximum.",
-    href: "/cheap-mot",
-    icon: PoundSterling,
-  },
-  {
-    title: "Free MOT reminder",
-    blurb: "We email you in good time before expiry — you choose when. No signup, no spam.",
-    href: "/mot-reminder",
-    icon: Bell,
-  },
-  {
-    title: "Running cost calculator",
-    blurb: "Annual fuel, tax, insurance and servicing for any UK car.",
-    href: "/running-costs",
-    icon: Calculator,
-  },
-  {
-    title: "Repair cost calculators",
-    blurb: "Personalised price ranges for common repairs — based on your car.",
-    href: "/repair-costs",
-    icon: Wrench,
-  },
-  {
-    title: "Servicing & repair guides",
-    blurb: "What each service includes, when it's due, and what it typically costs.",
-    href: "/servicing",
-    icon: Wrench,
-  },
-  {
-    title: "Embed widget",
-    blurb: "Drop a free vehicle-check box on your own site in two lines of HTML.",
-    href: "/embed",
-    icon: Code,
-  },
-];
+// The cards come from the site index (src/lib/site-index.ts), the same list
+// the command palette and the mobile drawer read: an entry with a `tools`
+// block gets a card here. Until 2026-11 this page kept its own two arrays,
+// which is how the buyer's check and the booking wizard went missing from it.
+const CHECKS = toolsPageItems("checks");
+const UTILITIES = toolsPageItems("utilities");
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -302,7 +193,7 @@ function ToolGrid({
   tools,
   accent,
 }: {
-  tools: Tool[];
+  tools: SiteItem[];
   accent: "cyan" | "blue";
 }) {
   return (
@@ -314,8 +205,9 @@ function ToolGrid({
   );
 }
 
-function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
-  const Icon = tool.icon;
+function ToolCard({ tool, accent }: { tool: SiteItem; accent: "cyan" | "blue" }) {
+  const card = tool.tools;
+  if (!card) return null;
   const accentRing =
     accent === "cyan"
       ? "group-hover:border-cyan-500/40 group-hover:shadow-cyan-500/10"
@@ -326,7 +218,7 @@ function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
       : "from-blue-500 to-indigo-500";
   return (
     <Link
-      href={tool.href}
+      href={card.href ?? tool.href}
       prefetch={false}
       className={`group relative flex flex-col gap-2 sm:gap-3 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3 sm:p-5 transition-all hover:bg-slate-900/70 hover:shadow-xl ${accentRing}`}
     >
@@ -334,11 +226,14 @@ function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
         <div
           className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentIcon} text-white shadow-md shadow-cyan-500/10`}
         >
-          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+          {/* The icon is looked up by name from the index, so it is a value here,
+              not a component declared at module level: createElement keeps the
+              static-components lint rule happy without a wrapper component. */}
+          {createElement(siteIcon(tool.icon), { className: "h-4 w-4 sm:h-5 sm:w-5" })}
         </div>
-        {tool.badge && (
+        {card.badge && (
           <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-wider rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-            {tool.badge}
+            {card.badge}
           </span>
         )}
       </div>
@@ -347,7 +242,7 @@ function ToolCard({ tool, accent }: { tool: Tool; accent: "cyan" | "blue" }) {
           {tool.title}
         </h3>
         <p className="mt-1 text-xs sm:text-sm text-slate-400 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
-          {tool.blurb}
+          {card.blurb}
         </p>
       </div>
       <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-medium text-slate-500 group-hover:text-cyan-300 transition-colors">
