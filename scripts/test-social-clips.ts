@@ -9,6 +9,7 @@
 import {
   clipsFromRelease,
   fetchSocialClips,
+  isFreshRelease,
   latestSocialRelease,
   renderSocialClips,
   renderSocialClipsEmail,
@@ -35,11 +36,13 @@ const release = {
 };
 const captions = {
   week: "2026-W46",
+  weeks: ["2026-W46", "2026-W47"],
   monday: "2026-11-09",
   schedule: "Buffer: Monday (brand), Wednesday (sellers), Friday (MOT).",
   clips: [
-    { file: "2026-W46-1-brand.mp4", still: "2026-W46-1-brand.png", day: "Monday", date: "2026-11-09", audience: "brand", topic: "theft", title: "The most stolen cars per 1,000", headline: "The most stolen cars in the UK", caption: "Lexus NX 21.5 <per 1,000> & more\n\n#cartheft", source: "DVLA FOI", sourceDate: "2025" },
-    { file: "2026-W46-2-sellers.mp4", still: "2026-W46-2-sellers.png", day: "Wednesday", date: "2026-11-11", audience: "sellers", topic: "value-table", title: "Cars that hold their value best", headline: "The cars that hold their value best", caption: "MINI Countryman 46%", source: "model", sourceDate: "2026-10-19" },
+    { week: "2026-W46", file: "2026-W46-1-brand.mp4", still: "2026-W46-1-brand.png", day: "Monday", date: "2026-11-09", audience: "brand", topic: "theft", title: "The most stolen cars per 1,000", headline: "The most stolen cars in the UK", caption: "Lexus NX 21.5 <per 1,000> & more\n\n#cartheft", source: "DVLA FOI", sourceDate: "2025" },
+    { week: "2026-W46", file: "2026-W46-2-sellers.mp4", still: "2026-W46-2-sellers.png", day: "Wednesday", date: "2026-11-11", audience: "sellers", topic: "value-table", title: "Cars that hold their value best", headline: "The cars that hold their value best", caption: "MINI Countryman 46%", source: "model", sourceDate: "2026-10-19" },
+    { week: "2026-W47", file: "2026-W47-1-brand.mp4", still: "2026-W47-1-brand.png", day: "Monday", date: "2026-11-16", audience: "brand", topic: "colours", title: "Britain's favourite car colours", headline: "Britain's favourite car colours", caption: "Grey 27.6%", source: "SMMT", sourceDate: "2025" },
   ],
 };
 
@@ -54,13 +57,18 @@ check("no release → null", latestSocialRelease([{ ...release, tag_name: "data-
 
 console.log("joining assets to captions");
 const data = clipsFromRelease(release, captions);
-check("week and release url carried over", data.week === "2026-W46" && data.releaseUrl === release.html_url && data.publishedAt === "2026-11-05");
+check("week, weeks and release url carried over", data.week === "2026-W46" && data.weeks.join() === "2026-W46,2026-W47" && data.releaseUrl === release.html_url && data.publishedAt === "2026-11-05");
+check("each clip keeps its week", data.clips.map((c) => c.week).join() === "2026-W46,2026-W46,2026-W47");
+const single = clipsFromRelease(release, { ...captions, weeks: undefined, clips: captions.clips.slice(0, 2).map(({ week: _w, ...c }) => c) });
+check("a single-week file from before batches still parses", single.weeks.join() === "2026-W46" && single.clips.every((c) => c.week === "2026-W46"));
 check("still and download resolve to the release assets", data.clips[0].still?.endsWith("1-brand.png") === true && data.clips[0].download?.endsWith("1-brand.mp4") === true);
 check("a missing asset is null, not a broken link", data.clips[1].still === null && data.clips[1].download === null);
 
 console.log("html");
 const html = renderSocialClips({ ok: true, data });
-check("lists every clip with its day, audience and title", html.includes("Monday · brand") && html.includes("Wednesday · sellers") && html.includes("Cars that hold their value best"));
+check("lists every clip with its day, audience and title", html.includes("Monday · brand") && html.includes("Wednesday · sellers") && html.includes("Cars that hold their value best") && html.includes("Britain's favourite car colours"));
+check("clips are grouped under their week's Monday", /Week of 2026-11-09.*Week of 2026-11-16/s.test(html) && html.indexOf("Cars that hold their value best") < html.indexOf("Week of 2026-11-16"));
+check("the heading spans the batch", html.includes("2026-W46 to 2026-W47") && html.includes("3 clips"));
 check("the still is an img, the download a link", html.includes('<img src="https://github.com/x/y/releases/download/social-2026-W46/2026-W46-1-brand.png"') && html.includes('href="https://github.com/x/y/releases/download/social-2026-W46/2026-W46-1-brand.mp4"'));
 check("the caption is in a copyable block, escaped", html.includes("<pre") && html.includes("&lt;per 1,000&gt; &amp; more") && !html.includes("<per 1,000>"));
 check("the Buffer schedule reminder is there", /Monday<\/strong> \(brand\).*Wednesday<\/strong> \(sellers\).*Friday<\/strong> \(MOT\)/s.test(html));
@@ -78,7 +86,7 @@ const fetchOk = (async (url: string | URL | Request) => {
   return mk(404, {});
 }) as unknown as typeof fetch;
 const good = await fetchSocialClips(fetchOk, "x/y");
-check("fetches the release list and captions.json", good.ok && good.data.clips.length === 2 && good.data.week === "2026-W46");
+check("fetches the release list and captions.json", good.ok && good.data.clips.length === 3 && good.data.week === "2026-W46");
 const rateLimited = await fetchSocialClips((async () => mk(403, {})) as unknown as typeof fetch, "x/y");
 check("403 → ok:false with the status", !rateLimited.ok && rateLimited.note.includes("403"));
 const noRelease = await fetchSocialClips((async () => mk(200, [])) as unknown as typeof fetch, "x/y");
@@ -88,10 +96,12 @@ check("a thrown fetch → ok:false, never a throw", !network.ok && network.note.
 }
 
 console.log("sunday email");
-check("subject names the Monday and the three titles", socialClipsSubject({ ok: true, data }) === "FPC clips for the week of 2026-11-09: The most stolen cars per 1,000 · Cars that hold their value best");
+check("a batch subject counts the clips and weeks", socialClipsSubject({ ok: true, data }) === "FPC clips: 3 to queue for 2 weeks from 2026-11-09");
+check("a single-week subject names the titles", socialClipsSubject({ ok: true, data: single }) === "FPC clips for the week of 2026-11-09: The most stolen cars per 1,000 · Cars that hold their value best");
+check("a release from last night is fresh, one from three weeks ago is not", isFreshRelease(data, new Date("2026-11-08T08:00:00Z")) && !isFreshRelease(data, new Date("2026-11-29T08:00:00Z")));
 check("subject when there is nothing to post", socialClipsSubject({ ok: false, note: "x" }) === "FPC clips: none this week");
 const mail = renderSocialClipsEmail({ ok: true, data });
-check("the email wraps the same section and says when it was sent", mail.includes("this week's clips") && mail.includes("Download 2026-W46-1-brand.mp4") && mail.includes("Sundays 08:00 UTC"));
+check("the email wraps the same section and says when it is sent", mail.includes("the next clips") && mail.includes("Download 2026-W46-1-brand.mp4") && mail.includes("every third week"));
 
 console.log("social traffic");
 const row = (utm: string | undefined, ip: string | null, t = "2026-11-10T10:00:00Z") => ({ metadata: utm ? { utm_source: utm, path: "/" } : { path: "/" }, ip_hash: ip, created_at: t });
