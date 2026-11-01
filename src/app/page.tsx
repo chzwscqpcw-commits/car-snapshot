@@ -1324,14 +1324,27 @@ export default function Home() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadFavorites();
-      loadMyVehicles();
-      const savedTab = localStorage.getItem("fpc-active-tab");
-      if (savedTab === "recent" || savedTab === "saved" || savedTab === "mycars") {
-        setActiveVehicleTab(savedTab);
-      }
+    if (typeof window === "undefined") return;
+    loadFavorites();
+    loadMyVehicles();
+    const savedTab = localStorage.getItem("fpc-active-tab");
+    if (savedTab === "recent" || savedTab === "saved" || savedTab === "mycars") {
+      setActiveVehicleTab(savedTab);
     }
+    // The command palette's "My Cars" row lands on /#my-cars: open that tab
+    // and bring it into view. Listened for as well as read, because a hash
+    // change on the page already open is no navigation.
+    const openMyCars = () => {
+      if (window.location.hash !== "#my-cars") return;
+      setActiveVehicleTab("mycars");
+      localStorage.setItem("fpc-active-tab", "mycars");
+      window.setTimeout(() => {
+        document.getElementById("my-cars")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 250);
+    };
+    openMyCars();
+    window.addEventListener("hashchange", openMyCars);
+    return () => window.removeEventListener("hashchange", openMyCars);
   }, []);
 
   // Show floating share prompt when user scrolls into mid-results or bottom
@@ -3494,7 +3507,7 @@ END:VEVENT
               on mobile where the user tapped a saved vehicle from a
               scrolled position. */}
           {!loading && (recentLookups.length > 0 || favorites.length > 0 || myVehicles.length > 0) && (
-            <div className={data ? "" : "mt-4 pt-4 border-t border-slate-700/50"}>
+            <div id="my-cars" className={`scroll-mt-20 ${data ? "" : "mt-4 pt-4 border-t border-slate-700/50"}`}>
               {/* Tab bar */}
               <div className={`flex gap-1 border-b border-slate-700/50 ${data ? "mb-2" : "mb-4"}`}>
                 <button

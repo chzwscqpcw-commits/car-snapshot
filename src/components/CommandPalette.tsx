@@ -21,10 +21,25 @@ import {
 import { siteIcon } from "@/components/site-icons";
 import { plateHref } from "@/lib/plate-url";
 import { setPendingRegSource, trackEvent } from "@/lib/tracking";
+import { localCarCount } from "@/lib/my-cars";
 
 /** What opened the palette: the keyboard (⌘K or /), the desktop nav chip, or
  *  the mobile search icon / drawer button. */
 export type PaletteTrigger = "key" | "nav" | "mobile";
+
+// The homepage owns the My Cars list (its tab opens on /#my-cars), so the
+// palette offers it as a row of its own rather than an index page.
+const MY_CARS_HREF = "/#my-cars";
+function myCarsItem(count: number): SiteItem {
+  return {
+    title: count > 0 ? `My Cars (${count})` : "My Cars",
+    subtitle: count > 0 ? "Your saved cars and their alerts" : "Save a car from its result for MOT, tax, recall and value alerts",
+    href: MY_CARS_HREF,
+    category: "action",
+    keywords: ["my cars", "saved cars", "my vehicles", "saved", "alerts", "garage"],
+    icon: "car",
+  };
+}
 
 interface CommandPaletteContext {
   open: (trigger?: PaletteTrigger) => void;
@@ -150,6 +165,7 @@ function Palette({ onClose }: { onClose: () => void }) {
   const [selected, setSelected] = useState(0);
   const [posts, setPosts] = useState<PostIndexItem[] | null>(null);
   const [recent, setRecent] = useState<RecentVehicle[]>([]);
+  const [myCarsCount, setMyCarsCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -163,7 +179,9 @@ function Palette({ onClose }: { onClose: () => void }) {
     // Recent vehicles come from localStorage, unavailable during SSR render.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRecent(readRecentVehicles());
+    setMyCarsCount(localCarCount());
   }, []);
+  const myCars = useMemo(() => myCarsItem(myCarsCount), [myCarsCount]);
 
   // Fetch blog post index lazily
   useEffect(() => {
@@ -186,9 +204,9 @@ function Palette({ onClose }: { onClose: () => void }) {
   const results = useMemo(() => {
     const trimmed = query.trim();
 
-    // Site item matches
+    // Site item matches (My Cars searches like a page)
     const siteHits: Hit[] = trimmed
-      ? SITE_ITEMS.map((item) => ({ item, score: scoreItem(item, trimmed) }))
+      ? [...SITE_ITEMS, myCars].map((item) => ({ item, score: scoreItem(item, trimmed) }))
           .filter((h) => h.score > 0)
           .sort((a, b) => b.score - a.score)
           .slice(0, 8)
@@ -214,7 +232,7 @@ function Palette({ onClose }: { onClose: () => void }) {
         : [];
 
     return { siteHits, postHits };
-  }, [query, posts]);
+  }, [query, posts, myCars]);
 
   // Build a flat ordered list of selectable rows so arrow keys can step
   // through every visible action in one stream.
@@ -231,14 +249,15 @@ function Palette({ onClose }: { onClose: () => void }) {
       recent.forEach((v) => out.push({ kind: "recent", vehicle: v }));
     }
     if (!query.trim()) {
-      // Empty state — show all items grouped naturally
+      // Empty state — My Cars, then all items grouped naturally
+      out.push({ kind: "site", item: myCars });
       SITE_ITEMS.forEach((item) => out.push({ kind: "site", item }));
     } else {
       results.siteHits.forEach((h) => out.push({ kind: "site", item: h.item }));
       results.postHits.forEach((h) => out.push({ kind: "post", item: h.item }));
     }
     return out;
-  }, [reg, query, recent, results]);
+  }, [reg, query, recent, results, myCars]);
 
   // Clamp selection when rows change
   useEffect(() => {
@@ -360,8 +379,13 @@ function Palette({ onClose }: { onClose: () => void }) {
         {/* Results */}
         <div ref={listRef} className="flex-1 overflow-y-auto py-2">
           {rows.length === 0 && (
-            <div className="px-5 py-8 text-center text-sm text-slate-500">
-              No matches. Try a different word — or paste a reg.
+            <div className="px-5 py-8 text-center">
+              <p className="text-sm text-slate-300">Nothing matched that.</p>
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                The box takes a <span className="font-semibold text-slate-300">reg</span> (AB12 CDE), a{" "}
+                <span className="font-semibold text-slate-300">page</span> (MOT check, van theft, cheap MOT) or a{" "}
+                <span className="font-semibold text-slate-300">topic</span> (clocking, ULEZ, recalls).
+              </p>
             </div>
           )}
 
@@ -405,9 +429,17 @@ function Palette({ onClose }: { onClose: () => void }) {
             </Section>
           )}
 
-          {/* Empty state — show all items */}
+          {/* Empty state — My Cars, then all items */}
           {!query.trim() && (
             <>
+              <ItemGroup
+                label="My Cars"
+                items={[myCars]}
+                rows={rows}
+                selected={selected}
+                setSelected={setSelected}
+                runRow={runRow}
+              />
               <ItemGroup
                 label="Checks"
                 items={SITE_ITEMS.filter((i) => i.category === "check")}
