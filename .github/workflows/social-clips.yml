@@ -4,10 +4,12 @@ name: Social Clips
 # the site's own data (social/, a Remotion project) and publish them as a
 # GitHub release tagged social-<first ISO week>, with the posters and one
 # captions.json. The Sunday-morning "clips are ready" email
-# (/api/cron/social-clips, via src/lib/social-clips.ts) reads the latest such
+# (/api/cron/social-clips, via src/lib/social-clips.ts) reads that batch's
 # release through the public API and lists the clips with their captions, so
-# the founder can queue the whole batch in Buffer in half an hour; the Friday
-# audit shows the same section. Nothing here posts to a social network.
+# the founder can queue the whole batch in Buffer in half an hour. If the
+# release is not there the same cron says so (a failed render used to be
+# silent), and the Friday audit shows the latest run's result and the same
+# clips section. Nothing here posts to a social network.
 #
 # Why batches of three: Buffer's free plan queues ten posts per channel, and
 # three weeks is nine, queued on a Sunday when the previous batch has all
@@ -78,9 +80,11 @@ jobs:
       # a batch.
       - name: Decide the batch
         id: decide
+        env:
+          INPUT_WEEK: ${{ inputs.week }}
         run: |
           WEEK_FLAG=""
-          if [ -n "${{ inputs.week }}" ]; then WEEK_FLAG="--week ${{ inputs.week }}"; fi
+          if [ -n "$INPUT_WEEK" ]; then WEEK_FLAG="--week $INPUT_WEEK"; fi
           OUT=$(npm --prefix social run --silent batch -- $WEEK_FLAG)
           echo "$OUT"
           echo "batch=$(echo "$OUT" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).batch')" >> $GITHUB_OUTPUT
@@ -95,15 +99,41 @@ jobs:
           ANALYTICS_WRITES: '0'
         run: |
           npm run social:render -- --out social/out/current --week ${{ steps.decide.outputs.first }} --weeks 3
-          WEEK=$(node -e "console.log(require('./social/out/current/captions.json').week)")
+
+      # The render step and the steps after it must agree on where the files
+      # are. They did not from 6 to 20 Nov 2026: `--out` was resolved inside
+      # social/ and the clips went to social/social/out/current. Fail here,
+      # naming the problem, rather than in a later step that cannot say why.
+      - name: Check the clips are where the next step reads them
+        id: render_check
+        if: steps.decide.outputs.batch == 'true'
+        run: |
+          DIR=social/out/current
+          if [ ! -f "$DIR/captions.json" ]; then
+            echo "::error::captions.json is not in $DIR (relative to the repo root). Files found under social/:"
+            find social -path social/node_modules -prune -o \( -name captions.json -o -name '*.mp4' \) -print | head -20
+            exit 1
+          fi
+          MP4=$(ls "$DIR"/*.mp4 2>/dev/null | wc -l | tr -d ' ')
+          PNG=$(ls "$DIR"/*.png 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$MP4" != "9" ] || [ "$PNG" != "9" ]; then
+            echo "::error::expected 9 MP4s and 9 posters in $DIR, found $MP4 and $PNG"
+            ls -la "$DIR"
+            exit 1
+          fi
+          if [ -d social/social ]; then
+            echo "::error::social/social exists: something wrote relative to social/ instead of the repo root"
+            exit 1
+          fi
+          WEEK=$(node -e "console.log(require('./$DIR/captions.json').week)")
           echo "week=$WEEK" >> $GITHUB_OUTPUT
-          ls -la social/out/current
+          ls -la "$DIR"
 
       - name: Publish the release
         if: steps.decide.outputs.batch == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          WEEK: ${{ steps.render.outputs.week }}
+          WEEK: ${{ steps.render_check.outputs.week }}
           LAST: ${{ steps.decide.outputs.last }}
         run: |
           TAG="social-$WEEK"
@@ -128,7 +158,7 @@ jobs:
       - name: Summary
         if: always()
         run: |
-          echo "## Social clips — ${{ steps.render.outputs.week || 'not rendered' }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Social clips — ${{ steps.render_check.outputs.week || 'not rendered' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.decide.outputs.batch }}" != "true" ]; then
             echo "ℹ️ ${{ steps.decide.outputs.first }} does not open a batch (batches start every third week from 2026-W45); nothing rendered. Next batch: run by hand with that week, or wait." >> $GITHUB_STEP_SUMMARY
@@ -140,7 +170,7 @@ jobs:
               for (const x of c.clips) console.log('| ' + x.week + ' | ' + x.day + ' | ' + x.audience + ' | ' + x.title + ' | ' + x.file + ' |');
             " >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Release: https://github.com/${{ github.repository }}/releases/tag/social-${{ steps.render.outputs.week }}" >> $GITHUB_STEP_SUMMARY
+            echo "Release: https://github.com/${{ github.repository }}/releases/tag/social-${{ steps.render_check.outputs.week }}" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ The render did not produce captions.json — check the render step." >> $GITHUB_STEP_SUMMARY
           fi

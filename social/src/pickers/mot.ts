@@ -77,7 +77,7 @@ export function pickFailReasons(occurrence: number, weekIndex: number, music: bo
   const name = prettyName(subject);
   const pass = PASS[subject];
   const rows = reasons.slice(0, 5).map((label, i) => ({ label, value: 5 - i, display: String(i + 1) }));
-  const passLine = pass ? `${pass[1].toFixed(0)}% of ${name}s pass first time (UK ${Math.round(NATIONAL_PASS)}%).` : "";
+  const passLine = pass ? `${pass[1].toFixed(0)}% of ${name} cars pass first time (UK ${Math.round(NATIONAL_PASS)}%).` : "";
   return {
     composition: "FailReasons",
     title: `What a ${name} fails its MOT on`,

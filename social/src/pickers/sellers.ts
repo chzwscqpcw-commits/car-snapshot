@@ -125,17 +125,43 @@ export const WORTH_AFTER_MODELS: readonly string[] = [
 
 const AGES = [1, 3, 5, 8];
 
-export function pickWorthAfter(occurrence: number, weekIndex: number, music: boolean): Picked<WorthAfterProps> {
-  const key = nth(WORTH_AFTER_MODELS, occurrence);
+/** The depreciation curve for a family, or null when the family has no list price. */
+function worthAfterCurve(key: string) {
   const [make, model] = splitKey(key);
   const listPrice = lookupNewPrice(PRICES, make, model);
-  if (!listPrice) throw new Error(`worth-after: no list price for ${key} in src/data/new-prices.json`);
+  if (!listPrice) return null;
   // The "new" bar is what the valuation itself starts from: the price the
   // market calibration implies for the family where it has one (the scraped
   // list price is missing or stale for a third of models), else the list price.
   const newPrice = lookupCalibratedPrice(make, model, VALUE_AGE) ?? listPrice;
-  const name = prettyName(key);
   const points = AGES.map((age) => ({ age, value: calculateDepreciationBaseline(newPrice, age, make, model) }));
+  return { make, model, newPrice, points };
+}
+
+/**
+ * A curve that falls with age, from the new price down. Five families (Corsa,
+ * Clio, Juke, Leon, Sandero in Nov 2026) come out with a five-year-old car
+ * worth more than a three-year-old one, because their calibrated start price
+ * sits well below the list price; a clip must not show that.
+ */
+export function curveFalls(c: { newPrice: number; points: Array<{ value: number }> }): boolean {
+  return [c.newPrice, ...c.points.map((p) => p.value)].every((v, i, a) => i === 0 || v < a[i - 1]);
+}
+
+/** WORTH_AFTER_MODELS without the families whose curve does not fall, in the same order. */
+export function worthAfterSubjects(): string[] {
+  return WORTH_AFTER_MODELS.filter((key) => {
+    const c = worthAfterCurve(key);
+    return c !== null && curveFalls(c);
+  });
+}
+
+export function pickWorthAfter(occurrence: number, weekIndex: number, music: boolean): Picked<WorthAfterProps> {
+  const key = nth(worthAfterSubjects(), occurrence);
+  const curve = worthAfterCurve(key);
+  if (!curve) throw new Error(`worth-after: no list price for ${key} in src/data/new-prices.json`);
+  const { newPrice, points } = curve;
+  const name = prettyName(key);
   const at3 = points.find((p) => p.age === VALUE_AGE)!;
   const pct3 = Math.round((at3.value / newPrice) * 100);
   return {

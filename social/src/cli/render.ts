@@ -4,6 +4,8 @@
  *   npm run social:render -- --week 2026-W45 [--out social/out/2026-W45] [--silent] [--still-only]
  *
  * Runs from the repo root (the root script) or from social/ (npm run render).
+ * A relative --out is relative to the directory npm was started in, either way
+ * (see ../outdir.ts).
  * Deterministic: the same week gives the same three clips. Output:
  *   <out>/<week>-1-brand.mp4 (.png)   Monday
  *   <out>/<week>-2-sellers.mp4 (.png) Wednesday
@@ -16,10 +18,12 @@ import { bundle } from "@remotion/bundler";
 import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 import { batchWeeks, parseWeekLabel, upcomingWeek } from "../calendar";
 import { captionsFile } from "../captions";
+import { outBase } from "../outdir";
 import { buildWeek } from "../plan";
 import { withSiteAlias } from "../webpack";
 
 const SOCIAL_DIR = path.resolve(__dirname, "..", "..");
+
 /** 10 s in: every template has its data fully drawn and its outro not yet up. */
 export const POSTER_FRAME = 300;
 
@@ -42,7 +46,7 @@ async function main() {
   const builds = batchWeeks(week, nWeeks).map((w) => buildWeek(w, music));
   const first = builds[0].plan.label;
   const last = builds[builds.length - 1].plan.label;
-  const outDir = path.resolve(flag("out") ?? path.join(SOCIAL_DIR, "out", nWeeks > 1 ? `${first}-${last}` : first));
+  const outDir = path.resolve(outBase(), flag("out") ?? path.join(SOCIAL_DIR, "out", nWeeks > 1 ? `${first}-${last}` : first));
   mkdirSync(outDir, { recursive: true });
 
   const captions = captionsFile(builds);

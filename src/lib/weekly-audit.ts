@@ -5,10 +5,13 @@ import { getPartnerOrders, renderPartnerOrdersHtml, type PartnerOrdersSummary } 
 import { getWbacTopTest, renderWbacTopTestHtml, type WbacTopTestSummary } from "./wbac-top-test";
 import {
   fetchSocialClips,
+  fetchSocialRun,
+  renderSocialRun,
   renderSocialClips,
   renderSocialTraffic,
   socialTrafficWindow,
   type SocialClipsResult,
+  type SocialRunResult,
   type SocialTrafficAudit,
 } from "./social-clips";
 
@@ -186,6 +189,8 @@ export interface WeeklyAuditData {
   social: SocialTrafficAudit;
   /** The latest social-<week> release, for the Friday posting routine. */
   socialClips: SocialClipsResult;
+  /** The Social Clips workflow's latest run: a failed render shows in the Social line. */
+  socialRun: SocialRunResult;
   /** Every dataset's age, job result and due date; red when something needs a person. */
   dataStatus: DataStatus;
   /** /api/lookup's failures this week by stage, and the longest bad spell.
@@ -230,6 +235,8 @@ export async function buildWeeklyAuditData(
   nowMs: number,
   /** The clips fetch, swappable so a test never hits GitHub. */
   clips: () => Promise<SocialClipsResult> = fetchSocialClips,
+  /** The clip workflow's latest run (public GitHub API), swappable too. */
+  socialRun: () => Promise<SocialRunResult> = fetchSocialRun,
   /** The dataset status (GitHub reads), swappable for the same reason. */
   data: () => Promise<DataStatus> = () => getDataStatus(fetch, nowMs),
   /** Partner orders (service-role read of the private tables), swappable too. */
@@ -238,6 +245,7 @@ export async function buildWeeklyAuditData(
   const d7 = new Date(nowMs - 7 * DAY).toISOString();
   const d14 = new Date(nowMs - 14 * DAY).toISOString();
   const socialClipsPromise = clips();
+  const socialRunPromise = socialRun();
   const dataStatusPromise = data();
   const lookupHealthPromise = getLookupHealth(sb, nowMs);
   const partnerOrdersPromise = partnerOrders();
@@ -440,6 +448,7 @@ export async function buildWeeklyAuditData(
     prev: socialTrafficWindow(pv.filter(inPrev), rv14.filter(inPrev), saved14.filter(inPrev), pcPrev.filter(inPrev)),
   };
   const socialClips = await socialClipsPromise;
+  const socialRunResult = await socialRunPromise;
   const dataStatus = await dataStatusPromise;
   const lookupHealth = await lookupHealthPromise;
 
@@ -497,6 +506,7 @@ export async function buildWeeklyAuditData(
     },
     social,
     socialClips,
+    socialRun: socialRunResult,
     dataStatus,
     lookupHealth,
     partnerOrders: await partnerOrdersPromise,
@@ -736,6 +746,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   </p>
 
   ${renderSocialTraffic(d.social)}
+  ${renderSocialRun(d.socialRun)}
 
   ${renderSocialClips(d.socialClips)}
 
