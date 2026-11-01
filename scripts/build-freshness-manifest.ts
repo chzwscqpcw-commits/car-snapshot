@@ -1,6 +1,7 @@
 /**
  * Writes src/data/_freshness.json — a map of { filename: ISO-timestamp }
- * recording when each data file was last refreshed.
+ * recording when each data file (every dataset in src/data/_registry.ts,
+ * JSON and hand-written module alike) was last refreshed.
  *
  * Why this exists: at Vercel runtime, neither `git log` nor `fs.statSync`
  * returns accurate mtimes on bundled files (git history isn't shipped, and
@@ -79,7 +80,7 @@ function filesChangedInHead(): Set<string> {
     const set = new Set<string>();
     for (const line of out.split("\n")) {
       const t = line.trim();
-      if (t.startsWith("src/data/") && t.endsWith(".json")) {
+      if (t.startsWith("src/data/") && isDataset(t.replace("src/data/", ""))) {
         set.add(t.replace("src/data/", ""));
       }
     }
@@ -90,6 +91,15 @@ function filesChangedInHead(): Set<string> {
   }
 }
 
+
+/**
+ * A dataset is any .json or .ts file in src/data/ except the manifest itself
+ * and the registry — the same rule scripts/test-data-registry.ts applies, so
+ * the hand-written modules (caz-zones.ts, mot-locations.ts, …) get a date too.
+ */
+function isDataset(name: string): boolean {
+  return (name.endsWith(".json") || name.endsWith(".ts")) && !name.startsWith("_");
+}
 
 function loadExistingManifest(): Record<string, string> {
   // The manifest is committed to git and serves as the source of truth.
@@ -106,7 +116,7 @@ function main() {
   const now = new Date().toISOString();
   const files = fs
     .readdirSync(DATA_DIR)
-    .filter((f) => f.endsWith(".json") && f !== "_freshness.json")
+    .filter(isDataset)
     .sort();
 
   // Start from the committed manifest so unmodified entries survive shallow
