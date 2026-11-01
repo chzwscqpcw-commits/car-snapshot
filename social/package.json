@@ -1,0 +1,30 @@
+{
+  "name": "fpc-social-clips",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Renders Free Plate Check's weekly short vertical clips from the site's own data (Remotion).",
+  "scripts": {
+    "preview": "remotion studio src/index.ts",
+    "render": "tsx src/cli/render.ts",
+    "plan": "tsx src/cli/plan.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx src/calendar.test.ts",
+    "gallery": "tsx src/cli/gallery.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.539",
+    "@remotion/cli": "4.0.539",
+    "@remotion/fonts": "4.0.539",
+    "@remotion/renderer": "4.0.539",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsx": "^4.19.0",
+    "typescript": "^5"
+  }
+}

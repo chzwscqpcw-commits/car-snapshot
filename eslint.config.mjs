@@ -26,6 +26,10 @@ const eslintConfig = defineConfig([
     // gitignored and minified/vendored, so linting it is noise (was ~113
     // phantom errors: no-this-alias, no-require-imports, etc.).
     ".vercel/**",
+    // The social clip renderer's own install and render output (social/src is
+    // linted like the rest of the repo).
+    "social/node_modules/**",
+    "social/out/**",
   ]),
 ]);
 
