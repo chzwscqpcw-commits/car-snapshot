@@ -1,7 +1,7 @@
 /**
  * Render a week's three clips, their stills and captions.json:
  *
- *   npm run social:render -- --week 2026-W46 [--out social/out/2026-W46] [--silent] [--still-only]
+ *   npm run social:render -- --week 2026-W45 [--out social/out/2026-W45] [--silent] [--still-only]
  *
  * Runs from the repo root (the root script) or from social/ (npm run render).
  * Deterministic: the same week gives the same three clips. Output:

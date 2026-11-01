@@ -24,8 +24,8 @@ export type SellersTopic = "value-table" | "worth-after" | "used-price-trend";
 export type MotTopic = "fail-reasons" | "pass-by-area" | "pass-by-model" | "season-due";
 export type Topic = BrandTopic | SellersTopic | MotTopic;
 
-/** The first week of the series. Week counts and rotations start here. */
-export const SERIES_START = { year: 2026, week: 46 } as const;
+/** The first week of the series (Monday 2 November 2026). Week counts and rotations start here. */
+export const SERIES_START = { year: 2026, week: 45 } as const;
 
 export const BRAND_TOPICS: readonly BrandTopic[] = [
   "theft",
