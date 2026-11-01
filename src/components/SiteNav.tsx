@@ -147,7 +147,7 @@ export default function SiteNav() {
           {/* ⌘K — desktop chip */}
           <button
             type="button"
-            onClick={open}
+            onClick={() => open("nav")}
             className="hidden md:inline-flex items-center gap-2 rounded-lg border border-slate-700/70 bg-slate-900/60 px-3 py-1.5 text-sm text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-colors min-w-[200px]"
             aria-label="Open search (⌘K)"
           >
@@ -161,7 +161,7 @@ export default function SiteNav() {
           {/* Mobile: search icon */}
           <button
             type="button"
-            onClick={open}
+            onClick={() => open("mobile")}
             className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 transition-colors"
             aria-label="Open search"
           >
@@ -187,7 +187,7 @@ export default function SiteNav() {
           onClose={() => setDrawerOpen(false)}
           onOpenPalette={() => {
             setDrawerOpen(false);
-            open();
+            open("mobile");
           }}
           pathname={pathname}
         />
