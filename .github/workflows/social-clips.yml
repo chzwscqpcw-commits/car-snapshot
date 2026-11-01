@@ -1,32 +1,35 @@
 name: Social Clips
 
-# Saturday night: render next week's three short vertical clips from the
-# site's own data (social/, a Remotion project) and publish them as a GitHub
-# release tagged social-<ISO week>, with the posters and captions.json. The
-# Sunday-morning "clips are ready" email (/api/cron/social-clips, via
-# src/lib/social-clips.ts) reads the latest such release through the public
-# API and lists the clips with their captions, so the founder can upload them
-# to Buffer in ten minutes; the Friday audit shows the same section. Nothing
-# here posts to a social network.
+# Every third Saturday night: render the next three weeks' clips (nine) from
+# the site's own data (social/, a Remotion project) and publish them as a
+# GitHub release tagged social-<first ISO week>, with the posters and one
+# captions.json. The Sunday-morning "clips are ready" email
+# (/api/cron/social-clips, via src/lib/social-clips.ts) reads the latest such
+# release through the public API and lists the clips with their captions, so
+# the founder can queue the whole batch in Buffer in half an hour; the Friday
+# audit shows the same section. Nothing here posts to a social network.
 #
-# Runs at 22:00 UTC, ten hours before the Sunday email (08:00 UTC), and
-# renders the ISO week that starts on the coming Monday; `workflow_dispatch`
-# takes a `week` to re-render any week (the calendar is deterministic, so a
-# re-run gives the same three clips and simply replaces the release assets).
+# Why batches of three: Buffer's free plan queues ten posts per channel, and
+# three weeks is nine, queued on a Sunday when the previous batch has all
+# gone out. The cron fires every Saturday; `npm run batch` (social/src/cli/
+# batch.ts) says whether the coming week opens a batch (every third week from
+# 2026-W45), and on the other two Saturdays the job stops after that check.
+# `workflow_dispatch` takes a `week` and renders the batch starting there
+# whatever the calendar says (deterministic, so a re-run replaces the
+# release's assets with identical clips).
 #
-# Budget: the three clips render in about half a minute on an M-series Mac
-# and are expected to take 3–5 minutes on the runner (two cores); the render
-# step is capped at 10 minutes so a stuck browser can't eat the hour. Unlike
-# the data refreshes nothing is committed, so there is no PR and no CI run to
-# approve.
+# Budget: nine clips take about 90 s on an M-series Mac and are expected to
+# take 10–15 minutes on the runner (two cores); the render step is capped at
+# 25 minutes so a stuck browser can't eat the hour. Nothing is committed, so
+# there is no PR and no CI run to approve.
 
 on:
   schedule:
-    - cron: '0 22 * * 6' # Saturdays at 22:00 UTC
+    - cron: '0 22 * * 6' # Saturdays at 22:00 UTC; renders only on batch Saturdays
   workflow_dispatch:
     inputs:
       week:
-        description: 'ISO week to render, e.g. 2026-W46 (default: the week starting next Monday)'
+        description: 'First ISO week of the batch to render, e.g. 2026-W48 (default: the week starting next Monday, only if it opens a batch)'
         required: false
         type: string
 
@@ -40,7 +43,7 @@ concurrency:
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -70,40 +73,55 @@ jobs:
       - name: Check the calendar and pickers
         run: npm run social:check
 
-      - name: Render the week's clips
-        id: render
-        timeout-minutes: 10
-        env:
-          ANALYTICS_WRITES: '0'
+      # Which weeks, and whether to render at all. A dispatch with a week
+      # always renders; the schedule renders only when the coming week opens
+      # a batch.
+      - name: Decide the batch
+        id: decide
         run: |
           WEEK_FLAG=""
           if [ -n "${{ inputs.week }}" ]; then WEEK_FLAG="--week ${{ inputs.week }}"; fi
-          npm run social:render -- --out social/out/current $WEEK_FLAG
+          OUT=$(npm --prefix social run --silent batch -- $WEEK_FLAG)
+          echo "$OUT"
+          echo "batch=$(echo "$OUT" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).batch')" >> $GITHUB_OUTPUT
+          echo "first=$(echo "$OUT" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).first')" >> $GITHUB_OUTPUT
+          echo "last=$(echo "$OUT" | node -pe 'const w=JSON.parse(require("fs").readFileSync(0,"utf8")).weeks; w[w.length-1]')" >> $GITHUB_OUTPUT
+
+      - name: Render the batch
+        id: render
+        if: steps.decide.outputs.batch == 'true'
+        timeout-minutes: 25
+        env:
+          ANALYTICS_WRITES: '0'
+        run: |
+          npm run social:render -- --out social/out/current --week ${{ steps.decide.outputs.first }} --weeks 3
           WEEK=$(node -e "console.log(require('./social/out/current/captions.json').week)")
           echo "week=$WEEK" >> $GITHUB_OUTPUT
           ls -la social/out/current
 
       - name: Publish the release
+        if: steps.decide.outputs.batch == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           WEEK: ${{ steps.render.outputs.week }}
+          LAST: ${{ steps.decide.outputs.last }}
         run: |
           TAG="social-$WEEK"
           {
-            echo "Three clips for the week of $(node -e "console.log(require('./social/out/current/captions.json').monday)"), rendered from the site's data by the Thursday job."
+            echo "Nine clips for the three weeks from Monday $(node -e "console.log(require('./social/out/current/captions.json').monday)") ($WEEK to $LAST), rendered from the site's data by the Saturday job."
             echo
             node -e "
               const c = require('./social/out/current/captions.json');
-              for (const x of c.clips) console.log('- **' + x.day + '** (' + x.audience + '): ' + x.title + ' — \`' + x.file + '\`');
+              for (const x of c.clips) console.log('- ' + x.week + ' **' + x.day + '** (' + x.audience + '): ' + x.title + ' — \`' + x.file + '\`');
             "
             echo
-            echo "captions.json carries each clip's caption and UTM links; the Friday audit email lists them."
+            echo "captions.json carries each clip's caption and UTM links; the Sunday email and the Friday audit list them."
           } > /tmp/notes.md
           if gh release view "$TAG" --json tagName >/dev/null 2>&1; then
             echo "release $TAG exists; replacing its assets"
             gh release upload "$TAG" --clobber social/out/current/*.mp4 social/out/current/*.png social/out/current/captions.json
           else
-            gh release create "$TAG" --title "Social clips $WEEK" --notes-file /tmp/notes.md \
+            gh release create "$TAG" --title "Social clips $WEEK to $LAST" --notes-file /tmp/notes.md \
               social/out/current/*.mp4 social/out/current/*.png social/out/current/captions.json
           fi
 
@@ -112,12 +130,14 @@ jobs:
         run: |
           echo "## Social clips — ${{ steps.render.outputs.week || 'not rendered' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f social/out/current/captions.json ]; then
-            echo "| day | audience | title | file |" >> $GITHUB_STEP_SUMMARY
-            echo "|---|---|---|---|" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.decide.outputs.batch }}" != "true" ]; then
+            echo "ℹ️ ${{ steps.decide.outputs.first }} does not open a batch (batches start every third week from 2026-W45); nothing rendered. Next batch: run by hand with that week, or wait." >> $GITHUB_STEP_SUMMARY
+          elif [ -f social/out/current/captions.json ]; then
+            echo "| week | day | audience | title | file |" >> $GITHUB_STEP_SUMMARY
+            echo "|---|---|---|---|---|" >> $GITHUB_STEP_SUMMARY
             node -e "
               const c = require('./social/out/current/captions.json');
-              for (const x of c.clips) console.log('| ' + x.day + ' | ' + x.audience + ' | ' + x.title + ' | ' + x.file + ' |');
+              for (const x of c.clips) console.log('| ' + x.week + ' | ' + x.day + ' | ' + x.audience + ' | ' + x.title + ' | ' + x.file + ' |');
             " >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "Release: https://github.com/${{ github.repository }}/releases/tag/social-${{ steps.render.outputs.week }}" >> $GITHUB_STEP_SUMMARY
