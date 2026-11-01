@@ -147,8 +147,13 @@ function main() {
       manifest[f] = existing[f];
       preserved++;
     } else {
-      // First time seeing this file — best we can do is now.
-      manifest[f] = now;
+      // First time seeing this file: its last commit when git can tell us
+      // (the workflows clone with full history), else now. Stamping "now"
+      // here gave the four hand-written modules today's date on 2026-11-01
+      // when caz-zones.ts had last changed in March.
+      const git = gitLogIso(f);
+      manifest[f] = git ?? now;
+      if (git) gitOk++;
     }
   }
 

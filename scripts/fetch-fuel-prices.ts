@@ -149,6 +149,22 @@ async function main() {
     }
   }
 
+  // Only rewrite the file when the prices themselves changed. The first gated
+  // Sunday run (2026-11-01) opened a data PR, ran CI twice and deployed for a
+  // diff of one line: this timestamp. The committed file's date (git) is the
+  // "as of" the site shows, so a write with identical rows would also claim a
+  // refresh that brought nothing.
+  let previous: FuelPriceOutput | null = null;
+  try {
+    previous = JSON.parse(fs.readFileSync(OUTPUT, "utf8")) as FuelPriceOutput;
+  } catch {
+    previous = null;
+  }
+  if (previous && JSON.stringify(previous.weekly) === JSON.stringify(deduped)) {
+    console.log(`\nNo new weeks since ${previous.weekly[previous.weekly.length - 1]?.date} — src/data/fuel-prices-weekly.json left unchanged.`);
+    return;
+  }
+
   const output: FuelPriceOutput = {
     lastFetched: new Date().toISOString(),
     source: "https://www.gov.uk/government/statistics/weekly-road-fuel-prices",
