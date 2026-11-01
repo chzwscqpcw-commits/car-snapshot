@@ -29,15 +29,10 @@ const PURGE_AFTER_DAYS = 365;
 
 type CarWithSub = SavedCarRow & { push_subscriptions: (PushSubscriptionRow & { active: boolean }) | null };
 
-async function loadRecalls(sb: ReturnType<typeof supabaseServerRole>): Promise<Recall[]> {
-  try {
-    const { data } = await sb.from("data_cache").select("data, updated_at").eq("key", "recalls").single();
-    if (data?.data && Date.now() - Date.parse(data.updated_at) < 14 * 86_400_000) return data.data as Recall[];
-  } catch {
-    // Fall through to the bundled file.
-  }
-  return recallsData as Recall[];
-}
+// The committed recalls.json, refreshed and validated by the Sunday job, is
+// the source of truth (the Supabase data_cache copy a Vercel cron tried to
+// keep could never pass DVSA's bot protection; removed 2026-11).
+const RECALLS = recallsData as Recall[];
 
 function splitMakeModel(makeModel: string | null): { make?: string; model?: string } {
   const parts = (makeModel ?? "").trim().split(" ");
@@ -96,7 +91,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
   }
 
-  const recalls = await loadRecalls(sb);
+  const recalls = RECALLS;
   const pushOn = pushConfigured();
 
   for (const row of (rows ?? []) as CarWithSub[]) {

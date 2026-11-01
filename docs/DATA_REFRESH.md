@@ -42,10 +42,26 @@ How to keep each data file in `src/data/` fresh. There are three tiers:
 
 | File | Source | When |
 |---|---|---|
-| `fuel-prices-weekly.json` | DESNZ Content API → `scripts/fetch-fuel-prices.ts` | Every deploy |
-| `how-many-left.json` | DfT VEH0120 via Content API → `scripts/fetch-how-many-left.ts` | Every deploy |
+| `recalls.json`, `fuel-economy.json`, `ncap-ratings.json`, `new-car-price-index.json`, `fuel-prices-weekly.json`, `how-many-left.json` | see the registry | Sundays, `.github/workflows/refresh-data.yml` |
+| `new-prices.json`, `ev-specs.json` | Parkers, EV Database | Wednesdays, `refresh-prices.yml` |
+| `model-price-calibration.json` | own telemetry | 2nd of the month, `calibrate-valuations.yml` (PR for review) |
 
-After `npm run deploy`, both should show **0d** age in `/data-health`.
+Each job commits only when a file changes, so an old date on a weekly-job
+file is normal; the job's **last run** (Friday email, `/data-health`) is the
+health signal. A failing step keeps the issue "Data refresh failures" open
+until it passes again. `npm run prebuild` no longer fetches anything — a
+gov.uk outage cannot fail a deploy, and the committed file is what the site
+serves. (`recalls.json` is the only recall source: the Monday Vercel cron
+that tried to fill Supabase `data_cache` could not pass DVSA's bot
+protection and was removed in 2026-11.)
+
+## 📅 Hand-run datasets
+
+`npx tsx scripts/data-due.ts` lists what is due within 45 days with the
+command and source; `.github/workflows/data-due.yml` opens "Data due this
+month — &lt;Month YYYY&gt;" on the 1st when anything is. The theft FOI goes
+in September (`nextDue` 2027-09-01), the MOT bulk drop in May (2027-05-15).
+After a refresh, move the entry's `nextDue` on a year.
 
 ---
 

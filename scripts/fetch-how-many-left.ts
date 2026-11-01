@@ -7,11 +7,12 @@
  *
  * Data source: https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files
  *
- * Hooked into prebuild so every deploy gets the freshest DfT data without
- * any manual download step.
+ * Ran in prebuild on every deploy until 2026-11; now a step of
+ * .github/workflows/refresh-data.yml (DfT publish quarterly; the delta check
+ * gates the commit), so a gov.uk outage cannot fail a deploy.
  *
- * Run: npx tsx scripts/fetch-how-many-left.ts
- * Failure mode: logs warning, exits 0 (build continues with existing JSON).
+ * Run: npx tsx scripts/fetch-how-many-left.ts            # exits 0 on failure (keeps the file)
+ *      npx tsx scripts/fetch-how-many-left.ts --strict   # exits 1 on failure (the Sunday job)
  */
 
 import * as fs from "fs";
@@ -105,6 +106,6 @@ main().catch((err) => {
   } catch {
     /* ignore */
   }
-  // Exit 0 — stale data beats a broken build.
-  process.exit(0);
+  // Exit 0 unless --strict — stale data beats a broken build.
+  process.exit(process.argv.includes("--strict") ? 1 : 0);
 });

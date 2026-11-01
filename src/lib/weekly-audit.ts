@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getDataStatus, renderDataStatusHtml, renderDataSummaryLine, type DataStatus } from "./data-status";
 import {
   fetchSocialClips,
   renderSocialClips,
@@ -179,6 +180,8 @@ export interface WeeklyAuditData {
   social: SocialTrafficAudit;
   /** The latest social-<week> release, for the Friday posting routine. */
   socialClips: SocialClipsResult;
+  /** Every dataset's age, job result and due date; red when something needs a person. */
+  dataStatus: DataStatus;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -215,10 +218,13 @@ export async function buildWeeklyAuditData(
   nowMs: number,
   /** The clips fetch, swappable so a test never hits GitHub. */
   clips: () => Promise<SocialClipsResult> = fetchSocialClips,
+  /** The dataset status (GitHub reads), swappable for the same reason. */
+  data: () => Promise<DataStatus> = () => getDataStatus(fetch, nowMs),
 ): Promise<WeeklyAuditData> {
   const d7 = new Date(nowMs - 7 * DAY).toISOString();
   const d14 = new Date(nowMs - 14 * DAY).toISOString();
   const socialClipsPromise = clips();
+  const dataStatusPromise = data();
 
   // Headline counts: this week vs prior week
   const HEADLINE_EVENTS: { key: string; label: string }[] = [
@@ -417,6 +423,7 @@ export async function buildWeeklyAuditData(
     prev: socialTrafficWindow(pv.filter(inPrev), rv14.filter(inPrev), saved14.filter(inPrev), pcPrev.filter(inPrev)),
   };
   const socialClips = await socialClipsPromise;
+  const dataStatus = await dataStatusPromise;
 
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
@@ -471,6 +478,7 @@ export async function buildWeeklyAuditData(
     },
     social,
     socialClips,
+    dataStatus,
   };
 }
 
@@ -688,6 +696,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
 <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#0f172a;line-height:1.5">
   <h2 style="margin:0 0 2px">Free Plate Check — weekly visitor audit</h2>
   <p style="color:#64748b;margin:0 0 20px;font-size:14px">${d.windowStart} → ${d.windowEnd} (last 7 days vs the 7 days before) · owner traffic excluded</p>
+  ${renderDataSummaryLine(d.dataStatus)}
 
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 24px">
     <tr style="background:#f1f5f9">
@@ -721,6 +730,8 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   ${renderSavedCars(d.savedCars)}
 
   ${renderMarketData(d.marketData)}
+
+  ${renderDataStatusHtml(d.dataStatus)}
 
   <h3 style="margin:24px 0 6px;font-size:15px">Reg searches by source</h3>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.regSearchSources)}</table>

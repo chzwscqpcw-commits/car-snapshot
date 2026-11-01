@@ -28,8 +28,8 @@
 /** How the committed file gets refreshed. */
 export type RefreshMethod =
   | `workflow:${string}` // a GitHub Actions workflow in .github/workflows/
-  | "prebuild" // fetched by `npm run prebuild` on every deploy
-  | `vercel-cron:${string}` // a Vercel cron route (production cache, not the file)
+  | "prebuild" // fetched by `npm run prebuild` on every deploy (none since 2026-11)
+  | `vercel-cron:${string}` // a Vercel cron route (none since 2026-11)
   | "manual"; // a person runs the command in `refreshHint`
 
 export type Cadence = "weekly" | "monthly" | "quarterly" | "annual" | "as-needed";
@@ -74,8 +74,6 @@ export interface DatasetEntry {
   deltaRules: DeltaRules | null;
   /** Pages and features that read this file. */
   feeds: string[];
-  /** Supabase data_cache key when a Vercel cron also refreshes this in production. */
-  cacheKey?: string;
   /** The period the figures cover, when it is fixed (an annual release). */
   covers?: string;
 }
@@ -103,7 +101,6 @@ export const DATASETS: DatasetEntry[] = [
     validator: "validateRecalls",
     deltaRules: { countBand: 0.1, keyShrinkBand: 0.05, headlineBand: 0.1 },
     feeds: ["Results page recalls", "/recall-check", "/api/recalls", "My Cars recall alerts", "Buyer's check"],
-    cacheKey: "recalls",
   },
   {
     file: "fuel-economy.json",
@@ -173,16 +170,17 @@ export const DATASETS: DatasetEntry[] = [
     feeds: ["Results page EV specs", "Running costs (electric)"],
   },
 
-  // ── Every deploy ────────────────────────────────────────────────────────
+  // ── Weekly job too (moved out of the prebuild in 2026-11, so a gov.uk
+  //    outage can no longer fail a deploy) ─────────────────────────────────
   {
     file: "fuel-prices-weekly.json",
     kind: "json",
     label: "Weekly road fuel prices",
     source: { name: "DESNZ weekly road fuel prices", url: "https://www.gov.uk/government/statistics/weekly-road-fuel-prices" },
-    method: "prebuild",
+    method: "workflow:refresh-data.yml",
     cadence: "weekly",
     thresholdDays: 21,
-    refreshHint: "Fetched on every deploy by `npm run prebuild`. By hand: npx tsx scripts/fetch-fuel-prices.ts",
+    refreshHint: "Sundays via refresh-data.yml. By hand: npx tsx scripts/fetch-fuel-prices.ts",
     validator: "validateFuelPricesWeekly",
     deltaRules: { countBand: 0.05, headlineBand: 0.15 },
     feeds: ["/stats/fuel-prices", "/api/fuel-prices", "Running costs"],
@@ -192,10 +190,10 @@ export const DATASETS: DatasetEntry[] = [
     kind: "json",
     label: "How Many Left (licensed and SORN by model)",
     source: { name: "DfT VEH0120", url: DFT_LICENSING },
-    method: "prebuild",
+    method: "workflow:refresh-data.yml",
     cadence: "quarterly",
     thresholdDays: 150,
-    refreshHint: "Fetched on every deploy by `npm run prebuild`. By hand: npx tsx scripts/fetch-how-many-left.ts",
+    refreshHint: "Sundays via refresh-data.yml (DfT publish quarterly; commits only when the file changes). By hand: npx tsx scripts/fetch-how-many-left.ts",
     validator: "validateHowManyLeft",
     deltaRules: { countBand: 0.1, keyShrinkBand: 0.05, headlineBand: 0.15 },
     feeds: ["/stats/how-many-left", "Results page rarity", "Theft rates (denominator)"],

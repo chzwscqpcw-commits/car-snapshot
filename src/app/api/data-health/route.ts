@@ -26,6 +26,7 @@ import { facts as didYouKnow } from "@/data/did-you-know";
 import { modelTrivia } from "@/data/model-trivia";
 import freshness from "@/data/_freshness.json";
 import { DATASETS, describeMethod, methodKind } from "@/data/_registry";
+import { getDataStatus } from "@/lib/data-status";
 import { supabaseServerRole } from "@/lib/supabaseServer";
 import {
   MARKETCHECK_MONTHLY_CALL_LIMIT,
@@ -34,9 +35,8 @@ import {
   marketCheckEnabled,
 } from "@/lib/marketcheck";
 
-// Dynamic so we can query the Supabase data_cache table on each request and
-// report the actual freshness of what production users see — not just the
-// build-time JSON mtime, which lags reality for cron-refreshed datasets.
+// Dynamic: reads the MarketCheck usage tables and the public GitHub API (the
+// refresh jobs' last runs) on each request.
 export const dynamic = "force-dynamic";
 
 const BUILD_TIME = new Date().toISOString();
@@ -86,24 +86,6 @@ function getLastModified(file: string): string {
 
 function daysBetween(a: Date, b: Date): number {
   return Math.floor(Math.abs(b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
-}
-
-// Reads the Supabase data_cache row for a given key and returns the
-// updated_at ISO timestamp (or null if no row). Used to surface the real
-// freshness of data refreshed via cron rather than the (older) JSON fallback.
-async function fetchProductionAge(key: string): Promise<string | null> {
-  try {
-    const sb = supabaseServerRole();
-    const { data, error } = await sb
-      .from("data_cache")
-      .select("updated_at")
-      .eq("key", key)
-      .single();
-    if (error || !data) return null;
-    return data.updated_at as string;
-  } catch {
-    return null;
-  }
 }
 
 // ── MarketCheck monthly spend cap usage ───────────────────────────────────
@@ -162,28 +144,18 @@ async function fetchMarketCheckUsage(now: Date): Promise<MarketCheckUsage> {
 
 export async function GET() {
   const now = new Date();
+  // Job results and open review issues from GitHub; each read fails soft.
+  const status = await getDataStatus(fetch, now.getTime());
+  const statusByFile = new Map(status.rows.map((r) => [r.file, r]));
 
-  const files = await Promise.all(
-    DATASETS.map(async (entry) => {
+  const files = DATASETS.map((entry) => {
       const modDate = getLastModified(entry.file);
       const lastModified = modDate ? modDate.split("T")[0] : "unknown";
       const fileDaysAgo = modDate ? daysBetween(new Date(modDate), now) : -1;
-
-      // Production age: only set for datasets backed by Supabase cache.
-      // Reflects what users *actually* see in production.
-      let productionDaysAgo: number | null = null;
-      let productionUpdatedAt: string | null = null;
-      if (entry.cacheKey) {
-        productionUpdatedAt = await fetchProductionAge(entry.cacheKey);
-        if (productionUpdatedAt) {
-          productionDaysAgo = daysBetween(new Date(productionUpdatedAt), now);
-        }
-      }
-
-      // Effective age: production cache if available, else file mtime.
-      const effectiveDaysAgo = productionDaysAgo !== null ? productionDaysAgo : fileDaysAgo;
+      const effectiveDaysAgo = fileDaysAgo;
       const stale = effectiveDaysAgo === -1 ? false : effectiveDaysAgo >= entry.thresholdDays;
       const dueInDays = entry.nextDue ? Math.ceil((Date.parse(entry.nextDue) - now.getTime()) / 864e5) : null;
+      const row = statusByFile.get(entry.file);
 
       return {
         file: entry.file,
@@ -191,8 +163,6 @@ export async function GET() {
         entries: ENTRY_COUNTS[entry.file] ?? 0,
         lastModified,
         daysAgo: fileDaysAgo,
-        productionDaysAgo,
-        productionUpdatedAt,
         effectiveDaysAgo,
         threshold: entry.thresholdDays,
         stale,
@@ -205,9 +175,11 @@ export async function GET() {
         refreshHint: entry.refreshHint,
         sourceName: entry.source.name,
         sourceUrl: entry.source.url,
+        lastRun: row?.lastRun ?? null,
+        state: row?.state ?? "unknown",
+        reason: row?.reason ?? null,
       };
-    }),
-  );
+  });
 
   const staleCount = files.filter((f) => f.stale).length;
   const dueSoonCount = files.filter((f) => f.dueInDays !== null && f.dueInDays <= 45).length;
@@ -224,5 +196,10 @@ export async function GET() {
     dueSoonCount,
     files,
     marketcheck,
+    // The same red line the Friday email carries at its top.
+    dataSummary: status.summary,
+    dataRed: status.red,
+    reviewIssues: status.reviews,
+    statusNote: status.note,
   });
 }

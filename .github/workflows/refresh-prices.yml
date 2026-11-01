@@ -113,6 +113,18 @@ jobs:
           fi
           exit 0
 
+      # One open issue, "Data refresh failures", while any step is failing;
+      # closed when every workflow's steps pass again. See refresh-data.yml.
+      - name: Report step failures
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW: New-Car Price & EV Spec Refresh
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          OUTCOMES: "Parkers new-car prices=${{ steps.parkers.outcome }};EV specs=${{ steps.evspecs.outcome }}"
+        run: npx tsx scripts/report-step-failures.ts
+
       # Gates the commit exactly as the weekly refresh does: shape checks plus
       # a comparison with main (scripts/validate-data.ts --against). A partial
       # or failed scrape may cost freshness, but must never push bad data.

@@ -6,11 +6,15 @@ name: Weekly Data Refresh
 #   - VCA fuel economy (full 2000-2026 archive)
 #   - Euro NCAP crash ratings
 #
-# Plus one that does not: the ONS new-car price index. It is a plain CSV fetch
-# that finishes in about a second, so it rides along here rather than earning a
-# workflow of its own. It had no schedule at all until 2026-10-01 and sat on a
-# 2026-08-02 snapshot as a result — the series is monthly, so weekly is more
-# than enough to keep it current.
+# Plus three that do not: the ONS new-car price index, DESNZ weekly fuel
+# prices and DfT VEH0120 (How Many Left). Each is a plain fetch that finishes
+# in seconds, so they ride along here rather than earning workflows of their
+# own. The price index had no schedule at all until 2026-10-01 and sat on a
+# 2026-08-02 snapshot as a result. Fuel prices and How Many Left were fetched
+# in `npm run prebuild` on every deploy until 2026-11, which tied every deploy
+# to gov.uk being up and left their dates meaning "last deploy" rather than
+# "last change"; here they are committed like everything else, gated by the
+# same validation, and the committed file is the fallback the site serves.
 #
 # Direct-commits to main on changes (Vercel auto-deploys on push). For
 # data sanity, validates the full dataset before pushing — if validation
@@ -75,11 +79,11 @@ env:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # Must exceed the SUM of the step caps below (5 + 6 + 12 + 3 = 26) plus
-    # setup and commit, or a bad week reintroduces the exact bug this replaced:
-    # the job dying before it can commit. 33 leaves ~5 minutes of genuine slack.
-    # Raise this whenever a step cap goes up.
-    timeout-minutes: 33
+    # Must exceed the SUM of the step caps below (5 + 6 + 12 + 3 + 3 + 4 = 33)
+    # plus setup and commit, or a bad week reintroduces the exact bug this
+    # replaced: the job dying before it can commit. 40 leaves ~5 minutes of
+    # genuine slack. Raise this whenever a step cap goes up.
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -134,6 +138,39 @@ jobs:
         continue-on-error: true
         run: npx tsx scripts/fetch-new-car-price-index.ts
 
+      # DESNZ publish on Tuesdays; a Sunday commit is at most five days behind,
+      # and /api/fuel-prices reads the live CSV for the headline figure anyway.
+      # --strict so a failed fetch shows as a failed step (the script otherwise
+      # exits 0 to keep the committed file, which is the right thing to do
+      # everywhere except here).
+      - name: Refresh weekly fuel prices
+        id: fuelprices
+        timeout-minutes: 3
+        continue-on-error: true
+        run: npx tsx scripts/fetch-fuel-prices.ts --strict
+
+      # DfT publish VEH0120 quarterly; most weeks this changes nothing and the
+      # gate below commits nothing. The CSV is ~50 MB.
+      - name: Refresh How Many Left (DfT VEH0120)
+        id: howmanyleft
+        timeout-minutes: 4
+        continue-on-error: true
+        run: npx tsx scripts/fetch-how-many-left.ts --strict
+
+      # Every scraper above is continue-on-error, so a failed step leaves the
+      # run green. This keeps one issue, "Data refresh failures", open while
+      # any step is failing and closes it when they all pass again. Never
+      # fatal: reporting must not cost the commit.
+      - name: Report step failures
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW: Weekly Data Refresh
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          OUTCOMES: "DVSA recalls=${{ steps.recalls.outcome }};VCA fuel economy=${{ steps.vca.outcome }};Euro NCAP=${{ steps.ncap.outcome }};ONS price index=${{ steps.priceindex.outcome }};Weekly fuel prices=${{ steps.fuelprices.outcome }};How Many Left=${{ steps.howmanyleft.outcome }}"
+        run: npx tsx scripts/report-step-failures.ts
+
       # Shape checks on every dataset, plus a comparison with what main has:
       # entry counts, key sets and headline figures within their bands
       # (src/data/_registry.ts). A half-scraped file that still clears the
@@ -161,11 +198,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PREFIX: data-refresh/
-          TITLE: "data: weekly auto-refresh (recalls, fuel economy, NCAP, price index)"
-          # Only the four this workflow refreshes. new-prices.json and
+          TITLE: "data: weekly auto-refresh (recalls, fuel economy, NCAP, price index, fuel prices, How Many Left)"
+          # Only the six this workflow refreshes. new-prices.json and
           # ev-specs.json belong to refresh-prices.yml — listing them here would
           # let this job commit whatever that one happened to leave behind.
-          DATA_FILES: src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-car-price-index.json
+          DATA_FILES: src/data/recalls.json src/data/fuel-economy.json src/data/ncap-ratings.json src/data/new-car-price-index.json src/data/fuel-prices-weekly.json src/data/how-many-left.json
           STATUS: ${{ steps.validate.outputs.status || 'fail' }}
           REPORT: validation-report.md
           DRY_RUN: ${{ inputs.dry_run == true }}
@@ -176,6 +213,8 @@ jobs:
             | VCA fuel economy | ${{ steps.vca.outcome }} |
             | Euro NCAP | ${{ steps.ncap.outcome }} |
             | ONS price index | ${{ steps.priceindex.outcome }} |
+            | Weekly fuel prices | ${{ steps.fuelprices.outcome }} |
+            | How Many Left | ${{ steps.howmanyleft.outcome }} |
         run: bash scripts/open-data-pr.sh
 
       # GitHub holds CI runs on bot-authored PRs as `action_required` pending
@@ -259,6 +298,8 @@ jobs:
           echo "| VCA fuel economy | ${{ steps.vca.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Euro NCAP | ${{ steps.ncap.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| ONS price index | ${{ steps.priceindex.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Weekly fuel prices | ${{ steps.fuelprices.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| How Many Left | ${{ steps.howmanyleft.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           # `approved=false` means the PR is open and waiting on a human. That
           # must be visible here, or it repeats the 2026-08-16 silence.
