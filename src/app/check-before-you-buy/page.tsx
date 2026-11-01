@@ -105,35 +105,8 @@ export default function CheckBeforeYouBuyPage() {
               "Mileage rollbacks, MOT failures and advisories that keep coming back",
               "A viewing-day checklist built for this model",
             ]}
-            exampleCard={
-              <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-cyan-500/5">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-                  <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
-                    2 THINGS TO ASK
-                  </span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-                  <span className="mx-1.5 text-slate-600">&middot;</span>
-                  2017 Ford Focus 1.0
-                </p>
-                <ul className="mt-4 space-y-2 text-xs">
-                  <li className="rounded-lg border border-emerald-500/30 bg-emerald-950/30 px-3 py-2 text-emerald-100">
-                    ✓ Colour, engine and year match DVLA
-                  </li>
-                  <li className="rounded-lg border border-amber-500/30 bg-amber-950/30 px-3 py-2 text-amber-100">
-                    ! Tyre advisory on 3 MOTs in a row
-                  </li>
-                  <li className="rounded-lg border border-amber-500/30 bg-amber-950/30 px-3 py-2 text-amber-100">
-                    ! Logbook issued 3 weeks ago
-                  </li>
-                  <li className="rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 text-slate-400">
-                    ? Finance, write-off, stolen — not in free records
-                  </li>
-                </ul>
-              </div>
-            }
+            sample="buyer"
+            tool="check-before-you-buy"
           />
 
           <div className="mx-auto max-w-3xl px-4 pt-6 pb-12 sm:py-12">

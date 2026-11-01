@@ -146,57 +146,8 @@ export default function CarCheckPage() {
           "Verify make, model, mileage and history before you buy",
           "Free MOT reminders — timed how you like, before it's due",
         ]}
-        exampleCard={
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DVLA-verified
-              </span>
-            </div>
-            <p className="text-sm text-slate-400">
-              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-              <span className="mx-1.5 text-slate-600">&middot;</span>
-              2018 VW Golf 1.4 TSI
-            </p>
-            <p className="text-xs text-slate-500">Petrol &middot; 1.4L &middot; Manual</p>
-
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="rounded-md border border-emerald-700/30 bg-emerald-900/15 p-2.5 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500">MOT</p>
-                <p className="mt-0.5 text-sm font-bold text-emerald-300">VALID</p>
-                <p className="text-[9px] text-slate-500">to Jan 2027</p>
-              </div>
-              <div className="rounded-md border border-emerald-700/30 bg-emerald-900/15 p-2.5 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500">Tax</p>
-                <p className="mt-0.5 text-sm font-bold text-emerald-300">TAXED</p>
-                <p className="text-[9px] text-slate-500">&pound;190/yr</p>
-              </div>
-              <div className="rounded-md border border-emerald-700/30 bg-emerald-900/15 p-2.5 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500">Recalls</p>
-                <p className="mt-0.5 text-sm font-bold text-emerald-300">NONE</p>
-                <p className="text-[9px] text-slate-500">All clear</p>
-              </div>
-              <div className="rounded-md border border-emerald-700/30 bg-emerald-900/15 p-2.5 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500">ULEZ</p>
-                <p className="mt-0.5 text-sm font-bold text-emerald-300">EURO 6</p>
-                <p className="text-[9px] text-slate-500">Compliant</p>
-              </div>
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-2 text-center">
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">mileage</p>
-                <p className="text-xs font-semibold text-slate-300">56,400 mi</p>
-              </div>
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">valuation</p>
-                <p className="text-xs font-semibold text-emerald-400">&pound;6.8k&ndash;&pound;8.4k</p>
-              </div>
-            </div>
-          </div>
-        }
+        sample="check"
+        tool="car-check"
       />
 
       <div className="max-w-3xl mx-auto px-4 py-12">

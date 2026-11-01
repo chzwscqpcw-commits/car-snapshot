@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import HeroRegSearch from "@/components/HeroRegSearch";
-import TrustBar from "@/components/TrustBar";
+import LandingHero from "@/components/LandingHero";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
 import PlateSwitch from "@/components/tools/PlateSwitch";
@@ -133,59 +131,19 @@ export default function RunningCostsPage() {
 
       <PlateSwitch tool="runningCosts">
         <>
-      <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
-        <div className="max-w-3xl mx-auto px-4 py-6">
-          <a
-            href="/tools"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block"
-          >
-            &larr; Back to all tools
-          </a>
-          <div className="grid gap-3 grid-cols-[1fr_110px] sm:grid-cols-[1fr_135px] lg:grid-cols-[1fr_280px] lg:gap-8 items-start lg:items-center">
-            <div className="min-w-0">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-tight">
-                What Does It Cost to Run Your Car?
-              </h1>
-              <p className="text-sm text-slate-400 mt-2 leading-relaxed">
-                Get a free breakdown of fuel, tax, depreciation, MOT and servicing costs for any UK vehicle.
-              </p>
-            </div>
-            <div className="flex justify-end lg:justify-start">
-              <div className="lg:hidden relative">
-                <Image
-                  src="/previews/running-costs.png"
-                  alt="Sample running-cost breakdown"
-                  width={110}
-                  height={145}
-                  className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
-                  style={{ width: 110, height: 145 }}
-                />
-                <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                  Sample
-                </span>
-              </div>
-              <div className="hidden lg:block relative w-fit">
-                <Image
-                  src="/previews/running-costs.png"
-                  alt="Sample running-cost breakdown"
-                  width={280}
-                  height={365}
-                  className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top -rotate-2"
-                  style={{ width: 280, height: 365 }}
-                />
-                <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                  Sample
-                </span>
-              </div>
-            </div>
-          </div>
-          {/* Hero reg box (graduated winner of valuation_hero_reg_v1) — above the
-              fold like the valuation/MOT pages; the lower ConversionWidget hides
-              its own lookup so there's no duplicate. */}
-          <HeroRegSearch targetPath="/running-costs" ctaLabel="Check running costs free" className="mt-5" />
-          <TrustBar className="mt-5" />
-        </div>
-      </div>
+      <LandingHero
+        h1="What Does It Cost to Run Your Car?"
+        searchTargetPath="/running-costs"
+        searchCtaLabel="Check running costs free"
+        subtitle="Get a free breakdown of fuel, tax, depreciation, MOT and servicing costs for any UK vehicle."
+        bullets={[
+          "Fuel, tax, insurance, servicing and depreciation, itemised",
+          "Worked from the car's real MOT mileage and DVLA record",
+          "Free, instant, no signup",
+        ]}
+        sample="running-costs"
+        tool="running-costs"
+      />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget

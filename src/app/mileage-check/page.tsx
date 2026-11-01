@@ -140,71 +140,13 @@ export default function MileageCheckPage() {
         searchCtaLabel="Check mileage free"
         subtitle="Every odometer reading from every MOT test since 2005 — verify mileage and spot clocking instantly. Free, no signup."
         badgeText="Free · No signup · MOT mileage records"
-        previewImage="mileage-check.png"
         bullets={[
           "Mileage timeline from every MOT test since 2005",
           "Automatic anomaly flag for potential odometer tampering",
           "Annual mileage trend vs. the UK average",
         ]}
-        exampleCard={
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DVSA-verified
-              </span>
-            </div>
-            <p className="text-sm text-slate-400">
-              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-              <span className="mx-1.5 text-slate-600">&middot;</span>
-              2018 VW Golf 1.4 TSI
-            </p>
-            <p className="text-xs text-slate-500">8 MOT records since 2018</p>
-
-            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">Latest reading</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                  CONSISTENT
-                </span>
-              </div>
-              <p className="mt-1 text-2xl font-bold text-slate-100">
-                56,400 mi
-              </p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                14 Jan 2026 &middot; no anomalies detected
-              </p>
-            </div>
-
-            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Annual progression</p>
-            <div className="mt-2 flex items-end gap-1 h-12 border-b border-slate-800">
-              <div className="flex-1 bg-blue-500/40" style={{ height: "20%" }} />
-              <div className="flex-1 bg-blue-500/50" style={{ height: "30%" }} />
-              <div className="flex-1 bg-blue-500/60" style={{ height: "45%" }} />
-              <div className="flex-1 bg-blue-500/65" style={{ height: "52%" }} />
-              <div className="flex-1 bg-blue-500/75" style={{ height: "65%" }} />
-              <div className="flex-1 bg-blue-500/85" style={{ height: "78%" }} />
-              <div className="flex-1 bg-blue-500/95" style={{ height: "90%" }} />
-              <div className="flex-1 bg-blue-500" style={{ height: "100%" }} />
-            </div>
-            <div className="mt-1 flex justify-between text-[9px] text-slate-500">
-              <span>2018</span>
-              <span>2026</span>
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-2 text-center">
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">avg per year</p>
-                <p className="text-xs font-semibold text-slate-300">~7,500 mi</p>
-              </div>
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">vs UK avg</p>
-                <p className="text-xs font-semibold text-emerald-400">Below</p>
-              </div>
-            </div>
-          </div>
-        }
+        sample="mileage"
+        tool="mileage-check"
       />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
