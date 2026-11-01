@@ -16,6 +16,8 @@ import {
   type JobRun,
 } from "../src/lib/data-status";
 import { dueWithin, renderDueMarkdown } from "./data-due";
+import { dataProvenance, nextUpdateLabel, provenanceLine } from "../src/lib/data-provenance";
+import { datasetByFile } from "../src/data/_registry";
 import { anyFailing, nextState, parseOutcomes, parseState, renderBody } from "./report-step-failures";
 
 let failed = 0;
@@ -99,6 +101,20 @@ check("the theft FOI is due in August 2027 and says to email the DVLA", august.s
 const overdue = dueWithin("2027-10-01", 45);
 check("an overdue dataset stays listed and is marked overdue", overdue.some((r) => r.file === "theft-risk.json" && r.dueInDays < 0) && renderDueMarkdown(overdue, "2027-10-01", 45).includes("overdue"));
 check("a wider window reaches February's curated files", dueWithin("2026-11-06", 120).some((r) => r.file === "body-types.json"));
+
+console.log("provenance line");
+const manifest = { "theft-stats.json": "2026-10-12T19:36:33Z", "theft-risk.json": "2026-10-12T19:36:33Z", "recalls.json": "2026-11-01T11:15:11Z", "how-many-left.json": "2026-10-30T00:00:00Z" };
+const theft = dataProvenance(["theft-stats.json", "theft-risk.json"], manifest);
+check("the line reads date, source, next update", provenanceLine(theft) === "Data as of 12 October 2026 · Source DVLA FOI FOIR13058 ÷ DfT VEH0120 · Next update September 2027", provenanceLine(theft));
+check("duplicate sources collapse to one", theft.sources.length === 1);
+const mixed = dataProvenance(["recalls.json", "how-many-left.json"], manifest);
+check("the oldest file sets the date and the cadence", mixed.asOf === "2026-10-30T00:00:00Z" && mixed.nextUpdate === "weekly" && mixed.sources.length === 2, mixed);
+const insights = dataProvenance(["how-many-left.json", "mot-pass-rates.json", "theft-risk.json", "colour-popularity.json"], { ...manifest, "mot-pass-rates.json": "2026-10-11T00:00:00Z", "colour-popularity.json": "2026-06-08T00:00:00Z" });
+check("with a hand-run file oldest, next update is its month, not the weekly job's", insights.asOfLabel === "8 June 2026" && insights.nextUpdate === "February 2027" && insights.covers === "2025 registrations", insights);
+check("more than two sources are summarised", insights.sourcesLabel === "DfT VEH0120 and 3 others" && insights.sources.length === 4, insights.sourcesLabel);
+check("a file with no manifest date gives no date", dataProvenance(["recalls.json"], {}).asOf === null);
+check("a weekly job says weekly, a monthly one monthly, a hand run its month", nextUpdateLabel(datasetByFile("recalls.json")!) === "weekly" && nextUpdateLabel(datasetByFile("model-price-calibration.json")!) === "monthly" && nextUpdateLabel(datasetByFile("mot-pass-rates.json")!) === "May 2027" && nextUpdateLabel(datasetByFile("caz-zones.ts")!) === "when the source changes");
+check("coversYear is carried for the pages that print it", theft.coversYear === 2025 && dataProvenance(["mot-pass-rates.json"], manifest).coversYear === 2023);
 
 console.log("failure issue state");
 const outcomes = parseOutcomes("DVSA recalls=failure;VCA fuel economy=success;Euro NCAP=skipped");

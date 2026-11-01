@@ -153,7 +153,7 @@ export default function VanTheftPage() {
           </p>
         </div>
 
-        <CiteThisData title={TITLE} url={URL} />
+        <CiteThisData title={TITLE} url={URL} files={["theft-stats.json", "theft-risk-vans.json"]} />
         <FaqAccordion items={faqItems} />
 
         <ConversionWidget

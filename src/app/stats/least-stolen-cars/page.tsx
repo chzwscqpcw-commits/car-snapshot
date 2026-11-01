@@ -136,7 +136,7 @@ export default function LeastStolenCarsPage() {
           </p>
         </div>
 
-        <CiteThisData title={TITLE} url={URL} />
+        <CiteThisData title={TITLE} url={URL} files={["theft-stats.json"]} />
         <FaqAccordion items={faqItems} />
 
         <ConversionWidget

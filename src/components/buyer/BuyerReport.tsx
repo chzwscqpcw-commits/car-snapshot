@@ -1,5 +1,6 @@
 "use client";
 
+import DataAsOf from "@/components/stats/DataAsOf";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertOctagon,
@@ -151,6 +152,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       <Step n={2} title="What the free records show">
         <FlagList flags={flags} />
         <MileageLine mileage={mileage} compareToUkAverage={!isBike} />
+        <DataAsOf files={["recalls.json", "theft-risk.json", "mot-pass-rates.json"]} compact className="mt-3" />
       </Step>
 
       <Step n={3} title="What the free records can't show">

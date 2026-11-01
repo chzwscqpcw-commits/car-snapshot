@@ -174,6 +174,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: "https://www.freeplatecheck.co.uk/about/data",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
+    {
       url: "https://www.freeplatecheck.co.uk/contact",
       lastModified: new Date("2026-03-13"),
       changeFrequency: "yearly",

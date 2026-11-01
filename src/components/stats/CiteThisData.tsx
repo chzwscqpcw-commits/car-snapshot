@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Quote, Copy, Check } from "lucide-react";
+import DataAsOf from "@/components/stats/DataAsOf";
 
 interface CiteThisDataProps {
   /** The data-story page title (used in the citation). */
@@ -10,6 +11,8 @@ interface CiteThisDataProps {
   url: string;
   /** Source/publisher name. */
   publisher?: string;
+  /** The datasets behind the page (registry file names) — adds the "Data as of" line. */
+  files?: string[];
 }
 
 /**
@@ -24,6 +27,7 @@ export default function CiteThisData({
   title,
   url,
   publisher = "Free Plate Check",
+  files,
 }: CiteThisDataProps) {
   const plainCite = `${publisher}. "${title}." ${url}`;
   const htmlCite = `<a href="${url}">${title} — ${publisher}</a>`;
@@ -56,6 +60,7 @@ export default function CiteThisData({
         Using these figures in an article or post? A credit with a link back is
         appreciated — copy a ready-made citation:
       </p>
+      {files && files.length > 0 && <DataAsOf files={files} className="-mt-2 mb-4" />}
 
       <div className="space-y-3">
         {rows.map((r) => (

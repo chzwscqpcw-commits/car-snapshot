@@ -265,7 +265,7 @@ export default function HowManyLeftPage() {
           means taxed for road use; &ldquo;SORN&rdquo; means declared off-road. Counts are a snapshot.
         </p>
 
-        <CiteThisData title="How Many Cars Are Left on UK Roads" url="https://www.freeplatecheck.co.uk/stats/how-many-left" />
+        <CiteThisData title="How Many Cars Are Left on UK Roads" url="https://www.freeplatecheck.co.uk/stats/how-many-left" files={["how-many-left.json"]} />
 
         {/* Insight copy */}
         <div className="my-10 space-y-4 text-sm leading-relaxed text-slate-300">

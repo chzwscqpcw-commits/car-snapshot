@@ -30,6 +30,7 @@ const SITE_LINKS = [
   { href: "/", label: "Home" },
   { href: "/tools", label: "All tools" },
   { href: "/about", label: "About" },
+  { href: "/about/data", label: "Our data" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },

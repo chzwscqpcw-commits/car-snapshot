@@ -6,18 +6,22 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import FaqAccordion from "@/components/stats/FaqAccordion";
 import CiteThisData from "@/components/stats/CiteThisData";
 import CarColourCharts from "@/components/stats/CarColourCharts";
+import { datasetByFile } from "@/data/_registry";
+
+// The registration year the shares cover, from the registry (coversYear).
+const YEAR = datasetByFile("colour-popularity.json")?.coversYear ?? 2025;
 
 export const metadata: Metadata = {
   title: "Most Popular Car Colours in the UK 2026 — Full Ranking",
   description:
-    "Britain's most popular new car colours, ranked by 2025 registration share. Grey leads for the eighth year running, with monochrome shades taking around 70% of the market.",
+    `Britain's most popular new car colours, ranked by ${YEAR} registration share. Grey leads for the eighth year running, with monochrome shades taking around 70% of the market.`,
   alternates: {
     canonical: "https://www.freeplatecheck.co.uk/stats/car-colours",
   },
   openGraph: {
     title: "Most Popular Car Colours in the UK 2026 — Full Ranking",
     description:
-      "Britain's most popular new car colours, ranked by 2025 registration share. Grey leads for the eighth year running.",
+      `Britain's most popular new car colours, ranked by ${YEAR} registration share. Grey leads for the eighth year running.`,
     url: "https://www.freeplatecheck.co.uk/stats/car-colours",
     siteName: "Free Plate Check",
     locale: "en_GB",
@@ -63,9 +67,9 @@ export default function CarColoursPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "Most Popular Car Colours in the UK 2025",
+              name: `Most Popular Car Colours in the UK ${YEAR}`,
               description:
-                "UK new car colours ranked by share of 2025 registrations, based on SMMT data. Grey, black and blue lead the market.",
+                `UK new car colours ranked by share of ${YEAR} registrations, based on SMMT data. Grey, black and blue lead the market.`,
               url: "https://www.freeplatecheck.co.uk/stats/car-colours",
               license: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
               creator: {
@@ -73,7 +77,7 @@ export default function CarColoursPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2025",
+              temporalCoverage: String(YEAR),
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "Share of new car registrations by colour (per cent)",
@@ -95,7 +99,7 @@ export default function CarColoursPage() {
       />
       <StatsHeroSection
         title="Most Popular Car Colours in the UK 2026"
-        subtitle="Britain's favourite new-car colours, ranked by 2025 registration share — and what your colour choice means for resale."
+        subtitle={`Britain's favourite new-car colours, ranked by ${YEAR} registration share — and what your colour choice means for resale.`}
         breadcrumb="Car Colours"
       />
 
@@ -113,14 +117,15 @@ export default function CarColoursPage() {
         {/* Source / methodology note — figures attributable now that the page
             invites citation. */}
         <p className="mt-3 text-xs text-slate-500">
-          Figures are the share of UK new car registrations by colour for the
-          2025 full year (SMMT), rounded to one decimal place.
+          Figures are the share of UK new car registrations by colour for the{" "}
+          {YEAR} full year (SMMT), rounded to one decimal place.
         </p>
 
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
         <CiteThisData
           title="Most Popular Car Colours in the UK"
           url="https://www.freeplatecheck.co.uk/stats/car-colours"
+          files={["colour-popularity.json"]}
         />
 
         {/* Insight copy */}

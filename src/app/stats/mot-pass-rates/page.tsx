@@ -7,6 +7,11 @@ import StatsRelated from "@/components/stats/StatsRelated";
 import CiteThisData from "@/components/stats/CiteThisData";
 import DataAsOf from "@/components/stats/DataAsOf";
 import passRateData from "@/data/mot-pass-rates.json";
+import { datasetByFile } from "@/data/_registry";
+
+// The DVSA test year the figures cover, from the registry (coversYear), so the
+// prose, the schema and the data cannot drift apart when the bulk data is rebuilt.
+const TEST_YEAR = datasetByFile("mot-pass-rates.json")?.coversYear ?? 2023;
 
 import MotPassRateCharts from "@/components/stats/MotPassRateCharts";
 
@@ -81,7 +86,7 @@ const stats = computeStats();
 const faqItems = [
   {
     question: "What is the national MOT pass rate in the UK?",
-    answer: `The national average MOT first-time pass rate is approximately ${stats.nationalAvg}%, based on 32.8 million initial MOT tests on cars and light vans in 2023 — the most recent year DVSA has published. That means nearly 3 in 10 vehicles fail first time. Pass rates vary significantly by make, model and vehicle age.`,
+    answer: `The national average MOT first-time pass rate is approximately ${stats.nationalAvg}%, based on 32.8 million initial MOT tests on cars and light vans in ${TEST_YEAR} — the most recent year DVSA has published. That means nearly 3 in 10 vehicles fail first time. Pass rates vary significantly by make, model and vehicle age.`,
   },
   {
     question: "Which car make has the highest MOT pass rate?",
@@ -95,7 +100,7 @@ const faqItems = [
   {
     question: "How are MOT pass rates calculated?",
     answer:
-      "Pass rates are calculated from real MOT test results recorded by the DVSA (Driver and Vehicle Standards Agency). The rate represents the percentage of vehicles that pass their MOT on the first attempt within a given test year, without requiring any repair and retest. Our figures cover every initial class 4 MOT test in 2023 (retests excluded); a fix made during the test (PRS) counts as a fail.",
+      `Pass rates are calculated from real MOT test results recorded by the DVSA (Driver and Vehicle Standards Agency). The rate represents the percentage of vehicles that pass their MOT on the first attempt within a given test year, without requiring any repair and retest. Our figures cover every initial class 4 MOT test in ${TEST_YEAR} (retests excluded); a fix made during the test (PRS) counts as a fail.`,
   },
   {
     question: "Does my car's age affect its MOT pass rate?",
@@ -119,7 +124,7 @@ export default function MotPassRatesPage() {
             {
               "@context": "https://schema.org",
               "@type": "Dataset",
-              name: "MOT Pass Rates by Make & Model (2023 DVSA data)",
+              name: `MOT Pass Rates by Make & Model (${TEST_YEAR} DVSA data)`,
               description:
                 "Interactive UK MOT pass rate statistics by make and model. See national averages, top failure reasons, and find out how your car compares — based on millions of real MOT tests.",
               url: "https://www.freeplatecheck.co.uk/stats/mot-pass-rates",
@@ -130,7 +135,7 @@ export default function MotPassRatesPage() {
                 name: "Free Plate Check",
                 url: "https://www.freeplatecheck.co.uk",
               },
-              temporalCoverage: "2023",
+              temporalCoverage: String(TEST_YEAR),
               spatialCoverage: "United Kingdom",
               variableMeasured:
                 "MOT first-time pass rate percentage by vehicle make and model",
@@ -184,7 +189,7 @@ export default function MotPassRatesPage() {
         {/* Charts */}
         <MotPassRateCharts />
 
-        {/* The page states the DVSA test year its figures COVER (calendar 2023, in
+        {/* The page states the DVSA test year its figures COVER (TEST_YEAR, in
             the schema and the prose); this states when our copy of the data was
             last refreshed, which is a different fact and the one a citing
             journalist needs. Both datasets the charts draw on are listed, so
@@ -266,7 +271,7 @@ export default function MotPassRatesPage() {
 
         {/* Related stats */}
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
-        <CiteThisData title="UK MOT Pass Rates" url="https://www.freeplatecheck.co.uk/stats/mot-pass-rates" />
+        <CiteThisData title="UK MOT Pass Rates" url="https://www.freeplatecheck.co.uk/stats/mot-pass-rates" files={["mot-pass-rates.json", "mot-failure-reasons.json"]} />
 
         <StatsRelated exclude="mot-pass-rates" />
       </div>

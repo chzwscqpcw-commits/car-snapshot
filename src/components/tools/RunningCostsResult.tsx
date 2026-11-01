@@ -1,5 +1,6 @@
 "use client";
 
+import DataAsOf from "@/components/stats/DataAsOf";
 import { useEffect, useMemo, useState } from "react";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
@@ -1091,6 +1092,7 @@ function CostForecastCard({
         and insurance. Depreciation per year eases as the car ages; maintenance
         gently rises. Fuel and VED held constant at today&apos;s rates.
       </p>
+      <DataAsOf files={["fuel-prices-weekly.json", "fuel-economy.json", "new-prices.json"]} compact className="-mt-2 mb-4" />
 
       <div ref={ref} className="space-y-2">
         {/* Today's actual cost — the solid anchor the projection extends from */}

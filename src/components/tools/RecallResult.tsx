@@ -1,5 +1,6 @@
 "use client";
 
+import DataAsOf from "@/components/stats/DataAsOf";
 import { useEffect, useState } from "react";
 import {
   AlertTriangle,
@@ -208,6 +209,7 @@ function RecallList({ recalls }: { recalls: Recall[] }) {
           <ExternalLink className="h-2.5 w-2.5" />
         </a>
       </p>
+      <DataAsOf files={["recalls.json"]} compact className="mt-2" />
     </section>
   );
 }
