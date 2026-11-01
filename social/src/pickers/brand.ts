@@ -256,7 +256,7 @@ export function pickColours(occurrence: number, weekIndex: number, music: boolea
     caption: `Britain's favourite car colours: ${rows
       .slice(0, 5)
       .map((r) => `${r.label} ${r.display}`)
-      .join(", ")}. ${topThree.join(", ")} take ${Math.round(all.slice(0, 3).reduce((n, c) => n + c.share, 0))}% between them. Your car's colour, and how rare it is, is in the free check.`,
+      .join(", ")}. ${prettyName(all[0].colour)}, ${topThree[1]} and ${topThree[2]} take ${Math.round(all.slice(0, 3).reduce((n, c) => n + c.share, 0))}% between them. Your car's colour, and how rare it is, is in the free check.`,
     tags: ["carcolours", "newcars", "grey"],
     source: "SMMT new car registrations by colour",
     sourceDate: "2025",
