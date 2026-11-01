@@ -71,6 +71,10 @@ for the component side, minus the now-removed variant branching.
 
 - Telemetry must never break the user flow — `tracking.ts` mirrors events
   fire-and-forget via `sendBeacon` (fallback `fetch` keepalive) to `/api/event`.
+- Every public page lives in `src/lib/site-index.ts` — the command palette
+  (⌘K), the mobile drawer and `/tools` all read it (a `tools` block on an
+  entry is its `/tools` card). `npm run test:site-index` walks `src/app` and
+  fails when a page is missing or an entry points nowhere.
 - The admin dashboard at `/data-health` (PIN-gated) shows data freshness, the CI
   badge, and MarketCheck API usage.
 - Commit messages end with the project's `Co-Authored-By` trailer.
