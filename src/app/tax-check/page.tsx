@@ -139,64 +139,13 @@ export default function TaxCheckPage() {
         searchCtaLabel="Check tax status free"
         subtitle="Real-time DVLA tax status for any UK vehicle — see if it's taxed, SORN, or due. Plus VED band and annual cost. Free, instant, no signup."
         badgeText="Free · No signup · Real-time DVLA tax data"
-        previewImage="tax-check.png"
         bullets={[
           "Real-time DVLA status — taxed, SORN or untaxed",
           "Annual VED rate based on CO₂ band and registration year",
           "Free MOT reminders — timed how you like, before it's due",
         ]}
-        exampleCard={
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DVLA live
-              </span>
-            </div>
-            <p className="text-sm text-slate-400">
-              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-              <span className="mx-1.5 text-slate-600">&middot;</span>
-              2018 VW Golf 1.4 TSI
-            </p>
-            <p className="text-xs text-slate-500">Petrol &middot; 1.4L &middot; CO₂ 121g/km</p>
-
-            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">Tax status</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                  TAXED
-                </span>
-              </div>
-              <p className="mt-1 text-2xl font-bold text-slate-100">
-                Expires 30 Aug 2026
-              </p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                123 days remaining
-              </p>
-            </div>
-
-            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Annual VED</p>
-            <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">band</p>
-                <p className="text-xs font-semibold text-slate-300">Std</p>
-              </div>
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">12 month</p>
-                <p className="text-xs font-semibold text-emerald-400">&pound;190</p>
-              </div>
-              <div className="rounded-md bg-slate-800/60 p-2">
-                <p className="text-[10px] text-slate-500">6 month</p>
-                <p className="text-xs font-semibold text-slate-300">&pound;104.50</p>
-              </div>
-            </div>
-
-            <p className="mt-3 rounded-md bg-amber-500/10 border border-amber-700/30 px-3 py-2 text-[11px] text-amber-300">
-              &#9888; Driving untaxed: fine up to &pound;1,000
-            </p>
-          </div>
-        }
+        sample="tax"
+        tool="tax-check"
       />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">

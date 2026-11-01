@@ -1,10 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import Image from "next/image";
 import MOTBookingCTA from "@/components/MOTBookingCTA";
 import ConversionWidget from "@/components/stats/ConversionWidget";
-import HeroRegSearch from "@/components/HeroRegSearch";
-import TrustBar from "@/components/TrustBar";
+import LandingHero from "@/components/LandingHero";
 import MotReminderBanner from "@/components/MotReminderBanner";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 import StatCallouts from "@/components/StatCallouts";
@@ -137,129 +135,19 @@ export default function MotCheckPage() {
 
       <PlateSwitch tool="mot">
         <>
-      {/* --- HERO --- */}
-      <div className="relative overflow-hidden border-b border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-6 lg:pb-10">
-          <a
-            href="/tools"
-            className="text-blue-400 hover:text-blue-300 text-sm mb-6 inline-block"
-          >
-            &larr; Back to all tools
-          </a>
-
-          {/* MOBILE LAYOUT (<lg) */}
-          <div className="lg:hidden">
-            <div className="grid gap-3 grid-cols-[1fr_110px] sm:grid-cols-[1fr_135px] items-start">
-              <div className="min-w-0">
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 leading-tight">
-                  Free MOT History Check
-                </h1>
-                <a
-                  href="#mot-reminder"
-                  className="inline-flex items-center gap-1.5 mt-3 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1.5 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
-                >
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
-                  Set free MOT reminder &rarr;
-                </a>
-              </div>
-              <div className="flex justify-end">
-                <div className="relative">
-                  <Image
-                    src="/previews/mot-check.png"
-                    alt="Sample MOT history result"
-                    width={110}
-                    height={145}
-                    className="rounded-lg border border-slate-700/60 shadow-xl shadow-cyan-500/15 -rotate-2 object-cover object-top"
-                    style={{ width: 110, height: 145 }}
-                  />
-                  <span className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[9px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                    Sample
-                  </span>
-                </div>
-              </div>
-            </div>
-            <p className="mt-4 text-base text-slate-300 leading-relaxed">
-              Every MOT result, advisory and failure for any UK vehicle since 2005 &mdash; pulled directly from the DVSA.
-            </p>
-            <ul className="mt-4 space-y-1.5 text-sm text-slate-400">
-              <li className="flex items-start gap-2">
-                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                Every test result since 2005 with full advisory notes
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                Spot recurring problems and mileage tampering
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                Free MOT reminders — timed how you like
-              </li>
-            </ul>
-          </div>
-
-          {/* DESKTOP LAYOUT (≥lg) */}
-          <div className="hidden lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:items-center">
-            <div>
-              {/* Desktop hero heading — a <p>, not a second <h1>: the mobile
-                  layout above already carries the page's single <h1> (one h1
-                  per page; fixes Bing's "multiple <h1>" flag). */}
-              <p className="text-5xl font-bold text-slate-100 leading-tight">
-                Free MOT History Check
-              </p>
-              <a
-                href="#mot-reminder"
-                className="inline-flex items-center gap-1.5 mt-4 rounded-full border border-emerald-700/60 bg-emerald-900/30 px-3 py-1.5 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:border-emerald-600"
-              >
-                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-                Set free MOT reminder &rarr;
-              </a>
-              <p className="mt-4 text-lg text-slate-300 leading-relaxed max-w-xl">
-                Every MOT result, advisory and failure for any UK vehicle since 2005 &mdash; pulled directly from the DVSA. Spot recurring issues, verify mileage, and never miss your next MOT.
-              </p>
-              <ul className="mt-5 space-y-2 text-sm text-slate-400">
-                <li className="flex items-start gap-2">
-                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                  Every test result since 2005 with full advisory notes
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                  Spot recurring problems, mileage tampering and deferred maintenance
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path d="M5 13l4 4L19 7" /></svg>
-                  Free MOT reminders — you choose when, before it&apos;s due
-                </li>
-              </ul>
-            </div>
-            <div className="relative w-fit mx-auto lg:mx-0">
-              <Image
-                src="/previews/mot-check.png"
-                alt="Sample MOT history result"
-                width={280}
-                height={365}
-                className="rounded-2xl border border-slate-700/60 shadow-2xl shadow-cyan-500/10 object-cover object-top -rotate-2"
-                style={{ width: 280, height: 365 }}
-              />
-              <span className="absolute -top-3 -right-3 px-2.5 py-1 rounded-full bg-amber-400 text-slate-900 text-[10px] font-bold uppercase tracking-wider shadow-lg rotate-3">
-                Sample
-              </span>
-            </div>
-          </div>
-
-          {/* Hero reg box (graduated valuation_hero_reg_v1 winner). Lower widget
-              hides its duplicate lookup (showLookup={false}). */}
-          <HeroRegSearch targetPath="/mot-check" ctaLabel="Check MOT history free" className="mt-6" />
-
-          <TrustBar className="mt-7 border-t border-slate-800/70 pt-5" />
-        </div>
-      </div>
+      <LandingHero
+        h1="Free MOT History Check"
+        searchTargetPath="/mot-check"
+        searchCtaLabel="Check MOT history free"
+        subtitle="Every MOT result, advisory and failure for any UK vehicle since 2005 — pulled directly from the DVSA. Spot recurring issues, verify mileage, and never miss your next MOT."
+        bullets={[
+          "Every test result since 2005 with full advisory notes",
+          "Spot recurring problems, mileage tampering and deferred maintenance",
+          "Free MOT reminders — you choose when, before it's due",
+        ]}
+        sample="mot"
+        tool="mot-check"
+      />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
         <ConversionWidget

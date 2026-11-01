@@ -139,72 +139,13 @@ export default function RecallCheckPage() {
         searchCtaLabel="Check for recalls free"
         subtitle="Check any UK vehicle for outstanding safety recalls from the DVSA database — repairs are always free, even on older cars. Free, instant, no signup."
         badgeText="Free · No signup · DVSA recall database"
-        previewImage="recall-check.png"
         bullets={[
           "Cross-checked against the full DVSA recall database",
           "Recall repairs are always free — regardless of vehicle age",
           "Free MOT reminders so you never miss a related safety check",
         ]}
-        exampleCard={
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DVSA-verified
-              </span>
-            </div>
-            <p className="text-sm text-slate-400">
-              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-              <span className="mx-1.5 text-slate-600">&middot;</span>
-              2018 VW Golf 1.4 TSI
-            </p>
-            <p className="text-xs text-slate-500">Make-model match &middot; cross-referenced</p>
-
-            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">Outstanding recalls</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                  NONE
-                </span>
-              </div>
-              <p className="mt-1 text-2xl font-bold text-slate-100">
-                All clear
-              </p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                Checked 14 Jan 2026 &middot; DVSA database
-              </p>
-            </div>
-
-            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Past recalls (completed)</p>
-            <div className="mt-2 space-y-1.5">
-              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                <div>
-                  <span className="text-slate-300">2020 &middot; Airbag inflator</span>
-                  <p className="text-[10px] text-slate-500">VW notice R/2020/123</p>
-                </div>
-                <span className="inline-flex items-center gap-1 text-emerald-300">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
-                  Done
-                </span>
-              </div>
-              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                <div>
-                  <span className="text-slate-300">2022 &middot; Fuel pump seal</span>
-                  <p className="text-[10px] text-slate-500">VW notice R/2022/045</p>
-                </div>
-                <span className="inline-flex items-center gap-1 text-emerald-300">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
-                  Done
-                </span>
-              </div>
-            </div>
-
-            <p className="mt-3 text-[10px] text-slate-500 text-center">
-              Recall repairs are always <span className="font-bold text-emerald-400">free</span>, no time limit
-            </p>
-          </div>
-        }
+        sample="recall"
+        tool="recall-check"
       />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">

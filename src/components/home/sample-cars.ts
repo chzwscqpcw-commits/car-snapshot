@@ -1,16 +1,26 @@
-// The made-up cars the example result rotates through, on the homepage (the
-// full check) and on /value-my-car (the valuation). Each tells a different
-// story (an open recall, a ULEZ fail, a retest, a car that has lost most of its
-// value) so the card shows what a check can turn up, not just a clean bill of
-// health. Plates are placeholders in the AB12 CDE style; the card is labelled
-// "Example result". The earliest "valid until" date is 30 Jan 2027: refresh
-// the dates (and add a test to each history) before then. Ages are measured
-// from REF_YEAR, so bump that with the dates.
+// The made-up cars the example result rotates through: on the homepage (the
+// full check), on /value-my-car (the valuation) and on every tool lander in
+// that tool's own form (MOT history, tax, mileage, ULEZ, recalls, buyer's
+// check, running costs). Each tells a different story (an open recall, a ULEZ
+// fail, a retest, a car that has lost most of its value) so the card shows
+// what a check can turn up, not just a clean bill of health. Plates are
+// placeholders in the AB12 CDE style; the card is labelled "Example result".
+// The earliest "valid until" date is 30 Jan 2027: refresh the dates (and add a
+// test to each history) before then — scripts/test-sample-cars.ts fails two
+// weeks ahead of the first expiry. Ages are measured from REF_YEAR, so bump
+// that with the dates.
 
 export type MotResult = "pass" | "retest";
 
 /** The year the sample data describes; ages and average mileage count from it. */
 export const REF_YEAR = 2026;
+
+/** One line of the buyer's check: a match, something to ask about, or a gap
+ *  free records can't fill. */
+export interface BuyerFlag {
+  tone: "ok" | "warn" | "ask";
+  text: string;
+}
 
 export interface SampleCar {
   id: string;
@@ -42,6 +52,28 @@ export interface SampleCar {
   runningCost: string;
   /** Fuel (or charging), insurance, servicing, tax: shares of the year's cost. */
   costSplit: [number, number, number, number];
+
+  // ── Per-tool detail (the tool landers' cards) ──
+  /** Tax runs to this date; must stay in the future like `motUntil`. */
+  taxUntil: string;
+  /** The year's VED, in pounds. */
+  vedAnnual: number;
+  /** Shown on the tax and ULEZ cards: what the band is based on. */
+  vedBasis: string;
+  /** The emissions standard the ULEZ verdict rests on. */
+  euroStandard: string;
+  /** Advisories on the most recent test, oldest-looking first; empty = clean. */
+  advisories: string[];
+  /** First-time pass rate for this make and model, percent. */
+  modelPassRate: number;
+  /** Recalls already fixed (shown as completed on the recall card). */
+  pastRecalls: number;
+  /** What the open recall is for, when `openRecalls` > 0. */
+  openRecallTitle?: string;
+  /** The year's running cost as a number (`runningCost` is its sentence). */
+  runningCostTotal: number;
+  /** The buyer's check, top to bottom: three or four lines. */
+  buyerFlags: BuyerFlag[];
 }
 
 export const SAMPLE_CARS: SampleCar[] = [
@@ -67,6 +99,20 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 0,
     runningCost: "About £1,640 a year",
     costSplit: [46, 30, 13, 11],
+    taxUntil: "1 Jul 2027",
+    vedAnnual: 195,
+    vedBasis: "Standard rate, registered after April 2017",
+    euroStandard: "Euro 6",
+    advisories: ["Front tyres worn close to the legal limit"],
+    modelPassRate: 81,
+    pastRecalls: 1,
+    runningCostTotal: 1640,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, engine and year match DVLA" },
+      { tone: "warn", text: "Failed its 2024 MOT, passed on retest — ask what" },
+      { tone: "warn", text: "Tyre advisory on the last test — budget for a pair" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
   {
     id: "model3",
@@ -90,6 +136,21 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 1,
     runningCost: "About £1,290 a year",
     costSplit: [24, 48, 12, 16],
+    taxUntil: "1 Apr 2027",
+    vedAnnual: 195,
+    vedBasis: "Standard rate — electric cars pay it since April 2025",
+    euroStandard: "Zero emission",
+    advisories: [],
+    modelPassRate: 92,
+    pastRecalls: 2,
+    openRecallTitle: "Rear camera display software",
+    runningCostTotal: 1290,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, motor and year match DVLA" },
+      { tone: "warn", text: "1 open recall — ask if the fix has been done" },
+      { tone: "ok", text: "Three MOTs, all first-time passes, no advisories" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
   {
     id: "golf",
@@ -113,6 +174,20 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 0,
     runningCost: "About £1,890 a year",
     costSplit: [44, 28, 18, 10],
+    taxUntil: "1 Mar 2027",
+    vedAnnual: 195,
+    vedBasis: "Standard rate, registered after April 2017",
+    euroStandard: "Euro 6",
+    advisories: ["Slight oil leak, not excessive", "Rear brake pads wearing thin"],
+    modelPassRate: 76,
+    pastRecalls: 1,
+    runningCostTotal: 1890,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, engine and year match DVLA" },
+      { tone: "warn", text: "99,200 miles — ask for the service history" },
+      { tone: "warn", text: "Oil leak advisory on the last MOT" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
   {
     id: "corsa",
@@ -136,6 +211,20 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 0,
     runningCost: "About £1,520 a year",
     costSplit: [42, 33, 15, 10],
+    taxUntil: "1 May 2027",
+    vedAnnual: 180,
+    vedBasis: "CO₂ band, registered before April 2017",
+    euroStandard: "Euro 5",
+    advisories: ["Slight play in a front wheel bearing"],
+    modelPassRate: 72,
+    pastRecalls: 0,
+    runningCostTotal: 1520,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, engine and year match DVLA" },
+      { tone: "warn", text: "Two retests in nine MOTs — ask what failed" },
+      { tone: "warn", text: "Wheel bearing advisory still open" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
   {
     id: "yaris",
@@ -159,6 +248,20 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 0,
     runningCost: "About £1,180 a year",
     costSplit: [34, 38, 16, 12],
+    taxUntil: "1 Sep 2027",
+    vedAnnual: 195,
+    vedBasis: "Standard rate, registered after April 2017",
+    euroStandard: "Euro 6",
+    advisories: [],
+    modelPassRate: 88,
+    pastRecalls: 0,
+    runningCostTotal: 1180,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, engine and year match DVLA" },
+      { tone: "ok", text: "Four MOTs, all first-time passes, no advisories" },
+      { tone: "ok", text: "Low mileage for its age, rising evenly" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
   {
     id: "320d",
@@ -182,8 +285,41 @@ export const SAMPLE_CARS: SampleCar[] = [
     openRecalls: 0,
     runningCost: "About £2,280 a year",
     costSplit: [45, 27, 20, 8],
+    taxUntil: "1 Jun 2027",
+    vedAnnual: 35,
+    vedBasis: "CO₂ band C, registered before April 2017",
+    euroStandard: "Euro 5",
+    advisories: ["Front tyres worn close to the legal limit", "Corrosion on rear suspension, not serious"],
+    modelPassRate: 70,
+    pastRecalls: 2,
+    runningCostTotal: 2280,
+    buyerFlags: [
+      { tone: "ok", text: "Colour, engine and year match DVLA" },
+      { tone: "warn", text: "Not ULEZ compliant — £12.50 a day in London" },
+      { tone: "warn", text: "146,200 miles — ask for the service history" },
+      { tone: "ask", text: "Finance, write-off, stolen: not in free records" },
+    ],
   },
 ];
+
+/**
+ * The MOT exemption check needs a car near the 40-year line, which none of
+ * the rotating cars are, so its example is fixed. The plate's third letter is
+ * a Z, which the prefix system never issued — it cannot be a real one.
+ */
+export const CLASSIC_SAMPLE = {
+  plate: "C123 XYZ",
+  title: "1986 Ford Escort 1.6 Ghia",
+  spec: "1.6 · Petrol · Red",
+  year: 1986,
+  firstRegistered: "14 Mar 1986",
+  /** The 40th anniversary of first registration: no MOT due from this day. */
+  exemptFrom: "14 Mar 2026",
+  /** The historic tax class starts on the first 1 April after that 40th year. */
+  historicTaxFrom: "1 Apr 2027",
+  lastMot: "Passed, Nov 2025",
+  lastMotAdvisories: 2,
+};
 
 const STORAGE_KEY = "fpc_sample_car";
 let pageChoice: number | null = null;

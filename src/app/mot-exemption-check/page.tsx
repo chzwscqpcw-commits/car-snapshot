@@ -114,41 +114,8 @@ export default function MotExemptionCheckPage() {
               "When the historic tax class actually starts — it isn't the same date",
               "The substantial-changes condition, in plain English",
             ]}
-            exampleCard={
-              <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                    <span className="h-1 w-1 animate-pulse rounded-full bg-emerald-400" />
-                    DVLA build data
-                  </span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  <span className="font-mono uppercase tracking-wider text-slate-200">XYZ 123K</span>
-                  <span className="mx-1.5 text-slate-600">&middot;</span>
-                  1986 Ford Escort 1.6
-                </p>
-                <p className="text-xs text-slate-500">Registered March 1986</p>
-
-                <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-slate-400">MOT exemption</p>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                      ELIGIBLE
-                    </span>
-                  </div>
-                  <p className="mt-1 text-2xl font-bold text-slate-100">Since 1 March 2026</p>
-                </div>
-
-                <div className="mt-3 rounded-lg border border-amber-700/30 bg-amber-950/20 p-4">
-                  <p className="text-xs text-slate-400">Historic tax class</p>
-                  <p className="mt-1 text-lg font-bold text-amber-200">Not until 1 April 2027</p>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    Still has to be taxed for another 13 months
-                  </p>
-                </div>
-              </div>
-            }
+            sample="exemption"
+            tool="mot-exemption-check"
           />
 
           <div className="mx-auto max-w-3xl px-4 py-12 space-y-10">

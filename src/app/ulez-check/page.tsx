@@ -145,73 +145,13 @@ export default function UlezCheckPage() {
         searchCtaLabel="Check ULEZ status free"
         subtitle="Instantly check if your car meets London ULEZ and other UK Clean Air Zone standards — see if you'll pay the £12.50/day charge. Free, no signup."
         badgeText="Free · No signup · Real DVLA emissions data"
-        previewImage="ulez-check.png"
         bullets={[
           "Euro emission standard pulled straight from DVLA",
           "Covers London ULEZ + Birmingham, Bath, Bristol, Sheffield CAZs",
           "Daily charge calculator — non-compliance can cost £4,500/year",
         ]}
-        exampleCard={
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 shadow-xl shadow-emerald-500/5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Example</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DVLA-verified
-              </span>
-            </div>
-            <p className="text-sm text-slate-400">
-              <span className="font-mono uppercase tracking-wider text-slate-200">AB12 CDE</span>
-              <span className="mx-1.5 text-slate-600">&middot;</span>
-              2018 VW Golf 1.4 TSI
-            </p>
-            <p className="text-xs text-slate-500">Petrol &middot; Euro 6 standard</p>
-
-            <div className="mt-4 rounded-lg border border-emerald-700/30 bg-gradient-to-br from-emerald-900/30 to-slate-900/20 p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">London ULEZ</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                  COMPLIANT
-                </span>
-              </div>
-              <p className="mt-1 text-2xl font-bold text-slate-100">
-                &pound;0 / day
-              </p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                No daily charge applies
-              </p>
-            </div>
-
-            <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-slate-500">Other Clean Air Zones</p>
-            <div className="mt-2 space-y-1.5">
-              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                <span className="text-slate-300">Birmingham CAZ</span>
-                <span className="inline-flex items-center gap-1 text-emerald-300">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
-                  Compliant
-                </span>
-              </div>
-              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                <span className="text-slate-300">Bath / Bristol CAZ</span>
-                <span className="inline-flex items-center gap-1 text-emerald-300">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
-                  Compliant
-                </span>
-              </div>
-              <div className="flex items-center justify-between rounded-md bg-slate-800/40 px-3 py-2 text-xs">
-                <span className="text-slate-300">Sheffield CAZ</span>
-                <span className="inline-flex items-center gap-1 text-emerald-300">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path d="M5 13l4 4L19 7"/></svg>
-                  Compliant
-                </span>
-              </div>
-            </div>
-
-            <p className="mt-3 text-[10px] text-slate-500 text-center">
-              Non-compliant: &pound;12.50/day London ULEZ = up to <span className="font-bold text-amber-400">&pound;4,562/yr</span>
-            </p>
-          </div>
-        }
+        sample="ulez"
+        tool="ulez-check"
       />
 
       <div className="max-w-3xl mx-auto px-4 pt-6 pb-12 sm:py-12">
