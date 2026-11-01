@@ -1,4 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import {
+  fetchSocialClips,
+  renderSocialClips,
+  renderSocialTraffic,
+  socialTrafficWindow,
+  type SocialClipsResult,
+  type SocialTrafficAudit,
+} from "./social-clips";
 
 /**
  * Weekly visitor-overview audit — the data behind the Sunday email. Reads
@@ -167,6 +175,10 @@ export interface WeeklyAuditData {
   buyerJourney: BuyerJourneyAudit;
   marketData: MarketDataAudit;
   savedCars: SavedCarsAudit;
+  /** Visitors from the social clips (utm_source) and what they did. */
+  social: SocialTrafficAudit;
+  /** The latest social-<week> release, for the Friday posting routine. */
+  socialClips: SocialClipsResult;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -201,9 +213,12 @@ function twoProportionZ(a: ArmStat, b: ArmStat): number | null {
 export async function buildWeeklyAuditData(
   sb: SupabaseClient,
   nowMs: number,
+  /** The clips fetch, swappable so a test never hits GitHub. */
+  clips: () => Promise<SocialClipsResult> = fetchSocialClips,
 ): Promise<WeeklyAuditData> {
   const d7 = new Date(nowMs - 7 * DAY).toISOString();
   const d14 = new Date(nowMs - 14 * DAY).toISOString();
+  const socialClipsPromise = clips();
 
   // Headline counts: this week vs prior week
   const HEADLINE_EVENTS: { key: string; label: string }[] = [
@@ -390,6 +405,19 @@ export async function buildWeeklyAuditData(
   for (const r of alertsSent) kindOf(metaStr(r.metadata, "kind")).sent++;
   for (const r of alertsOpened) kindOf(metaStr(r.metadata, "kind")).opened++;
 
+  // ── Social (14d: this week vs prior) ─────────────────────────────────────
+  // Visitors whose page_view carried utm_source=tiktok|instagram|facebook (the
+  // clips' bio links), and what those sessions went on to do. Prior week needs
+  // its own partner_click and car_saved rows; results_view is pulled for both.
+  const [rv14, pcPrev] = await Promise.all([pullEvents(sb, "results_view", d14), pullEvents(sb, "partner_click", d14)]);
+  const inCur = (r: EventRow) => Date.parse(r.created_at) >= d7ms;
+  const inPrev = (r: EventRow) => !inCur(r);
+  const social: SocialTrafficAudit = {
+    cur: socialTrafficWindow(pv.filter(inCur), rv14.filter(inCur), savedCur, pc),
+    prev: socialTrafficWindow(pv.filter(inPrev), rv14.filter(inPrev), saved14.filter(inPrev), pcPrev.filter(inPrev)),
+  };
+  const socialClips = await socialClipsPromise;
+
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
     headlineCounts.find((h) => h.label === "Partner clicks")?.cur ?? 0;
@@ -441,6 +469,8 @@ export async function buildWeeklyAuditData(
       byIntent: topN(byIntent, 4),
       alerts: [...alertKinds.values()].sort((a, b) => b.sent - a.sent),
     },
+    social,
+    socialClips,
   };
 }
 
@@ -673,6 +703,10 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
     <strong>Conversion:</strong> ${d.partnerPerResults != null ? `${d.partnerPerResults.toFixed(1)}% of results views led to a partner click` : "n/a"}.
     <span style="color:#94a3b8"> (Note: reg_search now includes repair-cost inline lookups with no results_view — compare partner clicks to results views, not reg searches.)</span>
   </p>
+
+  ${renderSocialTraffic(d.social)}
+
+  ${renderSocialClips(d.socialClips)}
 
   <h3 style="margin:24px 0 6px;font-size:15px">Partner clicks by partner</h3>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 20px">${rows(d.partnersByName)}</table>
