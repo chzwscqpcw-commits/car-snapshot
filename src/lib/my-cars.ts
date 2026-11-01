@@ -37,6 +37,12 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
+/** How many cars this device has in My Cars (the palette's row shows it). */
+export function localCarCount(): number {
+  if (typeof window === "undefined") return 0;
+  return read<LocalCar[]>(MY_CARS_KEY, []).length;
+}
+
 /** Is this car already in the local My Cars list? */
 export function isLocalCar(vrm: string): boolean {
   if (typeof window === "undefined") return false;
