@@ -1,7 +1,12 @@
 /**
- * Site search index — the universe of destinations the command palette can
- * navigate to. Hand-curated so the most-useful results surface first; the
- * blog post index is fetched async from /api/posts and merged at runtime.
+ * Site index — the one list of the site's public pages. The command palette
+ * (⌘K), the mobile drawer and the /tools hub all read it, so a page added here
+ * reaches all three at once; scripts/test-site-index.ts walks src/app and
+ * fails when a public page is missing from it, which is how the index stopped
+ * drifting (by 2026-11 it had no buyer's check, exemption check or the three
+ * newer theft pages). Hand-ordered so the most-useful results surface first;
+ * the blog post index is fetched async from /api/search-index and merged at
+ * runtime.
  */
 
 export type SiteItemCategory =
@@ -12,6 +17,8 @@ export type SiteItemCategory =
   | "site"
   | "action";
 
+export type ToolsSection = "checks" | "utilities";
+
 export interface SiteItem {
   title: string;
   subtitle?: string;
@@ -19,8 +26,17 @@ export interface SiteItem {
   category: SiteItemCategory;
   /** Extra terms to match against, beyond title + subtitle. */
   keywords?: string[];
-  /** Optional Lucide icon name string (rendered by the palette). */
+  /** Icon name, resolved through SITE_ICONS (src/components/site-icons.ts). */
   icon?: string;
+  /** Present when the page has a card on /tools. */
+  tools?: {
+    section: ToolsSection;
+    /** The card's copy — longer than `subtitle`, which the palette shows. */
+    blurb: string;
+    badge?: string;
+    /** Where the card links when that isn't `href` (a sourced booking link). */
+    href?: string;
+  };
 }
 
 export const SITE_ITEMS: SiteItem[] = [
@@ -30,8 +46,13 @@ export const SITE_ITEMS: SiteItem[] = [
     subtitle: "Full report from a reg",
     href: "/",
     category: "check",
-    keywords: ["check", "lookup", "registration", "vrm", "report"],
+    keywords: ["check", "lookup", "registration", "vrm", "report", "number plate", "plate check"],
     icon: "search",
+    tools: {
+      section: "checks",
+      blurb: "Every check at once: DVLA spec, MOT history, tax, mileage, ULEZ, recalls, valuation and running costs on one page.",
+      badge: "All-in-one",
+    },
   },
   {
     title: "Car check",
@@ -48,6 +69,11 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["mot", "test", "expiry", "advisory", "pass rate"],
     icon: "shield-check",
+    tools: {
+      section: "checks",
+      blurb: "Pass/fail history, expiry date, advisories and a clocking-check on mileage.",
+      badge: "Most popular",
+    },
   },
   {
     title: "Tax check",
@@ -56,6 +82,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["tax", "ved", "road tax", "sorn", "expired"],
     icon: "receipt",
+    tools: {
+      section: "checks",
+      blurb: "Current tax status, expiry date and the annual VED rate for your reg.",
+    },
   },
   {
     title: "Mileage check",
@@ -64,6 +94,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["mileage", "odometer", "clocking", "history"],
     icon: "gauge",
+    tools: {
+      section: "checks",
+      blurb: "Every MOT mileage reading plotted — spot clocking and inconsistencies.",
+    },
   },
   {
     title: "ULEZ check",
@@ -72,6 +106,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["ulez", "emissions", "clean air", "caz", "london"],
     icon: "wind",
+    tools: {
+      section: "checks",
+      blurb: "Instant compliance check for London ULEZ and every UK clean-air zone.",
+    },
   },
   {
     title: "Recall check",
@@ -80,6 +118,55 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["recall", "safety", "defect"],
     icon: "alert-triangle",
+    tools: {
+      section: "checks",
+      blurb: "Match your vehicle against every open DVSA safety recall.",
+    },
+  },
+  {
+    title: "MOT exemption check",
+    subtitle: "Is it over 40 and MOT-exempt? The exact date",
+    href: "/mot-exemption-check",
+    category: "check",
+    keywords: [
+      "exemption",
+      "exempt",
+      "mot exempt",
+      "40 years",
+      "classic",
+      "historic",
+      "historic vehicle",
+      "historic tax class",
+      "old car",
+    ],
+    icon: "shield-check",
+    tools: {
+      section: "checks",
+      blurb: "Is your car over 40 and exempt from the MOT? See the exact date — and when the historic tax class starts, which isn't the same day.",
+    },
+  },
+  {
+    title: "Buyer's check",
+    subtitle: "Does the car match its advert? Red flags before you buy",
+    href: "/check-before-you-buy",
+    category: "check",
+    keywords: [
+      "buying",
+      "buyer",
+      "buy",
+      "used car",
+      "before you buy",
+      "check before you buy",
+      "advert",
+      "clone",
+      "red flags",
+      "viewing",
+    ],
+    icon: "clipboard-check",
+    tools: {
+      section: "checks",
+      blurb: "Buying used? Check the car matches its advert, its red flags, and what free data can't show.",
+    },
   },
   {
     title: "Car valuation",
@@ -88,6 +175,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["valuation", "value", "value my car", "worth", "price", "sell"],
     icon: "pound-sterling",
+    tools: {
+      section: "checks",
+      blurb: "Live market valuation built from real eBay listings and depreciation models.",
+    },
   },
   {
     title: "Car comparison",
@@ -96,6 +187,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "check",
     keywords: ["compare", "vs", "side by side"],
     icon: "git-compare",
+    tools: {
+      section: "checks",
+      blurb: "Side-by-side report for two saved vehicles — perfect for shortlisting.",
+    },
   },
 
   // ─── Tools ───
@@ -119,14 +214,11 @@ export const SITE_ITEMS: SiteItem[] = [
       "bmg",
     ],
     icon: "calendar-check",
-  },
-  {
-    title: "Free MOT reminder",
-    subtitle: "We email you before it's due — you choose when",
-    href: "/mot-reminder",
-    category: "action",
-    keywords: ["reminder", "mot reminder", "alert", "email", "notify"],
-    icon: "bell",
+    tools: {
+      section: "utilities",
+      blurb: "Pre-fill the reg once, compare MOT and service prices from local garages, and book in seconds. No email needed.",
+      href: "/booking?source=tools_page",
+    },
   },
   {
     title: "Cheap MOT near you",
@@ -135,14 +227,34 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "action",
     keywords: ["cheap mot", "cheapest mot", "mot price", "mot cost", "mot near me", "compare mot"],
     icon: "pound-sterling",
+    tools: {
+      section: "utilities",
+      blurb: "Compare local garage MOT prices — many beat the £54.85 legal maximum.",
+    },
   },
   {
     title: "MOT prices by town",
-    subtitle: "Average MOT prices for your area",
+    subtitle: "What an MOT costs where you live",
     href: "/mot-prices",
     category: "action",
-    keywords: ["mot prices", "mot by town", "mot cost", "local mot", "compare mot"],
-    icon: "pound-sterling",
+    keywords: ["mot prices", "mot by town", "mot cost", "local mot", "compare mot", "near me", "my town"],
+    icon: "map-pin",
+    tools: {
+      section: "utilities",
+      blurb: "What garages charge for an MOT in your town, from the DVSA's own test results by area.",
+    },
+  },
+  {
+    title: "Free MOT reminder",
+    subtitle: "A nudge before it's due — plus tax, recall & value alerts",
+    href: "/mot-reminder",
+    category: "action",
+    keywords: ["reminder", "mot reminder", "alert", "alerts", "email", "push", "notify", "my cars", "saved car"],
+    icon: "bell",
+    tools: {
+      section: "utilities",
+      blurb: "A heads-up before the MOT is due, timed how you like. Save a car and you also get tax, recall and value alerts, by push or email.",
+    },
   },
   {
     title: "All tools",
@@ -159,6 +271,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "tool",
     keywords: ["embed", "widget", "iframe", "code"],
     icon: "code",
+    tools: {
+      section: "utilities",
+      blurb: "Drop a free vehicle-check box on your own site in two lines of HTML.",
+    },
   },
   {
     title: "Running cost calculators",
@@ -167,6 +283,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "tool",
     keywords: ["running cost", "cost of ownership", "calculator"],
     icon: "calculator",
+    tools: {
+      section: "utilities",
+      blurb: "Annual fuel, tax, insurance and servicing for any UK car.",
+    },
   },
   {
     title: "Servicing & repair guides",
@@ -175,6 +295,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "tool",
     keywords: ["service", "servicing", "repair", "garage", "mechanic"],
     icon: "wrench",
+    tools: {
+      section: "utilities",
+      blurb: "What each service includes, when it's due, and what it typically costs.",
+    },
   },
   {
     title: "EV charger installation",
@@ -199,6 +323,10 @@ export const SITE_ITEMS: SiteItem[] = [
     category: "tool",
     keywords: ["repair", "fix", "cost", "estimate", "garage", "price"],
     icon: "wrench",
+    tools: {
+      section: "utilities",
+      blurb: "Personalised price ranges for common repairs — based on your car.",
+    },
   },
   {
     title: "Aircon regas cost",
@@ -371,6 +499,30 @@ export const SITE_ITEMS: SiteItem[] = [
     icon: "alert-triangle",
   },
   {
+    title: "Least stolen cars",
+    subtitle: "The models thieves leave alone",
+    href: "/stats/least-stolen-cars",
+    category: "stats",
+    keywords: ["least stolen", "rarely stolen", "safest cars", "theft rating", "low theft risk", "not stolen"],
+    icon: "shield-check",
+  },
+  {
+    title: "Van theft statistics",
+    subtitle: "Most-stolen vans & theft rates",
+    href: "/stats/van-theft",
+    category: "stats",
+    keywords: ["van theft", "stolen vans", "most stolen van", "transit", "lcv", "van crime"],
+    icon: "alert-triangle",
+  },
+  {
+    title: "Motorbike theft statistics",
+    subtitle: "Most-stolen bikes & scooters",
+    href: "/stats/motorbike-theft",
+    category: "stats",
+    keywords: ["motorbike theft", "motorcycle theft", "stolen bikes", "scooter theft", "moped", "bike crime"],
+    icon: "alert-triangle",
+  },
+  {
     title: "Road safety",
     subtitle: "Road deaths & casualty trends",
     href: "/stats/road-safety",
@@ -411,6 +563,11 @@ export const SITE_ITEMS: SiteItem[] = [
   { title: "Privacy", href: "/privacy", category: "site", keywords: ["privacy", "gdpr", "data"] },
   { title: "Terms", href: "/terms", category: "site", keywords: ["terms", "conditions"] },
 ];
+
+/** The cards /tools shows in a section, in index order. */
+export function toolsPageItems(section: ToolsSection): SiteItem[] {
+  return SITE_ITEMS.filter((item) => item.tools?.section === section);
+}
 
 /** Top-level links shown in the persistent nav (kept very short). */
 export const PRIMARY_NAV: { label: string; href: string }[] = [

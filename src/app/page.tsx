@@ -171,7 +171,7 @@ import { RegPlate } from "@/components/RegPlate";
 import CountUp from "@/components/CountUp";
 import { useHomeResult } from "@/components/HomeResultContext";
 import { PARTNER_LINKS, getPartnerRel, isPartnerConfigured } from "@/config/partners";
-import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult } from "@/lib/tracking";
+import { trackPartnerClick, trackConversion, trackEvent, trackValuationResult, takePendingRegSource } from "@/lib/tracking";
 import SampleResultCard from "@/components/home/SampleResultCard";
 import InstallToast, { useInstallOffer } from "@/components/pwa/InstallToast";
 import { triggerShare, isMobileDevice } from "@/lib/share";
@@ -1316,7 +1316,7 @@ export default function Home() {
       const plate = readPlate();
       if (!plate) return;
       setVrm(plate);
-      performLookup(plate);
+      performLookup(plate, false, takePendingRegSource() ?? undefined);
       window.history.replaceState(null, "", "/");
     };
     run();
@@ -2266,7 +2266,7 @@ export default function Home() {
 
 
   // Extract core lookup logic so it can be called with a registration directly
-  async function performLookup(cleanedReg: string, skipCache: boolean = false) {
+  async function performLookup(cleanedReg: string, skipCache: boolean = false, source?: string) {
     if (!cleanedReg) {
       setError("Please enter a registration number.");
       return;
@@ -2338,7 +2338,9 @@ export default function Home() {
 
       setData(json.data);
       setCheckedItems(new Set());
-      trackConversion("reg_search", { vrm: cleanedReg, flow: "main" });
+      // `source` names the entry point when it isn't the box on this page (the
+      // command palette hands its reg over via /#vrm= and leaves its source behind).
+      trackConversion("reg_search", { vrm: cleanedReg, flow: "main", ...(source ? { source } : {}) });
       trackEvent("results_view", {
         flow: "main",
         make: json.data.make ?? null,

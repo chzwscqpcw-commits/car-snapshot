@@ -10,30 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  Search,
-  ShieldCheck,
-  Receipt,
-  Gauge,
-  Wind,
-  AlertTriangle,
-  PoundSterling,
-  GitCompare,
-  Bell,
-  CalendarCheck,
-  Code,
-  Calculator,
-  Wrench,
-  BarChart3,
-  Fuel,
-  BookOpen,
-  Car,
-  FileText,
-  CornerDownLeft,
-  ArrowRight,
-  Clock,
-  X,
-} from "lucide-react";
+import { Search, FileText, CornerDownLeft, Clock, X, type LucideIcon } from "lucide-react";
 import {
   PRIMARY_NAV,
   SITE_ITEMS,
@@ -41,8 +18,14 @@ import {
   scoreItem,
   type SiteItem,
 } from "@/lib/site-index";
+import { siteIcon } from "@/components/site-icons";
 import { plateHref } from "@/lib/plate-url";
+import { setPendingRegSource, trackEvent } from "@/lib/tracking";
 import { localCarCount } from "@/lib/my-cars";
+
+/** What opened the palette: the keyboard (⌘K or /), the desktop nav chip, or
+ *  the mobile search icon / drawer button. */
+export type PaletteTrigger = "key" | "nav" | "mobile";
 
 // The homepage owns the My Cars list (its tab opens on /#my-cars), so the
 // palette offers it as a row of its own rather than an index page.
@@ -59,7 +42,7 @@ function myCarsItem(count: number): SiteItem {
 }
 
 interface CommandPaletteContext {
-  open: () => void;
+  open: (trigger?: PaletteTrigger) => void;
   close: () => void;
   isOpen: boolean;
 }
@@ -112,35 +95,19 @@ function rememberVehicle(reg: string, label?: string) {
   }
 }
 
-const ICON_MAP: Record<string, typeof Search> = {
-  search: Search,
-  "shield-check": ShieldCheck,
-  receipt: Receipt,
-  gauge: Gauge,
-  wind: Wind,
-  "alert-triangle": AlertTriangle,
-  "pound-sterling": PoundSterling,
-  "git-compare": GitCompare,
-  bell: Bell,
-  "calendar-check": CalendarCheck,
-  code: Code,
-  calculator: Calculator,
-  wrench: Wrench,
-  "bar-chart-3": BarChart3,
-  fuel: Fuel,
-  "book-open": BookOpen,
-  car: Car,
-};
-
 function iconFor(item: SiteItem) {
-  if (item.icon && ICON_MAP[item.icon]) return ICON_MAP[item.icon];
-  return ArrowRight;
+  return siteIcon(item.icon);
 }
 
 export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const open = useCallback(() => setIsOpen(true), []);
+  // Every open is counted with what opened it — until 2026-11 the palette
+  // fired nothing, so nobody knew whether it was used at all.
+  const open = useCallback((trigger: PaletteTrigger = "nav") => {
+    trackEvent("palette_open", { trigger });
+    setIsOpen(true);
+  }, []);
   const close = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
@@ -148,6 +115,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
       const isK = e.key === "k" || e.key === "K";
       if (isK && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
+        if (!isOpen) trackEvent("palette_open", { trigger: "key" });
         setIsOpen((v) => !v);
         return;
       }
@@ -161,13 +129,13 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
             t.isContentEditable);
         if (!inField) {
           e.preventDefault();
-          setIsOpen(true);
+          open("key");
         }
       }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [isOpen]);
+  }, [isOpen, open]);
 
   // Lock background scroll when open
   useEffect(() => {
@@ -313,18 +281,27 @@ function Palette({ onClose }: { onClose: () => void }) {
     node?.scrollIntoView({ block: "nearest" });
   }, [selected]);
 
+  // What was chosen, never what was typed: the payload carries the kind and
+  // the page, and for a reg only "/" — the plate itself stays out of telemetry.
+  // The homepage fires the reg_search after the hop; the pending source tags
+  // it "palette" so those searches stop landing in the unsourced bucket.
   const runRow = useCallback(
     (row: Row) => {
       if (row.kind === "reg") {
         rememberVehicle(row.reg);
+        trackEvent("palette_select", { kind: "reg", href: "/" });
+        setPendingRegSource("palette");
         window.location.href = plateHref("/", row.reg);
         return;
       }
       if (row.kind === "recent") {
         rememberVehicle(row.vehicle.reg, row.vehicle.label);
+        trackEvent("palette_select", { kind: "recent", href: "/" });
+        setPendingRegSource("palette");
         window.location.href = plateHref("/", row.vehicle.reg);
         return;
       }
+      trackEvent("palette_select", { kind: "page", href: row.item.href, category: row.item.category });
       window.location.href = row.item.href;
     },
     []
@@ -692,7 +669,7 @@ function Row({
   onRun: () => void;
   title: string;
   subtitle?: string;
-  icon: typeof Search;
+  icon: LucideIcon;
   accent?: "cyan";
 }) {
   return (

@@ -365,6 +365,36 @@ export function clearCarVerticalClick(): void {
   }
 }
 
+// ── Reg-search source hand-off ───────────────────────────────────────────────
+// The command palette sends a plate to the homepage as /#vrm=…, and the
+// homepage runs the lookup after the navigation — so the palette can't fire
+// the reg_search itself, and the fragment carries only the plate (never a
+// source, so nothing else rides along in the address). The source waits in
+// sessionStorage for the one lookup that follows; those searches used to land
+// in the unsourced bucket.
+const REG_SOURCE_KEY = "fpc:reg_source";
+
+export function setPendingRegSource(source: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(REG_SOURCE_KEY, source);
+  } catch {
+    /* storage unavailable — the search is simply unsourced */
+  }
+}
+
+/** The pending source, cleared on read so it attaches to one lookup only. */
+export function takePendingRegSource(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const source = sessionStorage.getItem(REG_SOURCE_KEY);
+    if (source) sessionStorage.removeItem(REG_SOURCE_KEY);
+    return source || null;
+  } catch {
+    return null;
+  }
+}
+
 export function trackConversion(
   conversionType: ConversionType,
   metadata?: Record<string, unknown>
