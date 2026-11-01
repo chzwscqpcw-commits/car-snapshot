@@ -221,7 +221,7 @@ export default function MostReliableCarsPage() {
 
         {/* Related */}
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
-        <CiteThisData title="Most Reliable Cars in the UK" url="https://www.freeplatecheck.co.uk/stats/most-reliable-cars" />
+        <CiteThisData title="Most Reliable Cars in the UK" url="https://www.freeplatecheck.co.uk/stats/most-reliable-cars" files={["mot-pass-rates.json"]} />
 
         <StatsRelated exclude="most-reliable-cars" />
       </div>

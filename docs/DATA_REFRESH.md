@@ -215,3 +215,26 @@ The dashboard's 180–365 day thresholds for these are deliberately generous —
 | `fuel-economy.json` | Manual script | Yearly |
 | `mot-pass-rates.json` | Manual script | Yearly |
 | Everything else | Hand-edit JSON | When you spot something out of date |
+
+## What the reader sees
+
+Every dataset-backed section shows one line — *Data as of &lt;date&gt; · Source
+&lt;name&gt; · Next update &lt;month&gt;* — from `src/components/stats/DataAsOf.tsx`
+(`src/lib/data-provenance.ts`: the registry for source and cadence, the
+freshness manifest for the date; the oldest file a section draws on sets the
+date). `CiteThisData` takes `files` and shows the same line. `/about/data`
+(linked from the footer, the About page and the stats hub) lists every
+dataset with its source link, cadence, last refresh and what it feeds, no PIN.
+Pages that used to type the covered year into copy read `coversYear` from the
+registry (`/stats/mot-pass-rates`, `/stats/car-colours`).
+
+## What could and could not be automated (checked 2026-11-01)
+
+| Dataset | Outcome |
+|---|---|
+| How Many Left (VEH0120) | Automated: the Sunday job fetches the UK CSV through the gov.uk Content API every week (DfT publish quarterly), gated by the delta check. |
+| Body types | No source. The `BodyType` column in both VEH0120 and VEH0220 holds the vehicle *category* ("Cars", "Buses and coaches"), not the shape. `scripts/fetch-body-types.ts` keeps its schema guard so it can be re-enabled if DfT restore shapes. Manual, due yearly. |
+| Colour popularity | No machine-readable source. The page's figures are SMMT's new-car registration shares, released each January as a press release; the DfT's VEH0206 is licensed stock by colour — a different measure. Manual, due 1 Feb. |
+| MOT bulk (pass rates, failure areas, postcode areas) | Does not fit a GitHub runner as the scripts stand: ~12 GB of unzipped CSV plus the ~2 GB of zips and DuckDB's temp space against the runner's 14 GB disk. A month-at-a-time rewrite (unzip one month, aggregate into Parquet, delete) would fit; until then it is a local run, documented in the registry hint, due each May. |
+| Theft (FOI) | Manual by nature: DVLA answer FOIR13058 by email. Request in September; the calendar issue says so. |
+| Service prices, tyre sizes, dimensions | Manual, with due dates in the registry. |

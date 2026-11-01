@@ -1,5 +1,6 @@
 "use client";
 
+import DataAsOf from "@/components/stats/DataAsOf";
 import Link from "next/link";
 import { useMemo, useState, useRef, useEffect } from "react";
 
@@ -4671,6 +4672,7 @@ END:VEVENT
                     <a href="https://www.check-vehicle-recalls.service.gov.uk" target="_blank" rel="noopener noreferrer" className="underline hover:text-slate-400">check-vehicle-recalls.service.gov.uk</a>
                     {" "}or contact your manufacturer&apos;s dealer. Recall repairs are always free.
                   </p>
+                  <DataAsOf files={["recalls.json"]} compact className="mt-2" />
                 </div>
               </DataReveal>
             )}
@@ -5388,6 +5390,8 @@ END:VEVENT
                         <ChevronDown className={`w-4 h-4 transition-transform ${showAllInsights ? "rotate-180" : ""}`} />
                       </button>
                     )}
+                    {/* The insights draw on four of our datasets; say how old they are. */}
+                    <DataAsOf files={["how-many-left.json", "mot-pass-rates.json", "theft-risk.json", "colour-popularity.json"]} compact className="pt-1" />
                   </div>
                 </DataReveal>
               );

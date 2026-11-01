@@ -234,7 +234,7 @@ export default function FuelPricesPage() {
 
         {/* Related stats */}
         {/* Cite-this-data box — earns attribution backlinks (digital-PR play) */}
-        <CiteThisData title="UK Fuel Prices" url="https://www.freeplatecheck.co.uk/stats/fuel-prices" />
+        <CiteThisData title="UK Fuel Prices" url="https://www.freeplatecheck.co.uk/stats/fuel-prices" files={["fuel-prices-weekly.json"]} />
 
         <StatsRelated exclude="fuel-prices" />
       </div>

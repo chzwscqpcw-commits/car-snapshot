@@ -109,7 +109,13 @@ export default function AboutPage() {
             <p>
               All data displayed on Free Plate Check is sourced from <strong>official UK government APIs and
               trusted databases</strong>. We do not fabricate or estimate core vehicle data — it comes directly
-              from the following sources:
+              from the following sources. The statistics around each result (recalls, pass rates, theft rates,
+              how many are left, fuel prices) are listed dataset by dataset, with their sources and refresh
+              dates, on{" "}
+              <Link href="/about/data" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">
+                Where our data comes from
+              </Link>
+              .
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2 mt-4">
               <li>

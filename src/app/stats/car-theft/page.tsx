@@ -274,6 +274,7 @@ export default function CarTheftPage() {
         </div>
 
         <CiteThisData
+          files={["theft-stats.json", "theft-risk.json"]}
           title={`Most Stolen Cars in the UK: ${YEAR} DVLA Figures`}
           url="https://www.freeplatecheck.co.uk/stats/car-theft"
         />

@@ -76,6 +76,8 @@ export interface DatasetEntry {
   feeds: string[];
   /** The period the figures cover, when it is fixed (an annual release). */
   covers?: string;
+  /** The year the figures cover, for page copy that used to type it in. */
+  coversYear?: number;
 }
 
 const DFT_LICENSING =
@@ -83,7 +85,7 @@ const DFT_LICENSING =
 const DVSA_MOT_BULK =
   "https://www.data.gov.uk/dataset/e3939ef8-30c7-4ca8-9c7c-ad9475cc9b2f/anonymised-mot-tests-and-results";
 const MOT_BULK_HINT =
-  "Download the year's results, failure-item and lookup zips from data.gov.uk (~12 GB unzipped), then: .venv/bin/python scripts/process-mot-bulk.py <dir> <year> (writes mot-pass-rates.json + mot-failure-reasons.json) and .venv/bin/python scripts/process-mot-areas.py <results-dir> <items-dir> <lookup-dir> <year> (writes mot-areas.json). One-off: python3 -m venv .venv && .venv/bin/pip install duckdb. Update UK_AVERAGE_PASS_RATE in src/lib/mot-pass-rate.ts to the printed figure.";
+  "Local run only — the ~12 GB of unzipped CSV plus the zips does not fit a GitHub runner's 14 GB disk, so there is no workflow (a month-at-a-time rewrite of the two scripts would be needed first). Download the year's results, failure-item and lookup zips from data.gov.uk (~12 GB unzipped), then: .venv/bin/python scripts/process-mot-bulk.py <dir> <year> (writes mot-pass-rates.json + mot-failure-reasons.json) and .venv/bin/python scripts/process-mot-areas.py <results-dir> <items-dir> <lookup-dir> <year> (writes mot-areas.json). One-off: python3 -m venv .venv && .venv/bin/pip install duckdb. Update UK_AVERAGE_PASS_RATE in src/lib/mot-pass-rate.ts to the printed figure.";
 const THEFT_HINT =
   "Email foi@dvla.gov.uk in September asking for FOIR13058 (vehicles recorded as stolen by make/model and year) extended to the latest full year; download df_VEH0120_UK.csv (and VEH0124_AM/NZ) from the DfT licensing page; then: .venv/bin/python scripts/process-theft-foi.py <FOIR13058.xlsx> <df_VEH0120_UK.csv> [<VEH0124_AM.csv> <VEH0124_NZ.csv>] (writes theft-risk.json, theft-risk-vans.json, theft-stats.json).";
 
@@ -229,6 +231,7 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.1, headlineBand: 0.05 },
     feeds: ["/stats/mot-pass-rates", "/stats/most-reliable-cars", "Results page pass rate", "Buyer's check"],
     covers: "2023 test year",
+    coversYear: 2023,
   },
   {
     file: "mot-failure-reasons.json",
@@ -244,6 +247,7 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.1 },
     feeds: ["Results page common failures", "/stats/mot-pass-rates"],
     covers: "2023 test year",
+    coversYear: 2023,
   },
   {
     file: "mot-areas.json",
@@ -259,6 +263,7 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.1, keyShrinkBand: 0.05, headlineBand: 0.1, headlineBands: { nationalPassRate: 0.05 } },
     feeds: ["/mot-prices/[town]"],
     covers: "2024 test year",
+    coversYear: 2024,
   },
   {
     file: "theft-risk.json",
@@ -274,6 +279,7 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.1 },
     feeds: ["Results page theft rating", "Buyer's check", "/stats/car-theft", "/stats/least-stolen-cars"],
     covers: "2025 calendar year",
+    coversYear: 2025,
   },
   {
     file: "theft-risk-vans.json",
@@ -289,6 +295,7 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.1 },
     feeds: ["Results page theft rating (vans)", "/stats/van-theft"],
     covers: "2025 calendar year",
+    coversYear: 2025,
   },
   {
     file: "theft-stats.json",
@@ -304,21 +311,27 @@ export const DATASETS: DatasetEntry[] = [
     deltaRules: { countBand: 0.2, headlineBand: 0.3 },
     feeds: ["/stats/car-theft", "/stats/van-theft", "/stats/motorbike-theft", "/stats/least-stolen-cars", "Stats hub"],
     covers: "2025 calendar year",
+    coversYear: 2025,
   },
   {
     file: "colour-popularity.json",
     kind: "json",
     label: "Car colour popularity",
-    source: { name: "DfT VEH0206 (licensed cars by colour)", url: "https://www.gov.uk/government/statistical-data-sets/veh02-licensed-cars" },
+    // SMMT publish the year's new-car colour shares each January (a press
+    // release and a PDF, no machine-readable table). The DfT's VEH0206 is a
+    // different measure (all licensed cars by colour), so it cannot stand in
+    // without changing what the page says; this stays a hand refresh.
+    source: { name: "SMMT new car registrations by colour", url: "https://www.smmt.co.uk/category/news/registrations/" },
     method: "manual",
     cadence: "annual",
-    nextDue: "2027-06-01",
+    nextDue: "2027-02-01",
     thresholdDays: 400,
-    refreshHint: "Open the VEH0206 table on the DfT VEH02 page, take the latest year's share per colour, and edit src/data/colour-popularity.json (rank, share, label).",
+    refreshHint: "Take the previous year's share per colour from SMMT's January colour release and edit src/data/colour-popularity.json (rank, share, label); update the year in src/app/stats/car-colours/page.tsx copy that narrates the ranking.",
     validator: "validateColourPopularity",
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.1 },
     feeds: ["/stats/car-colours", "Results page colour fact"],
-    covers: "2025",
+    covers: "2025 registrations",
+    coversYear: 2025,
   },
   {
     file: "body-types.json",
@@ -329,7 +342,7 @@ export const DATASETS: DatasetEntry[] = [
     cadence: "annual",
     nextDue: "2027-02-11",
     thresholdDays: 400,
-    refreshHint: "Add new models by hand to src/data/body-types.json from manufacturer specs. If DfT restore body shapes to VEH0220, run npx tsx scripts/fetch-body-types.ts (it refuses to write while the column only says \"Cars\").",
+    refreshHint: "Add new models by hand to src/data/body-types.json from manufacturer specs. Checked 2026-11: the BodyType column in VEH0120 and VEH0220 holds the vehicle category (\"Cars\", \"Buses and coaches\"), not the shape, so no DfT table can feed this. If that changes, npx tsx scripts/fetch-body-types.ts refreshes it (its schema guard refuses to write until it does).",
     validator: "validateBodyTypes",
     deltaRules: { countBand: 0.2, keyShrinkBand: 0.05 },
     feeds: ["Results page body type", "Model guides", "Theft and MOT lookups (model matching)"],

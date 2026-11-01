@@ -93,6 +93,13 @@ export default function StatsIndex() {
           <p className="stats-reveal mt-3 text-base text-slate-400 max-w-2xl" style={{ animationDelay: "50ms" }}>
             Interactive charts and data for every UK driver
           </p>
+          <p className="stats-reveal mt-2 text-sm text-slate-500" style={{ animationDelay: "80ms" }}>
+            Every figure is dated and sourced —{" "}
+            <Link href="/about/data" prefetch={false} className="text-slate-400 underline decoration-slate-700 underline-offset-2 hover:text-slate-200">
+              where our data comes from
+            </Link>
+            .
+          </p>
         </div>
       </div>
 
