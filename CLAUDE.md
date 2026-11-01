@@ -67,6 +67,17 @@ that converted` (≤100%).
 The shipped `MobileSearchCue` (variant C of the concluded test) is the reference
 for the component side, minus the now-removed variant branching.
 
+## Social clips (`social/`)
+
+A Remotion project with its own install, outside the Next build and the root
+`tsc`; root ESLint lints `social/src`. `npm run social:check` runs its
+typecheck and calendar test. The Thursday workflow
+(`.github/workflows/social-clips.yml`) renders three clips a week to a
+`social-<ISO week>` release, and the Friday audit email lists them
+(`src/lib/social-clips.ts`). Routine, setup and go/no-go line:
+`docs/social-pipeline.md`. Never a real registration or a partner name in a
+clip or caption; the test enforces both.
+
 ## Conventions
 
 - Telemetry must never break the user flow — `tracking.ts` mirrors events

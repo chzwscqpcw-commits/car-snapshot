@@ -1,0 +1,125 @@
+name: Social Clips
+
+# Thursday night: render next week's three short vertical clips from the
+# site's own data (social/, a Remotion project) and publish them as a GitHub
+# release tagged social-<ISO week>, with the posters and captions.json. The
+# Friday audit email (src/lib/social-clips.ts) reads the latest such release
+# through the public API and lists the clips with their captions, so the
+# founder can upload them to Buffer in ten minutes. Nothing here posts to a
+# social network.
+#
+# Runs at 22:00 UTC, well before the audit cron (Fridays 16:00 UTC), and
+# renders the ISO week that starts on the coming Monday; `workflow_dispatch`
+# takes a `week` to re-render any week (the calendar is deterministic, so a
+# re-run gives the same three clips and simply replaces the release assets).
+#
+# Budget: the three clips render in about half a minute on an M-series Mac
+# and are expected to take 3–5 minutes on the runner (two cores); the render
+# step is capped at 10 minutes so a stuck browser can't eat the hour. Unlike
+# the data refreshes nothing is committed, so there is no PR and no CI run to
+# approve.
+
+on:
+  schedule:
+    - cron: '0 22 * * 4' # Thursdays at 22:00 UTC
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'ISO week to render, e.g. 2026-W46 (default: the week starting next Monday)'
+        required: false
+        type: string
+
+permissions:
+  contents: write # creates the release and uploads its assets
+
+concurrency:
+  group: social-clips
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: social/package-lock.json
+
+      # Chrome Headless Shell's shared libraries (remotion.dev/docs/miscellaneous/linux-dependencies).
+      - name: Install browser libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends \
+            libnss3 libdbus-1-3 libatk1.0-0 libasound2t64 libxrandr2 libxkbcommon-dev \
+            libxfixes3 libxcomposite1 libxdamage1 libgbm-dev libcups2 libcairo2 \
+            libpango-1.0-0 libatk-bridge2.0-0
+
+      - name: Install the renderer
+        run: npm ci --prefix social --no-audit --no-fund
+
+      - name: Fetch Chrome Headless Shell
+        run: npm --prefix social exec -- remotion browser ensure
+
+      - name: Check the calendar and pickers
+        run: npm run social:check
+
+      - name: Render the week's clips
+        id: render
+        timeout-minutes: 10
+        env:
+          ANALYTICS_WRITES: '0'
+        run: |
+          WEEK_FLAG=""
+          if [ -n "${{ inputs.week }}" ]; then WEEK_FLAG="--week ${{ inputs.week }}"; fi
+          npm run social:render -- --out social/out/current $WEEK_FLAG
+          WEEK=$(node -e "console.log(require('./social/out/current/captions.json').week)")
+          echo "week=$WEEK" >> $GITHUB_OUTPUT
+          ls -la social/out/current
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WEEK: ${{ steps.render.outputs.week }}
+        run: |
+          TAG="social-$WEEK"
+          {
+            echo "Three clips for the week of $(node -e "console.log(require('./social/out/current/captions.json').monday)"), rendered from the site's data by the Thursday job."
+            echo
+            node -e "
+              const c = require('./social/out/current/captions.json');
+              for (const x of c.clips) console.log('- **' + x.day + '** (' + x.audience + '): ' + x.title + ' — \`' + x.file + '\`');
+            "
+            echo
+            echo "captions.json carries each clip's caption and UTM links; the Friday audit email lists them."
+          } > /tmp/notes.md
+          if gh release view "$TAG" --json tagName >/dev/null 2>&1; then
+            echo "release $TAG exists; replacing its assets"
+            gh release upload "$TAG" --clobber social/out/current/*.mp4 social/out/current/*.png social/out/current/captions.json
+          else
+            gh release create "$TAG" --title "Social clips $WEEK" --notes-file /tmp/notes.md \
+              social/out/current/*.mp4 social/out/current/*.png social/out/current/captions.json
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Social clips — ${{ steps.render.outputs.week || 'not rendered' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f social/out/current/captions.json ]; then
+            echo "| day | audience | title | file |" >> $GITHUB_STEP_SUMMARY
+            echo "|---|---|---|---|" >> $GITHUB_STEP_SUMMARY
+            node -e "
+              const c = require('./social/out/current/captions.json');
+              for (const x of c.clips) console.log('| ' + x.day + ' | ' + x.audience + ' | ' + x.title + ' | ' + x.file + ' |');
+            " >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Release: https://github.com/${{ github.repository }}/releases/tag/social-${{ steps.render.outputs.week }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ The render did not produce captions.json — check the render step." >> $GITHUB_STEP_SUMMARY
+          fi
