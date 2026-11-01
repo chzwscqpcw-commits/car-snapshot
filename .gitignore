@@ -66,3 +66,8 @@ vca-data/
 # stale the day after you pull them, and this repo is public. Root-level only —
 # data CSVs that genuinely belong to the project live in subdirectories.
 /*.csv
+
+# Social clip renderer (social/): its own install and render output.
+# Rendered MP4s go to a GitHub release, never into the repo.
+/social/node_modules
+/social/out

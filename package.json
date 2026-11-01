@@ -34,6 +34,11 @@
     "refresh-data": "npx tsx scripts/refresh-data.ts",
     "ping-sitemap": "npx tsx scripts/ping-sitemap.ts",
     "generate-previews": "npx tsx scripts/generate-previews.ts",
+    "social:install": "npm ci --prefix social",
+    "social:render": "npm --prefix social run render --",
+    "social:plan": "npm --prefix social run plan --",
+    "social:preview": "npm --prefix social run preview",
+    "social:check": "npm --prefix social run typecheck && npm --prefix social test",
     "deploy": "vercel build --prod && vercel deploy --prebuilt --prod --archive=tgz"
   },
   "dependencies": {
