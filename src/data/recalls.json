@@ -16,6 +16,42 @@
     "models": [
       "LYRIQ"
     ],
+    "buildDateStart": "2025-03-08",
+    "buildDateEnd": "2025-05-21",
+    "recallDate": "2026-10-28",
+    "defect": "Affected vehicles may not have read-only access to the up-to-date data for the parameters for determining the state of health and expected lifetime of the battery.",
+    "remedy": "Reprogram the battery energy control module.",
+    "recallNumber": "R/2026/406"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2024-04-10",
+    "buildDateEnd": "2024-04-10",
+    "recallDate": "2026-10-27",
+    "defect": "Affected vehicles computers that have had a replacement battery control module fitted can overestimate the state of health of the high-voltage battery.  This means the dashboard could display around 10% battery charge when the battery is in fact nearly empty.",
+    "remedy": "The software for the remedy is not currently available.  Once available Ford will notify affected vehicle owners so they can contact their dealer to schedule an appointment.",
+    "recallNumber": "R/2026/411"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG MACH-E"
+    ],
+    "buildDateStart": "2024-08-06",
+    "buildDateEnd": "2024-08-06",
+    "recallDate": "2026-10-27",
+    "defect": "Affected vehicles computers that have had a replacement battery control module fitted can overestimate the state of health of the high-voltage battery.  This means the dashboard could display around 10% battery charge when the battery is in fact nearly empty.",
+    "remedy": "The software for the remedy is not currently available.  Once available Ford will notify affected vehicle owners so they can contact their dealer to schedule an appointment.",
+    "recallNumber": "R/2026/411"
+  },
+  {
+    "make": "CADILLAC 2",
+    "models": [
+      "LYRIQ"
+    ],
     "buildDateStart": "2025-05-21",
     "buildDateEnd": "2025-06-20",
     "recallDate": "2026-10-21",
@@ -58,6 +94,30 @@
     "defect": "On affected vehicles there is a potential issue with insufficient fastenings on the front seat head cushions.  This means that there is a risk that in the event of an impact the head cushions may not perform as expected and could pose a risk of injury.",
     "remedy": "Reinforce the head restraint cushion attachment.",
     "recallNumber": "R/2026/386"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT CUSTOM"
+    ],
+    "buildDateStart": "2024-09-16",
+    "buildDateEnd": "2025-01-04",
+    "recallDate": "2026-10-19",
+    "defect": "Affected vehicles may have brake discs that do not meet specifications.  This could reduce braking performance the vehicle’s ability to maintain stability and in some cases a brake component could come loose and create a hazard for other road users.",
+    "remedy": "Check for defective parts and replace them as required.",
+    "recallNumber": "R/2026/410"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TOURNEO CUSTOM"
+    ],
+    "buildDateStart": "2024-09-16",
+    "buildDateEnd": "2025-05-01",
+    "recallDate": "2026-10-19",
+    "defect": "Affected vehicles may have brake discs that do not meet specifications.  This could reduce braking performance the vehicle’s ability to maintain stability and in some cases a brake component could come loose and create a hazard for other road users.",
+    "remedy": "Check for defective parts and replace them as required.",
+    "recallNumber": "R/2026/410"
   },
   {
     "make": "MERCEDES-BENZ",
@@ -265,6 +325,54 @@
     "recallNumber": "R/2026/362"
   },
   {
+    "make": "SKODA",
+    "models": [
+      "SUPERB"
+    ],
+    "buildDateStart": "2015-10-01",
+    "buildDateEnd": "2022-09-24",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "OCTAVIA"
+    ],
+    "buildDateStart": "2018-10-22",
+    "buildDateEnd": "2019-01-15",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "KODIAQ"
+    ],
+    "buildDateStart": "2017-02-12",
+    "buildDateEnd": "2023-10-13",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "KAROQ"
+    ],
+    "buildDateStart": "2017-10-12",
+    "buildDateEnd": "2024-01-17",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
     "make": "VOLKSWAGEN",
     "models": [
       "TOURAN"
@@ -335,6 +443,30 @@
     "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
     "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
     "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2017-07-04",
+    "buildDateEnd": "2018-06-14",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/375"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ATLAS"
+    ],
+    "buildDateStart": "2017-06-06",
+    "buildDateEnd": "2018-08-17",
+    "recallDate": "2026-10-16",
+    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/375"
   },
   {
     "make": "CITROEN",
@@ -1063,6 +1195,42 @@
     ],
     "buildDateStart": "2026-02-03",
     "buildDateEnd": "2026-04-16",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "RANGER"
+    ],
+    "buildDateStart": "2026-04-24",
+    "buildDateEnd": "2026-05-04",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MACH-E"
+    ],
+    "buildDateStart": "2025-05-02",
+    "buildDateEnd": "2025-12-09",
+    "recallDate": "2026-09-28",
+    "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
+    "remedy": "Update the vehicles configuration and Software.",
+    "recallNumber": "R/2026/366"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MACH-E"
+    ],
+    "buildDateStart": "2025-12-02",
+    "buildDateEnd": "2025-12-02",
     "recallDate": "2026-09-28",
     "defect": "Affected vehicles have been identified where the Traffic Sign Recognition and Driver Alert System are being turned on or off without the expected notification to the driver.",
     "remedy": "Update the vehicles configuration and Software.",
