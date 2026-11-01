@@ -31,8 +31,9 @@ const SRC = "DVSA anonymised MOT results, class 4, first-time result";
 
 /** The subjects of the fail-reasons clip: the national picture, then popular models. */
 export const FAIL_SUBJECTS: readonly string[] = [
-  "national", "FORD|FIESTA", "VAUXHALL|CORSA", "VOLKSWAGEN|GOLF", "FORD|FOCUS", "BMW|3 SERIES",
-  "NISSAN|QASHQAI", "AUDI|A3", "VOLKSWAGEN|POLO", "BMW|1 SERIES", "FORD|TRANSIT", "VAUXHALL|ASTRA",
+  // Not in the worth-after list's order, so a week rarely shows one model twice.
+  "national", "FORD|FOCUS", "BMW|3 SERIES", "VAUXHALL|CORSA", "AUDI|A3", "FORD|FIESTA",
+  "NISSAN|QASHQAI", "VOLKSWAGEN|GOLF", "VOLKSWAGEN|POLO", "BMW|1 SERIES", "FORD|TRANSIT", "VAUXHALL|ASTRA",
   "MERCEDES BENZ|C CLASS", "TOYOTA|YARIS", "FORD|KUGA", "HONDA|CIVIC", "KIA|SPORTAGE",
   "LAND ROVER|RANGE ROVER EVOQUE", "PEUGEOT|208", "VOLKSWAGEN|TRANSPORTER",
 ];

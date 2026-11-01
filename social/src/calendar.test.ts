@@ -7,7 +7,7 @@
  * Run: npm test (in social/).
  */
 import assert from "node:assert/strict";
-import { isoWeekOf, nextWeek as next, parseWeekLabel, planWeek, weekLabel } from "./calendar";
+import { batchWeeks, isBatchStart, isoWeekOf, nextWeek as next, parseWeekLabel, planWeek, weekLabel } from "./calendar";
 import { captionsFile } from "./captions";
 import { buildWeek } from "./plan";
 import { HOW_MANY_LEFT_MODELS, pickHowManyLeft } from "./pickers/brand";
@@ -25,6 +25,16 @@ assert.equal(weekLabel(isoWeekOf(new Date("2027-01-01T12:00:00Z"))), "2026-W53")
 assert.equal(weekLabel(isoWeekOf(new Date("2026-12-28T12:00:00Z"))), "2026-W53");
 assert.equal(planWeek(parseWeekLabel("2026-W46")).monday, "2026-11-09");
 assert.equal(weekLabel(next(parseWeekLabel("2026-W53"))), "2027-W01");
+
+// Batches: three weeks from the series start, then every third week
+assert.ok(isBatchStart(parseWeekLabel("2026-W45")) && !isBatchStart(parseWeekLabel("2026-W46")) && !isBatchStart(parseWeekLabel("2026-W47")) && isBatchStart(parseWeekLabel("2026-W48")));
+assert.deepEqual(batchWeeks(parseWeekLabel("2026-W52")).map(weekLabel), ["2026-W52", "2026-W53", "2027-W01"]);
+const batch = captionsFile(batchWeeks(parseWeekLabel("2026-W48")).map((w) => buildWeek(w, false)));
+assert.deepEqual(batch.weeks, ["2026-W48", "2026-W49", "2026-W50"]);
+assert.equal(batch.week, "2026-W48");
+assert.equal(batch.clips.length, 9);
+assert.equal(batch.clips[3].week, "2026-W49");
+assert.ok(batch.clips.every((c) => c.file.startsWith(c.week) && c.utm.tiktok.includes(`utm_campaign=${c.week}`)));
 
 // Determinism
 const a = JSON.stringify(captionsFile(buildWeek(parseWeekLabel("2026-W45"))));

@@ -9,7 +9,8 @@
     "plan": "tsx src/cli/plan.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx src/calendar.test.ts",
-    "gallery": "tsx src/cli/gallery.ts"
+    "gallery": "tsx src/cli/gallery.ts",
+    "batch": "tsx src/cli/batch.ts"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.539",

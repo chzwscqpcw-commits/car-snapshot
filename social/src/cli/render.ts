@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { bundle } from "@remotion/bundler";
 import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
-import { parseWeekLabel, upcomingWeek } from "../calendar";
+import { batchWeeks, parseWeekLabel, upcomingWeek } from "../calendar";
 import { captionsFile } from "../captions";
 import { buildWeek } from "../plan";
 import { withSiteAlias } from "../webpack";
@@ -38,14 +38,17 @@ async function main() {
   }
   const stillOnly = args.includes("--still-only");
 
-  const build = buildWeek(week, music);
-  const outDir = path.resolve(flag("out") ?? path.join(SOCIAL_DIR, "out", build.plan.label));
+  const nWeeks = Math.max(1, Number(flag("weeks") ?? 1));
+  const builds = batchWeeks(week, nWeeks).map((w) => buildWeek(w, music));
+  const first = builds[0].plan.label;
+  const last = builds[builds.length - 1].plan.label;
+  const outDir = path.resolve(flag("out") ?? path.join(SOCIAL_DIR, "out", nWeeks > 1 ? `${first}-${last}` : first));
   mkdirSync(outDir, { recursive: true });
 
-  const captions = captionsFile(build);
+  const captions = captionsFile(builds);
   writeFileSync(path.join(outDir, "captions.json"), JSON.stringify(captions, null, 2) + "\n");
-  console.log(`Week ${build.plan.label} (Monday ${build.plan.monday}), music ${music ? "on" : "off"}`);
-  for (const c of build.clips) console.log(`  ${c.slot.day.padEnd(9)} ${c.slot.topic.padEnd(16)} ${c.picked.title}`);
+  console.log(`${nWeeks > 1 ? `Weeks ${first} to ${last}` : `Week ${first}`} (from Monday ${builds[0].plan.monday}), music ${music ? "on" : "off"}`);
+  for (const build of builds) for (const c of build.clips) console.log(`  ${build.plan.label}  ${c.slot.day.padEnd(9)} ${c.slot.topic.padEnd(16)} ${c.picked.title}`);
 
   const started = Date.now();
   console.log("Bundling…");
@@ -55,7 +58,7 @@ async function main() {
     webpackOverride: withSiteAlias,
   });
 
-  for (const clip of build.clips) {
+  for (const clip of builds.flatMap((b) => b.clips)) {
     const inputProps = clip.picked.props as unknown as Record<string, unknown>;
     const composition = await selectComposition({ serveUrl, id: clip.picked.composition, inputProps });
     const still = path.join(outDir, `${clip.id}.png`);
