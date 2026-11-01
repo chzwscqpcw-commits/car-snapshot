@@ -21,10 +21,16 @@ on:
   schedule:
     - cron: '0 4 * * 3' # Wednesdays at 04:00 UTC
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Scrape and validate only: no PR, no issue, no push. The run summary still shows the delta table."
+        type: boolean
+        default: false
 
 permissions:
   contents: write
   pull-requests: write # opens + auto-merges the data PR (main is protected)
+  issues: write # opens / updates "Data refresh needs review: <date>"
   actions: write # approves this PR's own held CI run
 
 env:
@@ -107,68 +113,51 @@ jobs:
           fi
           exit 0
 
-      # Gates the commit exactly as the weekly refresh does: a partial or
-      # failed scrape may cost freshness, but must never push bad data.
-      - name: Validate all data
-        run: npx tsx scripts/validate-data.ts
+      # Gates the commit exactly as the weekly refresh does: shape checks plus
+      # a comparison with main (scripts/validate-data.ts --against). A partial
+      # or failed scrape may cost freshness, but must never push bad data.
+      - name: Validate all data (delta against main)
+        id: validate
+        continue-on-error: true
+        run: npx tsx scripts/validate-data.ts --against origin/main
 
-      - name: Check for changes
-        id: changes
-        run: |
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: validation-report.md
+          if-no-files-found: ignore
+
+      # ok → PR with auto-merge. review → PR without auto-merge + issue.
+      # fail → no PR, previous files kept, issue. See scripts/open-data-pr.sh.
+      - name: Open data PR / review issue
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREFIX: data-prices/
+          TITLE: "data: refresh new-car prices & EV specs"
           # The scrape-state files are committed on purpose: CI runners are
           # ephemeral, so state is the only way a run knows which slice the
           # previous one covered. Without it the scrapers restart from scratch
           # every week and never converge.
-          DATA_FILES="src/data/new-prices.json src/data/ev-specs.json scripts/scrape-state"
-          if git diff --quiet $DATA_FILES; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "No price/spec changes — nothing to commit."
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "Changes detected:"
-            git diff --stat $DATA_FILES
-          fi
-
-      - name: Rebuild freshness manifest
-        if: steps.changes.outputs.changed == 'true'
-        run: npx tsx scripts/build-freshness-manifest.ts
-
-      # main is branch-protected and requires the `checks` status, so a direct
-      # push is rejected with GH006 however good the scrape was. Commit to a
-      # branch and let auto-merge land it once CI passes. See the long note in
-      # refresh-data.yml for why this isn't solved with an admin PAT.
-      - name: Open auto-merging data PR
-        if: steps.changes.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          BRANCH="data-prices/${{ github.run_id }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add src/data/new-prices.json src/data/ev-specs.json src/data/_freshness.json scripts/scrape-state
-          git commit -m "data: refresh new-car prices & EV specs"
-          git push origin "$BRANCH"
-          gh pr create \
-            --title "data: refresh new-car prices & EV specs" \
-            --body "Automated Parkers/EV scrape. Merges itself once \`checks\` passes.
-
-          | source | outcome |
-          |---|---|
-          | Parkers new-car prices | ${{ steps.parkers.outcome }} |
-          | EV specs | ${{ steps.evspecs.outcome }} |
-
-          A \`failure\` above means that dataset kept its previous values. See
-          run ${{ github.run_id }}." \
-            --base main --head "$BRANCH"
-          gh pr merge "$BRANCH" --auto --squash --delete-branch
+          DATA_FILES: src/data/new-prices.json src/data/ev-specs.json scripts/scrape-state
+          STATUS: ${{ steps.validate.outputs.status || 'fail' }}
+          REPORT: validation-report.md
+          DRY_RUN: ${{ inputs.dry_run == true }}
+          OUTCOMES: |
+            | source | outcome |
+            |---|---|
+            | Parkers new-car prices | ${{ steps.parkers.outcome }} |
+            | EV specs | ${{ steps.evspecs.outcome }} |
+        run: bash scripts/open-data-pr.sh
 
       # See the long note in refresh-data.yml: GitHub holds CI runs on
       # bot-authored PRs as `action_required`, so without this the PR sits open
       # forever waiting on a human.
       - name: Approve own CI run
         id: approve
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.gate.outputs.pr != ''
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -217,11 +206,14 @@ jobs:
         run: |
           echo "## New-Car Price & EV Spec Refresh — Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.changes.outputs.changed }}" = "true" ]; then
-            echo "✅ Data changed. Commit pushed; Vercel will deploy." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ No changes this run." >> $GITHUB_STEP_SUMMARY
-          fi
+          case "${{ steps.gate.outputs.outcome }}" in
+            auto-merge) echo "✅ Data changed and validated. PR ${{ steps.gate.outputs.pr }} merges itself once CI passes." >> $GITHUB_STEP_SUMMARY ;;
+            review-pr)  echo "🟡 Data changed but a dataset moved outside its band. PR ${{ steps.gate.outputs.pr }} is waiting for a person (issue: ${{ steps.gate.outputs.issue }})." >> $GITHUB_STEP_SUMMARY ;;
+            failed)     echo "❌ Validation failed. Nothing committed; previous files kept. Issue: ${{ steps.gate.outputs.issue }}" >> $GITHUB_STEP_SUMMARY ;;
+            dry-run)    echo "🧪 Dry run: scraped and validated, nothing opened or pushed (changed=${{ steps.gate.outputs.changed }}, validation=${{ steps.validate.outputs.status }})." >> $GITHUB_STEP_SUMMARY ;;
+            no-change)  echo "ℹ️ No changes this run." >> $GITHUB_STEP_SUMMARY ;;
+            *)          echo "⚠️ The gate did not run — read the log." >> $GITHUB_STEP_SUMMARY ;;
+          esac
           echo "" >> $GITHUB_STEP_SUMMARY
           # Both scrapers are continue-on-error, so a green job proves nothing
           # on its own. Print the outcomes.
@@ -231,14 +223,17 @@ jobs:
           echo "| Parkers new-car prices | ${{ steps.parkers.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| EV specs | ${{ steps.evspecs.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Current entry counts" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          node -e "
-            const fs=require('fs');
-            for (const f of ['new-prices.json','ev-specs.json']) {
-              const d=JSON.parse(fs.readFileSync('src/data/'+f,'utf-8'));
-              const count = Array.isArray(d) ? d.length : Object.keys(d).length;
-              console.log(f.padEnd(22)+' '+count.toLocaleString()+' entries');
-            }
-          " >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.gate.outputs.pr }}" ]; then
+            echo "Self-approval of CI run: **${{ steps.approve.outputs.approved || 'unknown' }}**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f validation-report.md ]; then
+            cat validation-report.md >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail the job if validation failed
+        if: always() && (steps.validate.outputs.status == 'fail' || steps.validate.outcome != 'success')
+        run: |
+          echo "::error title=Data validation failed::no PR was opened; the previous files are kept. See the issue linked in the summary."
+          exit 1

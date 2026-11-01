@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run test:pdf && npm run test:report-v2 && npm run test:valuation && npm run test:historic && npm run test:booking && npm run test:booking-postcode && npm run test:buyer-flags && npm run test:model-buying && npm run test:model-family && npm run test:redact && npm run test:ebay && npm run test:wbac && npm run test:wrong-turn && npm run test:insurance && npm run test:saved-cars && npm run test:car-alerts && npm run test:mot-areas && npm run test:fixter && npm run test:sample-cars && npm run test:site-index && npm run test:social-clips",
+    "test": "npm run test:pdf && npm run test:report-v2 && npm run test:valuation && npm run test:historic && npm run test:booking && npm run test:booking-postcode && npm run test:buyer-flags && npm run test:model-buying && npm run test:model-family && npm run test:redact && npm run test:ebay && npm run test:wbac && npm run test:wrong-turn && npm run test:insurance && npm run test:saved-cars && npm run test:car-alerts && npm run test:mot-areas && npm run test:fixter && npm run test:sample-cars && npm run test:site-index && npm run test:social-clips && npm run test:data-registry",
     "test:pdf": "npx tsx scripts/test-pdf-report.ts",
     "test:report-v2": "npx tsx scripts/test-report-v2.ts",
     "test:valuation": "npx tsx scripts/test-valuation-lookup.ts",
@@ -42,7 +42,9 @@
     "social:plan": "npm --prefix social run plan --",
     "social:preview": "npm --prefix social run preview",
     "social:check": "npm --prefix social run typecheck && npm --prefix social test",
-    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod --archive=tgz"
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod --archive=tgz",
+    "test:data-registry": "npx tsx scripts/test-data-registry.ts",
+    "validate-data:delta": "npx tsx scripts/validate-data.ts --against"
   },
   "dependencies": {
     "@react-email/components": "^1.0.8",

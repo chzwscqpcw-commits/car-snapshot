@@ -1,5 +1,33 @@
 # Data refresh guide
 
+**The source of truth for every dataset is `src/data/_registry.ts`**: file,
+label, source and URL, how it is refreshed (`method`), how often (`cadence`),
+when the next hand run is due (`nextDue`), how old it may get
+(`thresholdDays`), the exact command (`refreshHint`), its validator and the
+bands for the comparison with the previous version (`deltaRules`).
+`/data-health`, `scripts/check-freshness.ts` and `scripts/validate-data.ts`
+all read it, and `npm run test:data-registry` fails when a file in
+`src/data/` is missing from it. Add a dataset → add a registry entry.
+
+## Validation: shape and delta
+
+`npx tsx scripts/validate-data.ts` checks every file's shape (parses, minimum
+count, plausible values). `npm run validate-data:delta` (or `--against <ref>`)
+also compares each file with the version committed at `origin/main` (falling
+back to `HEAD`): entry count within a band, key sets (makes, models, postcode
+areas, recall numbers) not shrinking by more than a band, and headline figures
+(national pass rate, latest fuel price, How Many Left totals for known models)
+within bands. Results are `ok`, `review` (out of band but plausible) or `fail`
+(shape error, or a change no refresh produces — a dataset halving, a date
+going backwards). It writes `validation-report.md` and, in Actions, a
+`status` output.
+
+Both refresh workflows run the delta and route on it
+(`scripts/open-data-pr.sh`): `ok` auto-merges as before; `review` opens the
+PR without auto-merge, labels it `data-review`, puts the table in the body and
+opens (or updates) the issue "Data refresh needs review: <date>"; `fail`
+opens no PR, keeps the previous files, opens the issue and turns the run red.
+
 How to keep each data file in `src/data/` fresh. There are three tiers:
 
 | Tier | What | Action |

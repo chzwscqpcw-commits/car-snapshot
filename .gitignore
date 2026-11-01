@@ -71,3 +71,7 @@ vca-data/
 # Rendered MP4s go to a GitHub release, never into the repo.
 /social/node_modules
 /social/out
+
+# Written by `npm run validate-data:delta` and the refresh workflows; attached to
+# their PRs, never committed.
+validation-report.md

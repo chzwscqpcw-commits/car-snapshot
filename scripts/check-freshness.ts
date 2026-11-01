@@ -1,11 +1,13 @@
 #!/usr/bin/env npx tsx
 /**
- * Data file freshness monitor
+ * Data file freshness monitor.
  *
- * Checks when each data file was last modified (via git log or fs.stat)
- * and flags stale files based on configurable thresholds.
+ * Reads every dataset from the registry (src/data/_registry.ts), finds when
+ * each file was last changed (git log, else mtime) and flags the ones past
+ * their `thresholdDays`. The thresholds used to live in a table in this file
+ * that disagreed with the one in the data-health route; the registry is now
+ * the only copy.
  *
- * Usage:
  *   npx tsx scripts/check-freshness.ts          # human-readable table
  *   npx tsx scripts/check-freshness.ts --json   # machine-readable JSON
  *
@@ -14,68 +16,35 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
+import { DATASETS, describeMethod } from "../src/data/_registry";
 
 const DATA_DIR = path.resolve(__dirname, "../src/data");
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 
 interface FreshnessEntry {
   file: string;
+  label: string;
   lastModified: string; // ISO date
   daysAgo: number;
   threshold: number;
   stale: boolean;
-  source: "automatable" | "curated";
+  method: string;
+  nextDue: string | null;
 }
 
-// Automatable sources have a shorter threshold (90 days)
-// Curated sources get 180 days before flagging
-const FILE_CONFIG: Record<string, { threshold: number; source: "automatable" | "curated" }> = {
-  "recalls.json":            { threshold: 90,  source: "automatable" },
-  // Scheduled into refresh-data.yml on 2026-10-01. It was absent from this
-  // config as well as from every workflow, so nothing watched it and nothing
-  // refreshed it — it sat on a 2026-08-02 snapshot unnoticed. ONS publishes
-  // monthly; 90 days flags a genuinely broken fetch, not a quiet month.
-  "new-car-price-index.json": { threshold: 90, source: "automatable" },
-  "how-many-left.json":      { threshold: 90,  source: "automatable" },
-  "body-types.json":         { threshold: 90,  source: "automatable" },
-  "fuel-economy.json":       { threshold: 180, source: "curated" },
-  "ncap-ratings.json":       { threshold: 180, source: "curated" },
-  "new-prices.json":         { threshold: 180, source: "curated" },
-  "ev-specs.json":           { threshold: 180, source: "curated" },
-  "mot-pass-rates.json":     { threshold: 180, source: "curated" },
-  "mot-failure-reasons.json":{ threshold: 180, source: "semi-auto" },
-  // One annual drop (each year's bulk data lands the following May), rebuilt
-  // by hand with scripts/process-mot-areas.py; 400 days flags a missed year.
-  "mot-areas.json":          { threshold: 400, source: "semi-auto" },
-  "theft-risk.json":         { threshold: 400, source: "semi-auto" },
-  "theft-stats.json":        { threshold: 400, source: "semi-auto" },
-  "theft-risk-vans.json":    { threshold: 400, source: "semi-auto" },
-  "colour-popularity.json":  { threshold: 180, source: "curated" },
-  "tyre-sizes.json":         { threshold: 180, source: "curated" },
-  "vehicle-dimensions.json": { threshold: 180, source: "curated" },
-};
-
 function getLastModifiedDate(file: string): Date {
-  const relPath = path.join("src/data", file);
-
-  // Try git log first
   try {
-    const output = execSync(
-      `git log -1 --format=%aI -- "${relPath}"`,
-      { cwd: PROJECT_ROOT, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] }
-    ).trim();
-    if (output) {
-      return new Date(output);
-    }
+    const output = execFileSync("git", ["log", "-1", "--format=%aI", "--", `src/data/${file}`], {
+      cwd: PROJECT_ROOT,
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "pipe"],
+    }).trim();
+    if (output) return new Date(output);
   } catch {
     // git not available, fall through
   }
-
-  // Fallback to filesystem mtime
-  const filePath = path.join(DATA_DIR, file);
-  const stat = fs.statSync(filePath);
-  return stat.mtime;
+  return fs.statSync(path.join(DATA_DIR, file)).mtime;
 }
 
 function daysBetween(a: Date, b: Date): number {
@@ -85,69 +54,47 @@ function daysBetween(a: Date, b: Date): number {
 const jsonMode = process.argv.includes("--json");
 const now = new Date();
 
-const entries: FreshnessEntry[] = Object.entries(FILE_CONFIG).map(([file, config]) => {
-  const filePath = path.join(DATA_DIR, file);
+const entries: FreshnessEntry[] = DATASETS.map((d) => {
+  const filePath = path.join(DATA_DIR, d.file);
+  const base = { file: d.file, label: d.label, threshold: d.thresholdDays, method: describeMethod(d), nextDue: d.nextDue ?? null };
   if (!fs.existsSync(filePath)) {
-    return {
-      file,
-      lastModified: "unknown",
-      daysAgo: Infinity,
-      threshold: config.threshold,
-      stale: true,
-      source: config.source,
-    };
+    return { ...base, lastModified: "unknown", daysAgo: Infinity, stale: true };
   }
-
-  const lastMod = getLastModifiedDate(file);
+  const lastMod = getLastModifiedDate(d.file);
   const days = daysBetween(lastMod, now);
-
-  return {
-    file,
-    lastModified: lastMod.toISOString().split("T")[0],
-    daysAgo: days,
-    threshold: config.threshold,
-    stale: days > config.threshold,
-    source: config.source,
-  };
+  return { ...base, lastModified: lastMod.toISOString().split("T")[0], daysAgo: days, stale: days > d.thresholdDays };
 });
 
 const staleFiles = entries.filter((e) => e.stale);
+const dueSoon = entries.filter((e) => e.nextDue && (Date.parse(e.nextDue) - now.getTime()) / 864e5 <= 45);
 
 if (jsonMode) {
-  console.log(JSON.stringify({ entries, staleCount: staleFiles.length }, null, 2));
+  console.log(JSON.stringify({ entries, staleCount: staleFiles.length, dueSoon: dueSoon.map((e) => e.file) }, null, 2));
 } else {
   const maxFileLen = Math.max(...entries.map((e) => e.file.length));
-
   console.log("\n  Data File Freshness Report");
-  console.log("  " + "=".repeat(60));
+  console.log("  " + "=".repeat(70));
   console.log();
-  console.log(
-    `  ${"File".padEnd(maxFileLen)}   ${"Last Modified".padEnd(12)}   ${"Age".padEnd(8)}   ${"Threshold".padEnd(10)}   Status`
-  );
-  console.log("  " + "-".repeat(maxFileLen + 50));
-
+  console.log(`  ${"File".padEnd(maxFileLen)}   ${"Last change".padEnd(12)}   ${"Age".padEnd(8)}   ${"Threshold".padEnd(10)}   ${"Next due".padEnd(10)}   Status`);
+  console.log("  " + "-".repeat(maxFileLen + 66));
   for (const e of entries) {
-    const padded = e.file.padEnd(maxFileLen);
     const age = e.daysAgo === Infinity ? "???" : `${e.daysAgo}d`;
-    const status = e.stale
-      ? "\x1b[33m STALE \x1b[0m"
-      : "\x1b[32m  OK   \x1b[0m";
-    console.log(
-      `  ${padded}   ${e.lastModified.padEnd(12)}   ${age.padStart(8)}   ${(e.threshold + "d").padStart(10)}   ${status}`
-    );
+    const status = e.stale ? "\x1b[33m STALE \x1b[0m" : "\x1b[32m  OK   \x1b[0m";
+    console.log(`  ${e.file.padEnd(maxFileLen)}   ${e.lastModified.padEnd(12)}   ${age.padStart(8)}   ${(e.threshold + "d").padStart(10)}   ${(e.nextDue ?? "—").padEnd(10)}   ${status}`);
   }
-
   console.log();
   if (staleFiles.length > 0) {
     console.log(`  \x1b[33m${staleFiles.length} file(s) are stale and may need updating\x1b[0m`);
     for (const f of staleFiles) {
-      console.log(`    - ${f.file} (${f.daysAgo === Infinity ? "not found" : f.daysAgo + " days old"}, threshold: ${f.threshold}d)`);
+      console.log(`    - ${f.file} (${f.daysAgo === Infinity ? "not found" : f.daysAgo + " days old"}, threshold: ${f.threshold}d) — ${f.method}`);
     }
   } else {
     console.log("  \x1b[32mAll data files are fresh\x1b[0m");
   }
+  if (dueSoon.length > 0) {
+    console.log(`  ${dueSoon.length} hand-run dataset(s) due within 45 days: ${dueSoon.map((e) => `${e.file} (${e.nextDue})`).join(", ")}`);
+  }
   console.log();
 }
 
-// Export for use by GitHub Action
 export { entries as freshnessEntries, staleFiles };
