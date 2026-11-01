@@ -1,14 +1,15 @@
 name: Social Clips
 
-# Thursday night: render next week's three short vertical clips from the
+# Saturday night: render next week's three short vertical clips from the
 # site's own data (social/, a Remotion project) and publish them as a GitHub
 # release tagged social-<ISO week>, with the posters and captions.json. The
-# Friday audit email (src/lib/social-clips.ts) reads the latest such release
-# through the public API and lists the clips with their captions, so the
-# founder can upload them to Buffer in ten minutes. Nothing here posts to a
-# social network.
+# Sunday-morning "clips are ready" email (/api/cron/social-clips, via
+# src/lib/social-clips.ts) reads the latest such release through the public
+# API and lists the clips with their captions, so the founder can upload them
+# to Buffer in ten minutes; the Friday audit shows the same section. Nothing
+# here posts to a social network.
 #
-# Runs at 22:00 UTC, well before the audit cron (Fridays 16:00 UTC), and
+# Runs at 22:00 UTC, ten hours before the Sunday email (08:00 UTC), and
 # renders the ISO week that starts on the coming Monday; `workflow_dispatch`
 # takes a `week` to re-render any week (the calendar is deterministic, so a
 # re-run gives the same three clips and simply replaces the release assets).
@@ -21,7 +22,7 @@ name: Social Clips
 
 on:
   schedule:
-    - cron: '0 22 * * 4' # Thursdays at 22:00 UTC
+    - cron: '0 22 * * 6' # Saturdays at 22:00 UTC
   workflow_dispatch:
     inputs:
       week:

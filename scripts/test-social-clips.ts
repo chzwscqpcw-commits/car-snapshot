@@ -11,7 +11,9 @@ import {
   fetchSocialClips,
   latestSocialRelease,
   renderSocialClips,
+  renderSocialClipsEmail,
   renderSocialTraffic,
+  socialClipsSubject,
   socialTrafficWindow,
 } from "../src/lib/social-clips";
 
@@ -84,6 +86,12 @@ check("no social release → ok:false with a plain note", !noRelease.ok && /no s
 const network = await fetchSocialClips((async () => { throw new Error("ENOTFOUND api.github.com"); }) as unknown as typeof fetch, "x/y");
 check("a thrown fetch → ok:false, never a throw", !network.ok && network.note.includes("ENOTFOUND"));
 }
+
+console.log("sunday email");
+check("subject names the Monday and the three titles", socialClipsSubject({ ok: true, data }) === "FPC clips for the week of 2026-11-09: The most stolen cars per 1,000 · Cars that hold their value best");
+check("subject when there is nothing to post", socialClipsSubject({ ok: false, note: "x" }) === "FPC clips: none this week");
+const mail = renderSocialClipsEmail({ ok: true, data });
+check("the email wraps the same section and says when it was sent", mail.includes("this week's clips") && mail.includes("Download 2026-W46-1-brand.mp4") && mail.includes("Sundays 08:00 UTC"));
 
 console.log("social traffic");
 const row = (utm: string | undefined, ip: string | null, t = "2026-11-10T10:00:00Z") => ({ metadata: utm ? { utm_source: utm, path: "/" } : { path: "/" }, ip_hash: ip, created_at: t });

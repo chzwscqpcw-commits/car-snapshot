@@ -71,9 +71,10 @@ for the component side, minus the now-removed variant branching.
 
 A Remotion project with its own install, outside the Next build and the root
 `tsc`; root ESLint lints `social/src`. `npm run social:check` runs its
-typecheck and calendar test. The Thursday workflow
+typecheck and calendar test. The Saturday-night workflow
 (`.github/workflows/social-clips.yml`) renders three clips a week to a
-`social-<ISO week>` release, and the Friday audit email lists them
+`social-<ISO week>` release; a Sunday cron emails them
+(`/api/cron/social-clips`) and the Friday audit lists them too
 (`src/lib/social-clips.ts`). Routine, setup and go/no-go line:
 `docs/social-pipeline.md`. Never a real registration or a partner name in a
 clip or caption; the test enforces both.

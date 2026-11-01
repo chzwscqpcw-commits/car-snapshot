@@ -1,9 +1,11 @@
 /**
- * "This week's clips" for the Friday audit email: the latest `social-<ISO
- * week>` GitHub release (made by .github/workflows/social-clips.yml every
- * Thursday night), read through the public API with no token, so a missing
- * release, a rate limit or a network blip costs one line of the email and
- * never the email itself.
+ * "This week's clips": the latest `social-<ISO week>` GitHub release (made
+ * by .github/workflows/social-clips.yml every Saturday night), read through
+ * the public API with no token, so a missing release, a rate limit or a
+ * network blip costs one line of the email and never the email itself. The
+ * section goes out on its own on Sunday morning (/api/cron/social-clips, the
+ * founder's cue to schedule the week in Buffer) and again inside the Friday
+ * audit.
  *
  * Also the "Social" traffic line: visitors who arrived with
  * utm_source=tiktok|instagram|facebook, and what those sessions went on to do.
@@ -228,4 +230,22 @@ export function renderSocialClips(r: SocialClipsResult): string {
   <h3 style="margin:24px 0 6px;font-size:15px">This week's clips <span style="color:#94a3b8;font-weight:400">(${esc(d.week)}, from Monday ${esc(d.monday)})</span></h3>
   <p style="margin:0 0 10px;font-size:14px">Ten minutes: download the three MP4s, upload each to Buffer, schedule <strong>Monday</strong> (brand), <strong>Wednesday</strong> (sellers), <strong>Friday</strong> (MOT) at about 18:00; TikTok first, cross-posted to Reels and Facebook Reels. Paste the caption as it is. <a href="${esc(d.releaseUrl)}" style="color:#0e7490">All files on the release</a> (published ${esc(d.publishedAt)}).</p>
   ${cards}`;
+}
+
+/** Subject of the Sunday email. */
+export function socialClipsSubject(r: SocialClipsResult): string {
+  if (!r.ok) return "FPC clips: none this week";
+  const d = r.data;
+  return `FPC clips for the week of ${d.monday}: ${d.clips.map((c) => c.title).join(" · ")}`;
+}
+
+/** The Sunday email: the clips section in the audit's frame, nothing else. */
+export function renderSocialClipsEmail(r: SocialClipsResult): string {
+  return `
+<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#0f172a;line-height:1.5">
+  <h2 style="margin:0 0 2px">Free Plate Check — this week's clips</h2>
+  <p style="color:#64748b;margin:0 0 8px;font-size:14px">Rendered Saturday night from the site's data. Schedule them in Buffer today; the routine is in docs/social-pipeline.md.</p>
+  ${renderSocialClips(r)}
+  <p style="color:#94a3b8;font-size:12px;margin:28px 0 0;border-top:1px solid #e2e8f0;padding-top:12px">Sent Sundays 08:00 UTC by /api/cron/social-clips · the Friday audit carries the same section and the Social traffic line.</p>
+</div>`;
 }
