@@ -24,7 +24,8 @@ export const Frame: React.FC<FrameProps> = ({ eyebrow, source, music, children }
   const frame = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   const drift = Math.sin(frame / (fps * 4)) * 40;
-  const headerIn = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: "clamp" });
+  // Fully in on frame 0: the first frame is the poster the networks show.
+  const headerIn = interpolate(frame, [-14, 0], [0, 1], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ background: T.bg, fontFamily: FONT.sans, color: T.ink, overflow: "hidden" }}>
