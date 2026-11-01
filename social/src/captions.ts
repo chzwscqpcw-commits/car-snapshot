@@ -6,10 +6,17 @@ const PLATFORMS = ["tiktok", "instagram", "facebook"] as const;
 
 /** Every caption ends with these, after the topic's own tags. */
 const AUDIENCE_TAGS: Record<Audience, string[]> = {
-  brand: ["freeplatecheck", "ukcars", "carcheck", "fyp"],
-  sellers: ["sellingmycar", "carvaluation", "usedcars", "ukcars"],
-  mot: ["mot", "motcheck", "ukcars", "cars"],
+  brand: ["freeplatecheck", "ukcars", "carcheck"],
+  sellers: ["sellingmycar", "carvaluation", "usedcars"],
+  mot: ["mot", "motcheck", "ukcars"],
 };
+
+/**
+ * Instagram allows five hashtags per post (from late 2026) and the same
+ * caption goes to all three networks, so five it is everywhere: the topic's
+ * own tags first, the audience's filling up the rest.
+ */
+export const MAX_HASHTAGS = 5;
 
 export interface CaptionEntry {
   file: string;
@@ -49,7 +56,10 @@ export function headlineText(hook: Array<string | { em: string }>): string {
 function hashtags(topicTags: string[], audience: Audience): string {
   const seen = new Set<string>();
   const all = [...topicTags, ...AUDIENCE_TAGS[audience]].filter((t) => t && !seen.has(t) && seen.add(t));
-  return all.map((t) => `#${t}`).join(" ");
+  return all
+    .slice(0, MAX_HASHTAGS)
+    .map((t) => `#${t}`)
+    .join(" ");
 }
 
 /** The caption as posted: the templated body, the site, the hashtags. */

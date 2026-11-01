@@ -58,6 +58,8 @@ for (let i = 0; i < 60; i++) {
     assert.ok(!PLATE.test(text.replace(SAMPLE_PLATES, "")), `${c.file}: a registration-shaped token in the caption: ${text}`);
     assert.ok(!PARTNERS.test(text), `${c.file}: a partner is named in the caption`);
     assert.ok(c.caption.length <= 2200, `${c.file}: caption over TikTok's 2,200 characters`);
+    const tags = c.caption.match(/#\w+/g) ?? [];
+    assert.ok(tags.length >= 3 && tags.length <= 5, `${c.file}: ${tags.length} hashtags (Instagram allows 5)`);
     assert.ok(c.utm.tiktok.includes("utm_source=tiktok") && c.utm.tiktok.includes(`utm_campaign=${captions.week}`));
     assert.ok(c.headline.length <= 60, `${c.file}: headline too long for the top third: "${c.headline}"`);
   }
