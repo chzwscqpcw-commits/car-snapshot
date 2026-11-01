@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { AlignLeft, Copy, Ellipsis, Share, SquarePlus, X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import BoltMark from "@/components/BoltMark";
+import HomeScreenWalkthrough from "@/components/pwa/HomeScreenWalkthrough";
+import { iosBrowser, type IosBrowser } from "@/components/pwa/ios-browser";
 import { trackEvent } from "@/lib/tracking";
 import { getDeferredPrompt, installPlatform, setDeferredPrompt, subscribeInstall, type InstallPlatform } from "@/components/pwa/pwa-store";
 
@@ -11,25 +13,6 @@ function offer(): InstallPlatform {
   if (typeof window === "undefined") return "none";
   if (!window.matchMedia?.("(pointer: coarse)").matches) return "none";
   return installPlatform();
-}
-
-type IosBrowser = "safari-new" | "safari" | "chrome" | "other";
-
-/**
- * Which iPhone browser, so the steps match what's on screen. Safari 26 moved
- * Share behind the menu button by the address bar; Chrome keeps it in the
- * address bar; Brave (whose user agent is identical to Safari's, but which
- * exposes navigator.brave), Firefox and the rest can't make a proper
- * home-screen app, so they're sent to Safari.
- */
-function iosBrowser(): IosBrowser {
-  const ua = navigator.userAgent;
-  if ((navigator as Navigator & { brave?: unknown }).brave) return "other";
-  if (/CriOS/.test(ua)) return "chrome";
-  if (/FxiOS|EdgiOS|OPiOS|DuckDuckGo|GSA\//.test(ua)) return "other";
-  const safari = ua.match(/Version\/(\d+)/);
-  if (!safari) return "other";
-  return Number(safari[1]) >= 26 ? "safari-new" : "safari";
 }
 
 /** "prompt" (Android/Chrome), "ios" (Share sheet steps) or "none" (desktop, installed). */
@@ -101,20 +84,7 @@ export default function InstallToast({
     }
   };
 
-  const step = (n: number, body: React.ReactNode) => (
-    <li className="flex items-center gap-2 flex-wrap">
-      <span className="w-5 h-5 shrink-0 rounded-full bg-slate-800 text-[11px] font-semibold text-cyan-300 flex items-center justify-center">{n}</span>
-      {body}
-    </li>
-  );
   const strong = (t: string) => <span className="font-medium text-white">{t}</span>;
-  const addStep = step(
-    2,
-    <>
-      Choose <SquarePlus className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Add to Home Screen")}
-      <span className="text-slate-500">(scroll the list if it&apos;s hidden)</span>
-    </>,
-  );
 
   return (
     <div className={`fixed left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto sm:max-w-md z-50 animate-slideUpIn ${className}`}>
@@ -163,28 +133,7 @@ export default function InstallToast({
           </div>
         )}
 
-        {showSteps && browser !== "other" && (
-          <ol className="mt-3 grid gap-2 text-[13px] text-slate-300">
-            {step(
-              1,
-              browser === "chrome" ? (
-                <>
-                  Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} in the address bar
-                </>
-              ) : browser === "safari-new" ? (
-                <>
-                  Tap the <AlignLeft className="w-4 h-4 text-cyan-400" aria-hidden="true" /> or{" "}
-                  <Ellipsis className="w-4 h-4 text-cyan-400" aria-hidden="true" /> button by the address bar, then {strong("Share")}
-                </>
-              ) : (
-                <>
-                  Tap <Share className="w-4 h-4 text-cyan-400" aria-hidden="true" /> {strong("Share")} at the bottom of the screen
-                </>
-              ),
-            )}
-            {addStep}
-          </ol>
-        )}
+        {showSteps && browser !== "other" && <HomeScreenWalkthrough browser={browser} source="toast" className="mt-4" />}
       </div>
     </div>
   );

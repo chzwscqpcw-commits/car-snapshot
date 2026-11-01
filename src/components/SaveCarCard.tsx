@@ -15,6 +15,8 @@ import {
 } from "@/lib/saved-cars";
 import { addLocalCar, alertsFor, carIntent, isLocalCar, onAlertsChange, onIntentChange, rememberAlerts, rememberIntent } from "@/lib/my-cars";
 import { pushAvailability, subscribeToPush, type PushAvailability } from "@/lib/push-client";
+import HomeScreenWalkthrough from "@/components/pwa/HomeScreenWalkthrough";
+import { iosBrowser, type IosBrowser } from "@/components/pwa/ios-browser";
 
 /**
  * "Save this car and get alerts" — the one-tap save that turns the local My
@@ -82,6 +84,9 @@ export default function SaveCarCard({
   const [hidden, setHidden] = useState(false);
   const [push, setPush] = useState<PushAvailability>({ kind: "unsupported" });
   const [channel, setChannel] = useState<"email" | "push" | null>(null);
+  // iPhone only: the Home Screen walkthrough, offered once alerts are saved
+  // by email so nobody loses the save while learning the gesture.
+  const [howTo, setHowTo] = useState<IosBrowser | null>(null);
   const name = makeModelLabel(make, model);
   const plate = vrm.replace(/\s+/g, "").toUpperCase();
 
@@ -321,7 +326,7 @@ export default function SaveCarCard({
               {push.kind === "ios-install" && (
                 <p className="mt-3 text-xs leading-relaxed text-slate-500">
                   <Smartphone className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-slate-400" />
-                  On iPhone, notifications work once Free Plate Check is on your Home Screen. Email works everywhere.
+                  On iPhone, notifications need Free Plate Check on your Home Screen (we&apos;ll show you how after). Email works everywhere.
                 </p>
               )}
               <div className={`${push.kind === "ready" ? "" : "mt-3.5"} flex flex-col gap-2 sm:flex-row`}>
@@ -364,6 +369,23 @@ export default function SaveCarCard({
                 We&apos;ll {channel === "push" ? "notify you on this device" : "email you"} {alertsDescription(intent)}.
                 {intent && <> You said you&apos;re <span className="text-slate-200">{INTENT_LABELS[intent].toLowerCase()}</span>.</>}
               </p>
+              {push.kind === "ios-install" && channel === "email" && (
+                howTo ? (
+                  <div className="fact-enter mt-4 border-t border-slate-700/60 pt-4">
+                    <p className="mb-3 text-sm font-medium text-white">Alerts on this phone too</p>
+                    <HomeScreenWalkthrough browser={howTo} source="save-card" />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setHowTo(iosBrowser())}
+                    className="mt-3 inline-flex items-center gap-1.5 text-left text-xs font-medium text-cyan-300 underline-offset-4 transition-colors hover:text-cyan-200 hover:underline"
+                  >
+                    <Smartphone className="h-3.5 w-3.5" />
+                    Want alerts on this phone? See how (6 seconds)
+                  </button>
+                )
+              )}
             </div>
           )}
         </div>

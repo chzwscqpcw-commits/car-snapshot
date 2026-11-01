@@ -392,3 +392,38 @@ a {
 html[data-plate] [data-plate-landing] {
   display: none;
 }
+
+/* Home Screen walkthrough (src/components/pwa/HomeScreenWalkthrough.tsx):
+   the finger's tap ring and the app icon landing on the Home Screen. The
+   component itself renders a still under prefers-reduced-motion, so these
+   only ever run for visitors who allow motion. */
+@keyframes hswTap {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+.hsw-tap {
+  animation: hswTap 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes hswLand {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.hsw-land {
+  animation: hswLand 620ms cubic-bezier(0.34, 1.4, 0.64, 1) 180ms both;
+}
