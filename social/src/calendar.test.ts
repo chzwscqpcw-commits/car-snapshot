@@ -27,15 +27,16 @@ assert.equal(planWeek(parseWeekLabel("2026-W46")).monday, "2026-11-09");
 assert.equal(weekLabel(next(parseWeekLabel("2026-W53"))), "2027-W01");
 
 // Determinism
-const a = JSON.stringify(captionsFile(buildWeek(parseWeekLabel("2026-W46"))));
-const b = JSON.stringify(captionsFile(buildWeek(parseWeekLabel("2026-W46"))));
+const a = JSON.stringify(captionsFile(buildWeek(parseWeekLabel("2026-W45"))));
+const b = JSON.stringify(captionsFile(buildWeek(parseWeekLabel("2026-W45"))));
+assert.equal(buildWeek(parseWeekLabel("2026-W45")).plan.monday, "2026-11-02", "the series starts on Monday 2 November 2026");
 assert.equal(a, b, "the same week must build the same captions");
 
 // Rotation over 60 weeks: no consecutive-week topic repeats, no repeated subject within a topic
 const PLATE = /\b[A-Z]{2}\d{2}\s?[A-Z]{3}\b|\b[A-Z]\d{1,3}\s?[A-Z]{3}\b/;
 const SAMPLE_PLATES = /\b(AB19 CDE|CD21 EFG|GH17 JKL|MN15 PQR|ST20 UVW|XY14 ZAB|C123 XYZ)\b/;
 const PARTNERS = /carvertical|webuyanycar|wbac|bookmygarage|clickmechanic|warrantywise|fixter|awin|everflow/i;
-let w = parseWeekLabel("2026-W46");
+let w = parseWeekLabel("2026-W45");
 let prev: string[] = [];
 const titlesByTopic = new Map<string, string[]>();
 let seasonWeeks = 0;

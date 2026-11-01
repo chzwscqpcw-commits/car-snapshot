@@ -14,7 +14,7 @@ From the repo root (the `social/` package has its own install):
 
 ```bash
 npm run social:install                     # once: npm ci inside social/
-npm run social:render -- --week 2026-W46   # → social/out/2026-W46/*.mp4, *.png, captions.json
+npm run social:render -- --week 2026-W45   # → social/out/2026-W45/*.mp4, *.png, captions.json
 npm run social:preview                     # Remotion Studio, every template
 npm run social:plan -- --weeks 12          # what the next 12 weeks will be
 npm run social:check                       # typecheck + the calendar/picker test

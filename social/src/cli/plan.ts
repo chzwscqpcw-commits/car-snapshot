@@ -1,6 +1,6 @@
 /**
  * Print the plan for a week without rendering anything (in social/):
- *   npm run plan -- --week 2026-W46        captions.json for that week
+ *   npm run plan -- --week 2026-W45        captions.json for that week
  *   npm run plan -- --weeks 12             the next 12 weeks, one line each
  */
 import { nextWeek, parseWeekLabel, upcomingWeek } from "../calendar";

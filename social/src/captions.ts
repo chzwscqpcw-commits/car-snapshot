@@ -54,7 +54,10 @@ function hashtags(topicTags: string[], audience: Audience): string {
 
 /** The caption as posted: the templated body, the site, the hashtags. */
 export function fullCaption(body: string, topicTags: string[], audience: Audience): string {
-  return `${body}\n\nFree check: freeplatecheck.co.uk (link in bio)\n\n${hashtags(topicTags, audience)}`;
+  // No "link in bio": TikTok only makes the bio link clickable for Business
+  // accounts or at 1,000 followers, so the domain is the call to action
+  // everywhere, and it is short enough to type.
+  return `${body}\n\nFree check: freeplatecheck.co.uk\n\n${hashtags(topicTags, audience)}`;
 }
 
 export function captionsFile(build: WeekBuild): CaptionsFile {
