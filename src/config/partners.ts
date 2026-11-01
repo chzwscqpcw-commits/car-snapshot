@@ -288,6 +288,43 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       );
     },
   },
+  // Fixter (Awin merchant 18184) — collection-and-delivery servicing, MOT and
+  // repairs through vetted garages in ~100 UK towns and cities. We had been
+  // JOINED on Awin for years without ever placing a link; found on 31 Oct 2026
+  // while pricing MOT routes for the booking programme. Terms are in Awin, not
+  // here (public repo). BookMyGarage stays first for the MOT (proven on the
+  // wizard, national coverage); Fixter is the "have it collected" option
+  // where the basket is a service and the visitor is in a city.
+  //
+  // NO REG IN THE URL. fixter.co.uk's booking is a JavaScript flow and no
+  // pre-fill parameter has been confirmed (not probed as of 31 Oct 2026), and
+  // a plate in an outbound URL that pre-fills nothing is a plate shared for
+  // nothing — the WBAC and Warrantywise rule. `reg` stays in the signature so
+  // a confirmed parameter is a one-line change.
+  fixter: {
+    url: "https://www.awin1.com/cread.php?awinmid=18184&awinaffid=2729598&ued=https%3A%2F%2Fwww.fixter.co.uk%2Fcar-service%2F",
+    name: "Fixter",
+    isAffiliate: true,
+    description: "Car service with collection and delivery from your door",
+    shortDescription: "Collect & deliver servicing",
+    buildLink: (_reg: string, clickref?: string) =>
+      withClickref(
+        "https://www.awin1.com/cread.php?awinmid=18184&awinaffid=2729598&ued=https%3A%2F%2Fwww.fixter.co.uk%2Fcar-service%2F",
+        clickref,
+      ),
+  },
+  fixterMot: {
+    url: "https://www.awin1.com/cread.php?awinmid=18184&awinaffid=2729598&ued=https%3A%2F%2Fwww.fixter.co.uk%2Fmot%2F",
+    name: "Fixter",
+    isAffiliate: true,
+    description: "MOT with collection and delivery from your door",
+    shortDescription: "Collect & deliver MOT",
+    buildLink: (_reg: string, clickref?: string) =>
+      withClickref(
+        "https://www.awin1.com/cread.php?awinmid=18184&awinaffid=2729598&ued=https%3A%2F%2Fwww.fixter.co.uk%2Fmot%2F",
+        clickref,
+      ),
+  },
   // Extended car warranty (Awin merchant 75286) — applied 2026-05-17,
   // APPROVED + activated 2026-08-23.
   //
