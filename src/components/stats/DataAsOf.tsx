@@ -27,7 +27,7 @@ export default function DataAsOf({
   /** Data file names as in the registry, e.g. "theft-risk.json". */
   files: string[];
   className?: string;
-  /** Smaller type and no trailing link — for inside a result card. */
+  /** Smaller type — for inside a result card. */
   compact?: boolean;
 }) {
   const p = dataProvenance(files);
@@ -47,8 +47,8 @@ export default function DataAsOf({
       {p.sources.length > 0 && (
         <>
           {sep}
-          <span>
-            Source <span className="text-slate-400">{p.sources.join(", ")}</span>
+          <span title={p.sources.length > 2 ? p.sources.join(" · ") : undefined}>
+            Source <span className="text-slate-400">{p.sourcesLabel}</span>
           </span>
         </>
       )}
@@ -56,18 +56,14 @@ export default function DataAsOf({
       <span className="whitespace-nowrap">
         Next update <span className="text-slate-400">{p.nextUpdate}</span>
       </span>
-      {!compact && (
-        <>
-          {sep}
-          <Link
-            href="/about/data"
-            prefetch={false}
-            className="whitespace-nowrap underline decoration-slate-700 underline-offset-2 hover:text-slate-300"
-          >
-            About our data
-          </Link>
-        </>
-      )}
+      {sep}
+      <Link
+        href="/about/data"
+        prefetch={false}
+        className="whitespace-nowrap underline decoration-slate-700 underline-offset-2 hover:text-slate-300"
+      >
+        About our data
+      </Link>
     </p>
   );
 }

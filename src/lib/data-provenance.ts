@@ -48,8 +48,11 @@ export interface Provenance {
   asOfLabel: string | null;
   /** Unique source names, in the order the files were given. */
   sources: string[];
+  /** "DfT VEH0120" or "DfT VEH0120 and 3 others" — the line stays one line. */
+  sourcesLabel: string;
+  /** Cadence of the OLDEST file: the one the date belongs to. */
   nextUpdate: string;
-  /** The period the first file's figures cover, when the registry knows it. */
+  /** The period the oldest file's figures cover, when the registry knows it. */
   covers: string | null;
   coversYear: number | null;
 }
@@ -60,28 +63,34 @@ export function dataProvenance(
   lookup: (file: string) => DatasetEntry | undefined = datasetByFile,
 ): Provenance {
   const entries = files.map(lookup).filter((e): e is DatasetEntry => !!e);
-  const dates = files
-    .map((f) => manifest[f])
-    .filter((v): v is string => typeof v === "string" && v.length > 0)
-    .sort();
-  const asOf = dates[0] ?? null;
+  const dated = files
+    .filter((f) => typeof manifest[f] === "string" && manifest[f].length > 0)
+    .sort((a, b) => manifest[a].localeCompare(manifest[b]));
+  const oldestFile = dated[0] ?? null;
+  const asOf = oldestFile ? manifest[oldestFile] : null;
+  // The oldest file sets the date, so it also sets "next update" and "covers":
+  // a line that says "as of June · next update weekly" because a weekly file
+  // sits beside a yearly one would be wrong about the yearly one.
+  const anchor = (oldestFile ? lookup(oldestFile) : undefined) ?? entries[0];
   const sources: string[] = [];
   for (const e of entries) if (!sources.includes(e.source.name)) sources.push(e.source.name);
-  const first = entries[0];
+  const sourcesLabel =
+    sources.length <= 2 ? sources.join(", ") : `${sources[0]} and ${sources.length - 1} others`;
   return {
     asOf,
     asOfLabel: asOf ? formatDay(asOf) : null,
     sources,
-    nextUpdate: first ? nextUpdateLabel(first) : "when the source changes",
-    covers: first?.covers ?? null,
-    coversYear: first?.coversYear ?? null,
+    sourcesLabel,
+    nextUpdate: anchor ? nextUpdateLabel(anchor) : "when the source changes",
+    covers: anchor?.covers ?? null,
+    coversYear: anchor?.coversYear ?? null,
   };
 }
 
 /** The plain-text form, for tests and non-React surfaces. */
 export function provenanceLine(p: Provenance): string {
   const parts = [`Data as of ${p.asOfLabel ?? "unknown"}`];
-  if (p.sources.length) parts.push(`Source ${p.sources.join(", ")}`);
+  if (p.sources.length) parts.push(`Source ${p.sourcesLabel}`);
   parts.push(`Next update ${p.nextUpdate}`);
   return parts.join(" · ");
 }
