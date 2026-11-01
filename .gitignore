@@ -75,3 +75,6 @@ vca-data/
 # Written by `npm run validate-data:delta` and the refresh workflows; attached to
 # their PRs, never committed.
 validation-report.md
+
+# Claude Code session files (local settings, launch configs, worktrees)
+.claude/

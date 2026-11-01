@@ -67,6 +67,19 @@ that converted` (≤100%).
 The shipped `MobileSearchCue` (variant C of the concluded test) is the reference
 for the component side, minus the now-removed variant branching.
 
+## Data integrity
+
+Every dataset in `src/data/` has one record in `src/data/_registry.ts`
+(source, method, cadence, `nextDue`, threshold, refresh command, validator,
+delta bands); `npm run test:data-registry` fails when a file and the registry
+disagree. `npm run validate-data:delta` compares every file with `origin/main`
+(counts, key sets, headline figures) and classifies `ok` / `review` / `fail`;
+the refresh workflows route on it (auto-merge / PR + issue / no PR + issue).
+The Friday audit email's "Data" section and `/data-health` read the jobs' last
+runs from the public GitHub API. Adding a dataset = a registry entry, a
+validator in `scripts/lib/validators.ts` and a `profileDataset` case. Details:
+`docs/DATA_REFRESH.md`.
+
 ## Social clips (`social/`)
 
 A Remotion project with its own install, outside the Next build and the root

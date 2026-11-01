@@ -4,8 +4,12 @@
  *
  * Data source: https://www.gov.uk/government/statistics/weekly-road-fuel-prices
  *
- * Run: npx tsx scripts/fetch-fuel-prices.ts
- * Hooked into prebuild so every deploy gets the latest prices.
+ * Run: npx tsx scripts/fetch-fuel-prices.ts            # exits 0 on failure (keeps the file)
+ *      npx tsx scripts/fetch-fuel-prices.ts --strict   # exits 1 on failure (the Sunday job)
+ *
+ * Ran in prebuild on every deploy until 2026-11; now a step of
+ * .github/workflows/refresh-data.yml, so a gov.uk outage can no longer fail a
+ * deploy, and the committed file is the fallback the site serves.
  */
 
 import fs from "fs";
@@ -160,6 +164,6 @@ async function main() {
 
 main().catch((err) => {
   console.error("Failed to fetch fuel prices:", err);
-  // Don't exit with error — allow build to continue with cached data
-  console.log("Build will continue with existing cached data if available.");
+  if (process.argv.includes("--strict")) process.exit(1);
+  console.log("Continuing with the committed fuel-prices-weekly.json.");
 });

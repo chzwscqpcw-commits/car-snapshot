@@ -12,14 +12,13 @@
  *   - At prebuild time, `git log` IS available because the build env has the
  *     repo checked out. We run it for each data file and capture the most
  *     recent commit time.
- *   - For files that get fetched-and-replaced earlier in the same prebuild
- *     (fuel-prices, how-many-left), their git log timestamp would be stale
- *     because the fresh download isn't committed. We special-case those to
- *     "now" so the dashboard reflects reality.
  *   - Runtime reads the static manifest — no git, no fs.statSync needed.
  *
- * Run: npx tsx scripts/build-freshness-manifest.ts
- * Hooked into prebuild AFTER all fetch-* scripts.
+ * Until 2026-11 the prebuild also fetched fuel prices and How Many Left and
+ * this stamped them "now"; both now arrive through the Sunday refresh job,
+ * so every date here is a commit date.
+ *
+ * Run: npx tsx scripts/build-freshness-manifest.ts (first step of prebuild).
  */
 
 import * as fs from "fs";
@@ -29,13 +28,6 @@ import { execSync } from "child_process";
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DATA_DIR = path.join(PROJECT_ROOT, "src", "data");
 const MANIFEST_PATH = path.join(DATA_DIR, "_freshness.json");
-
-// Files refreshed by fetch-* prebuild scripts that ran earlier in this build.
-// Their content is "now", even though git log would say otherwise.
-const FETCHED_THIS_BUILD = new Set([
-  "fuel-prices-weekly.json",
-  "how-many-left.json",
-]);
 
 function gitLogIso(file: string): string | null {
   try {
@@ -126,17 +118,10 @@ function main() {
   const manifest: Record<string, string> = { ...existing };
   const changedInHead = filesChangedInHead();
   let gitOk = 0;
-  let fetchedNow = 0;
   let dirty = 0;
   let preserved = 0;
 
   for (const f of files) {
-    if (FETCHED_THIS_BUILD.has(f)) {
-      // Prebuild fetch scripts just (re)wrote this — stamp it "now".
-      manifest[f] = now;
-      fetchedNow++;
-      continue;
-    }
     if (isDirty(f)) {
       // File modified in this working tree but not yet committed
       // (e.g., refresh workflow ran but hasn't pushed). Treat as fresh now.
@@ -174,7 +159,7 @@ function main() {
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 
   console.log(
-    `Wrote freshness manifest: ${files.length} files (${fetchedNow} fetched-now · ${dirty} dirty-now · ${gitOk} from git · ${preserved} preserved). filesChangedInHead=${[...changedInHead].join(",") || "(none)"}`,
+    `Wrote freshness manifest: ${files.length} files (${dirty} dirty-now · ${gitOk} from git · ${preserved} preserved). filesChangedInHead=${[...changedInHead].join(",") || "(none)"}`,
   );
 }
 

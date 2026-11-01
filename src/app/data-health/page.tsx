@@ -134,17 +134,23 @@ type StatsData = {
 
 type DataFileEntry = {
   file: string;
+  label: string;
   entries: number;
   lastModified: string;
   daysAgo: number;
-  productionDaysAgo: number | null;
-  productionUpdatedAt: string | null;
   effectiveDaysAgo: number;
   threshold: number;
   stale: boolean;
   source: "auto" | "semi-auto" | "curated";
+  methodLabel: string;
+  nextDue: string | null;
+  dueInDays: number | null;
   refreshHint: string;
+  sourceName: string;
   sourceUrl: string | null;
+  lastRun: { status: "success" | "failure" | "unknown"; conclusion: string | null; date: string | null; url: string | null } | null;
+  state: "ok" | "stale" | "failed" | "due" | "unknown";
+  reason: string | null;
 };
 
 type MarketCheckUsage = {
@@ -164,8 +170,14 @@ type DataHealthData = {
   commit: string;
   totalEntries: number;
   staleCount: number;
+  dueSoonCount?: number;
   files: DataFileEntry[];
   marketcheck?: MarketCheckUsage;
+  /** The red line the Friday email carries; null when nothing is red. */
+  dataSummary?: string | null;
+  dataRed?: boolean;
+  reviewIssues?: { title: string; url: string }[];
+  statusNote?: string | null;
 };
 
 type FuelPriceData = {
@@ -1677,7 +1689,26 @@ export default function DataHealthPage() {
                 title="Data freshness"
                 hint={`${dataHealth.files.length} files · ${dataHealth.totalEntries.toLocaleString()} entries`}
               >
-                {dataHealth.staleCount > 0 && (
+                {dataHealth.dataRed && dataHealth.dataSummary && (
+                  <div className="bg-red-950/40 border border-red-800/50 rounded-xl p-3.5 mb-3 flex items-start gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse shrink-0 mt-1" />
+                    <div className="min-w-0">
+                      <p className="text-red-300 font-semibold text-sm leading-tight">{dataHealth.dataSummary}</p>
+                      <p className="text-red-400/70 text-xs mt-0.5 leading-relaxed">
+                        The same line heads the Friday audit email.
+                        {dataHealth.reviewIssues?.map((i) => (
+                          <span key={i.url}>
+                            {" "}
+                            <a href={i.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-red-200">
+                              {i.title}
+                            </a>
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {!dataHealth.dataRed && dataHealth.staleCount > 0 && (
                   <div className="bg-amber-950/40 border border-amber-800/50 rounded-xl p-3.5 mb-3 flex items-start gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0 mt-1" />
                     <div className="min-w-0">
@@ -1698,7 +1729,6 @@ export default function DataHealthPage() {
                     const ageBadge = getAgeBadgeClasses(status);
                     const sourcePill = getSourcePill(f.source);
                     const isExpanded = expandedFile === f.file;
-                    const hasProd = f.productionDaysAgo !== null;
 
                     return (
                       <div
@@ -1714,12 +1744,17 @@ export default function DataHealthPage() {
                           <div className="flex items-center gap-3">
                             <StatusDot status={status} />
                             <div className="min-w-0 flex-1">
-                              <p className="font-mono text-xs text-slate-200 truncate">
-                                {f.file}
+                              <p className="text-xs text-slate-200 truncate">
+                                {f.label} <span className="font-mono text-slate-500">{f.file}</span>
                               </p>
                               <p className="text-[10px] text-slate-500 mt-0.5">
-                                {f.entries.toLocaleString()} entries · threshold{" "}
-                                {f.threshold}d
+                                {f.entries.toLocaleString()} entries · threshold {f.threshold}d · {f.methodLabel}
+                                {f.lastRun?.status === "failure" && (
+                                  <span className="text-red-400"> · last run failed</span>
+                                )}
+                                {f.state === "due" && f.nextDue && (
+                                  <span className="text-amber-400"> · due {f.nextDue}</span>
+                                )}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1 flex-shrink-0">
@@ -1760,26 +1795,28 @@ export default function DataHealthPage() {
                               </div>
                               <div>
                                 <p className="text-slate-500 uppercase tracking-wider text-[9px] font-semibold">
-                                  Production
+                                  {f.lastRun ? "Last job run" : "Next due"}
                                 </p>
-                                {hasProd ? (
+                                {f.lastRun ? (
                                   <>
-                                    <p className="text-slate-300 tabular-nums">
-                                      {f.productionDaysAgo} days ago
+                                    <p className={`tabular-nums ${f.lastRun.status === "failure" ? "text-red-300" : "text-slate-300"}`}>
+                                      {f.lastRun.status === "unknown" ? "unknown" : f.lastRun.conclusion ?? f.lastRun.status}
                                     </p>
                                     <p className="text-slate-600 text-[10px]">
-                                      {f.productionUpdatedAt
-                                        ? new Date(f.productionUpdatedAt).toLocaleDateString(
-                                            "en-GB",
-                                          )
-                                        : ""}
+                                      {f.lastRun.url ? (
+                                        <a href={f.lastRun.url} target="_blank" rel="noopener noreferrer" className="hover:text-slate-400 underline underline-offset-2">
+                                          {f.lastRun.date ?? "open run"}
+                                        </a>
+                                      ) : (
+                                        f.lastRun.date ?? "—"
+                                      )}
                                     </p>
                                   </>
                                 ) : (
                                   <>
-                                    <p className="text-slate-500">same as file</p>
+                                    <p className="text-slate-300 tabular-nums">{f.nextDue ?? "when needed"}</p>
                                     <p className="text-slate-600 text-[10px]">
-                                      no cron cache
+                                      {f.dueInDays === null ? "no fixed date" : f.dueInDays < 0 ? `${-f.dueInDays} days overdue` : `in ${f.dueInDays} days`}
                                     </p>
                                   </>
                                 )}
@@ -1800,7 +1837,7 @@ export default function DataHealthPage() {
                                 rel="noopener noreferrer"
                                 className="inline-block text-xs text-sky-400 hover:text-sky-300 underline underline-offset-2"
                               >
-                                Open data source →
+                                Open data source ({f.sourceName}) →
                               </a>
                             )}
                           </div>

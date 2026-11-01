@@ -9,10 +9,6 @@
       "schedule": "30 8 * * *"
     },
     {
-      "path": "/api/cron/refresh-recalls",
-      "schedule": "0 3 * * 1"
-    },
-    {
       "path": "/api/cron/gsc-positions",
       "schedule": "0 4 * * 1"
     },

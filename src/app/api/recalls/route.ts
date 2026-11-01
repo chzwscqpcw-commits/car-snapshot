@@ -1,37 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import recallsData from "@/data/recalls.json";
 import { findRecalls, type Recall } from "@/lib/recalls";
-import { supabaseServerRole } from "@/lib/supabaseServer";
 
-/** Max age for Supabase cached recalls data (7 days in ms) */
-const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-
-/**
- * Try to load recalls from Supabase data_cache table.
- * Returns the cached data if found and less than 7 days old, otherwise null.
- */
-async function getCachedRecalls(): Promise<Recall[] | null> {
-  try {
-    const sb = supabaseServerRole();
-    const { data, error } = await sb
-      .from("data_cache")
-      .select("data, updated_at")
-      .eq("key", "recalls")
-      .single();
-
-    if (error || !data) return null;
-
-    const updatedAt = new Date(data.updated_at).getTime();
-    const age = Date.now() - updatedAt;
-
-    if (age > CACHE_MAX_AGE_MS) return null;
-
-    return data.data as Recall[];
-  } catch {
-    // If Supabase is unavailable or table doesn't exist, fall back silently
-    return null;
-  }
-}
+// The committed recalls.json is the source of truth: the Sunday refresh job
+// (refresh-data.yml) drives a real browser past DVSA's Imperva protection,
+// validates the result against the previous week and commits it. A Monday
+// Vercel cron used to try a plain fetch of the same CSV into Supabase
+// data_cache and read it here first — but a plain fetch cannot pass Imperva
+// (it 302s into the JS challenge, checked 2026-11-01), so the cache was
+// never fresher than the file. Removed in 2026-11.
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -44,8 +21,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "make parameter is required" }, { status: 400 });
   }
 
-  // Try Supabase cache first (refreshed weekly by cron), fall back to static JSON
-  const recalls = (await getCachedRecalls()) ?? (recallsData as Recall[]);
+  const recalls = recallsData as Recall[];
 
   const results = findRecalls(recalls, make, model, year);
 
