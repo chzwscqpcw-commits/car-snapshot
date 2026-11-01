@@ -19,6 +19,8 @@ const AUDIENCE_TAGS: Record<Audience, string[]> = {
 export const MAX_HASHTAGS = 5;
 
 export interface CaptionEntry {
+  /** The clip's ISO week, e.g. "2026-W46". */
+  week: string;
   file: string;
   still: string;
   day: string;
@@ -34,7 +36,11 @@ export interface CaptionEntry {
 }
 
 export interface CaptionsFile {
+  /** The first week in the file (the release tag's week). */
   week: string;
+  /** Every week in the file, in order: one for a single render, three for a batch. */
+  weeks: string[];
+  /** Monday of the first week, ISO date. */
   monday: string;
   schedule: string;
   clips: CaptionEntry[];
@@ -70,25 +76,31 @@ export function fullCaption(body: string, topicTags: string[], audience: Audienc
   return `${body}\n\nFree check: freeplatecheck.co.uk\n\n${hashtags(topicTags, audience)}`;
 }
 
-export function captionsFile(build: WeekBuild): CaptionsFile {
-  const week = build.plan.label;
+export function captionsFile(builds: WeekBuild | WeekBuild[]): CaptionsFile {
+  const list = Array.isArray(builds) ? builds : [builds];
+  if (list.length === 0) throw new Error("captionsFile: no weeks");
   return {
-    week,
-    monday: build.plan.monday,
-    schedule: "Buffer: Monday (brand), Wednesday (sellers), Friday (MOT); TikTok first, cross-post to Reels and Facebook Reels.",
-    clips: build.clips.map((c) => ({
-      file: `${c.id}.mp4`,
-      still: `${c.id}.png`,
-      day: c.slot.day,
-      date: c.slot.date,
-      audience: c.slot.audience,
-      topic: c.slot.topic,
-      title: c.picked.title,
-      headline: headlineText(c.picked.props.hook),
-      caption: fullCaption(c.picked.caption, c.picked.tags, c.slot.audience),
-      source: c.picked.source,
-      sourceDate: c.picked.sourceDate,
-      utm: Object.fromEntries(PLATFORMS.map((p) => [p, utmLink(p, week)])) as CaptionEntry["utm"],
-    })),
+    week: list[0].plan.label,
+    weeks: list.map((b) => b.plan.label),
+    monday: list[0].plan.monday,
+    schedule: "Buffer: Monday (brand), Wednesday (sellers), Friday (MOT) at 18:00; one post to TikTok, Instagram and Facebook together.",
+    clips: list.flatMap((build) => {
+      const week = build.plan.label;
+      return build.clips.map((c) => ({
+        week,
+        file: `${c.id}.mp4`,
+        still: `${c.id}.png`,
+        day: c.slot.day,
+        date: c.slot.date,
+        audience: c.slot.audience,
+        topic: c.slot.topic,
+        title: c.picked.title,
+        headline: headlineText(c.picked.props.hook),
+        caption: fullCaption(c.picked.caption, c.picked.tags, c.slot.audience),
+        source: c.picked.source,
+        sourceDate: c.picked.sourceDate,
+        utm: Object.fromEntries(PLATFORMS.map((p) => [p, utmLink(p, week)])) as CaptionEntry["utm"],
+      }));
+    }),
   };
 }

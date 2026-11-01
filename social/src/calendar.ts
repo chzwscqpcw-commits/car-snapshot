@@ -182,3 +182,22 @@ export function upcomingWeek(now = new Date()): IsoWeek {
 export function nextWeek(w: IsoWeek, n = 1): IsoWeek {
   return isoWeekOf(new Date(isoWeekMonday(w).getTime() + n * 7 * DAY_MS));
 }
+
+/**
+ * Batches. Buffer's free plan queues ten posts per channel, so the clips go
+ * out three weeks at a time (nine posts), rendered on the Saturday before
+ * the batch's first Monday and queued on the Sunday. Batches start at the
+ * series' first week and every third week after it.
+ */
+export const BATCH_WEEKS = 3;
+
+/** Whether this week opens a batch. */
+export function isBatchStart(week: IsoWeek): boolean {
+  const i = weekDiff(SERIES_START, week);
+  return i >= 0 && i % BATCH_WEEKS === 0;
+}
+
+/** The weeks of the batch that starts at `first` (which need not be a batch start). */
+export function batchWeeks(first: IsoWeek, n = BATCH_WEEKS): IsoWeek[] {
+  return Array.from({ length: n }, (_, i) => nextWeek(first, i));
+}
