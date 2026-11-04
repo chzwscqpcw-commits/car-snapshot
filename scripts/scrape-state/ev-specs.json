@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-28T11:16:32.653Z",
+  "updatedAt": "2026-11-04T12:52:16.060Z",
   "urls": {
     "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
@@ -466,7 +466,49 @@
     "https://ev-database.org/car/3268/BYD-ATTO-2-648-kWh": "2026-10-28T11:16:32.645Z",
     "https://ev-database.org/car/3269/Tesla-Model-Y-Performance": "2026-10-28T11:16:32.645Z",
     "https://ev-database.org/car/3267/Cadillac-VISTIQ-900-E4": "2026-10-28T11:16:32.645Z",
-    "https://ev-database.org/car/3266/Cadillac-LYRIQ-V": "2026-10-28T11:16:32.645Z"
+    "https://ev-database.org/car/3266/Cadillac-LYRIQ-V": "2026-10-28T11:16:32.645Z",
+    "https://ev-database.org/car/3870/Leapmotor-B10-608-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3869/Leapmotor-B10-687-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3868/Skoda-Enyaq-85-84-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3867/Skoda-Elroq-85-84-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3866/Fiat-Grande-Panda-54-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3861/Ford-e-Transit-Custom-Kombi-L2-160-kW-71-kWh-AWD": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3860/Ford-e-Transit-Custom-Kombi-L1-160-kW-71-kWh-AWD": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3730/Denza-Z9GT-12249-kWh-AWD": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3264/Hongqi-E-HS7-111-kWh-Long-Range": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3265/Hongqi-E-HS7-111-kWh-AWD-Pro": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3262/CUPRA-Born-150-kW---59-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3263/CUPRA-Born-170-kW---79-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3260/Volkswagen-ID7-Tourer-Pro-S": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3261/Volkswagen-ID7-Tourer-GTX": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3259/Volkswagen-ID7-Tourer-Pro": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3258/Volkswagen-ID7-GTX": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3257/Volkswagen-ID7-Pro-S": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3256/Volkswagen-ID7-Pro": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3254/Volkswagen-ID5-Pro": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3255/Volkswagen-ID5-GTX": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3253/Volkswagen-ID5-Pure": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3252/Volkswagen-ID4-GTX": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3251/Volkswagen-ID4-Pro-4MOTION": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3250/Volkswagen-ID4-Pro": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3249/Volkswagen-ID4-Pure": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3248/MG-IM6-Performance": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3247/MG-IM6-Long-Range": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3246/MG-IM5-Performance": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3245/MG-IM5-Long-Range": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3244/MG-IM5-Standard-Range": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3243/Mercedes-Benz-EQE-AMG-53-4MATICplus": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3242/Mercedes-Benz-EQE-500-4MATIC": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3240/Mercedes-Benz-EQE-350plus": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3241/Mercedes-Benz-EQE-350-4MATIC": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3238/Genesis-G80-Electrified": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3239/Mercedes-Benz-EQE-300": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3237/Genesis-GV70-Electrified": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3236/Genesis-GV60-Performance": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3235/Genesis-GV60-Sport": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3234/Genesis-GV60-Pure": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3233/Leapmotor-B10-671-kWh": "2026-11-04T12:52:16.052Z",
+    "https://ev-database.org/car/3232/Leapmotor-B10-562-kWh": "2026-11-04T12:52:16.052Z"
   },
   "records": {
     "TESLA|MODEL 3": {
@@ -8013,6 +8055,454 @@
         "chargeSlow": "5 hours (22 kW AC)",
         "motorKw": 459,
         "driveType": "AWD"
+      }
+    },
+    "LEAPMOTOR|B10 608 KWH": {
+      "rank": 3870,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B10 608 KWH",
+        "batteryKwh": 59,
+        "rangeWltp": 208,
+        "chargeFast": "26 min (140 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "LEAPMOTOR|B10 687 KWH": {
+      "rank": 3869,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B10 687 KWH",
+        "batteryKwh": 66.5,
+        "rangeWltp": 227,
+        "chargeFast": "25 min (168 kW DC)",
+        "chargeSlow": "7h15m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "SKODA|ENYAQ 85 84 KWH": {
+      "rank": 3868,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "SKODA",
+        "model": "ENYAQ 85 84 KWH",
+        "batteryKwh": 79,
+        "rangeWltp": 292,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "SKODA|ELROQ 85 84 KWH": {
+      "rank": 3867,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "SKODA",
+        "model": "ELROQ 85 84 KWH",
+        "batteryKwh": 79,
+        "rangeWltp": 286,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "FIAT|GRANDE PANDA 54 KWH": {
+      "rank": 3866,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "FIAT",
+        "model": "GRANDE PANDA 54 KWH",
+        "batteryKwh": 52.8,
+        "rangeWltp": 193,
+        "chargeFast": "33 min (100 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 83,
+        "driveType": "FWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L2 160 KW 71 KWH AWD": {
+      "rank": 3861,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L2 160 KW 71 KWH AWD",
+        "batteryKwh": 70.9,
+        "rangeWltp": 162,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L1 160 KW 71 KWH AWD": {
+      "rank": 3860,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L1 160 KW 71 KWH AWD",
+        "batteryKwh": 70.9,
+        "rangeWltp": 162,
+        "chargeFast": "30 min (125 kW DC)",
+        "chargeSlow": "7h45m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "AWD"
+      }
+    },
+    "DENZA|Z9GT 12249 KWH AWD": {
+      "rank": 3730,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "DENZA",
+        "model": "Z9GT 12249 KWH AWD",
+        "batteryKwh": 119.5,
+        "rangeWltp": 339,
+        "chargeFast": "12 min (500 kW DC)",
+        "chargeSlow": "13 hours (11 kW AC)",
+        "motorKw": 850,
+        "driveType": "AWD"
+      }
+    },
+    "HONGQI|E HS7 111 KWH LONG RANGE": {
+      "rank": 3264,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "HONGQI",
+        "model": "E HS7 111 KWH LONG RANGE",
+        "batteryKwh": 103.5,
+        "rangeWltp": 308,
+        "chargeFast": "25 min (250 kW DC)",
+        "chargeSlow": "11h15m (11 kW AC)",
+        "motorKw": 253,
+        "driveType": "RWD"
+      }
+    },
+    "HONGQI|E HS7 111 KWH AWD PRO": {
+      "rank": 3265,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "HONGQI",
+        "model": "E HS7 111 KWH AWD PRO",
+        "batteryKwh": 103.5,
+        "rangeWltp": 292,
+        "chargeFast": "25 min (250 kW DC)",
+        "chargeSlow": "11h15m (11 kW AC)",
+        "motorKw": 455,
+        "driveType": "AWD"
+      }
+    },
+    "CUPRA|BORN 150 KW   59 KWH": {
+      "rank": 3262,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "CUPRA",
+        "model": "BORN 150 KW   59 KWH",
+        "batteryKwh": 59,
+        "rangeWltp": 224,
+        "chargeFast": "25 min (165 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID7 TOURER PRO S": {
+      "rank": 3260,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID7 TOURER PRO S",
+        "batteryKwh": 86,
+        "rangeWltp": 323,
+        "chargeFast": "27 min (200 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID7 TOURER PRO": {
+      "rank": 3259,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID7 TOURER PRO",
+        "batteryKwh": 77,
+        "rangeWltp": 292,
+        "chargeFast": "27 min (190 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID7 PRO S": {
+      "rank": 3257,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID7 PRO S",
+        "batteryKwh": 86,
+        "rangeWltp": 326,
+        "chargeFast": "27 min (200 kW DC)",
+        "chargeSlow": "9h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID7 PRO": {
+      "rank": 3256,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID7 PRO",
+        "batteryKwh": 77,
+        "rangeWltp": 295,
+        "chargeFast": "27 min (190 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "MG|IM6 PERFORMANCE": {
+      "rank": 3248,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "MG",
+        "model": "IM6 PERFORMANCE",
+        "batteryKwh": 96.5,
+        "rangeWltp": 270,
+        "chargeFast": "17 min (396 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 553,
+        "driveType": "AWD"
+      }
+    },
+    "MG|IM6 LONG RANGE": {
+      "rank": 3247,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "MG",
+        "model": "IM6 LONG RANGE",
+        "batteryKwh": 96.5,
+        "rangeWltp": 298,
+        "chargeFast": "17 min (396 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "RWD"
+      }
+    },
+    "MG|IM5 PERFORMANCE": {
+      "rank": 3246,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "MG",
+        "model": "IM5 PERFORMANCE",
+        "batteryKwh": 96.5,
+        "rangeWltp": 301,
+        "chargeFast": "17 min (396 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 553,
+        "driveType": "AWD"
+      }
+    },
+    "MG|IM5 LONG RANGE": {
+      "rank": 3245,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "MG",
+        "model": "IM5 LONG RANGE",
+        "batteryKwh": 96.5,
+        "rangeWltp": 320,
+        "chargeFast": "17 min (396 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "RWD"
+      }
+    },
+    "MG|IM5 STANDARD RANGE": {
+      "rank": 3244,
+      "scrapedAt": "2026-11-04T12:52:16.052Z",
+      "record": {
+        "make": "MG",
+        "model": "IM5 STANDARD RANGE",
+        "batteryKwh": 73.5,
+        "rangeWltp": 249,
+        "chargeFast": "27 min (153 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 217,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|EQE AMG 53 4MATICPLUS": {
+      "rank": 3243,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE AMG 53 4MATICPLUS",
+        "batteryKwh": 90.6,
+        "rangeWltp": 280,
+        "chargeFast": "28 min (173 kW DC)",
+        "chargeSlow": "5 hours (22 kW AC)",
+        "motorKw": 505,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|EQE 500 4MATIC": {
+      "rank": 3242,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE 500 4MATIC",
+        "batteryKwh": 90.6,
+        "rangeWltp": 314,
+        "chargeFast": "28 min (173 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 330,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|EQE 350PLUS": {
+      "rank": 3240,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE 350PLUS",
+        "batteryKwh": 96,
+        "rangeWltp": 345,
+        "chargeFast": "30 min (173 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 235,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|EQE 350 4MATIC": {
+      "rank": 3241,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE 350 4MATIC",
+        "batteryKwh": 90.6,
+        "rangeWltp": 320,
+        "chargeFast": "28 min (173 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 235,
+        "driveType": "AWD"
+      }
+    },
+    "GENESIS|G80 ELECTRIFIED": {
+      "rank": 3238,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "G80 ELECTRIFIED",
+        "batteryKwh": 90,
+        "rangeWltp": 304,
+        "chargeFast": "25 min (187 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 272,
+        "driveType": "AWD"
+      }
+    },
+    "MERCEDES-BENZ|EQE 300": {
+      "rank": 3239,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE 300",
+        "batteryKwh": 89,
+        "rangeWltp": 326,
+        "chargeFast": "33 min (170 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 195,
+        "driveType": "RWD"
+      }
+    },
+    "GENESIS|GV70 ELECTRIFIED": {
+      "rank": 3237,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV70 ELECTRIFIED",
+        "batteryKwh": 80,
+        "rangeWltp": 239,
+        "chargeFast": "17 min (264 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 360,
+        "driveType": "AWD"
+      }
+    },
+    "GENESIS|GV60 PERFORMANCE": {
+      "rank": 3236,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV60 PERFORMANCE",
+        "batteryKwh": 80,
+        "rangeWltp": 249,
+        "chargeFast": "17 min (264 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 360,
+        "driveType": "AWD"
+      }
+    },
+    "GENESIS|GV60 SPORT": {
+      "rank": 3235,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV60 SPORT",
+        "batteryKwh": 80,
+        "rangeWltp": 258,
+        "chargeFast": "17 min (264 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 234,
+        "driveType": "AWD"
+      }
+    },
+    "GENESIS|GV60 PURE": {
+      "rank": 3234,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "GENESIS",
+        "model": "GV60 PURE",
+        "batteryKwh": 80,
+        "rangeWltp": 264,
+        "chargeFast": "17 min (264 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "LEAPMOTOR|B10 671 KWH": {
+      "rank": 3233,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B10 671 KWH",
+        "batteryKwh": 65,
+        "rangeWltp": 224,
+        "chargeFast": "26 min (168 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "LEAPMOTOR|B10 562 KWH": {
+      "rank": 3232,
+      "scrapedAt": "2026-11-04T12:52:16.053Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "B10 562 KWH",
+        "batteryKwh": 55,
+        "rangeWltp": 190,
+        "chargeFast": "24 min (140 kW DC)",
+        "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
       }
     }
   }
