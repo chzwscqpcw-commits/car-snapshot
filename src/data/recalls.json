@@ -2,14 +2,50 @@
   {
     "make": "FORD",
     "models": [
-      "KUGA"
+      "EDGE"
     ],
-    "buildDateStart": "2019-07-24",
-    "buildDateEnd": "2020-03-13",
-    "recallDate": "2027-02-03",
-    "defect": "On affected vehicles the software repair for previous recall 25C79 may not have been delivered properly and the Powertrain Control Module software may deliver lower power output than intended.",
-    "remedy": "Update the Powertrain Control Module software and perform an additional verification process to ensure the configuration has been installed correctly.",
-    "recallNumber": "R/2026/030"
+    "buildDateStart": "2015-12-09",
+    "buildDateEnd": "2016-09-06",
+    "recallDate": "2026-11-06",
+    "defect": "On affected vehicles the front airbag inflators may rupture in the event of an accident.  A ruptured inflator can send inflator parts towards the vehicle occupants resulting in serious injury or death.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle. Dealers will either recover the affected vehicle or will send a technician in a Mobile Service Van to replace the airbag.",
+    "recallNumber": "R/2026/416"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EDGE"
+    ],
+    "buildDateStart": "2016-08-24",
+    "buildDateEnd": "2017-08-14",
+    "recallDate": "2026-11-06",
+    "defect": "On affected vehicles the front airbag inflators may rupture in the event of an accident.  A ruptured inflator can send inflator parts towards the vehicle occupants resulting in serious injury or death.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle. Dealers will either recover the affected vehicle or will send a technician in a Mobile Service Van to replace the airbag.",
+    "recallNumber": "R/2026/416"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "EDGE"
+    ],
+    "buildDateStart": "2017-10-02",
+    "buildDateEnd": "2017-12-14",
+    "recallDate": "2026-11-06",
+    "defect": "On affected vehicles the front airbag inflators may rupture in the event of an accident.  A ruptured inflator can send inflator parts towards the vehicle occupants resulting in serious injury or death.",
+    "remedy": "Owners of affected vehicles should immediately cease using their vehicle. Dealers will either recover the affected vehicle or will send a technician in a Mobile Service Van to replace the airbag.",
+    "recallNumber": "R/2026/416"
+  },
+  {
+    "make": "LAND ROVER",
+    "models": [
+      "RANGE ROVER SPORT"
+    ],
+    "buildDateStart": "2023-10-03",
+    "buildDateEnd": "2026-06-24",
+    "recallDate": "2026-11-06",
+    "defect": "A concern has been identified where on certain Range Rover Sport SV  vehicles renewed analysis of supplier imaging history has detected the  potential presence of cracks on the rear subframe for some vehicles. For a  number of other vehicles imaging history was not available to positively  confirm a lack of cracks on the rear subframe.",
+    "remedy": "Vehicles known to have a crack in the rear subframe will have the subframe  replaced. Vehicles where photographic inspection of the rear subframe could not be  completed will be inspected and if a crack is found to be present the rear  subframe will be replaced.",
+    "recallNumber": "R/2026/363"
   },
   {
     "make": "CADILLAC 2",
@@ -537,7 +573,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -549,7 +585,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -561,7 +597,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -573,7 +609,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -585,7 +621,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -597,7 +633,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -609,7 +645,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -621,7 +657,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -633,7 +669,7 @@
     "buildDateEnd": "2026-01-31",
     "recallDate": "2026-10-14",
     "defect": "For affected engine gaskets  these contain certain asbestos fibers  (chrysotile asbestos also known as white asbestos) and thus do not  comply with the legal requirements.",
-    "remedy": "Consumers users and customers will be informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
+    "remedy": "Consumers users and customers have been informed of the product risk. This action is to remove the products by withdrawing them from the supply  chain and destroying them. In addition conspicuous and permanent labelling will be used on  motor vehicles in which the affected products are installed.",
     "recallNumber": "R/2026/371"
   },
   {
@@ -791,6 +827,66 @@
     "defect": "Affected vehicles do not conform to ECE R48 and fail to alert the driver via DIC message if there is a loss of communication between the headlamp control module and body control module.",
     "remedy": "Reprogram the body control module.",
     "recallNumber": "R/2026/388"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "NIRO DE EV"
+    ],
+    "buildDateStart": "2020-05-19",
+    "buildDateEnd": "2022-03-18",
+    "recallDate": "2026-10-09",
+    "defect": "For affected vehicles due to insufficient detection capability in the current Battery Management System (BMS) diagnostic logic micro shorts between battery cells may remain unrecognised. Such undetected micro shorts can lead to cell overheating and a risk of fire while the vehicle is parked or charging.",
+    "remedy": "Update the BMS software to enhance the battery diagnosis performance. If a Diagnostic trouble code (DTC) is then recorded the dealer will either replace the faulty components or the complete battery pack assembly.",
+    "recallNumber": "R/2026/288"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "NIRO DE EV"
+    ],
+    "buildDateStart": "2020-05-19",
+    "buildDateEnd": "2022-03-18",
+    "recallDate": "2026-10-09",
+    "defect": "For affected vehicles due to insufficient detection capability in the current Battery Management System (BMS) diagnostic logic micro shorts between battery cells may remain unrecognised. Such undetected micro shorts can lead to cell overheating and a risk of fire while the vehicle is parked or charging.",
+    "remedy": "Update the BMS software to enhance the battery diagnosis performance. If a Diagnostic trouble code (DTC) is then recorded the dealer will either replace the faulty components or the complete battery pack assembly.",
+    "recallNumber": "R/2026/288"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "NIRO DE EV"
+    ],
+    "buildDateStart": "2020-05-19",
+    "buildDateEnd": "2022-03-18",
+    "recallDate": "2026-10-09",
+    "defect": "For affected vehicles due to insufficient detection capability in the current Battery Management System (BMS) diagnostic logic micro shorts between battery cells may remain unrecognised. Such undetected micro shorts can lead to cell overheating and a risk of fire while the vehicle is parked or charging.",
+    "remedy": "Update the BMS software to enhance the battery diagnosis performance. If a Diagnostic trouble code (DTC) is then recorded the dealer will either replace the faulty components or the complete battery pack assembly.",
+    "recallNumber": "R/2026/288"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "NIRO DE EV"
+    ],
+    "buildDateStart": "2020-05-19",
+    "buildDateEnd": "2022-03-18",
+    "recallDate": "2026-10-09",
+    "defect": "For affected vehicles due to insufficient detection capability in the current Battery Management System (BMS) diagnostic logic micro shorts between battery cells may remain unrecognised. Such undetected micro shorts can lead to cell overheating and a risk of fire while the vehicle is parked or charging.",
+    "remedy": "Update the BMS software to enhance the battery diagnosis performance. If a Diagnostic trouble code (DTC) is then recorded the dealer will either replace the faulty components or the complete battery pack assembly.",
+    "recallNumber": "R/2026/288"
+  },
+  {
+    "make": "KIA",
+    "models": [
+      "NIRO DE EV"
+    ],
+    "buildDateStart": "2020-05-19",
+    "buildDateEnd": "2022-03-18",
+    "recallDate": "2026-10-09",
+    "defect": "For affected vehicles due to insufficient detection capability in the current Battery Management System (BMS) diagnostic logic micro shorts between battery cells may remain unrecognised. Such undetected micro shorts can lead to cell overheating and a risk of fire while the vehicle is parked or charging.",
+    "remedy": "Update the BMS software to enhance the battery diagnosis performance. If a Diagnostic trouble code (DTC) is then recorded the dealer will either replace the faulty components or the complete battery pack assembly.",
+    "recallNumber": "R/2026/288"
   },
   {
     "make": "VAUXHALL",
@@ -3083,6 +3179,30 @@
     "defect": "Under certain conditions the platform lift motor could remain energised and move unintentionally despite the lift operator commanding the lift to stop increasing the risk of injury to the lift occupant or others in the vicinity.",
     "remedy": "Install two diodes within the lift electrical system wiring to prevent voltage from a failed contactor maintaining a closed condition and to ensure proper de-energisation of the motor contactor when the operator commands the lift to stop.",
     "recallNumber": "R/2026/303"
+  },
+  {
+    "make": "IVECO",
+    "models": [
+      "EUROCARGO"
+    ],
+    "buildDateStart": "2025-09-04",
+    "buildDateEnd": "2026-01-13",
+    "recallDate": "2026-07-15",
+    "defect": "Following a process carried out by the supplier of the ball joints mounted on the steering transverse tie rod [track rod tube] and in order to protect end customers and guarantee the highest quality standards IVECO has decided to launch a recall campaign.",
+    "remedy": "Replace the affected transverse tie rod.",
+    "recallNumber": "R/2026/331"
+  },
+  {
+    "make": "IVECO",
+    "models": [
+      "EUROCARGO"
+    ],
+    "buildDateStart": "2025-09-04",
+    "buildDateEnd": "2026-01-13",
+    "recallDate": "2026-07-15",
+    "defect": "Following a process carried out by the supplier of the ball joints mounted on the steering transverse tie rod [track rod tube] and in order to protect end customers and guarantee the highest quality standards IVECO has decided to launch a recall campaign.",
+    "remedy": "Replace the affected transverse tie rod.",
+    "recallNumber": "R/2026/331"
   },
   {
     "make": "TOYOTA",
@@ -9040,6 +9160,18 @@
     "defect": "On affected vehicles the software repair for previous recall 24C06 may not have been delivered properly and certain warning chimes may not be audible.",
     "remedy": "Update the Audio Front Control Module software and perform an additional verification process to ensure the configuration has been installed correctly.",
     "recallNumber": "R/2026/028"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "KUGA"
+    ],
+    "buildDateStart": "2019-07-24",
+    "buildDateEnd": "2020-03-13",
+    "recallDate": "2026-02-03",
+    "defect": "On affected vehicles the software repair for previous recall 25C79 may not have been delivered properly and the Powertrain Control Module software may deliver lower power output than intended.",
+    "remedy": "Update the Powertrain Control Module software and perform an additional verification process to ensure the configuration has been installed correctly.",
+    "recallNumber": "R/2026/030"
   },
   {
     "make": "JAECOO UK LIMITED",
@@ -16415,42 +16547,6 @@
   {
     "make": "CITROEN",
     "models": [
-      "SPACETOURER"
-    ],
-    "buildDateStart": "2020-09-23",
-    "buildDateEnd": "2022-06-30",
-    "recallDate": "2025-08-18",
-    "defect": "Vehicles may be affected by incorrect performance of the On-Board-Diagnostics related to Selective Catalytic Reduction system and/or Diesel Particle Filter. The Malfunction Indicator Light (MIL) may not illuminate in the event of a malfunction and therefore does not comply with emission regulations.",
-    "remedy": "Update the Engine Control Unit software to ensure compliance to regulations.",
-    "recallNumber": "R/2025/346"
-  },
-  {
-    "make": "CITROEN",
-    "models": [
-      "C3 AIRCROSS"
-    ],
-    "buildDateStart": "2017-09-12",
-    "buildDateEnd": "2020-11-28",
-    "recallDate": "2025-08-18",
-    "defect": "Vehicles may be affected by incorrect performance of the On-Board-Diagnostics related to Selective Catalytic Reduction system and/or Diesel Particle Filter. The Malfunction Indicator Light (MIL) may not illuminate in the event of a malfunction and therefore does not comply with emission regulations.",
-    "remedy": "Update the Engine Control Unit software to ensure compliance to regulations.",
-    "recallNumber": "R/2025/346"
-  },
-  {
-    "make": "CITROEN",
-    "models": [
-      "C4 PICASSO"
-    ],
-    "buildDateStart": "2017-12-12",
-    "buildDateEnd": "2020-11-28",
-    "recallDate": "2025-08-18",
-    "defect": "Vehicles may be affected by incorrect performance of the On-Board-Diagnostics related to Selective Catalytic Reduction system and/or Diesel Particle Filter. The Malfunction Indicator Light (MIL) may not illuminate in the event of a malfunction and therefore does not comply with emission regulations.",
-    "remedy": "Update the Engine Control Unit software to ensure compliance to regulations.",
-    "recallNumber": "R/2025/346"
-  },
-  {
-    "make": "CITROEN",
-    "models": [
       "RELAY"
     ],
     "buildDateStart": "2024-09-17",
@@ -23474,6 +23570,126 @@
   {
     "make": "FORD",
     "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2019-05-21",
+    "buildDateEnd": "2019-07-27",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-03-22",
+    "buildDateEnd": "2018-07-13",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-03-13",
+    "buildDateEnd": "2018-07-07",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-06-30",
+    "buildDateEnd": "2018-07-19",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-09-19",
+    "buildDateEnd": "2019-03-02",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2019-03-25",
+    "buildDateEnd": "2019-05-13",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-05-05",
+    "buildDateEnd": "2018-09-06",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2018-09-06",
+    "buildDateEnd": "2019-03-26",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2019-03-27",
+    "buildDateEnd": "2019-05-20",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "TRANSIT COURIER"
+    ],
+    "buildDateStart": "2019-05-21",
+    "buildDateEnd": "2019-07-25",
+    "recallDate": "2024-12-19",
+    "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
+    "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
+    "recallNumber": "R/2025/094"
+  },
+  {
+    "make": "FORD",
+    "models": [
       "TRANSIT CUSTOM"
     ],
     "buildDateStart": "2015-06-10",
@@ -24232,7 +24448,7 @@
     "models": [
       "TRANSIT COURIER"
     ],
-    "buildDateStart": "2016-12-07",
+    "buildDateStart": "2016-12-02",
     "buildDateEnd": "2017-02-20",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
@@ -24245,7 +24461,7 @@
       "TRANSIT COURIER"
     ],
     "buildDateStart": "2017-02-20",
-    "buildDateEnd": "2017-02-28",
+    "buildDateEnd": "2017-12-30",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",
     "remedy": "Update software to prevent a cracked DPF.  Test and replace DPFs that are already cracked.",
@@ -24268,7 +24484,7 @@
     "models": [
       "TRANSIT COURIER"
     ],
-    "buildDateStart": "2015-08-03",
+    "buildDateStart": "2015-05-12",
     "buildDateEnd": "2016-08-23",
     "recallDate": "2024-12-19",
     "defect": "Affected vehicles may develop a crack in the Diesel Particulate Filter (DPF).",

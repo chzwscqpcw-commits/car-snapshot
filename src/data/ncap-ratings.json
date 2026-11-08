@@ -111,16 +111,6 @@
   },
   {
     "make": "AUDI",
-    "model": "A6 E-TRON",
-    "overallStars": 5,
-    "adultOccupant": 92,
-    "childOccupant": 91,
-    "pedestrian": 92,
-    "safetyAssist": 80,
-    "yearTested": 2025
-  },
-  {
-    "make": "AUDI",
     "model": "A7",
     "overallStars": 5,
     "adultOccupant": 93,
@@ -638,16 +628,6 @@
     "pedestrian": 89,
     "safetyAssist": 79,
     "yearTested": 2024
-  },
-  {
-    "make": "CUPRA",
-    "model": "TERRAMAR",
-    "overallStars": 5,
-    "adultOccupant": 89,
-    "childOccupant": 87,
-    "pedestrian": 89,
-    "safetyAssist": 76,
-    "yearTested": 2025
   },
   {
     "make": "DACIA",
@@ -2043,11 +2023,11 @@
     "make": "MERCEDES-BENZ",
     "model": "CLA",
     "overallStars": 5,
-    "adultOccupant": 94,
-    "childOccupant": 89,
-    "pedestrian": 94,
-    "safetyAssist": 85,
-    "yearTested": 2025
+    "adultOccupant": 96,
+    "childOccupant": 91,
+    "pedestrian": 91,
+    "safetyAssist": 75,
+    "yearTested": 2019
   },
   {
     "make": "MERCEDES-BENZ",
@@ -2357,16 +2337,6 @@
     "childOccupant": 87,
     "pedestrian": 83,
     "safetyAssist": 79,
-    "yearTested": 2024
-  },
-  {
-    "make": "MITSUBISHI",
-    "model": "ASX",
-    "overallStars": 4,
-    "adultOccupant": 76,
-    "childOccupant": 80,
-    "pedestrian": 76,
-    "safetyAssist": 69,
     "yearTested": 2024
   },
   {
@@ -3325,7 +3295,7 @@
     "overallStars": 5,
     "adultOccupant": 88,
     "childOccupant": 85,
-    "pedestrian": 80,
+    "pedestrian": 88,
     "safetyAssist": 79,
     "yearTested": 2025
   },
