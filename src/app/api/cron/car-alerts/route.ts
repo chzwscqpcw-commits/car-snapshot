@@ -51,7 +51,9 @@ async function refresh(origin: string, car: SavedCarRow) {
     const d = (await res.json())?.data;
     if (!d?.make) return null;
     return {
-      make_model: makeModelLabel(d.make, d.model) || car.make_model,
+      // The model comes from the MOT service. If that is down and we hold no
+      // saved copy of it, keep the label we have rather than cut it to the make.
+      make_model: (d.motUnavailable && !d.model ? null : makeModelLabel(d.make, d.model)) || car.make_model,
       mot_expiry: cleanIsoDate(d.motExpiryDate) ?? car.mot_expiry,
       tax_due: cleanIsoDate(d.taxDueDate) ?? car.tax_due,
       year_of_manufacture: typeof d.yearOfManufacture === "number" ? d.yearOfManufacture : car.year_of_manufacture,

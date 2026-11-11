@@ -210,6 +210,8 @@ import {
   latestRecordedMileage,
   odometerMiles,
   isValuationSupported,
+  expectedTotalMiles,
+  withEstimatedMileage,
   type ValuationResult,
   type ConditionInputs,
 } from "@/lib/valuation";
@@ -230,6 +232,7 @@ import SaveCarCard from "@/components/SaveCarCard";
 import InsuranceCTA from "@/components/InsuranceCTA";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
+import MotOutageNotice from "@/components/MotOutageNotice";
 import Reveal from "@/components/Reveal";
 import { LOOKUP_RATE_LIMIT_MESSAGE } from "@/lib/lookup-errors";
 import { onPlateChange, plateHref, readPlate } from "@/lib/plate-url";
@@ -247,6 +250,13 @@ type VehicleData = {
   taxDueDate?: string;
   /** Set by /api/lookup when DVLA was down and the result came from MOT data alone. */
   dvlaUnavailable?: boolean;
+  /** Set by /api/lookup when the MOT service did not answer: no MOT history or
+   *  mileage, and no model unless we had looked the car up before. */
+  motUnavailable?: boolean;
+  /** That outage is the preview-only simulation. */
+  motSimulated?: boolean;
+  /** Set here, not by the lookup: the visitor told us the model during an MOT outage. */
+  modelFromVisitor?: boolean;
   motStatus?: string;
   motExpiryDate?: string;
   monthOfFirstRegistration?: string;
@@ -958,6 +968,9 @@ export default function Home() {
   const [fuelEconomy, setFuelEconomy] = useState<FuelEconomyResult | null>(null);
   const [valuationServerData, setValuationServerData] = useState<{ ebayMedian: number | null; ebayQ1Price: number | null; ebayQ3Price: number | null; ebayListingCount: number; ebayMinPrice: number | null; ebayMaxPrice: number | null; ebayTotalListings: number | null; ebayDominantTransmission: string | null; ebayDominantBodyType: string | null; ebayYearWidened: boolean; cacheMedian: number | null; cacheEntryCount: number; marketcheckMedian: number | null; marketcheckQ1: number | null; marketcheckQ3: number | null; marketcheckListingCount: number; marketcheckSource: "cache" | "api" | null; sources: string[] } | null>(null);
   const [valuationCondition, setValuationCondition] = useState<ConditionInputs | null>(null);
+  // MOT service down: the mileage the visitor entered in place of the last
+  // MOT reading we couldn't fetch. Null while the age-based estimate stands.
+  const [outageMileage, setOutageMileage] = useState<number | null>(null);
   const [showConditionForm, setShowConditionForm] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const [showRecallDetails, setShowRecallDetails] = useState(false);
@@ -1579,11 +1592,16 @@ export default function Home() {
     // Same shared helper as the /api/valuation call above and the standalone
     // tool — converts km→miles and picks the newest reading, so the report's
     // local baseline can't disagree with the figure it sent to the API.
-    const latestMileage = latestRecordedMileage(data.motTests);
+    const recordedMileage = latestRecordedMileage(data.motTests);
+    // MOT service down: no reading to use. Take the visitor's figure if they
+    // have given one; otherwise the valuation assumes typical mileage for the
+    // car's age (no adjustment) and is stated less confidently below.
+    const latestMileage = recordedMileage ?? (data.motUnavailable ? outageMileage : null);
+    const mileageEstimated = data.motUnavailable === true && latestMileage == null;
 
     const depBaseline = calculateDepreciationBaseline(newPrice, vehicleAge, data.make, data.model, data.fuelType);
-    return { newPrice, vehicleAge, latestMileage, depBaseline };
-  }, [data, lookupModel]);
+    return { newPrice, vehicleAge, latestMileage, mileageEstimated, depBaseline };
+  }, [data, lookupModel, outageMileage]);
 
   // Vehicle valuation
   const valuationResult = useMemo((): ValuationResult | null => {
@@ -1596,7 +1614,7 @@ export default function Home() {
       (r) => r.type === "ADVISORY"
     ).length ?? 0;
     const recentFailure = data.motTests?.[0]?.testResult === "FAILED";
-    const { total: condAdj, motAuto } = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure);
+    const { total: condAdj, motAuto } = getConditionAdjustment(valuationCondition, advisoryCount, recentFailure, data.motUnavailable !== true);
     const colourAdj = getColourAdjustment(data.colour);
 
     const result = combineValuationLayers(
@@ -1626,7 +1644,7 @@ export default function Home() {
       result.motAutoAdjustmentPercent = motAuto;
     }
 
-    return result;
+    return result && valuationInputs.mileageEstimated ? withEstimatedMileage(result) : result;
   }, [data, valuationServerData, valuationCondition, valuationInputs]);
 
   // ── Record what we actually showed ─────────────────────────────────────
@@ -1658,6 +1676,13 @@ export default function Home() {
       cacheMedian: valuationServerData?.cacheMedian ?? null,
       marketcheckMedian: valuationServerData?.marketcheckMedian ?? null,
       sources: valuationResult.sources,
+      ...(data?.motUnavailable
+        ? {
+            motUnavailable: true,
+            mileageEstimated: valuationInputs.mileageEstimated,
+            modelFromVisitor: data?.modelFromVisitor === true,
+          }
+        : {}),
     });
   }, [
     valuationResult,
@@ -1668,6 +1693,8 @@ export default function Home() {
     data?.make,
     data?.model,
     data?.yearOfManufacture,
+    data?.motUnavailable,
+    data?.modelFromVisitor,
   ]);
 
   // Ownership Cost Calculator
@@ -2275,6 +2302,7 @@ export default function Home() {
 
     setError(null);
     setData(null);
+    setOutageMileage(null);
     setLoading(true);
     setVrm(cleanedReg);
     setSharePromptDismissed(false);
@@ -4332,6 +4360,16 @@ END:VEVENT
                     below is complete. Search again in a few minutes for the full DVLA details.
                   </p>
                 )}
+                {/* The reverse of the above (8–9 Nov 2026): DVLA answered, the
+                    MOT service did not. Without this the page shows a car with
+                    no MOT history and no reason why. */}
+                {data.motUnavailable && (
+                  <p data-mot-outage-banner className="mb-3 text-xs text-amber-200/90">
+                    DVSA&apos;s MOT service isn&apos;t answering at the moment, so this car&apos;s MOT history and mileage
+                    readings aren&apos;t shown. Tax and vehicle details from DVLA are complete. Search again later for
+                    the full record.
+                  </p>
+                )}
 
                 {/* Specs-placement MOTBookingCTA removed (Phase 2 CTA de-dup) —
                     it sat directly under the status-aware MotActionBanner above,
@@ -4813,6 +4851,37 @@ END:VEVENT
             {/* ═══ GROUP 3: FINANCIAL PICTURE ═══ */}
             <SectionGroup icon={<PoundSterling className="w-4 h-4" />} label="Financial Picture" id="section-money">
 
+            {/* MOT service down: explain it ABOVE the valuation, ask for the
+                model if we have never looked this car up (MOT history is where
+                the model comes from), and take a mileage in place of the
+                reading we couldn't fetch. Same component as /value-my-car.
+                Nothing below it (the figure, the selling offers) is ever shown
+                during an outage without this. Not for a vehicle we don't value. */}
+            {data.motUnavailable && isValuationSupported(data) && (
+              <DataReveal delay={355}>
+                <MotOutageNotice
+                  surface="home-valuation"
+                  make={data.make}
+                  model={data.model}
+                  modelFromVisitor={data.modelFromVisitor === true}
+                  onPickModel={(model) => {
+                    setOutageMileage(null);
+                    setData((d) => (d ? { ...d, model: model ?? undefined, modelFromVisitor: model !== null } : d));
+                  }}
+                  mileage={{
+                    estimate: data.yearOfManufacture
+                      ? expectedTotalMiles(Math.max(0, new Date().getFullYear() - data.yearOfManufacture), data.fuelType)
+                      : null,
+                    value: outageMileage,
+                    onChange: setOutageMileage,
+                  }}
+                  mileageSet={outageMileage !== null}
+                  simulated={data.motSimulated === true}
+                  className="mb-6"
+                />
+              </DataReveal>
+            )}
+
             {/* VEHICLE VALUATION ESTIMATE */}
             {valuationResult && (
               <DataReveal delay={360}>
@@ -5055,10 +5124,12 @@ END:VEVENT
                 views, so half the audience kept seeing "Buying this car?" on a
                 page where 41% of them are valuing a car they already own. Same
                 reasoning as ValuationResult; see the note there. Hidden for a
-                car its owner said they are keeping. */}
-            {!keepingCar && (
+                car its owner said they are keeping. And held back during an
+                MOT outage until the visitor has their valuation: the first
+                thing under "tell us the model" should not be an offer. */}
+            {!keepingCar && !(data.motUnavailable && !valuationResult && isValuationSupported(data)) && (
               <DataReveal delay={398}>
-                <div className="mb-8">
+                <div className="mb-8" data-money-seller>
                   <CarVerticalReportCTA
                     regNumber={data.registrationNumber}
                     context="money-seller"
