@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/weekly-audit",
       "schedule": "0 16 * * 5"
+    },
+    {
+      "path": "/api/cron/lookup-health",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
