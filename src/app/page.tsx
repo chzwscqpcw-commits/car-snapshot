@@ -1487,6 +1487,10 @@ export default function Home() {
   // Vehicle Health Score
   const healthScore = useMemo((): HealthScoreResult | null => {
     if (!data) return null;
+    // MOT service down: a quarter of the score is MOT history we don't have,
+    // so there is no grade (chip, card, checklist and report alike) rather
+    // than one marked down, or up, for our gap.
+    if (data.motUnavailable) return null;
     const motInsightsData = data.motTests ? calculateMotInsights(data.motTests, data?.yearOfManufacture) : null;
     const hasMileageDiscrepancy = motInsightsData?.mileageWarnings?.some(w => w.includes("ALERT") || w.includes("decreased")) ?? false;
     return calculateHealthScore({
@@ -4481,6 +4485,12 @@ END:VEVENT
             <SectionGroup icon={<ShieldCheck className="w-4 h-4" />} label="Health &amp; Safety" id="section-health">
 
             {/* VEHICLE HEALTH SCORE */}
+            {data.motUnavailable && !healthScore && (
+              <p data-health-paused className="mb-8 rounded-lg border border-slate-700/50 bg-slate-800/50 px-4 py-3 text-sm text-slate-400">
+                <span className="font-medium text-slate-200">Health score paused.</span> It leans on MOT history, which is
+                temporarily unavailable. Check again later for the grade.
+              </p>
+            )}
             {healthScore && (
               <DataReveal delay={160}>
                 <div className="mb-8 p-5 rounded-lg border border-slate-700/50 bg-slate-800/50">

@@ -193,6 +193,9 @@ await check("homepage, known model", motDown({ knownModel: true }), async (page)
   const valued = await until(page, () => !!document.querySelector("[data-mot-outage-notice]") && /Estimated Value/.test(document.body.innerText), 20000);
   report("homepage: a car we have seen before is valued at once, with the notice", valued && !(await page.evaluate(() => !!document.querySelector("[data-mot-outage-notice] select"))));
   await shot(page, "home-known-model");
+  // No health grade: a quarter of it is the MOT history we don't have.
+  const graded = await page.evaluate(() => /Health [A-F]\b/.test(document.body.innerText) || /Vehicle Health Score/.test(document.body.innerText));
+  report("homepage: no health grade on missing MOT history, and it says why", !graded && (await page.evaluate(() => !!document.querySelector("[data-health-paused]"))));
 
   // The PDF report made in this state is told about it, so it can say that
   // MOT history was unavailable and that the valuation assumes typical mileage.
