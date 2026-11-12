@@ -234,7 +234,7 @@ async function checkLookupHealth(): Promise<ServiceStatus> {
     return {
       name,
       status: h.ongoing ? "error" : endedRecently ? "warning" : "ok",
-      message: `${h.ongoing ? "Failing now. " : ""}${lookupHealthLine(h)}`.replace(/^no errors$/, "No lookup errors"),
+      message: `${h.ongoing ? "Failing now. " : ""}${lookupHealthLine(h)}`.replace(/^no errors/, "No lookup errors"),
     };
   } catch (err: unknown) {
     return { name, status: "warning", message: (err as Error)?.message || "Could not read lookup errors" };

@@ -106,7 +106,23 @@ export interface StageStats {
   causes: Record<string, number>;
 }
 
+/**
+ * An error from a call that no page of ours made (`direct: true`, written by
+ * /api/lookup since 12 Nov 2026; see src/lib/lookup-guards.ts). Those calls'
+ * successes are `lookup_direct` rows, which nothing here reads, so their
+ * failures are left out too: the alert, the spells and the weekly figures are
+ * all about lookups visitors made. A real outage fails visitors' lookups as
+ * well and is judged on those.
+ */
+function isDirectError(row: HealthRow): boolean {
+  return row.event_type === "lookup_error" && row.metadata?.direct === true;
+}
+
+/** The stage an error row counts against; null for a row that does not count
+ *  (no stage, or a direct call's error). Every reader of error rows goes
+ *  through this, so the rule holds for all of them. */
 function stageOf(row: HealthRow): LookupStage | null {
+  if (isDirectError(row)) return null;
   const s = row.metadata?.stage;
   return s === "mot" || s === "dvla" || s === "internal" ? s : null;
 }
@@ -294,6 +310,8 @@ export interface LookupHealthSummary {
   longestSpell: BadSpell | null;
   /** A spell whose last error is within the alert window of `toISO`: still going. */
   ongoing: BadSpell | null;
+  /** Errors from direct calls in the window. In none of the figures above. */
+  directErrors: number;
 }
 
 /** The week (or any window) in one object, for the Friday email and /data-health. */
@@ -321,6 +339,7 @@ export function summariseLookupHealth(rows: HealthRow[], fromMs: number, toMs: n
     })),
     longestSpell,
     ongoing,
+    directErrors: inWindow.filter(isDirectError).length,
   };
 }
 
@@ -499,12 +518,13 @@ export function renderAlertHtml(action: HealthAction, nowMs: number): string {
 
 /** One line of plain text: "738 errors (MOT history (DVSA) 738). Longest bad spell: …". */
 export function lookupHealthLine(h: LookupHealthSummary): string {
-  if (h.totalErrors === 0) return "no errors";
+  const direct = h.directErrors > 0 ? ` Not counted: ${h.directErrors.toLocaleString("en-GB")} from direct API calls.` : "";
+  if (h.totalErrors === 0) return direct ? `no errors from visitors.${direct}` : "no errors";
   const stages = h.byStage.map((s) => `${STAGE_LABEL[s.stage]} ${s.errors.toLocaleString("en-GB")}`).join(", ");
   const spell = h.longestSpell
     ? ` Longest bad spell: ${STAGE_LABEL[h.longestSpell.stage]}, ${fmtUtc(h.longestSpell.startISO)} to ${fmtUtc(h.longestSpell.endISO)} UTC (${fmtDuration(h.longestSpell.minutes)}, ${h.longestSpell.errors.toLocaleString("en-GB")} errors).`
     : " No bad spell (errors were scattered).";
-  return `${h.totalErrors.toLocaleString("en-GB")} error${h.totalErrors === 1 ? "" : "s"} (${stages}).${spell}`;
+  return `${h.totalErrors.toLocaleString("en-GB")} error${h.totalErrors === 1 ? "" : "s"} (${stages}).${spell}${direct}`;
 }
 
 /** The "Lookup health" block for the Friday audit email. Red when there was a

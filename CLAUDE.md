@@ -126,7 +126,9 @@ clip or caption; the test enforces both.
   `lookup_direct`, so every count of `lookup` leaves it out; `/data-health`
   shows the last 24h of them. The route also remembers for ten minutes that
   DVLA does not know a plate (`src/lib/lookup-guards.ts`). A server-side call
-  of ours to the route must send `x-fpc-internal: 1`.
+  of ours to the route must send `x-fpc-internal: 1`. An error from a direct
+  call is a `lookup_error` with `direct: true`; the lookup-health alert and
+  weekly figures leave those out and report them as "Not counted".
 - Every public page lives in `src/lib/site-index.ts` — the command palette
   (⌘K), the mobile drawer and `/tools` all read it (a `tools` block on an
   entry is its `/tools` card). `npm run test:site-index` walks `src/app` and
