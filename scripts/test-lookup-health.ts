@@ -198,6 +198,59 @@ console.log("\nCounting results a visitor lost, not error rows (since the fallba
   check("DVLA failures still page on their error rows", isBad(stageStats(dvla, N0 - 60 * MIN, N0).dvla));
 }
 
+console.log("\nErrors from direct calls (no page of ours made the request):");
+{
+  // Since 12 Nov 2026 /api/lookup marks an error from a direct call
+  // `direct: true`, and records that caller's successes as `lookup_direct`
+  // (not read here). So its errors must not count either, anywhere.
+  const N0 = MOT_FLAG_SINCE_MS + 48 * 60 * MIN;
+  const nat = (minutes: number) => new Date(N0 + minutes * MIN).toISOString();
+  const look = (minutes: number): HealthRow => ({ event_type: "lookup", created_at: nat(minutes), metadata: { cached: false, make: "FORD" } });
+  const dvlaErr = (minutes: number, direct: boolean): HealthRow => ({
+    event_type: "lookup_error",
+    created_at: nat(minutes),
+    metadata: { stage: "dvla", reason: "service_error", status: 503, ...(direct ? { direct: true } : {}) },
+  });
+  const weekFrom = N0 - 7 * 24 * 60 * MIN;
+
+  // A quiet hour for visitors (6 fresh lookups) while a script collects 40 DVLA errors over 40 minutes.
+  const visitors = Array.from({ length: 6 }, (_, i) => look(-55 + i * 10));
+  const scripted = Array.from({ length: 40 }, (_, i) => dvlaErr(-45 + i, true));
+  const quiet = [...visitors, ...scripted].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const q = stageStats(quiet, N0 - 60 * MIN, N0);
+  check("the same errors unmarked would page (the case being guarded)", isBad(stageStats([...visitors, ...scripted.map((r) => dvlaErr((Date.parse(r.created_at) - N0) / MIN, false))], N0 - 60 * MIN, N0).dvla));
+  check("marked direct, they are not errors of any stage", q.dvla.errors === 0 && q.dvla.affected === 0 && q.mot.errors === 0 && q.internal.errors === 0);
+  check("and do not page", !isBad(q.dvla) && decideHealthActions(quiet, N0, []).length === 0);
+  check("nor inflate the attempts the share is taken of", q.dvla.attempts === 6, String(q.dvla.attempts));
+  check("forty minutes of them is not a bad spell", badSpells(quiet).length === 0);
+  const s = summariseLookupHealth(quiet, weekFrom, N0);
+  check("the week's summary counts no errors", s.totalErrors === 0 && s.byStage.length === 0 && s.longestSpell === null && s.ongoing === null);
+  check("but says how many it left out", s.directErrors === 40 && /^no errors from visitors\. Not counted: 40 from direct API calls\.$/.test(lookupHealthLine(s)), lookupHealthLine(s));
+  check("and the email carries that line", renderLookupHealthHtml(s).includes("Not counted: 40 from direct API calls."));
+  check("a week with none says nothing about them", lookupHealthLine(summariseLookupHealth(visitors, weekFrom, N0)) === "no errors");
+
+  // A real DVLA outage with the script running through it: judged on visitors' failures alone.
+  const outage = Array.from({ length: 12 }, (_, i) => dvlaErr(-58 + i * 5, false));
+  const mixed = [...outage, ...scripted].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const m = stageStats(mixed, N0 - 60 * MIN, N0);
+  check("a real outage still pages, counted on visitors' errors only", isBad(m.dvla) && m.dvla.errors === 12 && m.dvla.affected === 12, `${m.dvla.affected}/${m.dvla.attempts}`);
+  const [opened] = decideHealthActions(mixed, N0, []);
+  check("and starts at the visitors' first error, not the script's", opened?.type === "open" && opened.startedAt === nat(-58), opened?.type === "open" ? opened.startedAt : "no alert");
+  const ms = summariseLookupHealth(mixed, weekFrom, N0);
+  check("the summary keeps the two apart", ms.totalErrors === 12 && ms.directErrors === 40 && /^12 errors .*Not counted: 40 from direct API calls\.$/.test(lookupHealthLine(ms)), lookupHealthLine(ms));
+
+  // Recovery: visitors' lookups work again while the script is still failing.
+  const healed = [...outage, ...Array.from({ length: 10 }, (_, i) => look(2 + i * 3)), ...Array.from({ length: 30 }, (_, i) => dvlaErr(1 + i, true))].sort((a, b) =>
+    a.created_at.localeCompare(b.created_at),
+  );
+  const rec = decideHealthActions(healed, N0 + 31 * MIN, [{ stage: "dvla", startedAt: nat(-58), alertedAt: nat(-30) }]);
+  check("an incident clears when visitors' lookups work, whatever the script sees", rec[0]?.type === "recover" && rec[0].errorsSinceStart === 12 && rec[0].lastErrorAt === nat(-3), JSON.stringify(rec[0] ?? null).slice(0, 160));
+
+  // An MOT error from a direct call, before and after: never counted.
+  const motDirect: HealthRow = { event_type: "lookup_error", created_at: nat(-5), metadata: { stage: "mot", reason: "timeout", status: null, direct: true } };
+  check("a direct call's MOT error is not counted either", stageStats([motDirect], N0 - 60 * MIN, N0).mot.errors === 0);
+}
+
 console.log("\nIncident state (lookup_alert rows):");
 {
   const alertRow = (minutes: number, stage: string, state: string, started: number): HealthRow => ({
