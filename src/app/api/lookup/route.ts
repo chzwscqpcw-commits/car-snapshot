@@ -7,6 +7,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 import { maskPlate } from "@/lib/redact";
 import { simulatedMotOutage } from "@/lib/deploy-env";
+import { calledFromOurPages, UnknownPlates } from "@/lib/lookup-guards";
 import {
   describeFetchError,
   fetchMotHistory,
@@ -20,6 +21,9 @@ import {
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+/** Plates DVLA has just said it does not know. See lookup-guards.ts. */
+const unknownPlates = new UnknownPlates();
 
 const DVLA_API_KEY = process.env.DVLA_X_API_KEY;
 
@@ -253,6 +257,8 @@ function recordLookupFailure(meta: {
    * outage, which analytics could time but not explain. Never a plate.
    */
   detail?: Record<string, string | number | null>;
+  /** The request did not come from one of our pages (see lookup-guards.ts). */
+  direct?: boolean;
 }): void {
   if (!analyticsWritesEnabled()) return;
   try {
@@ -269,7 +275,13 @@ function recordLookupFailure(meta: {
           .from("site_events")
           .insert({
             event_type: "lookup_error",
-            metadata: { ...(meta.detail ?? {}), stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
+            metadata: {
+              ...(meta.detail ?? {}),
+              ...(meta.direct ? { direct: true } : {}),
+              stage: meta.stage,
+              reason: meta.reason,
+              status: meta.status ?? null,
+            },
             ip_hash: meta.ipHash ?? null,
           });
       })().catch(() => {
@@ -315,6 +327,13 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     // lookup counts stay about visitors.
     const internal =
       req.headers.get("x-fpc-internal") === "1" || /(^|;\s*)fpc_internal=1(;|$)/.test(req.headers.get("cookie") ?? "");
+    // A lookup that no page of ours made (a script calling the route) is
+    // recorded as `lookup_direct`, not `lookup`. A separate event type, as
+    // with `lookup_error`, so `lookup` goes on meaning a visitor's lookup
+    // in every count that already reads it.
+    const direct = !internal && !calledFromOurPages(req.headers);
+    const lookupEvent = direct ? "lookup_direct" : "lookup";
+    if (direct) console.log("[LOOKUP] Direct call: no page of ours made this request");
     const forwarded = req.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";
 
@@ -336,8 +355,17 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       );
     }
 
-    const sb = supabaseServer();
     const vrmHash = hashVrm(vrm);
+
+    // DVLA said minutes ago that it has no such plate. Give the same answer
+    // without asking DVLA and DVSA again.
+    const unknown = unknownPlates.recall(vrmHash);
+    if (unknown) {
+      console.log(`[LOOKUP] Not asking again about a plate DVLA does not know: ${maskPlate(vrm)}`);
+      return NextResponse.json({ ok: false, error: unknown.error } as ErrorResponse, { status: unknown.status });
+    }
+
+    const sb = supabaseServer();
 
     const { data: cached, error: cacheErr } = await sb
       .from("vehicle_lookups")
@@ -362,7 +390,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           (cached.data as { make?: string } | null | undefined)?.make ?? null;
         if (analyticsWritesEnabled()) {
           sb.from("site_events").insert({
-            event_type: "lookup",
+            event_type: lookupEvent,
             metadata: { ...(internal ? { internal: true } : {}), cached: true, make: cachedMake },
             ip_hash: ipHash,
           }).then(() => {}, () => {});
@@ -403,6 +431,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         status: typeof status === "number" ? status : undefined,
         ipHash: ip !== "unknown" ? hashVrm(ip) : null,
         detail,
+        direct,
       });
     }
 
@@ -430,6 +459,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           status: dvlaResult.status,
           ipHash: ip !== "unknown" ? hashVrm(ip) : null,
           detail: dvlaResult.detail,
+          direct,
         });
       }
       // DVLA down but the MOT service answered: show what MOT data has. Not
@@ -439,7 +469,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         const fallback = combineVehicleData(vehicleFromMot(vrm, motData), motData);
         if (analyticsWritesEnabled()) {
           sb.from("site_events").insert({
-            event_type: "lookup",
+            event_type: lookupEvent,
             metadata: { ...(internal ? { internal: true } : {}), make: fallback.make || null, cached: false, dvla_unavailable: true },
             ip_hash: ip !== "unknown" ? hashVrm(ip) : null,
           }).then(() => {}, () => {});
@@ -455,6 +485,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           headers: { "Cache-Control": "no-store" },
         });
       }
+      if (!isOutage) unknownPlates.remember(vrmHash, { error: dvlaResult.error, status: dvlaResult.status });
       return NextResponse.json(
         { ok: false, error: dvlaResult.error } as ErrorResponse,
         { status: dvlaResult.status }
@@ -505,7 +536,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
     if (analyticsWritesEnabled()) {
       sb.from("site_events").insert({
-        event_type: "lookup",
+        event_type: lookupEvent,
         metadata: {
           ...(internal ? { internal: true } : {}),
           make: combinedData.make || null,

@@ -121,6 +121,12 @@ clip or caption; the test enforces both.
 
 - Telemetry must never break the user flow — `tracking.ts` mirrors events
   fire-and-forget via `sendBeacon` (fallback `fetch` keepalive) to `/api/event`.
+- A `lookup` event is a lookup one of our pages made. A call to `/api/lookup`
+  from anything else (a script; no same-origin browser headers) is recorded as
+  `lookup_direct`, so every count of `lookup` leaves it out; `/data-health`
+  shows the last 24h of them. The route also remembers for ten minutes that
+  DVLA does not know a plate (`src/lib/lookup-guards.ts`). A server-side call
+  of ours to the route must send `x-fpc-internal: 1`.
 - Every public page lives in `src/lib/site-index.ts` — the command palette
   (⌘K), the mobile drawer and `/tools` all read it (a `tools` block on an
   entry is its `/tools` card). `npm run test:site-index` walks `src/app` and

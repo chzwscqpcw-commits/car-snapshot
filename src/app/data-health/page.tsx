@@ -74,6 +74,8 @@ type StatsData = {
     last7d: number;
     today: number;
     yesterday: number;
+    /** Calls to /api/lookup that no page of ours made; not in the figures above. */
+    direct24h?: number;
   };
   pageViews: {
     last24h: number;
@@ -1594,6 +1596,7 @@ export default function DataHealthPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
                   <MiniStat label="Lookups (1h)" value={stats.lookups.last1h} />
                   <MiniStat label="Lookups (24h)" value={stats.lookups.last24h} />
+                  <MiniStat label="Direct API calls (24h)" value={stats.lookups.direct24h ?? 0} />
                   <MiniStat label="Page views (24h)" value={stats.pageViews.last24h} />
                   <MiniStat label="Page views (7d)" value={stats.pageViews.last7d} />
                   <MiniStat label="Visitors (24h)" value={stats.uniqueVisitors.last24h} />

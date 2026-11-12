@@ -57,7 +57,8 @@ async function verifyWithDvla(req: Request, vrm: string) {
   try {
     const res = await fetch(`${new URL(req.url).origin}/api/lookup`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // Our own re-check, not a visitor's lookup: counted as internal.
+      headers: { "Content-Type": "application/json", "x-fpc-internal": "1" },
       body: JSON.stringify({ vrm }),
     });
     if (!res.ok) return null;

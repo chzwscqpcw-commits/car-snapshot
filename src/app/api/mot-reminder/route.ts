@@ -192,7 +192,8 @@ export async function POST(req: Request) {
       const baseUrl = new URL(req.url).origin;
       const lookupRes = await fetch(`${baseUrl}/api/lookup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // Our own re-check, not a visitor's lookup: counted as internal.
+        headers: { "Content-Type": "application/json", "x-fpc-internal": "1" },
         body: JSON.stringify({ vrm }),
       });
       if (lookupRes.ok) {
