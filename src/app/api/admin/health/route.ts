@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { adminGate } from "@/lib/admin-auth";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { discoverFuelCsvUrl, parseFuelCsvDate } from "@/lib/govuk-fuel-csv";
+import { getLookupHealth, lookupHealthLine } from "@/lib/lookup-health";
 
 type ServiceStatus = {
   name: string;
@@ -217,6 +218,29 @@ async function checkFuelPrices(): Promise<ServiceStatus> {
   }
 }
 
+/**
+ * What /api/lookup actually did this week, from its own `lookup_error` rows:
+ * errors by stage and the longest bad spell (the Friday email's "Lookup
+ * health" line). The DVLA and MOT cards above only prove the credentials
+ * exist; this is the one that would have shown the Nov 2026 MOT outage.
+ * Red while a spell is still running, amber for a day after one ends.
+ */
+async function checkLookupHealth(): Promise<ServiceStatus> {
+  const name = "Lookup health (7d)";
+  try {
+    const now = Date.now();
+    const h = await getLookupHealth(supabaseServer(), now);
+    const endedRecently = h.longestSpell !== null && now - Date.parse(h.longestSpell.endISO) < 864e5;
+    return {
+      name,
+      status: h.ongoing ? "error" : endedRecently ? "warning" : "ok",
+      message: `${h.ongoing ? "Failing now. " : ""}${lookupHealthLine(h)}`.replace(/^no errors$/, "No lookup errors"),
+    };
+  } catch (err: unknown) {
+    return { name, status: "warning", message: (err as Error)?.message || "Could not read lookup errors" };
+  }
+}
+
 export async function GET(req: Request): Promise<NextResponse> {
   const denied = adminGate(req); if (denied) return denied;
   const services = await Promise.all([
@@ -225,6 +249,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     checkMot(),
     checkEbay(),
     checkFuelPrices(),
+    checkLookupHealth(),
   ]);
 
   const hasError = services.some((s) => s.status === "error");
