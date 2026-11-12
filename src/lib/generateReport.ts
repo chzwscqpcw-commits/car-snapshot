@@ -1,6 +1,7 @@
 import type { jsPDF } from "jspdf";
 import { drawIcon, drawToneIcon, toneFromAccent, drawBoltMark, drawArc, type Tone } from "./pdf-icons";
 import { odometerMiles } from "./valuation";
+import { MOT_OUTAGE_BODY, MOT_OUTAGE_TITLE, estimatedMileageNote, reportMotUnavailable, withoutMotDependentScores } from "./report-mot-outage";
 
 /** MOT odometer reading in miles for display — converts km→mi (some imported
  *  vehicles record in km) using the SAME shared helper as the website, so the
@@ -48,6 +49,8 @@ type VehicleData = {
   variant?: string;
   motTests?: MotTest[];
   motTestsLastUpdated?: string;
+  /** The MOT service did not answer this lookup (see lib/report-mot-outage.ts). */
+  motUnavailable?: boolean;
 };
 
 type MotInsights = {
@@ -116,6 +119,9 @@ export type ReportInput = {
     conditionAdjustmentPercent?: number;
     colourAdjustmentPercent?: number;
     disclaimer?: string;
+    /** Worked out on typical mileage for the car's age, not a recorded reading. */
+    mileageEstimated?: boolean;
+    assumedMileage?: number | null;
   } | null;
   motReadiness?: {
     score: "green" | "amber" | "red";
@@ -561,6 +567,7 @@ function drawInsightCard(
 
 function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   const { data, motInsights } = input;
+  const motDown = reportMotUnavailable(input);
   paintBackground(doc);
 
   // ── Header banner ──
@@ -679,8 +686,8 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
     y,
     badgeW,
     "ADVISORIES",
-    String(totalAdvisories),
-    advisoryColor,
+    motDown ? "\u2014" : String(totalAdvisories),
+    motDown ? C.slate400 : advisoryColor,
   );
   y += 24;
 
@@ -719,12 +726,18 @@ function renderCoverPage(doc: jsPDF, input: ReportInput): number {
   doc.setFontSize(FONT.body);
   setTextColor(doc, C.secondaryText);
   doc.setFont("helvetica", "bold");
-  doc.text("Latest MOT", MARGIN + 5, y + 7);
+  doc.text(motDown ? MOT_OUTAGE_TITLE : "Latest MOT", MARGIN + 5, y + 7);
 
   doc.setFont("helvetica", "normal");
   setTextColor(doc, C.bodyText);
 
-  if (data.motTests && data.motTests.length > 0) {
+  if (motDown) {
+    // Not "no MOT history": the service did not answer, which is different.
+    doc.setFontSize(FONT.small);
+    setTextColor(doc, C.secondaryText);
+    const lines = doc.splitTextToSize(MOT_OUTAGE_BODY, CONTENT_W - 10) as string[];
+    doc.text(lines.slice(0, 3), MARGIN + 5, y + 12.5);
+  } else if (data.motTests && data.motTests.length > 0) {
     const latest = data.motTests[0];
     const resultColor = latest.testResult === "PASSED" ? C.emerald : C.red;
     const advisoryCount = latest.rfrAndComments?.filter((r) => r.type === "ADVISORY").length ?? 0;
@@ -893,6 +906,11 @@ function renderMotHistory(doc: jsPDF, input: ReportInput, y: number): number {
     doc.setFontSize(FONT.body);
     setTextColor(doc, C.secondaryText);
     doc.setFont("helvetica", "normal");
+    if (reportMotUnavailable(input)) {
+      const lines = doc.splitTextToSize(MOT_OUTAGE_BODY, CONTENT_W) as string[];
+      doc.text(lines, MARGIN, y + 4);
+      return y + 4 + lines.length * 5;
+    }
     doc.text("No MOT history available for this vehicle.", MARGIN, y + 4);
     return y + 8;
   }
@@ -1536,6 +1554,9 @@ function renderValuation(doc: jsPDF, input: ReportInput, y: number): number {
   }
   if (adjustments.length > 0) {
     detailLines.push(`Adjustments: ${adjustments.join(", ")}`);
+  }
+  if (valuation!.mileageEstimated) {
+    detailLines.push(...(doc.splitTextToSize(estimatedMileageNote(valuation!.assumedMileage), CONTENT_W - 8) as string[]));
   }
 
   if (detailLines.length > 0) {
@@ -2261,7 +2282,8 @@ function addFooterPass(doc: jsPDF) {
 
 // ── Orchestrator ─────────────────────────────────────────────────────────────
 
-export async function generateVehicleReport(input: ReportInput): Promise<Blob> {
+export async function generateVehicleReport(rawInput: ReportInput): Promise<Blob> {
+  const input = withoutMotDependentScores(rawInput);
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
 

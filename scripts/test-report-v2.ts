@@ -16,7 +16,7 @@
 import { writeFileSync } from "node:fs";
 import { renderReportHtml } from "../src/lib/report-v2/document";
 import { findOverflowingPages, renderPdf } from "../src/lib/report-v2/render";
-import { SAMPLE_REPORT_INPUT } from "../src/lib/report-v2/sample";
+import { SAMPLE_REPORT_INPUT, sampleMotOutageInput } from "../src/lib/report-v2/sample";
 import { qrSvg } from "../src/lib/report-v2/qr";
 
 // Cover, verdict, MOT story, money, details, before you buy.
@@ -124,6 +124,42 @@ function check(label: string, ok: boolean) {
   check("no mileage note without a fuel cost", !bikeHtml.includes("Based on 7,400 miles a year"));
   const bikeOverflow = await findOverflowingPages(bikeHtml);
   check(`motorbike: no page overflows${bikeOverflow.length ? ` (${bikeOverflow.join(", ")})` : ""}`, bikeOverflow.length === 0);
+
+  // Made while the MOT service was not answering (8–9 Nov 2026). The report
+  // used to read as a car with "no MOT history yet", no mileage and a grade
+  // marked down for the missing quarter of its score.
+  console.log("\nMOT service down:");
+  const text = (h: string) => h.replace(/<style>[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  for (const theme of ["dark", "light"] as const) {
+    const downHtml = renderReportHtml(sampleMotOutageInput(), { theme, now });
+    const t = text(downHtml);
+    check(`${theme}: cover says MOT history is unavailable today`, downHtml.includes("data-mot-outage") && t.includes("MOT HISTORY UNAVAILABLE TODAY") && t.includes("MOT service was not answering"));
+    check(`${theme}: summary makes no claim about MOT history`, t.includes("A 7-year-old diesel saloon.") && !t.includes("no MOT history yet"));
+    check(`${theme}: mileage vital says why it is blank`, t.includes("MOT history unavailable") && !t.includes("No MOT reading yet"));
+    check(`${theme}: no grade on a missing MOT quarter`, !t.includes("THE VERDICT") && !t.includes("GRADE") && t.includes("unavailable today"));
+    check(`${theme}: no MOT story page`, !t.includes("The MOT story"));
+    check(`${theme}: valuation still printed, at lower confidence`, t.includes("£8,950") && t.includes("Low confidence"));
+    check(`${theme}: valuation says it assumes typical mileage`, downHtml.includes("data-mileage-estimated") && t.includes("assumes typical mileage for its age, about 66,634 miles"));
+    check(`${theme}: the mileage note comes before the selling offer`, downHtml.indexOf("data-mileage-estimated") < downHtml.indexOf("pdf-wbac"));
+    check(`${theme}: sources say the MOT service was not answering`, t.includes("MOT history: DVSA (not answering when checked)") && !t.includes("MOT history: DVSA MOT History API"));
+    const downOverflow = await findOverflowingPages(downHtml);
+    check(`${theme}: no page overflows${downOverflow.length ? ` (${downOverflow.join(", ")})` : ""}`, downOverflow.length === 0);
+    try { writeFileSync(`/tmp/fpc-report-v2-mot-down-${theme}.pdf`, Buffer.from(await renderPdf(downHtml))); } catch { /* fine */ }
+  }
+  // A car we had never seen: no model, so no valuation and no selling offer.
+  const newHtml = renderReportHtml(sampleMotOutageInput({ model: false }), { theme: "dark", now });
+  check("unknown model: notice shown, no valuation, no selling offer", newHtml.includes("data-mot-outage") && !newHtml.includes("ESTIMATED VALUE TODAY") && !newHtml.includes("pdf-wbac"));
+  const newOverflow = await findOverflowingPages(newHtml);
+  check(`unknown model: no page overflows${newOverflow.length ? ` (${newOverflow.join(", ")})` : ""}`, newOverflow.length === 0);
+  // The ordinary report carries none of it, and a car that simply has no MOTs
+  // yet (nothing unavailable) keeps its own wording.
+  const normalHtml = renderReportHtml(SAMPLE_REPORT_INPUT, { theme: "dark", now });
+  check("normal report: no outage wording", !normalHtml.includes("data-mot-outage") && !normalHtml.includes("data-mileage-estimated") && !normalHtml.includes("not answering"));
+  const young = structuredClone(SAMPLE_REPORT_INPUT);
+  young.data.motTests = [];
+  young.motInsights = null;
+  const youngHtml = renderReportHtml(young, { theme: "dark", now });
+  check("no MOTs yet (service fine): keeps its own wording and its grade", youngHtml.includes("with no MOT history yet") && !youngHtml.includes("data-mot-outage") && youngHtml.includes("THE VERDICT"));
 
   console.log("\nEscaping:");
   const hostile = structuredClone(SAMPLE_REPORT_INPUT);

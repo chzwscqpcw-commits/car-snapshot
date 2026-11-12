@@ -466,8 +466,11 @@ export function getConditionAdjustment(
   condition: ConditionInputs | null,
   advisoryCount: number,
   recentFailure: boolean,
+  /** False when the MOT service did not answer: "no advisories" then means
+   *  "we couldn't look", and must not earn the clean-MOT bonus. */
+  motKnown: boolean = true,
 ): { total: number; motAuto: number } {
-  const motAuto = getMotAutoAdjustment(advisoryCount, recentFailure);
+  const motAuto = motKnown ? getMotAutoAdjustment(advisoryCount, recentFailure) : 0;
 
   if (!condition) return { total: motAuto, motAuto };
 
@@ -894,6 +897,41 @@ export function combineValuationLayers(
     ebayQ3Price: rangeQ3 ?? null,
     marketSupply,
     disclaimer,
+  };
+}
+
+// ── Estimated mileage (MOT history unavailable) ─────────────────────────────
+
+const CONFIDENCE_ONE_STEP_DOWN: Record<ValuationConfidence, ValuationConfidence> = {
+  high: "medium",
+  medium: "low",
+  low: "low",
+  "estimate-only": "estimate-only",
+};
+
+/** Extra half-range, in points of the estimate, when the mileage is a guess.
+ *  With MILEAGE_ELASTICITY at 0.35, a car at three quarters or one and a third
+ *  times the typical mileage for its age is worth about 10% more or less. */
+export const ESTIMATED_MILEAGE_EXTRA_RANGE_PCT = 10;
+
+/**
+ * The same valuation, stated less confidently, for when we could not read the
+ * car's last recorded mileage and assumed the typical figure for its age (the
+ * MOT service being down; see MotOutageNotice). The estimate itself does not
+ * move: typical mileage is the baseline every adjustment is measured against.
+ * Confidence drops one step and the range widens by
+ * ESTIMATED_MILEAGE_EXTRA_RANGE_PCT either side. Callers stop applying this
+ * the moment the visitor enters their own mileage.
+ */
+export function withEstimatedMileage(result: ValuationResult): ValuationResult {
+  const value = result.estimatedValue;
+  if (!value) return { ...result, confidence: CONFIDENCE_ONE_STEP_DOWN[result.confidence] };
+  const halfRangePct = ((result.rangeHigh - result.rangeLow) / 2 / value) * 100 + ESTIMATED_MILEAGE_EXTRA_RANGE_PCT;
+  return {
+    ...result,
+    confidence: CONFIDENCE_ONE_STEP_DOWN[result.confidence],
+    rangeLow: Math.max(roundTo50(value * (1 - halfRangePct / 100)), 100),
+    rangeHigh: roundTo50(value * (1 + halfRangePct / 100)),
   };
 }
 

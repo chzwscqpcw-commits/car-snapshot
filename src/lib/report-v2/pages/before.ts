@@ -5,6 +5,7 @@ import { qrSvg } from "../qr";
 import type { ThemeTokens } from "../theme";
 import { formatPlate, shortDate } from "../format";
 import { BODY_HEIGHT, CONTINUED_ROOM, type Block, pageShell, paginate, textHeight } from "./shared";
+import { reportMotUnavailable } from "@/lib/report-mot-outage";
 
 // Last section · Next steps: checklists for buyers, owners and sellers, the
 // history check the free data can't do, and where the data comes from. Always
@@ -23,6 +24,9 @@ const SOURCES = [
   "Theft rates: DVLA stolen-vehicle records (FOI) and DfT licensing statistics",
   "Values, running costs and repair estimates: Free Plate Check models, using live listings where available",
 ];
+
+/** Replaces the MOT line during an outage. Kept to one line: the closing block has no room for a wrap. */
+const MOT_SOURCE_DOWN = "MOT history: DVSA (not answering when checked)";
 
 const LIST_W = 300;
 
@@ -62,6 +66,7 @@ function historyPanel(input: ReportInput, t: ThemeTokens): Safe {
 
 export function beforePages(input: ReportInput, t: ThemeTokens, firstFolio: number, now: Date): Safe[] {
   const blocks: Block[] = [];
+  const down = reportMotUnavailable(input);
   for (const list of LISTS) {
     const items = input.checklist?.[list.key] ?? [];
     if (items.length === 0) continue;
@@ -85,7 +90,7 @@ export function beforePages(input: ReportInput, t: ThemeTokens, firstFolio: numb
     <div class="fineprint" style="border-color:${t.ruleStrong}">
       <div class="stack-6">
         <h2 class="eyebrow">WHERE THIS COMES FROM</h2>
-        ${SOURCES.map((s) => html`<p style="color:${t.soft}">${s}</p>`)}
+        ${SOURCES.map((s) => html`<p style="color:${t.soft}">${down && s.startsWith("MOT history") ? MOT_SOURCE_DOWN : s}</p>`)}
       </div>
       <div class="stack-6">
         <h2 class="eyebrow">PLEASE NOTE</h2>

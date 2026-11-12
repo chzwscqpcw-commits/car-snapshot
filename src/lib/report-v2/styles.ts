@@ -53,6 +53,8 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .cover-title { margin: 0; font-size: 104px; line-height: 0.95; letter-spacing: -0.01em; max-width: 600px; text-wrap: balance }
 .cover-title em { font-style: italic }
 .deck { margin: 0; font-size: 19px; line-height: 1.55; max-width: 480px; text-wrap: pretty }
+.outage { max-width: 480px; padding: 2px 0 2px 16px; border-left: 2px solid; display: flex; flex-direction: column; gap: 6px }
+.outage p { margin: 0; font-size: 13px; line-height: 1.5 }
 .contents { list-style: none; margin: 0 0 40px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; row-gap: 20px; max-width: 540px; position: relative }
 .contents li { display: flex; gap: 14px; align-items: baseline }
 .contents li .mono { font-size: 13px }
@@ -109,6 +111,7 @@ h1, h2, p, dl, dd, ul, ol, figure, blockquote { margin: 0 }
 .value-hero { font-size: 128px; line-height: 0.85 }
 .value-hero-range { font-size: 84px }
 .conf { font-size: 14px; font-weight: 600 }
+.outage-note { margin: 14px 0 0; max-width: 560px }
 .money-cols { display: grid; gap: 40px; margin-top: 40px }
 .cost-hero { display: flex; align-items: baseline; gap: 10px; font-size: 14px }
 .cost-hero .display { font-size: 60px; line-height: 1 }

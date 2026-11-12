@@ -1,12 +1,14 @@
 import { renderReportHtml } from "@/lib/report-v2/document";
 import { renderPdf } from "@/lib/report-v2/render";
-import { SAMPLE_REPORT_INPUT } from "@/lib/report-v2/sample";
+import { SAMPLE_REPORT_INPUT, sampleMotOutageInput } from "@/lib/report-v2/sample";
 import { isReportTheme } from "@/lib/report-v2/theme";
 import { clientIp, isProductionDeployment, rateLimited } from "@/lib/report-v2/request";
 
-// GET /api/report-pdf/sample?theme=dark|light&format=pdf|html
+// GET /api/report-pdf/sample?theme=dark|light&format=pdf|html[&mot=down|down-new]
 // The sample report, for reviewing the design on preview deployments and
-// locally. Never served in production.
+// locally. `mot=down` is the report made while the MOT service was not
+// answering; `mot=down-new` the same for a car we had never seen (no model,
+// so no valuation). Never served in production.
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +21,9 @@ export async function GET(req: Request): Promise<Response> {
   const params = new URL(req.url).searchParams;
   const themeParam = params.get("theme") ?? "dark";
   const theme = isReportTheme(themeParam) ? themeParam : "dark";
-  const html = renderReportHtml(SAMPLE_REPORT_INPUT, { theme });
+  const mot = params.get("mot");
+  const input = mot === "down" ? sampleMotOutageInput() : mot === "down-new" ? sampleMotOutageInput({ model: false }) : SAMPLE_REPORT_INPUT;
+  const html = renderReportHtml(input, { theme });
 
   if (params.get("format") === "html") {
     return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" } });

@@ -6,124 +6,22 @@ import { waitUntil } from "@vercel/functions";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { analyticsWritesEnabled } from "@/lib/analytics-writes";
 import { maskPlate } from "@/lib/redact";
+import { simulatedMotOutage } from "@/lib/deploy-env";
+import {
+  describeFetchError,
+  fetchMotHistory,
+  motFailureMetadata,
+  type FetchErrorDetail,
+  type MOTHistoryData,
+  type MOTTest,
+  type MotFetchResult,
+} from "@/lib/mot-history";
 
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-const MOT_API_KEY = process.env.MOT_API_KEY;
-const MOT_TENANT_ID = process.env.MOT_TENANT_ID;
-const MOT_CLIENT_ID = process.env.MOT_CLIENT_ID;
-const MOT_CLIENT_SECRET = process.env.MOT_CLIENT_SECRET;
-const MOT_API_URL = "https://history.mot.api.gov.uk/v1/trade/vehicles/registration";
-
 const DVLA_API_KEY = process.env.DVLA_X_API_KEY;
-
-let cachedMotToken: { token: string; expiresAt: number } | null = null;
-
-type MOTTest = {
-  completedDate: string;
-  testResult: "PASSED" | "FAILED" | "NO DETAILS HELD";
-  expiryDate?: string;
-  odometer?: {
-    value: number;
-    unit: string;
-  };
-  motTestNumber?: string;
-  rfrAndComments?: Array<{
-    text: string;
-    type: "COMMENT" | "DEFECT" | "ADVISORY";
-  }>;
-};
-
-type RawMotTest = {
-  completedDate?: string;
-  testResult?: string;
-  expiryDate?: string;
-  motTestNumber?: string;
-  odometerValue?: string;
-  odometerUnit?: string;
-  defects?: Array<{ type?: string; text?: string }>;
-  advisories?: Array<{ advisoryText?: string; text?: string }>;
-  comments?: Array<{ commentText?: string; text?: string }>;
-};
-
-function transformMotTest(apiTest: RawMotTest): MOTTest {
-  const transformed: MOTTest = {
-    completedDate: apiTest.completedDate ?? "",
-    testResult: (apiTest.testResult as MOTTest["testResult"]) || "NO DETAILS HELD",
-    expiryDate: apiTest.expiryDate,
-    motTestNumber: apiTest.motTestNumber,
-  };
-
-  // Transform odometer data
-  if (apiTest.odometerValue) {
-    transformed.odometer = {
-      value: parseInt(apiTest.odometerValue, 10),
-      unit: apiTest.odometerUnit || "MI",
-    };
-  }
-
-  // Transform defects to rfrAndComments format
-  const rfrAndComments: Array<{ text: string; type: "COMMENT" | "DEFECT" | "ADVISORY" }> = [];
-
-  if (Array.isArray(apiTest.defects)) {
-    apiTest.defects.forEach((defect) => {
-      // Use the defect's type field to categorize
-      let commentType: "COMMENT" | "DEFECT" | "ADVISORY" = "DEFECT";
-      
-      if (defect.type === "ADVISORY") {
-        commentType = "ADVISORY";
-      } else if (defect.type === "DANGEROUS" || defect.type === "MAJOR") {
-        commentType = "DEFECT";
-      }
-      
-      rfrAndComments.push({
-        text: defect.text || "Unknown defect",
-        type: commentType,
-      });
-    });
-  }
-
-  if (Array.isArray(apiTest.advisories)) {
-    apiTest.advisories.forEach((advisory) => {
-      rfrAndComments.push({
-        text: advisory.advisoryText || advisory.text || "Unknown advisory",
-        type: "ADVISORY",
-      });
-    });
-  }
-
-  if (Array.isArray(apiTest.comments)) {
-    apiTest.comments.forEach((comment) => {
-      rfrAndComments.push({
-        text: comment.commentText || comment.text || "Unknown comment",
-        type: "COMMENT",
-      });
-    });
-  }
-
-  if (rfrAndComments.length > 0) {
-    transformed.rfrAndComments = rfrAndComments;
-  }
-
-  return transformed;
-}
-
-type MOTHistoryData = {
-  registration: string;
-  make?: string;
-  model?: string;
-  variant?: string;
-  colour?: string;
-  primaryColour?: string;
-  firstUsedDate?: string;
-  registrationDate?: string;
-  manufactureDate?: string;
-  engineSize?: string;
-  fuelType?: string;
-  motTests?: MOTTest[];
-};
 
 type VehicleData = {
   registrationNumber: string;
@@ -154,6 +52,14 @@ type VehicleData = {
   motTestsLastUpdated?: string;
   /** DVLA was down; built from MOT data alone. See vehicleFromMot. */
   dvlaUnavailable?: boolean;
+  /**
+   * The MOT service did not answer (as opposed to answering "nothing held").
+   * No MOT history or mileage in this record, and no model unless we had
+   * looked the car up before. The pages say so; see MotOutageNotice.
+   */
+  motUnavailable?: boolean;
+  /** The outage was switched on by the preview-only cookie (never in production). */
+  motSimulated?: boolean;
 };
 
 type CombinedResponse = {
@@ -215,136 +121,6 @@ function mockDvlaResponse(registrationNumber: string) {
   };
 }
 
-async function getMOTAuthToken(): Promise<string | null> {
-  if (cachedMotToken && cachedMotToken.expiresAt > Date.now()) {
-    console.log("[MOT] Using cached token");
-    return cachedMotToken.token;
-  }
-
-  if (!MOT_TENANT_ID || !MOT_CLIENT_ID || !MOT_CLIENT_SECRET) {
-    console.warn("[MOT] Missing OAuth2 credentials");
-    return null;
-  }
-
-  try {
-    console.log("[MOT] Fetching new authentication token");
-    const tokenUrl = `https://login.microsoftonline.com/${MOT_TENANT_ID}/oauth2/v2.0/token`;
-
-    const response = await fetch(tokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: MOT_CLIENT_ID,
-        client_secret: MOT_CLIENT_SECRET,
-        scope: "https://tapi.dvsa.gov.uk/.default",
-      }),
-    });
-
-    if (!response.ok) {
-      console.error(`[MOT] Token request failed: ${response.status}`);
-      return null;
-    }
-
-    const data = await response.json();
-    const token = data.access_token;
-    const expiresIn = data.expires_in || 3600;
-
-    cachedMotToken = {
-      token,
-      expiresAt: Date.now() + (expiresIn - 300) * 1000,
-    };
-
-    console.log("[MOT] Token obtained successfully");
-    return token;
-  } catch (error: unknown) {
-    console.error("[MOT] Token fetch error:", (error as Error)?.message || error);
-    return null;
-  }
-}
-
-async function fetchMOTHistory(registrationNumber: string): Promise<MOTHistoryData | null> {
-  if (!MOT_API_KEY) {
-    console.warn("[MOT] API key not configured");
-    return null;
-  }
-
-  const token = await getMOTAuthToken();
-  if (!token) {
-    console.warn("[MOT] Could not obtain authentication token");
-    return null;
-  }
-
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
-    const url = `${MOT_API_URL}/${registrationNumber}`;
-
-    console.log(`[MOT] Fetching MOT history for ${maskPlate(registrationNumber)}`);
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "X-API-Key": MOT_API_KEY,
-        "Accept": "application/json+v6",
-      },
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.log(`[MOT] Vehicle not found: ${maskPlate(registrationNumber)}`);
-        return null;
-      }
-      if (response.status === 401 || response.status === 403) {
-        console.error(`[MOT] Authentication failed (${response.status})`);
-        // Credential rot is the quietest failure here: tokens expire, the page
-        // still renders, and MOT history just silently stops appearing.
-        recordLookupFailure({ stage: "mot", reason: "auth_failed", status: response.status });
-        return null;
-      }
-      console.error(`[MOT] API error: ${response.status}`);
-      recordLookupFailure({ stage: "mot", reason: "api_error", status: response.status });
-      return null;
-    }
-
-    const data = await response.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      const motData = data[0];
-      if (motData.motTests && Array.isArray(motData.motTests)) {
-        motData.motTests = motData.motTests.map(transformMotTest);
-      }
-      console.log(`[MOT] Got data with ${motData.motTests?.length || 0} MOT tests`);
-      return motData;
-    }
-
-    if (data && typeof data === "object") {
-      if (data.motTests && Array.isArray(data.motTests)) {
-        data.motTests = data.motTests.map(transformMotTest);
-      }
-      console.log(`[MOT] Got data with ${data.motTests?.length || 0} MOT tests`);
-      return data;
-    }
-
-    return null;
-  } catch (error: unknown) {
-    if ((error as Error).name === "AbortError") {
-      console.error("[MOT] Request timeout");
-      recordLookupFailure({ stage: "mot", reason: "timeout" });
-    } else {
-      console.error("[MOT] Fetch error:", (error as Error)?.message || error);
-      recordLookupFailure({ stage: "mot", reason: "network_error" });
-    }
-    return null;
-  }
-}
-
 const DVLA_DOWN_MESSAGE = "DVLA's vehicle service is briefly unavailable. Please try again in a few minutes.";
 const INVALID_REG_MESSAGE = "That registration doesn't look right. Check it and try again.";
 
@@ -377,7 +153,9 @@ function vehicleFromMot(vrm: string, mot: MOTHistoryData): VehicleData {
   };
 }
 
-async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | { error: string; status: number } | null> {
+type DvlaFailure = { error: string; status: number; detail?: FetchErrorDetail };
+
+async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | DvlaFailure | null> {
   const endpoint =
     process.env.DVLA_ENV === "uat"
       ? "https://uat.driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles"
@@ -391,7 +169,7 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
   // as an error. Never retry 404 (not found) or 429 (rate limit) — a retry
   // won't help and would make 429 worse.
   const MAX_ATTEMPTS = 2;
-  let transient: { error: string; status: number } = {
+  let transient: DvlaFailure = {
     error: DVLA_DOWN_MESSAGE,
     status: 503,
   };
@@ -428,10 +206,11 @@ async function fetchFromDvla(registrationNumber: string): Promise<VehicleData | 
       transient = { error: DVLA_DOWN_MESSAGE, status: resp.status };
     } catch (err: unknown) {
       clearTimeout(timeout);
+      // 503/504 here are our own labels for "fetch threw". Keep what it threw.
       transient =
         (err as Error).name === "AbortError"
           ? { error: DVLA_DOWN_MESSAGE, status: 504 }
-          : { error: DVLA_DOWN_MESSAGE, status: 503 };
+          : { error: DVLA_DOWN_MESSAGE, status: 503, detail: describeFetchError(err, registrationNumber) };
     }
 
     if (attempt < MAX_ATTEMPTS) {
@@ -468,6 +247,12 @@ function recordLookupFailure(meta: {
   reason: string;
   status?: number;
   ipHash?: string | null;
+  /**
+   * What the failure said about itself: error name, code and cause, elapsed
+   * milliseconds, attempts (see mot-history.ts). Added after the Nov 2026 MOT
+   * outage, which analytics could time but not explain. Never a plate.
+   */
+  detail?: Record<string, string | number | null>;
 }): void {
   if (!analyticsWritesEnabled()) return;
   try {
@@ -484,7 +269,7 @@ function recordLookupFailure(meta: {
           .from("site_events")
           .insert({
             event_type: "lookup_error",
-            metadata: { stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
+            metadata: { ...(meta.detail ?? {}), stage: meta.stage, reason: meta.reason, status: meta.status ?? null },
             ip_hash: meta.ipHash ?? null,
           });
       })().catch(() => {
@@ -566,7 +351,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
     const hasDvlaKey = Boolean(DVLA_API_KEY);
 
-    if (!skipCache && cached?.expires_at && new Date(cached.expires_at) > new Date()) {
+    if (!skipCache && !simulatedMotOutage(req.headers.get("cookie")) && cached?.expires_at && new Date(cached.expires_at) > new Date()) {
       if (!(hasDvlaKey && cached.source === "mock")) {
         console.log(`[LOOKUP] Using cached data for VRM: ${maskPlate(vrm)}`);
         const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
@@ -595,10 +380,31 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     }
 
     console.log(`[LOOKUP] Fetching data for VRM: ${maskPlate(vrm)}${skipCache ? " (cache skipped)" : ""}`);
-    const [dvlaResult, motData] = await Promise.all([
+    // Preview-only: pretend the MOT service is down (never in live production).
+    const simulation = simulatedMotOutage(req.headers.get("cookie"));
+    const [dvlaResult, motResult] = await Promise.all([
       fetchFromDvla(vrm),
-      fetchMOTHistory(vrm),
+      simulation
+        ? Promise.resolve<MotFetchResult>({
+            state: "failed",
+            failure: { reason: "network_error", detail: { cause_code: "SIMULATED" }, ms: 0, attempts: 0 },
+          })
+        : fetchMotHistory(vrm),
     ]);
+    const motData = motResult.state === "ok" ? motResult.data : null;
+    // "Failed" is the service not answering. A 404 or an empty record is an
+    // answer, and so is having no credentials in local development.
+    const motFailed = motResult.state === "failed";
+    if (motResult.state === "failed" && !simulation) {
+      const { stage: _stage, reason, status, ...detail } = motFailureMetadata(motResult.failure);
+      recordLookupFailure({
+        stage: "mot",
+        reason: String(reason),
+        status: typeof status === "number" ? status : undefined,
+        ipHash: ip !== "unknown" ? hashVrm(ip) : null,
+        detail,
+      });
+    }
 
     console.log(`[LOOKUP] DVLA Result:`, dvlaResult ? "Got data" : "No data or error");
     console.log(`[LOOKUP] MOT Data:`, motData ? "Got MOT history" : "No MOT data");
@@ -623,6 +429,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           reason: dvlaResult.status === 429 ? "rate_limited" : "service_error",
           status: dvlaResult.status,
           ipHash: ip !== "unknown" ? hashVrm(ip) : null,
+          detail: dvlaResult.detail,
         });
       }
       // DVLA down but the MOT service answered: show what MOT data has. Not
@@ -657,26 +464,54 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const vehicleData = dvlaResult || mockDvlaResponse(vrm);
     const combinedData = combineVehicleData(vehicleData, motData);
 
-    const { error: upsertErr } = await sb.from("vehicle_lookups").upsert(
-      {
-        vrm_hash: vrmHash,
-        data: combinedData,
-        source: dvlaResult ? "dvla" : "mock",
-        expires_at: expiresAt,
-        updated_at: updatedAt,
-      },
-      { onConflict: "vrm_hash" }
-    );
+    if (motFailed) {
+      // The MOT service is where a car's model comes from (DVLA returns the
+      // make only), and without a model there is no price to start a
+      // valuation from: that is how the Nov 2026 outage took valuations down
+      // with it. A model is a fact about the car, not a reading that goes
+      // stale, so reuse the one from our own saved copy of an earlier lookup
+      // when there is one, however old. MOT tests and mileage are NOT reused:
+      // showing an old history as current would be worse than saying it is
+      // unavailable.
+      const saved = simulation === "new" || cached?.source === "mock" ? null : (cached?.data as VehicleData | null | undefined);
+      if (!combinedData.model && saved?.model) {
+        combinedData.model = saved.model;
+        if (saved.variant) combinedData.variant = saved.variant;
+      }
+      combinedData.motUnavailable = true;
+      if (simulation) combinedData.motSimulated = true;
+    }
 
-    if (upsertErr) {
-      console.error("cache_write_error:", upsertErr.message);
+    // A record missing its MOT half is not cached: it would be served for 24
+    // hours, long after the service is back (and it would overwrite the saved
+    // copy the model above came from).
+    if (!motFailed) {
+      const { error: upsertErr } = await sb.from("vehicle_lookups").upsert(
+        {
+          vrm_hash: vrmHash,
+          data: combinedData,
+          source: dvlaResult ? "dvla" : "mock",
+          expires_at: expiresAt,
+          updated_at: updatedAt,
+        },
+        { onConflict: "vrm_hash" }
+      );
+
+      if (upsertErr) {
+        console.error("cache_write_error:", upsertErr.message);
+      }
     }
 
     const ipHash = ip !== "unknown" ? hashVrm(ip) : null;
     if (analyticsWritesEnabled()) {
       sb.from("site_events").insert({
         event_type: "lookup",
-        metadata: { ...(internal ? { internal: true } : {}), make: combinedData.make || null, cached: false },
+        metadata: {
+          ...(internal ? { internal: true } : {}),
+          make: combinedData.make || null,
+          cached: false,
+          ...(motFailed ? { mot_unavailable: true, model_known: Boolean(combinedData.model) } : {}),
+        },
         ip_hash: ipHash,
       }).then(() => {}, () => {});
     }
@@ -689,7 +524,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       cached: false,
       vrmHash,
     } as CombinedResponse, {
-      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+      headers: { "Cache-Control": motFailed ? "no-store" : "public, s-maxage=300, stale-while-revalidate=600" },
     });
   } catch (err: unknown) {
     console.error("lookup_error:", (err as Error)?.message || err);
@@ -697,6 +532,10 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       stage: "internal",
       reason: (err as Error)?.name || "exception",
       status: 500,
+      // Name and code only: an exception's message can quote the request body.
+      detail: (({ err_name, err_code, cause_name, cause_code }) => ({ err_name, err_code, cause_name, cause_code }))(
+        describeFetchError(err),
+      ) as Record<string, string>,
     });
     return NextResponse.json(
       { ok: false, error: "Server error. Please try again." } as ErrorResponse,

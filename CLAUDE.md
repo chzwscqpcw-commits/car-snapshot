@@ -13,7 +13,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
 | Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
-| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL. Locally: `npm run build && npx next start -p 3123`, then run it. |
+| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half. Locally: `npm run build && npx next start -p 3123`, then run it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
@@ -79,6 +79,32 @@ The Friday audit email's "Data" section and `/data-health` read the jobs' last
 runs from the public GitHub API. Adding a dataset = a registry entry, a
 validator in `scripts/lib/validators.ts` and a `profileDataset` case. Details:
 `docs/DATA_REFRESH.md`.
+
+## When the MOT service is down
+
+`/api/lookup` joins DVLA (vehicle details) and DVSA (MOT history). Either can
+fail on its own, and the MOT half fails quietly: the page still renders. On
+8–9 Nov 2026 it failed for 21.5 hours unnoticed and took valuations with it,
+because a car's **model comes from its MOT record** (DVLA returns the make
+only).
+
+- Every failure is a `lookup_error` row (`stage`, `reason`, and since Nov 2026
+  the error's `err_name` / `cause_code` / `cause_msg`, `ms`, `attempts`; never
+  a plate). `src/lib/mot-history.ts` is the MOT call.
+- A failed MOT call sets `motUnavailable` on the lookup, reuses the model from
+  our saved copy of an earlier lookup when there is one, and is not cached.
+  `MotOutageNotice` explains it on both valuation surfaces (the tool and the
+  homepage's own inline valuation) and asks for the model when we have none.
+- To see the outage state without an outage: `/preview/car-valuation?mot=down`
+  (fixture, no lookup), or on a preview deployment
+  `/api/preview/mot-outage?state=known|new|off`, which sets a 30-minute cookie
+  the lookup honours everywhere except live production.
+- No health grade during an outage, on the page or in the report: a quarter of
+  it is MOT history, so it would be marked down (or up) for our gap.
+- The PDF report says so too, in both engines (`src/lib/report-mot-outage.ts`
+  holds the shared wording): a notice on the cover, no health grade, and a
+  line under the valuation when it rests on typical mileage. Sample:
+  `/api/report-pdf/sample?mot=down` (or `down-new`, `&format=html`).
 
 ## Social clips (`social/`)
 
