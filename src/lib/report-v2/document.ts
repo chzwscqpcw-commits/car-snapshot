@@ -10,6 +10,7 @@ import { moneyPage } from "./pages/money";
 import { detailPages } from "./pages/details";
 import { beforePages } from "./pages/before";
 import { REPORT_CSS } from "./styles";
+import { withoutMotDependentScores } from "@/lib/report-mot-outage";
 
 // The report as one HTML document: fixed A4 pages, one <section class="page">
 // each, rendered to PDF by render.ts. Sections only appear when the car has
@@ -48,7 +49,10 @@ function sections(input: ReportInput, now: Date): Section[] {
 
 export type RenderOptions = { theme: ReportTheme; now?: Date };
 
-export function renderReportHtml(input: ReportInput, { theme, now = new Date() }: RenderOptions): string {
+export function renderReportHtml(rawInput: ReportInput, { theme, now = new Date() }: RenderOptions): string {
+  // Made during an MOT outage: no health grade (a quarter of it is missing),
+  // and the cover and the valuation say what is unavailable and why.
+  const input = withoutMotDependentScores(rawInput);
   const t = THEMES[theme];
   const contents: ContentsLine[] = [];
   const pages: Safe[] = [];

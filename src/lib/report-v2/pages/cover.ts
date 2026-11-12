@@ -2,6 +2,7 @@ import type { ReportInput } from "@/lib/generateReport";
 import { html, raw, type Safe } from "../html";
 import type { ThemeTokens } from "../theme";
 import { formatPlate, monthYear, num, parseDate, shortDate, titleCase, vehicleNoun } from "../format";
+import { MOT_OUTAGE_BODY, MOT_OUTAGE_TITLE, reportMotUnavailable } from "@/lib/report-mot-outage";
 
 const BOLT_PATH = "M300 0 L40 430 L230 430 L150 760 L480 290 L280 290 L360 0 Z";
 
@@ -25,6 +26,10 @@ export function coverSummary(input: ReportInput, now: Date): string {
   const body = noun === "car" ? input.parsedModel?.bodyStyle?.toLowerCase() ?? "car" : noun;
   const subject = [age !== null ? `${age}-year-old` : null, fuel, body].filter(Boolean).join(" ");
   parts.push(`A ${subject}`);
+
+  // MOT service down: say nothing about its history here (the notice under
+  // this sentence does), rather than "no MOT history yet", which is untrue.
+  if (reportMotUnavailable(input)) return parts.join("") + ".";
 
   const tests = d.motTests ?? [];
   const latest = tests[0];
@@ -50,6 +55,7 @@ type Vital = { label: string; value: string; sub: string; color: string };
 function vitals(input: ReportInput, t: ThemeTokens, now: Date): Vital[] {
   const d = input.data;
   const out: Vital[] = [];
+  const motDown = reportMotUnavailable(input);
 
   const motExpiry = parseDate(d.motExpiryDate);
   const motExpired = motExpiry ? motExpiry.getTime() < now.getTime() : false;
@@ -76,7 +82,7 @@ function vitals(input: ReportInput, t: ThemeTokens, now: Date): Vital[] {
   out.push({
     label: "MILEAGE",
     value: latestMiles !== null ? num(latestMiles) : "—",
-    sub: latestMiles !== null && latestDate ? `at ${monthYear(latestDate)} MOT` : "No MOT reading yet",
+    sub: latestMiles !== null && latestDate ? `at ${monthYear(latestDate)} MOT` : motDown ? "MOT history unavailable" : "No MOT reading yet",
     color: t.ink,
   });
 
@@ -84,7 +90,7 @@ function vitals(input: ReportInput, t: ThemeTokens, now: Date): Vital[] {
     out.push({ label: "GRADE", value: `${input.healthScore.grade} · ${input.healthScore.score}`, sub: "out of 100", color: t.accent });
   } else {
     const n = d.motTests?.length ?? 0;
-    out.push({ label: "MOT TESTS", value: String(n), sub: "on record", color: t.ink });
+    out.push({ label: "MOT TESTS", value: motDown ? "—" : String(n), sub: motDown ? "unavailable today" : "on record", color: t.ink });
   }
   return out;
 }
@@ -117,6 +123,10 @@ export function coverPage(input: ReportInput, t: ThemeTokens, now: Date, lines: 
       <div class="plate" style="box-shadow:${t.plateShadow}">${formatPlate(d.registrationNumber)}</div>
       <h1 class="display cover-title">${d.yearOfManufacture ?? ""} ${make}${firstModel ? html` <em style="color:${t.accent}">${firstModel}</em>` : ""}${restModel.length ? ` ${restModel.join(" ")}` : ""}</h1>
       <p class="deck" style="color:${t.soft}">${coverSummary(input, now)}</p>
+      ${reportMotUnavailable(input) ? html`<div class="outage" data-mot-outage style="border-color:${t.warn}">
+        <span class="mono label" style="color:${t.warn}">${MOT_OUTAGE_TITLE.toUpperCase()}</span>
+        <p style="color:${t.soft}">${MOT_OUTAGE_BODY}</p>
+      </div>` : ""}
     </div>
 
     <div class="grow"></div>

@@ -8,6 +8,7 @@ import { qrSvg } from "../qr";
 import { pageShell } from "./shared";
 import { ASSUMED_ANNUAL_MILES } from "@/lib/fuel-economy";
 import { goLink, isPartnerConfigured, PARTNER_LINKS } from "@/config/partners";
+import { estimatedMileageNote } from "@/lib/report-mot-outage";
 
 // 04 · The money: estimated value with its range against live asking prices,
 // the cost to run, repairs to budget for, and the negotiation helper. Any
@@ -55,6 +56,7 @@ function valueSection(v: NonNullable<ReportInput["valuation"]>, t: ThemeTokens, 
     <div class="stack-6"><span class="mono label" style="color:${t.muted}">ESTIMATED VALUE TODAY</span><span class="display value-hero${v.estimatedValue ? "" : " value-hero-range"}">${hero}</span></div>
     <div class="stack-6 right"><span class="conf" style="color:${confColor}">${conf.charAt(0).toUpperCase()}${conf.slice(1)} confidence${pct ? ` · ±${pct}%` : ""}</span>${v.ebayTotalListings ? html`<span class="small-text" style="color:${t.muted}">${num(v.ebayTotalListings)} similar cars for sale</span>` : ""}</div>
   </div>
+  ${v.mileageEstimated ? html`<p class="small-text outage-note" data-mileage-estimated style="color:${t.warn}">${estimatedMileageNote(v.assumedMileage)}</p>` : ""}
   <figure class="chart tight">${rangeBar(v, t)}<figcaption style="color:${t.muted}">Shaded: typical range for this ${noun}.${v.ebayMinPrice && v.ebayMaxPrice ? " Thin line: asking prices for similar cars on sale now." : ""}${notes ? ` ${notes}` : ""}</figcaption></figure>`;
 }
 

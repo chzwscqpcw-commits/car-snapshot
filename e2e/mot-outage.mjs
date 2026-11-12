@@ -64,6 +64,8 @@ function report(name, ok, detail = "") {
 
 /** Mileage params sent to the comparables API (it files them as MOT readings). */
 const mileageSent = [];
+/** Bodies posted to the report renderer (answered 404, as when it is switched off). */
+const reportPosts = [];
 
 async function newPage(lookupBody) {
   const page = await browser.newPage();
@@ -83,6 +85,10 @@ async function newPage(lookupBody) {
       return req.respond({ status: 200, contentType: "application/json", body: NO_COMPARABLES });
     }
     if (u.pathname === "/api/event") return req.respond({ status: 204 });
+    if (u.pathname === "/api/report-pdf") {
+      try { reportPosts.push(JSON.parse(req.postData() ?? "{}")); } catch { reportPosts.push({}); }
+      return req.respond({ status: 404, contentType: "text/plain", body: "Not found" });
+    }
     return req.continue();
   });
   return page;
@@ -187,6 +193,21 @@ await check("homepage, known model", motDown({ knownModel: true }), async (page)
   const valued = await until(page, () => !!document.querySelector("[data-mot-outage-notice]") && /Estimated Value/.test(document.body.innerText), 20000);
   report("homepage: a car we have seen before is valued at once, with the notice", valued && !(await page.evaluate(() => !!document.querySelector("[data-mot-outage-notice] select"))));
   await shot(page, "home-known-model");
+
+  // The PDF report made in this state is told about it, so it can say that
+  // MOT history was unavailable and that the valuation assumes typical mileage.
+  await page.click('button[aria-controls="report-menu-header"]');
+  await page.waitForSelector('#report-menu-header [role="menuitem"]', { timeout: 5000 });
+  await page.click('#report-menu-header [role="menuitem"]');
+  const start = Date.now();
+  while (reportPosts.length === 0 && Date.now() - start < 10000) await new Promise((r) => setTimeout(r, 100));
+  const sent = reportPosts[0]?.input;
+  report("homepage: the PDF report is told MOT history was unavailable", sent?.data?.motUnavailable === true && !(sent?.data?.motTests?.length > 0));
+  report(
+    "homepage: the PDF report is told the valuation assumes typical mileage",
+    sent?.valuation?.mileageEstimated === true && sent?.valuation?.assumedMileage > 0,
+    JSON.stringify(sent?.valuation ?? null).slice(0, 200),
+  );
 });
 
 // 4. Every other tool says why its MOT data is missing.
@@ -198,8 +219,11 @@ await check("mot tool", motDown({ knownModel: true }), async (page) => {
 // 5. And on a normal day none of this appears.
 await check("normal day", JSON.stringify(full), async (page) => {
   await page.goto(`${BASE}/value-my-car#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
-  const shown = await until(page, () => /Estimated market value/i.test(document.body.innerText));
-  report("normal lookup: valuation with no outage notice", shown && !(await page.evaluate(hasNotice)) && /Pre-filled from the last MOT/i.test(await page.evaluate(text)));
+  // The mileage panel reveals a moment after the figure: wait for both.
+  const shown = await until(page, () => /Estimated market value/i.test(document.body.innerText) && /Pre-filled from the last MOT/i.test(document.body.innerText));
+  const noNotice = !(await page.evaluate(hasNotice));
+  const prefilled = /Pre-filled from the last MOT/i.test(await page.evaluate(text));
+  report("normal lookup: valuation with no outage notice", shown && noNotice && prefilled, `valuation shown: ${shown}, no notice: ${noNotice}, mileage pre-filled from the MOT: ${prefilled}`);
 });
 
 await browser.close();

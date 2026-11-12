@@ -3086,6 +3086,12 @@ END:VEVENT
           conditionAdjustmentPercent: valuationResult.conditionAdjustmentPercent,
           colourAdjustmentPercent: valuationResult.colourAdjustmentPercent,
           disclaimer: valuationResult.disclaimer,
+          // MOT service down and no mileage entered: the report says the
+          // figure rests on typical mileage for the car's age.
+          mileageEstimated: valuationInputs?.mileageEstimated === true,
+          assumedMileage: valuationInputs?.mileageEstimated && data.yearOfManufacture
+            ? expectedTotalMiles(Math.max(0, new Date().getFullYear() - data.yearOfManufacture), data.fuelType)
+            : null,
         } : null,
         rarityResult: rarityResult ?? undefined,
         colourPopularity: colourPopularity ?? undefined,

@@ -99,6 +99,10 @@ only).
   (fixture, no lookup), or on a preview deployment
   `/api/preview/mot-outage?state=known|new|off`, which sets a 30-minute cookie
   the lookup honours everywhere except live production.
+- The PDF report says so too, in both engines (`src/lib/report-mot-outage.ts`
+  holds the shared wording): a notice on the cover, no health grade, and a
+  line under the valuation when it rests on typical mileage. Sample:
+  `/api/report-pdf/sample?mot=down` (or `down-new`, `&format=html`).
 
 ## Social clips (`social/`)
 
