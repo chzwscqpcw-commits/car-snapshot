@@ -485,6 +485,13 @@ export function trackValuationResult(input: {
   cacheMedian: number | null;
   marketcheckMedian: number | null;
   sources: string[];
+  /** Set only while the MOT service is down, so the valuations given during
+   *  an outage can be counted and kept out of the calibration data. */
+  motUnavailable?: boolean;
+  /** The mileage was the typical figure for the car's age, not a reading. */
+  mileageEstimated?: boolean;
+  /** The visitor told us the model (we had never looked the car up). */
+  modelFromVisitor?: boolean;
 }): void {
   trackEvent("valuation_result", {
     ...input,

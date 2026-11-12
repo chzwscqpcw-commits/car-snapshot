@@ -11,6 +11,39 @@ const tests: NonNullable<ReportInput["data"]["motTests"]> = [
   { completedDate: "2023-04-12T09:00:00.000Z", testResult: "PASSED", expiryDate: "2024-04-11", odometer: { value: 29826, unit: "mi" }, motTestNumber: "1234 5678 9030", rfrAndComments: [] },
 ];
 
+/**
+ * The same car as a lookup made while the MOT service was not answering: no
+ * tests, no MOT-derived sections, and a valuation on typical mileage for its
+ * age with the confidence one step down (what the results page hands over).
+ * `model: false` is a car we had never seen before, so there is no model and
+ * no valuation at all.
+ */
+export function sampleMotOutageInput({ model = true }: { model?: boolean } = {}): ReportInput {
+  const base = structuredClone(SAMPLE_REPORT_INPUT);
+  base.data.motTests = undefined;
+  base.data.motUnavailable = true;
+  base.motInsights = null;
+  base.motReadiness = null;
+  // What the health score works out to with nothing in the MOT rows.
+  base.healthScore = {
+    score: 41,
+    grade: "D",
+    label: "Below average",
+    breakdown: base.healthScore!.breakdown.map((b) => (b.category === "MOT History" ? { ...b, score: 0, detail: "No MOT data available" } : b)),
+  };
+  if (model) {
+    base.valuation = { ...base.valuation!, rangeLow: 7000, rangeHigh: 10900, confidence: "low", mileageEstimated: true, assumedMileage: 66634 };
+  } else {
+    base.data.model = undefined;
+    base.parsedModel = null;
+    base.valuation = null;
+    base.ownershipCost = null;
+    base.theftRisk = null;
+    base.motPassRate = null;
+  }
+  return base;
+}
+
 export const SAMPLE_REPORT_INPUT: ReportInput = {
   data: {
     registrationNumber: "AB12CDE",

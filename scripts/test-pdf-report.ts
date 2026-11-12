@@ -149,6 +149,28 @@ function check(label: string, ok: boolean) {
   check("total 3,850 present", pdf.includes("3,850"));
   check("insurance exclusion noted", pdf.includes("Excludes: insurance"));
 
+  // Made while the MOT service was not answering (8–9 Nov 2026): the report
+  // must say so rather than "No MOT history available", must not grade the
+  // car on a missing quarter of its score, and must say the valuation rests
+  // on typical mileage.
+  console.log("\nMOT service down:");
+  const down: ReportInput = structuredClone(input);
+  down.data.motTests = undefined;
+  down.data.motUnavailable = true;
+  down.motInsights = null;
+  down.motReadiness = null;
+  down.valuation = { ...down.valuation!, confidence: "low", mileageEstimated: true, assumedMileage: 66634 };
+  const downBuf = Buffer.from(await (await generateVehicleReport(down)).arrayBuffer());
+  const downPdf = downBuf.toString("latin1");
+  check("says MOT history is unavailable today", downPdf.includes("MOT history unavailable today"));
+  check("explains why (the MOT service was not answering)", downPdf.includes("MOT service was not answering"));
+  check('never claims "No MOT history available"', !downPdf.includes("No MOT history available"));
+  check("no health score on a missing MOT quarter", !downPdf.includes("Vehicle Health Score"));
+  check("valuation still printed (8,950)", downPdf.includes("8,950") && downPdf.includes("Low confidence"));
+  check("valuation says it assumes typical mileage", downPdf.includes("assumes typical mileage") && downPdf.includes("66,634"));
+  check("the normal report carries none of it", !pdf.includes("unavailable today") && !pdf.includes("assumes typical mileage") && pdf.includes("Vehicle Health Score"));
+  try { writeFileSync("/tmp/fpc-test-report-mot-down.pdf", downBuf); } catch { /* fine */ }
+
   // Write artefact for local inspection (harmless in CI).
   const out = "/tmp/fpc-test-report.pdf";
   try { writeFileSync(out, buf); console.log(`\nartefact: ${out} (${(buf.length / 1024).toFixed(1)} KB)`); } catch { /* read-only fs in CI is fine */ }

@@ -25,6 +25,7 @@ import SaveCarCard from "@/components/SaveCarCard";
 import { isVan, shortVehicleName } from "@/lib/report-v2/format";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import PartnerReturnPrompt from "@/components/PartnerReturnPrompt";
+import MotOutageNotice from "@/components/MotOutageNotice";
 import EvChargerPromptWidget from "@/components/EvChargerPromptWidget";
 import { useScrollReveal } from "@/components/tools/useScrollReveal";
 import {
@@ -41,6 +42,7 @@ import {
   type ConditionInputs,
   type ValuationResult as ValuationResultType,
   valuationUnsupportedReason,
+  withEstimatedMileage,
 } from "@/lib/valuation";
 import { parseModel, expandBaseModelForLookup } from "@/lib/model-parser";
 import newPricesData from "@/data/new-prices.json";
@@ -77,17 +79,65 @@ const NEW_PRICES = newPricesData as Array<{
   newPrice: number;
 }>;
 
+/** What Loaded needs to know when the MOT service did not answer. */
+interface MotOutage {
+  modelFromVisitor: boolean;
+  onPickModel: (model: string | null) => void;
+  simulated: boolean;
+}
+
 export default function ValuationResult({ vrm, previewVehicle }: ValuationResultProps) {
   const state = useVehicleLookup(previewVehicle ? "" : vrm);
-  const vehicle = previewVehicle ?? (state.kind === "ok" ? state.vehicle : null);
-  if (!vehicle) {
+  const looked = previewVehicle ?? (state.kind === "ok" ? state.vehicle : null);
+  // The model the visitor picked while the MOT service is down, tied to the
+  // plate it was picked for so it can't follow them to the next car.
+  const [picked, setPicked] = useState<{ vrm: string; model: string } | null>(null);
+  if (!looked) {
     if (state.kind === "error")
       return <LookupError vrm={vrm} message={state.message} backHref="/value-my-car" />;
     return <LookupSkeleton vrm={vrm} hint="Running the valuation model…" />;
   }
+
+  // MOT history is where the model comes from (DVLA returns the make only).
+  // When the service is down the lookup says so: it reuses the model from an
+  // earlier lookup of this car if we have one, and otherwise we ask.
+  const motDown = looked.motUnavailable === true;
+  const pickedModel = picked && picked.vrm === vrm ? picked.model : null;
+  const modelFromVisitor = motDown && !looked.model && pickedModel !== null;
+  const vehicle = modelFromVisitor ? { ...looked, model: pickedModel! } : looked;
+  const outage: MotOutage | null = motDown
+    ? {
+        modelFromVisitor,
+        onPickModel: (model) => setPicked(model ? { vrm, model } : null),
+        simulated: looked.motSimulated === true,
+      }
+    : null;
+
   const unsupported = valuationUnsupportedReason(vehicle);
   if (unsupported) return <NotValued vrm={vrm} vehicle={vehicle} reason={unsupported} />;
-  return <Loaded vrm={vrm} vehicle={vehicle} />;
+  if (outage && !vehicle.model) return <AwaitingModel vrm={vrm} vehicle={vehicle} outage={outage} />;
+  return <Loaded vrm={vrm} vehicle={vehicle} outage={outage} />;
+}
+
+/**
+ * MOT service down and a car we have never looked up: no model, so no price
+ * to start from. Say why and ask which model it is. No figure and no selling
+ * offers until there is a valuation to put them under.
+ */
+function AwaitingModel({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle; outage: MotOutage }) {
+  return (
+    <ToolResultLayout vrm={vrm} vehicle={vehicle} excludePill="valuation" hideMotOutageBanner>
+      <MotOutageNotice
+        surface="valuation-tool"
+        make={vehicle.make}
+        model={undefined}
+        modelFromVisitor={false}
+        onPickModel={outage.onPickModel}
+        simulated={outage.simulated}
+        className="mt-4"
+      />
+    </ToolResultLayout>
+  );
 }
 
 const NOT_VALUED: Record<"motorbike" | "pickup", { heading: string; body: string }> = {
@@ -122,7 +172,7 @@ function NotValued({
   );
 }
 
-function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
+function Loaded({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle; outage: MotOutage | null }) {
   // Five routes render this result; the scroll series is only useful if it says
   // which one it came from.
   const pathname = usePathname();
@@ -161,6 +211,16 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
   const [mileage, setMileage] = useState<number>(
     defaultMileage ?? (age != null ? expectedTotalMiles(age, vehicle.fuelType) : 60000)
   );
+  // MOT service down: the mileage above is the typical figure for the car's
+  // age, not a reading. Until the visitor sets their own, the valuation is
+  // stated one step less confidently (see withEstimatedMileage).
+  const [mileageEdited, setMileageEdited] = useState(false);
+  const motDown = outage !== null;
+  const mileageEstimated = motDown && defaultMileage == null && !mileageEdited;
+  const changeMileage = (miles: number) => {
+    setMileageEdited(true);
+    setMileage(miles);
+  };
   const advisoryCount = useMemo(
     () =>
       vehicle.motTests?.[0]?.rfrAndComments?.filter((r) => r.type === "ADVISORY")
@@ -209,7 +269,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     if (newPrice) params.set("newPrice", String(newPrice));
     if (vehicle.fuelType) params.set("fuelType", vehicle.fuelType);
     if (vehicle.engineCapacity) params.set("engineCapacity", String(vehicle.engineCapacity));
-    if (mileageRef.current) params.set("mileage", String(mileageRef.current));
+    // The server files this mileage as an MOT reading. During an MOT outage
+    // it is an estimate (or the visitor's word), so it isn't sent.
+    if (mileageRef.current && !motDown) params.set("mileage", String(mileageRef.current));
     if (vehicle.colour) params.set("colour", String(getColourAdjustment(vehicle.colour)));
 
     fetch(`/api/valuation?${params}`)
@@ -237,6 +299,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     vehicle.engineCapacity,
     vehicle.colour,
     newPrice,
+    motDown,
   ]);
 
   // ── Combined valuation ─────────────────────────────────────────────────
@@ -245,7 +308,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     const { total: condAdj, motAuto } = getConditionAdjustment(
       condition,
       advisoryCount,
-      recentFailure
+      recentFailure,
+      !motDown
     );
     const colourAdj = getColourAdjustment(vehicle.colour);
     // Mileage now scales the BLENDED value, not just the 20%-weighted
@@ -276,7 +340,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     if (result) {
       result.motAutoAdjustmentPercent = motAuto;
     }
-    return result;
+    return result && mileageEstimated ? withEstimatedMileage(result) : result;
   }, [
     depEstimate,
     serverData,
@@ -287,6 +351,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     vehicle.fuelType,
     mileage,
     age,
+    mileageEstimated,
+    motDown,
   ]);
 
   // ── Record what we actually showed ─────────────────────────────────────
@@ -320,6 +386,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       cacheMedian: serverData?.cacheMedian ?? null,
       marketcheckMedian: serverData?.marketcheckMedian ?? null,
       sources: valuation.sources,
+      ...(outage
+        ? { motUnavailable: true, mileageEstimated, modelFromVisitor: outage.modelFromVisitor }
+        : {}),
     });
   }, [
     valuation,
@@ -333,6 +402,8 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     vehicle.make,
     vehicle.model,
     vehicle.yearOfManufacture,
+    outage,
+    mileageEstimated,
   ]);
 
   return (
@@ -341,6 +412,7 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       vehicle={vehicle}
       excludePill="valuation"
       revealPitch="Valuation is just one piece — the full report adds MOT history, recalls, ULEZ, running costs and negotiation helpers, all on one page."
+      hideMotOutageBanner
     >
       {/* Mounted INSIDE the result, so the denominator is "sessions that got a
           valuation" rather than "sessions that opened the page" — the first is
@@ -361,6 +433,22 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
           valuation. Judge the move on clicks per valuation, not CTR: the rate
           will dip as less-engaged readers start seeing it. */}
       <ScrollDepthTracker path={pathname ?? "/valuation-result"} />
+      {/* MOT service down: the explanation goes ABOVE the figure, so nobody
+          reads a number (or the selling offers under it) without knowing the
+          mileage behind it is an estimate. */}
+      {outage && (
+        <MotOutageNotice
+          surface="valuation-tool"
+          make={vehicle.make}
+          model={vehicle.model}
+          modelFromVisitor={outage.modelFromVisitor}
+          onPickModel={outage.onPickModel}
+          assumedMileage={mileageEstimated ? mileage : null}
+          mileageSet={!mileageEstimated}
+          simulated={outage.simulated}
+          className="mt-4"
+        />
+      )}
       <Hero
         valuation={valuation}
         depEstimate={depEstimate}
@@ -370,7 +458,13 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         vehicle={vehicle}
         serverState={serverState}
       />
-      <MileagePanel mileage={mileage} defaultMileage={defaultMileage} onChange={setMileage} />
+      <MileagePanel
+        mileage={mileage}
+        defaultMileage={defaultMileage}
+        onChange={changeMileage}
+        motUnavailable={outage !== null}
+        estimated={mileageEstimated}
+      />
       {valuation && (
         <SourceBreakdown
           valuation={valuation}
@@ -845,10 +939,16 @@ function MileagePanel({
   mileage,
   defaultMileage,
   onChange,
+  motUnavailable = false,
+  estimated = false,
 }: {
   mileage: number;
   defaultMileage: number | null;
   onChange: (m: number) => void;
+  /** The MOT service did not answer, so there is no reading to pre-fill. */
+  motUnavailable?: boolean;
+  /** Still the typical figure for the car's age: the visitor hasn't set theirs. */
+  estimated?: boolean;
 }) {
   const sliderMax = Math.max(150000, Math.ceil((mileage + 20000) / 10000) * 10000);
   const changed = defaultMileage != null && mileage !== defaultMileage;
@@ -913,6 +1013,15 @@ function MileagePanel({
             Pre-filled from the last MOT ({defaultMileage.toLocaleString("en-GB")} miles).
             Adjust to your car&apos;s current mileage for a sharper estimate.
           </>
+        ) : motUnavailable ? (
+          estimated ? (
+            <span data-mileage-estimated>
+              MOT history is temporarily unavailable, so this is estimated from the car&apos;s age. Set your
+              actual mileage for a sharper estimate.
+            </span>
+          ) : (
+            <>Using the mileage you entered. MOT history is temporarily unavailable, so we can&apos;t check it against the last test.</>
+          )
         ) : (
           <>Estimated from the car&apos;s age — set your actual mileage for a sharper estimate.</>
         )}

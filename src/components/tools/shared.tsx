@@ -40,6 +40,11 @@ export interface LookupVehicle {
   motStatus?: string;
   motExpiryDate?: string;
   motTests?: MotTest[];
+  /** The MOT service did not answer: no history or mileage, and no model
+   *  unless we had looked the car up before. Set by /api/lookup. */
+  motUnavailable?: boolean;
+  /** That outage is the preview-only simulation. */
+  motSimulated?: boolean;
   /** Any other fields the lookup returns — opaque pass-through. */
   [key: string]: unknown;
 }
@@ -490,6 +495,7 @@ export function ToolResultLayout({
   children,
   excludePill,
   revealPitch,
+  hideMotOutageBanner = false,
 }: {
   vrm: string;
   vehicle: LookupVehicle;
@@ -498,6 +504,8 @@ export function ToolResultLayout({
   excludePill: string;
   /** Custom reveal-CTA copy. */
   revealPitch?: string;
+  /** For a tool that explains the MOT outage itself (the valuation). */
+  hideMotOutageBanner?: boolean;
 }) {
   const displayReg = vehicle.registrationNumber || vrm;
   const label = vehicleLabel(vehicle);
@@ -505,6 +513,25 @@ export function ToolResultLayout({
   return (
     <div className="mx-auto max-w-3xl px-4 pt-6 pb-10 sm:pt-8 sm:pb-14">
       <VehiclePill reg={displayReg} label={label} />
+      {/* Every tool reads MOT history somewhere. When the service did not
+          answer, say so once, here, rather than let a tool report "no MOT
+          history" for a car that has plenty. */}
+      {vehicle.motUnavailable === true && !hideMotOutageBanner && (
+        <p
+          data-mot-outage-banner
+          className="mt-4 flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm leading-relaxed text-amber-100"
+        >
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-300" aria-hidden />
+          <span>
+            <strong className="font-semibold">MOT history is temporarily unavailable.</strong>{" "}
+            <span className="text-amber-100/80">
+              DVSA&apos;s MOT service isn&apos;t answering at the moment, so this car&apos;s tests and mileage
+              readings aren&apos;t shown. Everything from DVLA is unaffected. Search again later for the full
+              record.
+            </span>
+          </span>
+        </p>
+      )}
       {children}
       <RevealCTA vrm={displayReg} pitch={revealPitch ?? revealPitchFor(valued)} />
       {/* No Valuation pill for a vehicle we don't value — it would only lead

@@ -113,8 +113,11 @@ async function main(): Promise<void> {
       .limit(1000);
     if (error) throw new Error(`site_events: ${error.message}`);
     for (const r of data) {
-      const m = r.metadata as Partial<Obs> & { internal?: boolean };
+      const m = r.metadata as Partial<Obs> & { internal?: boolean; modelFromVisitor?: boolean };
       if (m.internal || !m.make || !m.model || !m.year) continue;
+      // During an MOT outage the visitor names the model themselves (see
+      // MotOutageNotice). A wrong pick must not teach the calibration.
+      if (m.modelFromVisitor) continue;
       // Latest observation per make/model/year: the market moves.
       latest.set(`${m.make}|${m.model}|${m.year}`, m as Obs);
     }
