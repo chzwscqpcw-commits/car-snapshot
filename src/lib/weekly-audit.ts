@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataStatus, renderDataStatusHtml, renderDataSummaryLine, type DataStatus } from "./data-status";
+import { getLookupHealth, renderLookupHealthHtml, type LookupHealthSummary } from "./lookup-health";
 import {
   fetchSocialClips,
   renderSocialClips,
@@ -182,6 +183,9 @@ export interface WeeklyAuditData {
   socialClips: SocialClipsResult;
   /** Every dataset's age, job result and due date; red when something needs a person. */
   dataStatus: DataStatus;
+  /** /api/lookup's failures this week by stage, and the longest bad spell.
+   *  Added after the 21.5-hour MOT outage of 8–9 Nov 2026 went unreported. */
+  lookupHealth: LookupHealthSummary;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -225,6 +229,7 @@ export async function buildWeeklyAuditData(
   const d14 = new Date(nowMs - 14 * DAY).toISOString();
   const socialClipsPromise = clips();
   const dataStatusPromise = data();
+  const lookupHealthPromise = getLookupHealth(sb, nowMs);
 
   // Headline counts: this week vs prior week
   const HEADLINE_EVENTS: { key: string; label: string }[] = [
@@ -424,6 +429,7 @@ export async function buildWeeklyAuditData(
   };
   const socialClips = await socialClipsPromise;
   const dataStatus = await dataStatusPromise;
+  const lookupHealth = await lookupHealthPromise;
 
   const results = headlineCounts.find((h) => h.label === "Results views")?.cur ?? 0;
   const partnerClicks =
@@ -479,6 +485,7 @@ export async function buildWeeklyAuditData(
     social,
     socialClips,
     dataStatus,
+    lookupHealth,
   };
 }
 
@@ -697,6 +704,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
   <h2 style="margin:0 0 2px">Free Plate Check — weekly visitor audit</h2>
   <p style="color:#64748b;margin:0 0 20px;font-size:14px">${d.windowStart} → ${d.windowEnd} (last 7 days vs the 7 days before) · owner traffic excluded</p>
   ${renderDataSummaryLine(d.dataStatus)}
+  ${renderLookupHealthHtml(d.lookupHealth)}
 
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 24px">
     <tr style="background:#f1f5f9">

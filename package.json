@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run test:pdf && npm run test:report-v2 && npm run test:valuation && npm run test:historic && npm run test:booking && npm run test:booking-postcode && npm run test:buyer-flags && npm run test:model-buying && npm run test:model-family && npm run test:redact && npm run test:ebay && npm run test:wbac && npm run test:wrong-turn && npm run test:insurance && npm run test:saved-cars && npm run test:car-alerts && npm run test:mot-areas && npm run test:fixter && npm run test:sample-cars && npm run test:site-index && npm run test:social-proof && npm run test:social-clips && npm run test:data-registry && npm run test:data-status",
+    "test": "npm run test:pdf && npm run test:report-v2 && npm run test:valuation && npm run test:historic && npm run test:booking && npm run test:booking-postcode && npm run test:buyer-flags && npm run test:model-buying && npm run test:model-family && npm run test:redact && npm run test:ebay && npm run test:wbac && npm run test:wrong-turn && npm run test:insurance && npm run test:saved-cars && npm run test:car-alerts && npm run test:mot-areas && npm run test:fixter && npm run test:sample-cars && npm run test:site-index && npm run test:social-proof && npm run test:social-clips && npm run test:data-registry && npm run test:data-status && npm run test:lookup-health",
     "test:pdf": "npx tsx scripts/test-pdf-report.ts",
     "test:report-v2": "npx tsx scripts/test-report-v2.ts",
     "test:valuation": "npx tsx scripts/test-valuation-lookup.ts && npm run test:mot-outage",
@@ -48,6 +48,7 @@
     "test:data-registry": "npx tsx scripts/test-data-registry.ts",
     "validate-data:delta": "npx tsx scripts/validate-data.ts --against",
     "test:data-status": "npx tsx scripts/test-data-status.ts",
+    "test:lookup-health": "npx tsx scripts/test-lookup-health.ts",
     "data-due": "npx tsx scripts/data-due.ts"
   },
   "dependencies": {
