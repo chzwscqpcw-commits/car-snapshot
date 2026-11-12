@@ -10,6 +10,7 @@ import {
   LOOKUP_ALERT,
   alertSubject,
   decideHealthActions,
+  lastRecoveriesFrom,
   openIncidentsFrom,
   pullHealthRows,
   renderAlertHtml,
@@ -69,7 +70,7 @@ export async function GET(req: Request) {
     const sinceMs = Math.min(nowMs - QUIET_LOOKBACK_HOURS * HOUR, oldestOpen - HOUR);
     const rows = await pullHealthRows(sb, new Date(sinceMs).toISOString());
 
-    const actions = decideHealthActions(rows, nowMs, open);
+    const actions = decideHealthActions(rows, nowMs, open, lastRecoveriesFrom((alertRows ?? []) as HealthRow[]));
     const done: { type: string; stage: string; emailed: boolean; error?: string }[] = [];
 
     for (const action of actions) {
@@ -103,7 +104,7 @@ export async function GET(req: Request) {
         state: action.type === "open" ? "open" : "recovered",
         started_at: action.type === "open" ? action.startedAt : action.incident.startedAt,
         ...(action.type === "open"
-          ? { errors: action.stats.errors, attempts: action.stats.attempts, reasons: action.stats.reasons, causes: action.stats.causes }
+          ? { errors: action.stats.errors, affected: action.stats.affected, attempts: action.stats.attempts, reasons: action.stats.reasons, causes: action.stats.causes }
           : { errors: action.errorsSinceStart, last_error_at: action.lastErrorAt }),
       });
       done.push({ type: action.type, stage: action.stage, emailed: true });
@@ -113,7 +114,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       ok: true,
       dry,
-      lastHour: Object.values(hour).map((s) => ({ stage: s.stage, errors: s.errors, attempts: s.attempts, share: Math.round(s.share * 100) / 100 })),
+      lastHour: Object.values(hour).map((s) => ({ stage: s.stage, errors: s.errors, affected: s.affected, attempts: s.attempts, share: Math.round(s.share * 100) / 100 })),
       openIncidents: open.map((i) => ({ stage: i.stage, startedAt: i.startedAt })),
       actions: done,
     });

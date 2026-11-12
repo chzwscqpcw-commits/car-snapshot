@@ -23,18 +23,21 @@ const MINUTE = 60_000;
  * lookup. So the bar is low, with a share test to keep one unlucky visitor
  * retrying from ringing it:
  *
- *   bad        = at least MIN_ERRORS errors for one stage in the last hour
- *                AND they are at least MIN_SHARE of that hour's fresh lookups
+ *   bad        = at least MIN_ERRORS affected lookups for one stage in the
+ *                last hour (see StageStats.affected) AND they are at least
+ *                MIN_SHARE of that hour's fresh lookups
  *   recovered  = in the last RECOVERY_WINDOW_MIN minutes there were at least
  *                RECOVERY_MIN_LOOKUPS fresh lookups and at most
  *                RECOVERY_MAX_SHARE of them failed
  *
- * Replayed every 15 minutes against the real rows, this fires at 12:30 UTC on
- * 8 Nov, 38 minutes after the first error (at 12:15 the five errors so far
- * were still under 30% of an hour that began healthy), and clears at 10:15
- * the next morning, 45 minutes after the last. Nothing else fires between
- * 29 Oct and 11 Nov. In the small hours an outage can take longer to reach
- * five errors; that is the price of not paging on a single timeout.
+ * Replayed against the real rows at every quarter-hour offset, this fires
+ * between 12:30 and 12:42 UTC on 8 Nov, 38–50 minutes after the first error
+ * (at 12:15 the five errors so far were still under 30% of an hour that began
+ * healthy), and clears between 10:03 and 10:15 the next morning. Once each:
+ * see `recoveredAt` on decideHealthActions. Nothing else fires between 29 Oct
+ * and 12 Nov, including the burst of 12 Nov (see SPELL_MIN_MINUTES). In the
+ * small hours an outage can take longer to reach five affected lookups; that
+ * is the price of not paging on a single timeout.
  */
 export const LOOKUP_ALERT = {
   WINDOW_MIN: 60,
@@ -50,6 +53,22 @@ export const LOOKUP_ALERT = {
 export const SPELL_GAP_MIN = 60;
 /** Fewer errors than this is a blip, not a spell. */
 export const SPELL_MIN_ERRORS = 5;
+/** Shorter than this is a burst, not a spell: on 12 Nov 2026 an automated
+ *  client asked for one unregistered plate 112 times in four minutes and 19 of
+ *  those MOT calls timed out. No visitor was affected. */
+export const SPELL_MIN_MINUTES = 10;
+
+/**
+ * Since this moment (the deploy of the MOT-outage fallback) a lookup that
+ * rendered without its MOT half says so on its own `lookup` row
+ * (`mot_unavailable: true`). That is what the alert counts for the MOT stage:
+ * results a visitor actually got without MOT data. An MOT error row is also
+ * written for a plate DVLA has never heard of, which shows no result to
+ * anyone, and the burst above would have paged on those alone (19 errors,
+ * no result affected). Before this moment the flag did not exist, so MOT
+ * error rows are counted as they were.
+ */
+export const MOT_FLAG_SINCE_MS = Date.parse("2026-11-12T08:32:00Z");
 
 export type LookupStage = "dvla" | "mot" | "internal";
 const STAGES: LookupStage[] = ["mot", "dvla", "internal"];
@@ -69,10 +88,17 @@ export interface HealthRow {
 
 export interface StageStats {
   stage: LookupStage;
+  /** `lookup_error` rows for this stage. */
   errors: number;
+  /**
+   * Lookups a visitor lost something on, which is what the alert judges by.
+   * DVLA and our own route: every error (the lookup failed). MOT: results
+   * that rendered without MOT data (see MOT_FLAG_SINCE_MS).
+   */
+  affected: number;
   /** Fresh (non-cached) lookups that reached this stage in the window. */
   attempts: number;
-  /** errors / attempts, capped at 1. */
+  /** affected / attempts, capped at 1. */
   share: number;
   /** reason → count, e.g. { network_error: 31, timeout: 2 }. */
   reasons: Record<string, number>;
@@ -102,7 +128,7 @@ function bump(map: Record<string, number>, key: unknown): void {
  */
 export function stageStats(rows: HealthRow[], fromMs: number, toMs: number): Record<LookupStage, StageStats> {
   const stats = Object.fromEntries(
-    STAGES.map((stage) => [stage, { stage, errors: 0, attempts: 0, share: 0, reasons: {}, causes: {} } as StageStats]),
+    STAGES.map((stage) => [stage, { stage, errors: 0, affected: 0, attempts: 0, share: 0, reasons: {}, causes: {} } as StageStats]),
   ) as Record<LookupStage, StageStats>;
   let fresh = 0;
   for (const row of rows) {
@@ -110,11 +136,13 @@ export function stageStats(rows: HealthRow[], fromMs: number, toMs: number): Rec
     if (!(t >= fromMs && t < toMs)) continue;
     if (row.event_type === "lookup") {
       if (row.metadata?.cached !== true) fresh++;
+      if (t >= MOT_FLAG_SINCE_MS && row.metadata?.mot_unavailable === true) stats.mot.affected++;
     } else if (row.event_type === "lookup_error") {
       const stage = stageOf(row);
       if (!stage) continue;
       const s = stats[stage];
       s.errors++;
+      if (stage !== "mot" || t < MOT_FLAG_SINCE_MS) s.affected++;
       bump(s.reasons, row.metadata?.reason);
       bump(s.causes, row.metadata?.cause_code ?? row.metadata?.err_code);
     }
@@ -122,14 +150,14 @@ export function stageStats(rows: HealthRow[], fromMs: number, toMs: number): Rec
   const reachedServices = fresh + stats.dvla.errors + stats.internal.errors;
   for (const stage of STAGES) {
     const s = stats[stage];
-    s.attempts = Math.max(s.errors, reachedServices);
-    s.share = s.attempts > 0 ? Math.min(1, s.errors / s.attempts) : 0;
+    s.attempts = Math.max(s.affected, reachedServices);
+    s.share = s.attempts > 0 ? Math.min(1, s.affected / s.attempts) : 0;
   }
   return stats;
 }
 
 export function isBad(s: StageStats): boolean {
-  return s.errors >= LOOKUP_ALERT.MIN_ERRORS && s.share >= LOOKUP_ALERT.MIN_SHARE;
+  return s.affected >= LOOKUP_ALERT.MIN_ERRORS && s.share >= LOOKUP_ALERT.MIN_SHARE;
 }
 
 /** Recovery needs evidence, not silence: some lookups, nearly all succeeding. */
@@ -158,25 +186,39 @@ export type HealthAction =
  *
  * `rows` must cover at least the alert window; give it since the oldest open
  * incident's start for an exact error count in the recovery email.
+ *
+ * `recoveredAt` is when each stage's last incident was declared over. A new
+ * incident is judged only on what happened after that: recovery looks at the
+ * last half hour and opening at the last hour, so without it the tail of the
+ * incident just closed could open a second one a quarter of an hour later
+ * (replayed on the real rows, the 8–9 Nov outage did exactly that).
  */
-export function decideHealthActions(rows: HealthRow[], nowMs: number, open: OpenIncident[]): HealthAction[] {
+export function decideHealthActions(
+  rows: HealthRow[],
+  nowMs: number,
+  open: OpenIncident[],
+  recoveredAt: Partial<Record<LookupStage, string>> = {},
+): HealthAction[] {
   const actions: HealthAction[] = [];
-  const hour = stageStats(rows, nowMs - LOOKUP_ALERT.WINDOW_MIN * MINUTE, nowMs);
   const recent = stageStats(rows, nowMs - LOOKUP_ALERT.RECOVERY_WINDOW_MIN * MINUTE, nowMs);
 
   for (const stage of STAGES) {
     const incident = open.find((i) => i.stage === stage);
     if (!incident) {
+      const lastRecovery = Date.parse(recoveredAt[stage] ?? "");
+      const fromMs = Math.max(nowMs - LOOKUP_ALERT.WINDOW_MIN * MINUTE, Number.isFinite(lastRecovery) ? lastRecovery : 0);
+      const hour = stageStats(rows, fromMs, nowMs);
       if (isBad(hour[stage])) {
-        const spell = spellsFor(rows, stage).at(-1);
+        const spell = spellsFor(rows, stage, 0).at(-1);
         const firstInHour = rows.find(
-          (r) => r.event_type === "lookup_error" && stageOf(r) === stage && Date.parse(r.created_at) >= nowMs - LOOKUP_ALERT.WINDOW_MIN * MINUTE,
+          (r) => r.event_type === "lookup_error" && stageOf(r) === stage && Date.parse(r.created_at) >= fromMs,
         );
+        const spellStart = spell && Date.parse(spell.startISO) >= lastRecoveryOrZero(lastRecovery) ? spell.startISO : undefined;
         actions.push({
           type: "open",
           stage,
           stats: hour[stage],
-          startedAt: spell?.startISO ?? firstInHour?.created_at ?? new Date(nowMs).toISOString(),
+          startedAt: spellStart ?? firstInHour?.created_at ?? new Date(nowMs).toISOString(),
         });
       }
       continue;
@@ -198,6 +240,10 @@ export function decideHealthActions(rows: HealthRow[], nowMs: number, open: Open
   return actions;
 }
 
+function lastRecoveryOrZero(ms: number): number {
+  return Number.isFinite(ms) ? ms : 0;
+}
+
 export interface BadSpell {
   stage: LookupStage;
   startISO: string;
@@ -206,7 +252,7 @@ export interface BadSpell {
   errors: number;
 }
 
-function spellsFor(rows: HealthRow[], stage: LookupStage): BadSpell[] {
+function spellsFor(rows: HealthRow[], stage: LookupStage, minMinutes = SPELL_MIN_MINUTES): BadSpell[] {
   const times = rows
     .filter((r) => r.event_type === "lookup_error" && stageOf(r) === stage)
     .map((r) => Date.parse(r.created_at))
@@ -217,7 +263,7 @@ function spellsFor(rows: HealthRow[], stage: LookupStage): BadSpell[] {
   for (let i = 1; i <= times.length; i++) {
     if (i < times.length && times[i] - times[i - 1] <= SPELL_GAP_MIN * MINUTE) continue;
     const errors = i - start;
-    if (errors >= SPELL_MIN_ERRORS) {
+    if (errors >= SPELL_MIN_ERRORS && (times[i - 1] - times[start]) / MINUTE >= minMinutes) {
       spells.push({
         stage,
         startISO: new Date(times[start]).toISOString(),
@@ -232,7 +278,8 @@ function spellsFor(rows: HealthRow[], stage: LookupStage): BadSpell[] {
 }
 
 /** Every bad spell in the rows: runs of one stage's errors no more than
- *  SPELL_GAP_MIN apart, at least SPELL_MIN_ERRORS long. Oldest first. */
+ *  SPELL_GAP_MIN apart, at least SPELL_MIN_ERRORS of them over at least
+ *  SPELL_MIN_MINUTES. Oldest first. */
 export function badSpells(rows: HealthRow[]): BadSpell[] {
   return STAGES.flatMap((stage) => spellsFor(rows, stage)).sort((a, b) => a.startISO.localeCompare(b.startISO));
 }
@@ -352,6 +399,17 @@ export async function getLookupHealth(sb: SupabaseClient, nowMs: number, days = 
  */
 export const ALERT_EVENT = "lookup_alert";
 
+/** When each stage's last incident was declared over, from the same rows. */
+export function lastRecoveriesFrom(alertRows: HealthRow[]): Partial<Record<LookupStage, string>> {
+  const out: Partial<Record<LookupStage, string>> = {};
+  for (const row of alertRows) {
+    const stage = stageOf(row);
+    if (!stage || row.metadata?.state !== "recovered") continue;
+    if (!out[stage] || row.created_at > out[stage]!) out[stage] = row.created_at;
+  }
+  return out;
+}
+
 export function openIncidentsFrom(alertRows: HealthRow[]): OpenIncident[] {
   const latest = new Map<LookupStage, HealthRow>();
   for (const row of [...alertRows].sort((a, b) => a.created_at.localeCompare(b.created_at))) {
@@ -407,7 +465,7 @@ const BOX = "border-radius:8px;padding:12px 14px;margin:0 0 16px";
 export function alertSubject(action: HealthAction): string {
   const label = STAGE_LABEL[action.stage];
   if (action.type === "open") {
-    return `FPC alert: ${label} failing, ${action.stats.errors} errors in the last hour`;
+    return `FPC alert: ${label} failing, ${action.stats.affected} lookups affected in the last hour`;
   }
   return `FPC recovered: ${label} is answering again`;
 }
@@ -420,11 +478,11 @@ export function renderAlertHtml(action: HealthAction, nowMs: number): string {
     return `
 <div style="${WRAP}">
   <p style="${BOX};background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-weight:600">${label} is failing.</p>
-  <p style="margin:0 0 12px"><strong>${s.errors}</strong> of the last hour's ${s.attempts} fresh lookups failed at this stage (${Math.round(s.share * 100)}%). First error ${esc(fmtUtc(action.startedAt))} UTC.</p>
+  <p style="margin:0 0 12px"><strong>${s.affected}</strong> of the last hour's ${s.attempts} fresh lookups failed at this stage (${Math.round(s.share * 100)}%). First error ${esc(fmtUtc(action.startedAt))} UTC.</p>
   <p style="margin:0 0 12px"><strong>What failed:</strong> ${esc(tally(s.reasons)) || "no reason recorded"}${causes ? `<br><strong>Underlying cause:</strong> ${esc(causes)}` : ""}</p>
   <p style="margin:0 0 12px"><strong>What visitors see:</strong> ${esc(VISITOR_EFFECT[action.stage])}</p>
   <p style="margin:0 0 12px">You will get one more email, when it clears. Nothing else until then.</p>
-  <p style="margin:0;color:#64748b;font-size:13px">Checked ${esc(fmtUtc(new Date(nowMs).toISOString()))} UTC · alert rule: ${LOOKUP_ALERT.MIN_ERRORS}+ errors and ${Math.round(LOOKUP_ALERT.MIN_SHARE * 100)}%+ of fresh lookups in ${LOOKUP_ALERT.WINDOW_MIN} minutes · <a href="${SITE}/data-health" style="color:#2563eb">data-health</a></p>
+  <p style="margin:0;color:#64748b;font-size:13px">Checked ${esc(fmtUtc(new Date(nowMs).toISOString()))} UTC · alert rule: ${LOOKUP_ALERT.MIN_ERRORS}+ affected lookups and ${Math.round(LOOKUP_ALERT.MIN_SHARE * 100)}%+ of fresh lookups in ${LOOKUP_ALERT.WINDOW_MIN} minutes · <a href="${SITE}/data-health" style="color:#2563eb">data-health</a></p>
 </div>`;
   }
   const startMs = Date.parse(action.incident.startedAt);

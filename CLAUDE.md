@@ -129,8 +129,10 @@ clip or caption; the test enforces both.
   badge, and MarketCheck API usage.
 - `/api/cron/lookup-health` runs every 15 minutes and emails the founder when
   one half of `/api/lookup` (DVLA, MOT, or our own route) starts failing, and
-  once more when it clears. Thresholds, and the Nov 2026 outage they were
-  picked from, are in `src/lib/lookup-health.ts`; the Friday audit and
+  once more when it clears. For MOT it counts results that rendered without
+  MOT data (`mot_unavailable` on the `lookup` row), not error rows: an MOT
+  error for a plate DVLA doesn't know affects nobody. Thresholds, and the Nov
+  2026 outage they were picked from, are in `src/lib/lookup-health.ts`; the Friday audit and
   `/data-health` carry the same "Lookup health" line. Incident state is a
   `lookup_alert` row in `site_events` (flagged internal).
 - Commit messages end with the project's `Co-Authored-By` trailer.

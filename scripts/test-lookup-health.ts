@@ -12,6 +12,8 @@ import {
   badSpells,
   decideHealthActions,
   fmtDuration,
+  lastRecoveriesFrom,
+  MOT_FLAG_SINCE_MS,
   isBad,
   isRecovered,
   lookupHealthLine,
@@ -114,6 +116,88 @@ console.log("\nOne email when it starts, one when it clears:");
   check("isRecovered needs lookups to judge by", !isRecovered(stageStats([], T0, T0 + 30 * MIN).mot));
 }
 
+console.log("\nNo second alert from the tail of the first:");
+{
+  // Recovery reads the last half hour, opening the last hour. Depending on
+  // where the cron's ticks fall, the hour after a recovery can still hold
+  // enough of the old incident to open a new one. Replayed on the real rows,
+  // 8–9 Nov did: open, recover, open again 15 minutes later, recover again.
+  const rows = traffic(-120, 900, 2, 0, 600);
+  const counts: string[] = [];
+  let withoutMemory = 0;
+  for (let phase = 0; phase < 15; phase++) {
+    for (const remember of [true, false]) {
+      let open: OpenIncident[] = [];
+      const recovered: Partial<Record<"mot" | "dvla" | "internal", string>> = {};
+      let emails = 0;
+      for (let m = -60 + phase; m <= 900; m += 15) {
+        const now = T0 + m * MIN;
+        const seen = rows.filter((r) => Date.parse(r.created_at) < now);
+        for (const a of decideHealthActions(seen, now, open, remember ? recovered : {})) {
+          emails++;
+          if (a.type === "open") open = [...open, { stage: a.stage, startedAt: a.startedAt, alertedAt: new Date(now).toISOString() }];
+          else {
+            open = open.filter((i) => i.stage !== a.stage);
+            recovered[a.stage] = new Date(now).toISOString();
+          }
+        }
+      }
+      if (remember) counts.push(String(emails));
+      else withoutMemory = Math.max(withoutMemory, emails);
+    }
+  }
+  check("two emails per incident, wherever the cron's ticks fall", counts.every((c) => c === "2"), counts.join(","));
+  check("(the fixture does flap without the recovery time, so the check above means something)", withoutMemory > 2, String(withoutMemory));
+
+  const alertRow = (minutes: number, stage: string, state: string): HealthRow => ({ event_type: "lookup_alert", created_at: at(minutes), metadata: { internal: true, stage, state, started_at: at(0) } });
+  const rec = lastRecoveriesFrom([alertRow(30, "mot", "open"), alertRow(645, "mot", "recovered"), alertRow(100, "mot", "recovered"), alertRow(700, "dvla", "open")]);
+  check("the last recovery per stage is read from the alert rows", rec.mot === at(645) && rec.dvla === undefined);
+
+  // A genuinely new failure after a recovery still opens.
+  const again = [...traffic(-120, 700, 2, 0, 600), ...traffic(700, 760, 2, 700, 760)];
+  const reopened = decideHealthActions(again, T0 + 760 * MIN, [], { mot: at(645) });
+  check("a new outage after a recovery still alerts", reopened[0]?.type === "open" && reopened[0].startedAt === at(700), JSON.stringify(reopened[0]?.type === "open" ? reopened[0].startedAt : reopened));
+}
+
+console.log("\nCounting results a visitor lost, not error rows (since the fallback went live):");
+{
+  // After the flag exists. 12 Nov 2026, 12:54 UTC: an automated client asked
+  // for one unregistered plate 112 times in four minutes; 19 of those MOT
+  // calls timed out. No result was shown to anyone, with or without MOT data.
+  const N0 = MOT_FLAG_SINCE_MS + 24 * 60 * MIN;
+  const nat = (minutes: number) => new Date(N0 + minutes * MIN).toISOString();
+  const look = (minutes: number, extra: Record<string, unknown> = {}): HealthRow => ({ event_type: "lookup", created_at: nat(minutes), metadata: { cached: false, make: "FORD", ...extra } });
+  const timeout = (minutes: number): HealthRow => ({ event_type: "lookup_error", created_at: nat(minutes), metadata: { stage: "mot", reason: "timeout", status: null, ms: 10003, attempts: 1 } });
+
+  const normalHour = Array.from({ length: 35 }, (_, i) => look(-59 + i * 1.6));
+  const burst = [...normalHour, ...Array.from({ length: 19 }, (_, i) => timeout(-6 + i * 0.1))].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const b = stageStats(burst, N0 - 60 * MIN, N0);
+  check("the burst's 19 timeouts are counted as errors", b.mot.errors === 19 && b.mot.reasons.timeout === 19);
+  check("but no result was affected, so it does not page", b.mot.affected === 0 && !isBad(b.mot) && decideHealthActions(burst, N0, []).length === 0, `${b.mot.affected}/${b.mot.attempts}`);
+  check("and four minutes of errors is not a bad spell in the Friday line", badSpells(burst).length === 0 && summariseLookupHealth(burst, N0 - 7 * 24 * 60 * MIN, N0).longestSpell === null);
+
+  // A real outage now: every fresh lookup renders without MOT data and says so.
+  const outage: HealthRow[] = [];
+  for (let m = -60; m < 0; m += 2) outage.push(timeout(m), look(m + 0.01, { mot_unavailable: true, model_known: true }));
+  const o = stageStats(outage, N0 - 60 * MIN, N0);
+  check("a real outage is every result affected, and pages", o.mot.affected === 30 && o.mot.share === 1 && isBad(o.mot));
+  const [opened] = decideHealthActions(outage, N0, []);
+  check("the alert says how many lookups were affected", opened?.type === "open" && /30 lookups affected/.test(alertSubject(opened)) && /timeout/.test(renderAlertHtml(opened, N0)));
+
+  // Both at once: the burst must not hide a real outage, nor inflate it.
+  const both = [...outage, ...Array.from({ length: 19 }, (_, i) => timeout(-6 + i * 0.1))];
+  check("a burst on top of a real outage changes nothing", stageStats(both, N0 - 60 * MIN, N0).mot.affected === 30);
+
+  // Recovery after the flag: lookups succeed again.
+  const healed = [...outage, ...Array.from({ length: 15 }, (_, i) => look(1 + i * 2))];
+  const rec = decideHealthActions(healed, N0 + 31 * MIN, [{ stage: "mot", startedAt: nat(-60), alertedAt: nat(-30) }]);
+  check("and it recovers when results carry MOT data again", rec[0]?.type === "recover");
+
+  // DVLA failures have no result row at all; they are judged on error rows as before.
+  const dvla = Array.from({ length: 6 }, (_, i): HealthRow => ({ event_type: "lookup_error", created_at: nat(-9 + i), metadata: { stage: "dvla", reason: "service_error", status: 503 } }));
+  check("DVLA failures still page on their error rows", isBad(stageStats(dvla, N0 - 60 * MIN, N0).dvla));
+}
+
 console.log("\nIncident state (lookup_alert rows):");
 {
   const alertRow = (minutes: number, stage: string, state: string, started: number): HealthRow => ({
@@ -166,7 +250,7 @@ console.log("\nThe emails:");
   const [open] = decideHealthActions(rows, T0, []);
   const subject = open ? alertSubject(open) : "";
   const html = open ? renderAlertHtml(open, T0) : "";
-  check("the alert subject says what and how much", /^FPC alert: MOT history \(DVSA\) failing, 30 errors in the last hour$/.test(subject), subject);
+  check("the alert subject says what and how much", /^FPC alert: MOT history \(DVSA\) failing, 30 lookups affected in the last hour$/.test(subject), subject);
   check("the body gives the share, the cause and what visitors see", /30<\/strong> of the last hour/.test(html) && /CERT_HAS_EXPIRED/.test(html) && /What visitors see/.test(html));
   check("and promises exactly one more email", /one more email, when it clears/.test(html));
   const after = [...rows, ...traffic(0, 45, 2)];
