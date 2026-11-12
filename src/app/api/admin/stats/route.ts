@@ -28,6 +28,11 @@ export type StatsResponse = {
     last7d: number;
     today: number;
     yesterday: number;
+    /**
+     * Calls to /api/lookup in the last 24h that no page of ours made
+     * (`lookup_direct`, see src/lib/lookup-guards.ts). Not in any figure above.
+     */
+    direct24h: number;
   };
   pageViews: {
     last24h: number;
@@ -705,6 +710,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     lookups7d,
     lookupsToday,
     lookupsYesterday,
+    lookupsDirect24h,
     pageViews24h,
     pageViews7d,
     pageViewsToday,
@@ -777,6 +783,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     countEvents(sb, "lookup", sevenDaysAgo),
     countEvents(sb, "lookup", todayStart),
     countEvents(sb, "lookup", yesterdayStart, todayStart),
+    countEvents(sb, "lookup_direct", oneDayAgo),
     countEvents(sb, "page_view", oneDayAgo),
     countEvents(sb, "page_view", sevenDaysAgo),
     countEvents(sb, "page_view", todayStart),
@@ -926,6 +933,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       last7d: lookups7d,
       today: lookupsToday,
       yesterday: lookupsYesterday,
+      direct24h: lookupsDirect24h,
     },
     pageViews: {
       last24h: pageViews24h,
