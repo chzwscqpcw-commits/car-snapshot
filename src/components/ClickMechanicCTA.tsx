@@ -5,7 +5,7 @@ import { PARTNER_LINKS, getPartnerRel } from "@/config/partners";
 import { trackPartnerClick } from "@/lib/tracking";
 import { usePartnerImpression } from "@/components/usePartnerImpression";
 
-const CM = "#3c93f7"; // ClickMechanic brand blue (cleared for use by Scott, 2026-06-17)
+const CM = "#3c93f7"; // ClickMechanic brand blue (cleared for use by ClickMechanic, 2026-06-17)
 
 /**
  * Tracked ClickMechanic CTA (client component). buildLink routes by `context`:

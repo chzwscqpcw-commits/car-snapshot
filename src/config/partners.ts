@@ -88,8 +88,8 @@ function rakutenLink(base: string, clickref?: string): string {
 
 /**
  * RVU's insurance programmes on Rakuten (confused.com, Uswitch, Tempcover).
- * RVU approached us on 29 Oct 2026 (Anu Uthayarajan, Rakuten) wanting CPA on
- * car, van and bike insurance plus Tempcover; terms not yet agreed. When the
+ * Staged 29 Oct 2026 for car, van and bike insurance plus Tempcover; the
+ * tracking links have not been issued yet. When the
  * links arrive, paste each one here in place of the placeholder (and set the
  * brand name below if it's Uswitch rather than confused.com) and the
  * placements in src/config/insurance.ts switch on by themselves.
@@ -125,9 +125,9 @@ export function isPartnerConfigured(partner: PartnerLink): boolean {
  * Until now this was a two-way ternary: blog → `blog`, anything matching
  * "mileage" → `mcheck`, and **everything else → `ccheck`**. That catch-all
  * silently swallowed seven distinct placements, including the valuation result,
- * which alone is ~57% of all our carVertical clicks. Dominyka's "the clicks
+ * which alone is ~57% of all our carVertical clicks. carVertical's "the clicks
  * aren't converting" could never be localised because we had collapsed the
- * evidence before it reached her.
+ * evidence before it reached them.
  *
  * `blog` and `mcheck` keep their existing meaning so those two series stay
  * continuous across the change; it's the `ccheck` bucket that splits. Tell
@@ -136,7 +136,7 @@ export function isPartnerConfigured(partner: PartnerLink): boolean {
 const CARVERTICAL_SUB2: Record<string, string> = {
   "valuation-result-carvertical": "val-result",
   // Seller-framed replacement for the above, held pending carVertical
-  // coordination (agreement 1.1) — see /preview/carvertical placement 3. Kept as
+  // coordination — see /preview/carvertical placement 3. Kept as
   // a separate tag rather than reusing `val-result` so the reframe can be
   // compared against the buyer-framed copy it replaces instead of silently
   // overwriting its history.
@@ -201,32 +201,28 @@ function carVerticalSub2(ctx: string): string {
  * and leave, not long enough to buy. The CTA had no price anywhere, so every
  * click was a blind one and the checkout (£37.99 at the time) came as a shock.
  *
- * We are paid per SALE (€6), never per click, so filtering out visitors who
+ * We are paid per SALE, never per click, so filtering out visitors who
  * would never pay £40 costs us nothing and fixes the exact complaint carVertical
  * raised. Expect click volume to drop; that is the intent.
  *
- * ⚠️ Re-verify when carVertical run a promotion, and tell Dominyka before
- * changing this copy — pricing claims are coordinated under agreement 1.1/3.1.
+ * ⚠️ Re-verify when carVertical run a promotion, and tell carVertical before
+ * changing this copy — pricing claims are coordinated with them.
  *
- * CONFIRMED BY THE ADVERTISER 2026-09-21. Dominyka sends the full price list
- * direct, which is a stronger source than the public pricing page these were
- * originally read from. She gave advance notice of a rise in the SINGLE report
- * only — £37.99 -> £39.99 (£30.39 -> £31.99 with our code). The 2- and 3-report
+ * CONFIRMED BY THE ADVERTISER 2026-09-21. carVertical send the customer price
+ * list direct, which is a stronger source than the public pricing page these
+ * were originally read from. Only the SINGLE report rose
+ * — £37.99 -> £39.99 (£30.39 -> £31.99 with our code). The 2- and 3-report
  * packs are unchanged, so the pack per-report figure we quote (£20.99, £16.79
  * with the code) still stands.
  *
  *   standard   1 report £39.99 · 2-pack £51.98 (£25.99 ea) · 3-pack £62.97 (£20.99 ea)
  *   with code  1 report £31.99 · 2-pack £41.58 (£20.79 ea) · 3-pack £50.38 (£16.79 ea)
  *
- * The 2-REPORT PACK is deliberately absent below. She offered it and approved
- * omitting it: "If you want to highlight the single and the three-pack, that's
- * fine from our side." Two anchors — the entry price and the best per-report
+ * The 2-REPORT PACK is deliberately absent below, and carVertical approved
+ * omitting it. Two anchors — the entry price and the best per-report
  * price — bracket the range; a third number in the middle adds clutter without
  * changing the reader's decision. It is recorded here so nobody has to ask
  * again if that judgement is ever revisited.
- *
- * She also confirmed affiliate discounts will not exceed 20% and undertook to
- * give advance notice of any pricing change.
  */
 export const CARVERTICAL_PRICING = {
   /** One report, full price. */
@@ -235,7 +231,7 @@ export const CARVERTICAL_PRICING = {
   packOf3PerReport: 20.99,
   /** Our coupon, applied automatically through the tracking link. */
   discountPct: 20,
-  /** Confirmed direct with carVertical (Dominyka), not read off the public page. */
+  /** Confirmed direct with carVertical, not read off the public page. */
   verifiedOn: "2026-09-21",
 } as const;
 
@@ -347,13 +343,13 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   //     "Enter Registration" input empty. The value reaches the framework's
   //     page-props `query` blob and the app simply never reads it.
   //   · So pre-fill is not something we can unlock from our side by guessing a
-  //     name; Warrantywise would have to build it. Asked of Jack Fisher.
+  //     name; Warrantywise would have to build it. Asked of Warrantywise.
   // So we deep-link to /get-a-quote/ on the PRIMARY domain (keeps the click on
   // the domain Awin tracks; the 301 then lands the user on the reg-entry step
   // rather than a marketing homepage) and drop the reg entirely — carrying a
   // plate in an outbound URL for zero benefit is pure leakage. `reg` stays in
-  // the signature so wiring a real param back in is a one-line change if Jack
-  // Fisher confirms one.
+  // the signature so wiring a real param back in is a one-line change if
+  // Warrantywise confirm one.
   warrantywise: {
     url: "https://www.awin1.com/cread.php?awinmid=75286&awinaffid=2729598&ued=https%3A%2F%2Fwww.warrantywise.co.uk%2F",
     name: "Warrantywise",
@@ -435,14 +431,13 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   },
   // ClickMechanic — pre-purchase inspections + EV-charger installation (Awin
   // merchant 67328) — applied 2026-06-07, APPROVED + activated 2026-06-08.
-  // Standard commission 2.5% (Scott offered to revisit once volume builds).
   // We use the canonical awin1.com/cread.php tracking link (awinmid=67328,
   // awinaffid=2729598, ued=<destination>) — same format as our BookMyGarage
-  // links, so &clickref survives for per-placement attribution. (Scott first
-  // sent tidd.ly shortlinks; those silently dropped the clickref, so we use the
-  // awin1.com link they resolve to — confirmed equivalent, and Scott OK'd it.)
+  // links, so &clickref survives for per-placement attribution. (ClickMechanic
+  // first sent tidd.ly shortlinks; those silently dropped the clickref, so we
+  // use the awin1.com link they resolve to — confirmed equivalent with them.)
   //
-  // Reg PRE-FILL (Scott, 2026-06-17): the INSPECTION flow uses a co-branded
+  // Reg PRE-FILL (ClickMechanic, 2026-06-17): the INSPECTION flow uses a co-branded
   // partner landing page (our logo) that accepts ?vrm=&postcode= (caps). We pass
   // the searched reg as ?vrm= (the user enters their postcode on CM's side); the
   // partner page itself is the graceful fallback if pre-fill ever fails. EVCI has
@@ -485,11 +480,10 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     },
   },
   // We Buy Any Car — sell-your-car instant offer. NOTE: Rakuten Advertising
-  // (MID 54121), NOT Awin. Live 28 Oct 2026 after
-  // Webgains declined us and then lost the programme. Pays £45 only when WBAC
-  // BUYS the car: valued + booked within 24h of the click (1-day cookie),
-  // bought within 4 days of booking, and the reg/email unseen by WBAC in the
-  // prior 60 days. Cars only — WBAC asked us not to show it for vans (see
+  // (MID 54121), NOT Awin. Live 28 Oct 2026; the earlier Webgains route never
+  // opened. A click is not an order: an order exists only on Rakuten's side,
+  // once WBAC has bought the car, so our click counts say nothing about
+  // orders. Cars only — WBAC asked us not to show it for vans (see
   // SellCarCTA). Clicks go through /go/webuyanycar (bot filter, server-side
   // click record).
   weBuyAnyCar: {
@@ -524,19 +518,19 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // carVertical's own terms — we never originate, store or handle the report,
   // so none of the data liability that shelved a self-built check sits with us.
   // IN-HOUSE programme, NOT Awin — only a DE-region feed appears on Awin; the
-  // UK programme is direct via carvertical.com/gb/affiliate-program (free,
-  // 90-day cookie, from €4/sale tiered+uncapped). Staged 2026-06-08 — apply
+  // UK programme is direct via carvertical.com/gb/affiliate-program.
+  // Staged 2026-06-08 — apply
   // direct; on approval carVertical issues its OWN tracking link (Post Affiliate
   // Pro), so replace the whole url/buildLink below with their link format (and
   // its sub-id/clickref param name), then flip pending:false.
-  // LIVE 2026-06-11 (Everflow offer GB 6EUR, ID 4, CPA €6).
+  // LIVE 2026-06-11 (on Everflow).
   // UPDATED 2026-06-16 — switched from carVertical's direct destination URLs
-  // (hardcoded _ef_transaction_id) to Dominyka's proper EVERFLOW TRACKING LINKS
+  // (hardcoded _ef_transaction_id) to carVertical's proper EVERFLOW TRACKING LINKS
   // on carvertical.deal. The old links pinned every click to one fixed
   // _ef_transaction_id, so Everflow collapsed all clicks under a single click ID
   // and the dashboard read 0 clicks (vs our own analytics). The tracker links
   // below mint a UNIQUE transaction id per click (server-side redirect) while
-  // still pre-filling the reg and applying the coupon. Param mapping (Dominyka):
+  // still pre-filling the reg and applying the coupon. Param mapping (from carVertical):
   //   sub1 = coupon applied at checkout (freeplatecheck — our 20% discount)
   //   sub2 = placement tag we segment on in the dashboard (ccheck / mcheck / blog)
   //   sub3 = dynamic reg/VIN pre-filled on the precheck landing page
@@ -556,7 +550,7 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       const ctx = (clickref ?? "").toLowerCase();
       const TRACKER = "https://www.carvertical.deal/NCRBZ8/6JHXF/";
       const sub2 = carVerticalSub2(ctx);
-      // Blog placement: no reg to pre-fill, no uid (matches Dominyka's blog link).
+      // Blog placement: no reg to pre-fill, no uid (matches carVertical's blog link).
       //
       // Links written inline in post prose arrive here as `blog-inline-<slug>`
       // (via /go/carvertical — see src/lib/affiliateLinks.ts). Those carry the
@@ -581,12 +575,10 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
   // Awin. Staged 2026-06-08 — apply on Webgains, then fill both IDs from the
   // Webgains dashboard and flip pending:false on approval.
   //
-  // ⛔ DO NOT ACTIVATE while the carVertical agreement is in force (signed
-  // 2026-06-09). carVertical's exclusivity clause (Section 5) bars promoting
-  // ANY competing vehicle-history-report provider worldwide — HPI is a direct
-  // competitor. Activating this would breach that agreement. To use HPI instead,
-  // terminate carVertical first (30 days' notice). Also blocked separately by
-  // the Webgains ~10k-unique-visitor gate.
+  // ⛔ DO NOT ACTIVATE while carVertical is our history-check partner: HPI is
+  // a direct competitor and the two must not run together. This is the
+  // founder's call, not an engineering one — ask before changing it. The
+  // Webgains IDs are also still unprovisioned.
   hpiCheck: {
     url: "https://track.webgains.com/click.html?wgcampaignid=PENDING_WEBGAINS&wgprogramid=PENDING_WEBGAINS&wgtarget=https%3A%2F%2Fwww.hpi.co.uk%2F",
     name: "HPI Check",
@@ -611,10 +603,9 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     isAffiliate: false,
   },
   // GoCompare — car-insurance comparison (Awin merchant 117439). Top-5 UK
-  // comparison site, 170+ insurance brands, CPA basis (exact rate in the Awin
-  // F&P doc). Replaces the old non-affiliate Parkers insurance-group leak (£0,
-  // off-site, not pre-filled). ALREADY APPLIED on Awin — status Pending Approval
-  // (account contact Harry Curtis, harry.curtis@awin.com). awinmid is known
+  // comparison site, 170+ insurance brands. Replaces the old non-affiliate
+  // Parkers insurance-group link (off-site, not pre-filled).
+  // ALREADY APPLIED on Awin — status Pending Approval. awinmid is known
   // (117439), so on approval just flip pending:false. The action prompt is gated
   // on isPartnerConfigured so we never promote before Awin accepts us.
   // (Confused.com was the first pick but isn't joinable on this Awin account.)

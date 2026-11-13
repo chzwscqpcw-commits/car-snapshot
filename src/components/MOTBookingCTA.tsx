@@ -115,7 +115,7 @@ export default function MOTBookingCTA({
   // doesn't need one, and that placement converts at 12% against 87–94% for the
   // sources that arrive genuinely shopping. And it's wrong for us: of the
   // visitors who do reach the picker and choose freely, 65% take a service
-  // (42 vs 23 since 1 May), which pays 4–5x what an MOT does.
+  // (42 vs 23 since 1 May), which is also the better-paying job for us.
   //
   // So pre-select only where the MOT really is the product: when it's expired,
   // due within 60 days, or just had a reminder set, or when the CTA sits on an

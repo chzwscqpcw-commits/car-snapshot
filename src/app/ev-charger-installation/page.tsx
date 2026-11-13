@@ -17,7 +17,7 @@ import ClickMechanicLogo from "@/components/ClickMechanicLogo";
 import ClickMechanicCTA from "@/components/ClickMechanicCTA";
 import FaqAccordion, { type FaqItem } from "@/components/FaqAccordion";
 
-const CM = "#3c93f7"; // ClickMechanic brand blue (cleared for use by Scott, 2026-06-17)
+const CM = "#3c93f7"; // ClickMechanic brand blue (cleared for use by ClickMechanic, 2026-06-17)
 const URL = "https://www.freeplatecheck.co.uk/ev-charger-installation";
 
 export const metadata: Metadata = {

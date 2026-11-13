@@ -14,10 +14,10 @@ export default function PartnerWidgetPreview() {
       <main className="min-h-screen bg-slate-950 text-slate-100">
         <div className="mx-auto max-w-4xl px-4 py-8">
           <div className="mb-6 rounded-lg border border-amber-700/40 bg-amber-950/30 px-4 py-2.5 text-sm text-amber-300">
-            Concept for ClickMechanic — a co-branded vehicle-check widget Scott
-            could embed on <strong>his own site</strong>. Results show in the widget
+            Concept for ClickMechanic — a co-branded vehicle-check widget they
+            could embed on <strong>their own site</strong>. Results show in the widget
             (no redirect away); the CTAs point at <strong>ClickMechanic&apos;s</strong> own
-            bookings, so a free check funnels into his work. Quiet &ldquo;powered by
+            bookings, so a free check funnels into their work. Quiet &ldquo;powered by
             Free Plate Check&rdquo; for our brand. Sample data only.
           </div>
           <Link

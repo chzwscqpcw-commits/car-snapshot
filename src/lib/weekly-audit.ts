@@ -533,7 +533,7 @@ function renderWbac(w: WbacAudit): string {
   <p style="margin:0 0 10px;font-size:14px">
     <strong>${w.human}</strong> clicks from real visitors
     <span style="color:#64748b">(${w.logged} logged${w.logged > w.human ? `, ${w.logged - w.human} from IPs that never loaded a page` : ""})</span>.
-    £45 only when WBAC buys the car (booked within 24h of the click, bought within 4 days) — sales by placement (<code>u1</code>) are in Rakuten's transaction report.
+    Clicks are not orders: orders by placement (<code>u1</code>) are in Rakuten's reports.
   </p>
   <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 18px">
     <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Placement</th><th style="${TDR}">Seen</th><th style="${TDR}">Clicks</th><th style="${TDR}">Rate</th></tr>

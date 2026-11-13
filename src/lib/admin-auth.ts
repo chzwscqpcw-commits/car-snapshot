@@ -3,21 +3,25 @@ import { NextResponse } from "next/server";
 /**
  * Server-side gate for the /api/admin/* JSON endpoints.
  *
- * These power the PIN-gated /data-health dashboard, but the API routes
- * themselves were previously open — anyone hitting the URL got the data. The
- * dashboard now sends the owner-entered PIN as an `x-admin-pin` header; we
- * validate it here against ADMIN_PIN (env), falling back to the legacy PIN so
- * the dashboard keeps working until the env var is set in Vercel.
+ * These power the PIN-gated /data-health dashboard. The dashboard sends the
+ * owner-entered PIN as an `x-admin-pin` header and we compare it with the
+ * ADMIN_PIN environment variable.
  *
- * Note: a short PIN is a gate, not strong auth — but it closes the open API.
- * For real hardening, set a long ADMIN_PIN secret in the Vercel env.
+ * There is no fallback. A deployment without its own ADMIN_PIN refuses every
+ * request: these routes read with the service-role key, and this repository
+ * is public, so a default written here would be a published password. Each
+ * Vercel environment (Production, Preview) needs ADMIN_PIN set for
+ * /data-health to open there.
+ *
+ * Note: a short PIN is a gate, not strong auth. Use a long random value.
  */
-const ADMIN_PIN = process.env.ADMIN_PIN || "4533";
 
 /** Returns a 401 NextResponse if the request isn't authorised, else null. */
 export function adminGate(req: Request): NextResponse | null {
+  // Unset, empty or blank all mean "no PIN configured", which refuses.
+  const expected = process.env.ADMIN_PIN ?? "";
   const pin = req.headers.get("x-admin-pin");
-  if (!pin || pin !== ADMIN_PIN) {
+  if (!expected.trim() || !pin || pin !== expected) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   return null;
