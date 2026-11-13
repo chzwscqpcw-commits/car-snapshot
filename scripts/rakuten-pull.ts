@@ -65,6 +65,12 @@ async function main(): Promise<number> {
     console.error(`${RAKUTEN_ENV.exportDir} is not set: name the folder the two CSVs should go in.`);
     return 1;
   }
+  // A relative value (or a placeholder left in the file) would quietly make a
+  // folder of that name wherever the command was run.
+  if (!path.isAbsolute(dir)) {
+    console.error(`${RAKUTEN_ENV.exportDir} must be a full path starting with "/". Nothing fetched.`);
+    return 1;
+  }
 
   const config = rakutenConfig();
   if (!fromFiles && config.missing.length > 0) {
