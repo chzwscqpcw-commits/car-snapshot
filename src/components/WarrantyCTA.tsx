@@ -211,8 +211,8 @@ export default function WarrantyCTA({
           GENERIC Awin affiliate code shipped in Warrantywise's own creatives,
           not one issued to us, so unlike `freeplatecheck` it proves nothing
           about where a sale came from. Swap it for a Free-Plate-Check-specific
-          code the moment Jack Fisher supplies one — with commission arriving as
-          untracked bonus payments, a unique code is the only thing that would
+          code the moment Warrantywise supply one — their sales do not come back
+          against a click, so a unique code is the only thing that would
           make a sale attributable to us. */}
       <p className={`${indent} mb-3 inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300`}>
         <Tag className="h-3 w-3 shrink-0" aria-hidden />

@@ -167,8 +167,7 @@ const VARIANTS: Record<
    *  `report` variant asks "Buying this car?" of exactly the wrong person, which
    *  is the checkout drop-off carVertical described on 2026-08-07.
    *
-   *  Copy discipline (agreement 1.1, "not to act against carVertical
-   *  interests"): promise proof and no surprises, never imply the owner is
+   *  Copy discipline (agreed with carVertical): promise proof and no surprises, never imply the owner is
    *  likely to find fraud on their own car. For most sellers the report finds
    *  nothing, and "nothing to find, in writing" is the thing being sold.
    *  Overstating it buys refunds, which costs carVertical more than a low

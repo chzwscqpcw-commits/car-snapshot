@@ -437,8 +437,8 @@ export interface SavingsInfo {
  * the subtraction; "£120 between the cheapest and dearest quote" is the offer.
  *
  * Worth knowing which number to lead with: the MOT's spread is £19.85 against
- * a full service's £120, and at BookMyGarage's 5.06% the service is also worth
- * 4–5x the commission. The bigger saving and the better-paying job happen to be
+ * a full service's £120, and the service is also the better-paying job for
+ * us. The bigger saving and the better-paying job happen to be
  * the same one, which is a rare piece of luck — the honest pitch and the
  * profitable pitch point the same way.
  */

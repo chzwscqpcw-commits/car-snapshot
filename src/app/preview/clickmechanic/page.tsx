@@ -13,7 +13,7 @@ const PAGES = [
     Icon: Zap,
     tag: "Co-branded landing page",
     title: "EV Charger Installation",
-    desc: "A Free Plate Check-hosted, SEO-able landing page for home EV charger installs (from £752, ~£40 commission each) — our brand, CM woven in, funnelling to ClickMechanic.",
+    desc: "A Free Plate Check-hosted, SEO-able landing page for home EV charger installs (from £752) — our brand, CM woven in, funnelling to ClickMechanic.",
     cta: "View the EV charger page",
   },
   {
@@ -37,7 +37,7 @@ const PAGES = [
     Icon: Code2,
     tag: "Widget for ClickMechanic's site",
     title: "Co-branded checker widget",
-    desc: "A free vehicle-check widget Scott embeds on clickmechanic.com — results show in the widget, CTAs go to his own bookings (MOT due → book MOT; advisory → inspection). Keeps his visitors on-page; brand awareness + a backlink for us.",
+    desc: "A free vehicle-check widget ClickMechanic embeds on clickmechanic.com — results show in the widget, CTAs go to their own bookings (MOT due → book MOT; advisory → inspection). Keeps their visitors on-page; brand awareness + a backlink for us.",
     cta: "View the widget concept",
   },
 ];

@@ -51,8 +51,8 @@ export default function Step2ServiceType({
   // The cards used to render in a fixed order with MOT first and the
   // recommendation merely badged. That ordering was doing real work against
   // us: of the visitors who reach this step and choose freely, 65% take a
-  // service rather than an MOT (42 vs 23 since 1 May), and a service pays 4-5x
-  // the commission. Putting the car's actual recommendation in the first slot
+  // service rather than an MOT (42 vs 23 since 1 May), and a service is the
+  // better-paying job for us. Putting the car's actual recommendation in the first slot
   // costs the reader nothing — every option stays on screen, priced — and
   // stops the default from arguing for the wrong one.
   const cards = [...SERVICE_CARDS].sort((a, b) => {

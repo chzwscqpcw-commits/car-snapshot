@@ -2,6 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { adminGate } from "@/lib/admin-auth";
 
 export type RecentEvent = {
   id: string;
@@ -25,7 +26,11 @@ const LIMIT = 30;
  */
 const NOISY_EVENT_TYPES = new Set(["page_view"]);
 
-export async function GET(): Promise<NextResponse<RecentEventsResponse>> {
+export async function GET(req: Request): Promise<NextResponse<RecentEventsResponse>> {
+  // This route shipped without the gate the other /api/admin/* routes have,
+  // and answered anyone. Nothing on the site calls it today.
+  const denied = adminGate(req); if (denied) return denied as NextResponse<RecentEventsResponse>;
+
   const sb = supabaseServer();
 
   const { data, error } = await sb
