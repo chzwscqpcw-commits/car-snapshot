@@ -19,6 +19,10 @@
     {
       "path": "/api/cron/lookup-health",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/rakuten-reports",
+      "schedule": "15 6 * * *"
     }
   ]
 }

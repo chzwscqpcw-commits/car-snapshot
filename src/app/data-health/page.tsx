@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import InternalTrafficToggle from "@/components/InternalTrafficToggle";
+import PartnerOrdersCard from "./PartnerOrdersCard";
 import { KEY_QUERY_GROUPS, queryGroup } from "@/lib/gsc-queries";
 import {
   Activity,
@@ -1461,6 +1462,9 @@ export default function DataHealthPage() {
                 </div>
               </Section>
             )}
+
+            {/* ── PARTNER ORDERS (Rakuten reports: orders by placement + click check) ── */}
+            <PartnerOrdersCard adminFetch={adminFetch} />
 
             {/* ── OTHER PARTNER LINKS (non-affiliate long tail) ── */}
             {stats && stats.otherPartners && (
