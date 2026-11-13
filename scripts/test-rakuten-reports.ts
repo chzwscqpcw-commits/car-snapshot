@@ -21,7 +21,7 @@ import {
   parseRevenueByDay,
   rakutenConfig,
   revenueToCsv,
-  withRollingEndDate,
+  withReportWindow,
   type RakutenOrder,
 } from "../src/lib/rakuten-reports";
 import {
@@ -534,7 +534,14 @@ async function asyncChecks(): Promise<void> {
   // (Response.text() drops the byte-order mark, so compare what it parses to.)
   check("a CSV comes back and parses", parseRevenueByDay(await fetchReportCsv("Report", SECRET_URL, NOW, respond(REVENUE_HAND_EXPORT))).length === 3);
   check("a fixed end date is moved to today, the start left alone", seen[0].includes("end_date=2026-11-13") && seen[0].includes("start_date=2026-10-28") && seen[0].includes("token=TOKENMARKER"), seen[0].replace("TOKENMARKER", "…"));
-  check("a relative range is left as it is", withRollingEndDate("https://reports.example/r?date_range=last-30-days&token=x", NOW) === "https://reports.example/r?date_range=last-30-days&token=x");
+  const windowed = new URL(withReportWindow("https://reports.example/r?date_range=this-year&tz=GMT&token=x", NOW));
+  check(
+    "a relative range becomes explicit dates: the last 120 days, ending today",
+    !windowed.searchParams.has("date_range") && windowed.searchParams.get("start_date") === "2026-07-16" && windowed.searchParams.get("end_date") === "2026-11-13",
+    `${windowed.searchParams.get("start_date")} → ${windowed.searchParams.get("end_date")}`,
+  );
+  check("…and the rest of the link is kept", windowed.searchParams.get("tz") === "GMT" && windowed.searchParams.get("token") === "x");
+  check("a link with no dates at all is left as it is", withReportWindow("https://reports.example/r?token=x", NOW) === "https://reports.example/r?token=x");
 
   const denied = await failWith("Lock Status Report", SECRET_URL, respond("Forbidden: token=TOKENMARKER", 403));
   check("a 403 says the token may have expired", /Lock Status Report: Rakuten answered 403 \(the link's token may have expired\)/.test(denied), denied);

@@ -482,20 +482,46 @@ export function ordersToCsv(orders: RakutenOrder[]): string {
 
 // ─── Fetch ───────────────────────────────────────────────────────────────────
 
-const FETCH_TIMEOUT_MS = 30_000;
+/**
+ * Rakuten builds the report when asked, and is slow about it: the first real
+ * fetch (13 Nov 2026) took 97 seconds to answer with a 22-line file. Thirty
+ * seconds, the first value here, never got an answer at all.
+ */
+const FETCH_TIMEOUT_MS = 240_000;
+
+/** How far back a link with a relative range is made to reach. Orders lock
+ *  about a month after the sale, so this is four times what is needed. */
+export const REPORT_WINDOW_DAYS = 120;
 
 /**
- * A saved report's link can carry a fixed `start_date` and `end_date`. Left
- * alone, the pull would stop at the day the link was made, so the end date is
- * moved to today. A link with a relative range (no fixed dates) is untouched.
+ * The dates a pull asks for. A saved report's link carries the range it was
+ * saved with, and neither kind can be left alone:
+ *
+ * - A relative one (`date_range=this-year`, what the first real links had)
+ *   resets: on 1 January, December's orders would drop out of the report
+ *   weeks before they lock, and stay "Unlocked" in our table for good. It is
+ *   swapped for explicit dates: the last REPORT_WINDOW_DAYS, ending today.
+ *   Rakuten accepts `start_date`/`end_date` in its place (checked against the
+ *   real reports, 13 Nov 2026). Rows older than the window stay stored.
+ * - Fixed `start_date` and `end_date` would stop at the day the link was
+ *   made, so the end date is moved to today and the start is kept.
+ *
+ * A link with neither is used as it is.
  */
-export function withRollingEndDate(rawUrl: string, nowMs: number): string {
+export function withReportWindow(rawUrl: string, nowMs: number): string {
   const u = new URL(rawUrl);
   const iso = /^\d{4}-\d{2}-\d{2}$/;
+  const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
   const start = u.searchParams.get("start_date");
   const end = u.searchParams.get("end_date");
+  if (u.searchParams.has("date_range")) {
+    u.searchParams.delete("date_range");
+    u.searchParams.set("start_date", day(nowMs - REPORT_WINDOW_DAYS * 86_400_000));
+    u.searchParams.set("end_date", day(nowMs));
+    return u.toString();
+  }
   if (!(start && end && iso.test(start) && iso.test(end))) return rawUrl;
-  u.searchParams.set("end_date", new Date(nowMs).toISOString().slice(0, 10));
+  u.searchParams.set("end_date", day(nowMs));
   return u.toString();
 }
 
@@ -512,7 +538,7 @@ export async function fetchReportCsv(
   let url: string;
   try {
     if (new URL(rawUrl).protocol !== "https:") throw new Error("not https");
-    url = withRollingEndDate(rawUrl, nowMs);
+    url = withReportWindow(rawUrl, nowMs);
   } catch {
     throw new RakutenReportError(`${label}: the saved link is not a valid https address`);
   }

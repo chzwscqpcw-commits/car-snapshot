@@ -1,5 +1,7 @@
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Each report can take well over a minute to come back (see FETCH_TIMEOUT_MS
+// in rakuten-reports.ts); the two are fetched side by side.
+export const maxDuration = 300;
 
 import { NextResponse } from "next/server";
 import { supabaseServerRole } from "@/lib/supabaseServer";

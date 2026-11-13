@@ -31,12 +31,12 @@ Code: `src/lib/rakuten-reports.ts` (fetch, parse, clean),
    | `RAKUTEN_REVENUE_REPORT_URL` | Revenue Report by Day |
    | `RAKUTEN_LOCK_REPORT_URL` | Lock Status Report, filter *Lock Status in Unlocked, Locked* |
 
-   Save each report with the widest date range on offer, starting no later
-   than the programme's first day: an order's lock status changes weeks
-   after its transaction date, and a pull only updates the orders its range
-   covers. If the link has fixed `start_date` and `end_date` values, the
-   pull moves the end date to today on every run; a relative range is used
-   as it is.
+   The date range the report was saved with does not matter. A relative
+   range ("this year", "last 30 days") would reset and drop orders before
+   they lock, so each pull asks for explicit dates instead: the last 120
+   days, ending today. If the link has fixed `start_date` and `end_date`
+   values, the start is kept and the end is moved to today. Rows older
+   than the window stay stored.
 
 3. **Add them to Vercel** (Project → Settings → Environment Variables,
    Production; mark them Sensitive) and redeploy. Add the same two lines to
@@ -65,10 +65,12 @@ A failure names the report and the reason (a missing column is named; a 401
 or 403 means the link's token has expired and a fresh "Get API" link is
 needed). Then run it without `?dry=1` and open `/data-health`.
 
-The response format of the "Get API" links was written from the hand
-exports. The parser finds columns by name, accepts a response with or
-without the three preamble lines, and fails loudly on a missing column, so
-the first real run is the check that the two agree.
+Rakuten builds a report when it is asked for one and can take over a
+minute and a half to answer, so a run can be slow; the job allows for it.
+
+Checked against the real reports on 13 Nov 2026: both parse, with the three
+preamble lines, `m/d/yy` dates and GMT days, and explicit dates are accepted
+in place of a relative range.
 
 ## The local command
 
