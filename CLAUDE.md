@@ -117,6 +117,41 @@ typecheck and calendar test. The Thursday workflow
 `docs/social-pipeline.md`. Never a real registration or a partner name in a
 clip or caption; the test enforces both.
 
+## Partner orders (Rakuten reports)
+
+Our own events see We Buy Any Car clicks, never orders: an order exists only
+in Rakuten's reports, tagged with the placement (`u1`) that sent it.
+`/api/cron/rakuten-reports` (daily) fetches two saved reports from their
+"Get API" links and stores them; the Friday email and `/data-health` show a
+"Partner orders" block from them. Setup and the first-run checks:
+`docs/partner-orders.md`.
+
+- **The links are secrets.** `RAKUTEN_REVENUE_REPORT_URL` and
+  `RAKUTEN_LOCK_REPORT_URL` each hold a token. Never log, return or commit
+  one; `src/lib/rakuten-reports.ts` writes its own error messages (column
+  names and row numbers only) for that reason. Unset = a quiet "not
+  connected" state everywhere, no email.
+- **No registration is kept.** In the Lock Status report `SKU` is the
+  customer's registration and `Product Name` their car. The parser reads an
+  allow-list of columns, so neither reaches a row, a log, a response or a
+  file; `npm run test:rakuten` fails if either survives. Fixtures are
+  invented: no registration-shaped strings, no real amounts.
+- **Private tables.** `rakuten_daily` and `rakuten_orders` (RLS on, no
+  policy, service role only), never `site_events`, which the public anon key
+  can read. Orders upsert by Transaction ID; when a commission changes the
+  earlier figure moves to `previous_commission`, so a paying order dropping
+  to zero stays visible. `/api/admin/partner-orders` serves nothing real on
+  a deployment without its own `ADMIN_PIN`.
+- **Reconciliation.** Rakuten's clicks per day against our `partner_click`
+  rows (`partner_id = weBuyAnyCar`, owner traffic out); a finished day more
+  than 3 clicks (or a tenth) apart is flagged. Thresholds: `RECON` in
+  `src/lib/partner-orders.ts`.
+- `npm run rakuten:pull` writes the two cleaned CSVs to `RAKUTEN_EXPORT_DIR`
+  (no database, no site). `/data-health?partner-orders=sample` shows the
+  panel with made-up figures.
+- This repository is public: no rates, earnings, contacts or terms in code,
+  fixtures, commits or PR text.
+
 ## Conventions
 
 - Telemetry must never break the user flow — `tracking.ts` mirrors events

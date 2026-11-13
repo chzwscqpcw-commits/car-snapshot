@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataStatus, renderDataStatusHtml, renderDataSummaryLine, type DataStatus } from "./data-status";
 import { getLookupHealth, renderLookupHealthHtml, type LookupHealthSummary } from "./lookup-health";
+import { getPartnerOrders, renderPartnerOrdersHtml, type PartnerOrdersSummary } from "./partner-orders";
 import {
   fetchSocialClips,
   renderSocialClips,
@@ -186,6 +187,9 @@ export interface WeeklyAuditData {
   /** /api/lookup's failures this week by stage, and the longest bad spell.
    *  Added after the 21.5-hour MOT outage of 8–9 Nov 2026 went unreported. */
   lookupHealth: LookupHealthSummary;
+  /** What the We Buy Any Car clicks became, from the Rakuten reports the
+   *  daily job stores (private tables); a "not connected" state until set up. */
+  partnerOrders: PartnerOrdersSummary;
 }
 
 /** The two arms of seller_trust_copy_v1 and the placements it runs on. */
@@ -224,12 +228,15 @@ export async function buildWeeklyAuditData(
   clips: () => Promise<SocialClipsResult> = fetchSocialClips,
   /** The dataset status (GitHub reads), swappable for the same reason. */
   data: () => Promise<DataStatus> = () => getDataStatus(fetch, nowMs),
+  /** Partner orders (service-role read of the private tables), swappable too. */
+  partnerOrders: () => Promise<PartnerOrdersSummary> = () => getPartnerOrders(sb, nowMs),
 ): Promise<WeeklyAuditData> {
   const d7 = new Date(nowMs - 7 * DAY).toISOString();
   const d14 = new Date(nowMs - 14 * DAY).toISOString();
   const socialClipsPromise = clips();
   const dataStatusPromise = data();
   const lookupHealthPromise = getLookupHealth(sb, nowMs);
+  const partnerOrdersPromise = partnerOrders();
 
   // Headline counts: this week vs prior week
   const HEADLINE_EVENTS: { key: string; label: string }[] = [
@@ -486,6 +493,7 @@ export async function buildWeeklyAuditData(
     socialClips,
     dataStatus,
     lookupHealth,
+    partnerOrders: await partnerOrdersPromise,
   };
 }
 
@@ -733,6 +741,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
 
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
   ${renderWbac(d.weBuyAnyCar)}
+  ${renderPartnerOrdersHtml(d.partnerOrders)}
   ${renderPdfReport(d.pdfReport)}
 
   ${renderSavedCars(d.savedCars)}
