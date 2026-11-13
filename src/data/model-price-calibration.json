@@ -1,43 +1,43 @@
 {
-  "generatedAt": "2026-10-19",
+  "generatedAt": "2026-11-02",
   "windowDays": 120,
-  "events": 94584,
-  "observations": 2618,
+  "events": 108556,
+  "observations": 2928,
   "rule": "median(ebayMedian / (deflator x curve x retention)) per family; >=4 obs over >=3 ages, >=3 listings each; applied only within minAge-2..maxAge+2",
   "families": {
     "ABARTH|595": {
-      "price": 37300,
-      "n": 4,
+      "price": 38400,
+      "n": 5,
       "minAge": 6,
       "maxAge": 12
     },
     "AUDI|A1": {
-      "price": 28400,
-      "n": 15,
+      "price": 25300,
+      "n": 14,
       "minAge": 1,
       "maxAge": 16
     },
     "AUDI|A3": {
-      "price": 29450,
-      "n": 22,
+      "price": 31700,
+      "n": 23,
       "minAge": 6,
       "maxAge": 25
     },
     "AUDI|A4": {
-      "price": 25900,
-      "n": 20,
-      "minAge": 6,
+      "price": 27050,
+      "n": 22,
+      "minAge": 5,
       "maxAge": 25
     },
     "AUDI|A5": {
-      "price": 43700,
-      "n": 13,
+      "price": 42250,
+      "n": 14,
       "minAge": 7,
       "maxAge": 19
     },
     "AUDI|A6": {
-      "price": 37550,
-      "n": 16,
+      "price": 40250,
+      "n": 20,
       "minAge": 5,
       "maxAge": 21
     },
@@ -48,64 +48,70 @@
       "maxAge": 15
     },
     "AUDI|Q2": {
-      "price": 28950,
-      "n": 5,
+      "price": 30500,
+      "n": 4,
       "minAge": 2,
-      "maxAge": 7
+      "maxAge": 6
     },
     "AUDI|Q3": {
-      "price": 60400,
-      "n": 9,
+      "price": 59700,
+      "n": 12,
       "minAge": 4,
       "maxAge": 14
     },
     "AUDI|Q5": {
-      "price": 58450,
+      "price": 51800,
       "n": 13,
       "minAge": 4,
       "maxAge": 17
     },
     "AUDI|Q7": {
-      "price": 56150,
-      "n": 10,
+      "price": 65400,
+      "n": 11,
       "minAge": 5,
       "maxAge": 18
     },
     "AUDI|TT": {
-      "price": 29700,
+      "price": 36650,
       "n": 20,
       "minAge": 6,
       "maxAge": 24
     },
     "BMW|1 SERIES": {
-      "price": 30950,
-      "n": 56,
+      "price": 25850,
+      "n": 62,
       "minAge": 2,
       "maxAge": 20
     },
     "BMW|2 SERIES": {
-      "price": 34800,
-      "n": 15,
-      "minAge": 6,
+      "price": 36600,
+      "n": 18,
+      "minAge": 5,
       "maxAge": 12
     },
     "BMW|3 SERIES": {
-      "price": 44000,
-      "n": 41,
+      "price": 28350,
+      "n": 43,
       "minAge": 5,
       "maxAge": 24
     },
     "BMW|4 SERIES": {
-      "price": 41000,
-      "n": 13,
+      "price": 46300,
+      "n": 16,
       "minAge": 6,
       "maxAge": 12
     },
     "BMW|5 SERIES": {
-      "price": 34700,
+      "price": 34900,
       "n": 26,
       "minAge": 3,
-      "maxAge": 18
+      "maxAge": 20
+    },
+    "BMW|6 SERIES": {
+      "price": 34400,
+      "n": 4,
+      "minAge": 8,
+      "maxAge": 12
     },
     "BMW|M4": {
       "price": 105200,
@@ -114,26 +120,26 @@
       "maxAge": 11
     },
     "BMW|M5": {
-      "price": 97650,
+      "price": 103550,
       "n": 4,
       "minAge": 10,
       "maxAge": 15
     },
     "BMW|X1": {
-      "price": 32550,
-      "n": 12,
+      "price": 31200,
+      "n": 9,
       "minAge": 4,
       "maxAge": 16
     },
     "BMW|X3": {
-      "price": 41200,
-      "n": 14,
+      "price": 40700,
+      "n": 9,
       "minAge": 6,
       "maxAge": 19
     },
     "BMW|X5": {
-      "price": 82350,
-      "n": 11,
+      "price": 85400,
+      "n": 15,
       "minAge": 6,
       "maxAge": 23
     },
@@ -144,25 +150,25 @@
       "maxAge": 18
     },
     "BMW|Z4": {
-      "price": 51200,
-      "n": 9,
+      "price": 48450,
+      "n": 6,
       "minAge": 10,
       "maxAge": 23
     },
     "CITROEN|C1": {
-      "price": 22150,
-      "n": 13,
+      "price": 23400,
+      "n": 10,
       "minAge": 7,
       "maxAge": 19
     },
     "CITROEN|C3": {
-      "price": 20150,
-      "n": 15,
+      "price": 18600,
+      "n": 14,
       "minAge": 6,
       "maxAge": 21
     },
     "CITROEN|C4": {
-      "price": 22500,
+      "price": 22350,
       "n": 11,
       "minAge": 7,
       "maxAge": 20
@@ -170,12 +176,12 @@
     "CITROEN|DS3": {
       "price": 21550,
       "n": 4,
-      "minAge": 12,
+      "minAge": 13,
       "maxAge": 16
     },
     "DACIA|DUSTER": {
-      "price": 21250,
-      "n": 7,
+      "price": 20650,
+      "n": 5,
       "minAge": 6,
       "maxAge": 13
     },
@@ -186,74 +192,80 @@
       "maxAge": 13
     },
     "DS|DS3": {
-      "price": 17450,
-      "n": 5,
+      "price": 17200,
+      "n": 4,
       "minAge": 5,
-      "maxAge": 11
+      "maxAge": 10
     },
     "FIAT|500": {
-      "price": 23750,
+      "price": 22350,
       "n": 14,
       "minAge": 3,
       "maxAge": 18
     },
     "FIAT|PANDA": {
-      "price": 21250,
-      "n": 9,
+      "price": 22000,
+      "n": 7,
       "minAge": 7,
-      "maxAge": 20
+      "maxAge": 17
     },
     "FORD|C-MAX": {
-      "price": 22100,
-      "n": 12,
+      "price": 22000,
+      "n": 9,
       "minAge": 7,
-      "maxAge": 18
+      "maxAge": 17
     },
     "FORD|ECOSPORT": {
-      "price": 22650,
-      "n": 7,
+      "price": 15050,
+      "n": 6,
       "minAge": 4,
-      "maxAge": 11
+      "maxAge": 10
     },
     "FORD|FIESTA": {
-      "price": 24700,
-      "n": 22,
+      "price": 18950,
+      "n": 26,
       "minAge": 3,
       "maxAge": 24
     },
     "FORD|FOCUS": {
-      "price": 22800,
-      "n": 30,
+      "price": 22450,
+      "n": 36,
       "minAge": 1,
       "maxAge": 25
     },
     "FORD|GRAND C-MAX": {
-      "price": 28800,
+      "price": 23600,
       "n": 4,
-      "minAge": 9,
+      "minAge": 8,
       "maxAge": 15
     },
     "FORD|KA": {
-      "price": 17300,
+      "price": 18450,
       "n": 16,
       "minAge": 8,
       "maxAge": 22
     },
     "FORD|KUGA": {
-      "price": 25300,
-      "n": 12,
+      "price": 27050,
+      "n": 13,
       "minAge": 4,
       "maxAge": 17
     },
     "FORD|MONDEO": {
-      "price": 22300,
-      "n": 18,
+      "price": 20500,
+      "n": 19,
       "minAge": 5,
       "maxAge": 24
     },
+    "FORD|PUMA": {
+      "price": 31250,
+      "n": 5,
+      "minAge": 2,
+      "maxAge": 6
+    },
     "FORD|S-MAX": {
-      "price": 21000,
-      "n": 8,
+      "price": 22150,
+      "n": 9,
       "minAge": 6,
       "maxAge": 17
     },
@@ -263,28 +275,34 @@
       "minAge": 8,
       "maxAge": 11
     },
+    "HONDA|ACCORD": {
+      "price": 45700,
+      "n": 4,
+      "minAge": 17,
+      "maxAge": 21
+    },
     "HONDA|CIVIC": {
-      "price": 31700,
+      "price": 32200,
       "n": 19,
       "minAge": 6,
       "maxAge": 25
     },
     "HONDA|CR-V": {
-      "price": 25200,
-      "n": 15,
+      "price": 27650,
+      "n": 12,
       "minAge": 6,
-      "maxAge": 21
+      "maxAge": 20
     },
     "HONDA|JAZZ": {
-      "price": 24600,
-      "n": 16,
+      "price": 29000,
+      "n": 15,
       "minAge": 8,
       "maxAge": 23
     },
     "HYUNDAI|I10": {
-      "price": 15100,
-      "n": 7,
-      "minAge": 11,
+      "price": 17200,
+      "n": 10,
+      "minAge": 8,
       "maxAge": 17
     },
     "HYUNDAI|SANTA FE": {
@@ -294,25 +312,25 @@
       "maxAge": 15
     },
     "HYUNDAI|TUCSON": {
-      "price": 32400,
-      "n": 7,
+      "price": 28750,
+      "n": 8,
       "minAge": 5,
       "maxAge": 11
     },
     "JAGUAR|F-PACE": {
-      "price": 63200,
+      "price": 45250,
       "n": 5,
       "minAge": 2,
       "maxAge": 10
     },
     "JAGUAR|XE": {
-      "price": 30950,
-      "n": 6,
+      "price": 30000,
+      "n": 7,
       "minAge": 6,
       "maxAge": 11
     },
     "JAGUAR|XF": {
-      "price": 26200,
+      "price": 27300,
       "n": 12,
       "minAge": 7,
       "maxAge": 18
@@ -324,8 +342,8 @@
       "maxAge": 21
     },
     "KIA|CEED": {
-      "price": 19050,
-      "n": 13,
+      "price": 16300,
+      "n": 14,
       "minAge": 3,
       "maxAge": 17
     },
@@ -336,70 +354,64 @@
       "maxAge": 14
     },
     "KIA|RIO": {
-      "price": 23200,
-      "n": 8,
+      "price": 21100,
+      "n": 6,
       "minAge": 8,
       "maxAge": 17
     },
     "KIA|SPORTAGE": {
-      "price": 35350,
-      "n": 14,
+      "price": 29800,
+      "n": 15,
       "minAge": 4,
       "maxAge": 18
     },
     "LAND ROVER|DEFENDER": {
-      "price": 234500,
-      "n": 11,
-      "minAge": 10,
+      "price": 221350,
+      "n": 13,
+      "minAge": 4,
       "maxAge": 25
     },
     "LAND ROVER|DISCOVERY": {
-      "price": 55900,
-      "n": 18,
-      "minAge": 7,
-      "maxAge": 24
+      "price": 56100,
+      "n": 21,
+      "minAge": 5,
+      "maxAge": 25
     },
     "LAND ROVER|DISCOVERY SPORT": {
-      "price": 36700,
-      "n": 6,
-      "minAge": 7,
+      "price": 34150,
+      "n": 8,
+      "minAge": 6,
       "maxAge": 12
     },
     "LAND ROVER|FREELANDER": {
-      "price": 29700,
-      "n": 10,
+      "price": 30550,
+      "n": 11,
       "minAge": 12,
       "maxAge": 21
     },
     "LAND ROVER|RANGE ROVER": {
-      "price": 49650,
+      "price": 48350,
       "n": 17,
       "minAge": 6,
       "maxAge": 25
     },
     "LAND ROVER|RANGE ROVER EVOQUE": {
-      "price": 42350,
-      "n": 12,
-      "minAge": 6,
+      "price": 44200,
+      "n": 14,
+      "minAge": 5,
       "maxAge": 15
     },
     "LAND ROVER|RANGE ROVER SPORT": {
-      "price": 56550,
-      "n": 18,
+      "price": 58850,
+      "n": 17,
       "minAge": 4,
       "maxAge": 21
     },
     "LAND ROVER|RANGE ROVER VELAR": {
-      "price": 64900,
+      "price": 62450,
       "n": 4,
       "minAge": 6,
       "maxAge": 9
-    },
-    "LEXUS|IS250": {
-      "price": 25750,
-      "n": 4,
-      "minAge": 14,
-      "maxAge": 18
     },
     "MAZDA|2": {
       "price": 30900,
@@ -408,8 +420,8 @@
       "maxAge": 18
     },
     "MAZDA|3": {
-      "price": 23900,
-      "n": 13,
+      "price": 23800,
+      "n": 10,
       "minAge": 4,
       "maxAge": 22
     },
@@ -420,37 +432,37 @@
       "maxAge": 20
     },
     "MAZDA|6": {
-      "price": 24150,
-      "n": 11,
-      "minAge": 7,
+      "price": 23150,
+      "n": 12,
+      "minAge": 6,
       "maxAge": 20
     },
     "MAZDA|CX-5": {
-      "price": 29650,
-      "n": 10,
+      "price": 28000,
+      "n": 8,
       "minAge": 6,
       "maxAge": 14
     },
     "MAZDA|MX-5": {
-      "price": 37300,
-      "n": 10,
+      "price": 37750,
+      "n": 8,
       "minAge": 7,
       "maxAge": 22
     },
     "MERCEDES-BENZ|A CLASS": {
-      "price": 51700,
-      "n": 20,
+      "price": 41800,
+      "n": 22,
       "minAge": 3,
       "maxAge": 20
     },
     "MERCEDES-BENZ|C CLASS": {
-      "price": 37450,
-      "n": 22,
+      "price": 43750,
+      "n": 20,
       "minAge": 6,
       "maxAge": 25
     },
     "MERCEDES-BENZ|CLA": {
-      "price": 44450,
+      "price": 42150,
       "n": 10,
       "minAge": 3,
       "maxAge": 12
@@ -462,8 +474,8 @@
       "maxAge": 24
     },
     "MERCEDES-BENZ|E CLASS": {
-      "price": 32300,
-      "n": 18,
+      "price": 43550,
+      "n": 16,
       "minAge": 5,
       "maxAge": 24
     },
@@ -473,11 +485,17 @@
       "minAge": 3,
       "maxAge": 11
     },
+    "MERCEDES-BENZ|GLA": {
+      "price": 53250,
+      "n": 4,
+      "minAge": 7,
+      "maxAge": 11
+    },
     "MERCEDES-BENZ|GLC": {
-      "price": 55800,
-      "n": 7,
+      "price": 55600,
+      "n": 6,
       "minAge": 4,
-      "maxAge": 10
+      "maxAge": 9
     },
     "MERCEDES-BENZ|ML": {
       "price": 64050,
@@ -486,7 +504,7 @@
       "maxAge": 21
     },
     "MERCEDES-BENZ|SLK": {
-      "price": 46600,
+      "price": 44050,
       "n": 13,
       "minAge": 11,
       "maxAge": 25
@@ -498,76 +516,76 @@
       "maxAge": 11
     },
     "MINI|COOPER": {
-      "price": 27850,
+      "price": 29300,
       "n": 33,
       "minAge": 2,
       "maxAge": 21
     },
     "MINI|COUNTRYMAN": {
-      "price": 29800,
-      "n": 12,
+      "price": 28400,
+      "n": 11,
       "minAge": 4,
       "maxAge": 16
     },
     "MINI|MINI": {
-      "price": 24350,
+      "price": 25050,
       "n": 14,
       "minAge": 13,
       "maxAge": 24
     },
     "MINI|ONE": {
-      "price": 19000,
-      "n": 8,
+      "price": 22700,
+      "n": 6,
       "minAge": 9,
       "maxAge": 23
     },
     "MITSUBISHI|OUTLANDER": {
-      "price": 36300,
-      "n": 5,
+      "price": 34000,
+      "n": 4,
       "minAge": 7,
       "maxAge": 13
     },
     "NISSAN|JUKE": {
-      "price": 23700,
-      "n": 10,
+      "price": 25900,
+      "n": 11,
       "minAge": 7,
       "maxAge": 16
     },
     "NISSAN|MICRA": {
-      "price": 21050,
-      "n": 17,
+      "price": 20550,
+      "n": 18,
       "minAge": 6,
       "maxAge": 24
     },
     "NISSAN|NOTE": {
-      "price": 16850,
-      "n": 12,
+      "price": 18250,
+      "n": 10,
       "minAge": 9,
       "maxAge": 20
     },
     "NISSAN|QASHQAI": {
-      "price": 24450,
+      "price": 24300,
       "n": 17,
       "minAge": 5,
       "maxAge": 19
     },
     "NISSAN|X-TRAIL": {
-      "price": 27500,
+      "price": 31650,
       "n": 12,
       "minAge": 6,
       "maxAge": 20
     },
     "PEUGEOT|107": {
-      "price": 18400,
-      "n": 8,
+      "price": 18300,
+      "n": 7,
       "minAge": 13,
       "maxAge": 21
     },
     "PEUGEOT|108": {
-      "price": 27350,
-      "n": 6,
+      "price": 22100,
+      "n": 5,
       "minAge": 6,
-      "maxAge": 12
+      "maxAge": 11
     },
     "PEUGEOT|206": {
       "price": 23900,
@@ -576,26 +594,26 @@
       "maxAge": 25
     },
     "PEUGEOT|207": {
-      "price": 16600,
-      "n": 7,
+      "price": 13100,
+      "n": 5,
       "minAge": 14,
       "maxAge": 20
     },
     "PEUGEOT|208": {
-      "price": 24000,
-      "n": 8,
-      "minAge": 7,
+      "price": 27600,
+      "n": 13,
+      "minAge": 3,
       "maxAge": 14
     },
     "PEUGEOT|3008": {
-      "price": 31350,
-      "n": 12,
+      "price": 27100,
+      "n": 14,
       "minAge": 2,
       "maxAge": 17
     },
     "PEUGEOT|308": {
       "price": 24200,
-      "n": 12,
+      "n": 11,
       "minAge": 7,
       "maxAge": 18
     },
@@ -612,92 +630,92 @@
       "maxAge": 21
     },
     "PORSCHE|BOXSTER": {
-      "price": 94850,
-      "n": 4,
+      "price": 95800,
+      "n": 5,
       "minAge": 20,
-      "maxAge": 23
+      "maxAge": 24
     },
     "PORSCHE|CAYENNE": {
-      "price": 55200,
-      "n": 7,
+      "price": 62700,
+      "n": 9,
       "minAge": 7,
       "maxAge": 18
     },
     "PORSCHE|MACAN": {
-      "price": 76600,
-      "n": 10,
+      "price": 82550,
+      "n": 9,
       "minAge": 2,
       "maxAge": 12
     },
     "RENAULT|CAPTUR": {
-      "price": 34200,
-      "n": 4,
+      "price": 25500,
+      "n": 7,
       "minAge": 7,
       "maxAge": 13
     },
     "RENAULT|CLIO": {
-      "price": 27050,
-      "n": 18,
-      "minAge": 7,
-      "maxAge": 25
+      "price": 23300,
+      "n": 14,
+      "minAge": 6,
+      "maxAge": 23
     },
     "RENAULT|KADJAR": {
-      "price": 23750,
-      "n": 5,
+      "price": 25000,
+      "n": 6,
       "minAge": 5,
       "maxAge": 11
     },
     "RENAULT|MEGANE": {
-      "price": 17700,
-      "n": 6,
+      "price": 31350,
+      "n": 7,
       "minAge": 9,
       "maxAge": 20
     },
     "RENAULT|TWINGO": {
-      "price": 19500,
-      "n": 5,
-      "minAge": 10,
+      "price": 18200,
+      "n": 4,
+      "minAge": 12,
       "maxAge": 18
     },
     "SAAB|9-3": {
-      "price": 24350,
-      "n": 7,
-      "minAge": 15,
+      "price": 28150,
+      "n": 6,
+      "minAge": 16,
       "maxAge": 23
     },
     "SEAT|ARONA": {
-      "price": 30000,
-      "n": 5,
+      "price": 30650,
+      "n": 4,
       "minAge": 4,
       "maxAge": 8
     },
     "SEAT|IBIZA": {
-      "price": 30650,
-      "n": 18,
+      "price": 26850,
+      "n": 19,
       "minAge": 3,
       "maxAge": 20
     },
     "SEAT|LEON": {
-      "price": 37050,
-      "n": 14,
+      "price": 40250,
+      "n": 15,
       "minAge": 6,
       "maxAge": 21
     },
     "SKODA|FABIA": {
-      "price": 25750,
-      "n": 17,
+      "price": 22650,
+      "n": 16,
       "minAge": 5,
       "maxAge": 22
     },
     "SKODA|KODIAQ": {
-      "price": 63350,
-      "n": 5,
+      "price": 62750,
+      "n": 6,
       "minAge": 3,
-      "maxAge": 8
+      "maxAge": 9
     },
     "SKODA|OCTAVIA": {
-      "price": 29250,
-      "n": 15,
+      "price": 32200,
+      "n": 14,
       "minAge": 6,
       "maxAge": 21
     },
@@ -708,8 +726,8 @@
       "maxAge": 13
     },
     "SKODA|SUPERB": {
-      "price": 27700,
-      "n": 11,
+      "price": 26350,
+      "n": 10,
       "minAge": 6,
       "maxAge": 17
     },
@@ -726,14 +744,14 @@
       "maxAge": 12
     },
     "SUBARU|IMPREZA": {
-      "price": 105250,
+      "price": 125250,
       "n": 7,
       "minAge": 19,
       "maxAge": 25
     },
     "SUZUKI|SWIFT": {
-      "price": 23000,
-      "n": 12,
+      "price": 30200,
+      "n": 10,
       "minAge": 7,
       "maxAge": 19
     },
@@ -743,105 +761,129 @@
       "minAge": 7,
       "maxAge": 11
     },
+    "TESLA|MODEL 3": {
+      "price": 39600,
+      "n": 5,
+      "minAge": 5,
+      "maxAge": 7
+    },
     "TOYOTA|AURIS": {
-      "price": 20600,
-      "n": 9,
+      "price": 25450,
+      "n": 7,
       "minAge": 8,
       "maxAge": 19
     },
+    "TOYOTA|AVENSIS": {
+      "price": 23450,
+      "n": 4,
+      "minAge": 12,
+      "maxAge": 18
+    },
     "TOYOTA|AYGO": {
-      "price": 20100,
+      "price": 19150,
       "n": 16,
       "minAge": 5,
-      "maxAge": 20
-    },
-    "TOYOTA|C-HR": {
-      "price": 44900,
-      "n": 4,
-      "minAge": 3,
-      "maxAge": 9
-    },
-    "TOYOTA|PRIUS": {
-      "price": 35600,
-      "n": 8,
-      "minAge": 8,
       "maxAge": 21
     },
+    "TOYOTA|PRIUS": {
+      "price": 31300,
+      "n": 13,
+      "minAge": 9,
+      "maxAge": 21
+    },
+    "TOYOTA|RAV-4": {
+      "price": 35850,
+      "n": 4,
+      "minAge": 15,
+      "maxAge": 20
+    },
     "TOYOTA|RAV4": {
-      "price": 29950,
-      "n": 5,
-      "minAge": 13,
+      "price": 47150,
+      "n": 4,
+      "minAge": 19,
       "maxAge": 24
     },
     "TOYOTA|YARIS": {
-      "price": 36550,
-      "n": 21,
+      "price": 26550,
+      "n": 16,
       "minAge": 5,
       "maxAge": 25
     },
     "VAUXHALL|ADAM": {
-      "price": 21850,
+      "price": 22550,
       "n": 4,
       "minAge": 8,
       "maxAge": 13
     },
     "VAUXHALL|ASTRA": {
-      "price": 18850,
-      "n": 20,
+      "price": 17550,
+      "n": 22,
       "minAge": 5,
       "maxAge": 25
     },
     "VAUXHALL|CORSA": {
-      "price": 18700,
-      "n": 19,
-      "minAge": 7,
+      "price": 18350,
+      "n": 34,
+      "minAge": 3,
       "maxAge": 24
     },
+    "VAUXHALL|GRANDLAND": {
+      "price": 29900,
+      "n": 4,
+      "minAge": 6,
+      "maxAge": 8
+    },
     "VAUXHALL|INSIGNIA": {
-      "price": 18700,
-      "n": 11,
+      "price": 19000,
+      "n": 10,
       "minAge": 7,
-      "maxAge": 17
+      "maxAge": 16
     },
     "VAUXHALL|MOKKA": {
-      "price": 26400,
+      "price": 25750,
       "n": 7,
       "minAge": 7,
       "maxAge": 13
     },
     "VAUXHALL|ZAFIRA": {
-      "price": 19050,
-      "n": 12,
+      "price": 17250,
+      "n": 13,
       "minAge": 9,
       "maxAge": 20
     },
     "VOLKSWAGEN|CADDY": {
-      "price": 31350,
-      "n": 7,
+      "price": 34300,
+      "n": 6,
       "minAge": 6,
       "maxAge": 14
     },
+    "VOLKSWAGEN|CC": {
+      "price": 26500,
+      "n": 5,
+      "minAge": 11,
+      "maxAge": 15
+    },
     "VOLKSWAGEN|GOLF": {
-      "price": 41650,
-      "n": 24,
+      "price": 36600,
+      "n": 36,
       "minAge": 2,
       "maxAge": 25
     },
     "VOLKSWAGEN|PASSAT": {
-      "price": 21800,
-      "n": 18,
+      "price": 25800,
+      "n": 14,
       "minAge": 5,
       "maxAge": 22
     },
     "VOLKSWAGEN|POLO": {
-      "price": 26350,
-      "n": 26,
+      "price": 27250,
+      "n": 32,
       "minAge": 2,
       "maxAge": 25
     },
     "VOLKSWAGEN|SCIROCCO": {
-      "price": 40300,
-      "n": 11,
+      "price": 37200,
+      "n": 8,
       "minAge": 8,
       "maxAge": 18
     },
@@ -852,8 +894,8 @@
       "maxAge": 8
     },
     "VOLKSWAGEN|TIGUAN": {
-      "price": 46350,
-      "n": 15,
+      "price": 47400,
+      "n": 18,
       "minAge": 4,
       "maxAge": 18
     },
@@ -864,32 +906,32 @@
       "maxAge": 16
     },
     "VOLKSWAGEN|TOURAN": {
-      "price": 26950,
-      "n": 6,
+      "price": 29250,
+      "n": 7,
       "minAge": 11,
       "maxAge": 19
     },
     "VOLKSWAGEN|TRANSPORTER": {
-      "price": 77100,
-      "n": 5,
+      "price": 81550,
+      "n": 6,
       "minAge": 7,
       "maxAge": 21
     },
     "VOLKSWAGEN|UP": {
-      "price": 24000,
-      "n": 10,
+      "price": 19100,
+      "n": 8,
       "minAge": 4,
       "maxAge": 14
     },
     "VOLVO|V40": {
-      "price": 25850,
+      "price": 29450,
       "n": 8,
       "minAge": 7,
       "maxAge": 14
     },
     "VOLVO|V60": {
-      "price": 43850,
-      "n": 4,
+      "price": 40400,
+      "n": 5,
       "minAge": 7,
       "maxAge": 11
     },
@@ -900,14 +942,14 @@
       "maxAge": 25
     },
     "VOLVO|XC60": {
-      "price": 40150,
-      "n": 10,
+      "price": 38200,
+      "n": 11,
       "minAge": 7,
       "maxAge": 17
     },
     "VOLVO|XC90": {
-      "price": 48500,
-      "n": 11,
+      "price": 45050,
+      "n": 10,
       "minAge": 6,
       "maxAge": 21
     }
