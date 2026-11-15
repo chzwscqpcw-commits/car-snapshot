@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataStatus, renderDataStatusHtml, renderDataSummaryLine, type DataStatus } from "./data-status";
 import { getLookupHealth, renderLookupHealthHtml, type LookupHealthSummary } from "./lookup-health";
 import { getPartnerOrders, renderPartnerOrdersHtml, type PartnerOrdersSummary } from "./partner-orders";
+import { getWbacTopTest, renderWbacTopTestHtml, type WbacTopTestSummary } from "./wbac-top-test";
 import {
   fetchSocialClips,
   renderSocialClips,
@@ -174,6 +175,9 @@ export interface WeeklyAuditData {
   partnerPerResults: number | null; // partner_click / results_view, %
   carVertical: CarVerticalAudit;
   weBuyAnyCar: WbacAudit;
+  /** valuation_wbac_top_v1: the offer card against the strip inside the
+   *  valuation card, whole test to date (src/lib/wbac-top-test.ts). */
+  wbacTopTest: WbacTopTestSummary;
   pdfReport: PdfReportAudit;
   buyerJourney: BuyerJourneyAudit;
   marketData: MarketDataAudit;
@@ -237,6 +241,7 @@ export async function buildWeeklyAuditData(
   const dataStatusPromise = data();
   const lookupHealthPromise = getLookupHealth(sb, nowMs);
   const partnerOrdersPromise = partnerOrders();
+  const wbacTopTestPromise = getWbacTopTest(sb, nowMs);
 
   // Headline counts: this week vs prior week
   const HEADLINE_EVENTS: { key: string; label: string }[] = [
@@ -466,6 +471,7 @@ export async function buildWeeklyAuditData(
       human: wbacHuman.length,
       placements: [...wbacPlacements.values()].sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions),
     },
+    wbacTopTest: await wbacTopTestPromise,
     pdfReport: {
       downloads: pdfDownloads,
       partners: [pdfSplit("carVertical", "pdf-carvertical", cvHuman), pdfSplit("We Buy Any Car", "pdf-wbac", wbacHuman)],
@@ -741,6 +747,7 @@ export function renderWeeklyAuditHtml(d: WeeklyAuditData): string {
 
   ${renderCarVertical(d.carVertical, d.buyerJourney)}
   ${renderWbac(d.weBuyAnyCar)}
+  ${renderWbacTopTestHtml(d.wbacTopTest)}
   ${renderPartnerOrdersHtml(d.partnerOrders)}
   ${renderPdfReport(d.pdfReport)}
 
