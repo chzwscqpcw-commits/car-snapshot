@@ -141,6 +141,9 @@ export default function SaveCarCard({
   const [howTo, setHowTo] = useState<IosBrowser | null>(null);
   const name = makeModelLabel(make, model);
   const plate = vrm.replace(/\s+/g, "").toUpperCase();
+  // This card switched alerts on during this visit (as opposed to finding
+  // them already on when it loaded).
+  const savedHere = useRef(false);
 
   // "Selling it, or keeping it?" is asked once per page (SellerIntentChip);
   // the answer pre-fills this card's row, and a pick here is kept the same way.
@@ -166,8 +169,11 @@ export default function SaveCarCard({
         setChannel(known.channel);
         setStep("done");
         // The value card on the same page as the alerts card: once either
-        // has done its job, the other goes.
-        if (variant === "value") setHidden(true);
+        // has done its job, the other goes. Not the card that just did the
+        // job, though: it used to vanish on its own save, leaving the owner
+        // with no "Alerts on" anywhere in sight (nowhere at all on
+        // /value-my-car, where it is the only card).
+        if (variant === "value" && !savedHere.current) setHidden(true);
         return;
       }
       if (isLocalCar(plate)) setStep((s) => (s === "idle" ? "channel" : s));
@@ -247,6 +253,34 @@ export default function SaveCarCard({
     return () => obs.disconnect();
   }, [step, preview]);
 
+  // After a save from this card, put "Alerts on" where the owner is looking.
+  // Typing an email on a phone scrolls the field up above the keyboard, which
+  // pushes the top of the card off the screen; the card then shrinks to its
+  // short confirmation and, on an iPhone (no scroll anchoring in WebKit),
+  // what is left on screen is the card's bottom edge and the section below.
+  // The founder's first real save on the preview ended exactly there.
+  useEffect(() => {
+    if (step !== "done" || !savedHere.current) return;
+    const show = () => {
+      const node = cardRef.current;
+      if (!node) return;
+      const r = node.getBoundingClientRect();
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      // Clear of the sticky header above and the section bar below.
+      if (r.top >= 72 && r.bottom <= height - 96) return;
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      node.scrollIntoView({ block: "center", behavior: still ? "auto" : "smooth" });
+    };
+    // Once the keyboard has gone (it takes about a third of a second), and
+    // once more in case it was slow to.
+    const first = setTimeout(show, 400);
+    const second = setTimeout(show, 1100);
+    return () => {
+      clearTimeout(first);
+      clearTimeout(second);
+    };
+  }, [step]);
+
   const saveLocally = () => {
     if (preview) {
       setStep("channel");
@@ -264,6 +298,7 @@ export default function SaveCarCard({
   const save = async (body: Record<string, unknown>, via: "email" | "push"): Promise<boolean> => {
     if (preview) {
       await wait(700);
+      savedHere.current = true;
       setValueAsked(valueCheck);
       setChannel(via);
       setStep("done");
@@ -282,6 +317,7 @@ export default function SaveCarCard({
     // `intent` stays what the owner SAID (the weekly audit's "not said" row
     // depends on it); value_check says whether the monthly check is coming.
     trackEvent("car_saved", { surface, channel: via, intent, value_check: valueCheck, vrm: plate });
+    savedHere.current = true;
     rememberAlerts(plate, { channel: via, intent, ...(valueCheck && !statedValue ? { value: true } : {}) });
     setValueAsked(valueCheck);
     setChannel(via);

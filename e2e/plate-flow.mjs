@@ -58,6 +58,12 @@ const lookups = [];
 const saves = [];
 /** Events posted to /api/event, as { type, payload } (only readable when a check turns sendBeacon off). */
 const events = [];
+const NO_COMPARABLES = JSON.stringify({
+  ebayMedian: null, ebayQ1Price: null, ebayQ3Price: null, ebayListingCount: 0, ebayMinPrice: null, ebayMaxPrice: null,
+  ebayTotalListings: null, ebayDominantTransmission: null, ebayDominantBodyType: null, ebayYearWidened: false,
+  ebayYearTolerance: null, cacheMedian: null, cacheEntryCount: 0, marketcheckMedian: null, marketcheckQ1: null,
+  marketcheckQ3: null, marketcheckListingCount: 0, marketcheckSource: null, sources: [],
+});
 /** What /api/lookup answers. The save-card check swaps in dates that are always ahead of today. */
 let lookupBody = LOOKUP;
 let failures = 0;
@@ -90,6 +96,8 @@ async function newPage() {
       lookups.push(JSON.parse(req.postData() ?? "{}").vrm);
       return req.respond({ status: 200, contentType: "application/json", body: lookupBody });
     }
+    // The valuation tool asks for market comparables; none, as in mot-outage.mjs.
+    if (path === "/api/valuation") return req.respond({ status: 200, contentType: "application/json", body: NO_COMPARABLES });
     if (path === "/api/saved-cars") {
       saves.push(JSON.parse(req.postData() ?? "{}").vrm);
       return req.respond({ status: 200, contentType: "application/json", body: '{"ok":true,"status":"created"}' });
@@ -284,9 +292,21 @@ for (const arm of ["control", "dated"]) {
     } else {
       await page.type(`${card} input[type="email"]`, EMAIL);
     }
+    // A phone with the keyboard up has scrolled the field above it, so the
+    // top of the card is off the screen when the save lands, and an iPhone
+    // keeps the page where it is when the card shrinks (WebKit has no scroll
+    // anchoring; switched off here to match). Unless the card brings itself
+    // back, the owner is left looking at the section below it.
+    await page.addStyleTag({ content: "*{overflow-anchor:none!important}" });
+    await page.$eval(card, (el) => window.scrollBy({ top: el.getBoundingClientRect().top + 220, behavior: "instant" }));
     await page.$eval(`${card} button[type="submit"]`, (b) => b.click());
     const done = await until(page, (c) => /Alerts on for/i.test(document.querySelector(c)?.textContent ?? ""), 15000, card);
     report(`${arm}: alerts switched on, plate sent in the POST body`, done && saves.includes(PLATE), JSON.stringify({ done, saves }));
+    const inView = await until(page, (c) => {
+      const r = document.querySelector(c).getBoundingClientRect();
+      return r.top >= 56 && r.bottom <= window.innerHeight - 90;
+    }, 6000, card);
+    report(`${arm}: "Alerts on" is brought back into view after the save`, inView, JSON.stringify(await page.$eval(card, (el) => el.getBoundingClientRect().top)));
     const saved = events.filter((e) => e.type === "car_saved");
     report(
       `${arm}: car_saved keeps its fields and carries the arm`,
@@ -296,6 +316,35 @@ for (const arm of ["control", "dated"]) {
   });
   lookupBody = LOOKUP;
 }
+
+// 5c. A save from the value card (under a valuation) says so. The card used
+//     to hide itself the moment its own save landed: on /value-my-car, where
+//     it is the only save card, that left no confirmation on the page at all.
+await check("save from the value card", async (page) => {
+  await page.evaluateOnNewDocument((key) => {
+    if (!sessionStorage.getItem("e2e-fresh")) {
+      localStorage.removeItem("fpc-car-alerts");
+      localStorage.removeItem("fpc-my-vehicles");
+      localStorage.removeItem("fpc-alert-email");
+      sessionStorage.setItem("e2e-fresh", "1");
+    }
+    localStorage.setItem(key, "control");
+  }, `experiment_${EXPERIMENT}`);
+  await page.goto(`${BASE}/value-my-car#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
+  const card = '[data-save-card="valuation-result"]';
+  const has = await until(page, (c) => !!document.querySelector(`${c} button`), 20000, card);
+  report("value card renders under the valuation", has);
+  if (!has) return;
+  await page.$eval(`${card} button`, (b) => b.click());
+  if (!(await until(page, (c) => !!document.querySelector(`${c} input[type="email"]`), 15000, card))) {
+    report("value card: asks where alerts go", false);
+    return;
+  }
+  await page.type(`${card} input[type="email"]`, EMAIL);
+  await page.$eval(`${card} button[type="submit"]`, (b) => b.click());
+  const stays = await until(page, (c) => /Alerts on for/i.test(document.querySelector(c)?.textContent ?? ""), 15000, card);
+  report("value card: says alerts are on instead of vanishing", stays);
+});
 
 // 6. carVertical hand-off: the link carries no plate; clicking it puts the
 //    plate in a short-lived cookie that /go turns into the partner's sub3.
