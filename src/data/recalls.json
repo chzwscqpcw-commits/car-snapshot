@@ -1,5 +1,17 @@
 [
   {
+    "make": "HYUNDAI",
+    "models": [
+      "NEXO FE"
+    ],
+    "buildDateStart": "2017-10-01",
+    "buildDateEnd": "2024-06-05",
+    "recallDate": "2026-11-09",
+    "defect": "For certain vehicles the thermally activated pressure relief device may have an internal concern which may result in hydrogen discharging from the hydrogen tank. Until the vehicle is rectified please park the vehicle in a well ventilated area.",
+    "remedy": "To rectify this issue the thermally activated pressure relief device will be replaced.",
+    "recallNumber": "R/2026/367"
+  },
+  {
     "make": "FORD",
     "models": [
       "EDGE"
@@ -46,6 +58,30 @@
     "defect": "A concern has been identified where on certain Range Rover Sport SV  vehicles renewed analysis of supplier imaging history has detected the  potential presence of cracks on the rear subframe for some vehicles. For a  number of other vehicles imaging history was not available to positively  confirm a lack of cracks on the rear subframe.",
     "remedy": "Vehicles known to have a crack in the rear subframe will have the subframe  replaced. Vehicles where photographic inspection of the rear subframe could not be  completed will be inspected and if a crack is found to be present the rear  subframe will be replaced.",
     "recallNumber": "R/2026/363"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "BERLINGO"
+    ],
+    "buildDateStart": "2024-04-04",
+    "buildDateEnd": "2025-10-27",
+    "recallDate": "2026-11-03",
+    "defect": "Affected vehicles have missing information on the tyre pressure label (non homogeneous spare wheel data) resulting in non compliance with regulatory requirements.",
+    "remedy": "The manufacturer will provide a handbook addendum containing the correct tyre pressure values for the spare wheel fitted to the vehicle.",
+    "recallNumber": "R/2026/270"
+  },
+  {
+    "make": "PEUGEOT",
+    "models": [
+      "PARTNER"
+    ],
+    "buildDateStart": "2024-04-24",
+    "buildDateEnd": "2025-11-10",
+    "recallDate": "2026-11-03",
+    "defect": "Affected vehicles have missing information on the tyre pressure label (non homogeneous spare wheel data) resulting in non compliance with regulatory requirements.",
+    "remedy": "The manufacturer will provide a handbook addendum containing the correct tyre pressure values for the spare wheel fitted to the vehicle.",
+    "recallNumber": "R/2026/269"
   },
   {
     "make": "CADILLAC 2",
@@ -551,6 +587,18 @@
     "defect": "In CUPRA Born vehicles equipped with high-voltage batteries of a  certain type there is a suspicion that manufacturing problems may  have occurred in certain components of the high-voltage battery on  the part of the supplier.",
     "remedy": "In an initial phase customers whose vehicles are equipped with  high-voltage batteries from the affected batch will receive a recall  letter including warning labels to attach to the charging socket and  the dashboard as well as the instruction to not charge above 80%  (Battery Care Mode) for safety reasons.    Furthermore where technical requirements exist we will limit the  maximum available charging capacity of your vehicle to 80% (Battery  Care Mode) via the system.",
     "recallNumber": "R/2026/396"
+  },
+  {
+    "make": "IVECO",
+    "models": [
+      "S WAY"
+    ],
+    "buildDateStart": "2024-03-22",
+    "buildDateEnd": "2026-07-21",
+    "recallDate": "2026-10-14",
+    "defect": "On affected vehicles at very low temperatures a leak may occur at the connection between the fuel pressure/temperature sensor and the air intake manifold.",
+    "remedy": "Replacement of the fuel pressure and temperature sensor.",
+    "recallNumber": "R/2026/423"
   },
   {
     "make": "MERCEDES-BENZ",
