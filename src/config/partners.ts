@@ -748,6 +748,7 @@ export const GO_CONTEXTS = [
   "stats-uk-mileage",
   "buyer-check-carvertical",
   "valuation-result-wbac", // We Buy Any Car under the valuation tool's result
+  "valuation-result-wbac-top", // the same offer inside the valuation card (valuation_wbac_top_v1, arm "top")
   "money-wbac", // We Buy Any Car under the homepage's own valuation
   "pdf-wbac", // We Buy Any Car QR code + link under the PDF report's valuation
   // Insurance (src/config/insurance.ts) — whichever partner is live

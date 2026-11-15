@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { BellRing, Car, Check, Loader2, Mail, Smartphone, TrendingUp } from "lucide-react";
 import Button from "@/components/Button";
-import { EXPERIMENTS, assignExperimentVariant, trackEvent, trackExperimentImpressionOnce } from "@/lib/tracking";
+import { EXPERIMENTS, assignExperimentVariant, trackEvent, trackExperimentImpression } from "@/lib/tracking";
 import {
   INTENT_LABELS,
   SAVE_INTENTS,
@@ -231,7 +231,10 @@ export default function SaveCarCard({
   const nextKind = next?.kind ?? "none";
   const expose = () => {
     if (preview || !arm) return;
-    trackExperimentImpressionOnce(EXPERIMENTS.SAVE_ALERT_STEP, arm, { surface, card: variant, push: push.kind, next: nextKind });
+    trackExperimentImpression(EXPERIMENTS.SAVE_ALERT_STEP, arm, {
+      oncePerSession: true,
+      context: { surface, card: variant, push: push.kind, next: nextKind },
+    });
   };
   const exposeRef = useRef(expose);
   useEffect(() => {

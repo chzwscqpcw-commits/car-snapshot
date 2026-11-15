@@ -26,7 +26,28 @@ interface SellCarCTAProps {
   vehicleName?: string;
   /** Render even while the partner is pending — for the preview page. */
   preview?: boolean;
+  /** Called on a click on the offer, before the browser leaves for /go. */
+  onOfferClick?: () => void;
   className?: string;
+}
+
+/* The offer's wording, shared with SellCarStrip (the same offer inside the
+   valuation card) so the two can never drift apart.
+
+   Claims about WBAC stay within their own approved link text ("Get Your Free
+   30 Second Car Valuation") — the Rakuten agreement (2.5) bars any others.
+   Never imply they'll pay our figure: theirs is a trade offer. */
+export const wbacHeading = (vehicleName?: string) =>
+  vehicleName ? `Selling your ${vehicleName}?` : "Thinking of selling?";
+export const WBAC_POINTS = ["Free", "About 30 seconds", "Online"] as const;
+export const WBAC_BUTTON_LABEL = "Get my free valuation";
+export const WBAC_DISCLOSURE = "Free Plate Check may earn a small commission from this link.";
+export function WbacPitch() {
+  return (
+    <>
+      Our figure is a guide to what it&apos;s worth. To see what you could sell it for today, get a free online valuation from <strong className="text-slate-100">We Buy Any Car</strong>.
+    </>
+  );
 }
 
 /**
@@ -48,7 +69,7 @@ interface SellCarCTAProps {
  * a run of fake clicks — and rebuilds the tracker link from partners.ts. So no
  * trackPartnerClick here, or every click would count twice.
  */
-export default function SellCarCTA({ context, regNumber, isVan, vehicleName, preview = false, className = "" }: SellCarCTAProps) {
+export default function SellCarCTA({ context, regNumber, isVan, vehicleName, preview = false, onOfferClick, className = "" }: SellCarCTAProps) {
   const live = isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && !isVan;
 
   // `partner_impression` once, when half the card is on screen — the same
@@ -84,20 +105,17 @@ export default function SellCarCTA({ context, regNumber, isVan, vehicleName, pre
       <div className="flex items-start gap-3 mb-3">
         <Banknote className="h-5 w-5 text-emerald-400 mt-0.5 shrink-0" />
         <h3 className="flex-1 text-base sm:text-lg font-semibold text-white">
-          {vehicleName ? `Selling your ${vehicleName}?` : "Thinking of selling?"}
+          {wbacHeading(vehicleName)}
         </h3>
         <WbacLogo className="shrink-0 text-xs" />
       </div>
 
-      {/* Claims about WBAC stay within their own approved link text ("Get Your
-          Free 30 Second Car Valuation") — the Rakuten agreement (2.5) bars any
-          others. Never imply they'll pay our figure: theirs is a trade offer. */}
       <p className="text-sm text-slate-300 leading-relaxed mb-3 ml-8">
-        Our figure is a guide to what it&apos;s worth. To see what you could sell it for today, get a free online valuation from <strong className="text-slate-100">We Buy Any Car</strong>.
+        <WbacPitch />
       </p>
 
       <ul className="ml-8 mb-4 flex flex-wrap gap-2 text-xs text-emerald-200">
-        {["Free", "About 30 seconds", "Online"].map((t) => (
+        {WBAC_POINTS.map((t) => (
           <li key={t} className="rounded-full border border-emerald-700/50 bg-emerald-900/30 px-2.5 py-1">
             {t}
           </li>
@@ -111,15 +129,16 @@ export default function SellCarCTA({ context, regNumber, isVan, vehicleName, pre
           rel="sponsored nofollow noopener noreferrer"
           onClick={() => {
             if (WBAC_PREFILLS_PLATE) setGoPlate(regNumber);
+            onOfferClick?.();
           }}
           className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg transition-colors"
         >
-          Get my free valuation &#8599;
+          {WBAC_BUTTON_LABEL} &#8599;
         </a>
       </div>
 
       <p className="text-xs text-slate-500 mt-3 ml-8">
-        Free Plate Check may earn a small commission from this link.
+        {WBAC_DISCLOSURE}
       </p>
     </div>
   );

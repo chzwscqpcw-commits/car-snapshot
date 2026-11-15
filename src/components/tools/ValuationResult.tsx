@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { trackValuationResult } from "@/lib/tracking";
+import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import {
+  EXPERIMENTS,
+  assignExperimentVariant,
+  trackExperimentClick,
+  trackExperimentImpression,
+  trackValuationResult,
+} from "@/lib/tracking";
 import {
   Sparkles,
   Info,
@@ -20,6 +26,9 @@ import {
 import { usePathname } from "next/navigation";
 import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import SellCarCTA from "@/components/SellCarCTA";
+import SellCarStrip from "@/components/SellCarStrip";
+import { PARTNER_LINKS, isPartnerConfigured } from "@/config/partners";
+import { WBAC_TOP_ARMS, type WbacTopArm } from "@/lib/wbac-top-test";
 import SellerIntentChip, { useCarIntent } from "@/components/SellerIntentChip";
 import SaveCarCard from "@/components/SaveCarCard";
 import { isVan, shortVehicleName } from "@/lib/report-v2/format";
@@ -50,6 +59,9 @@ import newPricesData from "@/data/new-prices.json";
 interface ValuationResultProps {
   vrm: string;
   previewVehicle?: LookupVehicle;
+  /** Preview page only: which arm of valuation_wbac_top_v1 to draw. A preview
+   *  is never bucketed and records nothing for the test. */
+  previewWbacArm?: WbacTopArm;
 }
 
 interface ServerValuation {
@@ -86,7 +98,7 @@ interface MotOutage {
   simulated: boolean;
 }
 
-export default function ValuationResult({ vrm, previewVehicle }: ValuationResultProps) {
+export default function ValuationResult({ vrm, previewVehicle, previewWbacArm }: ValuationResultProps) {
   const state = useVehicleLookup(previewVehicle ? "" : vrm);
   const looked = previewVehicle ?? (state.kind === "ok" ? state.vehicle : null);
   // The model the visitor picked while the MOT service is down, tied to the
@@ -116,7 +128,15 @@ export default function ValuationResult({ vrm, previewVehicle }: ValuationResult
   const unsupported = valuationUnsupportedReason(vehicle);
   if (unsupported) return <NotValued vrm={vrm} vehicle={vehicle} reason={unsupported} />;
   if (outage && !vehicle.model) return <AwaitingModel vrm={vrm} vehicle={vehicle} outage={outage} />;
-  return <Loaded vrm={vrm} vehicle={vehicle} outage={outage} />;
+  return (
+    <Loaded
+      vrm={vrm}
+      vehicle={vehicle}
+      outage={outage}
+      preview={previewVehicle !== undefined}
+      previewWbacArm={previewWbacArm}
+    />
+  );
 }
 
 /**
@@ -172,7 +192,19 @@ function NotValued({
   );
 }
 
-function Loaded({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle; outage: MotOutage | null }) {
+function Loaded({
+  vrm,
+  vehicle,
+  outage,
+  preview,
+  previewWbacArm,
+}: {
+  vrm: string;
+  vehicle: LookupVehicle;
+  outage: MotOutage | null;
+  preview: boolean;
+  previewWbacArm?: WbacTopArm;
+}) {
   // Five routes render this result; the scroll series is only useful if it says
   // which one it came from.
   const pathname = usePathname();
@@ -406,6 +438,50 @@ function Loaded({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle;
     mileageEstimated,
   ]);
 
+  // ── valuation_wbac_top_v1: We Buy Any Car beside the estimate ──────────
+  // Two arms (see EXPERIMENTS in tracking.ts). "control" is the offer card
+  // under the chip, further down. "top" is the same offer as a strip at the
+  // foot of the valuation card, and no card below. In the test: a car the
+  // offer can show for (never a van) that we have put a figure on. Anything
+  // else, in either arm, gets today's layout and is not counted.
+  const wbacOffered = isPartnerConfigured(PARTNER_LINKS.weBuyAnyCar) && !isVan(vehicle);
+  const [wbacArm] = useState<WbacTopArm | null>(() => {
+    if (preview) return previewWbacArm ?? "control";
+    if (!wbacOffered || typeof window === "undefined") return null;
+    return assignExperimentVariant(EXPERIMENTS.WBAC_TOP, [...WBAC_TOP_ARMS]) as WbacTopArm;
+  });
+  const hasFigure = (valuation?.estimatedValue ?? depEstimate) !== null;
+  const inWbacTest = wbacArm !== null && wbacOffered && hasFigure;
+  const wbacOnTop = inWbacTest && wbacArm === "top";
+
+  // Exposure is OUR FIGURE on screen: the same element in both arms, so the
+  // two denominators are the same people ("valuers who saw their figure"),
+  // not "saw the offer", which is the thing being tested. Once per session.
+  // Someone who had already said they are keeping this car is left out: both
+  // arms show them nothing to click.
+  const figureRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (preview || !inWbacTest || !wbacArm || keeping) return;
+    const node = figureRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        trackExperimentImpression(EXPERIMENTS.WBAC_TOP, wbacArm, { oncePerSession: true });
+        obs.disconnect();
+      },
+      { threshold: 0.5 },
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [preview, inWbacTest, wbacArm, keeping]);
+  // The same call from either arm's button; /go records the partner click
+  // itself, under each arm's own context.
+  const onWbacClick = () => {
+    if (preview || !inWbacTest || !wbacArm) return;
+    trackExperimentClick(EXPERIMENTS.WBAC_TOP, wbacArm, { oncePerExposedSession: true });
+  };
+
   return (
     <ToolResultLayout
       vrm={vrm}
@@ -457,6 +533,19 @@ function Loaded({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle;
         mileage={mileage}
         vehicle={vehicle}
         serverState={serverState}
+        figureRef={figureRef}
+        foot={
+          wbacOnTop ? (
+            <SellCarStrip
+              regNumber={vrm}
+              isVan={isVan(vehicle)}
+              vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+              open={!keeping}
+              preview={preview}
+              onOfferClick={onWbacClick}
+            />
+          ) : null
+        }
       />
       <MileagePanel
         mileage={mileage}
@@ -495,13 +584,19 @@ function Loaded({ vrm, vehicle, outage }: { vrm: string; vehicle: LookupVehicle;
           built for them. Until 2026-10-28 it sat below the condition panel and
           reminder, ~2,000px down (0 views in its first evening against 13 on
           the homepage); then second, under carVertical; now first. See
-          SellCarCTA for why, and judge the order on clicks per valuation. */}
-      {!keeping && (
+          SellCarCTA for why, and judge the order on clicks per valuation.
+
+          Not drawn in arm "top" of valuation_wbac_top_v1: there the offer is
+          the strip at the foot of the valuation card above (one offer, moved,
+          not one offer twice, which is also what keeps each arm's clicks
+          under its own /go context). */}
+      {!keeping && !wbacOnTop && (
         <SellCarCTA
           context="valuation-result-wbac"
           regNumber={vrm}
           isVan={isVan(vehicle)}
           vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
+          onOfferClick={onWbacClick}
           className="mt-6"
         />
       )}
@@ -591,6 +686,8 @@ function Hero({
   mileage,
   vehicle,
   serverState,
+  figureRef,
+  foot,
 }: {
   valuation: ValuationResultType | null;
   depEstimate: number | null;
@@ -599,6 +696,10 @@ function Hero({
   mileage: number;
   vehicle: LookupVehicle;
   serverState: "loading" | "ok" | "skipped";
+  /** On the headline figure, so the caller can tell when it is on screen. */
+  figureRef?: RefObject<HTMLParagraphElement | null>;
+  /** Drawn under everything of ours, to the card's edges (SellCarStrip). */
+  foot?: ReactNode;
 }) {
   const value = valuation?.estimatedValue ?? depEstimate;
   const low = valuation?.rangeLow ?? null;
@@ -622,7 +723,7 @@ function Hero({
 
         {hasValue ? (
           <>
-            <p className="mt-2 flex items-baseline gap-2">
+            <p ref={figureRef} className="mt-2 flex items-baseline gap-2">
               <span className="text-5xl sm:text-6xl font-bold text-white tracking-tight tabular-nums">
                 £{value!.toLocaleString("en-GB")}
               </span>
@@ -664,6 +765,7 @@ function Hero({
           {vehicle.fuelType && <Chip>{vehicle.fuelType}</Chip>}
           {newPrice && <Chip>New ~£{newPrice.toLocaleString("en-GB")}</Chip>}
         </div>
+        {foot}
       </div>
     </section>
   );

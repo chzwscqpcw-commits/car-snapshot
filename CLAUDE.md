@@ -13,7 +13,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
 | Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
-| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half. Locally: `npm run build && npx next start -p 3123`, then run it. |
+| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half, then (`e2e/wbac-top.mjs`) that both arms of `valuation_wbac_top_v1` are drawn and counted alike. Locally: `npm run build && npx next start -p 3123`, then run it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
@@ -67,10 +67,19 @@ that converted` (≤100%).
 The shipped `MobileSearchCue` (variant C of the concluded test) is the reference
 for the component side, minus the now-removed variant branching.
 
-When a visitor can meet the variant more than once in a visit, record the
-impression with `trackExperimentImpressionOnce(id, variant, context)`: one per
-session, so the denominator is sessions, the unit conversions are attributed
-in. `context` adds fields for cutting the denominator (never a plate).
+When one session can meet the surface more than once (several cars valued in a
+row), pass `{ oncePerSession: true }` to `trackExperimentImpression` and
+`{ oncePerExposedSession: true }` to `trackExperimentClick`, so impressions
+count exposed sessions and clicks ÷ impressions stays a share of them.
+`valuation_wbac_top_v1` (We Buy Any Car inside the valuation card against the
+card further down; `ValuationResult`, `SellCarStrip`) is the reference for a
+layout test: exposure is the element both arms share (our figure), each arm's
+`/go` link has its own context so the partner's order report splits by arm,
+and `src/lib/wbac-top-test.ts` holds the planned size and length and the
+Friday email block, which will not name a leader before both are reached.
+`trackExperimentImpression` also takes `context`: extra fields on the
+impression for cutting the denominator (a surface, a device state; never a
+plate).
 
 ### Running: `save_alert_step_v1` (step two of the save card)
 
