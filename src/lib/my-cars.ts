@@ -70,6 +70,8 @@ export function addLocalCar(car: LocalCar): number {
 export interface AlertsMemory {
   channel: SaveChannel;
   intent: SaveIntent | null;
+  /** The monthly value check was asked for without a stated plan (the "dated" save card). */
+  value?: boolean;
   at: number;
 }
 

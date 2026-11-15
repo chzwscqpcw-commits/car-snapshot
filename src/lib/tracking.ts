@@ -150,6 +150,18 @@ export const EXPERIMENTS: Record<string, string> = {
   // judge on clicks per impression, not totals (valuations fell ~28% the same
   // day, #161).
   SELLER_TRUST: "seller_trust_copy_v1",
+  // Step two of the save card ("Save this car and get alerts"), started with
+  // this entry. In 1–14 Nov 2026, 188 people tapped Save and 15 ended with
+  // alerts on: the local save works, "Where should alerts go?" does not.
+  // control = that step as shipped; dated = the car's own next date first
+  // ("MOT due 14 March"), one tap where the browser can notify, the email
+  // field at once (remembered address filled in) where it can't.
+  // Exposure = the alerts step on screen, once per session
+  // (trackExperimentImpressionOnce, with surface / push state / what led);
+  // conversion = car_saved carrying exp_save_alert_step_v1. About 13 savers a
+  // day: a doubling needs ~6 weeks, anything under 2x is not readable before
+  // mid-December. See src/lib/alert-step.ts and SaveCarCard.
+  SAVE_ALERT_STEP: "save_alert_step_v1",
   // valuation_hero_reg_v1 CONCLUDED 2026-06-21 — treatment "b" (reg box in the
   // hero, above the fold) beat control "a" decisively: reg_search conversion
   // 39.0% → 52.8% (+35% relative, z=4.74, n=1,181 exposures). Variant b was
@@ -250,7 +262,12 @@ function attachExposedVariants(payload: Record<string, unknown>, dedupeKey?: str
   }
 }
 
-export function trackExperimentImpression(experimentId: string, variant: string): void {
+export function trackExperimentImpression(
+  experimentId: string,
+  variant: string,
+  /** Extra fields for slicing the denominator (a surface, a device state). Never a plate. */
+  context?: Record<string, unknown>,
+): void {
   // Record exposure for this session so downstream conversions attribute only
   // to visitors who actually SAW the cue (tier 2 of the attribution model).
   if (typeof window !== "undefined") {
@@ -260,11 +277,28 @@ export function trackExperimentImpression(experimentId: string, variant: string)
       // sessionStorage unavailable (private mode etc.) — impression still fires.
     }
   }
-  const payload = { experiment_id: experimentId, variant };
+  const payload = { ...context, experiment_id: experimentId, variant };
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "experiment_impression", payload);
   }
   mirrorToServer("experiment_impression", payload);
+}
+
+/**
+ * As trackExperimentImpression, but at most once per session: for a variant
+ * a visitor can meet several times in one visit (the save card's alerts step
+ * sits on three surfaces and shows again for every saved car), so the
+ * denominator stays "sessions that saw it", the unit conversions are
+ * attributed in. Returns false when this session was already counted.
+ */
+export function trackExperimentImpressionOnce(
+  experimentId: string,
+  variant: string,
+  context?: Record<string, unknown>,
+): boolean {
+  if (getSessionExposure(experimentId)) return false;
+  trackExperimentImpression(experimentId, variant, context);
+  return true;
 }
 
 export function trackExperimentClick(experimentId: string, variant: string): void {

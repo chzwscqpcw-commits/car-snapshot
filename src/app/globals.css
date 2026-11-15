@@ -427,3 +427,53 @@ html[data-plate] [data-plate-landing] {
 .hsw-land {
   animation: hswLand 620ms cubic-bezier(0.34, 1.4, 0.64, 1) 180ms both;
 }
+
+/* Save card, "dated" alerts step (src/components/save-card/DatedAlertStep.tsx):
+   the reminder timeline draws left to right, its stops land one after the
+   other, and the calendar page tips in. All still under reduced motion. */
+@keyframes alertTrackDraw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.alert-track-line {
+  transform-origin: left center;
+  animation: alertTrackDraw 900ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+}
+@keyframes alertTrackStop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.alert-track-stop {
+  animation: alertTrackStop 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes alertDateTile {
+  from {
+    opacity: 0;
+    transform: perspective(220px) rotateX(-55deg) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(220px) rotateX(0) translateY(0);
+  }
+}
+.alert-date-tile {
+  transform-origin: top center;
+  animation: alertDateTile 620ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alert-track-line,
+  .alert-track-stop,
+  .alert-date-tile {
+    animation: none;
+  }
+}

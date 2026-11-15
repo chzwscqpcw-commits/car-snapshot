@@ -67,6 +67,33 @@ that converted` (≤100%).
 The shipped `MobileSearchCue` (variant C of the concluded test) is the reference
 for the component side, minus the now-removed variant branching.
 
+When a visitor can meet the variant more than once in a visit, record the
+impression with `trackExperimentImpressionOnce(id, variant, context)`: one per
+session, so the denominator is sessions, the unit conversions are attributed
+in. `context` adds fields for cutting the denominator (never a plate).
+
+### Running: `save_alert_step_v1` (step two of the save card)
+
+`SaveCarCard` saves the car locally on the first tap (both arms, so
+`vehicle_saved` stays comparable), then asks for alerts. `control` is the
+step as shipped ("Where should alerts go?"); `dated` leads with the car's own
+next date and asks for one thing (`src/components/save-card/DatedAlertStep.tsx`).
+
+- Everything the dated step promises comes from `src/lib/alert-step.ts`, and
+  `npm run test:saved-cars` holds it to the cron's schedule in
+  `src/lib/car-alerts.ts`. Change the schedule and the copy together.
+- Read it: `experiment_impression` rows with `experiment_id =
+  save_alert_step_v1` per `variant` (each carries `surface`, `card`, `push`,
+  `next`) against `car_saved` rows carrying `exp_save_alert_step_v1`. Compare
+  within a `push` state as well as overall: a browser that can notify is a
+  different test from one that can't.
+- The dated arm can ask for the monthly value check without a stated plan
+  (the value card does by default). It is stored as `intent: "thinking"`,
+  the weakest plan the cron sends the check for; `car_saved.intent` stays what
+  the owner said and `value_check` says whether the check is coming.
+- Both arms in every device state, fixture only: `/preview/save-card`. It can
+  also pin this device's arm for a real save.
+
 ## Data integrity
 
 Every dataset in `src/data/` has one record in `src/data/_registry.ts`
