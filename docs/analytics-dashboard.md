@@ -51,7 +51,7 @@ Both helpers automatically attach any active A/B experiment variant the visitor 
 | `mot_reminder_validation_error` | When `validate()` returns false | `context`, `trigger_variant`, `field` (widget only) |
 | `mot_reminder_submit_error` | API 4xx/5xx or network failure | `context`, `trigger_variant`, `error_type` (`duplicate` \| `server` \| `network`), `status` |
 | `partner_click` | All affiliate CTAs across the site | `partner_id`, `click_context` |
-| `experiment_impression` / `experiment_click` | `MobileSearchCue` and other A/B experiments | `experiment_id`, `variant` |
+| `experiment_impression` / `experiment_click` | `MobileSearchCue` and other A/B experiments | `experiment_id`, `variant` (+ `surface`, `card`, `push`, `next` for `save_alert_step_v1`) |
 
 ### Trigger variants
 

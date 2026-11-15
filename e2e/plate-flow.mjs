@@ -56,6 +56,16 @@ const leaks = [];
 const lookups = [];
 /** Plates sent to /api/saved-cars (POST body too). */
 const saves = [];
+/** Events posted to /api/event, as { type, payload } (only readable when a check turns sendBeacon off). */
+const events = [];
+const NO_COMPARABLES = JSON.stringify({
+  ebayMedian: null, ebayQ1Price: null, ebayQ3Price: null, ebayListingCount: 0, ebayMinPrice: null, ebayMaxPrice: null,
+  ebayTotalListings: null, ebayDominantTransmission: null, ebayDominantBodyType: null, ebayYearWidened: false,
+  ebayYearTolerance: null, cacheMedian: null, cacheEntryCount: 0, marketcheckMedian: null, marketcheckQ1: null,
+  marketcheckQ3: null, marketcheckListingCount: 0, marketcheckSource: null, sources: [],
+});
+/** What /api/lookup answers. The save-card check swaps in dates that are always ahead of today. */
+let lookupBody = LOOKUP;
 let failures = 0;
 
 function report(name, ok, detail = "") {
@@ -84,13 +94,22 @@ async function newPage() {
     const path = new URL(url).pathname;
     if (path === "/api/lookup") {
       lookups.push(JSON.parse(req.postData() ?? "{}").vrm);
-      return req.respond({ status: 200, contentType: "application/json", body: LOOKUP });
+      return req.respond({ status: 200, contentType: "application/json", body: lookupBody });
     }
+    // The valuation tool asks for market comparables; none, as in mot-outage.mjs.
+    if (path === "/api/valuation") return req.respond({ status: 200, contentType: "application/json", body: NO_COMPARABLES });
     if (path === "/api/saved-cars") {
       saves.push(JSON.parse(req.postData() ?? "{}").vrm);
       return req.respond({ status: 200, contentType: "application/json", body: '{"ok":true,"status":"created"}' });
     }
-    if (path === "/api/event") return req.respond({ status: 204 });
+    if (path === "/api/event") {
+      try {
+        events.push(JSON.parse(req.postData() ?? ""));
+      } catch {
+        // A beacon's body isn't readable here; only the save-card check needs it.
+      }
+      return req.respond({ status: 204 });
+    }
     return req.continue();
   });
   return page;
@@ -200,23 +219,131 @@ await check("mot reminder", async (page) => {
 
 // 5b. Save a car for alerts: one tap, then an email. The plate travels to
 //     /api/saved-cars in the POST body, never in the address.
-await check("save car", async (page) => {
-  await page.goto(`${BASE}/#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
-  const sel = '[data-save-card="results"] button';
-  const has = await until(page, (s) => !!document.querySelector(s), 20000, sel);
-  report("save card renders on the result", has);
+//     Step two is under test (save_alert_step_v1), so both arms are driven,
+//     each pinned through the framework's own sticky key. Checked per arm:
+//     the step shown is that arm's, seeing it marks the session exposed, and
+//     car_saved carries the arm (the test's conversion). CI has no push key,
+//     so both arms are in their email state here.
+const EXPERIMENT = "save_alert_step_v1";
+const EMAIL = "e2e@example.com";
+const isoIn = (days) => new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
+// The fixture's own dates go stale; the dated arm leads with the car's next
+// date, so give it an MOT that is always four months off (and tax later).
+const MOT_DUE = isoIn(120);
+const datedLookup = (() => {
+  const json = JSON.parse(LOOKUP);
+  const vehicle = json.data ?? json;
+  vehicle.motExpiryDate = MOT_DUE;
+  vehicle.taxDueDate = isoIn(200);
+  return JSON.stringify(json);
+})();
+const motDueLabel = new Date(`${MOT_DUE}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+
+for (const arm of ["control", "dated"]) {
+  lookupBody = datedLookup;
+  await check(`save car (${arm})`, async (page) => {
+    await page.evaluateOnNewDocument((key, value, remembered) => {
+      // Pages share one browser profile: forget the other arm's save, or
+      // this card would open on "Alerts on" with nothing left to test.
+      if (!sessionStorage.getItem("e2e-fresh")) {
+        localStorage.removeItem("fpc-car-alerts");
+        localStorage.removeItem("fpc-my-vehicles");
+        // The control types its address; the dated arm is a returning
+        // visitor, whose remembered address should already be in the field.
+        if (remembered) localStorage.setItem("fpc-alert-email", remembered);
+        else localStorage.removeItem("fpc-alert-email");
+        sessionStorage.setItem("e2e-fresh", "1");
+      }
+      localStorage.setItem(key, value);
+      // Events fall back to fetch, whose body this script can read.
+      navigator.sendBeacon = () => false;
+    }, `experiment_${EXPERIMENT}`, arm, arm === "dated" ? EMAIL : null);
+    events.length = 0;
+    saves.length = 0;
+    await page.goto(`${BASE}/#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
+    const card = '[data-save-card="results"]';
+    const sel = `${card} button`;
+    const has = await until(page, (s) => !!document.querySelector(s), 20000, sel);
+    report(`${arm}: save card renders on the result`, has);
+    if (!has) return;
+    // DOM clicks, not coordinate clicks: on a phone-sized viewport the card
+    // scrolls in under the bottom share/install toast, and a coordinate click
+    // lands on the toast instead (it did, on CI).
+    await page.$eval(sel, (b) => b.click());
+    const asks = await until(page, (c) => !!document.querySelector(`${c} input[type="email"]`), 15000, card);
+    report(`${arm}: one tap saves, then asks where alerts go`, asks);
+    if (!asks) return;
+    const text = await page.$eval(card, (el) => el.textContent ?? "");
+    const stepArm = await page.$eval(`${card} [data-alert-step]`, (el) => el.getAttribute("data-alert-step"));
+    const heading = arm === "dated" ? `MOT due ${motDueLabel}` : "Where should alerts go?";
+    report(`${arm}: step two is this arm's ("${heading}")`, stepArm === arm && text.includes(heading), JSON.stringify({ stepArm, text: text.slice(0, 160) }));
+    // Exposure is the step on screen, not the step rendered.
+    await page.$eval(`${card} [data-alert-step]`, (el) => el.scrollIntoView({ block: "center" }));
+    const exposed = await until(page, (key, a) => sessionStorage.getItem(key) === a, 10000, `experiment_${EXPERIMENT}_exposed`, arm);
+    const impressions = events.filter((e) => e.type === "experiment_impression" && e.payload?.experiment_id === EXPERIMENT);
+    report(
+      `${arm}: seeing the step records one impression for the arm`,
+      exposed && impressions.length === 1 && impressions[0].payload.variant === arm && impressions[0].payload.surface === "results",
+      JSON.stringify({ exposed, impressions }),
+    );
+    if (arm === "dated") {
+      const filled = await page.$eval(`${card} input[type="email"]`, (i) => i.value);
+      report("dated: the remembered address is already in the field", filled === EMAIL, filled);
+    } else {
+      await page.type(`${card} input[type="email"]`, EMAIL);
+    }
+    // A phone with the keyboard up has scrolled the field above it, so the
+    // top of the card is off the screen when the save lands, and an iPhone
+    // keeps the page where it is when the card shrinks (WebKit has no scroll
+    // anchoring; switched off here to match). Unless the card brings itself
+    // back, the owner is left looking at the section below it.
+    await page.addStyleTag({ content: "*{overflow-anchor:none!important}" });
+    await page.$eval(card, (el) => window.scrollBy({ top: el.getBoundingClientRect().top + 220, behavior: "instant" }));
+    await page.$eval(`${card} button[type="submit"]`, (b) => b.click());
+    const done = await until(page, (c) => /Alerts on for/i.test(document.querySelector(c)?.textContent ?? ""), 15000, card);
+    report(`${arm}: alerts switched on, plate sent in the POST body`, done && saves.includes(PLATE), JSON.stringify({ done, saves }));
+    const inView = await until(page, (c) => {
+      const r = document.querySelector(c).getBoundingClientRect();
+      return r.top >= 56 && r.bottom <= window.innerHeight - 90;
+    }, 6000, card);
+    report(`${arm}: "Alerts on" is brought back into view after the save`, inView, JSON.stringify(await page.$eval(card, (el) => el.getBoundingClientRect().top)));
+    const saved = events.filter((e) => e.type === "car_saved");
+    report(
+      `${arm}: car_saved keeps its fields and carries the arm`,
+      saved.length === 1 && saved[0].payload.surface === "results" && saved[0].payload.channel === "email" && saved[0].payload[`exp_${EXPERIMENT}`] === arm,
+      JSON.stringify(saved),
+    );
+  });
+  lookupBody = LOOKUP;
+}
+
+// 5c. A save from the value card (under a valuation) says so. The card used
+//     to hide itself the moment its own save landed: on /value-my-car, where
+//     it is the only save card, that left no confirmation on the page at all.
+await check("save from the value card", async (page) => {
+  await page.evaluateOnNewDocument((key) => {
+    if (!sessionStorage.getItem("e2e-fresh")) {
+      localStorage.removeItem("fpc-car-alerts");
+      localStorage.removeItem("fpc-my-vehicles");
+      localStorage.removeItem("fpc-alert-email");
+      sessionStorage.setItem("e2e-fresh", "1");
+    }
+    localStorage.setItem(key, "control");
+  }, `experiment_${EXPERIMENT}`);
+  await page.goto(`${BASE}/value-my-car#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
+  const card = '[data-save-card="valuation-result"]';
+  const has = await until(page, (c) => !!document.querySelector(`${c} button`), 20000, card);
+  report("value card renders under the valuation", has);
   if (!has) return;
-  // DOM clicks, not coordinate clicks: on a phone-sized viewport the card
-  // scrolls in under the bottom share/install toast, and a coordinate click
-  // lands on the toast instead (it did, on CI).
-  await page.$eval(sel, (b) => b.click());
-  const asks = await until(page, () => !!document.querySelector('[data-save-card="results"] input[type="email"]'));
-  report("one tap saves, then asks where alerts go", asks);
-  if (!asks) return;
-  await page.type('[data-save-card="results"] input[type="email"]', "e2e@example.com");
-  await page.$eval('[data-save-card="results"] button[type="submit"]', (b) => b.click());
-  const done = await until(page, () => /Alerts on for/i.test(document.querySelector('[data-save-card="results"]')?.textContent ?? ""));
-  report("alerts switched on, plate sent in the POST body", done && saves.includes(PLATE), JSON.stringify({ done, saves }));
+  await page.$eval(`${card} button`, (b) => b.click());
+  if (!(await until(page, (c) => !!document.querySelector(`${c} input[type="email"]`), 15000, card))) {
+    report("value card: asks where alerts go", false);
+    return;
+  }
+  await page.type(`${card} input[type="email"]`, EMAIL);
+  await page.$eval(`${card} button[type="submit"]`, (b) => b.click());
+  const stays = await until(page, (c) => /Alerts on for/i.test(document.querySelector(c)?.textContent ?? ""), 15000, card);
+  report("value card: says alerts are on instead of vanishing", stays);
 });
 
 // 6. carVertical hand-off: the link carries no plate; clicking it puts the

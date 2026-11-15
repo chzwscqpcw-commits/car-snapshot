@@ -123,7 +123,8 @@ export default function PrivacyPage() {
               If you save a car and switch on alerts (MOT due, tax due, a new recall, or a monthly value check), we store
               the same information as for an MOT reminder &mdash; your email address, the registration number, the make and
               model, the MOT expiry and tax due dates &mdash; plus what you told us about the car (selling, keeping or
-              thinking about it), which only decides whether you get the value check. Alerts come by email, or by
+              thinking about it; asking for the monthly value check is recorded as thinking about it), which only
+              decides whether you get the value check. Alerts come by email, or by
               notification if you choose that on a device that supports it (in which case we store the notification
               address your browser gives us instead of an email).
             </p>

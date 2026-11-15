@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { BellRing, Car, Check, Loader2, Mail, Smartphone, TrendingUp } from "lucide-react";
 import Button from "@/components/Button";
-import { trackEvent } from "@/lib/tracking";
+import { EXPERIMENTS, assignExperimentVariant, trackEvent, trackExperimentImpression } from "@/lib/tracking";
 import {
   INTENT_LABELS,
   SAVE_INTENTS,
@@ -15,6 +15,9 @@ import {
 } from "@/lib/saved-cars";
 import { addLocalCar, alertsFor, carIntent, isLocalCar, onAlertsChange, onIntentChange, rememberAlerts, rememberIntent } from "@/lib/my-cars";
 import { pushAvailability, subscribeToPush, type PushAvailability } from "@/lib/push-client";
+import { ALERT_STEP_ARMS, alertStepCopy, intentToStore, nextCarDate, type AlertStepArm } from "@/lib/alert-step";
+import { shortVehicleName } from "@/lib/report-v2/format";
+import DatedAlertStep, { DateTile } from "@/components/save-card/DatedAlertStep";
 import HomeScreenWalkthrough from "@/components/pwa/HomeScreenWalkthrough";
 import { iosBrowser, type IosBrowser } from "@/components/pwa/ios-browser";
 
@@ -35,6 +38,13 @@ import { iosBrowser, type IosBrowser } from "@/components/pwa/ios-browser";
  * and only when the visitor taps "Notify me". A device that has
  * switched alerts on for this car sees a quiet "Alerts on" line instead of
  * the ask (and the value variant disappears), so nobody is asked twice.
+ *
+ * Step two is under test (save_alert_step_v1, EXPERIMENTS.SAVE_ALERT_STEP):
+ * "control" is the step described above; "dated" leads with the car's own
+ * next date and asks for one thing (DatedAlertStep). Step one, the local
+ * save, is the same in both arms, so vehicle_saved stays comparable. The
+ * arm is sticky per visitor; a session counts as exposed once the alerts
+ * step has actually been on screen; car_saved is the conversion.
  */
 
 const EMAIL_MEMORY_KEY = "fpc-alert-email";
@@ -59,9 +69,29 @@ interface SaveCarCardProps {
    */
   onLocalSave?: () => void;
   className?: string;
+  /** /preview/save-card only: see SaveCardPreview. */
+  preview?: SaveCardPreview;
+}
+
+/**
+ * Shows the alerts step in a chosen arm and device state, on the preview
+ * page. A previewed card touches nothing: no events, no storage, no request,
+ * no real permission prompt. Saving and the prompt's answer are pretended.
+ */
+export interface SaveCardPreview {
+  arm: AlertStepArm;
+  push: PushAvailability;
+  /** What the pretend permission prompt answers when the notify button is tapped. */
+  permission?: "granted" | "refused";
+  /** An address this device "remembers" from an earlier save. */
+  email?: string;
+  /** Fixes today, so the fixture's dates read the same whenever it is viewed. */
+  now?: Date;
 }
 
 type Step = "idle" | "channel" | "done";
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function SaveCarCard({
   surface,
@@ -75,44 +105,75 @@ export default function SaveCarCard({
   year,
   onLocalSave,
   className = "",
+  preview,
 }: SaveCarCardProps) {
-  const [step, setStep] = useState<Step>("idle");
+  const [step, setStep] = useState<Step>(preview ? "channel" : "idle");
   const [intent, setIntent] = useState<SaveIntent | null>(null);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(preview?.email ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
-  const [push, setPush] = useState<PushAvailability>({ kind: "unsupported" });
+  const [push, setPush] = useState<PushAvailability>(preview?.push ?? { kind: "unsupported" });
+  // save_alert_step_v1: which step two this visitor gets. Assigned once per
+  // mount so the step can't change under the reader, sticky across visits.
+  // Every surface mounts the card after a client-side lookup, so there is no
+  // server render to match (and step two is never the first render anyway).
+  const [arm] = useState<AlertStepArm | null>(() =>
+    preview
+      ? preview.arm
+      : typeof window === "undefined"
+        ? null
+        : (assignExperimentVariant(EXPERIMENTS.SAVE_ALERT_STEP, [...ALERT_STEP_ARMS]) as AlertStepArm),
+  );
+  const dated = arm === "dated";
+  const [now] = useState(() => preview?.now ?? new Date());
+  // Dated arm only. The email form is open although this browser could
+  // notify (the visitor chose it, or the prompt came back without a yes)…
+  const [emailOpen, setEmailOpen] = useState(false);
+  // …with a plain line saying why, when it wasn't their choice.
+  const [notice, setNotice] = useState<string | null>(null);
+  // The monthly value check, asked for (or declined) on this card. Null
+  // until touched: the value card asks for it by being the value card.
+  const [valueAsked, setValueAsked] = useState<boolean | null>(null);
   const [channel, setChannel] = useState<"email" | "push" | null>(null);
   // iPhone only: the Home Screen walkthrough, offered once alerts are saved
   // by email so nobody loses the save while learning the gesture.
   const [howTo, setHowTo] = useState<IosBrowser | null>(null);
   const name = makeModelLabel(make, model);
   const plate = vrm.replace(/\s+/g, "").toUpperCase();
+  // This card switched alerts on during this visit (as opposed to finding
+  // them already on when it loaded).
+  const savedHere = useRef(false);
 
   // "Selling it, or keeping it?" is asked once per page (SellerIntentChip);
   // the answer pre-fills this card's row, and a pick here is kept the same way.
   useEffect(() => {
+    if (preview) return;
     const sync = () => {
       if (step !== "done") setIntent(carIntent(plate));
     };
     sync();
     return onIntentChange(sync);
-  }, [plate, step]);
+  }, [plate, step, preview]);
 
   // What this device already knows: alerts on → done; in My Cars → straight
   // to the channel step. Read after mount (localStorage), so the server and
   // first client render agree.
   useEffect(() => {
+    if (preview) return;
     const sync = () => {
       const known = alertsFor(plate);
       if (known) {
         setIntent(known.intent);
+        setValueAsked(known.value ?? null);
         setChannel(known.channel);
         setStep("done");
         // The value card on the same page as the alerts card: once either
-        // has done its job, the other goes.
-        if (variant === "value") setHidden(true);
+        // has done its job, the other goes. Not the card that just did the
+        // job, though: it used to vanish on its own save, leaving the owner
+        // with no "Alerts on" anywhere in sight (nowhere at all on
+        // /value-my-car, where it is the only card).
+        if (variant === "value" && !savedHere.current) setHidden(true);
         return;
       }
       if (isLocalCar(plate)) setStep((s) => (s === "idle" ? "channel" : s));
@@ -125,14 +186,14 @@ export default function SaveCarCard({
       // Storage blocked: the field just starts empty.
     }
     return onAlertsChange(sync);
-  }, [plate, variant]);
+  }, [plate, variant, preview]);
 
   // Seen once, when half the card is on screen: the denominator for the
   // opt-in rate (car_saved ÷ save_card_view per surface).
   const cardRef = useRef<HTMLDivElement>(null);
   const seen = useRef(false);
   useEffect(() => {
-    if (seen.current || hidden) return;
+    if (seen.current || hidden || preview) return;
     const node = cardRef.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
     const obs = new IntersectionObserver(
@@ -146,9 +207,88 @@ export default function SaveCarCard({
     );
     obs.observe(node);
     return () => obs.disconnect();
-  }, [surface, variant, hidden]);
+  }, [surface, variant, hidden, preview]);
+
+  // What a save from this card will be sent. A stated plan decides it, as it
+  // always has; the dated arm can also ask for the value check outright (the
+  // value card by default, the tick on the alerts card), which is stored as
+  // the weakest plan that switches it on (see intentToStore).
+  const statedValue = intent === "selling" || intent === "thinking";
+  const isValue = variant === "value";
+  const valueCheck = statedValue || (step === "done" ? valueAsked === true : dated && (valueAsked ?? (isValue && intent !== "keeping")));
+  const storedIntent = intentToStore(intent, valueCheck);
+  const next = nextCarDate({ motExpiryDate, taxDueDate }, now);
+  const copy = alertStepCopy(
+    { card: variant, name: shortVehicleName(make, model), motExpiryDate, taxDueDate, intent, valueCheck },
+    now,
+  );
+
+  // Exposure for save_alert_step_v1: the alerts step half on screen, counted
+  // once per session whichever surface or car it was. The context fields are
+  // the same in both arms, so each arm's denominator can be cut the same way
+  // (a phone that can notify is a different test from one that can't).
+  const stepRef = useRef<HTMLFormElement>(null);
+  const nextKind = next?.kind ?? "none";
+  const expose = () => {
+    if (preview || !arm) return;
+    trackExperimentImpression(EXPERIMENTS.SAVE_ALERT_STEP, arm, {
+      oncePerSession: true,
+      context: { surface, card: variant, push: push.kind, next: nextKind },
+    });
+  };
+  const exposeRef = useRef(expose);
+  useEffect(() => {
+    exposeRef.current = expose;
+  });
+  useEffect(() => {
+    if (step !== "channel" || preview) return;
+    const node = stepRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        obs.disconnect();
+        exposeRef.current();
+      },
+      { threshold: 0.5 },
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [step, preview]);
+
+  // After a save from this card, put "Alerts on" where the owner is looking.
+  // Typing an email on a phone scrolls the field up above the keyboard, which
+  // pushes the top of the card off the screen; the card then shrinks to its
+  // short confirmation and, on an iPhone (no scroll anchoring in WebKit),
+  // what is left on screen is the card's bottom edge and the section below.
+  // The founder's first real save on the preview ended exactly there.
+  useEffect(() => {
+    if (step !== "done" || !savedHere.current) return;
+    const show = () => {
+      const node = cardRef.current;
+      if (!node) return;
+      const r = node.getBoundingClientRect();
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      // Clear of the sticky header above and the section bar below.
+      if (r.top >= 72 && r.bottom <= height - 96) return;
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      node.scrollIntoView({ block: "center", behavior: still ? "auto" : "smooth" });
+    };
+    // Once the keyboard has gone (it takes about a third of a second), and
+    // once more in case it was slow to.
+    const first = setTimeout(show, 400);
+    const second = setTimeout(show, 1100);
+    return () => {
+      clearTimeout(first);
+      clearTimeout(second);
+    };
+  }, [step]);
 
   const saveLocally = () => {
+    if (preview) {
+      setStep("channel");
+      return;
+    }
     if (onLocalSave) {
       onLocalSave();
     } else {
@@ -159,18 +299,30 @@ export default function SaveCarCard({
   };
 
   const save = async (body: Record<string, unknown>, via: "email" | "push"): Promise<boolean> => {
+    if (preview) {
+      await wait(700);
+      savedHere.current = true;
+      setValueAsked(valueCheck);
+      setChannel(via);
+      setStep("done");
+      return true;
+    }
     const res = await fetch("/api/saved-cars", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vrm: plate, make, model, year, motExpiry: motExpiryDate, taxDue: taxDueDate, intent, surface, channel: via, ...body }),
+      body: JSON.stringify({ vrm: plate, make, model, year, motExpiry: motExpiryDate, taxDue: taxDueDate, intent: storedIntent, surface, channel: via, ...body }),
     });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
     if (!res.ok || !json?.ok) {
       setError(json?.error || "Something went wrong — please try again.");
       return false;
     }
-    trackEvent("car_saved", { surface, channel: via, intent, vrm: plate });
-    rememberAlerts(plate, { channel: via, intent });
+    // `intent` stays what the owner SAID (the weekly audit's "not said" row
+    // depends on it); value_check says whether the monthly check is coming.
+    trackEvent("car_saved", { surface, channel: via, intent, value_check: valueCheck, vrm: plate });
+    savedHere.current = true;
+    rememberAlerts(plate, { channel: via, intent, ...(valueCheck && !statedValue ? { value: true } : {}) });
+    setValueAsked(valueCheck);
     setChannel(via);
     setStep("done");
     return true;
@@ -186,9 +338,10 @@ export default function SaveCarCard({
     setBusy(true);
     setChannel("email");
     setError(null);
-    trackEvent("alert_opt_in", { channel: "email", surface });
+    expose();
+    if (!preview) trackEvent("alert_opt_in", { channel: "email", surface });
     try {
-      if (await save({ email: clean }, "email")) {
+      if ((await save({ email: clean }, "email")) && !preview) {
         try {
           localStorage.setItem(EMAIL_MEMORY_KEY, clean);
         } catch {
@@ -207,17 +360,32 @@ export default function SaveCarCard({
     setBusy(true);
     setChannel("push");
     setError(null);
-    trackEvent("alert_opt_in", { channel: "push", surface });
+    setNotice(null);
+    expose();
+    if (!preview) trackEvent("alert_opt_in", { channel: "push", surface });
     try {
-      const subscription = await subscribeToPush();
+      const subscription = preview ? await pretendPrompt(preview) : await subscribeToPush();
       if (!subscription) {
-        setPush(pushAvailability());
-        setError("Notifications were blocked on this device — email works just as well.");
+        setPush(preview ? { kind: "denied" } : pushAvailability());
+        if (dated) {
+          // No yes from the prompt (declined, dismissed, or the browser
+          // couldn't): not a mistake of theirs, so no error. The email
+          // field takes over, with whatever address this device remembers.
+          setNotice("No notifications on this device for now. Email works just as well:");
+          setEmailOpen(true);
+        } else {
+          setError("Notifications were blocked on this device — email works just as well.");
+        }
         return;
       }
       await save({ subscription }, "push");
     } catch {
-      setError("Couldn't switch notifications on — try email instead.");
+      if (dated) {
+        setNotice("Couldn't switch notifications on here. Email works just as well:");
+        setEmailOpen(true);
+      } else {
+        setError("Couldn't switch notifications on — try email instead.");
+      }
     } finally {
       setBusy(false);
     }
@@ -225,7 +393,6 @@ export default function SaveCarCard({
 
   if (hidden) return null;
 
-  const isValue = variant === "value";
   const Icon = isValue ? TrendingUp : BellRing;
   const tone = isValue
     ? "from-cyan-950/50 via-slate-900/80 to-slate-900 border-cyan-500/25"
@@ -248,9 +415,13 @@ export default function SaveCarCard({
         }`}
       />
       <div className="relative flex items-start gap-3.5">
-        <span className={`mt-0.5 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconTone}`}>
-          {step === "done" ? <Check className="h-5 w-5 text-emerald-300" strokeWidth={2.5} /> : <Icon className="h-5 w-5" />}
-        </span>
+        {step === "channel" && dated && copy.date ? (
+          <DateTile iso={copy.date} />
+        ) : (
+          <span className={`mt-0.5 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconTone}`}>
+            {step === "done" ? <Check className="h-5 w-5 text-emerald-300" strokeWidth={2.5} /> : <Icon className="h-5 w-5" />}
+          </span>
+        )}
         <div className="min-w-0 flex-1">
           {step === "idle" && (
             <div key="idle" className="fact-enter">
@@ -272,8 +443,35 @@ export default function SaveCarCard({
             </div>
           )}
 
-          {step === "channel" && (
-            <form key="channel" onSubmit={submit} className="fact-enter" noValidate>
+          {step === "channel" && dated && (
+            <DatedAlertStep
+              key="channel-dated"
+              formRef={stepRef}
+              copy={copy}
+              push={push}
+              busy={busy}
+              channel={channel}
+              error={error}
+              notice={notice}
+              email={email}
+              onEmail={(value) => {
+                setEmail(value);
+                if (error) setError(null);
+              }}
+              emailOpen={emailOpen}
+              onEmailOpen={(open) => {
+                setEmailOpen(open);
+                setNotice(null);
+                setError(null);
+              }}
+              onNotify={notify}
+              onSubmit={submit}
+              valueToggle={copy.lead === "value" || statedValue ? null : { on: valueCheck, onChange: setValueAsked }}
+            />
+          )}
+
+          {step === "channel" && !dated && (
+            <form key="channel" ref={stepRef} onSubmit={submit} className="fact-enter" noValidate data-alert-step="control">
               <p className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-300">
                 <Check className="h-3.5 w-3.5" strokeWidth={3} />
                 In My Cars
@@ -295,7 +493,7 @@ export default function SaveCarCard({
                         aria-pressed={on}
                         onClick={() => {
                           setIntent(on ? null : i);
-                          rememberIntent(plate, on ? null : i);
+                          if (!preview) rememberIntent(plate, on ? null : i);
                         }}
                         className={`rounded-full border px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
                           on
@@ -366,19 +564,19 @@ export default function SaveCarCard({
                 Alerts on for <span className="font-mono tracking-wide">{spaced(plate)}</span>
               </h3>
               <p className="mt-1 text-sm leading-relaxed text-slate-400">
-                We&apos;ll {channel === "push" ? "notify you on this device" : "email you"} {alertsDescription(intent)}.
+                We&apos;ll {channel === "push" ? "notify you on this device" : "email you"} {alertsDescription(storedIntent)}.
                 {intent && <> You said you&apos;re <span className="text-slate-200">{INTENT_LABELS[intent].toLowerCase()}</span>.</>}
               </p>
               {push.kind === "ios-install" && channel === "email" && (
                 howTo ? (
                   <div className="fact-enter mt-4 border-t border-slate-700/60 pt-4">
                     <p className="mb-3 text-sm font-medium text-white">Alerts on this phone too</p>
-                    <HomeScreenWalkthrough browser={howTo} source="save-card" />
+                    <HomeScreenWalkthrough browser={howTo} source="save-card" track={!preview} />
                   </div>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => setHowTo(iosBrowser())}
+                    onClick={() => setHowTo(preview ? "safari-new" : iosBrowser())}
                     className="mt-3 inline-flex items-center gap-1.5 text-left text-xs font-medium text-cyan-300 underline-offset-4 transition-colors hover:text-cyan-200 hover:underline"
                   >
                     <Smartphone className="h-3.5 w-3.5" />
@@ -392,6 +590,12 @@ export default function SaveCarCard({
       </div>
     </div>
   );
+}
+
+/** The preview's stand-in for the browser's permission prompt: a beat, then its answer. */
+async function pretendPrompt(preview: SaveCardPreview): Promise<{ endpoint: string } | null> {
+  await wait(900);
+  return preview.permission === "refused" ? null : { endpoint: "preview" };
 }
 
 /** "AB12CDE" -> "AB12 CDE" for display only; the stored plate has no space. */

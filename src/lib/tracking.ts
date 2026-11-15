@@ -170,6 +170,21 @@ export const EXPERIMENTS: Record<string, string> = {
   // holds an even mix of the other. Read it at the planned length, not
   // before: src/lib/wbac-top-test.ts has the sums and the Friday email block.
   WBAC_TOP: "valuation_wbac_top_v1",
+  // Step two of the save card ("Save this car and get alerts"), started with
+  // this entry. In 1–14 Nov 2026, 188 people tapped Save and 15 ended with
+  // alerts on: the local save works, "Where should alerts go?" does not.
+  // control = that step as shipped; dated = the car's own next date first
+  // ("MOT due 14 March"), one tap where the browser can notify, the email
+  // field at once (remembered address filled in) where it can't.
+  // Exposure = the alerts step on screen, once per session (oncePerSession,
+  // with surface / card / push state / which date as context); conversion =
+  // car_saved carrying exp_save_alert_step_v1. The value card sits on the
+  // same screen as valuation_wbac_top_v1 and seller_trust_copy_v1; buckets
+  // are drawn independently, so each arm here holds an even mix of theirs.
+  // About 13 savers a day: a doubling needs ~6 weeks, anything under 2x is
+  // not readable before mid-December. See src/lib/alert-step.ts and
+  // SaveCarCard.
+  SAVE_ALERT_STEP: "save_alert_step_v1",
   // valuation_hero_reg_v1 CONCLUDED 2026-06-21 — treatment "b" (reg box in the
   // hero, above the fold) beat control "a" decisively: reg_search conversion
   // 39.0% → 52.8% (+35% relative, z=4.74, n=1,181 exposures). Variant b was
@@ -275,8 +290,10 @@ export function trackExperimentImpression(
   variant: string,
   /** `oncePerSession`: skip when this session is already exposed, so the
    *  count of impressions is the count of exposed sessions even when one
-   *  session meets the surface several times (three cars valued in a row). */
-  opts?: { oncePerSession?: boolean },
+   *  session meets the surface several times (three cars valued in a row).
+   *  `context`: extra fields for cutting the denominator (a surface, a
+   *  device state). Never a plate. */
+  opts?: { oncePerSession?: boolean; context?: Record<string, unknown> },
 ): void {
   if (opts?.oncePerSession && getSessionExposure(experimentId)) return;
   // Record exposure for this session so downstream conversions attribute only
@@ -288,7 +305,7 @@ export function trackExperimentImpression(
       // sessionStorage unavailable (private mode etc.) — impression still fires.
     }
   }
-  const payload = { experiment_id: experimentId, variant };
+  const payload = { ...opts?.context, experiment_id: experimentId, variant };
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "experiment_impression", payload);
   }
