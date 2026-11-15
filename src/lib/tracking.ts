@@ -150,6 +150,26 @@ export const EXPERIMENTS: Record<string, string> = {
   // judge on clicks per impression, not totals (valuations fell ~28% the same
   // day, #161).
   SELLER_TRUST: "seller_trust_copy_v1",
+  // We Buy Any Car beside the estimate, on the valuation tool's result
+  // (ValuationResult; the homepage's own inline valuation is NOT in the test).
+  // control = today's layout, the offer card under the "selling or keeping?"
+  // chip. top = the same offer, same wording, as a strip inside the valuation
+  // card under our figure, and no card lower down. 1–14 Nov 2026: about two
+  // thirds of valuers ever had the card on screen and about 1 in 20 clicked
+  // it; when the MOT outage of 8–9 Nov left the card showing without a figure
+  // above it, nearly half did. So the question is whether the offer is in the
+  // wrong place, and this measures it instead of assuming.
+  //
+  // Exposure = our figure on screen, in BOTH arms, once per session, and only
+  // for a car the offer can show for (never a van, never a keeper), so the
+  // denominator is the same people in each arm. The click is experiment_click,
+  // once per exposed session. Each arm's link has its own /go context
+  // (valuation-result-wbac / valuation-result-wbac-top), so the partner's
+  // order report splits by arm too. Buckets are drawn separately from
+  // seller_trust_copy_v1's, which runs on the same screen, so each arm of one
+  // holds an even mix of the other. Read it at the planned length, not
+  // before: src/lib/wbac-top-test.ts has the sums and the Friday email block.
+  WBAC_TOP: "valuation_wbac_top_v1",
   // valuation_hero_reg_v1 CONCLUDED 2026-06-21 — treatment "b" (reg box in the
   // hero, above the fold) beat control "a" decisively: reg_search conversion
   // 39.0% → 52.8% (+35% relative, z=4.74, n=1,181 exposures). Variant b was
@@ -216,7 +236,7 @@ export function assignExperimentVariant(experimentId: string, variants: string[]
 
 /** The variant THIS session was exposed to (saw an impression for), or null if
  *  the cue hasn't been seen this session. */
-function getSessionExposure(experimentId: string): string | null {
+export function getSessionExposure(experimentId: string): string | null {
   if (typeof window === "undefined") return null;
   try {
     return sessionStorage.getItem(exposureKey(experimentId));
@@ -250,7 +270,15 @@ function attachExposedVariants(payload: Record<string, unknown>, dedupeKey?: str
   }
 }
 
-export function trackExperimentImpression(experimentId: string, variant: string): void {
+export function trackExperimentImpression(
+  experimentId: string,
+  variant: string,
+  /** `oncePerSession`: skip when this session is already exposed, so the
+   *  count of impressions is the count of exposed sessions even when one
+   *  session meets the surface several times (three cars valued in a row). */
+  opts?: { oncePerSession?: boolean },
+): void {
+  if (opts?.oncePerSession && getSessionExposure(experimentId)) return;
   // Record exposure for this session so downstream conversions attribute only
   // to visitors who actually SAW the cue (tier 2 of the attribution model).
   if (typeof window !== "undefined") {
@@ -267,7 +295,24 @@ export function trackExperimentImpression(experimentId: string, variant: string)
   mirrorToServer("experiment_impression", payload);
 }
 
-export function trackExperimentClick(experimentId: string, variant: string): void {
+export function trackExperimentClick(
+  experimentId: string,
+  variant: string,
+  /** `oncePerExposedSession`: only from a session that was exposed, and at
+   *  most once in it, the same rule conversions are held to. Clicks ÷
+   *  impressions is then a share of exposed sessions and cannot pass 100%. */
+  opts?: { oncePerExposedSession?: boolean },
+): void {
+  if (opts?.oncePerExposedSession) {
+    if (typeof window === "undefined" || !getSessionExposure(experimentId)) return;
+    const k = `${exposureKey(experimentId)}_attr_experiment_click`;
+    try {
+      if (sessionStorage.getItem(k)) return;
+      sessionStorage.setItem(k, "1");
+    } catch {
+      // storage unavailable — count the click rather than lose it
+    }
+  }
   const payload = { experiment_id: experimentId, variant };
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "experiment_click", payload);

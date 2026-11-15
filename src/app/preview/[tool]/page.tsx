@@ -9,6 +9,7 @@ import ValuationResult from "@/components/tools/ValuationResult";
 import RunningCostsResult from "@/components/tools/RunningCostsResult";
 import { PREVIEW_VEHICLE, PREVIEW_TOOL_SLUGS } from "@/lib/preview-data";
 import type { LookupVehicle } from "@/components/tools/shared";
+import type { WbacTopArm } from "@/lib/wbac-top-test";
 
 /**
  * Internal preview route. Renders a tool's Result component with the
@@ -22,6 +23,11 @@ import type { LookupVehicle } from "@/components/tools/shared";
  * ?mot=down shows the fixture as /api/lookup returns it when the MOT service
  * did not answer (no tests, no mileage); ?mot=down-new is the same for a car
  * we have never looked up, which has no model either. No lookup is made.
+ *
+ * /preview/car-valuation?wbac=top draws arm "top" of valuation_wbac_top_v1
+ * (We Buy Any Car as a strip inside the valuation card); ?wbac=control, or
+ * nothing, draws today's layout. The links under the result switch between
+ * them. A preview is never bucketed and records nothing for the test.
  */
 
 export const metadata: Metadata = {
@@ -53,14 +59,15 @@ export default async function PreviewPage({
   searchParams,
 }: {
   params: Promise<{ tool: string }>;
-  searchParams: Promise<{ mot?: string }>;
+  searchParams: Promise<{ mot?: string; wbac?: string }>;
 }) {
   const { tool } = await params;
-  const { mot } = await searchParams;
+  const { mot, wbac } = await searchParams;
   const Result = RESULT_BY_SLUG[tool as (typeof PREVIEW_TOOL_SLUGS)[number]];
   if (!Result) notFound();
   const vehicle =
     mot === "down" || mot === "down-new" ? withoutMot(PREVIEW_VEHICLE, mot === "down") : PREVIEW_VEHICLE;
+  const wbacArm: WbacTopArm = wbac === "top" ? "top" : "control";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -68,8 +75,44 @@ export default async function PreviewPage({
         id="screenshot-target"
         className="mx-auto max-w-md sm:max-w-lg lg:max-w-2xl"
       >
-        <Result vrm={vehicle.registrationNumber} previewVehicle={vehicle} />
+        {tool === "car-valuation" ? (
+          <ValuationResult
+            vrm={vehicle.registrationNumber}
+            previewVehicle={vehicle}
+            previewWbacArm={wbacArm}
+          />
+        ) : (
+          <Result vrm={vehicle.registrationNumber} previewVehicle={vehicle} />
+        )}
       </div>
+      {/* Outside #screenshot-target, so the marketing screenshots never carry it. */}
+      {tool === "car-valuation" && (
+        <nav
+          aria-label="We Buy Any Car position test"
+          className="mx-auto flex max-w-md flex-wrap items-center gap-2 px-4 pb-10 text-xs text-slate-400 sm:max-w-lg lg:max-w-2xl"
+        >
+          <span>We Buy Any Car position test:</span>
+          {(
+            [
+              ["control", "Control (card under the chip)"],
+              ["top", "Variant (strip inside the valuation card)"],
+            ] as const
+          ).map(([arm, label]) => (
+            <a
+              key={arm}
+              href={`?wbac=${arm}${mot ? `&mot=${encodeURIComponent(mot)}` : ""}`}
+              aria-current={arm === wbacArm ? "page" : undefined}
+              className={`rounded-full border px-3 py-1.5 ${
+                arm === wbacArm
+                  ? "border-cyan-400/60 bg-cyan-500/15 text-cyan-200"
+                  : "border-slate-700 text-slate-300 hover:border-slate-500 hover:text-white"
+              }`}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
