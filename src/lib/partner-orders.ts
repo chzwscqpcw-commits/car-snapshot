@@ -865,7 +865,7 @@ export function renderPartnerOrdersHtml(s: PartnerOrdersSummary): string {
   </table>
   <p style="margin:0 0 12px;font-size:13px;color:#64748b">Clicks are Rakuten's count, every advertiser together. Provisional = commission on orders not locked yet, which can still change; locked is final. Orders are placed by transaction date.</p>
   ${advertiserTable}
-  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
+  <table style="border-collapse:collapse;width:100%;font-size:13px;margin:0 0 8px">
     <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Advertiser</th><th style="${TD};text-align:left">Placement (u1)</th><th style="${TDR}">Our clicks, week</th><th style="${TDR}">Orders, week</th><th style="${TDR}">Orders, all</th><th style="${TDR}">Paying / zero</th><th style="${TDR}">Commission, all</th></tr>
     ${placementRows}
   </table>
