@@ -102,6 +102,13 @@ interface Props {
    * recipient still has to finish their own before we can hand off.
    */
   postcode?: string;
+  /**
+   * ?noreg=1 — the visitor chose, before arriving, to carry on without a
+   * registration (the "no reg to hand" link under the blog's MOT box). It
+   * stands in for Step 1's own skip link: the wizard opens where a plate
+   * would have opened it, with no car.
+   */
+  noreg?: string;
 }
 
 export default function BookingWizard({
@@ -109,8 +116,10 @@ export default function BookingWizard({
   type: urlTypeRaw,
   source: urlSource,
   postcode: urlPostcode,
+  noreg: urlNoReg,
 }: Props) {
   const source = urlSource || "direct";
+  const noReg = urlNoReg === "1";
   const urlVrm = (urlVrmRaw ?? "").toUpperCase().replace(/\s+/g, "");
   const urlType = urlTypeRaw?.toLowerCase();
 
@@ -125,7 +134,7 @@ export default function BookingWizard({
     const initialService = isServiceType(urlType) ? (urlType as ServiceType) : null;
 
     let initialStep: Step = 1;
-    if (urlVrm) initialStep = initialService ? 3 : 2;
+    if (urlVrm || noReg) initialStep = initialService ? 3 : 2;
 
     return {
       step: initialStep,
@@ -155,6 +164,9 @@ export default function BookingWizard({
       setState((s) => ({ ...s, vrm: hashVrm, step: s.service ? 3 : 2 }));
       return;
     }
+    // Skipping the registration is a deep-link too: it says which step to
+    // open, so an older part-finished visit doesn't pull them back to step 1.
+    if (noReg) return;
     const stored = loadFromStorage();
     if (!stored) return;
     setState((s) => ({

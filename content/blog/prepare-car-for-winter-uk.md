@@ -103,7 +103,7 @@ Winter is a bad time to discover your MOT has expired. Driving without a valid M
 
 Run a [free vehicle check](/car-check) to confirm your MOT expiry date and [tax status](/tax-check). If your MOT is due in the coming months, book early — garages get busy in the run-up to Christmas. Review the [most common MOT failures](/blog/most-common-mot-failures) and address any obvious issues before your appointment.
 
-[Compare MOT and winter service prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices and availability at local garages. A combined winter check, oil change, and MOT is usually cheaper than booking each separately, and most garages will replace bulbs, wipers, and topping up fluids as part of the visit.
+[Compare MOT and service prices with our booking tool](/booking?source=blog-text) — enter your registration to see what an MOT or a service typically costs for your car, then compare garages near you. A combined winter check, oil change, and MOT is usually cheaper than booking each separately, and most garages will replace bulbs, wipers, and topping up fluids as part of the visit.
 
 ## Consider your car's emissions and running costs
 

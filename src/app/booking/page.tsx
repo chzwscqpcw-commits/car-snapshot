@@ -143,7 +143,7 @@ export async function generateMetadata({
 export default async function BookingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ vrm?: string; type?: string; source?: string; postcode?: string }>;
+  searchParams: Promise<{ vrm?: string; type?: string; source?: string; postcode?: string; noreg?: string }>;
 }) {
   const params = await searchParams;
   const breadcrumbJsonLd = {
@@ -234,6 +234,7 @@ export default async function BookingPage({
           type={params?.type}
           source={params?.source}
           postcode={params?.postcode}
+          noreg={params?.noreg}
         />
 
         <section className="mt-8 sm:mt-12">

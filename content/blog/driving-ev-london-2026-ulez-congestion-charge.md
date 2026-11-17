@@ -98,7 +98,7 @@ Free London access used to be one of the strongest financial arguments for buyin
 
 For a regular central London driver, the total annual London-only saving on an EV vs a non-compliant diesel is still **~£4,000–£5,000** when you combine ULEZ avoidance, the Auto Pay discount, and fuel savings. That's down from ~£8,000 before the CVD ended, but it remains substantial.
 
-If you're shopping for a used EV specifically to access London, getting a proper pre-purchase inspection is worth the £100 it costs — battery health is invisible from the outside, and a worn-out battery in a five-year-old EV is the most expensive single repair you can face. [Compare local garage prices for an EV pre-purchase inspection on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — many independents now offer EV-specific inspection packages that include a battery state-of-health check.
+If you're shopping for a used EV specifically to access London, getting a proper pre-purchase inspection is worth the £100 it costs — battery health is invisible from the outside, and a worn-out battery in a five-year-old EV is the most expensive single repair you can face. [See how a pre-purchase inspection works](/pre-purchase-inspection), and ask before you book whether it includes a battery state-of-health check — not every inspection does.
 
 ## What about hybrids?
 

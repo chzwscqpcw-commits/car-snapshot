@@ -126,7 +126,7 @@ For a deeper understanding of what each advisory means and how seriously to take
 
 If anything on the checklist felt out of your depth — brakes that don't feel right, a coolant level you can't read, an unfamiliar dashboard light — get it looked at before you set off. A pre-trip inspection is one of the cheapest insurance policies you can buy. Most independent garages offer a "summer holiday check" for £25–£50, and many bundle it with an oil change or interim service.
 
-[Compare local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices and availability for a pre-trip check, interim service, or full service near you. Booking a week or two before you leave gives you time to address anything they find.
+[Compare service prices with our booking tool](/booking?source=blog-text) — enter your registration to see what an interim or full service typically costs for your car, then compare garages near you. Booking a week or two before you leave gives you time to address anything they find.
 
 ## A few minutes now saves hours later
 
