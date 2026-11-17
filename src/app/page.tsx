@@ -5292,7 +5292,7 @@ END:VEVENT
 
             {/* Insurance — the cost the card above leaves out. Whichever
                 insurance partner is live (src/config/insurance.ts); nothing
-                while none is. Replaced the never-live GoCompare action prompt. */}
+                while none is. */}
             {ownershipCost && (
               <InsuranceCTA
                 context="money-insurance"

@@ -630,30 +630,6 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     name: "GOV.UK Find MOT Centre",
     isAffiliate: false,
   },
-  // GoCompare — car-insurance comparison (Awin merchant 117439). Top-5 UK
-  // comparison site, 170+ insurance brands. Replaces the old non-affiliate
-  // Parkers insurance-group link (off-site, not pre-filled).
-  // ALREADY APPLIED on Awin — status Pending Approval. awinmid is known
-  // (117439), so on approval just flip pending:false. The action prompt is gated
-  // on isPartnerConfigured so we never promote before Awin accepts us.
-  // (Confused.com was the first pick but isn't joinable on this Awin account.)
-  goCompare: {
-    url: "https://www.awin1.com/cread.php?awinmid=117439&awinaffid=2729598&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
-    name: "GoCompare",
-    isAffiliate: true,
-    pending: true,
-    description: "Compare car insurance quotes from 170+ providers",
-    shortDescription: "Insurance quotes",
-    // On activation you may swap the ued destination for GoCompare's approved
-    // affiliate car-insurance deep link from their Awin creative.
-    buildLink: (_reg: string, clickref?: string) => {
-      const destination = encodeURIComponent("https://www.gocompare.com/car-insurance/");
-      return withClickref(
-        `https://www.awin1.com/cread.php?awinmid=117439&awinaffid=2729598&ued=${destination}`,
-        clickref,
-      );
-    },
-  },
 };
 
 /**
@@ -712,7 +688,7 @@ export type GoPartner =
   | InsuranceGoPartner;
 
 /** /go keys for the insurance partners (src/config/insurance.ts picks one). */
-export type InsuranceGoPartner = "rvu-car" | "rvu-van" | "rvu-bike" | "gocompare" | "tempcover" | "cuvva";
+export type InsuranceGoPartner = "rvu-car" | "rvu-van" | "rvu-bike" | "tempcover" | "cuvva";
 
 export function goLink(
   partner: GoPartner,
@@ -911,8 +887,8 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
   //
   // `car-insurance-groups-explained` is the site's SECOND best-read post (315
   // views/30d) and rendered no call to action at all, because it matched none
-  // of the matchers above. Nineteen posts were in that state. Insurance has no
-  // live partner yet (GoCompare is still pending), but /running-costs is a
+  // of the matchers above. Nineteen posts were in that state. Insurance had no
+  // live partner then; /running-costs (where the Confused.com card now sits) is a
   // genuine fit rather than a filler: it prices insurance, fuel, tax and
   // servicing for the specific vehicle, which is the question these posts leave
   // the reader holding.

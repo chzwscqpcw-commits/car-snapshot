@@ -11,8 +11,8 @@
  *      a change to it is a change to send them first);
  *   4. a partner's logo is shown only from a file that exists in /public, and
  *      no insurance partner has one until the partner supplies it;
- *   5. the order the fallbacks come in (GoCompare for cars, Cuvva behind
- *      Tempcover);
+ *   5. there is no fallback insurer (Confused.com or nothing), and Cuvva
+ *      comes behind Tempcover for temporary cover;
  *   6. no page links to an insurance comparison site that is not a partner:
  *      the partner's card is the site's only way out for insurance.
  */
@@ -148,12 +148,11 @@ async function main(): Promise<void> {
   check("no page or component links to another insurance comparison site", offenders.join(", "), "");
 
   console.log("\nFallbacks:");
-  PARTNER_LINKS.goCompare.pending = false;
-  check("Confused.com stays ahead of GoCompare for cars", insuranceOffer("car")?.go, "rvu-car");
+  check("no other insurer is configured to stand in", "goCompare" in PARTNER_LINKS, false);
   PARTNER_LINKS.rvuCarInsurance.pending = true;
-  check("car → GoCompare if Confused.com is stood down", insuranceOffer("car")?.go, "gocompare");
+  check("car → nothing if Confused.com is stood down", insuranceOffer("car"), null);
   PARTNER_LINKS.rvuVanInsurance.pending = true;
-  check("van → nothing (GoCompare is car-only)", insuranceOffer("van"), null);
+  check("van → nothing likewise", insuranceOffer("van"), null);
   PARTNER_LINKS.rvuBikeInsurance.pending = false;
   check("bike → Confused.com once its entry is switched on", insuranceOffer("motorbike")?.go, "rvu-bike");
 

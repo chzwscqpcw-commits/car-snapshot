@@ -487,7 +487,7 @@ const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boole
   {
     key: "insurance",
     name: "Insurance",
-    match: (p) => ["rvu", "gocompare", "tempcover", "cuvva"].some((k) => p.startsWith(k)),
+    match: (p) => ["rvu", "tempcover", "cuvva"].some((k) => p.startsWith(k)),
   },
 ];
 

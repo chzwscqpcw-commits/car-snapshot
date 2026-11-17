@@ -468,7 +468,7 @@ console.log("\nTwo advertisers: one click total, orders apart");
   const partners = rakutenPartners();
   check(
     "every partner with a Rakuten link is counted, and no other",
-    ["weBuyAnyCar", "rvuCarInsurance", "rvuVanInsurance", "rvuBikeInsurance"].every((k) => k in partners) && !("carVertical" in partners) && !("bookMyGarage" in partners) && !("goCompare" in partners),
+    ["weBuyAnyCar", "rvuCarInsurance", "rvuVanInsurance", "rvuBikeInsurance"].every((k) => k in partners) && !("carVertical" in partners) && !("bookMyGarage" in partners),
     Object.keys(partners).join(),
   );
   check("…under the names we show", partners.weBuyAnyCar === "We Buy Any Car" && partners.rvuCarInsurance === "Confused.com" && partners.rvuVanInsurance === "Confused.com");

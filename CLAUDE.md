@@ -210,7 +210,8 @@ no link yet.
   "Confused.com". `npm run test:insurance` pins the text and fails on a claim.
 - **Confused.com is the site's insurance provider** (founder, 17 Nov 2026).
   The card is the only link out for insurance: no button or link to another
-  comparison site anywhere, tracked or not. The `/running-costs` estimate
+  comparison site anywhere, tracked or not, and no fallback insurer in
+  `src/config/insurance.ts` (where Confused.com is not live, nothing shows). The `/running-costs` estimate
   used to carry one; it is gone, and `npm run test:insurance` fails if a page
   or component links to one again.
 - **Logo.** The card has a slot (a white plate) that draws only when the
