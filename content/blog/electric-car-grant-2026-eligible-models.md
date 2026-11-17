@@ -133,7 +133,7 @@ A common misconception is that EVs don't need servicing. They do — just less o
 
 Most EVs need an annual service that costs roughly £100–£200 less than the equivalent petrol or diesel car. Battery health checks become important from year 4 onwards, particularly if you're considering resale value.
 
-[Compare EV service prices at local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices from independents and franchised dealers near you. Independent specialists are increasingly common and typically charge less than main dealer rates for routine EV servicing.
+[Compare service prices for your EV with our booking tool](/booking?source=blog-text) — enter your registration to see what a service typically costs for your car, then compare garages near you. Independent specialists are increasingly common and typically charge less than main dealer rates for routine EV servicing.
 
 ## The bottom line
 

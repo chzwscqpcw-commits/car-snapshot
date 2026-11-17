@@ -82,7 +82,7 @@ The plate-change period brings more cars to market, but it also attracts sellers
 - **Verify the V5C.** The registration document should show the seller as the registered keeper. If it does not, ask why. A missing V5C is a warning sign.
 - **Check for outstanding finance.** A car with unpaid finance can be repossessed from you even if you bought it in good faith. This is especially important for nearly-new cars, which are frequently financed.
 
-For any used car bought around a plate change — particularly nearly-new ex-fleet or ex-demonstrator cars that flood the market in September — a pre-purchase inspection is the cheapest piece of due diligence you can do. [Compare local garages for a pre-purchase inspection on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — most independents will run a 60–90 minute check covering engine, transmission, suspension, brakes, electronics, and bodywork for £80–£150, and flag anything the seller did not mention.
+For any used car bought around a plate change — particularly nearly-new ex-fleet or ex-demonstrator cars that flood the market in September — a pre-purchase inspection is the cheapest piece of due diligence you can do. [See how a pre-purchase inspection works](/pre-purchase-inspection) — a mechanic goes to the car, checks the engine, bodywork, brakes, tyres and electrics, takes it on a road test, and writes up anything the seller did not mention.
 
 ## Beyond the plate: the bigger picture
 

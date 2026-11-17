@@ -200,6 +200,18 @@ in Rakuten's reports, tagged with the placement (`u1`) that sent it.
   of ours to the route must send `x-fpc-internal: 1`. An error from a direct
   call is a `lookup_error` with `direct: true`; the lookup-health alert and
   weekly figures leave those out and report them as "Not counted".
+- MOT prompts in blog articles open our own booking tool, never the partner
+  (`BlogMotBooking`, `src/lib/blog-mot-booking.ts`): a registration box
+  mid-article (`source` `blog-mot-inline`) and a one-line one at the foot
+  (`blog-mot-foot`), both landing on the wizard's price step with the plate in
+  `#vrm=`; `noreg=1` reaches the same step without a car. Read them as
+  `booking_entry_impression` (seen) and `booking_entry_click` (used) by
+  `source`, then `booking_wizard_start` and the step events on the same
+  `source`. The card they replaced was seen on 569 visitor-days and clicked on
+  2 (12 Sep to 17 Nov 2026; `partner_impression` / `partner_click`,
+  `click_context` `blog-mot-inline`). In article text, link to `/cheap-mot` or
+  `/booking?source=blog-text`; `npm run test:blog-booking` fails on a new
+  partner link in a post.
 - Every public page lives in `src/lib/site-index.ts` — the command palette
   (⌘K), the mobile drawer and `/tools` all read it (a `tools` block on an
   entry is its `/tools` card). `npm run test:site-index` walks `src/app` and

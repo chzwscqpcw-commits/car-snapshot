@@ -96,7 +96,7 @@ For broader market context — what's driving wholesale prices and what to expec
 
 Of the five tips above, the one most drivers neglect is keeping the car properly serviced. A clogged air filter, ageing spark plugs, or a sluggish oxygen sensor can each quietly cost a few percent in fuel economy — and they compound. By the time the engine management light comes on, you've often paid more in extra fuel than the repair itself would have cost.
 
-[Compare service prices at local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-servicing%2F) — enter your registration to see prices for an interim or full service near you. With duty held flat for the rest of 2026, fuel economy is now squarely the driver's variable to manage.
+[Compare service prices with our booking tool](/booking?source=blog-text) — enter your registration to see what an interim or full service typically costs for your car, then compare garages near you. With duty held flat for the rest of 2026, fuel economy is now squarely the driver's variable to manage.
 
 ## The bottom line
 
