@@ -12,9 +12,11 @@
  *   4. a partner's logo is shown only from a file that exists in /public, and
  *      no insurance partner has one until the partner supplies it;
  *   5. the order the fallbacks come in (GoCompare for cars, Cuvva behind
- *      Tempcover).
+ *      Tempcover);
+ *   6. no page links to an insurance comparison site that is not a partner:
+ *      the partner's card is the site's only way out for insurance.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -130,6 +132,20 @@ async function main(): Promise<void> {
   const withLogo = renderToStaticMarkup(<InsuranceCTA context="money-insurance" kind="car" preview />);
   check("a named logo is drawn on its plate, with the partner's name as its text", withLogo.includes("data-partner-logo") && withLogo.includes('alt="Confused.com"'), true);
   delete PARTNER_LINKS.rvuCarInsurance.logo;
+
+  console.log("\nNo other comparison site is linked:");
+  const OTHER_SITES = /comparethemarket\.|moneysupermarket\.|uswitch\.com|quotezone\./i;
+  const offenders: string[] = [];
+  const walk = (dir: string): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) walk(path);
+      else if (/\.(ts|tsx)$/.test(entry.name) && OTHER_SITES.test(readFileSync(path, "utf8"))) offenders.push(path);
+    }
+  };
+  walk(join(process.cwd(), "src", "app"));
+  walk(join(process.cwd(), "src", "components"));
+  check("no page or component links to another insurance comparison site", offenders.join(", "), "");
 
   console.log("\nFallbacks:");
   PARTNER_LINKS.goCompare.pending = false;

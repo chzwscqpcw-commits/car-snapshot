@@ -208,6 +208,11 @@ no link yet.
 - **The wording is ours and makes no claim**: no saving, "cheapest", "best",
   reward or figure, and nothing about the partner beyond its name, written
   "Confused.com". `npm run test:insurance` pins the text and fails on a claim.
+- **Confused.com is the site's insurance provider** (founder, 17 Nov 2026).
+  The card is the only link out for insurance: no button or link to another
+  comparison site anywhere, tracked or not. The `/running-costs` estimate
+  used to carry one; it is gone, and `npm run test:insurance` fails if a page
+  or component links to one again.
 - **Logo.** The card has a slot (a white plate) that draws only when the
   partner entry names a `logo`. Only a file the partner supplies or approves,
   used as it comes; never artwork found elsewhere. None is set, so the card

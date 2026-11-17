@@ -45,10 +45,8 @@ import {
 import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
-import Button from "@/components/Button";
 import { isMotorbike, isVan, shortVehicleName } from "@/lib/report-v2/format";
 import InsuranceCTA from "@/components/InsuranceCTA";
-import { insuranceOffer, type InsuranceKind } from "@/config/insurance";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -206,12 +204,6 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     };
   }, [ownership, insurance.estimatedAnnual, includeInsurance, milesPerYear]);
 
-  // One insurance ask on the page. Where a partner's card shows under the
-  // estimate, the estimate's own "Get real quotes" button (a plain link to a
-  // comparison site that is not a partner) is left out: the card is the ask.
-  const insuranceKind: InsuranceKind = isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car";
-  const hasInsurancePartner = insuranceOffer(insuranceKind) !== null;
-
   return (
     <ToolResultLayout
       vrm={vrm}
@@ -264,12 +256,13 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         inputs={insuranceInputs}
         setInputs={setInsuranceInputs}
         insurance={insurance}
-        quoteLink={!hasInsurancePartner}
       />
-      {/* The estimate above is a guide; a quote is the real figure. */}
+      {/* The estimate above is a guide; a quote is the real figure. The card
+          is the page's one insurance ask and its only link out for insurance:
+          the estimate has no button of its own. */}
       <InsuranceCTA
         context="running-costs-insurance"
-        kind={insuranceKind}
+        kind={isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car"}
         vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
         className="mt-4"
       />
@@ -864,19 +857,14 @@ const INSURANCE_FIELDS: Array<{
   },
 ];
 
-const COMPARE_THE_MARKET_URL = "https://www.comparethemarket.com/car-insurance/";
-
 function InsurancePanel({
   inputs,
   setInputs,
   insurance,
-  quoteLink,
 }: {
   inputs: InsuranceInputs;
   setInputs: (i: InsuranceInputs) => void;
   insurance: InsuranceEstimate;
-  /** Show the plain "Get real quotes" link; off where a partner's card follows. */
-  quoteLink: boolean;
 }) {
   return (
     <section className="mt-4 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/15 via-slate-900/70 to-slate-950 p-5 sm:p-6">
@@ -921,7 +909,7 @@ function InsurancePanel({
         ))}
       </div>
 
-      <div className="mt-5 rounded-xl border border-violet-500/20 bg-slate-950/50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="mt-5 rounded-xl border border-violet-500/20 bg-slate-950/50 p-4">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-slate-500 font-[family-name:var(--font-geist-mono)]">
             Current estimate
@@ -943,16 +931,6 @@ function InsurancePanel({
             </p>
           )}
         </div>
-        {quoteLink && (
-          <Button
-            href={COMPARE_THE_MARKET_URL}
-            target="_blank"
-            rel="noopener nofollow noreferrer"
-            size="sm"
-          >
-            Get real quotes →
-          </Button>
-        )}
       </div>
 
       <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
