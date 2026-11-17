@@ -119,10 +119,7 @@ export default function BlogMotBooking({
       href={blogMotBookingHref(placement, "")}
       prefetch={false}
       onClick={() => used(false)}
-      // `!`: globals.css has an unlayered `a { color: inherit; text-decoration:
-      // none }`, which outranks Tailwind's layered utilities, so without it
-      // this renders as plain text and nobody can tell it is a link.
-      className="text-emerald-300! underline! underline-offset-2 transition-colors hover:text-emerald-200!"
+      className="text-emerald-300 underline underline-offset-2 transition-colors hover:text-emerald-200"
     >
       {inline ? "See MOT prices without it" : "Carry on without it"}
     </Link>

@@ -13,7 +13,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
 | Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
-| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half, then (`e2e/wbac-top.mjs`) that both arms of `valuation_wbac_top_v1` are drawn and counted alike. Locally: `npm run build && npx next start -p 3123`, then run it. |
+| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half, then (`e2e/wbac-top.mjs`) that both arms of `valuation_wbac_top_v1` are drawn and counted alike, then (`e2e/link-styles.mjs`) that links draw in the colour and underline their classes give them, in light and dark mode. Locally: `npm run build && npx next start -p 3123`, then run it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
@@ -226,4 +226,11 @@ in Rakuten's reports, tagged with the placement (`u1`) that sent it.
   2026 outage they were picked from, are in `src/lib/lookup-health.ts`; the Friday audit and
   `/data-health` carry the same "Lookup health" line. Incident state is a
   `lookup_alert` row in `site_events` (flagged internal).
+- `src/app/globals.css`: a rule on a bare element goes inside `@layer base`.
+  Tailwind v4's utilities live in a layer and CSS outside any layer outranks
+  all of them, so a loose `a { color: inherit }` switched off every `text-*`
+  and `underline` on a link from the first commit until Nov 2026
+  (`e2e/link-styles.mjs` now checks). The page is dark in light mode too (one
+  `--background`). `:focus-visible` and `.blog-content …` are still outside a
+  layer and so still beat utilities.
 - Commit messages end with the project's `Co-Authored-By` trailer.
