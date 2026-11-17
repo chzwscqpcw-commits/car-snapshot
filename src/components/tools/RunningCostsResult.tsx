@@ -48,6 +48,7 @@ import WarrantyCTA from "@/components/WarrantyCTA";
 import Button from "@/components/Button";
 import { isMotorbike, isVan, shortVehicleName } from "@/lib/report-v2/format";
 import InsuranceCTA from "@/components/InsuranceCTA";
+import { insuranceOffer, type InsuranceKind } from "@/config/insurance";
 
 interface RunningCostsResultProps {
   vrm: string;
@@ -205,6 +206,12 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
     };
   }, [ownership, insurance.estimatedAnnual, includeInsurance, milesPerYear]);
 
+  // One insurance ask on the page. Where a partner's card shows under the
+  // estimate, the estimate's own "Get real quotes" button (a plain link to a
+  // comparison site that is not a partner) is left out: the card is the ask.
+  const insuranceKind: InsuranceKind = isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car";
+  const hasInsurancePartner = insuranceOffer(insuranceKind) !== null;
+
   return (
     <ToolResultLayout
       vrm={vrm}
@@ -257,17 +264,20 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         inputs={insuranceInputs}
         setInputs={setInsuranceInputs}
         insurance={insurance}
+        quoteLink={!hasInsurancePartner}
       />
       {/* The estimate above is a guide; a quote is the real figure. */}
       <InsuranceCTA
         context="running-costs-insurance"
-        kind={isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car"}
+        kind={insuranceKind}
         vehicleName={shortVehicleName(vehicle.make, vehicle.model)}
         className="mt-4"
       />
       {/* Running costs are a "should I buy this car?" signal — offer the full
           history check (finance/write-off/stolen/mileage) at that buyer intent. */}
-      <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" motorbike={isMotorbike(vehicle)} />
+      <div className="mt-4">
+        <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" motorbike={isMotorbike(vehicle)} />
+      </div>
       {/* Repairs are the one line this page forecasts least well — everything
           else here (fuel, tax, insurance, servicing) is modellable, a failed
           gearbox isn't. That gap is the honest case for a warranty, so the
@@ -860,10 +870,13 @@ function InsurancePanel({
   inputs,
   setInputs,
   insurance,
+  quoteLink,
 }: {
   inputs: InsuranceInputs;
   setInputs: (i: InsuranceInputs) => void;
   insurance: InsuranceEstimate;
+  /** Show the plain "Get real quotes" link; off where a partner's card follows. */
+  quoteLink: boolean;
 }) {
   return (
     <section className="mt-4 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/15 via-slate-900/70 to-slate-950 p-5 sm:p-6">
@@ -930,14 +943,16 @@ function InsurancePanel({
             </p>
           )}
         </div>
-        <Button
-          href={COMPARE_THE_MARKET_URL}
-          target="_blank"
-          rel="noopener nofollow noreferrer"
-          size="sm"
-        >
-          Get real quotes →
-        </Button>
+        {quoteLink && (
+          <Button
+            href={COMPARE_THE_MARKET_URL}
+            target="_blank"
+            rel="noopener nofollow noreferrer"
+            size="sm"
+          >
+            Get real quotes →
+          </Button>
+        )}
       </div>
 
       <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">
