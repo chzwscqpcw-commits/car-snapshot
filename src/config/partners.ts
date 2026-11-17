@@ -1,3 +1,11 @@
+export interface PartnerLogo {
+  /** Path under /public, e.g. "/partner-logos/name.svg". */
+  src: string;
+  /** The file's own pixel size (or viewBox), for the aspect ratio. */
+  width: number;
+  height: number;
+}
+
 export interface PartnerLink {
   url: string;
   name: string;
@@ -13,6 +21,15 @@ export interface PartnerLink {
   pending?: boolean;
   description?: string;
   shortDescription?: string;
+  /**
+   * The partner's own logo, for a card that shows one (InsuranceCTA). Only a
+   * file the partner has supplied or approved, used as it comes: a partner
+   * agreement typically licenses the marks the partner makes available and
+   * nothing else, so no artwork found elsewhere, no recolouring, no cropping.
+   * Unset = the card is text-only. `src` is a path under /public;
+   * `npm run test:insurance` fails if it names a file that isn't there.
+   */
+  logo?: PartnerLogo;
   /**
    * Construct the affiliate URL for a given vehicle reg.
    *
@@ -87,17 +104,26 @@ function rakutenLink(base: string, clickref?: string): string {
 }
 
 /**
- * RVU's insurance programmes on Rakuten (confused.com, Uswitch, Tempcover).
- * Staged 29 Oct 2026 for car, van and bike insurance plus Tempcover; the
- * tracking links have not been issued yet. When the
- * links arrive, paste each one here in place of the placeholder (and set the
- * brand name below if it's Uswitch rather than confused.com) and the
- * placements in src/config/insurance.ts switch on by themselves.
+ * RVU's insurance programmes on Rakuten (Confused.com, Tempcover). Staged
+ * 29 Oct 2026; the Confused.com links below are the ones in the publisher
+ * dashboard on 17 Nov 2026 (`id` is our publisher token, as in the We Buy Any
+ * Car link above). Car and van are live. The bike link is the real one too,
+ * but its entry stays pending: see rvuBikeInsurance. Tempcover has no link
+ * yet; paste it in place of the placeholder and its placements switch on by
+ * themselves (src/config/insurance.ts).
  */
-const RVU_CAR_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_CAR";
-const RVU_VAN_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_VAN";
-const RVU_BIKE_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_BIKE";
+const RVU_CAR_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=2164281.967&type=3&subid=0";
+const RVU_VAN_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=2164281.969&type=3&subid=0";
+const RVU_BIKE_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=2164281.968&type=3&subid=0";
 const TEMPCOVER_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_TEMPCOVER";
+
+/** A Rakuten Advertising tracker (the host every one of their links uses). */
+export function isRakutenLink(url: string): boolean {
+  return url.startsWith("https://click.linksynergy.com/");
+}
 
 /**
  * Rakuten tracker → webuyanycar.com, with the placement as `u1` — Rakuten's
@@ -375,28 +401,30 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       );
     },
   },
-  // RVU insurance on Rakuten — see RVU_CAR_LINK above. Pending until the
-  // links arrive; brand names may change to Uswitch per product.
+  // Confused.com (RVU) on Rakuten — see RVU_CAR_LINK above. The name is
+  // written as the brand writes it, capital C. No `logo`: the card is
+  // text-only until the partner supplies an approved file.
   rvuCarInsurance: {
     url: RVU_CAR_LINK,
-    name: "confused.com",
+    name: "Confused.com",
     isAffiliate: true,
-    pending: true,
+    pending: false,
     shortDescription: "Car insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_CAR_LINK, clickref),
   },
   rvuVanInsurance: {
     url: RVU_VAN_LINK,
-    name: "confused.com",
+    name: "Confused.com",
     isAffiliate: true,
-    pending: true,
+    pending: false,
     shortDescription: "Van insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_VAN_LINK, clickref),
   },
   rvuBikeInsurance: {
     url: RVU_BIKE_LINK,
-    name: "confused.com",
+    name: "Confused.com",
     isAffiliate: true,
+    // Waits on the partner fixing the link's destination (a 404 on 17 Nov 2026); then set false.
     pending: true,
     shortDescription: "Bike insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_BIKE_LINK, clickref),

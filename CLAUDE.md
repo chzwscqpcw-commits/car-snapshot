@@ -155,8 +155,9 @@ clip or caption; the test enforces both.
 
 ## Partner orders (Rakuten reports)
 
-Our own events see We Buy Any Car clicks, never orders: an order exists only
-in Rakuten's reports, tagged with the placement (`u1`) that sent it.
+Our own events see clicks to the Rakuten advertisers (We Buy Any Car, and
+Confused.com for insurance), never orders: an order exists only in Rakuten's
+reports, tagged with the placement (`u1`) that sent it.
 `/api/cron/rakuten-reports` (daily) fetches two saved reports from their
 "Get API" links and stores them; the Friday email and `/data-health` show a
 "Partner orders" block from them. Setup and the first-run checks:
@@ -178,15 +179,39 @@ in Rakuten's reports, tagged with the placement (`u1`) that sent it.
   earlier figure moves to `previous_commission`, so a paying order dropping
   to zero stays visible. `/api/admin/partner-orders` serves nothing real on
   a deployment without its own `ADMIN_PIN`.
-- **Reconciliation.** Rakuten's clicks per day against our `partner_click`
-  rows (`partner_id = weBuyAnyCar`, owner traffic out); a finished day more
-  than 3 clicks (or a tenth) apart is flagged. Thresholds: `RECON` in
-  `src/lib/partner-orders.ts`.
+- **Reconciliation.** Rakuten's clicks per day are the whole account's (the
+  day report has no advertiser column), so they are compared with our
+  `partner_click` rows for every partner whose link is a Rakuten link
+  (`rakutenPartners()`: We Buy Any Car and Confused.com today; owner traffic
+  out). A finished day more than 3 clicks (or a tenth) apart is flagged.
+  Thresholds: `RECON` in `src/lib/partner-orders.ts`; clicks known to have
+  been made outside the site go in `OFFSITE_CLICKS` there. Orders are shown
+  per advertiser, from the name on each row of the lock report.
 - `npm run rakuten:pull` writes the two cleaned CSVs to `RAKUTEN_EXPORT_DIR`
   (no database, no site). `/data-health?partner-orders=sample` shows the
   panel with made-up figures.
 - This repository is public: no rates, earnings, contacts or terms in code,
   fixtures, commits or PR text.
+
+## Insurance placements (Confused.com)
+
+`InsuranceCTA` shows a "compare insurance" card under running costs on the
+homepage (`money-insurance`) and on the `/running-costs` result
+(`running-costs-insurance`); `src/config/insurance.ts` picks the partner by
+vehicle type. Confused.com (through Rakuten) is live for cars and vans. The
+bike entry stays `pending` until its link's destination works; Tempcover has
+no link yet.
+
+- **The partner approves every placement before it goes live.** A change to
+  the card's wording, a new placement or a new vehicle type goes to them
+  first. `/preview/insurance` shows each card for that.
+- **The wording is ours and makes no claim**: no saving, "cheapest", "best",
+  reward or figure, and nothing about the partner beyond its name, written
+  "Confused.com". `npm run test:insurance` pins the text and fails on a claim.
+- **Logo.** The card has a slot (a white plate) that draws only when the
+  partner entry names a `logo`. Only a file the partner supplies or approves,
+  used as it comes; never artwork found elsewhere. None is set, so the card
+  is text-only.
 
 ## Conventions
 

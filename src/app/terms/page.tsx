@@ -43,7 +43,7 @@ export default function TermsPage() {
             ← Back to Free Plate Check
           </Link>
           <h1 className="text-3xl font-bold text-slate-100">Terms of Service</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: June 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: November 2026</p>
         </div>
       </div>
 
@@ -93,7 +93,8 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-100 mb-4">5. Third-Party Links & Affiliate Disclosure</h2>
             <p className="mb-4">
-              Free Plate Check contains links to third-party websites (insurance, finance, breakdown cover providers). 
+              Free Plate Check contains links to third-party websites (vehicle history reports, garage and MOT booking,
+              mechanics, warranties, car-buying services and insurance comparison).
               These are affiliate links - we earn a commission if you proceed through our links, at no extra cost to you.
             </p>
             <p className="mb-4">We are not responsible for:</p>

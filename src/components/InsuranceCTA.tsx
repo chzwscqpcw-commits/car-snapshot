@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { ShieldCheck } from "lucide-react";
-import { goLink, type GoContext } from "@/config/partners";
+import { goLink, type GoContext, type PartnerLogo } from "@/config/partners";
 import { insuranceOffer, previewOffer, type InsuranceKind, type InsuranceOffer } from "@/config/insurance";
 import { trackEvent } from "@/lib/tracking";
 
@@ -26,8 +27,16 @@ const NOUN: Record<InsuranceKind, string> = { car: "car", van: "van", motorbike:
  *
  * Clicks go through /go like SellCarCTA's: recorded server-side, bots turned
  * away before the partner's tracker, and the placement passed on as the
- * network's sub-ID. So no trackPartnerClick here. Copy makes no claims about
- * the partner: their approved wording isn't in yet.
+ * network's sub-ID. So no trackPartnerClick here.
+ *
+ * The wording is our own and stays claim-free on purpose: it says what the
+ * card is for and names the partner, nothing more. No saving, no "cheapest"
+ * or "best", no reward, no description of the partner's service. Their
+ * programme wants every placement approved before it goes live, so a change
+ * to the text here is a change to send them first.
+ *
+ * The partner's logo shows only when its entry in partners.ts names one (a
+ * file they have supplied or approved); otherwise the card is text-only.
  */
 export default function InsuranceCTA({ context, kind, vehicleName, preview = false, className = "" }: InsuranceCTAProps) {
   const offer: InsuranceOffer | null = preview ? previewOffer(kind) : insuranceOffer(kind);
@@ -38,6 +47,7 @@ export default function InsuranceCTA({ context, kind, vehicleName, preview = fal
   return (
     <div
       ref={cardRef}
+      data-insurance-card={kind}
       className={`rounded-xl border border-sky-700/40 bg-gradient-to-br from-sky-950/40 via-slate-900/40 to-slate-900/30 p-5 sm:p-6 ${className}`}
     >
       <div className="flex items-start gap-3 mb-3">
@@ -50,18 +60,41 @@ export default function InsuranceCTA({ context, kind, vehicleName, preview = fal
         Insurance is the one running cost we can&apos;t work out from the {noun}: it depends on you as much as the
         {" "}{noun}. Compare quotes in one go to see what yours would cost.
       </p>
-      <div className="ml-8">
+      {/* Phone: the logo sits above the full-width button. Wider: beside it. */}
+      <div className="ml-8 flex flex-col-reverse items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
         <a
           href={preview ? "#" : goLink(offer.go, context)}
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
-          className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold rounded-lg transition-colors"
+          className="inline-flex w-full sm:w-auto items-center justify-center text-center px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold rounded-lg transition-colors"
         >
           Compare {noun} insurance with {offer.partner.name} &#8599;
         </a>
+        {offer.partner.logo && <PartnerLogoPlate logo={offer.partner.logo} name={offer.partner.name} />}
       </div>
       <p className="text-xs text-slate-500 mt-3 ml-8">Free Plate Check may earn a small commission from this link.</p>
     </div>
+  );
+}
+
+/**
+ * The partner's logo on a white plate: most wordmarks are drawn for a light
+ * page and vanish on our dark cards. The file is shown whole and as supplied
+ * (never recoloured or cropped), with clear space of about half its height
+ * on every side; the plate is as tall as the button it sits beside.
+ */
+function PartnerLogoPlate({ logo, name }: { logo: PartnerLogo; name: string }) {
+  return (
+    <span data-partner-logo className="inline-flex shrink-0 items-center rounded-lg bg-white px-3.5 py-2.5">
+      <Image
+        src={logo.src}
+        alt={name}
+        width={logo.width}
+        height={logo.height}
+        unoptimized
+        style={{ height: 24, width: "auto" }}
+      />
+    </span>
   );
 }
 

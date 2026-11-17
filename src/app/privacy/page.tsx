@@ -43,7 +43,7 @@ export default function PrivacyPage() {
             ← Back to Free Plate Check
           </Link>
           <h1 className="text-3xl font-bold text-slate-100">Privacy Policy</h1>
-          <p className="text-sm text-slate-400 mt-2">Last Updated: October 2026</p>
+          <p className="text-sm text-slate-400 mt-2">Last Updated: November 2026</p>
         </div>
       </div>
 
@@ -207,7 +207,7 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-bold text-slate-100 mb-4">7. Third-Party Links</h2>
             <p>
               Free Plate Check contains links to third-party websites, including partners such as carVertical,
-              BookMyGarage, ClickMechanic, Warrantywise and We Buy Any Car.
+              BookMyGarage, ClickMechanic, Warrantywise, We Buy Any Car and Confused.com.
               These third parties have their own privacy policies. We are not responsible for their privacy practices.
             </p>
             <p className="mt-4">
