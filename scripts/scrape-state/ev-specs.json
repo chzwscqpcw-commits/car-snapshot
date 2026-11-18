@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-11T12:42:00.687Z",
+  "updatedAt": "2026-11-18T12:56:57.913Z",
   "urls": {
     "https://ev-database.org/car/3715/Polestar-4-SUV-Dual-Motor": "2026-09-02T09:27:06.690Z",
     "https://ev-database.org/car/3714/Polestar-4-SUV-Rear-Motor": "2026-09-02T09:27:06.690Z",
@@ -607,7 +607,125 @@
     "https://ev-database.org/car/3123/Kia-EV4-Hatchback-583-kWh": "2026-11-11T12:42:00.678Z",
     "https://ev-database.org/car/3121/Kia-EV4-Fastback-583-kWh": "2026-11-11T12:42:00.678Z",
     "https://ev-database.org/car/3120/Tesla-Model-Y-Long-Range-RWD": "2026-11-11T12:42:00.678Z",
-    "https://ev-database.org/car/3119/Volkswagen-ID-Buzz-NWB-Pure": "2026-11-11T12:42:00.678Z"
+    "https://ev-database.org/car/3119/Volkswagen-ID-Buzz-NWB-Pure": "2026-11-11T12:42:00.678Z",
+    "https://ev-database.org/car/3882/Changan-Deepal-S07-779-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3881/Leapmotor-C10-AWD-819-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3880/Leapmotor-C10-RWD-819-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3879/Leapmotor-C10-RWD-699-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3878/Audi-Q4-Sportback-e-tron-performance-77-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3876/Volkswagen-ID5-Pro-77-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3875/Volkswagen-ID4-Pro-77-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3118/Volvo-EX30-Cross-Country": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3877/Audi-Q4-e-tron-performance-77-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3117/BMW-i5-M60-xDrive-Touring": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3116/BMW-i5-xDrive40-Touring": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3115/BMW-i5-eDrive40-Touring": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3114/BMW-i5-M60-xDrive-Sedan": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3113/BMW-i5-xDrive40-Sedan": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3112/BMW-i5-eDrive40-Sedan": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3111/BMW-iX-M70-xDrive": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3110/BMW-iX-xDrive60": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3109/BMW-iX-xDrive45": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3108/Mazda-6e-Long-Range-80-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3107/Mazda-6e-688-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3106/Tesla-Model-Y-Long-Range-AWD-Launch-Series": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3105/Ford-Explorer-Extended-Range-RWD-Limited-Edition": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3104/Tesla-Model-Y-Long-Range-AWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3103/Tesla-Model-Y-RWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3102/BYD-SEAL-614-kWh-RWD-Comfort": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3101/Skoda-Enyaq-Coupe-85x": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3099/Skoda-Enyaq-Coupe-60": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3100/Skoda-Enyaq-Coupe-85": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3098/Skoda-Enyaq-85x": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3097/Skoda-Enyaq-85": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3096/Skoda-Enyaq-60": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3084/Nissan-Townstar-EV-Passenger-L2": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3083/Zeekr-7X-Privilege-AWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3082/Zeekr-7X-Long-Range-RWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3081/Zeekr-7X-Core-RWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3080/Volkswagen-ID5-Pure": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3079/Kia-EV6-GT": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3078/DS-Automobiles-N8-AWD-Long-Range": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3077/DS-Automobiles-N8-FWD-Long-Range": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3076/DS-Automobiles-N8-FWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3075/BMW-i5-xDrive40-Touring": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3074/Nissan-Ariya-e-4ORCE-87kWh---320-kW-Nismo": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3073/Ford-Puma-Gen-E": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3072/BYD-SEALION-7-913-kWh-AWD-Excellence": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3071/BYD-SEALION-7-825-kWh-AWD-Design": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3070/BYD-SEALION-7-825-kWh-RWD-Comfort": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3069/Hyundai-IONIQ-9-Performance-AWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3068/Hyundai-IONIQ-9-Long-Range-AWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3066/Peugeot-e-408-58-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3067/Hyundai-IONIQ-9-Long-Range-RWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3064/Skywell-BE11-Standard-Range": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3065/Skywell-BE11-Long-Range": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3063/Porsche-Taycan-GTS-Sport-Turismo": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3062/Porsche-Taycan-GTS": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3061/Porsche-Taycan-4-Plus": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3060/Porsche-Taycan-4": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3059/Mini-Aceman-JCW": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3058/Mini-Cooper-JCW": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3057/Abarth-600e-Scorpionissima": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3056/Abarth-600e-Turismo": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3055/Audi-A6-Avant-e-tron": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3054/Audi-A6-Avant-e-tron-quattro": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3053/Audi-A6-Sportback-e-tron": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3052/Audi-A6-Sportback-e-tron-quattro": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3050/Citroen-e-C4-X-54-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3051/Opel-Mokka-Electric": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3048/Citroen-e-C4-54-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3049/Citroen-e-C4-X": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3047/Citroen-e-C4": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3046/Omoda-E5": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3045/LynkCo-02": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3044/Audi-SQ6-Sportback-e-tron": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3043/Audi-Q6-Sportback-e-tron-quattro": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3042/Audi-Q6-Sportback-e-tron-performance": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3041/Audi-Q6-Sportback-e-tron": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3040/Leapmotor-C10-RWD-699-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3038/Opel-Grandland-Electric-82-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3039/Leapmotor-T03": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3037/Opel-Grandland-Electric-73-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3036/Dongfeng-Box-423-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3035/Dongfeng-Box-314-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3034/Tesla-Model-3-Long-Range-RWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3033/Skoda-Elroq-85": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3032/Skoda-Elroq-60": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3031/Skoda-Elroq-50": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3030/Kia-EV6-Standard-Range-2WD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3029/Kia-EV6-Long-Range-AWD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3028/Kia-EV6-Long-Range-2WD": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/3027/Lexus-RZ-300e": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2327/Smart-ForTwo-Brabus-Electric-Drive": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2326/Smart-ForTwo-Cabrio-Electric-Drive": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2328/Smart-ForTwo-Brabus-Cabrio-Electric-Drive": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2325/Smart-ForTwo-Electric-Drive": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2318/Fiat-E-Scudo-Combi-L3-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2317/Fiat-E-Scudo-Combi-L2-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2316/Fiat-E-Scudo-Combi-L3-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2315/Fiat-E-Scudo-Combi-L2-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2314/Opel-Vivaro-Combi-Electric-XL-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2313/Opel-Vivaro-Combi-Electric-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2312/Opel-Vivaro-Combi-Electric-XL-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2311/Opel-Vivaro-Combi-Electric-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2310/Peugeot-e-Expert-Combi-L3-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2309/Peugeot-e-Expert-Combi-L2-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2308/Peugeot-e-Expert-Combi-L3-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2307/Peugeot-e-Expert-Combi-L2-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2305/Citroen-e-Jumpy-Combi-M-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2304/Citroen-e-Jumpy-Combi-XL-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2306/Citroen-e-Jumpy-Combi-XL-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2303/Citroen-e-Jumpy-Combi-M-49-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2302/Fiat-E-Scudo-Combi-L3-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2301/Fiat-E-Scudo-Combi-L3-50-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2300/Fiat-E-Scudo-Combi-L2-75-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2299/Fiat-E-Scudo-Combi-L2-50-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2298/Ford-e-Transit-Custom-Kombi-L2-160-kW-64-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2297/Ford-e-Transit-Custom-Kombi-L2-100-kW-64-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2296/Ford-e-Transit-Custom-Kombi-L1-160-kW-64-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2295/Ford-e-Transit-Custom-Kombi-L1-100-kW-64-kWh": "2026-11-18T12:56:57.905Z",
+    "https://ev-database.org/car/2294/Mercedes-Benz-eVito-Tourer-Extra-Long-90-kWh": "2026-11-18T12:56:57.905Z"
   },
   "records": {
     "TESLA|MODEL 3": {
@@ -6799,8 +6917,8 @@
       }
     },
     "LEAPMOTOR|C10 AWD 819 KWH": {
-      "rank": 3388,
-      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "rank": 3881,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
       "record": {
         "make": "LEAPMOTOR",
         "model": "C10 AWD 819 KWH",
@@ -6808,13 +6926,13 @@
         "rangeWltp": 236,
         "chargeFast": "30 min (180 kW DC)",
         "chargeSlow": "8h45m (11 kW AC)",
-        "motorKw": 440,
+        "motorKw": 420,
         "driveType": "AWD"
       }
     },
     "LEAPMOTOR|C10 RWD 819 KWH": {
-      "rank": 3387,
-      "scrapedAt": "2026-10-14T10:19:32.253Z",
+      "rank": 3880,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
       "record": {
         "make": "LEAPMOTOR",
         "model": "C10 RWD 819 KWH",
@@ -9762,6 +9880,1364 @@
         "rangeWltp": 227,
         "chargeFast": "30 min (100 kW DC)",
         "chargeSlow": "6 hours (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "CHANGAN|DEEPAL S07 779 KWH": {
+      "rank": 3882,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "CHANGAN",
+        "model": "DEEPAL S07 779 KWH",
+        "batteryKwh": 76,
+        "rangeWltp": 245,
+        "chargeFast": "25 min (200 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 190,
+        "driveType": "RWD"
+      }
+    },
+    "LEAPMOTOR|C10 RWD 699 KWH": {
+      "rank": 3879,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "C10 RWD 699 KWH",
+        "batteryKwh": 69.9,
+        "rangeWltp": 221,
+        "chargeFast": "33 min (120 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 165,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|Q4 SPORTBACK E TRON PERFORMANCE 77 KWH": {
+      "rank": 3878,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q4 SPORTBACK E TRON PERFORMANCE 77 KWH",
+        "batteryKwh": 77,
+        "rangeWltp": 277,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID5 PRO 77 KWH": {
+      "rank": 3876,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID5 PRO 77 KWH",
+        "batteryKwh": 77,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLKSWAGEN|ID4 PRO 77 KWH": {
+      "rank": 3875,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "VOLKSWAGEN",
+        "model": "ID4 PRO 77 KWH",
+        "batteryKwh": 77,
+        "rangeWltp": 280,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "VOLVO|EX30 CROSS COUNTRY": {
+      "rank": 3118,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "VOLVO",
+        "model": "EX30 CROSS COUNTRY",
+        "batteryKwh": 65,
+        "rangeWltp": 208,
+        "chargeFast": "28 min (158 kW DC)",
+        "chargeSlow": "3h30m (22 kW AC)",
+        "motorKw": 315,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|Q4 E TRON PERFORMANCE 77 KWH": {
+      "rank": 3877,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q4 E TRON PERFORMANCE 77 KWH",
+        "batteryKwh": 77,
+        "rangeWltp": 264,
+        "chargeFast": "30 min (165 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 210,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|I5 M60 XDRIVE TOURING": {
+      "rank": 3117,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 M60 XDRIVE TOURING",
+        "batteryKwh": 81.2,
+        "rangeWltp": 264,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "4h30m (22 kW AC)",
+        "motorKw": 442,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|I5 XDRIVE40 TOURING": {
+      "rank": 3116,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 XDRIVE40 TOURING",
+        "batteryKwh": 81.2,
+        "rangeWltp": 280,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 290,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|I5 EDRIVE40 TOURING": {
+      "rank": 3115,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 EDRIVE40 TOURING",
+        "batteryKwh": 81.2,
+        "rangeWltp": 289,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 250,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|I5 M60 XDRIVE SEDAN": {
+      "rank": 3114,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 M60 XDRIVE SEDAN",
+        "batteryKwh": 81.2,
+        "rangeWltp": 267,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "4h30m (22 kW AC)",
+        "motorKw": 442,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|I5 XDRIVE40 SEDAN": {
+      "rank": 3113,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 XDRIVE40 SEDAN",
+        "batteryKwh": 81.2,
+        "rangeWltp": 289,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 290,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|I5 EDRIVE40 SEDAN": {
+      "rank": 3112,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "I5 EDRIVE40 SEDAN",
+        "batteryKwh": 81.2,
+        "rangeWltp": 298,
+        "chargeFast": "29 min (206 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 250,
+        "driveType": "RWD"
+      }
+    },
+    "BMW|IX M70 XDRIVE": {
+      "rank": 3111,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX M70 XDRIVE",
+        "batteryKwh": 108.9,
+        "rangeWltp": 311,
+        "chargeFast": "32 min (195 kW DC)",
+        "chargeSlow": "6 hours (22 kW AC)",
+        "motorKw": 485,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|IX XDRIVE60": {
+      "rank": 3110,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX XDRIVE60",
+        "batteryKwh": 109.1,
+        "rangeWltp": 326,
+        "chargeFast": "32 min (195 kW DC)",
+        "chargeSlow": "11h45m (11 kW AC)",
+        "motorKw": 400,
+        "driveType": "AWD"
+      }
+    },
+    "BMW|IX XDRIVE45": {
+      "rank": 3109,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "BMW",
+        "model": "IX XDRIVE45",
+        "batteryKwh": 94.8,
+        "rangeWltp": 292,
+        "chargeFast": "36 min (175 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "MAZDA|6E LONG RANGE 80 KWH": {
+      "rank": 3108,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "MAZDA",
+        "model": "6E LONG RANGE 80 KWH",
+        "batteryKwh": 78,
+        "rangeWltp": 298,
+        "chargeFast": "49 min (93 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 180,
+        "driveType": "RWD"
+      }
+    },
+    "MAZDA|6E 688 KWH": {
+      "rank": 3107,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "MAZDA",
+        "model": "6E 688 KWH",
+        "batteryKwh": 68,
+        "rangeWltp": 261,
+        "chargeFast": "23 min (165 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 190,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL Y LONG RANGE AWD LAUNCH SERIES": {
+      "rank": 3106,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y LONG RANGE AWD LAUNCH SERIES",
+        "batteryKwh": 75,
+        "rangeWltp": 283,
+        "chargeFast": "27 min (250 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 378,
+        "driveType": "AWD"
+      }
+    },
+    "FORD|EXPLORER EXTENDED RANGE RWD LIMITED EDITION": {
+      "rank": 3105,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "FORD",
+        "model": "EXPLORER EXTENDED RANGE RWD LIMITED EDITION",
+        "batteryKwh": 79,
+        "rangeWltp": 280,
+        "chargeFast": "27 min (185 kW DC)",
+        "chargeSlow": "8h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "RWD"
+      }
+    },
+    "TESLA|MODEL Y LONG RANGE AWD": {
+      "rank": 3104,
+      "scrapedAt": "2026-11-18T12:56:57.905Z",
+      "record": {
+        "make": "TESLA",
+        "model": "MODEL Y LONG RANGE AWD",
+        "batteryKwh": 75,
+        "rangeWltp": 283,
+        "chargeFast": "27 min (250 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 378,
+        "driveType": "AWD"
+      }
+    },
+    "NISSAN|TOWNSTAR EV PASSENGER L2": {
+      "rank": 3084,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "TOWNSTAR EV PASSENGER L2",
+        "batteryKwh": 45,
+        "rangeWltp": 137,
+        "chargeFast": "40 min (80 kW DC)",
+        "chargeSlow": "2h30m (22 kW AC)",
+        "motorKw": 90,
+        "driveType": "FWD"
+      }
+    },
+    "ZEEKR|7X PRIVILEGE AWD": {
+      "rank": 3083,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "ZEEKR",
+        "model": "7X PRIVILEGE AWD",
+        "batteryKwh": 97,
+        "rangeWltp": 304,
+        "chargeFast": "16 min (480 kW DC)",
+        "chargeSlow": "5h15m (22 kW AC)",
+        "motorKw": 475,
+        "driveType": "AWD"
+      }
+    },
+    "ZEEKR|7X LONG RANGE RWD": {
+      "rank": 3082,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "ZEEKR",
+        "model": "7X LONG RANGE RWD",
+        "batteryKwh": 97,
+        "rangeWltp": 314,
+        "chargeFast": "16 min (480 kW DC)",
+        "chargeSlow": "5h15m (22 kW AC)",
+        "motorKw": 310,
+        "driveType": "RWD"
+      }
+    },
+    "ZEEKR|7X CORE RWD": {
+      "rank": 3081,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "ZEEKR",
+        "model": "7X CORE RWD",
+        "batteryKwh": 73,
+        "rangeWltp": 239,
+        "chargeFast": "13 min (480 kW DC)",
+        "chargeSlow": "4 hours (22 kW AC)",
+        "motorKw": 310,
+        "driveType": "RWD"
+      }
+    },
+    "KIA|EV6 GT": {
+      "rank": 3079,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV6 GT",
+        "batteryKwh": 80,
+        "rangeWltp": 245,
+        "chargeFast": "17 min (263 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 478,
+        "driveType": "AWD"
+      }
+    },
+    "DS|N8 AWD LONG RANGE": {
+      "rank": 3078,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "DS",
+        "model": "N8 AWD LONG RANGE",
+        "batteryKwh": 97.2,
+        "rangeWltp": 329,
+        "chargeFast": "32 min (160 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 257,
+        "driveType": "AWD"
+      }
+    },
+    "DS|N8 FWD LONG RANGE": {
+      "rank": 3077,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "DS",
+        "model": "N8 FWD LONG RANGE",
+        "batteryKwh": 97.2,
+        "rangeWltp": 339,
+        "chargeFast": "32 min (160 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 180,
+        "driveType": "FWD"
+      }
+    },
+    "DS|N8 FWD": {
+      "rank": 3076,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "DS",
+        "model": "N8 FWD",
+        "batteryKwh": 73.7,
+        "rangeWltp": 258,
+        "chargeFast": "36 min (160 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 169,
+        "driveType": "FWD"
+      }
+    },
+    "NISSAN|ARIYA E 4ORCE 87KWH   320 KW NISMO": {
+      "rank": 3074,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "NISSAN",
+        "model": "ARIYA E 4ORCE 87KWH   320 KW NISMO",
+        "batteryKwh": 87,
+        "rangeWltp": 239,
+        "chargeFast": "48 min (130 kW DC)",
+        "chargeSlow": "4h45m (22 kW AC)",
+        "motorKw": 320,
+        "driveType": "AWD"
+      }
+    },
+    "BYD|SEALION 7 913 KWH AWD EXCELLENCE": {
+      "rank": 3072,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "BYD",
+        "model": "SEALION 7 913 KWH AWD EXCELLENCE",
+        "batteryKwh": 91.3,
+        "rangeWltp": 273,
+        "chargeFast": "24 min (230 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
+        "motorKw": 390,
+        "driveType": "AWD"
+      }
+    },
+    "BYD|SEALION 7 825 KWH AWD DESIGN": {
+      "rank": 3071,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "BYD",
+        "model": "SEALION 7 825 KWH AWD DESIGN",
+        "batteryKwh": 82.5,
+        "rangeWltp": 252,
+        "chargeFast": "32 min (150 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 390,
+        "driveType": "AWD"
+      }
+    },
+    "BYD|SEALION 7 825 KWH RWD COMFORT": {
+      "rank": 3070,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "BYD",
+        "model": "SEALION 7 825 KWH RWD COMFORT",
+        "batteryKwh": 82.5,
+        "rangeWltp": 261,
+        "chargeFast": "32 min (150 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 230,
+        "driveType": "RWD"
+      }
+    },
+    "HYUNDAI|IONIQ 9 PERFORMANCE AWD": {
+      "rank": 3069,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "IONIQ 9 PERFORMANCE AWD",
+        "batteryKwh": 106,
+        "rangeWltp": 301,
+        "chargeFast": "24 min (250 kW DC)",
+        "chargeSlow": "11h30m (11 kW AC)",
+        "motorKw": 315,
+        "driveType": "AWD"
+      }
+    },
+    "HYUNDAI|IONIQ 9 LONG RANGE AWD": {
+      "rank": 3068,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "IONIQ 9 LONG RANGE AWD",
+        "batteryKwh": 106,
+        "rangeWltp": 308,
+        "chargeFast": "24 min (250 kW DC)",
+        "chargeSlow": "11h30m (11 kW AC)",
+        "motorKw": 226,
+        "driveType": "AWD"
+      }
+    },
+    "HYUNDAI|IONIQ 9 LONG RANGE RWD": {
+      "rank": 3067,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "HYUNDAI",
+        "model": "IONIQ 9 LONG RANGE RWD",
+        "batteryKwh": 106,
+        "rangeWltp": 314,
+        "chargeFast": "24 min (250 kW DC)",
+        "chargeSlow": "11h30m (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "SKYWELL|BE11 STANDARD RANGE": {
+      "rank": 3064,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SKYWELL",
+        "model": "BE11 STANDARD RANGE",
+        "batteryKwh": 68,
+        "rangeWltp": 202,
+        "chargeFast": "60 min (80 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "SKYWELL|BE11 LONG RANGE": {
+      "rank": 3065,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SKYWELL",
+        "model": "BE11 LONG RANGE",
+        "batteryKwh": 81,
+        "rangeWltp": 239,
+        "chargeFast": "72 min (80 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "PORSCHE|TAYCAN GTS SPORT TURISMO": {
+      "rank": 3063,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "TAYCAN GTS SPORT TURISMO",
+        "batteryKwh": 97,
+        "rangeWltp": 314,
+        "chargeFast": "16 min (322 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 515,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|TAYCAN GTS": {
+      "rank": 3062,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "TAYCAN GTS",
+        "batteryKwh": 97,
+        "rangeWltp": 332,
+        "chargeFast": "16 min (322 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 515,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|TAYCAN 4 PLUS": {
+      "rank": 3061,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "TAYCAN 4 PLUS",
+        "batteryKwh": 97,
+        "rangeWltp": 351,
+        "chargeFast": "16 min (322 kW DC)",
+        "chargeSlow": "10h30m (11 kW AC)",
+        "motorKw": 320,
+        "driveType": "AWD"
+      }
+    },
+    "PORSCHE|TAYCAN 4": {
+      "rank": 3060,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PORSCHE",
+        "model": "TAYCAN 4",
+        "batteryKwh": 82.3,
+        "rangeWltp": 304,
+        "chargeFast": "19 min (270 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 300,
+        "driveType": "AWD"
+      }
+    },
+    "MINI|ACEMAN JCW": {
+      "rank": 3059,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "MINI",
+        "model": "ACEMAN JCW",
+        "batteryKwh": 49.2,
+        "rangeWltp": 174,
+        "chargeFast": "29 min (95 kW DC)",
+        "chargeSlow": "5h15m (11 kW AC)",
+        "motorKw": 190,
+        "driveType": "FWD"
+      }
+    },
+    "MINI|COOPER JCW": {
+      "rank": 3058,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "MINI",
+        "model": "COOPER JCW",
+        "batteryKwh": 49.2,
+        "rangeWltp": 180,
+        "chargeFast": "29 min (95 kW DC)",
+        "chargeSlow": "5h15m (11 kW AC)",
+        "motorKw": 190,
+        "driveType": "FWD"
+      }
+    },
+    "ABARTH|600E SCORPIONISSIMA": {
+      "rank": 3057,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "ABARTH",
+        "model": "600E SCORPIONISSIMA",
+        "batteryKwh": 50.8,
+        "rangeWltp": 177,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 207,
+        "driveType": "FWD"
+      }
+    },
+    "ABARTH|600E TURISMO": {
+      "rank": 3056,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "ABARTH",
+        "model": "600E TURISMO",
+        "batteryKwh": 50.8,
+        "rangeWltp": 177,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "5h30m (11 kW AC)",
+        "motorKw": 175,
+        "driveType": "FWD"
+      }
+    },
+    "AUDI|A6 AVANT E TRON": {
+      "rank": 3055,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A6 AVANT E TRON",
+        "batteryKwh": 75.8,
+        "rangeWltp": 283,
+        "chargeFast": "22 min (225 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 240,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|A6 AVANT E TRON QUATTRO": {
+      "rank": 3054,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A6 AVANT E TRON QUATTRO",
+        "batteryKwh": 94.9,
+        "rangeWltp": 339,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 340,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|A6 SPORTBACK E TRON": {
+      "rank": 3053,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A6 SPORTBACK E TRON",
+        "batteryKwh": 75.8,
+        "rangeWltp": 301,
+        "chargeFast": "22 min (225 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 240,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|A6 SPORTBACK E TRON QUATTRO": {
+      "rank": 3052,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "A6 SPORTBACK E TRON QUATTRO",
+        "batteryKwh": 94.9,
+        "rangeWltp": 354,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 340,
+        "driveType": "AWD"
+      }
+    },
+    "CITROEN|E C4 X 54 KWH": {
+      "rank": 3050,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E C4 X 54 KWH",
+        "batteryKwh": 50.8,
+        "rangeWltp": 208,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "8h15m (7.4 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|MOKKA ELECTRIC": {
+      "rank": 3051,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "MOKKA ELECTRIC",
+        "batteryKwh": 50.8,
+        "rangeWltp": 177,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "8h15m (7.4 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E C4 54 KWH": {
+      "rank": 3048,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E C4 54 KWH",
+        "batteryKwh": 50.8,
+        "rangeWltp": 202,
+        "chargeFast": "28 min (107 kW DC)",
+        "chargeSlow": "8h15m (7.4 kW AC)",
+        "motorKw": 115,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E C4 X": {
+      "rank": 3049,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E C4 X",
+        "batteryKwh": 46.3,
+        "rangeWltp": 180,
+        "chargeFast": "28 min (101 kW DC)",
+        "chargeSlow": "7h30m (7.4 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E C4": {
+      "rank": 3047,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E C4",
+        "batteryKwh": 46.3,
+        "rangeWltp": 177,
+        "chargeFast": "28 min (101 kW DC)",
+        "chargeSlow": "7h30m (7.4 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "OMODA|E5": {
+      "rank": 3046,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OMODA",
+        "model": "E5",
+        "batteryKwh": 58.9,
+        "rangeWltp": 205,
+        "chargeFast": "33 min (130 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 155,
+        "driveType": "FWD"
+      }
+    },
+    "LYNKCO|02": {
+      "rank": 3045,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "LYNKCO",
+        "model": "02",
+        "batteryKwh": 62,
+        "rangeWltp": 217,
+        "chargeFast": "30 min (150 kW DC)",
+        "chargeSlow": "6h45m (11 kW AC)",
+        "motorKw": 200,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|SQ6 SPORTBACK E TRON": {
+      "rank": 3044,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "SQ6 SPORTBACK E TRON",
+        "batteryKwh": 94.9,
+        "rangeWltp": 308,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 380,
+        "driveType": "AWD"
+      }
+    },
+    "AUDI|Q6 SPORTBACK E TRON PERFORMANCE": {
+      "rank": 3042,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q6 SPORTBACK E TRON PERFORMANCE",
+        "batteryKwh": 94.9,
+        "rangeWltp": 317,
+        "chargeFast": "23 min (269 kW DC)",
+        "chargeSlow": "10h15m (11 kW AC)",
+        "motorKw": 240,
+        "driveType": "RWD"
+      }
+    },
+    "AUDI|Q6 SPORTBACK E TRON": {
+      "rank": 3041,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "AUDI",
+        "model": "Q6 SPORTBACK E TRON",
+        "batteryKwh": 75.8,
+        "rangeWltp": 255,
+        "chargeFast": "22 min (225 kW DC)",
+        "chargeSlow": "8h15m (11 kW AC)",
+        "motorKw": 215,
+        "driveType": "RWD"
+      }
+    },
+    "OPEL|GRANDLAND ELECTRIC 82 KWH": {
+      "rank": 3038,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "GRANDLAND ELECTRIC 82 KWH",
+        "batteryKwh": 82.2,
+        "rangeWltp": 261,
+        "chargeFast": "36 min (160 kW DC)",
+        "chargeSlow": "9 hours (11 kW AC)",
+        "motorKw": 157,
+        "driveType": "FWD"
+      }
+    },
+    "LEAPMOTOR|T03": {
+      "rank": 3039,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "LEAPMOTOR",
+        "model": "T03",
+        "batteryKwh": 36,
+        "rangeWltp": 140,
+        "chargeFast": "53 min (48 kW DC)",
+        "chargeSlow": "6h30m (6.6 kW AC)",
+        "motorKw": 70,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|GRANDLAND ELECTRIC 73 KWH": {
+      "rank": 3037,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "GRANDLAND ELECTRIC 73 KWH",
+        "batteryKwh": 73,
+        "rangeWltp": 233,
+        "chargeFast": "36 min (160 kW DC)",
+        "chargeSlow": "8 hours (11 kW AC)",
+        "motorKw": 157,
+        "driveType": "FWD"
+      }
+    },
+    "DONGFENG|BOX 423 KWH": {
+      "rank": 3036,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "DONGFENG",
+        "model": "BOX 423 KWH",
+        "batteryKwh": 40,
+        "rangeWltp": 158,
+        "chargeFast": "35 min (61 kW DC)",
+        "chargeSlow": "7h15m (6.6 kW AC)",
+        "motorKw": 70,
+        "driveType": "FWD"
+      }
+    },
+    "DONGFENG|BOX 314 KWH": {
+      "rank": 3035,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "DONGFENG",
+        "model": "BOX 314 KWH",
+        "batteryKwh": 29,
+        "rangeWltp": 118,
+        "chargeFast": "26 min (57 kW DC)",
+        "chargeSlow": "10h30m (3.3 kW AC)",
+        "motorKw": 70,
+        "driveType": "FWD"
+      }
+    },
+    "SKODA|ELROQ 50": {
+      "rank": 3031,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SKODA",
+        "model": "ELROQ 50",
+        "batteryKwh": 52,
+        "rangeWltp": 193,
+        "chargeFast": "26 min (145 kW DC)",
+        "chargeSlow": "5h45m (11 kW AC)",
+        "motorKw": 125,
+        "driveType": "RWD"
+      }
+    },
+    "KIA|EV6 STANDARD RANGE 2WD": {
+      "rank": 3030,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV6 STANDARD RANGE 2WD",
+        "batteryKwh": 60,
+        "rangeWltp": 214,
+        "chargeFast": "18 min (195 kW DC)",
+        "chargeSlow": "6h30m (11 kW AC)",
+        "motorKw": 125,
+        "driveType": "RWD"
+      }
+    },
+    "KIA|EV6 LONG RANGE AWD": {
+      "rank": 3029,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV6 LONG RANGE AWD",
+        "batteryKwh": 80,
+        "rangeWltp": 273,
+        "chargeFast": "17 min (263 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 239,
+        "driveType": "AWD"
+      }
+    },
+    "KIA|EV6 LONG RANGE 2WD": {
+      "rank": 3028,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "KIA",
+        "model": "EV6 LONG RANGE 2WD",
+        "batteryKwh": 80,
+        "rangeWltp": 283,
+        "chargeFast": "17 min (263 kW DC)",
+        "chargeSlow": "8h45m (11 kW AC)",
+        "motorKw": 168,
+        "driveType": "RWD"
+      }
+    },
+    "LEXUS|RZ 300E": {
+      "rank": 3027,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "LEXUS",
+        "model": "RZ 300E",
+        "batteryKwh": 64,
+        "rangeWltp": 221,
+        "chargeFast": "28 min (147 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 150,
+        "driveType": "FWD"
+      }
+    },
+    "SMART|FORTWO BRABUS ELECTRIC DRIVE": {
+      "rank": 2327,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SMART",
+        "model": "FORTWO BRABUS ELECTRIC DRIVE",
+        "batteryKwh": 16.7,
+        "rangeWltp": 65,
+        "chargeFast": "",
+        "chargeSlow": "6 hours (3.3 kW AC)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|FORTWO CABRIO ELECTRIC DRIVE": {
+      "rank": 2326,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SMART",
+        "model": "FORTWO CABRIO ELECTRIC DRIVE",
+        "batteryKwh": 16.7,
+        "rangeWltp": 62,
+        "chargeFast": "",
+        "chargeSlow": "6 hours (3.3 kW AC)",
+        "motorKw": 55,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|FORTWO BRABUS CABRIO ELECTRIC DRIVE": {
+      "rank": 2328,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SMART",
+        "model": "FORTWO BRABUS CABRIO ELECTRIC DRIVE",
+        "batteryKwh": 16.7,
+        "rangeWltp": 62,
+        "chargeFast": "",
+        "chargeSlow": "6 hours (3.3 kW AC)",
+        "motorKw": 60,
+        "driveType": "RWD"
+      }
+    },
+    "SMART|FORTWO ELECTRIC DRIVE": {
+      "rank": 2325,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "SMART",
+        "model": "FORTWO ELECTRIC DRIVE",
+        "batteryKwh": 16.7,
+        "rangeWltp": 65,
+        "chargeFast": "",
+        "chargeSlow": "6 hours (3.3 kW AC)",
+        "motorKw": 55,
+        "driveType": "RWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L3 75 KWH": {
+      "rank": 2318,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L3 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L2 75 KWH": {
+      "rank": 2317,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L2 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L3 49 KWH": {
+      "rank": 2316,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L3 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L2 49 KWH": {
+      "rank": 2315,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L2 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|VIVARO COMBI ELECTRIC XL 75 KWH": {
+      "rank": 2314,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "VIVARO COMBI ELECTRIC XL 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|VIVARO COMBI ELECTRIC 75 KWH": {
+      "rank": 2313,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "VIVARO COMBI ELECTRIC 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|VIVARO COMBI ELECTRIC XL 49 KWH": {
+      "rank": 2312,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "VIVARO COMBI ELECTRIC XL 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "6h45m (7.4 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "OPEL|VIVARO COMBI ELECTRIC 49 KWH": {
+      "rank": 2311,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "OPEL",
+        "model": "VIVARO COMBI ELECTRIC 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "6h45m (7.4 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E EXPERT COMBI L3 75 KWH": {
+      "rank": 2310,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E EXPERT COMBI L3 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E EXPERT COMBI L2 75 KWH": {
+      "rank": 2309,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E EXPERT COMBI L2 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E EXPERT COMBI L3 49 KWH": {
+      "rank": 2308,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E EXPERT COMBI L3 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "PEUGEOT|E EXPERT COMBI L2 49 KWH": {
+      "rank": 2307,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "PEUGEOT",
+        "model": "E EXPERT COMBI L2 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E JUMPY COMBI M 75 KWH": {
+      "rank": 2305,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E JUMPY COMBI M 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E JUMPY COMBI XL 49 KWH": {
+      "rank": 2304,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E JUMPY COMBI XL 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E JUMPY COMBI XL 75 KWH": {
+      "rank": 2306,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E JUMPY COMBI XL 75 KWH",
+        "batteryKwh": 69,
+        "rangeWltp": 162,
+        "chargeFast": "39 min (100 kW DC)",
+        "chargeSlow": "7h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "CITROEN|E JUMPY COMBI M 49 KWH": {
+      "rank": 2303,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "CITROEN",
+        "model": "E JUMPY COMBI M 49 KWH",
+        "batteryKwh": 42,
+        "rangeWltp": 99,
+        "chargeFast": "24 min (101 kW DC)",
+        "chargeSlow": "4h30m (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L3 50 KWH": {
+      "rank": 2301,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L3 50 KWH",
+        "batteryKwh": 46.3,
+        "rangeWltp": 112,
+        "chargeFast": "26 min (101 kW DC)",
+        "chargeSlow": "5 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FIAT|E SCUDO COMBI L2 50 KWH": {
+      "rank": 2299,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FIAT",
+        "model": "E SCUDO COMBI L2 50 KWH",
+        "batteryKwh": 46.3,
+        "rangeWltp": 112,
+        "chargeFast": "26 min (101 kW DC)",
+        "chargeSlow": "5 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "FWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L2 160 KW 64 KWH": {
+      "rank": 2298,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L2 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 149,
+        "chargeFast": "27 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L2 100 KW 64 KWH": {
+      "rank": 2297,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L2 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 149,
+        "chargeFast": "27 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L1 160 KW 64 KWH": {
+      "rank": 2296,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L1 160 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 149,
+        "chargeFast": "27 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 160,
+        "driveType": "RWD"
+      }
+    },
+    "FORD|E TRANSIT CUSTOM KOMBI L1 100 KW 64 KWH": {
+      "rank": 2295,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "FORD",
+        "model": "E TRANSIT CUSTOM KOMBI L1 100 KW 64 KWH",
+        "batteryKwh": 63.8,
+        "rangeWltp": 149,
+        "chargeFast": "27 min (125 kW DC)",
+        "chargeSlow": "7 hours (11 kW AC)",
+        "motorKw": 100,
+        "driveType": "RWD"
+      }
+    },
+    "MERCEDES-BENZ|EVITO TOURER EXTRA LONG 90 KWH": {
+      "rank": 2294,
+      "scrapedAt": "2026-11-18T12:56:57.906Z",
+      "record": {
+        "make": "MERCEDES-BENZ",
+        "model": "EVITO TOURER EXTRA LONG 90 KWH",
+        "batteryKwh": 90,
+        "rangeWltp": 202,
+        "chargeFast": "41 min (110 kW DC)",
+        "chargeSlow": "9h45m (11 kW AC)",
         "motorKw": 150,
         "driveType": "FWD"
       }
