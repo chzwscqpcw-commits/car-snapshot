@@ -3,9 +3,9 @@
 // Plates live in the URL fragment (/mot-check#vrm=AB12CDE), which the browser
 // never sends to a server. That only holds while every entry point — hero
 // search, quick-link pills, direct links, old ?vrm= links, the homepage,
-// booking, MOT reminders and the carVertical hand-off — keeps reading and
-// writing the fragment. Unit tests can't see any of that, so this drives a
-// real browser against a production build.
+// booking, the MOT box in blog articles, MOT reminders and the carVertical
+// hand-off — keeps reading and writing the fragment. Unit tests can't see any
+// of that, so this drives a real browser against a production build.
 //
 //   npm run build && npx next start -p 3123   (in one shell)
 //   npm run test:e2e                          (in another)
@@ -208,6 +208,70 @@ await check("booking", async (page) => {
   while (!lookups.slice(before).includes(PLATE) && Date.now() < deadline) await new Promise((r) => setTimeout(r, 200));
   const looked = lookups.slice(before).includes(PLATE);
   report("booking pre-fills the plate (skips to step 3)", atStep3 && looked, JSON.stringify({ atStep3, looked }));
+});
+
+// 5b. The MOT box in a blog article, mid-article and at the foot. Both open
+//     the wizard at the price step with the plate in the fragment and their
+//     own source; the box is recorded as seen and as used under that source,
+//     and no event carries the plate. The "no reg to hand" link reaches the
+//     same step with no car and no lookup.
+const MOT_POST = "/blog/driving-without-an-mot-penalties";
+const waitFor = async (fn, timeout = 10000) => {
+  const deadline = Date.now() + timeout;
+  while (!fn() && Date.now() < deadline) await new Promise((r) => setTimeout(r, 200));
+  return fn();
+};
+const atPriceStep = () => !!document.querySelector('input[placeholder^="e.g. SW1A"]');
+for (const [placement, source] of [["inline", "blog-mot-inline"], ["foot", "blog-mot-foot"]]) {
+  await check(`blog MOT box (${placement})`, async (page) => {
+    // Beacons can't be read here, so events go by fetch for this check.
+    await page.evaluateOnNewDocument(() => {
+      navigator.sendBeacon = () => false;
+    });
+    events.length = 0;
+    const before = lookups.length;
+    await page.goto(BASE + MOT_POST, { waitUntil: "networkidle0" });
+    const box = `[data-blog-mot-booking="${placement}"]`;
+    if (!(await until(page, (s) => !!document.querySelector(s), 10000, box))) {
+      report(`blog ${placement} box is on an MOT post`, false);
+      return;
+    }
+    const partnerLinks = await page.$$eval("a[href]", (as) => as.map((a) => a.getAttribute("href")).filter((h) => /bookmygarage|awin1\.com/i.test(h)));
+    report(`blog ${placement}: the article has no link to the partner`, partnerLinks.length === 0, JSON.stringify(partnerLinks));
+
+    await page.$eval(box, (el) => el.scrollIntoView({ block: "center" }));
+    const seen = await waitFor(() => events.some((e) => e.type === "booking_entry_impression" && e.payload?.source === source));
+    report(`blog ${placement} box is recorded as seen`, seen);
+
+    await page.type(`${box} input`, "ab12 cde");
+    await page.keyboard.press("Enter");
+    const arrived = await until(page, (plate, src) => {
+      const q = new URLSearchParams(location.search);
+      return location.pathname === "/booking" && q.get("type") === "mot" && q.get("source") === src && !q.has("vrm") && location.hash === `#vrm=${plate}`;
+    }, 15000, PLATE, source);
+    const step3 = arrived && (await until(page, atPriceStep));
+    const looked = await waitFor(() => lookups.slice(before).includes(PLATE));
+    report(`blog ${placement} box -> /booking price step, plate in the fragment`, arrived && step3 && looked, `${page.url()} ${JSON.stringify({ step3, looked })}`);
+
+    const used = events.some((e) => e.type === "booking_entry_click" && e.payload?.source === source && e.payload?.has_reg === true);
+    const started = await waitFor(() => events.some((e) => e.type === "booking_wizard_start" && e.payload?.source === source && e.payload?.prefilled_vrm === true));
+    report(`blog ${placement} box: used and wizard start share the source`, used && started, JSON.stringify({ used, started }));
+    report(`blog ${placement} box: no event carries the plate`, !JSON.stringify(events).includes(PLATE));
+  });
+}
+
+await check("blog MOT box (no reg)", async (page) => {
+  const before = lookups.length;
+  await page.goto(BASE + MOT_POST, { waitUntil: "networkidle0" });
+  const link = '[data-blog-mot-booking="inline"] a[href*="noreg=1"]';
+  if (!(await until(page, (s) => !!document.querySelector(s), 10000, link))) {
+    report("blog box offers a way through without a reg", false);
+    return;
+  }
+  await page.$eval(link, (a) => a.click());
+  const arrived = await until(page, () => location.pathname === "/booking" && new URLSearchParams(location.search).get("source") === "blog-mot-inline" && location.hash === "");
+  const step3 = arrived && (await until(page, atPriceStep));
+  report("blog box without a reg -> /booking price step, no lookup", arrived && step3 && lookups.length === before, `${page.url()} ${JSON.stringify({ step3, lookups: lookups.length - before })}`);
 });
 
 await check("mot reminder", async (page) => {

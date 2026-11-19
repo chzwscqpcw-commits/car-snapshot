@@ -183,7 +183,7 @@ Before the test, it's worth checking your vehicle's [MOT history](/mot-check) to
 
 To make sure you always test within the optimal window, set up a [free MOT reminder](/mot-reminder) and you'll get an alert in good time before your MOT is due — 5 weeks and 1 week before by default, or pick your own timing — or add it straight to your calendar, no email needed. It's free, no signup, and we only ever use your email to send the reminder — never marketing, never shared.
 
-And if your car does need work before the test, [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to find competitive garages in your area.
+And when you're ready to book the test, [compare MOT prices near you](/cheap-mot) to see what local garages charge.
 
 ## The bottom line
 

@@ -76,7 +76,7 @@ If you wait until the last day and it fails, you could be stuck. Depending on th
 
 ### You can shop around on price
 
-MOT prices vary significantly between garages. Booking ahead gives you time to compare. You can [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) or ring a few local garages to find the best deal in your area.
+MOT prices vary significantly between garages. Booking ahead gives you time to compare. You can [compare MOT prices near you](/cheap-mot) or ring a few local garages to find the best deal in your area.
 
 ### You can pick a convenient slot
 

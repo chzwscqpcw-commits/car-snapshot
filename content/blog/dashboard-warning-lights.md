@@ -125,7 +125,7 @@ If you walk into a garage with a vague "the light's on" — you can't get a prop
 
 Reputable garages will give you the code in writing along with the recommended fix. If a garage refuses to share the diagnostic code — go elsewhere.
 
-Once you have the fault code, [compare repair quotes from local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fcar-repairs%2F) — enter your registration to see prices for the specific repair, with reviews and availability for each garage.
+Once you have the fault code, check our [repair cost guides](/repair-costs) to see what the fix typically costs, then get two or three quotes for the same job.
 
 ## Related guides
 

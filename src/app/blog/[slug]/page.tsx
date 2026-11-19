@@ -5,13 +5,13 @@ import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getPostTags, getTagLab
 import BlogTagPill from "@/components/BlogTagPill";
 import Button from "@/components/Button";
 import { ArrowLeft, Clock } from "lucide-react";
-import { PARTNER_LINKS, getPartnerRel, hasMotKeywords, getTopicCta, hasVehicleHistoryIntent, hasWarrantyIntent } from "@/config/partners";
+import { hasMotKeywords, getTopicCta, hasVehicleHistoryIntent, hasWarrantyIntent } from "@/config/partners";
 import ScrollDepthTracker from "@/components/ScrollDepthTracker";
 import ShareButtons from "@/components/ShareButtons";
 import MOTReminderCollapsible from "@/components/MOTReminderCollapsible";
 import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
-import MotBookingInline from "@/components/MotBookingInline";
+import BlogMotBooking from "@/components/BlogMotBooking";
 import WarrantyCTA from "@/components/WarrantyCTA";
 
 /**
@@ -259,8 +259,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         {(() => {
           // Drop a mid-article prompt after the first section so the bridge
           // appears early — blog readers rarely reach the foot-of-article CTA
-          // (content→tool bridge audit: blog bridges at ~16%). MOT posts get the
-          // BookMyGarage booking prompt; other commercially-relevant posts get an
+          // (content→tool bridge audit: blog bridges at ~16%). MOT posts get a
+          // registration box that opens our own booking tool at the price step
+          // (BlogMotBooking; until Nov 2026 this was a card linking straight to
+          // the partner); other commercially-relevant posts get an
           // inline reg-check routed to their topic tool (excludes /mot-reminder,
           // which is a signup, not a reg→results check). History-intent posts
           // (HPI, finance, write-off, buying used) get carVertical instead —
@@ -282,7 +284,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               : null;
 
           const midInject = isMot ? (
-            <MotBookingInline clickref="blog-mot-inline" />
+            <BlogMotBooking placement="inline" post={slug} />
           ) : isHistory ? (
             // Routed into the buyer check rather than straight to carVertical.
             // The direct `blog-carvertical` box logged 8 clicks in Sep–Oct 2026,
@@ -341,23 +343,9 @@ export default async function BlogPostPage({ params }: PageProps) {
             configured (see config/ads.ts). */}
         <AdUnit slot="blogInArticle" className="max-w-[700px] mx-auto mt-10" />
 
-        {/* MOT Booking CTA — only for MOT-related posts */}
-        {hasMotKeywords(post.keywords) && (
-          <div className="max-w-[700px] mx-auto mt-12 border-l-2 border-blue-500/50 bg-blue-950/30 rounded-r-lg px-4 py-3">
-            <p className="text-sm text-slate-300">
-              Need to book an MOT?{" "}
-              <a
-                href={PARTNER_LINKS.bookMyGarage.buildLink?.("", "blog-mot-foot") ?? PARTNER_LINKS.bookMyGarage.url}
-                target="_blank"
-                rel={getPartnerRel(PARTNER_LINKS.bookMyGarage)}
-                className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
-              >
-                Compare local garages on BookMyGarage
-              </a>
-              .
-            </p>
-          </div>
-        )}
+        {/* MOT booking, only for MOT-related posts: the same registration box
+            as mid-article, as one line, with its own source. */}
+        {hasMotKeywords(post.keywords) && <BlogMotBooking placement="foot" post={slug} />}
 
         {/* Topic-aware CTA */}
         {(() => {

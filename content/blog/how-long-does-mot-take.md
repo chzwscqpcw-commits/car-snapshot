@@ -104,7 +104,7 @@ The best way to avoid surprises is to know when your MOT is due and book with ti
 
 Booking a few weeks early means that if your car does fail, you've got time to arrange repairs and a retest without any panic. Remember, you can [book your MOT up to a month early](/blog/can-you-get-mot-done-early) without losing any days on the new certificate.
 
-It's also worth shopping around on price. While the maximum MOT fee is capped at £54.85, plenty of garages charge less. [Compare MOT prices on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) to find competitive rates near you.
+It's also worth shopping around on price. While the maximum MOT fee is capped at £54.85, plenty of garages charge less. [Compare MOT prices near you](/cheap-mot) to see what local garages charge.
 
 ## The bottom line
 

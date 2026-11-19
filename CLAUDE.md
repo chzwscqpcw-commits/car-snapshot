@@ -13,7 +13,7 @@ CI runs on every push/PR to `main` (`.github/workflows/ci.yml`) and is a
 | Typecheck | `npm run typecheck` | `tsc --noEmit` |
 | Lint | `npm run lint` | `eslint` — **0 errors and 0 warnings**; keep it that way |
 | Test suite | `npm test` | PDF report smoke-test, valuation lookup, historic-vehicle rules. CI ran only `test:pdf` until 2026-09-06; a valuation regression reached production because of it. |
-| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half, then (`e2e/wbac-top.mjs`) that both arms of `valuation_wbac_top_v1` are drawn and counted alike. Locally: `npm run build && npx next start -p 3123`, then run it. |
+| Plate flow (e2e) | `npm run test:e2e` | Separate `e2e` job, **required** on `main` since 2026-10-21: real browser against a production build. Checks plates stay in `#vrm=` across every entry point and never reach the server in a URL, then (`e2e/mot-outage.mjs`) that both valuation surfaces still value a car when the lookup has no MOT half, then (`e2e/wbac-top.mjs`) that both arms of `valuation_wbac_top_v1` are drawn and counted alike, then (`e2e/link-styles.mjs`) that links draw in the colour and underline their classes give them, in light and dark mode. Locally: `npm run build && npx next start -p 3123`, then run it. |
 
 Before pushing, run `npm run typecheck && npm run lint && npm test`. Lint is a
 hard gate now (the historical backlog was cleared) — don't reintroduce errors,
@@ -231,6 +231,18 @@ no link yet.
   of ours to the route must send `x-fpc-internal: 1`. An error from a direct
   call is a `lookup_error` with `direct: true`; the lookup-health alert and
   weekly figures leave those out and report them as "Not counted".
+- MOT prompts in blog articles open our own booking tool, never the partner
+  (`BlogMotBooking`, `src/lib/blog-mot-booking.ts`): a registration box
+  mid-article (`source` `blog-mot-inline`) and a one-line one at the foot
+  (`blog-mot-foot`), both landing on the wizard's price step with the plate in
+  `#vrm=`; `noreg=1` reaches the same step without a car. Read them as
+  `booking_entry_impression` (seen) and `booking_entry_click` (used) by
+  `source`, then `booking_wizard_start` and the step events on the same
+  `source`. The card they replaced was seen on 569 visitor-days and clicked on
+  2 (12 Sep to 17 Nov 2026; `partner_impression` / `partner_click`,
+  `click_context` `blog-mot-inline`). In article text, link to `/cheap-mot` or
+  `/booking?source=blog-text`; `npm run test:blog-booking` fails on a new
+  partner link in a post.
 - Every public page lives in `src/lib/site-index.ts` — the command palette
   (⌘K), the mobile drawer and `/tools` all read it (a `tools` block on an
   entry is its `/tools` card). `npm run test:site-index` walks `src/app` and
@@ -245,4 +257,11 @@ no link yet.
   2026 outage they were picked from, are in `src/lib/lookup-health.ts`; the Friday audit and
   `/data-health` carry the same "Lookup health" line. Incident state is a
   `lookup_alert` row in `site_events` (flagged internal).
+- `src/app/globals.css`: a rule on a bare element goes inside `@layer base`.
+  Tailwind v4's utilities live in a layer and CSS outside any layer outranks
+  all of them, so a loose `a { color: inherit }` switched off every `text-*`
+  and `underline` on a link from the first commit until Nov 2026
+  (`e2e/link-styles.mjs` now checks). The page is dark in light mode too (one
+  `--background`). `:focus-visible` and `.blog-content …` are still outside a
+  layer and so still beat utilities.
 - Commit messages end with the project's `Co-Authored-By` trailer.

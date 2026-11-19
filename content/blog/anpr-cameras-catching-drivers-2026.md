@@ -87,7 +87,7 @@ If any of these sound like you, doing a quick free check before you drive is the
 
 Once you know your MOT is due, the biggest mistake is calling your usual garage without checking prices. The maximum legal MOT fee is £54.85, but many garages charge £30–£40. Combined with a service, the price can drop further.
 
-[Compare MOT prices at local garages on BookMyGarage](https://www.awin1.com/cread.php?awinmid=68338&awinaffid=2729598&ued=https%3A%2F%2Fwww.bookmygarage.com%2Fmot%2F) — enter your registration to see prices and availability for garages near you in seconds. You can also book a combined MOT-and-service package, which usually works out cheaper than booking each separately.
+[Compare MOT prices at local garages](/cheap-mot) — enter your registration to see what garages near you charge. Booking the MOT and a service at the same garage usually works out cheaper than booking each separately.
 
 ## The bottom line
 
