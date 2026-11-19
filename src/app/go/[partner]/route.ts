@@ -49,7 +49,6 @@ const GO_PARTNERS: Record<string, { partnerKey: keyof typeof PARTNER_LINKS }> = 
   "rvu-car": { partnerKey: "rvuCarInsurance" },
   "rvu-van": { partnerKey: "rvuVanInsurance" },
   "rvu-bike": { partnerKey: "rvuBikeInsurance" },
-  gocompare: { partnerKey: "goCompare" },
   tempcover: { partnerKey: "tempcover" },
   cuvva: { partnerKey: "cuvva" },
 };

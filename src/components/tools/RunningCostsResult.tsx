@@ -45,7 +45,6 @@ import {
 import { useVehicleValuation } from "@/components/tools/useVehicleValuation";
 import CarVerticalReportCTA from "@/components/CarVerticalReportCTA";
 import WarrantyCTA from "@/components/WarrantyCTA";
-import Button from "@/components/Button";
 import { isMotorbike, isVan, shortVehicleName } from "@/lib/report-v2/format";
 import InsuranceCTA from "@/components/InsuranceCTA";
 
@@ -258,7 +257,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
         setInputs={setInsuranceInputs}
         insurance={insurance}
       />
-      {/* The estimate above is a guide; a quote is the real figure. */}
+      {/* The estimate above is a guide; a quote is the real figure. The card
+          is the page's one insurance ask and its only link out for insurance:
+          the estimate has no button of its own. */}
       <InsuranceCTA
         context="running-costs-insurance"
         kind={isMotorbike(vehicle) ? "motorbike" : isVan(vehicle) ? "van" : "car"}
@@ -267,7 +268,9 @@ function Loaded({ vrm, vehicle }: { vrm: string; vehicle: LookupVehicle }) {
       />
       {/* Running costs are a "should I buy this car?" signal — offer the full
           history check (finance/write-off/stolen/mileage) at that buyer intent. */}
-      <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" motorbike={isMotorbike(vehicle)} />
+      <div className="mt-4">
+        <CarVerticalReportCTA regNumber={vrm} variant="report" context="running-costs" motorbike={isMotorbike(vehicle)} />
+      </div>
       {/* Repairs are the one line this page forecasts least well — everything
           else here (fuel, tax, insurance, servicing) is modellable, a failed
           gearbox isn't. That gap is the honest case for a warranty, so the
@@ -854,8 +857,6 @@ const INSURANCE_FIELDS: Array<{
   },
 ];
 
-const COMPARE_THE_MARKET_URL = "https://www.comparethemarket.com/car-insurance/";
-
 function InsurancePanel({
   inputs,
   setInputs,
@@ -908,7 +909,7 @@ function InsurancePanel({
         ))}
       </div>
 
-      <div className="mt-5 rounded-xl border border-violet-500/20 bg-slate-950/50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="mt-5 rounded-xl border border-violet-500/20 bg-slate-950/50 p-4">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-slate-500 font-[family-name:var(--font-geist-mono)]">
             Current estimate
@@ -930,14 +931,6 @@ function InsurancePanel({
             </p>
           )}
         </div>
-        <Button
-          href={COMPARE_THE_MARKET_URL}
-          target="_blank"
-          rel="noopener nofollow noreferrer"
-          size="sm"
-        >
-          Get real quotes →
-        </Button>
       </div>
 
       <p className="mt-3 text-[11px] text-slate-500 leading-relaxed">

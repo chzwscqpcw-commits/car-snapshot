@@ -6,9 +6,24 @@ publisher dashboard to compare with our own click counts.
 What it does: once a day `/api/cron/rakuten-reports` fetches the two saved
 reports, stores them in two private tables, and the Friday audit email and
 `/data-health` show a "Partner orders" block: clicks, orders, orders paying
-against orders at zero, provisional and locked commission, a split by
-placement (`u1`), and a day-by-day check of Rakuten's click count against
-ours.
+against orders at zero, provisional and locked commission, each advertiser
+apart, a split by placement (`u1`), and a day-by-day check of Rakuten's
+click count against ours.
+
+The publisher account covers every advertiser we work with on the network
+(We Buy Any Car, and Confused.com from Nov 2026). The two reports treat
+that differently, and the block follows them:
+
+- The **Lock Status report** names the advertiser on every order, so orders
+  and commission are shown per advertiser, and each placement says whose it
+  is. The label is the report's own name for the advertiser ("WeBuyAnyCar");
+  an advertiser with clicks and no order yet shows under our name for it.
+- The **Revenue Report by Day** has no advertiser column: its click count
+  is the whole account's. So the click check compares it with our clicks
+  for *every* partner whose link is a Rakuten link (`rakutenPartners()` in
+  `src/lib/partner-orders.ts`, read from `src/config/partners.ts`), never
+  with one advertiser's. A new advertiser joins the check the day its link
+  goes into `partners.ts`; nothing here needs changing.
 
 Code: `src/lib/rakuten-reports.ts` (fetch, parse, clean),
 `src/lib/partner-orders.ts` (store, summary, email block),
@@ -105,10 +120,20 @@ neither column, and the tables have no column for either.
 - **Dropped to zero**: an order that had a commission on an earlier pull and
   has none now. The earlier figure is kept (`previous_commission`), and the
   email and the dashboard call these out in red for a week.
-- **Clicks, Rakuten against ours**: per day, Rakuten's count beside our
-  `partner_click` rows for We Buy Any Car (owner traffic left out). A
+- **By advertiser** (shown once there are two): orders, paying against
+  zero, provisional and locked, per advertiser. Its clicks are ours, since
+  Rakuten's are not split.
+- **Clicks, Rakuten against ours**: per day, Rakuten's count for the whole
+  account beside our `partner_click` rows for every partner on the network
+  (owner traffic left out); `/data-health` shows ours per advertiser too. A
   finished day more than 3 clicks (or a tenth of the day) apart is flagged.
   Today is never judged. Days are compared in UTC.
+- **Clicks made outside the site** (a link tested from the publisher
+  dashboard) are in Rakuten's count and not in ours. List them by day in
+  `OFFSITE_CLICKS` (`src/lib/partner-orders.ts`): that day may then have
+  Rakuten over ours by that many more, and both places say the day was
+  allowed for. 17 Nov 2026 is listed (six test clicks on the new links) and
+  19 Nov 2026 (one, on the motorbike link).
 - If the last successful pull is more than a day and a half old, both
   places say so.
 

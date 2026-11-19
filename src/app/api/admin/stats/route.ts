@@ -482,12 +482,12 @@ const AFFILIATE_GROUPS: { key: string; name: string; match: (p: string) => boole
   { key: "weBuyAnyCar", name: "We Buy Any Car", match: (p) => p.startsWith("webuyanycar") },
   // Awin 18184, placed on the site from 2026-10-31 (fixter / fixterMot).
   { key: "fixter", name: "Fixter", match: (p) => p.startsWith("fixter") },
-  // Prepared 2026-10-29 for RVU (confused.com / Uswitch / Tempcover) and the
+  // Prepared 2026-10-29 for RVU (Confused.com / Tempcover) and the
   // pending Awin insurers; shows nothing until one is live.
   {
     key: "insurance",
     name: "Insurance",
-    match: (p) => ["rvu", "gocompare", "tempcover", "cuvva"].some((k) => p.startsWith(k)),
+    match: (p) => ["rvu", "tempcover", "cuvva"].some((k) => p.startsWith(k)),
   },
 ];
 

@@ -1,3 +1,11 @@
+export interface PartnerLogo {
+  /** Path under /public, e.g. "/partner-logos/name.svg". */
+  src: string;
+  /** The file's own pixel size (or viewBox), for the aspect ratio. */
+  width: number;
+  height: number;
+}
+
 export interface PartnerLink {
   url: string;
   name: string;
@@ -13,6 +21,20 @@ export interface PartnerLink {
   pending?: boolean;
   description?: string;
   shortDescription?: string;
+  /**
+   * The partner's own logo, for a card that shows one (InsuranceCTA). Only a
+   * file the partner has supplied or approved, used as it comes: a partner
+   * agreement typically licenses the marks the partner makes available and
+   * nothing else, so no artwork found elsewhere, no recolouring, no cropping.
+   * Unset = the card is text-only. `src` is a path under /public;
+   * `npm run test:insurance` fails if it names a file that isn't there.
+   */
+  logo?: PartnerLogo;
+  /**
+   * A line the partner requires shown with its card, word for word as they
+   * supplied it (a regulatory statement). Never reworded here.
+   */
+  regulatoryLine?: string;
   /**
    * Construct the affiliate URL for a given vehicle reg.
    *
@@ -87,17 +109,40 @@ function rakutenLink(base: string, clickref?: string): string {
 }
 
 /**
- * RVU's insurance programmes on Rakuten (confused.com, Uswitch, Tempcover).
- * Staged 29 Oct 2026 for car, van and bike insurance plus Tempcover; the
- * tracking links have not been issued yet. When the
- * links arrive, paste each one here in place of the placeholder (and set the
- * brand name below if it's Uswitch rather than confused.com) and the
- * placements in src/config/insurance.ts switch on by themselves.
+ * RVU's insurance programmes on Rakuten (Confused.com, Tempcover). Staged
+ * 29 Oct 2026. The three Confused.com links are the ones the partner's
+ * account team issued for us and confirmed on 19 Nov 2026: use these, not the
+ * links the publisher dashboard shows, which carry a different offer id.
+ * (`id` is our publisher token, as in the We Buy Any Car link above.) Car,
+ * van and bike are live. Tempcover has no link yet; paste it in place of the
+ * placeholder and its placements switch on by themselves
+ * (src/config/insurance.ts).
  */
-const RVU_CAR_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_CAR";
-const RVU_VAN_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_VAN";
-const RVU_BIKE_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_BIKE";
+const RVU_CAR_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=1593696.967&type=3&subid=0";
+const RVU_VAN_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=1593696.969&type=3&subid=0";
+const RVU_BIKE_LINK =
+  "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=1593696.968&type=3&subid=0";
+
+/**
+ * What every Confused.com card carries. The logo is the file the partner
+ * supplied (19 Nov 2026), served exactly as it came: a near-black wordmark on
+ * a transparent background, so it goes on the card's white plate. The
+ * regulatory line is from their approved copy, word for word. Neither is to
+ * be altered here; a change to either is a change to send them first.
+ */
+const CONFUSED = {
+  name: "Confused.com",
+  logo: { src: "/partner-logos/confused-logo-black.svg", width: 206, height: 37 },
+  regulatoryLine: "Confused.com are authorised and regulated by the Financial Conduct Authority.",
+} as const;
 const TEMPCOVER_LINK = "https://click.linksynergy.com/PENDING_RAKUTEN_TEMPCOVER";
+
+/** A Rakuten Advertising tracker (the host every one of their links uses). */
+export function isRakutenLink(url: string): boolean {
+  return url.startsWith("https://click.linksynergy.com/");
+}
 
 /**
  * Rakuten tracker → webuyanycar.com, with the placement as `u1` — Rakuten's
@@ -375,29 +420,28 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
       );
     },
   },
-  // RVU insurance on Rakuten — see RVU_CAR_LINK above. Pending until the
-  // links arrive; brand names may change to Uswitch per product.
+  // Confused.com (RVU) on Rakuten — see RVU_CAR_LINK and CONFUSED above.
   rvuCarInsurance: {
     url: RVU_CAR_LINK,
-    name: "confused.com",
+    ...CONFUSED,
     isAffiliate: true,
-    pending: true,
+    pending: false,
     shortDescription: "Car insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_CAR_LINK, clickref),
   },
   rvuVanInsurance: {
     url: RVU_VAN_LINK,
-    name: "confused.com",
+    ...CONFUSED,
     isAffiliate: true,
-    pending: true,
+    pending: false,
     shortDescription: "Van insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_VAN_LINK, clickref),
   },
   rvuBikeInsurance: {
     url: RVU_BIKE_LINK,
-    name: "confused.com",
+    ...CONFUSED,
     isAffiliate: true,
-    pending: true,
+    pending: false,
     shortDescription: "Bike insurance quotes",
     buildLink: (_reg: string, clickref?: string) => rakutenLink(RVU_BIKE_LINK, clickref),
   },
@@ -602,30 +646,6 @@ export const PARTNER_LINKS: Record<string, PartnerLink> = {
     name: "GOV.UK Find MOT Centre",
     isAffiliate: false,
   },
-  // GoCompare — car-insurance comparison (Awin merchant 117439). Top-5 UK
-  // comparison site, 170+ insurance brands. Replaces the old non-affiliate
-  // Parkers insurance-group link (off-site, not pre-filled).
-  // ALREADY APPLIED on Awin — status Pending Approval. awinmid is known
-  // (117439), so on approval just flip pending:false. The action prompt is gated
-  // on isPartnerConfigured so we never promote before Awin accepts us.
-  // (Confused.com was the first pick but isn't joinable on this Awin account.)
-  goCompare: {
-    url: "https://www.awin1.com/cread.php?awinmid=117439&awinaffid=2729598&ued=https%3A%2F%2Fwww.gocompare.com%2Fcar-insurance%2F",
-    name: "GoCompare",
-    isAffiliate: true,
-    pending: true,
-    description: "Compare car insurance quotes from 170+ providers",
-    shortDescription: "Insurance quotes",
-    // On activation you may swap the ued destination for GoCompare's approved
-    // affiliate car-insurance deep link from their Awin creative.
-    buildLink: (_reg: string, clickref?: string) => {
-      const destination = encodeURIComponent("https://www.gocompare.com/car-insurance/");
-      return withClickref(
-        `https://www.awin1.com/cread.php?awinmid=117439&awinaffid=2729598&ued=${destination}`,
-        clickref,
-      );
-    },
-  },
 };
 
 /**
@@ -684,7 +704,7 @@ export type GoPartner =
   | InsuranceGoPartner;
 
 /** /go keys for the insurance partners (src/config/insurance.ts picks one). */
-export type InsuranceGoPartner = "rvu-car" | "rvu-van" | "rvu-bike" | "gocompare" | "tempcover" | "cuvva";
+export type InsuranceGoPartner = "rvu-car" | "rvu-van" | "rvu-bike" | "tempcover" | "cuvva";
 
 export function goLink(
   partner: GoPartner,
@@ -883,8 +903,8 @@ const TOPIC_MATCHERS: { keywords: string[]; cta: TopicCta }[] = [
   //
   // `car-insurance-groups-explained` is the site's SECOND best-read post (315
   // views/30d) and rendered no call to action at all, because it matched none
-  // of the matchers above. Nineteen posts were in that state. Insurance has no
-  // live partner yet (GoCompare is still pending), but /running-costs is a
+  // of the matchers above. Nineteen posts were in that state. Insurance had no
+  // live partner then; /running-costs (where the Confused.com card now sits) is a
   // genuine fit rather than a filler: it prices insurance, fuel, tax and
   // servicing for the specific vehicle, which is the question these posts leave
   // the reader holding.
