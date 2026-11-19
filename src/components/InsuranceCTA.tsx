@@ -35,8 +35,10 @@ const NOUN: Record<InsuranceKind, string> = { car: "car", van: "van", motorbike:
  * programme wants every placement approved before it goes live, so a change
  * to the text here is a change to send them first.
  *
- * The partner's logo shows only when its entry in partners.ts names one (a
- * file they have supplied or approved); otherwise the card is text-only.
+ * Two things on the card are the partner's, taken from its entry in
+ * partners.ts and shown as supplied: its logo (on a white plate) and, under
+ * our own commission line, the regulatory line it requires. A partner with
+ * neither gets a text-only card.
  */
 export default function InsuranceCTA({ context, kind, vehicleName, preview = false, className = "" }: InsuranceCTAProps) {
   const offer: InsuranceOffer | null = preview ? previewOffer(kind) : insuranceOffer(kind);
@@ -73,6 +75,9 @@ export default function InsuranceCTA({ context, kind, vehicleName, preview = fal
         {offer.partner.logo && <PartnerLogoPlate logo={offer.partner.logo} name={offer.partner.name} />}
       </div>
       <p className="text-xs text-slate-500 mt-3 ml-8">Free Plate Check may earn a small commission from this link.</p>
+      {offer.partner.regulatoryLine && (
+        <p data-regulatory-line className="text-xs text-slate-500 mt-1 ml-8">{offer.partner.regulatoryLine}</p>
+      )}
     </div>
   );
 }

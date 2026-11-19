@@ -3,9 +3,9 @@ import { PARTNER_LINKS, isPartnerConfigured, type InsuranceGoPartner, type Partn
 // Which insurance partner a placement shows. Placements ask by vehicle type
 // and get the first partner in the list that's live, so they switch on — and
 // switch brand — with no change of their own: Confused.com (RVU, on Rakuten)
-// for cars, vans and (once its bike link lands somewhere) motorbikes, with no
-// fallback: it is the site's insurance provider, so where it is not live
-// nothing shows. Tempcover first for temporary cover, then Cuvva.
+// for cars, vans and motorbikes, with no fallback: it is the site's insurance
+// provider, so where it is not live nothing shows. Tempcover first for
+// temporary cover, then Cuvva.
 
 export type InsuranceKind = "car" | "van" | "motorbike";
 

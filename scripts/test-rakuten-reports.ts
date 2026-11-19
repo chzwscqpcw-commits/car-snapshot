@@ -514,6 +514,7 @@ console.log("\nTwo advertisers: one click total, orders apart");
   const day17 = (rakuten: number, ours: number, offsite?: Record<string, { clicks: number }>) =>
     reconcileClicks([dailyRow("2026-11-17", rakuten, "2026-11-19T06:15:00.000Z")], siteClicksOn("2026-11-17", ours), NOW17, undefined, offsite).find((d) => d.day === "2026-11-17")!;
   check("17 Nov 2026: six test clicks are on the list", OFFSITE_CLICKS["2026-11-17"]?.clicks === 6);
+  check("19 Nov 2026: one more, on the motorbike link", OFFSITE_CLICKS["2026-11-19"]?.clicks === 1);
   check("so that day matches with the network six over", day17(18, 12).state === "match" && day17(18, 12).offsite === 6);
   check("…and nine over (six known, three tolerance)", day17(21, 12).state === "match");
   check("…but not ten over", day17(22, 12).state === "flag");

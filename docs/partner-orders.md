@@ -132,7 +132,8 @@ neither column, and the tables have no column for either.
   dashboard) are in Rakuten's count and not in ours. List them by day in
   `OFFSITE_CLICKS` (`src/lib/partner-orders.ts`): that day may then have
   Rakuten over ours by that many more, and both places say the day was
-  allowed for. 17 Nov 2026 is listed: six test clicks on the new links.
+  allowed for. 17 Nov 2026 is listed (six test clicks on the new links) and
+  19 Nov 2026 (one, on the motorbike link).
 - If the last successful pull is more than a day and a half old, both
   places say so.
 

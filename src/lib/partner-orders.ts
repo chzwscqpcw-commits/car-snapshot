@@ -84,6 +84,7 @@ export function advertiserKey(name: string): string {
  */
 export const OFFSITE_CLICKS: Record<string, { clicks: number; why: string }> = {
   "2026-11-17": { clicks: 6, why: "test clicks on the new Confused.com links (u1 link-test), made outside the site" },
+  "2026-11-19": { clicks: 1, why: "one test click on the motorbike link (u1 link-test), made outside the site" },
 };
 
 const NOT_INTERNAL = "metadata->>internal.is.null,metadata->>internal.neq.true";

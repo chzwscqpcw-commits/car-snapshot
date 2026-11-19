@@ -198,26 +198,30 @@ reports, tagged with the placement (`u1`) that sent it.
 `InsuranceCTA` shows a "compare insurance" card under running costs on the
 homepage (`money-insurance`) and on the `/running-costs` result
 (`running-costs-insurance`); `src/config/insurance.ts` picks the partner by
-vehicle type. Confused.com (through Rakuten) is live for cars and vans. The
-bike entry stays `pending` until its link's destination works; Tempcover has
-no link yet.
+vehicle type. Confused.com (through Rakuten) is live for cars, vans and
+motorbikes; Tempcover has no link yet. The three links are the ones the
+partner's account team issued, not the ones the publisher dashboard shows
+(they carry a different offer id).
 
 - **The partner approves every placement before it goes live.** A change to
   the card's wording, a new placement or a new vehicle type goes to them
   first. `/preview/insurance` shows each card for that.
 - **The wording is ours and makes no claim**: no saving, "cheapest", "best",
   reward or figure, and nothing about the partner beyond its name, written
-  "Confused.com". `npm run test:insurance` pins the text and fails on a claim.
+  "Confused.com", and the regulatory line it requires under our commission
+  line, word for word from its approved copy (`regulatoryLine` on the partner
+  entry). `npm run test:insurance` pins the text and fails on a claim.
 - **Confused.com is the site's insurance provider** (founder, 17 Nov 2026).
   The card is the only link out for insurance: no button or link to another
   comparison site anywhere, tracked or not, and no fallback insurer in
   `src/config/insurance.ts` (where Confused.com is not live, nothing shows). The `/running-costs` estimate
   used to carry one; it is gone, and `npm run test:insurance` fails if a page
   or component links to one again.
-- **Logo.** The card has a slot (a white plate) that draws only when the
-  partner entry names a `logo`. Only a file the partner supplies or approves,
-  used as it comes; never artwork found elsewhere. None is set, so the card
-  is text-only.
+- **Logo.** The card draws the partner's logo on a white plate when its
+  entry names one. `public/partner-logos/confused-logo-black.svg` is the file
+  the partner supplied (19 Nov 2026), served byte for byte: never recoloured,
+  cropped, redrawn or run through an optimiser, and never artwork found
+  elsewhere. `npm run test:insurance` holds its checksum.
 
 ## Conventions
 
