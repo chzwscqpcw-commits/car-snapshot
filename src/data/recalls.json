@@ -1,5 +1,137 @@
 [
   {
+    "make": "SEAT",
+    "models": [
+      "ATECA"
+    ],
+    "buildDateStart": "2017-01-28",
+    "buildDateEnd": "2023-11-15",
+    "recallDate": "2026-11-25",
+    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
+    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
+    "recallNumber": "R/2026/362"
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "TARRACO"
+    ],
+    "buildDateStart": "2019-02-18",
+    "buildDateEnd": "2019-02-18",
+    "recallDate": "2026-11-25",
+    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
+    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
+    "recallNumber": "R/2026/362"
+  },
+  {
+    "make": "BENTLEY",
+    "models": [
+      "CONTINENTAL GT"
+    ],
+    "buildDateStart": "2026-05-11",
+    "buildDateEnd": "2026-05-11",
+    "recallDate": "2026-11-18",
+    "defect": "Bentley has been notified that a manufacturing error by a supplier could result in seatbelt buckle parts being produced to the incorrect specification.  As a consequence of incorrectly using a shorter seatbelt buckle anchor rope from a different model to produce the Continental GT and GT Convertible parts there is a 22mm difference in buckle height.  As such seatbelt buckle parts to the incorrect specification do not match the relevant homologation documentation.  Bentley Motors Limited is not aware of any injuries warranty claims field/service reports or deaths reported as a result of this issue but is undertaking this action as a precautionary measure. Customers can continue to use their vehicle however we encourage all customers to arrange an appointment with their retailer as soon as possible.",
+    "remedy": "Recall vehicle and replace seatbelt buckle with correct production part made to specification that matches the Type Approval documentation.",
+    "recallNumber": "R/2026/420"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2023-12-05",
+    "buildDateEnd": "2026-06-09",
+    "recallDate": "2026-11-18",
+    "defect": "On affected vehicles certain engine wire harness grounds could become broken under normal use. Depending on which ground eyelet fractures this condition may result in a loss of motive power loss of right and/or left headlamps loss of windshield washer fluid pump function loss of air conditioning and/or a non-working engine cooling fan.",
+    "remedy": "Remove the old grounding eyelets and insert new ones in their place.",
+    "recallNumber": "R/2026/433"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2023-12-07",
+    "buildDateEnd": "2026-06-05",
+    "recallDate": "2026-11-18",
+    "defect": "On affected vehicles certain engine wire harness grounds could become broken under normal use. Depending on which ground eyelet fractures this condition may result in a loss of motive power loss of right and/or left headlamps loss of windshield washer fluid pump function loss of air conditioning and/or a non-working engine cooling fan.",
+    "remedy": "Remove the old grounding eyelets and insert new ones in their place.",
+    "recallNumber": "R/2026/433"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2023-12-05",
+    "buildDateEnd": "2026-05-21",
+    "recallDate": "2026-11-18",
+    "defect": "On affected vehicles certain engine wire harness grounds could become broken under normal use. Depending on which ground eyelet fractures this condition may result in a loss of motive power loss of right and/or left headlamps loss of windshield washer fluid pump function loss of air conditioning and/or a non-working engine cooling fan.",
+    "remedy": "Remove the old grounding eyelets and insert new ones in their place.",
+    "recallNumber": "R/2026/433"
+  },
+  {
+    "make": "FORD",
+    "models": [
+      "MUSTANG"
+    ],
+    "buildDateStart": "2023-12-01",
+    "buildDateEnd": "2026-06-09",
+    "recallDate": "2026-11-18",
+    "defect": "On affected vehicles certain engine wire harness grounds could become broken under normal use. Depending on which ground eyelet fractures this condition may result in a loss of motive power loss of right and/or left headlamps loss of windshield washer fluid pump function loss of air conditioning and/or a non-working engine cooling fan.",
+    "remedy": "Remove the old grounding eyelets and insert new ones in their place.",
+    "recallNumber": "R/2026/433"
+  },
+  {
+    "make": "CHEVROLET",
+    "models": [
+      "CORVETTE"
+    ],
+    "buildDateStart": "2022-07-22",
+    "buildDateEnd": "2025-05-14",
+    "recallDate": "2026-11-13",
+    "defect": "On affected vehicles excess fuel spilled into the vehicle fuel-filler pocket during refuelling may leak onto the radiator vaporise and migrate to the engine compartment where the vapours may be exposed to an ignition source increasing the risk of fire.",
+    "remedy": "Install a new bezel with an insert / shield to divert spilled fuel.",
+    "recallNumber": "R/2026/415"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON"
+    ],
+    "buildDateStart": "2017-02-21",
+    "buildDateEnd": "2017-06-27",
+    "recallDate": "2026-11-09",
+    "defect": "The fault relates to the SEG engine starter that was designed as a  replacement part for vehicles affected by the VALEO engine starter  recall (BMW 0012840600). It was found that for a specific production  batch the wrong relay was installed due to a process error. There is a  chance that the preload in the bolted joint securing the B+ lead to the  starter may be lost for example due to corrosion or temperature  fluctuations and that the joint may consequently come loose.    If the screw connection on the B+ cable comes loose sparks may be  created in the vicinity of the screw connection (only whilst the vehicle  or the starter is in operation).   It cannot be excluded that a thermal incident might occurs resulting  from the ignition of a flammable load caused by sparks in the vicinity  of the screw connection. In this case smoke is noticeable while driving  or when exiting the vehicle.",
+    "remedy": "On the affected vehicles the starter motor will be checked and if  necessary replaced again.",
+    "recallNumber": "R/2026/408"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "7 SERIES SALOON LWB"
+    ],
+    "buildDateStart": "2016-09-30",
+    "buildDateEnd": "2016-10-24",
+    "recallDate": "2026-11-09",
+    "defect": "The fault relates to the SEG engine starter that was designed as a  replacement part for vehicles affected by the VALEO engine starter  recall (BMW 0012840600). It was found that for a specific production  batch the wrong relay was installed due to a process error. There is a  chance that the preload in the bolted joint securing the B+ lead to the  starter may be lost for example due to corrosion or temperature  fluctuations and that the joint may consequently come loose.    If the screw connection on the B+ cable comes loose sparks may be  created in the vicinity of the screw connection (only whilst the vehicle  or the starter is in operation).   It cannot be excluded that a thermal incident might occurs resulting  from the ignition of a flammable load caused by sparks in the vicinity  of the screw connection. In this case smoke is noticeable while driving  or when exiting the vehicle.",
+    "remedy": "On the affected vehicles the starter motor will be checked and if  necessary replaced again.",
+    "recallNumber": "R/2026/408"
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "5 SERIES SALOON"
+    ],
+    "buildDateStart": "2017-03-24",
+    "buildDateEnd": "2018-12-17",
+    "recallDate": "2026-11-09",
+    "defect": "The fault relates to the SEG engine starter that was designed as a  replacement part for vehicles affected by the VALEO engine starter  recall (BMW 0012840600). It was found that for a specific production  batch the wrong relay was installed due to a process error. There is a  chance that the preload in the bolted joint securing the B+ lead to the  starter may be lost for example due to corrosion or temperature  fluctuations and that the joint may consequently come loose.    If the screw connection on the B+ cable comes loose sparks may be  created in the vicinity of the screw connection (only whilst the vehicle  or the starter is in operation).   It cannot be excluded that a thermal incident might occurs resulting  from the ignition of a flammable load caused by sparks in the vicinity  of the screw connection. In this case smoke is noticeable while driving  or when exiting the vehicle.",
+    "remedy": "On the affected vehicles the starter motor will be checked and if  necessary replaced again.",
+    "recallNumber": "R/2026/408"
+  },
+  {
     "make": "HYUNDAI",
     "models": [
       "NEXO FE"
@@ -58,6 +190,198 @@
     "defect": "A concern has been identified where on certain Range Rover Sport SV  vehicles renewed analysis of supplier imaging history has detected the  potential presence of cracks on the rear subframe for some vehicles. For a  number of other vehicles imaging history was not available to positively  confirm a lack of cracks on the rear subframe.",
     "remedy": "Vehicles known to have a crack in the rear subframe will have the subframe  replaced. Vehicles where photographic inspection of the rear subframe could not be  completed will be inspected and if a crack is found to be present the rear  subframe will be replaced.",
     "recallNumber": "R/2026/363"
+  },
+  {
+    "make": "AUDI",
+    "models": [
+      "Q3"
+    ],
+    "buildDateStart": "2019-11-29",
+    "buildDateEnd": "2021-07-23",
+    "recallDate": "2026-11-05",
+    "defect": "On Audi Q3 and Q6 (MQB China only) models manufactured within a  specific period corrosion may occur on a bolted connection  securing the steering rack due to moisture entering in combination  with significant exposure to road salt. Gradual corrosion can impair  the secure attachment of the steering rack and lead to it no longer  being possible to steer the vehicle increasing the risk of an accident.",
+    "remedy": "The bolted connection for the steering rack will be replaced on all  affected vehicles.",
+    "recallNumber": "R/2026/359"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "SUPERB"
+    ],
+    "buildDateStart": "2015-10-01",
+    "buildDateEnd": "2022-09-24",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "OCTAVIA"
+    ],
+    "buildDateStart": "2018-10-22",
+    "buildDateEnd": "2019-01-15",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "KODIAQ"
+    ],
+    "buildDateStart": "2017-02-12",
+    "buildDateEnd": "2023-10-13",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "SKODA",
+    "models": [
+      "KAROQ"
+    ],
+    "buildDateStart": "2017-10-12",
+    "buildDateEnd": "2024-01-17",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/376"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TOURAN"
+    ],
+    "buildDateStart": "2015-11-13",
+    "buildDateEnd": "2020-07-08",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2016-11-07",
+    "buildDateEnd": "2020-07-07",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2021-04-28",
+    "buildDateEnd": "2022-10-18",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2017-09-22",
+    "buildDateEnd": "2017-11-27",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "GOLF"
+    ],
+    "buildDateStart": "2014-05-10",
+    "buildDateEnd": "2019-06-17",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "GOLF"
+    ],
+    "buildDateStart": "2018-09-03",
+    "buildDateEnd": "2019-12-20",
+    "recallDate": "2026-11-05",
+    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
+    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
+    "recallNumber": "R/2026/360"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "TIGUAN"
+    ],
+    "buildDateStart": "2017-07-04",
+    "buildDateEnd": "2018-06-14",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/375"
+  },
+  {
+    "make": "VOLKSWAGEN",
+    "models": [
+      "ATLAS"
+    ],
+    "buildDateStart": "2017-06-06",
+    "buildDateEnd": "2018-08-17",
+    "recallDate": "2026-11-05",
+    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
+    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
+    "recallNumber": "R/2026/375"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "C3"
+    ],
+    "buildDateStart": "2025-06-04",
+    "buildDateEnd": "2026-03-30",
+    "recallDate": "2026-11-04",
+    "defect": "On affected vehicles a mounting component may interfere with the 12V battery connection in the event of a frontal collision with a loss of the 12V system. This may result in the vehicle not complying with certain regulatory requirements relating to post crash accessibility and occupant rescue.",
+    "remedy": "Replace battery bracket with an improved design.",
+    "recallNumber": "R/2026/422"
+  },
+  {
+    "make": "CITROEN",
+    "models": [
+      "C3 AIRCROSS"
+    ],
+    "buildDateStart": "2025-10-22",
+    "buildDateEnd": "2026-03-23",
+    "recallDate": "2026-11-04",
+    "defect": "On affected vehicles a mounting component may interfere with the 12V battery connection in the event of a frontal collision with a loss of the 12V system. This may result in the vehicle not complying with certain regulatory requirements relating to post crash accessibility and occupant rescue.",
+    "remedy": "Replace battery bracket with an improved design.",
+    "recallNumber": "R/2026/422"
+  },
+  {
+    "make": "VAUXHALL",
+    "models": [
+      "FRONTERA"
+    ],
+    "buildDateStart": "2025-10-21",
+    "buildDateEnd": "2026-03-23",
+    "recallDate": "2026-11-04",
+    "defect": "On affected vehicles a mounting component may interfere with the 12V battery connection in the event of a frontal collision with a loss of the 12V system. This may result in the vehicle not complying with certain regulatory requirements relating to post crash accessibility and occupant rescue.",
+    "remedy": "Replace battery bracket with an improved design.",
+    "recallNumber": "R/2026/421"
   },
   {
     "make": "CITROEN",
@@ -373,174 +697,6 @@
     "recallNumber": "R/2026/395"
   },
   {
-    "make": "SEAT",
-    "models": [
-      "ATECA"
-    ],
-    "buildDateStart": "2017-01-28",
-    "buildDateEnd": "2023-11-15",
-    "recallDate": "2026-10-16",
-    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
-    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
-    "recallNumber": "R/2026/362"
-  },
-  {
-    "make": "SEAT",
-    "models": [
-      "TARRACO"
-    ],
-    "buildDateStart": "2019-02-18",
-    "buildDateEnd": "2019-02-18",
-    "recallDate": "2026-10-16",
-    "defect": "SEAT S.A. has identified that in vehicles manufactured during a specific  production period there is a possibility that moisture ingress may cause  corrosion of a steering mounting bolt. If this corrosion progresses the  steering attachment may become compromised. This could ultimately lead  to a loss of steering control and increase the risk of an accident.",
-    "remedy": "In affected vehicles this steering mounting bolt will be replaced with a bolt  featuring enhanced corrosion resistance. If you notice unusual metallic rattling noises coming from the front axle area or any irregularities while steering you must not continue driving the vehicle.  Park the vehicle safely and contact an authorised SEAT Service Partner  immediately.",
-    "recallNumber": "R/2026/362"
-  },
-  {
-    "make": "SKODA",
-    "models": [
-      "SUPERB"
-    ],
-    "buildDateStart": "2015-10-01",
-    "buildDateEnd": "2022-09-24",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/376"
-  },
-  {
-    "make": "SKODA",
-    "models": [
-      "OCTAVIA"
-    ],
-    "buildDateStart": "2018-10-22",
-    "buildDateEnd": "2019-01-15",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/376"
-  },
-  {
-    "make": "SKODA",
-    "models": [
-      "KODIAQ"
-    ],
-    "buildDateStart": "2017-02-12",
-    "buildDateEnd": "2023-10-13",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/376"
-  },
-  {
-    "make": "SKODA",
-    "models": [
-      "KAROQ"
-    ],
-    "buildDateStart": "2017-10-12",
-    "buildDateEnd": "2024-01-17",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can may cause a bolt head on the steering rack to break off. This can result in a loss of steering control and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/376"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "TOURAN"
-    ],
-    "buildDateStart": "2015-11-13",
-    "buildDateEnd": "2020-07-08",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "TIGUAN"
-    ],
-    "buildDateStart": "2016-11-07",
-    "buildDateEnd": "2020-07-07",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "TIGUAN"
-    ],
-    "buildDateStart": "2021-04-28",
-    "buildDateEnd": "2022-10-18",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "TIGUAN"
-    ],
-    "buildDateStart": "2017-09-22",
-    "buildDateEnd": "2017-11-27",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "GOLF"
-    ],
-    "buildDateStart": "2014-05-10",
-    "buildDateEnd": "2019-06-17",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "GOLF"
-    ],
-    "buildDateStart": "2018-09-03",
-    "buildDateEnd": "2019-12-20",
-    "recallDate": "2026-10-16",
-    "defect": "On vehicles of a limited production period corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality.",
-    "remedy": "On the affected vehicles the affected bolted connection of the steering rack is replaced on the right-hand side of the subframe.",
-    "recallNumber": "R/2026/360"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "TIGUAN"
-    ],
-    "buildDateStart": "2017-07-04",
-    "buildDateEnd": "2018-06-14",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/375"
-  },
-  {
-    "make": "VOLKSWAGEN",
-    "models": [
-      "ATLAS"
-    ],
-    "buildDateStart": "2017-06-06",
-    "buildDateEnd": "2018-08-17",
-    "recallDate": "2026-10-16",
-    "defect": "On affected vehicles corrosion can cause a tear of a bolt head on the steering rack. This can result in a loss of steering functionality and increase the risk of injury.",
-    "remedy": "The steering bolt will be replaced with a more corrosion-resistant one.",
-    "recallNumber": "R/2026/375"
-  },
-  {
     "make": "CITROEN",
     "models": [
       "RELAY"
@@ -803,18 +959,6 @@
     "defect": "On vehicles of the ID. product line equipped with high-voltage  batteries from a certain supplier there is a suspicion that individual  components of the high-voltage battery may not meet our high  quality standards.    In rare cases when the high-voltage battery is at a high charge level  the battery may overheat. This creates a risk of fire which could lead  to severe or deadly injuries of persons within and outside of the  vehicle as well as to significant material damage.",
     "remedy": "Until the check and if necessary repair of the vehicle it is very  important that the high-voltage battery only be charged to a  maximum charge level of 80 %.    Furthermore the warnings (stickers) included with the campaign  letter must be applied to the vehicle. This measure is both for the  safety of the vehicle owner and to protect any other people who use  the vehicle.",
     "recallNumber": "R/2026/397"
-  },
-  {
-    "make": "AUDI",
-    "models": [
-      "Q3"
-    ],
-    "buildDateStart": "2019-11-29",
-    "buildDateEnd": "2021-07-23",
-    "recallDate": "2026-10-12",
-    "defect": "On Audi Q3 and Q6 (MQB China only) models manufactured within a  specific period corrosion may occur on a bolted connection  securing the steering rack due to moisture entering in combination  with significant exposure to road salt. Gradual corrosion can impair  the secure attachment of the steering rack and lead to it no longer  being possible to steer the vehicle increasing the risk of an accident.",
-    "remedy": "The bolted connection for the steering rack will be replaced on all  affected vehicles.",
-    "recallNumber": "R/2026/359"
   },
   {
     "make": "CADILLAC 2",
