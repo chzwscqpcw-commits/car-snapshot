@@ -720,6 +720,16 @@
     "yearTested": 2021
   },
   {
+    "make": "DENZA",
+    "model": "BAO 5",
+    "overallStars": 5,
+    "adultOccupant": 83,
+    "childOccupant": 93,
+    "pedestrian": 83,
+    "safetyAssist": 79,
+    "yearTested": 2025
+  },
+  {
     "make": "DONGFENG",
     "model": "BOX",
     "overallStars": 3,
@@ -1573,10 +1583,10 @@
     "make": "KIA",
     "model": "K4",
     "overallStars": 5,
-    "adultOccupant": 80,
-    "childOccupant": 86,
-    "pedestrian": 80,
-    "safetyAssist": 75,
+    "adultOccupant": 0,
+    "childOccupant": 0,
+    "pedestrian": 0,
+    "safetyAssist": 0,
     "yearTested": 2025
   },
   {
