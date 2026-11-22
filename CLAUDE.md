@@ -146,12 +146,18 @@ only).
 
 A Remotion project with its own install, outside the Next build and the root
 `tsc`; root ESLint lints `social/src`. `npm run social:check` runs its
-typecheck and calendar test. Every third Saturday night the workflow
-(`.github/workflows/social-clips.yml`) renders a three-week batch of nine
-clips to a `social-<first ISO week>` release; the Sunday cron emails them
-(`/api/cron/social-clips`) and the Friday audit lists them too
-(`src/lib/social-clips.ts`). Routine, setup and go/no-go line:
-`docs/social-pipeline.md`. Never a real registration or a partner name in a
+typecheck and calendar test (including the turn of the year: 2026 has 53 ISO
+weeks, so batches are W45, W48, W51, then 2027-W01). The workflow
+(`.github/workflows/social-clips.yml`) runs every Saturday 22:00 UTC and
+renders a three-week batch of nine clips to a `social-<first ISO week>`
+release on every third one; the Sunday cron (`/api/cron/social-clips`, same
+calendar) emails them, or emails that the batch **did not render** with the
+Actions link, and the Friday audit shows the latest run's result
+(`src/lib/social-clips.ts`). A relative `--out` is relative to where npm was
+started (`social/src/outdir.ts`): it was not, and the render failed unseen
+from 6 to 20 Nov 2026. Routine, setup, re-run steps and go/no-go line
+(first post 2 Nov 2026, review the week of 28 Dec): `docs/social-pipeline.md`.
+Never a real registration or a partner name in a
 clip or caption; the test enforces both.
 
 ## Partner orders (Rakuten reports)

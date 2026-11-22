@@ -18,19 +18,26 @@ still hold the handle, bio text and profile image.
 ## The routine: every third Sunday, about half an hour
 
 Diary: **Sunday 22 November 2026**, then every third Sunday (13 December,
-3 January 2027, 24 January, 14 February, 7 March, 28 March, …). The first
-batch (2 to 20 November) was queued by hand on 1 November.
+3 January 2027, 24 January, 14 February, 7 March, 28 March, …): the
+Sunday before each batch's first Monday. The batches are W45–W47 (queued by
+hand on 1 November), W48–W50, W51–W53 (2026 has 53 ISO weeks), then
+2027-W01–W03, and every third week after that. The W48–W50 batch was
+rendered on a Mac on 22 November, because the scheduled render had been
+failing since 6 November (below); from W51 the routine below is the real one.
 
 1. **The Saturday before, 22:00 UTC**, the `Social Clips` workflow renders
    the next three weeks' nine clips and publishes them as a GitHub release
    tagged `social-<first week>` (for example `social-2026-W48`): nine MP4s,
    nine poster PNGs and one `captions.json`. On the other two Saturdays it
    checks the calendar and stops.
-2. **Sunday 08:00 UTC** a "the next clips" email arrives
-   (`/api/cron/social-clips`): the nine clips grouped by week, each with its
-   poster, a download link and its caption in a copyable block. On the other
-   Sundays nothing is sent. The Friday audit always carries the same section
-   and the Social traffic line.
+2. **Sunday 08:00 UTC** an email arrives (`/api/cron/social-clips`): "the
+   next clips", the nine clips grouped by week, each with its poster, a
+   download link and its caption in a copyable block. **If the batch's release
+   is not there, the email says "the clips did not render"** instead, with the
+   link to the failed run and the re-run steps. On the other two Sundays in
+   three nothing is sent. The Friday audit always carries the same clips
+   section, the Social traffic line, and a "Clip render" line with the result
+   of the workflow's latest run (red when it failed).
 3. Download the nine MP4s from the email's links.
 4. In Buffer, for each clip in the email's order: **New → Post**, select all
    three channels, drop in the MP4, paste the caption as it is, and **Add to
@@ -41,12 +48,13 @@ batch (2 to 20 November) was queued by hand on 1 November.
    (Instagram's limit); the clickable links live in the Instagram and
    Facebook profiles (below). On TikTok the domain is typed, not tapped.
 
-If a batch Sunday brings no email, open the repository's Actions tab, run
-**Social Clips** by hand with `week` set to the batch's first week (the
-calendar's batch starts are 2026-W48, W51, 2027-W01, W04, …; `npm run
-social:plan -- --weeks 12` lists what each week holds), and the release
-appears in about a quarter of an hour; `captions.json` on it has the
-captions.
+**If the email says the clips did not render** (or a batch Sunday brings no
+email at all, which would mean the cron itself is down), open the repository's
+Actions tab, run **Social Clips** by hand (*Run workflow*) with `week` set to
+the batch's first week (the calendar's batch starts are 2026-W48, W51,
+2027-W01, W04, …; `npm run social:plan -- --weeks 12` lists what each week
+holds). The release appears in a few minutes; `captions.json` on it has the
+captions. The red step in the failed run says what broke.
 
 ## One-time setup
 
@@ -103,9 +111,11 @@ three** hold:
 | TikTok followers | 1,000 |
 
 Fewer than two: stop the Buffer routine (the Saturday job can keep running
-harmlessly, or be disabled in Actions) and keep the renderer for one-off
-clips. The review falls between batches: the 3 January batch is already
-queued by then, so the decision takes effect from the 24 January one.
+harmlessly, or be disabled in Actions; the Sunday email will then keep
+reporting batches, so remove its cron from `vercel.json` too) and keep the renderer for one-off
+clips. The review falls inside a batch: the 13 December batch (W51–W53)
+runs to Friday 1 January and is already queued, so the decision takes effect
+from the 3 January batch (2027-W01): if the answer is no, do not queue it.
 
 ## How it works
 
@@ -118,14 +128,22 @@ queued by then, so the decision takes effect from the 24 January one.
 - `.github/workflows/social-clips.yml` runs every Saturday night, asks the
   calendar whether the coming week opens a batch (`npm run batch` in
   `social/`), and if so installs the renderer, renders the nine clips
-  (capped at 25 minutes) and publishes the release. Re-running it for the
-  same batch replaces the release's assets with identical clips.
-- `src/lib/social-clips.ts` reads the latest `social-*` release through the
-  public GitHub API (no token) for the Sunday email
-  (`src/app/api/cron/social-clips/route.ts`, a Vercel cron at 08:00 UTC that
-  only sends when the release is less than a week old) and for the Friday
-  audit, and fails soft to a one-line note if the API or the release is
-  unavailable.
+  (capped at 25 minutes), **checks that the files are in `social/out/current`
+  (9 MP4s, 9 posters, `captions.json`)** and publishes the release. Re-running
+  it for the same batch replaces the release's assets with identical clips.
+  A relative `--out` means "relative to where npm was started"
+  (`social/src/outdir.ts`); until 22 November it was resolved inside
+  `social/`, so the clips landed in `social/social/out/current` and the
+  publish step failed, on 6, 13 and 20 November, unseen.
+- `src/lib/social-clips.ts` reads the `social-<first week>` release through
+  the public GitHub API (no token) and fails soft to a one-line note if the
+  API or the release is unavailable. The Sunday cron
+  (`src/app/api/cron/social-clips/route.ts`, 08:00 UTC in `vercel.json`)
+  follows the same calendar (`expectedBatch`), so it knows which Sundays
+  matter and which release to look for: the clips email when it is there, the
+  "did not render" email when it is not. The Friday audit adds the latest
+  workflow run's result (`fetchSocialRun`). The Vercel cron needs `CRON_SECRET`
+  and the audit's Resend settings, which the other crons already use.
 - Rules baked in: never a real registration (the closing card shows a sample
   plate), aggregate figures only, no partner names or offers in any clip or
   caption. `npm run social:check` runs the calendar test that enforces the

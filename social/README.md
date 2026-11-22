@@ -37,7 +37,7 @@ it holds; the Saturday workflow renders only on batch weeks.
 | `src/compositions/*.tsx` | The templates; `shared.tsx` is the common beat sheet |
 | `src/brand/*` | Theme, fonts, motion helpers, chart primitives, plate, closing card |
 | `src/captions.ts` | captions.json: caption, hashtags, UTM links per platform |
-| `src/cli/render.ts` | Bundle + render a week (what the Thursday workflow runs) |
+| `src/cli/render.ts` | Bundle + render a week (what the Saturday workflow runs) |
 | `src/calendar.test.ts` | Determinism, rotation, privacy and partner-name checks |
 | `public/fonts`, `public/audio` | The report's typefaces and the music bed; see `CREDITS.md` |
 
