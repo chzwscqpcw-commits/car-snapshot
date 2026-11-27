@@ -2,7 +2,7 @@
 title: "Car Insurance Groups 1–50: The Complete UK Guide (2026)"
 description: "How UK car insurance groups are decided, which models sit in each band, why EVs land higher than expected, and how to use the group rating to find cheaper cover."
 date: "2026-03-04"
-lastModified: "2026-05-29"
+lastModified: "2026-11-27"
 keywords: ["car insurance groups", "insurance group 1", "cheapest cars to insure", "car insurance group check", "how insurance groups work", "used car insurance cost", "buying a car insurance", "EV insurance groups", "Thatcham insurance group", "insurance group by model"]
 author: "Free Plate Check"
 faqItems:
@@ -232,10 +232,10 @@ This is also why "I had a quote of £450 on a group 18 car, so a group 22 will o
 The order of operations matters. Get the spec right first, then the group, then a real quote.
 
 1. **Confirm the exact variant.** Trim, engine size and gearbox can all shift the group. Run the registration on our [free car check](/car-check) to see the exact factory specification, including Euro NCAP rating where available — both are inputs the panel uses.
-2. **Look up the group.** Thatcham's website lists groups by model. The major comparison sites (Confused, GoCompare, MoneySuperMarket) display the group on the quote screen.
-3. **Get a real quote.** The only number that matters is the quote on your details. Run at least three quotes with slightly different mileage assumptions and excess levels to see how sensitive the price is.
-4. **Factor in running costs.** A cheaper-to-insure car is usually cheaper to tax and fuel as well, but not always — the [valuation and depreciation profile](/value-my-car) of a car affects the total cost of ownership more than insurance alone in many cases.
-5. **Plan the first service.** A pre-purchase service history check and a fresh service straight after purchase do not change the group, but they reduce the chance of a costly claim — which is what protects your no-claims discount, which is what controls your future premium. Compare local garage prices on [BookMyGarage](/booking) before you commit.
+2. **Look up the group.** Thatcham's website lists groups by model, and most insurance quote screens display the group too.
+3. **Factor in running costs.** A cheaper-to-insure car is usually cheaper to tax and fuel as well, but not always — the [valuation and depreciation profile](/value-my-car) of a car affects the total cost of ownership more than insurance alone in many cases.
+4. **Plan the first service.** A pre-purchase service history check and a fresh service straight after purchase do not change the group, but they reduce the chance of a costly claim — which is what protects your no-claims discount, which is what controls your future premium. Compare local garage prices on [BookMyGarage](/booking) before you commit.
+5. **Get a real quote.** The only number that matters is the quote on your details. Run at least three quotes with slightly different mileage assumptions and excess levels to see how sensitive the price is.
 
 ## Tips for cutting the premium
 

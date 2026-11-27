@@ -710,8 +710,13 @@ export function goLink(
   partner: GoPartner,
   context: GoContext,
   variant?: string,
+  fromPost?: string,
 ): string {
   const params = new URLSearchParams({ ctx: context });
+  // `from` names the article a click came from. Unlike `post` it does not
+  // change the context (so the partner's u1 still splits by placement only):
+  // /go just records it, when it is a live post, as `post` on the click.
+  if (fromPost) params.set("from", fromPost);
   // `v` rides ALONGSIDE the context and never feeds sub2. The same placement
   // can now show two different framings, and we need to tell their clicks apart
   // — but the partner's sub2 series is the only per-placement history either
@@ -774,6 +779,7 @@ export const GO_CONTEXTS = [
   // Insurance (src/config/insurance.ts) — whichever partner is live
   "money-insurance", // homepage, under the running-costs card ("excludes insurance")
   "running-costs-insurance", // /running-costs, under the insurance estimate
+  "blog-insurance-inline", // inside the articles about car insurance (src/lib/blog-insurance-card.ts)
   "buyer-check-temp-cover", // buyer's checklist step 4, by the test drive
   "car-check-temp-cover", // TempInsuranceCTA on /car-check
   "value-my-car-temp-cover", // TempInsuranceCTA on /value-my-car
@@ -1074,6 +1080,25 @@ export function hasWarrantyIntent(keywords: string[]): boolean {
   if (!keywords || keywords.length === 0) return false;
   const lower = keywords.map((k) => k.toLowerCase());
   return WARRANTY_INTENT_KEYWORDS.some((wk) => lower.some((k) => k.includes(wk)));
+}
+
+/**
+ * Insurance posts: the article is about car insurance itself, not a post that
+ * mentions it (the ANPR, SORN and MOT-penalty guides each carry one keyword
+ * for it). Three or more keywords that name insurance is the line; the
+ * insurance-group guide has ten, the two cost and penalty guides seven and
+ * eight, and nothing else has more than one. `scripts/test-blog-insurance.ts`
+ * pins the three, so a post that crosses the line shows up in a failing test
+ * before it shows a card.
+ *
+ * The blog page checks this AFTER the MOT, history and warranty tests, so a
+ * post that already has a prompt keeps it and never gets two.
+ */
+const INSURANCE_KEYWORD = /\binsur(?:e|ance)\b/i;
+
+export function hasInsuranceIntent(keywords: string[]): boolean {
+  if (!keywords || keywords.length === 0) return false;
+  return keywords.filter((k) => INSURANCE_KEYWORD.test(k)).length >= 3;
 }
 
 export function hasVehicleHistoryIntent(keywords: string[]): boolean {

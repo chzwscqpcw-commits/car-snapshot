@@ -12,6 +12,8 @@ interface InsuranceCTAProps {
   kind: InsuranceKind;
   /** "Ford Focus", from shortVehicleName. */
   vehicleName?: string;
+  /** The article the card sits in (its slug). Recorded with the impression and the click, never in the link's context. */
+  post?: string;
   /** Preview page only: render with the first-choice partner even while it's pending. */
   preview?: boolean;
   className?: string;
@@ -40,9 +42,9 @@ const NOUN: Record<InsuranceKind, string> = { car: "car", van: "van", motorbike:
  * our own commission line, the regulatory line it requires. A partner with
  * neither gets a text-only card.
  */
-export default function InsuranceCTA({ context, kind, vehicleName, preview = false, className = "" }: InsuranceCTAProps) {
+export default function InsuranceCTA({ context, kind, vehicleName, post, preview = false, className = "" }: InsuranceCTAProps) {
   const offer: InsuranceOffer | null = preview ? previewOffer(kind) : insuranceOffer(kind);
-  const cardRef = useSeenOnce(offer && !preview ? offer.partnerKey : null, context);
+  const cardRef = useSeenOnce(offer && !preview ? offer.partnerKey : null, context, post);
   if (!offer) return null;
   const noun = NOUN[kind];
 
@@ -65,7 +67,7 @@ export default function InsuranceCTA({ context, kind, vehicleName, preview = fal
       {/* Phone: the logo sits above the full-width button. Wider: beside it. */}
       <div className="ml-8 flex flex-col-reverse items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
         <a
-          href={preview ? "#" : goLink(offer.go, context)}
+          href={preview ? "#" : goLink(offer.go, context, undefined, post)}
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           className="inline-flex w-full sm:w-auto items-center justify-center text-center px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold rounded-lg transition-colors"
@@ -108,7 +110,7 @@ function PartnerLogoPlate({ logo, name }: { logo: PartnerLogo; name: string }) {
  * the carVertical and WBAC boxes use, so click rates compare across them.
  * Pass null to record nothing (no partner, or the preview page).
  */
-export function useSeenOnce(partnerKey: string | null, context: string) {
+export function useSeenOnce(partnerKey: string | null, context: string, post?: string) {
   const ref = useRef<HTMLDivElement>(null);
   const seen = useRef(false);
   useEffect(() => {
@@ -119,7 +121,11 @@ export function useSeenOnce(partnerKey: string | null, context: string) {
       (entries) => {
         if (entries.some((e) => e.isIntersecting) && !seen.current) {
           seen.current = true;
-          trackEvent("partner_impression", { partner_id: partnerKey, click_context: context });
+          trackEvent("partner_impression", {
+            partner_id: partnerKey,
+            click_context: context,
+            ...(post ? { post } : {}),
+          });
           obs.disconnect();
         }
       },
@@ -127,6 +133,6 @@ export function useSeenOnce(partnerKey: string | null, context: string) {
     );
     obs.observe(node);
     return () => obs.disconnect();
-  }, [partnerKey, context]);
+  }, [partnerKey, context, post]);
   return ref;
 }

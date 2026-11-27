@@ -108,6 +108,10 @@ export async function GET(
   const platesCookie = /(?:^|;\s*)fpc_go_vrm=([A-Za-z0-9]{1,8})(?:;|$)/.exec(req.headers.get("cookie") ?? "");
   const vrm = sanitiseVrm(url.searchParams.get("vrm") ?? platesCookie?.[1] ?? null);
   const variant = sanitiseVariant(url.searchParams.get("v"));
+  // The article a placement sat in (goLink's `fromPost`). Recorded only for a
+  // live post; never part of the context or the partner link.
+  const fromRaw = sanitiseSlug(url.searchParams.get("from"));
+  const fromPost = fromRaw && isPublishedPostSlug(fromRaw) ? fromRaw : "";
 
   // `blog-inline-<slug>` is both our own click_context and the clickref the
   // partner link is built from, so the two series join on one value. The
@@ -207,6 +211,7 @@ export async function GET(
             // can be read as impressions-by-variant against clicks-by-variant
             // without touching the context the partner reports on.
             ...(variant ? { variant } : {}),
+            ...(fromPost ? { post: fromPost } : {}),
             // What was actually asked for, so a renamed placement shows up here
             // instead of vanishing. Already sanitised to [a-z0-9-].
             ...(recognised ? {} : { requested: slug ? `post:${slug}` : `ctx:${ctxParam}` }),
