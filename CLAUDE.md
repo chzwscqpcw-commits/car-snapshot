@@ -224,6 +224,17 @@ partner's account team issued, not the ones the publisher dashboard shows
   `src/config/insurance.ts` (where Confused.com is not live, nothing shows). The `/running-costs` estimate
   used to carry one; it is gone, and `npm run test:insurance` fails if a page
   or component links to one again.
+- **In blog articles** (`blog-insurance-inline`, added Nov 2026, **needs the
+  partner's approval before it goes live**): the same card, kind `car`, no
+  vehicle name, once in each insurance guide. `hasInsuranceIntent` (three or
+  more keywords naming insurance) and `showsInsuranceCard` /
+  `INSURANCE_CARD_AFTER` in `src/lib/blog-insurance-card.ts` decide which posts
+  and where (after the named section, before the next heading; a post not
+  listed gets it before its last heading). A post with an MOT, history or
+  warranty prompt never gets it. Read it as `partner_impression` /
+  `partner_click` for that context (both carry `post`, the article). In article
+  text never name another comparison site; `npm run test:blog-insurance`
+  fails if one does, and pins which posts show the card.
 - **Logo.** The card draws the partner's logo on a white plate when its
   entry names one. `public/partner-logos/confused-logo-black.svg` is the file
   the partner supplied (19 Nov 2026), served byte for byte: never recoloured,

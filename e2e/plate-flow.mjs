@@ -274,6 +274,50 @@ await check("blog MOT box (no reg)", async (page) => {
   report("blog box without a reg -> /booking price step, no lookup", arrived && step3 && lookups.length === before, `${page.url()} ${JSON.stringify({ step3, lookups: lookups.length - before })}`);
 });
 
+// 5c. The insurance card inside the insurance articles: one card, after the
+//     section that tells the reader to get quotes, recorded as seen with its
+//     own context and the article, linking through /go with the same context.
+//     An MOT post that mentions insurance shows none.
+for (const [post, anchor] of [
+  ["car-insurance-groups-explained", "how-to-check-a-cars-insurance-group-before-you-buy"],
+  ["why-car-insurance-so-expensive-2026", "the-biggest-lever-shop-around"],
+]) {
+  await check(`blog insurance card (${post})`, async (page) => {
+    await page.evaluateOnNewDocument(() => {
+      navigator.sendBeacon = () => false;
+    });
+    events.length = 0;
+    await page.goto(`${BASE}/blog/${post}`, { waitUntil: "networkidle0" });
+    const cards = await page.$$("[data-insurance-card]");
+    report(`blog insurance card (${post}): exactly one`, cards.length === 1, String(cards.length));
+    if (cards.length !== 1) return;
+    const placed = await page.evaluate((id) => {
+      const card = document.querySelector("[data-blog-insurance-card]");
+      const h = document.getElementById(id);
+      if (!card || !h) return null;
+      // The card comes after the anchor heading, with no other <h2> in between.
+      const after = !!(h.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING);
+      const h2s = [...document.querySelectorAll(".blog-content h2")];
+      const next = h2s[h2s.indexOf(h) + 1];
+      const beforeNext = !next || !!(card.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING);
+      return { after, beforeNext, heading: card.querySelector("h3")?.textContent };
+    }, anchor);
+    report(`blog insurance card (${post}): follows its section`, !!placed && placed.after && placed.beforeNext, JSON.stringify(placed));
+    report(`blog insurance card (${post}): the approved generic heading`, placed?.heading === "Compare car insurance quotes", String(placed?.heading));
+    const href = await page.$eval("[data-insurance-card] a[href^='/go/']", (a) => a.getAttribute("href"));
+    report(`blog insurance card (${post}): links through /go with its context and the article`, href === `/go/rvu-car?ctx=blog-insurance-inline&from=${post}`, String(href));
+    await page.$eval("[data-insurance-card]", (el) => el.scrollIntoView({ block: "center" }));
+    const seen = await waitFor(() => events.some((e) => e.type === "partner_impression" && e.payload?.click_context === "blog-insurance-inline" && e.payload?.post === post));
+    report(`blog insurance card (${post}): recorded as seen with its context and the article`, seen, JSON.stringify(events.slice(-3)));
+    report(`blog insurance card (${post}): no event carries the plate`, !JSON.stringify(events).includes(PLATE));
+  });
+}
+await check("blog insurance card (MOT post: none)", async (page) => {
+  await page.goto(BASE + MOT_POST, { waitUntil: "networkidle0" });
+  const n = (await page.$$("[data-insurance-card]")).length;
+  report("an MOT post that mentions insurance shows no insurance card", n === 0, String(n));
+});
+
 await check("mot reminder", async (page) => {
   await page.goto(`${BASE}/mot-reminder#vrm=${PLATE}`, { waitUntil: "domcontentloaded" });
   const ok = await until(page, (plate) =>

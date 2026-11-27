@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -13,6 +14,8 @@ import ConversionWidget from "@/components/stats/ConversionWidget";
 import AdUnit from "@/components/ads/AdUnit";
 import BlogMotBooking from "@/components/BlogMotBooking";
 import WarrantyCTA from "@/components/WarrantyCTA";
+import InsuranceCTA from "@/components/InsuranceCTA";
+import { BLOG_INSURANCE_CONTEXT, insuranceCardIndex, showsInsuranceCard } from "@/lib/blog-insurance-card";
 
 /**
  * Split rendered post HTML just before the 2nd <h2> so an inline CTA can sit
@@ -313,15 +316,39 @@ export default async function BlogPostPage({ params }: PageProps) {
             />
           ) : null;
 
-          const split = midInject ? splitAtSecondH2(post.content) : null;
-          if (split) {
-            return (
-              <>
-                <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[0] }} />
-                {midInject}
-                <article className="blog-content" dangerouslySetInnerHTML={{ __html: split[1] }} />
-              </>
+          // Insurance posts also get the insurance card, further down — after
+          // the section that tells the reader to get quotes. It is not a
+          // second reg-box: the box above is our own tool, the card is the
+          // partner's, and an MOT / history / warranty post never shows it
+          // (showsInsuranceCard checks that).
+          const cardAt = showsInsuranceCard(post.keywords) ? insuranceCardIndex(post.content, slug) : null;
+          const card =
+            cardAt !== null ? (
+              <div className="my-8" data-blog-insurance-card>
+                <InsuranceCTA context={BLOG_INSURANCE_CONTEXT} kind="car" post={slug} />
+              </div>
+            ) : null;
+
+          const midSplit = midInject ? splitAtSecondH2(post.content) : null;
+          // Cut points in document order: where the reg box goes, where the card goes.
+          const cuts: Array<{ at: number; node: React.ReactNode }> = [];
+          if (midSplit && midInject) cuts.push({ at: midSplit[0].length, node: midInject });
+          if (card && cardAt !== null) cuts.push({ at: cardAt, node: card });
+          cuts.sort((a, b) => a.at - b.at);
+          if (cuts.length) {
+            const parts: React.ReactNode[] = [];
+            let from = 0;
+            cuts.forEach((c, i) => {
+              parts.push(
+                <article key={`a${i}`} className="blog-content" dangerouslySetInnerHTML={{ __html: post.content.slice(from, c.at) }} />,
+                <React.Fragment key={`n${i}`}>{c.node}</React.Fragment>,
+              );
+              from = c.at;
+            });
+            parts.push(
+              <article key="end" className="blog-content" dangerouslySetInnerHTML={{ __html: post.content.slice(from) }} />,
             );
+            return <>{parts}</>;
           }
           return (
             <article
