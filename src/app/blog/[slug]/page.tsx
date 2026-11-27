@@ -321,7 +321,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           // second reg-box: the box above is our own tool, the card is the
           // partner's, and an MOT / history / warranty post never shows it
           // (showsInsuranceCard checks that).
-          const cardAt = showsInsuranceCard(post.keywords) ? insuranceCardIndex(post.content, slug) : null;
+          const cardAt = showsInsuranceCard(post.keywords, slug) ? insuranceCardIndex(post.content, slug) : null;
           const card =
             cardAt !== null ? (
               <div className="my-8" data-blog-insurance-card>

@@ -4,7 +4,7 @@ import { hasInsuranceIntent, hasMotKeywords, hasVehicleHistoryIntent, hasWarrant
  * Where the insurance card (InsuranceCTA, kind "car") sits in an article.
  *
  * Which posts: `showsInsuranceCard` — a post about insurance (hasInsuranceIntent)
- * that has no prompt of its own already. An MOT post keeps its booking box, a
+ * that has no prompt of its own already and is not held (INSURANCE_CARD_HELD). An MOT post keeps its booking box, a
  * history post the buyer check, a warranty post the warranty card: a post never
  * gets two of those.
  *
@@ -19,11 +19,19 @@ export const BLOG_INSURANCE_CONTEXT = "blog-insurance-inline" as const;
 export const INSURANCE_CARD_AFTER: Record<string, string> = {
   "car-insurance-groups-explained": "how-to-check-a-cars-insurance-group-before-you-buy",
   "why-car-insurance-so-expensive-2026": "the-biggest-lever-shop-around",
-  "driving-without-insurance-penalties": "the-in10-and-why-insurers-care-so-much",
 };
 
-export function showsInsuranceCard(keywords: string[]): boolean {
+/**
+ * Insurance posts held back from this placement for now: the card does not
+ * show, and the post is not part of what the partner is asked to approve.
+ * driving-without-insurance-penalties (publishes 12 Dec 2026) is held; remove
+ * it here, and give it an anchor above, when the placement is cleared for it.
+ */
+export const INSURANCE_CARD_HELD = ["driving-without-insurance-penalties"];
+
+export function showsInsuranceCard(keywords: string[], slug?: string): boolean {
   return (
+    !(slug && INSURANCE_CARD_HELD.includes(slug)) &&
     !hasMotKeywords(keywords) &&
     !hasVehicleHistoryIntent(keywords) &&
     !hasWarrantyIntent(keywords) &&

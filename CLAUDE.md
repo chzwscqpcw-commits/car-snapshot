@@ -226,7 +226,8 @@ partner's account team issued, not the ones the publisher dashboard shows
   or component links to one again.
 - **In blog articles** (`blog-insurance-inline`, added Nov 2026, **needs the
   partner's approval before it goes live**): the same card, kind `car`, no
-  vehicle name, once in each insurance guide. `hasInsuranceIntent` (three or
+  vehicle name, once in each of two insurance guides (a third, the
+  driving-without-insurance guide, is held back: `INSURANCE_CARD_HELD`). `hasInsuranceIntent` (three or
   more keywords naming insurance) and `showsInsuranceCard` /
   `INSURANCE_CARD_AFTER` in `src/lib/blog-insurance-card.ts` decide which posts
   and where (after the named section, before the next heading; a post not

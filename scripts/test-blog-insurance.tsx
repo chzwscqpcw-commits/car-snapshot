@@ -4,10 +4,11 @@
  *   npx tsx scripts/test-blog-insurance.tsx
  *
  * Checks:
- *   1. which posts: exactly the three insurance guides, and no MOT, history or
+ *   1. which posts: exactly the two insurance guides the partner is asked to
+ *      approve (a third, the penalties guide, is held back), and no MOT, history or
  *      warranty post (they keep their own prompt: a post never gets two), none
  *      of the ANPR posts;
- *   2. where: each of the three has a heading to hang it on, and the card
+ *   2. where: each has a heading to hang it on, and the card
  *      lands just before the next section; one card per post, no more;
  *   3. the card is the approved one: same text as on the homepage and
  *      /running-costs, no vehicle name, nothing of ours added around it;
@@ -21,7 +22,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import matter from "gray-matter";
 import { hasInsuranceIntent, hasMotKeywords, hasVehicleHistoryIntent, hasWarrantyIntent, isGoContext } from "../src/config/partners";
-import { BLOG_INSURANCE_CONTEXT, INSURANCE_CARD_AFTER, insuranceCardIndex, showsInsuranceCard } from "../src/lib/blog-insurance-card";
+import { BLOG_INSURANCE_CONTEXT, INSURANCE_CARD_AFTER, INSURANCE_CARD_HELD, insuranceCardIndex, showsInsuranceCard } from "../src/lib/blog-insurance-card";
 import { getPostBySlug, slugify } from "../src/lib/blog";
 import InsuranceCTA from "../src/components/InsuranceCTA";
 
@@ -35,11 +36,10 @@ function check(label: string, actual: unknown, expected: unknown): void {
   console.log(`  ${ok ? "✓" : "✗"} ${label}${ok ? "" : `  — got ${JSON.stringify(actual)}, want ${JSON.stringify(expected)}`}`);
 }
 
-const THE_THREE = [
-  "car-insurance-groups-explained",
-  "driving-without-insurance-penalties",
-  "why-car-insurance-so-expensive-2026",
-];
+/** The posts the partner is asked to approve this round. */
+const GUIDES = ["car-insurance-groups-explained", "why-car-insurance-so-expensive-2026"];
+/** An insurance guide held back from this round: no card until it is cleared. */
+const HELD = "driving-without-insurance-penalties";
 const REGULATORY = "Confused.com are authorised and regulated by the Financial Conduct Authority.";
 const CAR_LINK = "https://click.linksynergy.com/fs-bin/click?id=%2aZ3mDbeym%2aI&offerid=1593696.967&type=3&subid=0";
 
@@ -57,13 +57,16 @@ const h2Html = (content: string) =>
 
 async function main(): Promise<void> {
   console.log("\nWhich posts:");
-  const withCard = posts.filter((p) => showsInsuranceCard(p.keywords) && insuranceCardIndex(h2Html(p.content), p.slug) !== null);
-  check("exactly the three insurance guides show the card", withCard.map((p) => p.slug).sort(), THE_THREE);
+  const withCard = posts.filter((p) => showsInsuranceCard(p.keywords, p.slug) && insuranceCardIndex(h2Html(p.content), p.slug) !== null);
+  check("exactly the two approved insurance guides show the card", withCard.map((p) => p.slug).sort(), GUIDES);
   const prompted = posts.filter((p) => hasMotKeywords(p.keywords) || hasVehicleHistoryIntent(p.keywords) || hasWarrantyIntent(p.keywords));
-  check("no post with an MOT, history or warranty prompt gets the card too", prompted.filter((p) => showsInsuranceCard(p.keywords)).length, 0);
+  check("no post with an MOT, history or warranty prompt gets the card too", prompted.filter((p) => showsInsuranceCard(p.keywords, p.slug)).length, 0);
   for (const p of posts) {
     if (/^anpr-/.test(p.slug)) check(`${p.slug}: untouched (no card)`, showsInsuranceCard(p.keywords), false);
   }
+  const held = posts.find((p) => p.slug === HELD)!;
+  check("the penalties guide is held back: an insurance post, but no card", [hasInsuranceIntent(held.keywords), INSURANCE_CARD_HELD.includes(HELD), showsInsuranceCard(held.keywords, HELD)], [true, true, false]);
+  check("nothing else is held", INSURANCE_CARD_HELD, [HELD]);
   // Posts that mention insurance but are about something else.
   for (const slug of ["driving-without-an-mot-penalties", "what-does-cat-n-s-mean", "sorn-rules-and-penalties", "first-car-checklist-new-drivers"]) {
     const p = posts.find((x) => x.slug === slug);
@@ -71,12 +74,12 @@ async function main(): Promise<void> {
   }
   check("a post that only mentions insurance is not an insurance post", hasInsuranceIntent(["sorn", "insurance", "tax"]), false);
   check("a post that is about it is", hasInsuranceIntent(["car insurance", "cheaper insurance", "insure a van"]), true);
-  check("an MOT post with three insurance keywords still keeps the MOT box", showsInsuranceCard(["mot test", "car insurance", "insurance cost", "insure"]), false);
+  check("an MOT post with insurance keywords still keeps the MOT box", showsInsuranceCard(["mot test", "car insurance", "insurance cost", "insure"]), false);
   check("a history post likewise", showsInsuranceCard(["hpi check", "car insurance", "insurance cost", "insure"]), false);
 
   console.log("\nWhere it sits:");
-  check("every anchor belongs to one of the three", Object.keys(INSURANCE_CARD_AFTER).sort(), THE_THREE);
-  for (const slug of THE_THREE) {
+  check("every anchor belongs to a post that shows the card", Object.keys(INSURANCE_CARD_AFTER).sort(), GUIDES);
+  for (const slug of GUIDES) {
     const p = posts.find((x) => x.slug === slug)!;
     const html = h2Html(p.content);
     const live = await getPostBySlug(slug); // null for a post dated in the future
@@ -100,7 +103,7 @@ async function main(): Promise<void> {
   const markup = (context: string, post?: string) =>
     renderToStaticMarkup(<InsuranceCTA context={context as typeof BLOG_INSURANCE_CONTEXT} kind="car" post={post} />);
   const text = (m: string) => m.replace(/<[^>]+>/g, " ").replace(/&#x27;/g, "'").replace(/\s+/g, " ").trim();
-  const blog = markup(BLOG_INSURANCE_CONTEXT, THE_THREE[0]);
+  const blog = markup(BLOG_INSURANCE_CONTEXT, GUIDES[0]);
   check("same text as the homepage's card", text(blog), text(markup("money-insurance")));
   check("same text as the /running-costs card", text(blog), text(markup("running-costs-insurance")));
   check(
@@ -120,16 +123,16 @@ async function main(): Promise<void> {
   process.env.ANALYTICS_WRITES = "0";
   check("its own context is one /go records", isGoContext(BLOG_INSURANCE_CONTEXT), true);
   const href = /href="([^"]+)"/.exec(blog)?.[1].replace(/&amp;/g, "&") ?? "";
-  check("the link: /go/rvu-car, its context, the article", href, `/go/rvu-car?ctx=blog-insurance-inline&from=${THE_THREE[0]}`);
+  check("the link: /go/rvu-car, its context, the article", href, `/go/rvu-car?ctx=blog-insurance-inline&from=${GUIDES[0]}`);
   const { GET } = await import("../src/app/go/[partner]/route");
   const ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
   const go = (query: string) =>
     GET(new Request(`http://localhost/go/rvu-car?${query}`, { headers: { cookie: "fpc_v=1", "user-agent": ua } }), {
       params: Promise.resolve({ partner: "rvu-car" }),
     });
-  const clicked = await go(`ctx=blog-insurance-inline&from=${THE_THREE[0]}`);
+  const clicked = await go(`ctx=blog-insurance-inline&from=${GUIDES[0]}`);
   check("/go redirects to the car link with u1 = the placement", clicked.headers.get("location"), `${CAR_LINK}&u1=blog-insurance-inline`);
-  check("the article's slug does not reach the partner", (await go(`ctx=blog-insurance-inline&from=${THE_THREE[0]}`)).headers.get("location")?.includes(THE_THREE[0]), false);
+  check("the article's slug does not reach the partner", (await go(`ctx=blog-insurance-inline&from=${GUIDES[0]}`)).headers.get("location")?.includes(GUIDES[0]), false);
   check("junk in `from` changes nothing", (await go("ctx=blog-insurance-inline&from=../../x%3Cscript")).headers.get("location"), `${CAR_LINK}&u1=blog-insurance-inline`);
 
   console.log("\nNo other insurance comparison site in any post:");
