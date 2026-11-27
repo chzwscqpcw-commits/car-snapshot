@@ -1,19 +1,25 @@
 /**
- * "This week's clips" for the Friday audit email: the latest `social-<ISO
- * week>` GitHub release (made by .github/workflows/social-clips.yml every
- * Thursday night), read through the public API with no token, so a missing
- * release, a rate limit or a network blip costs one line of the email and
- * never the email itself.
+ * "The next clips": the latest `social-<first ISO week>` GitHub release (made
+ * by .github/workflows/social-clips.yml on every third Saturday night: a
+ * batch of three weeks, nine clips), read through the public API with no
+ * token, so a missing release, a rate limit or a network blip costs one line
+ * of the email and never the email itself. The section goes out on its own
+ * on the Sunday after a batch (/api/cron/social-clips, the founder's cue to
+ * queue the batch in Buffer) and again inside the Friday audit.
  *
  * Also the "Social" traffic line: visitors who arrived with
  * utm_source=tiktok|instagram|facebook, and what those sessions went on to do.
  */
+
+import { batchWeeks, isBatchStart, upcomingWeek, weekLabel } from "../../social/src/calendar";
 
 export const SOCIAL_REPO = "chzwscqpcw-commits/car-snapshot";
 export const SOCIAL_SOURCES = ["tiktok", "instagram", "facebook"] as const;
 export type SocialSource = (typeof SOCIAL_SOURCES)[number];
 
 export interface SocialClip {
+  /** The clip's ISO week, e.g. "2026-W46". */
+  week: string;
   file: string;
   day: string;
   date: string;
@@ -31,7 +37,10 @@ export interface SocialClip {
 }
 
 export interface SocialClipsData {
+  /** The first week on the release. */
   week: string;
+  /** Every week on the release, in order. */
+  weeks: string[];
   monday: string;
   releaseUrl: string;
   publishedAt: string;
@@ -55,9 +64,11 @@ interface Release {
 }
 interface CaptionsFile {
   week: string;
+  /** Absent on a single-week file from before batches. */
+  weeks?: string[];
   monday: string;
   schedule: string;
-  clips: Array<Omit<SocialClip, "still" | "download"> & { still: string }>;
+  clips: Array<Omit<SocialClip, "still" | "download" | "week"> & { still: string; week?: string }>;
 }
 
 export const SOCIAL_TAG = /^social-(\d{4}-W\d{2})$/;
@@ -76,11 +87,13 @@ export function clipsFromRelease(release: Release, captions: CaptionsFile): Soci
   const byName = new Map(release.assets.map((a) => [a.name, a.browser_download_url]));
   return {
     week: captions.week,
+    weeks: captions.weeks ?? [captions.week],
     monday: captions.monday,
     releaseUrl: release.html_url,
     publishedAt: (release.published_at ?? release.created_at).slice(0, 10),
     schedule: captions.schedule,
     clips: captions.clips.map((c) => ({
+      week: c.week ?? captions.week,
       file: c.file,
       day: c.day,
       date: c.date,
@@ -98,10 +111,11 @@ export function clipsFromRelease(release: Release, captions: CaptionsFile): Soci
 }
 
 /**
- * Fetch the latest clips. Two requests, 8 s each, no token. Any failure
+ * Fetch the latest clips (or the release with this `tag`). Two requests, 8 s
+ * each, no token. Any failure
  * returns `{ ok: false, note }` for the email to print as one line.
  */
-export async function fetchSocialClips(fetchImpl: Fetch = fetch, repo = SOCIAL_REPO): Promise<SocialClipsResult> {
+export async function fetchSocialClips(fetchImpl: Fetch = fetch, repo = SOCIAL_REPO, tag?: string): Promise<SocialClipsResult> {
   const headers = { Accept: "application/vnd.github+json", "User-Agent": "freeplatecheck-weekly-audit" };
   try {
     const res = await fetchImpl(`https://api.github.com/repos/${repo}/releases?per_page=20`, {
@@ -109,8 +123,11 @@ export async function fetchSocialClips(fetchImpl: Fetch = fetch, repo = SOCIAL_R
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return { ok: false, note: `GitHub releases API answered ${res.status}` };
-    const release = latestSocialRelease((await res.json()) as Release[]);
-    if (!release) return { ok: false, note: "no social-<week> release published yet" };
+    const releases = (await res.json()) as Release[];
+    // With a tag, only that batch's release will do: an older batch's release
+    // is not the clips this Sunday was waiting for.
+    const release = tag ? (releases.find((r) => !r.draft && r.tag_name === tag) ?? null) : latestSocialRelease(releases);
+    if (!release) return { ok: false, note: tag ? `no ${tag} release published` : "no social-<week> release published yet" };
     const captionsAsset = release.assets.find((a) => a.name === "captions.json");
     if (!captionsAsset) return { ok: false, note: `${release.tag_name} has no captions.json` };
     const cap = await fetchImpl(captionsAsset.browser_download_url, { signal: AbortSignal.timeout(8000) });
@@ -119,6 +136,86 @@ export async function fetchSocialClips(fetchImpl: Fetch = fetch, repo = SOCIAL_R
   } catch (err) {
     return { ok: false, note: `clips unavailable (${err instanceof Error ? err.message : String(err)})` };
   }
+}
+
+/**
+ * Was the release published in the last `days` days? The Sunday cron fires
+ * every week but a batch arrives every third week; on the other Sundays the
+ * latest release is weeks old and has already been emailed.
+ */
+export function isFreshRelease(data: SocialClipsData, now: Date, days = 6): boolean {
+  const published = Date.parse(`${data.publishedAt}T00:00:00Z`);
+  if (!Number.isFinite(published)) return false;
+  const age = (now.getTime() - published) / 864e5;
+  return age >= -1 && age <= days;
+}
+
+// ─── Which batch a Sunday is waiting for ────────────────────────────────────
+
+export const SOCIAL_WORKFLOW = "social-clips.yml";
+export const SOCIAL_ACTIONS_URL = `https://github.com/${SOCIAL_REPO}/actions/workflows/${SOCIAL_WORKFLOW}`;
+
+export interface ExpectedBatch {
+  /** The first week of the batch, e.g. "2026-W48". */
+  first: string;
+  weeks: string[];
+  /** The release the Saturday job publishes: social-<first week>. */
+  tag: string;
+}
+
+/**
+ * The batch a Sunday is waiting for: the one that opens on the coming Monday,
+ * or null on the Sundays in between (two of every three). Same calendar as the
+ * workflow's own decision (social/src/calendar.ts), so the cron and the
+ * Saturday job cannot disagree about which Sunday matters, across the turn of
+ * the year (2026 has 53 ISO weeks: W51–W53, then 2027-W01).
+ */
+export function expectedBatch(now: Date): ExpectedBatch | null {
+  const next = upcomingWeek(now);
+  if (!isBatchStart(next)) return null;
+  const weeks = batchWeeks(next).map(weekLabel);
+  return { first: weeks[0], weeks, tag: `social-${weeks[0]}` };
+}
+
+// ─── The Social Clips workflow's latest run ─────────────────────────────────
+
+export interface SocialRun {
+  /** "success", "failure", "cancelled", … or null while it is still running. */
+  conclusion: string | null;
+  status: string;
+  createdAt: string;
+  url: string;
+}
+
+export type SocialRunResult = { ok: true; run: SocialRun | null } | { ok: false; note: string };
+
+interface WorkflowRun {
+  status: string;
+  conclusion: string | null;
+  created_at: string;
+  html_url: string;
+}
+
+/** The most recent run of the Social Clips workflow (public API, no token, fail-soft). */
+export async function fetchSocialRun(fetchImpl: Fetch = fetch, repo = SOCIAL_REPO): Promise<SocialRunResult> {
+  try {
+    const res = await fetchImpl(`https://api.github.com/repos/${repo}/actions/workflows/${SOCIAL_WORKFLOW}/runs?per_page=5`, {
+      headers: { Accept: "application/vnd.github+json", "User-Agent": "freeplatecheck-weekly-audit" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return { ok: false, note: `GitHub runs API answered ${res.status}` };
+    const runs = ((await res.json()) as { workflow_runs?: WorkflowRun[] }).workflow_runs ?? [];
+    const latest = [...runs].sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+    if (!latest) return { ok: true, run: null };
+    return { ok: true, run: { conclusion: latest.conclusion, status: latest.status, createdAt: latest.created_at, url: latest.html_url } };
+  } catch (err) {
+    return { ok: false, note: `run status unavailable (${err instanceof Error ? err.message : String(err)})` };
+  }
+}
+
+/** A run that needs the founder's eye: it ended badly. */
+export function runFailed(r: SocialRunResult): boolean {
+  return r.ok && r.run !== null && r.run.status === "completed" && r.run.conclusion !== null && !["success", "skipped"].includes(r.run.conclusion);
 }
 
 // ─── Social traffic ─────────────────────────────────────────────────────────
@@ -193,17 +290,30 @@ export function renderSocialTraffic(s: SocialTrafficAudit): string {
   </p>`;
 }
 
+/** "Clip render" line for the Friday audit: the Social Clips workflow's latest run, red when it failed. */
+export function renderSocialRun(r: SocialRunResult): string {
+  const base = "margin:-12px 0 20px;font-size:13px;padding:0 4px";
+  if (!r.ok) return `<p style="${base};color:#94a3b8"><strong>Clip render:</strong> could not check the latest Social Clips run (${esc(r.note)}).</p>`;
+  if (!r.run) return `<p style="${base};color:#94a3b8"><strong>Clip render:</strong> the Social Clips workflow has not run yet.</p>`;
+  const day = r.run.createdAt.slice(0, 10);
+  const link = `<a href="${esc(r.run.url)}" style="color:#0e7490">${esc(day)}</a>`;
+  if (runFailed(r)) {
+    return `<p style="${base};color:#b91c1c"><strong>Clip render FAILED</strong> (${esc(r.run.conclusion ?? "")}) on ${link}: the next batch of clips may not exist. Re-run it from Actions (steps in docs/social-pipeline.md).</p>`;
+  }
+  if (r.run.status !== "completed") return `<p style="${base};color:#94a3b8"><strong>Clip render:</strong> the latest run (${link}) is still ${esc(r.run.status.replace("_", " "))}.</p>`;
+  return `<p style="${base};color:#94a3b8"><strong>Clip render:</strong> the latest Social Clips run (${link}) passed.</p>`;
+}
+
 /** The "This week's clips" section: stills, download links, copyable captions. */
 export function renderSocialClips(r: SocialClipsResult): string {
   if (!r.ok) {
     return `
   <h3 style="margin:24px 0 6px;font-size:15px">This week's clips</h3>
-  <p style="margin:0 0 20px;font-size:14px;color:#64748b">No clips to post this week: ${esc(r.note)}. The Thursday job is <code>.github/workflows/social-clips.yml</code> (run it by hand from Actions if it was skipped).</p>`;
+  <p style="margin:0 0 20px;font-size:14px;color:#64748b">No clips to post this week: ${esc(r.note)}. The Saturday job is <code>.github/workflows/social-clips.yml</code> (it renders every third week; run it by hand from Actions if a batch was missed).</p>`;
   }
   const d = r.data;
-  const cards = d.clips
-    .map(
-      (c) => `
+  const mondayOf = (week: string) => d.clips.find((c) => c.week === week)?.date ?? "";
+  const card = (c: SocialClip) => `
     <table style="border-collapse:collapse;width:100%;margin:0 0 14px;border:1px solid #e2e8f0;border-radius:8px">
       <tr>
         <td style="width:120px;padding:10px;vertical-align:top">${
@@ -221,11 +331,69 @@ export function renderSocialClips(r: SocialClipsResult): string {
           <div style="margin:6px 0 0;font-size:11px;color:#94a3b8">${esc(c.source)} · ${esc(c.sourceDate)}</div>
         </td>
       </tr>
-    </table>`,
-    )
+    </table>`;
+  const groups = d.weeks
+    .map((week) => {
+      const clips = d.clips.filter((c) => c.week === week);
+      if (clips.length === 0) return "";
+      return `
+    <h4 style="margin:18px 0 8px;font-size:14px;color:#334155">Week of ${esc(mondayOf(week) || week)} <span style="color:#94a3b8;font-weight:400">(${esc(week)})</span></h4>
+    ${clips.map(card).join("")}`;
+    })
     .join("");
+  const n = d.clips.length;
   return `
-  <h3 style="margin:24px 0 6px;font-size:15px">This week's clips <span style="color:#94a3b8;font-weight:400">(${esc(d.week)}, from Monday ${esc(d.monday)})</span></h3>
-  <p style="margin:0 0 10px;font-size:14px">Ten minutes: download the three MP4s, upload each to Buffer, schedule <strong>Monday</strong> (brand), <strong>Wednesday</strong> (sellers), <strong>Friday</strong> (MOT) at about 18:00; TikTok first, cross-posted to Reels and Facebook Reels. Paste the caption as it is. <a href="${esc(d.releaseUrl)}" style="color:#0e7490">All files on the release</a> (published ${esc(d.publishedAt)}).</p>
-  ${cards}`;
+  <h3 style="margin:24px 0 6px;font-size:15px">The next clips <span style="color:#94a3b8;font-weight:400">(${d.weeks.length > 1 ? `${esc(d.weeks[0])} to ${esc(d.weeks[d.weeks.length - 1])}` : esc(d.week)}, from Monday ${esc(d.monday)})</span></h3>
+  <p style="margin:0 0 10px;font-size:14px">${n} clips, ${d.weeks.length > 1 ? "about half an hour" : "ten minutes"}: download the MP4s, make one Buffer post per clip to all three channels, paste its caption as it is, and <em>Add to queue</em>: the queue's slots are <strong>Monday</strong> (brand), <strong>Wednesday</strong> (sellers), <strong>Friday</strong> (MOT) at 18:00, so the clips land in order. Five hashtags each (Instagram's limit). <a href="${esc(d.releaseUrl)}" style="color:#0e7490">All files on the release</a> (published ${esc(d.publishedAt)}).</p>
+  ${groups}`;
+}
+
+/** Subject of the Sunday email. */
+export function socialClipsSubject(r: SocialClipsResult): string {
+  if (!r.ok) return "FPC clips: none this week";
+  const d = r.data;
+  if (d.weeks.length > 1) return `FPC clips: ${d.clips.length} to queue for ${d.weeks.length} weeks from ${d.monday}`;
+  return `FPC clips for the week of ${d.monday}: ${d.clips.map((c) => c.title).join(" · ")}`;
+}
+
+/** The Sunday email: the clips section in the audit's frame, nothing else. */
+export function renderSocialClipsEmail(r: SocialClipsResult): string {
+  return `
+<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#0f172a;line-height:1.5">
+  <h2 style="margin:0 0 2px">Free Plate Check — the next clips</h2>
+  <p style="color:#64748b;margin:0 0 8px;font-size:14px">Rendered last night from the site's data. Queue them in Buffer today; the routine is in docs/social-pipeline.md.</p>
+  ${renderSocialClips(r)}
+  <p style="color:#94a3b8;font-size:12px;margin:28px 0 0;border-top:1px solid #e2e8f0;padding-top:12px">Sent by /api/cron/social-clips on the Sunday after each batch (every third week) · the Friday audit carries the same section and the Social traffic line.</p>
+</div>`;
+}
+
+/** Subject of the note sent on a batch Sunday when the batch's release is not there. */
+export function missedBatchSubject(b: ExpectedBatch): string {
+  return `FPC clips did not render: the batch from ${b.first}`;
+}
+
+/**
+ * The note for a batch Sunday with no release for the batch. Short on purpose:
+ * what is missing, where to look, how to re-run. `run` is the workflow's
+ * latest run when the API could be read.
+ */
+export function renderMissedBatchEmail(b: ExpectedBatch, note: string, run: SocialRunResult): string {
+  const runLine = !run.ok
+    ? `Latest run: ${esc(run.note)}.`
+    : !run.run
+      ? "The workflow has no runs at all."
+      : `Latest run: <a href="${esc(run.run.url)}" style="color:#0e7490"><strong>${esc(run.run.conclusion ?? run.run.status)}</strong>, ${esc(run.run.createdAt.slice(0, 16).replace("T", " "))} UTC</a>.`;
+  return `
+<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#0f172a;line-height:1.5">
+  <h2 style="margin:0 0 2px">The clips did not render</h2>
+  <p style="color:#64748b;margin:0 0 12px;font-size:14px">Saturday night's job should have published the batch ${esc(b.weeks[0])} to ${esc(b.weeks[b.weeks.length - 1])} (nine clips) as the release <code>${esc(b.tag)}</code>. ${esc(note)}.</p>
+  <p style="margin:0 0 10px;font-size:14px">${runLine} <a href="${esc(SOCIAL_ACTIONS_URL)}" style="color:#0e7490">All runs of the Social Clips workflow</a>.</p>
+  <p style="margin:0 0 6px;font-size:14px"><strong>To re-run:</strong></p>
+  <ol style="margin:0 0 14px;padding-left:22px;font-size:14px">
+    <li>Open the workflow's page above, choose <em>Run workflow</em>, type <code>${esc(b.first)}</code> as the week, and run it (about 2 minutes on the runner).</li>
+    <li>When it finishes, the release <code>${esc(b.tag)}</code> holds the nine clips and their captions: queue them in Buffer as usual (docs/social-pipeline.md).</li>
+    <li>If it fails again, the red step in the run says why; send that to me.</li>
+  </ol>
+  <p style="color:#94a3b8;font-size:12px;margin:24px 0 0;border-top:1px solid #e2e8f0;padding-top:12px">Sent by /api/cron/social-clips on a batch Sunday when the batch's release is missing. This is the one email that says nothing rendered; between batches nothing is sent.</p>
+</div>`;
 }

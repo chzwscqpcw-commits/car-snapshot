@@ -7,9 +7,14 @@ import { Caption, Hook } from "../brand/Text";
 import { SAFE, T } from "../brand/theme";
 import type { Common, RankRow } from "../props";
 
-/** Where the beats land, in frames at 30 fps. */
+/**
+ * Where the beats land, in frames at 30 fps. The hook's spring starts before
+ * frame 0 so the first frame already shows the headline: TikTok, Instagram
+ * and Facebook take frame 0 as the cover unless one is chosen by hand, and a
+ * fade from black made an unreadable thumbnail.
+ */
 export const BEAT = {
-  hook: 4,
+  hook: -40,
   intro: 36,
   data: 70,
   outro: 350,

@@ -23,6 +23,10 @@
     {
       "path": "/api/cron/rakuten-reports",
       "schedule": "15 6 * * *"
+    },
+    {
+      "path": "/api/cron/social-clips",
+      "schedule": "0 8 * * 0"
     }
   ]
 }

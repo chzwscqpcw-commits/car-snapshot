@@ -1,39 +1,60 @@
-# Social clips: the weekly pipeline
+# Social clips: the three-weekly pipeline
 
-Three short vertical clips a week, made from the site's own data, posted by
-hand through Buffer. An eight-week, no-voice, zero-spend trial from the week
-of 9 November 2026 (ISO week 2026-W46). Nothing posts automatically: TikTok's
-API posts privately until an account is audited, so the clips go through
-Buffer's free plan (three channels, ten queued posts each).
+Three short vertical clips a week, made from the site's own data, posted
+through Buffer, queued three weeks at a time. An eight-week, no-voice,
+zero-spend trial from the week of 2 November 2026 (ISO week 2026-W45).
+Nothing posts automatically from this repository: TikTok's API posts
+privately until an account is audited, so the clips go through Buffer's free
+plan (three channels, ten queued posts each), which is also why the batch is
+three weeks: nine posts per channel, queued on a Sunday when the previous
+batch has all gone out.
 
 The earlier hand-made reels and their account sheets live in `docs/social/`
 (HTML reels with a record button, the brand guide, a two-week calendar).
-This pipeline replaces that cadence with an automatic weekly one; the account
+This pipeline replaces that cadence with an automatic one; the account
 sheets there (`tiktok-account-setup.txt`, `instagram-account-setup.txt`)
 still hold the handle, bio text and profile image.
 
-## The weekly routine (Friday, about ten minutes)
+## The routine: every third Sunday, about half an hour
 
-1. **Thursday 22:00 UTC** the `Social Clips` workflow renders next week's three
-   clips and publishes them as a GitHub release tagged `social-<week>`
-   (for example `social-2026-W46`): three MP4s, three poster PNGs and
-   `captions.json`.
-2. **Friday 16:00 UTC** the weekly audit email arrives with a "This week's
-   clips" section: each clip's poster, audience, a download link and its
-   caption in a copyable block.
-3. Download the three MP4s from the email's links.
-4. In Buffer, create a post per clip: upload the MP4, paste the caption as it
-   is, pick the channel group (TikTok, Instagram, Facebook), and schedule:
-   - **Monday** at about 18:00: the brand clip (search / data story),
-   - **Wednesday** at about 18:00: the sellers clip (valuation),
-   - **Friday** at about 18:00: the MOT clip.
-5. Done. The captions already end with `freeplatecheck.co.uk` and the
-   hashtags; the clickable link lives in each profile's bio (below).
+Diary: **Sunday 22 November 2026**, then every third Sunday (13 December,
+3 January 2027, 24 January, 14 February, 7 March, 28 March, …): the
+Sunday before each batch's first Monday. The batches are W45–W47 (queued by
+hand on 1 November), W48–W50, W51–W53 (2026 has 53 ISO weeks), then
+2027-W01–W03, and every third week after that. The W48–W50 batch was
+rendered on a Mac on 22 November, because the scheduled render had been
+failing since 6 November (below); from W51 the routine below is the real one.
 
-If the email says "No clips to post this week", open the repository's
-Actions tab, run **Social Clips** by hand (`Run workflow`, leave `week`
-blank), and the release appears a few minutes later. `captions.json` on the
-release has the same captions if the email is ever late.
+1. **The Saturday before, 22:00 UTC**, the `Social Clips` workflow renders
+   the next three weeks' nine clips and publishes them as a GitHub release
+   tagged `social-<first week>` (for example `social-2026-W48`): nine MP4s,
+   nine poster PNGs and one `captions.json`. On the other two Saturdays it
+   checks the calendar and stops.
+2. **Sunday 08:00 UTC** an email arrives (`/api/cron/social-clips`): "the
+   next clips", the nine clips grouped by week, each with its poster, a
+   download link and its caption in a copyable block. **If the batch's release
+   is not there, the email says "the clips did not render"** instead, with the
+   link to the failed run and the re-run steps. On the other two Sundays in
+   three nothing is sent. The Friday audit always carries the same clips
+   section, the Social traffic line, and a "Clip render" line with the result
+   of the workflow's latest run (red when it failed).
+3. Download the nine MP4s from the email's links.
+4. In Buffer, for each clip in the email's order: **New → Post**, select all
+   three channels, drop in the MP4, paste the caption as it is, and **Add to
+   Queue**. The channels' slots are Monday, Wednesday and Friday at 18:00, so
+   the clips fall into place in order: brand on Mondays, sellers on
+   Wednesdays, MOT on Fridays. Check the day shown before confirming each.
+5. Done. The captions end with `freeplatecheck.co.uk` and five hashtags
+   (Instagram's limit); the clickable links live in the Instagram and
+   Facebook profiles (below). On TikTok the domain is typed, not tapped.
+
+**If the email says the clips did not render** (or a batch Sunday brings no
+email at all, which would mean the cron itself is down), open the repository's
+Actions tab, run **Social Clips** by hand (*Run workflow*) with `week` set to
+the batch's first week (the calendar's batch starts are 2026-W48, W51,
+2027-W01, W04, …; `npm run social:plan -- --weeks 12` lists what each week
+holds). The release appears in a few minutes; `captions.json` on it has the
+captions. The red step in the failed run says what broke.
 
 ## One-time setup
 
@@ -43,12 +64,14 @@ than the three a week this needs. Cross-posting is simplest as one Buffer post
 with all three channels selected; TikTok's own share options can also
 cross-post a published TikTok to Reels.
 
-**TikTok.** Switch the account to a Business account (Settings → Account →
-Switch to Business Account; category Automotive). Then check whether a
-**Website** field appears under Edit profile. If it does, set it to the UTM
-link below; if not (TikTok gates it by follower count and region), keep the
-plain domain in the bio text, where it is not clickable but is readable and
-typeable. Handle and bio text: `docs/social/tiktok-account-setup.txt`.
+**TikTok.** Stay on a personal account: a Business account needs company
+registration documents, which a sole trader does not have, and it would also
+restrict posts to TikTok's commercial music library. On a personal account
+the Website field only becomes a tappable link at 1,000 followers (one of the
+go/no-go bars), so keep `freeplatecheck.co.uk` in the bio text, where it is
+readable and short enough to type. When the follower bar is reached, set the
+Website field to the TikTok UTM link below. Handle and bio text:
+`docs/social/tiktok-account-setup.txt` (ignore its Business-account line).
 
 **Instagram.** A Professional (Business) account is free and makes the
 Website field clickable. Set it to the UTM link below. Handle and bio text:
@@ -56,6 +79,10 @@ Website field clickable. Set it to the UTM link below. Handle and bio text:
 
 **Facebook Page.** Put the UTM link in the page's Website field and in the
 About text.
+
+**Buffer queue slots.** Each channel's Posting Schedule: Monday, Wednesday
+and Friday at 18:00 London, every other day off, goal 3. With the slots set,
+"Add to Queue" is the whole scheduling step.
 
 **Bio links** (one per platform, so the audit can tell them apart):
 
@@ -73,8 +100,8 @@ saved, partner clicks).
 
 ## Go / no-go
 
-Eight weeks after the first post (first post Monday 9 November 2026, so the
-review falls in the week of 4 January 2027), the trial continues if **two of
+Eight weeks after the first post (first post Monday 2 November 2026, so the
+review falls in the week of 28 December 2026), the trial continues if **two of
 three** hold:
 
 | Measure | Bar |
@@ -83,9 +110,12 @@ three** hold:
 | UTM-tagged visits in a month (the audit's Social line, summed) | 200 |
 | TikTok followers | 1,000 |
 
-Fewer than two: stop the Buffer routine (the Thursday job can keep running
-harmlessly, or be disabled in Actions) and keep the renderer for one-off
-clips.
+Fewer than two: stop the Buffer routine (the Saturday job can keep running
+harmlessly, or be disabled in Actions; the Sunday email will then keep
+reporting batches, so remove its cron from `vercel.json` too) and keep the renderer for one-off
+clips. The review falls inside a batch: the 13 December batch (W51–W53)
+runs to Friday 1 January and is already queued, so the decision takes effect
+from the 3 January batch (2027-W01): if the answer is no, do not queue it.
 
 ## How it works
 
@@ -95,12 +125,25 @@ clips.
   deterministically and walks each topic's subject list before repeating, so
   nothing repeats for months. `npm run social:plan -- --weeks 12` prints what
   is coming; `npm run social:preview` opens Remotion Studio.
-- `.github/workflows/social-clips.yml` installs the renderer, renders the
-  three clips (capped at ten minutes) and publishes the release. Re-running
-  it for the same week replaces the release's assets with identical clips.
-- `src/lib/social-clips.ts` reads the latest `social-*` release through the
-  public GitHub API (no token) for the audit email, and fails soft to a
-  one-line note if the API or the release is unavailable.
+- `.github/workflows/social-clips.yml` runs every Saturday night, asks the
+  calendar whether the coming week opens a batch (`npm run batch` in
+  `social/`), and if so installs the renderer, renders the nine clips
+  (capped at 25 minutes), **checks that the files are in `social/out/current`
+  (9 MP4s, 9 posters, `captions.json`)** and publishes the release. Re-running
+  it for the same batch replaces the release's assets with identical clips.
+  A relative `--out` means "relative to where npm was started"
+  (`social/src/outdir.ts`); until 22 November it was resolved inside
+  `social/`, so the clips landed in `social/social/out/current` and the
+  publish step failed, on 6, 13 and 20 November, unseen.
+- `src/lib/social-clips.ts` reads the `social-<first week>` release through
+  the public GitHub API (no token) and fails soft to a one-line note if the
+  API or the release is unavailable. The Sunday cron
+  (`src/app/api/cron/social-clips/route.ts`, 08:00 UTC in `vercel.json`)
+  follows the same calendar (`expectedBatch`), so it knows which Sundays
+  matter and which release to look for: the clips email when it is there, the
+  "did not render" email when it is not. The Friday audit adds the latest
+  workflow run's result (`fetchSocialRun`). The Vercel cron needs `CRON_SECRET`
+  and the audit's Resend settings, which the other crons already use.
 - Rules baked in: never a real registration (the closing card shows a sample
   plate), aggregate figures only, no partner names or offers in any clip or
   caption. `npm run social:check` runs the calendar test that enforces the

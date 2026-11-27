@@ -24,8 +24,8 @@ export type SellersTopic = "value-table" | "worth-after" | "used-price-trend";
 export type MotTopic = "fail-reasons" | "pass-by-area" | "pass-by-model" | "season-due";
 export type Topic = BrandTopic | SellersTopic | MotTopic;
 
-/** The first week of the series. Week counts and rotations start here. */
-export const SERIES_START = { year: 2026, week: 46 } as const;
+/** The first week of the series (Monday 2 November 2026). Week counts and rotations start here. */
+export const SERIES_START = { year: 2026, week: 45 } as const;
 
 export const BRAND_TOPICS: readonly BrandTopic[] = [
   "theft",
@@ -181,4 +181,23 @@ export function upcomingWeek(now = new Date()): IsoWeek {
 /** The ISO week `n` weeks after `w`. */
 export function nextWeek(w: IsoWeek, n = 1): IsoWeek {
   return isoWeekOf(new Date(isoWeekMonday(w).getTime() + n * 7 * DAY_MS));
+}
+
+/**
+ * Batches. Buffer's free plan queues ten posts per channel, so the clips go
+ * out three weeks at a time (nine posts), rendered on the Saturday before
+ * the batch's first Monday and queued on the Sunday. Batches start at the
+ * series' first week and every third week after it.
+ */
+export const BATCH_WEEKS = 3;
+
+/** Whether this week opens a batch. */
+export function isBatchStart(week: IsoWeek): boolean {
+  const i = weekDiff(SERIES_START, week);
+  return i >= 0 && i % BATCH_WEEKS === 0;
+}
+
+/** The weeks of the batch that starts at `first` (which need not be a batch start). */
+export function batchWeeks(first: IsoWeek, n = BATCH_WEEKS): IsoWeek[] {
+  return Array.from({ length: n }, (_, i) => nextWeek(first, i));
 }

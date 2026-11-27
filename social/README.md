@@ -14,7 +14,8 @@ From the repo root (the `social/` package has its own install):
 
 ```bash
 npm run social:install                     # once: npm ci inside social/
-npm run social:render -- --week 2026-W46   # → social/out/2026-W46/*.mp4, *.png, captions.json
+npm run social:render -- --week 2026-W45   # → social/out/2026-W45/*.mp4, *.png, captions.json
+npm run social:render -- --week 2026-W48 --weeks 3   # a batch: three weeks into social/out/2026-W48-2026-W50
 npm run social:preview                     # Remotion Studio, every template
 npm run social:plan -- --weeks 12          # what the next 12 weeks will be
 npm run social:check                       # typecheck + the calendar/picker test
@@ -22,7 +23,9 @@ npm run social:check                       # typecheck + the calendar/picker tes
 
 `--silent` renders without the music bed; `--still-only` renders the posters
 only. Inside `social/`, `npm run gallery` renders one still of every template
-variant to `out/gallery/`.
+variant to `out/gallery/`, and `npm run batch` says whether the coming week
+starts a batch (three weeks, every third week from 2026-W45) and which weeks
+it holds; the Saturday workflow renders only on batch weeks.
 
 ## Layout
 
@@ -34,7 +37,7 @@ variant to `out/gallery/`.
 | `src/compositions/*.tsx` | The templates; `shared.tsx` is the common beat sheet |
 | `src/brand/*` | Theme, fonts, motion helpers, chart primitives, plate, closing card |
 | `src/captions.ts` | captions.json: caption, hashtags, UTM links per platform |
-| `src/cli/render.ts` | Bundle + render a week (what the Thursday workflow runs) |
+| `src/cli/render.ts` | Bundle + render a week (what the Saturday workflow runs) |
 | `src/calendar.test.ts` | Determinism, rotation, privacy and partner-name checks |
 | `public/fonts`, `public/audio` | The report's typefaces and the music bed; see `CREDITS.md` |
 

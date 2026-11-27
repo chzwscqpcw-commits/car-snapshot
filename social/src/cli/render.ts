@@ -1,9 +1,11 @@
 /**
  * Render a week's three clips, their stills and captions.json:
  *
- *   npm run social:render -- --week 2026-W46 [--out social/out/2026-W46] [--silent] [--still-only]
+ *   npm run social:render -- --week 2026-W45 [--out social/out/2026-W45] [--silent] [--still-only]
  *
  * Runs from the repo root (the root script) or from social/ (npm run render).
+ * A relative --out is relative to the directory npm was started in, either way
+ * (see ../outdir.ts).
  * Deterministic: the same week gives the same three clips. Output:
  *   <out>/<week>-1-brand.mp4 (.png)   Monday
  *   <out>/<week>-2-sellers.mp4 (.png) Wednesday
@@ -14,12 +16,14 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { bundle } from "@remotion/bundler";
 import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
-import { parseWeekLabel, upcomingWeek } from "../calendar";
+import { batchWeeks, parseWeekLabel, upcomingWeek } from "../calendar";
 import { captionsFile } from "../captions";
+import { outBase } from "../outdir";
 import { buildWeek } from "../plan";
 import { withSiteAlias } from "../webpack";
 
 const SOCIAL_DIR = path.resolve(__dirname, "..", "..");
+
 /** 10 s in: every template has its data fully drawn and its outro not yet up. */
 export const POSTER_FRAME = 300;
 
@@ -38,14 +42,17 @@ async function main() {
   }
   const stillOnly = args.includes("--still-only");
 
-  const build = buildWeek(week, music);
-  const outDir = path.resolve(flag("out") ?? path.join(SOCIAL_DIR, "out", build.plan.label));
+  const nWeeks = Math.max(1, Number(flag("weeks") ?? 1));
+  const builds = batchWeeks(week, nWeeks).map((w) => buildWeek(w, music));
+  const first = builds[0].plan.label;
+  const last = builds[builds.length - 1].plan.label;
+  const outDir = path.resolve(outBase(), flag("out") ?? path.join(SOCIAL_DIR, "out", nWeeks > 1 ? `${first}-${last}` : first));
   mkdirSync(outDir, { recursive: true });
 
-  const captions = captionsFile(build);
+  const captions = captionsFile(builds);
   writeFileSync(path.join(outDir, "captions.json"), JSON.stringify(captions, null, 2) + "\n");
-  console.log(`Week ${build.plan.label} (Monday ${build.plan.monday}), music ${music ? "on" : "off"}`);
-  for (const c of build.clips) console.log(`  ${c.slot.day.padEnd(9)} ${c.slot.topic.padEnd(16)} ${c.picked.title}`);
+  console.log(`${nWeeks > 1 ? `Weeks ${first} to ${last}` : `Week ${first}`} (from Monday ${builds[0].plan.monday}), music ${music ? "on" : "off"}`);
+  for (const build of builds) for (const c of build.clips) console.log(`  ${build.plan.label}  ${c.slot.day.padEnd(9)} ${c.slot.topic.padEnd(16)} ${c.picked.title}`);
 
   const started = Date.now();
   console.log("Bundling…");
@@ -55,7 +62,7 @@ async function main() {
     webpackOverride: withSiteAlias,
   });
 
-  for (const clip of build.clips) {
+  for (const clip of builds.flatMap((b) => b.clips)) {
     const inputProps = clip.picked.props as unknown as Record<string, unknown>;
     const composition = await selectComposition({ serveUrl, id: clip.picked.composition, inputProps });
     const still = path.join(outDir, `${clip.id}.png`);
