@@ -25,11 +25,14 @@ import {
   type RakutenOrder,
 } from "../src/lib/rakuten-reports";
 import {
+  OFFSITE_CLICKS,
   RECON,
+  advertiserKey,
   getPartnerOrders,
   mergeDuplicateOrders,
   planOrderUpserts,
   pullRakutenReports,
+  rakutenPartners,
   reconcileClicks,
   reconciliationLine,
   renderPartnerOrdersHtml,
@@ -364,8 +367,8 @@ const storedOrder = (tx: string, date: string, over: Partial<OrderRow> = {}): Or
 const dailyRow = (day: string, clicks: number, updated = PULLED): DailyRow => ({
   ...toDailyRow({ day, impressions: 0, clicks, ctr: 0, orders: 0, ordersPerClick: 0, epc: 0, sales: 0, averageOrderValue: 0, baselineCommission: 0, adjustedCommission: 0, totalCommission: 0 }, updated),
 });
-const siteClicksOn = (day: string, n: number, context = "valuation-result-wbac"): SiteClick[] =>
-  Array.from({ length: n }, () => ({ created_at: `${day}T10:00:00.000Z`, context }));
+const siteClicksOn = (day: string, n: number, context = "valuation-result-wbac", advertiser = "Example Advertiser"): SiteClick[] =>
+  Array.from({ length: n }, () => ({ created_at: `${day}T10:00:00.000Z`, context, advertiser }));
 {
   const orders: OrderRow[] = [
     storedOrder("S1", "2026-10-30", { lock_status: "Locked", commission: 10 }),
@@ -402,6 +405,8 @@ const siteClicksOn = (day: string, n: number, context = "valuation-result-wbac")
   check("email block: heading and both rows", html.includes("Partner orders") && html.includes("This week") && html.includes("Since launch"));
   check("email block: the drop to zero is called out", html.includes("1 order that was paying dropped to zero this week") && html.includes("S4"));
   check("email block: placements listed", html.includes("valuation-result-wbac") && html.includes("money-wbac"));
+  check("one advertiser: one line for it, named on every placement", s.advertisers.length === 1 && s.advertisers[0].advertiser === "Example Advertiser" && s.advertisers[0].sinceLaunch.orders === 6 && s.placements.every((p) => p.advertiser === "Example Advertiser"));
+  check("one advertiser: no by-advertiser table in the email", !html.includes("Orders are split by the advertiser"));
 
   const stale = summarisePartnerOrders({ daily, orders, siteClicks: site, nowMs: NOW + 3 * 864e5 });
   check("three days without a pull is stale, and the email says so", stale.stale && renderPartnerOrdersHtml(stale).includes("last successful pull"));
@@ -456,17 +461,86 @@ console.log("\nClicks: Rakuten against ours");
   check("with no day report, nothing is judged", reconcileClicks([], site, NOW).every((d) => d.state === "no_report"));
 }
 
+// ─── Two advertisers on the network ──────────────────────────────────────────
+
+console.log("\nTwo advertisers: one click total, orders apart");
+{
+  const partners = rakutenPartners();
+  check(
+    "every partner with a Rakuten link is counted, and no other",
+    ["weBuyAnyCar", "rvuCarInsurance", "rvuVanInsurance", "rvuBikeInsurance"].every((k) => k in partners) && !("carVertical" in partners) && !("bookMyGarage" in partners),
+    Object.keys(partners).join(),
+  );
+  check("…under the names we show", partners.weBuyAnyCar === "We Buy Any Car" && partners.rvuCarInsurance === "Confused.com" && partners.rvuVanInsurance === "Confused.com");
+  check("our name and the report's reduce to one key", advertiserKey("We Buy Any Car") === advertiserKey("WeBuyAnyCar") && advertiserKey("Confused.com") === advertiserKey("confused.com UK") && advertiserKey("Confused.com") !== advertiserKey("We Buy Any Car"));
+  check("a blank name is still a key", advertiserKey("  ") === "(unknown)");
+
+  // The network reports 20 clicks for the day: 12 to one advertiser, 8 to the
+  // other. Against the first advertiser's clicks alone the day would be 8 out.
+  const daily = [dailyRow("2026-11-11", 20), dailyRow("2026-11-12", 9, "2026-11-13T06:15:00.000Z")];
+  const buyer = siteClicksOn("2026-11-11", 12, "valuation-result-wbac", "We Buy Any Car");
+  const insurer = [
+    ...siteClicksOn("2026-11-11", 5, "money-insurance", "Confused.com"),
+    ...siteClicksOn("2026-11-11", 3, "running-costs-insurance", "Confused.com"),
+    ...siteClicksOn("2026-11-12", 9, "running-costs-insurance", "Confused.com"),
+  ];
+  const both = reconcileClicks(daily, [...buyer, ...insurer], NOW).find((d) => d.day === "2026-11-11")!;
+  check("the network's total is compared with both advertisers' clicks", both.state === "match" && both.rakuten === 20 && both.site === 20);
+  check("…and ours is kept per advertiser", both.siteBy["We Buy Any Car"] === 12 && both.siteBy["Confused.com"] === 8);
+  check("one advertiser's clicks alone would have flagged the day", reconcileClicks(daily, buyer, NOW).find((d) => d.day === "2026-11-11")!.state === "flag");
+
+  const orders: OrderRow[] = [
+    storedOrder("T1", "2026-11-08", { advertiser: "WeBuyAnyCar", commission: 10, lock_status: "Locked" }),
+    storedOrder("T2", "2026-11-11", { advertiser: "WeBuyAnyCar", commission: 0 }),
+    storedOrder("T3", "2026-11-12", { advertiser: "Confused.com", commission: 10, placement: "running-costs-insurance" }),
+  ];
+  const s = summarisePartnerOrders({ daily, orders, siteClicks: [...buyer, ...insurer], nowMs: NOW });
+  const wbac = s.advertisers.find((a) => a.advertiser === "WeBuyAnyCar");
+  const conf = s.advertisers.find((a) => a.advertiser === "Confused.com");
+  check("two advertisers, most orders first", s.advertisers.length === 2 && s.advertisers[0] === wbac, s.advertisers.map((a) => a.advertiser).join());
+  check("the report's name is the label; our clicks join it", wbac?.siteClicksWeek === 12 && wbac.sinceLaunch.orders === 2 && wbac.sinceLaunch.paying === 1 && wbac.sinceLaunch.atZero === 1 && wbac.sinceLaunch.lockedCount === 1);
+  check("the other advertiser's orders and clicks are its own", conf?.siteClicksWeek === 17 && conf.sinceLaunch.orders === 1 && conf.sinceLaunch.provisional === 10 && conf.week.orders === 1);
+  check("an advertiser's order totals carry no click count (the network's is not split)", wbac?.week.clicks === null && conf?.week.clicks === null);
+  check("the two add up to the account", s.sinceLaunch.orders === 3 && s.sinceLaunch.commission === 20 && s.week.clicks === 29);
+  const ins = s.placements.find((p) => p.placement === "running-costs-insurance");
+  check("each placement names its advertiser", ins?.advertiser === "Confused.com" && ins.siteClicksWeek === 12 && ins.sinceLaunch.orders === 1 && s.placements.find((p) => p.placement === "valuation-result-wbac")?.advertiser === "WeBuyAnyCar");
+  check("an advertiser's placements sit together", s.placements.map((p) => p.advertiser).join() === "WeBuyAnyCar,Confused.com,Confused.com", s.placements.map((p) => p.advertiser).join());
+  check("the day's split uses the same labels", s.reconciliation.find((d) => d.day === "2026-11-11")?.siteBy["WeBuyAnyCar"] === 12);
+  const html = renderPartnerOrdersHtml(s);
+  check("email block: both advertisers named, with a table of their own", html.includes("WeBuyAnyCar, Confused.com") && html.includes("Orders are split by the advertiser") && html.includes("every advertiser together"));
+
+  // Clicks made outside the site (a link tested from the dashboard).
+  const NOW17 = Date.parse("2026-11-19T16:00:00Z");
+  const day17 = (rakuten: number, ours: number, offsite?: Record<string, { clicks: number }>) =>
+    reconcileClicks([dailyRow("2026-11-17", rakuten, "2026-11-19T06:15:00.000Z")], siteClicksOn("2026-11-17", ours), NOW17, undefined, offsite).find((d) => d.day === "2026-11-17")!;
+  check("17 Nov 2026: six test clicks are on the list", OFFSITE_CLICKS["2026-11-17"]?.clicks === 6);
+  check("19 Nov 2026: one more, on the motorbike link", OFFSITE_CLICKS["2026-11-19"]?.clicks === 1);
+  check("so that day matches with the network six over", day17(18, 12).state === "match" && day17(18, 12).offsite === 6);
+  check("…and nine over (six known, three tolerance)", day17(21, 12).state === "match");
+  check("…but not ten over", day17(22, 12).state === "flag");
+  check("…and it still matches if the network counted none of them", day17(12, 12).state === "match");
+  check("the allowance is one-sided: four under is flagged as on any day", day17(8, 12).state === "flag");
+  check("six over on a day with nothing listed is flagged", day17(18, 12, {}).state === "flag");
+  const noted = reconciliationLine(summarisePartnerOrders({ daily: [dailyRow("2026-11-17", 18, "2026-11-19T06:15:00.000Z")], orders: [], siteClicks: siteClicksOn("2026-11-17", 12), nowMs: NOW17 }));
+  check("the line says a day was allowed for", noted.includes("17 Nov allows for 6 clicks made outside the site"), noted);
+}
+
 // ─── Not connected, and the other quiet states ───────────────────────────────
 
 console.log("\nNot connected: quiet everywhere");
 type Table = { rows: object[]; error?: { message: string; code: string } };
 /** The few supabase-js calls partner-orders.ts makes, over in-memory tables. */
+const filters: { table: string; column: string; values: string[] }[] = [];
 function fakeStore(tables: Record<string, Table>, writes: { table: string; rows: object[] }[] = []): SupabaseClient {
   const query = (name: string) => {
     const t = tables[name] ?? { rows: [], error: { message: `Could not find the table 'public.${name}'`, code: "PGRST205" } };
     const result = { data: t.error ? null : t.rows, error: t.error ?? null };
     const q: Record<string, unknown> = {};
     for (const m of ["select", "order", "eq", "gte", "or"]) q[m] = () => q;
+    q.in = (column: string, values: string[]) => {
+      filters.push({ table: name, column, values });
+      return q;
+    };
     q.range = async () => result;
     q.upsert = async (rows: object[]) => {
       if (t.error) return { error: t.error };
@@ -502,14 +576,34 @@ async function asyncChecks(): Promise<void> {
   check("email block when not connected: one plain line, no table, no red", html.includes("Not connected") && !html.includes("<table") && !html.includes("#b91c1c"));
 
   const withRows = await getPartnerOrders(
-    fakeStore({ site_events: { rows: [{ created_at: "2026-11-12T10:00:00Z", metadata: { click_context: "money-wbac" } }] } }),
+    fakeStore({
+      site_events: {
+        rows: [
+          { created_at: "2026-11-12T10:00:00Z", metadata: { click_context: "money-wbac", partner_id: "weBuyAnyCar" } },
+          { created_at: "2026-11-12T11:00:00Z", metadata: { click_context: "money-insurance", partner_id: "rvuCarInsurance" } },
+          { created_at: "2026-11-12T12:00:00Z", metadata: { click_context: "running-costs-insurance", partner_id: "rvuVanInsurance" } },
+        ],
+      },
+    }),
     NOW,
     { store: fakeStore({ rakuten_daily: { rows: [dailyRow("2026-11-12", 1)] }, rakuten_orders: { rows: [storedOrder("R1", "2026-11-12")] } }), config: UNSET },
   );
   check("stored rows are shown even where the links are not set", withRows.state === "ok" && withRows.week.orders === 1 && withRows.placements.some((p) => p.placement === "money-wbac" && p.siteClicksWeek === 1));
+  const asked = filters.find((f) => f.table === "site_events");
+  check(
+    "our clicks are read for every partner on the network, not one",
+    asked?.column === "metadata->>partner_id" && ["weBuyAnyCar", "rvuCarInsurance", "rvuVanInsurance"].every((k) => asked.values.includes(k)),
+    asked?.values.join(),
+  );
+  check(
+    "a click is filed under its partner's name; car and van share one",
+    withRows.advertisers.some((a) => a.advertiser === "We Buy Any Car" && a.siteClicksWeek === 1) && withRows.advertisers.some((a) => a.advertiser === "Confused.com" && a.siteClicksWeek === 2),
+    withRows.advertisers.map((a) => `${a.advertiser}:${a.siteClicksWeek}`).join(),
+  );
+  check("…and the day's total is all three", withRows.reconciliation.find((d) => d.day === "2026-11-12")?.site === 3);
 
   const sample = samplePartnerOrders(NOW);
-  check("the sample is marked as one and has something of everything", sample.sample && sample.state === "ok" && sample.wentToZeroThisWeek === 1 && sample.flaggedDays >= 1 && sample.placements.length === 2);
+  check("the sample is marked as one and has something of everything", sample.sample && sample.state === "ok" && sample.wentToZeroThisWeek === 1 && sample.flaggedDays >= 1 && sample.advertisers.length === 2 && sample.placements.length === 4);
 
   // ─── Fetch ─────────────────────────────────────────────────────────────────
 

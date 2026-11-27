@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import type { OrderTotals, PartnerOrdersSummary, ReconDay } from "@/lib/partner-orders";
 
-// "Partner orders" on /data-health: what the We Buy Any Car clicks became,
-// from the Rakuten reports the daily job stores (src/lib/partner-orders.ts).
+// "Partner orders" on /data-health: what the clicks sent through Rakuten
+// became, each advertiser apart, from the reports the daily job stores
+// (src/lib/partner-orders.ts).
 // The figures come from /api/admin/partner-orders, behind the admin PIN.
 // /data-health?partner-orders=sample shows the panel with made-up figures.
 
@@ -69,6 +70,9 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
 
   if (!data) return null;
 
+  // Our clicks per advertiser beside the total, once there are two to tell apart.
+  const split = data.advertisers.length > 1 ? data.advertisers.map((a) => a.advertiser) : [];
+
   const pulled = data.lastPulledAt
     ? new Date(data.lastPulledAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
     : null;
@@ -85,7 +89,8 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
           )}
         </h2>
         <p className="text-[11px] text-slate-600">
-          We Buy Any Car · Rakuten reports{pulled ? ` · pulled ${pulled}` : ""}
+          {data.advertisers.length > 0 ? `${data.advertisers.map((a) => a.advertiser).join(", ")} · ` : ""}Rakuten reports
+          {pulled ? ` · pulled ${pulled}` : ""}
         </p>
       </div>
 
@@ -123,11 +128,52 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
           </div>
 
           <div className="space-y-3">
+            {data.advertisers.length > 1 && (
+              <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+                <p className="px-3 pt-3 text-[11px] uppercase tracking-wider text-slate-500">By advertiser</p>
+                <table className="mt-1 w-full">
+                  <thead>
+                    <tr className="border-b border-slate-800">
+                      <th className={TH}>Advertiser</th>
+                      <th className={`${TH} whitespace-nowrap text-right`}>Clicks 7d</th>
+                      <th className={`${TH} whitespace-nowrap text-right`}>Orders 7d</th>
+                      <th className={`${TH} text-right`}>Orders</th>
+                      <th className={`${TH} whitespace-nowrap text-right`}>Paid / zero</th>
+                      <th className={`${TH} text-right`}>Provisional</th>
+                      <th className={`${TH} text-right`}>Locked</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.advertisers.map((a) => (
+                      <tr key={a.advertiser} className="border-b border-slate-800/60 last:border-0">
+                        <td className="whitespace-nowrap px-2.5 py-2 text-[13px] text-slate-200">{a.advertiser}</td>
+                        <td className={`${TD} text-right`}>{num(a.siteClicksWeek)}</td>
+                        <td className={`${TD} text-right`}>{num(a.week.orders)}</td>
+                        <td className={`${TD} text-right`}>{num(a.sinceLaunch.orders)}</td>
+                        <td className={`${TD} text-right`}>
+                          {num(a.sinceLaunch.paying)} / {num(a.sinceLaunch.atZero)}
+                        </td>
+                        <td className={`${TD} text-right`}>{gbp(a.sinceLaunch.provisional)}</td>
+                        <td className={`${TD} whitespace-nowrap text-right text-cyan-300`}>
+                          {num(a.sinceLaunch.lockedCount)} · {gbp(a.sinceLaunch.lockedCommission)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="px-3 pb-3 pt-2 text-[11px] leading-relaxed text-slate-600">
+                  Orders are split by the advertiser named on each one. Rakuten&apos;s click count is not split by
+                  advertiser, so Clicks 7d are our own.
+                </p>
+              </div>
+            )}
+
             <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
               <p className="px-3 pt-3 text-[11px] uppercase tracking-wider text-slate-500">By placement (u1)</p>
               <table className="mt-1 w-full">
                 <thead>
                   <tr className="border-b border-slate-800">
+                    <th className={TH}>Advertiser</th>
                     <th className={TH}>Placement</th>
                     <th className={`${TH} whitespace-nowrap text-right`}>Clicks 7d</th>
                     <th className={`${TH} whitespace-nowrap text-right`}>Orders 7d</th>
@@ -139,13 +185,14 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
                 <tbody>
                   {data.placements.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-3 py-3 text-sm text-slate-500">
+                      <td colSpan={7} className="px-3 py-3 text-sm text-slate-500">
                         No orders or clicks yet.
                       </td>
                     </tr>
                   ) : (
                     data.placements.map((p) => (
-                      <tr key={p.placement} className="border-b border-slate-800/60 last:border-0">
+                      <tr key={`${p.advertiser}:${p.placement}`} className="border-b border-slate-800/60 last:border-0">
+                        <td className="whitespace-nowrap px-2.5 py-2 text-[13px] text-slate-400">{p.advertiser}</td>
                         <td className="whitespace-nowrap px-2.5 py-2 font-mono text-[13px] text-slate-300">{p.placement}</td>
                         <td className={`${TD} text-right`}>{num(p.siteClicksWeek)}</td>
                         <td className={`${TD} text-right`}>{num(p.week.orders)}</td>
@@ -179,7 +226,12 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
                   <tr className="border-b border-slate-800">
                     <th className={TH}>Day</th>
                     <th className={`${TH} text-right`}>Rakuten</th>
-                    <th className={`${TH} text-right`}>Ours</th>
+                    {split.map((name) => (
+                      <th key={name} className={`${TH} whitespace-nowrap text-right normal-case tracking-normal`}>
+                        {name}
+                      </th>
+                    ))}
+                    <th className={`${TH} text-right`}>{split.length > 0 ? "Ours, all" : "Ours"}</th>
                     <th className={`${TH} text-right`}>Gap</th>
                     <th className={TH}></th>
                   </tr>
@@ -194,17 +246,29 @@ export default function PartnerOrdersCard({ adminFetch }: { adminFetch: (url: st
                       >
                         <td className="px-3 py-1.5 text-[13px] text-slate-300">{shortDay(d.day)}</td>
                         <td className={`${TD} py-1.5 text-right`}>{num(d.rakuten)}</td>
+                        {split.map((name) => (
+                          <td key={name} className={`${TD} py-1.5 text-right text-slate-400`}>
+                            {num(d.siteBy[name] ?? 0)}
+                          </td>
+                        ))}
                         <td className={`${TD} py-1.5 text-right`}>{num(d.site)}</td>
                         <td className={`${TD} py-1.5 text-right`}>{gap === null ? "—" : gap > 0 ? `+${gap}` : gap}</td>
-                        <td className={`px-3 py-1.5 text-[12px] ${RECON_LABEL[d.state].cls}`}>{RECON_LABEL[d.state].text}</td>
+                        <td className={`whitespace-nowrap px-3 py-1.5 text-[12px] ${RECON_LABEL[d.state].cls}`}>
+                          {RECON_LABEL[d.state].text}
+                          {d.offsite > 0 && d.rakuten !== null && (
+                            <span className="font-normal text-slate-500"> · {d.offsite} off-site allowed for</span>
+                          )}
+                        </td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
               <p className="px-3 pb-3 pt-2 text-[11px] leading-relaxed text-slate-600">
-                Ours = partner_click rows for We Buy Any Car, owner traffic left out. A day is flagged when the two
-                differ by more than 3 clicks (or a tenth of the day). Today is never judged.
+                Rakuten&apos;s count is the whole account, so ours = partner_click rows for every advertiser on the
+                network, owner traffic left out. A day is flagged when the two differ by more than 3 clicks (or a
+                tenth of the day). Today is never judged. &quot;Off-site&quot; = clicks known to have been made outside
+                the site that day (a link tested from the dashboard).
               </p>
             </div>
           </div>

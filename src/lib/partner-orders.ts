@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { PARTNER_LINKS, isRakutenLink } from "../config/partners";
 import { supabaseServerRole } from "./supabaseServer";
 import {
   LOCK_REPORT,
@@ -14,8 +15,8 @@ import {
 } from "./rakuten-reports";
 
 /**
- * Partner orders: what the We Buy Any Car clicks turned into, from the two
- * Rakuten reports pulled each day (rakuten-reports.ts).
+ * Partner orders: what the clicks we send through Rakuten Advertising turned
+ * into, from the two reports pulled each day (rakuten-reports.ts).
  *
  * Our own `site_events` see clicks and never orders; an order exists only on
  * the network's side, tagged with the placement (`u1`) that sent it. This
@@ -23,6 +24,14 @@ import {
  * pull changes it, and writes the "Partner orders" block for the Friday email
  * and /data-health, with a day-by-day check of the network's click count
  * against ours.
+ *
+ * MORE THAN ONE ADVERTISER. The publisher account covers every advertiser we
+ * work with on the network (We Buy Any Car from Oct 2026, Confused.com from
+ * Nov 2026). The order report names the advertiser on each row, so orders
+ * are shown per advertiser. The day report does not: its click count is the
+ * whole account's. So the click check compares that total with our clicks
+ * for every partner whose link is a Rakuten link (`rakutenPartners`), never
+ * with one partner's.
  *
  * STORAGE IS PRIVATE. `site_events` is readable with the public anon key, so
  * order rows do not go there: they live in `rakuten_daily` and
@@ -39,8 +48,44 @@ const DAY = 24 * HOUR;
 
 export const DAILY_TABLE = "rakuten_daily";
 export const ORDERS_TABLE = "rakuten_orders";
-/** `partner_id` on our own partner_click rows. */
-export const SITE_PARTNER_ID = "weBuyAnyCar";
+/**
+ * Every partner whose link is a Rakuten link: `partner_id` on our own
+ * partner_click rows → the name we show. Read from partners.ts, so a new
+ * advertiser on the network joins the click check the day its link goes in.
+ */
+export function rakutenPartners(): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [id, p] of Object.entries(PARTNER_LINKS)) {
+    if (isRakutenLink(p.url)) out[id] = p.name;
+  }
+  return out;
+}
+
+/**
+ * One key for an advertiser however its name is written: ours ("We Buy Any
+ * Car", "Confused.com") and the report's ("WeBuyAnyCar") reduce to the same
+ * thing, so our clicks and the network's orders share a line. A name that
+ * does not reduce to ours still shows, on a line of its own.
+ */
+export function advertiserKey(name: string): string {
+  const k = name
+    .toLowerCase()
+    .replace(/\b(uk|ltd|limited|plc)\b/g, "")
+    .replace(/\.(com|co\.uk|co|uk|net)\b/g, "")
+    .replace(/[^a-z0-9]/g, "");
+  return k || "(unknown)";
+}
+
+/**
+ * Clicks the network counted that no page of ours sent, by day: a link
+ * tested from the publisher dashboard, say. The day report has no placement
+ * column to tell them apart, so they are listed here and allowed for on
+ * their day (the network may be over ours by this many more).
+ */
+export const OFFSITE_CLICKS: Record<string, { clicks: number; why: string }> = {
+  "2026-11-17": { clicks: 6, why: "test clicks on the new Confused.com links (u1 link-test), made outside the site" },
+  "2026-11-19": { clicks: 1, why: "one test click on the motorbike link (u1 link-test), made outside the site" },
+};
 
 const NOT_INTERNAL = "metadata->>internal.is.null,metadata->>internal.neq.true";
 
@@ -224,7 +269,19 @@ export interface OrderTotals {
   lockedCommission: number;
 }
 
+export interface AdvertiserOrders {
+  /** The order report's name for the advertiser; ours while it has no order. */
+  advertiser: string;
+  /** Our own clicks for this advertiser in the week (site_events). */
+  siteClicksWeek: number;
+  /** Orders only: the network's click count is not split by advertiser. */
+  week: OrderTotals;
+  sinceLaunch: OrderTotals;
+}
+
 export interface PlacementOrders {
+  /** Same label as its line in `advertisers`. */
+  advertiser: string;
   placement: string;
   /** Our own clicks for this placement in the week (site_events). */
   siteClicksWeek: number;
@@ -245,9 +302,15 @@ export type ReconState = "match" | "flag" | "incomplete" | "no_report";
 
 export interface ReconDay {
   day: string;
-  /** The network's clicks; null when the report does not reach this day. */
+  /** The network's clicks, every advertiser together; null when the report
+   *  does not reach this day. */
   rakuten: number | null;
+  /** Our clicks for every partner on the network. */
   site: number;
+  /** `site` by advertiser label; only advertisers with a click that day. */
+  siteBy: Record<string, number>;
+  /** Clicks known to have been made outside the site that day (OFFSITE_CLICKS). */
+  offsite: number;
   state: ReconState;
 }
 
@@ -279,6 +342,8 @@ export interface PartnerOrdersSummary {
   coverage: { from: string; to: string } | null;
   week: OrderTotals;
   sinceLaunch: OrderTotals;
+  /** Each advertiser apart, most orders first. */
+  advertisers: AdvertiserOrders[];
   placements: PlacementOrders[];
   /** Orders that were paying and now pay nothing, newest change first. */
   wentToZero: ZeroedOrder[];
@@ -300,6 +365,8 @@ const STALE_AFTER_HOURS = 36;
 export interface SiteClick {
   created_at: string;
   context: string;
+  /** Our name for the partner the click went to (partners.ts). */
+  advertiser: string;
 }
 
 function emptyTotals(clicks: number | null = null): OrderTotals {
@@ -328,32 +395,45 @@ function totalsOf(orders: OrderRow[], clicks: number | null): OrderTotals {
 }
 
 /**
- * The network's clicks per day against our own partner_click rows. Days are
+ * The network's clicks per day against our own partner_click rows. The
+ * network's figure is the whole account's, so `siteClicks` must hold every
+ * Rakuten partner's clicks (pullSiteClicks), not one advertiser's. Days are
  * UTC on both sides (the saved report's time zone); if the report were ever
  * switched to UK time, summer evenings would move a few clicks across
  * midnight, which the tolerance absorbs on most days.
+ *
+ * `labelOf` turns a click's advertiser into the label its line carries in
+ * the summary; `offsite` is OFFSITE_CLICKS unless a test passes its own.
  */
 export function reconcileClicks(
   daily: Pick<DailyRow, "day" | "clicks" | "updated_at">[],
   siteClicks: SiteClick[],
   nowMs: number,
+  labelOf: (advertiser: string) => string = (a) => a,
+  offsite: Record<string, { clicks: number }> = OFFSITE_CLICKS,
 ): ReconDay[] {
   const byDay = new Map(daily.map((d) => [d.day, d]));
   const days = daily.map((d) => d.day).sort();
   const firstDay = days[0];
   const lastPullMs = daily.reduce((max, d) => Math.max(max, Date.parse(d.updated_at) || 0), 0);
-  const site = new Map<string, number>();
+  const site = new Map<string, Record<string, number>>();
   for (const c of siteClicks) {
     const day = c.created_at.slice(0, 10);
-    site.set(day, (site.get(day) ?? 0) + 1);
+    const by = site.get(day) ?? {};
+    const label = labelOf(c.advertiser);
+    by[label] = (by[label] ?? 0) + 1;
+    site.set(day, by);
   }
 
   const out: ReconDay[] = [];
   for (let i = RECON.DAYS - 1; i >= 0; i--) {
     const day = dayOf(nowMs - i * DAY);
-    const ours = site.get(day) ?? 0;
+    const siteBy = site.get(day) ?? {};
+    const ours = Object.values(siteBy).reduce((a, b) => a + b, 0);
+    const known = offsite[day]?.clicks ?? 0;
+    const base = { day, site: ours, siteBy, offsite: known };
     if (!firstDay || day < firstDay) {
-      out.push({ day, rakuten: null, site: ours, state: "no_report" });
+      out.push({ ...base, rakuten: null, state: "no_report" });
       continue;
     }
     const row = byDay.get(day);
@@ -363,11 +443,14 @@ export function reconcileClicks(
     const pulledMs = row ? Date.parse(row.updated_at) || 0 : lastPullMs;
     const settledMs = Date.parse(`${day}T00:00:00Z`) + DAY + RECON.SETTLE_HOURS * HOUR;
     if (pulledMs < settledMs) {
-      out.push({ day, rakuten: theirs, site: ours, state: "incomplete" });
+      out.push({ ...base, rakuten: theirs, state: "incomplete" });
       continue;
     }
     const allowed = Math.max(RECON.ABS, RECON.SHARE * Math.max(theirs, ours));
-    out.push({ day, rakuten: theirs, site: ours, state: Math.abs(theirs - ours) > allowed ? "flag" : "match" });
+    // Known off-site clicks widen one side only: the network may be over ours
+    // by that many more. It need not have counted every one of them.
+    const gap = theirs - ours;
+    out.push({ ...base, rakuten: theirs, state: gap < -allowed || gap > allowed + known ? "flag" : "match" });
   }
   return out;
 }
@@ -382,6 +465,7 @@ export function blankPartnerOrders(state: PartnerOrdersState, note: string): Par
     coverage: null,
     week: emptyTotals(),
     sinceLaunch: emptyTotals(),
+    advertisers: [],
     placements: [],
     wentToZero: [],
     wentToZeroThisWeek: 0,
@@ -402,6 +486,8 @@ export function summarisePartnerOrders(input: {
   orders: OrderRow[];
   siteClicks: SiteClick[];
   nowMs: number;
+  /** Known off-site clicks by day; OFFSITE_CLICKS unless given (the sample gives none). */
+  offsite?: Record<string, { clicks: number }>;
 }): PartnerOrdersSummary {
   const { daily, orders, siteClicks, nowMs } = input;
   // The week is the last seven calendar days, today included.
@@ -414,28 +500,67 @@ export function summarisePartnerOrders(input: {
 
   const lastPulledMs = [...daily, ...orders].reduce((max, r) => Math.max(max, Date.parse(r.updated_at) || 0), 0);
 
-  const placementNames = new Set(orders.map((o) => o.placement || "(none)"));
-  const siteWeek = new Map<string, number>();
+  // Advertisers: the order report's name where it has an order, ours until
+  // then. Both reduce to one key, so clicks and orders meet on one line.
+  const labels = new Map<string, string>();
+  for (const c of siteClicks) if (!labels.has(advertiserKey(c.advertiser))) labels.set(advertiserKey(c.advertiser), c.advertiser);
+  for (const o of orders) if (o.advertiser) labels.set(advertiserKey(o.advertiser), o.advertiser);
+  const labelOf = (name: string) => labels.get(advertiserKey(name)) ?? (name || "(unknown)");
+  const placementOf = (o: OrderRow) => o.placement || "(none)";
+
+  const advWeekClicks = new Map<string, number>();
+  const placementWeekClicks = new Map<string, number>();
+  const placementKeys = new Map<string, { advertiser: string; placement: string }>();
+  const pKey = (advertiser: string, placement: string) => `${advertiser}\u0000${placement}`;
+  for (const o of orders) {
+    const advertiser = labelOf(o.advertiser);
+    placementKeys.set(pKey(advertiser, placementOf(o)), { advertiser, placement: placementOf(o) });
+  }
   for (const c of siteClicks) {
     if (!inWeek(c.created_at.slice(0, 10))) continue;
-    siteWeek.set(c.context, (siteWeek.get(c.context) ?? 0) + 1);
-    placementNames.add(c.context);
+    const advertiser = labelOf(c.advertiser);
+    advWeekClicks.set(advertiser, (advWeekClicks.get(advertiser) ?? 0) + 1);
+    placementWeekClicks.set(pKey(advertiser, c.context), (placementWeekClicks.get(pKey(advertiser, c.context)) ?? 0) + 1);
+    placementKeys.set(pKey(advertiser, c.context), { advertiser, placement: c.context });
   }
-  const placements: PlacementOrders[] = [...placementNames]
-    .map((placement) => ({
-      placement,
-      siteClicksWeek: siteWeek.get(placement) ?? 0,
-      week: totalsOf(weekOrders.filter((o) => (o.placement || "(none)") === placement), null),
-      sinceLaunch: totalsOf(orders.filter((o) => (o.placement || "(none)") === placement), null),
+
+  const advertiserNames = new Set([...orders.map((o) => labelOf(o.advertiser)), ...advWeekClicks.keys()]);
+  const advertisers: AdvertiserOrders[] = [...advertiserNames]
+    .map((advertiser) => ({
+      advertiser,
+      siteClicksWeek: advWeekClicks.get(advertiser) ?? 0,
+      week: totalsOf(weekOrders.filter((o) => labelOf(o.advertiser) === advertiser), null),
+      sinceLaunch: totalsOf(orders.filter((o) => labelOf(o.advertiser) === advertiser), null),
     }))
-    .sort((a, b) => b.sinceLaunch.orders - a.sinceLaunch.orders || b.siteClicksWeek - a.siteClicksWeek || a.placement.localeCompare(b.placement));
+    .sort((a, b) => b.sinceLaunch.orders - a.sinceLaunch.orders || b.siteClicksWeek - a.siteClicksWeek || a.advertiser.localeCompare(b.advertiser));
+  const rank = new Map(advertisers.map((a, i) => [a.advertiser, i]));
+
+  const placements: PlacementOrders[] = [...placementKeys.entries()]
+    .map(([key, { advertiser, placement }]) => {
+      const mine = (o: OrderRow) => labelOf(o.advertiser) === advertiser && placementOf(o) === placement;
+      return {
+        advertiser,
+        placement,
+        siteClicksWeek: placementWeekClicks.get(key) ?? 0,
+        week: totalsOf(weekOrders.filter(mine), null),
+        sinceLaunch: totalsOf(orders.filter(mine), null),
+      };
+    })
+    // An advertiser's placements sit together, in the advertisers' order.
+    .sort(
+      (a, b) =>
+        (rank.get(a.advertiser) ?? 0) - (rank.get(b.advertiser) ?? 0) ||
+        b.sinceLaunch.orders - a.sinceLaunch.orders ||
+        b.siteClicksWeek - a.siteClicksWeek ||
+        a.placement.localeCompare(b.placement),
+    );
 
   const zeroed = orders
     .filter((o) => o.previous_commission !== null && Number(o.previous_commission) > 0 && Number(o.commission) <= 0 && o.commission_changed_at)
     .sort((a, b) => (b.commission_changed_at ?? "").localeCompare(a.commission_changed_at ?? ""));
   const weekAgoMs = nowMs - 7 * DAY;
 
-  const reconciliation = reconcileClicks(daily, siteClicks, nowMs);
+  const reconciliation = reconcileClicks(daily, siteClicks, nowMs, labelOf, input.offsite);
 
   return {
     state: "ok",
@@ -446,6 +571,7 @@ export function summarisePartnerOrders(input: {
     coverage: days.length > 0 ? { from: days[0], to: days[days.length - 1] } : null,
     week: totalsOf(weekOrders, clicksIn(daily.filter((d) => inWeek(d.day)))),
     sinceLaunch: totalsOf(orders, clicksIn(daily)),
+    advertisers,
     placements,
     wentToZero: zeroed.slice(0, 20).map((o) => ({
       transactionId: o.transaction_id,
@@ -494,15 +620,21 @@ async function upsertAll(sb: SupabaseClient, table: string, rows: object[], onCo
   }
 }
 
-/** Our own We Buy Any Car clicks since `sinceISO`, owner traffic left out. */
+/**
+ * Our own clicks since `sinceISO` for every partner on the network, owner
+ * traffic left out. Every partner, because the network's daily click count
+ * is the whole account's: counting one advertiser here would flag every day
+ * the others had a click.
+ */
 async function pullSiteClicks(sb: SupabaseClient, sinceISO: string): Promise<SiteClick[]> {
+  const partners = rakutenPartners();
   const out: SiteClick[] = [];
   for (let from = 0; from < 50_000; from += 1000) {
     const { data, error } = await sb
       .from("site_events")
       .select("created_at, metadata")
       .eq("event_type", "partner_click")
-      .eq("metadata->>partner_id", SITE_PARTNER_ID)
+      .in("metadata->>partner_id", Object.keys(partners))
       .gte("created_at", sinceISO)
       .or(NOT_INTERNAL)
       .order("created_at", { ascending: true })
@@ -510,7 +642,12 @@ async function pullSiteClicks(sb: SupabaseClient, sinceISO: string): Promise<Sit
     if (error || !data) break;
     for (const r of data as { created_at: string; metadata: Record<string, unknown> | null }[]) {
       const ctx = r.metadata?.click_context;
-      out.push({ created_at: r.created_at, context: typeof ctx === "string" && ctx ? ctx : "(none)" });
+      const id = r.metadata?.partner_id;
+      out.push({
+        created_at: r.created_at,
+        context: typeof ctx === "string" && ctx ? ctx : "(none)",
+        advertiser: (typeof id === "string" && partners[id]) || "(unknown)",
+      });
     }
     if (data.length < 1000) break;
   }
@@ -652,11 +789,15 @@ export function reconciliationLine(s: PartnerOrdersSummary): string {
   const judged = s.reconciliation.filter((d) => d.state === "match" || d.state === "flag");
   if (judged.length === 0) return "No complete day to compare yet.";
   const flagged = judged.filter((d) => d.state === "flag");
+  const allowedFor = judged
+    .filter((d) => d.offsite > 0)
+    .map((d) => ` ${shortDay(d.day)} allows for ${d.offsite} click${d.offsite === 1 ? "" : "s"} made outside the site.`)
+    .join("");
   if (flagged.length === 0) {
-    return `${judged.length} complete day${judged.length === 1 ? "" : "s"} compared, every one within ${RECON.ABS} clicks (or ${Math.round(RECON.SHARE * 100)}%).`;
+    return `${judged.length} complete day${judged.length === 1 ? "" : "s"} compared, every one within ${RECON.ABS} clicks (or ${Math.round(RECON.SHARE * 100)}%).${allowedFor}`;
   }
   const list = flagged.map((d) => `${shortDay(d.day)}: Rakuten ${d.rakuten}, ours ${d.site}`).join("; ");
-  return `${flagged.length} of ${judged.length} complete days differ by more than ${RECON.ABS} clicks (or ${Math.round(RECON.SHARE * 100)}%). ${list}.`;
+  return `${flagged.length} of ${judged.length} complete days differ by more than ${RECON.ABS} clicks (or ${Math.round(RECON.SHARE * 100)}%). ${list}.${allowedFor}`;
 }
 
 const TD = "padding:6px 10px;border:1px solid #e2e8f0";
@@ -664,7 +805,8 @@ const TDR = `${TD};text-align:right;font-variant-numeric:tabular-nums`;
 
 /** The "Partner orders" block for the Friday audit email. Always present. */
 export function renderPartnerOrdersHtml(s: PartnerOrdersSummary): string {
-  const title = `<h3 style="margin:28px 0 6px;font-size:16px">Partner orders <span style="color:#94a3b8;font-weight:400">(We Buy Any Car, from Rakuten's reports)</span></h3>`;
+  const who = s.advertisers.map((a) => esc(a.advertiser)).join(", ");
+  const title = `<h3 style="margin:28px 0 6px;font-size:16px">Partner orders <span style="color:#94a3b8;font-weight:400">(${who ? `${who}; ` : ""}from Rakuten's reports)</span></h3>`;
   if (s.state !== "ok") {
     return `${title}
   <p style="margin:0 0 18px;font-size:14px;color:#64748b">${esc(s.note)}</p>`;
@@ -685,13 +827,28 @@ export function renderPartnerOrdersHtml(s: PartnerOrdersSummary): string {
   </p>`
       : "";
 
+  // Each advertiser apart, once there is more than one to tell apart.
+  const advertiserTable =
+    s.advertisers.length < 2
+      ? ""
+      : `<table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
+    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Advertiser</th><th style="${TDR}">Our clicks, week</th><th style="${TDR}">Orders, week</th><th style="${TDR}">Orders, all</th><th style="${TDR}">Paying / zero</th><th style="${TDR}">Provisional</th><th style="${TDR}">Locked</th></tr>
+    ${s.advertisers
+      .map(
+        (a) =>
+          `<tr><td style="${TD}">${esc(a.advertiser)}</td><td style="${TDR}">${n(a.siteClicksWeek)}</td><td style="${TDR}">${n(a.week.orders)}</td><td style="${TDR}">${n(a.sinceLaunch.orders)}</td><td style="${TDR}">${n(a.sinceLaunch.paying)} / ${n(a.sinceLaunch.atZero)}</td><td style="${TDR}">${gbp(a.sinceLaunch.provisional)}</td><td style="${TDR}">${n(a.sinceLaunch.lockedCount)} · ${gbp(a.sinceLaunch.lockedCommission)}</td></tr>`,
+      )
+      .join("")}
+  </table>
+  <p style="margin:0 0 12px;font-size:13px;color:#64748b">Orders are split by the advertiser named on each one. Rakuten's click count is not split, so the clicks here are ours.</p>`;
+
   const placementRows =
     s.placements.length === 0
-      ? `<tr><td style="${TD};color:#94a3b8" colspan="6">no orders or clicks yet</td></tr>`
+      ? `<tr><td style="${TD};color:#94a3b8" colspan="7">no orders or clicks yet</td></tr>`
       : s.placements
           .map(
             (p) =>
-              `<tr><td style="${TD};white-space:nowrap"><code>${esc(p.placement)}</code></td><td style="${TDR}">${n(p.siteClicksWeek)}</td><td style="${TDR}">${n(p.week.orders)}</td><td style="${TDR}">${n(p.sinceLaunch.orders)}</td><td style="${TDR}">${n(p.sinceLaunch.paying)} / ${n(p.sinceLaunch.atZero)}</td><td style="${TDR}">${gbp(p.sinceLaunch.commission)}</td></tr>`,
+              `<tr><td style="${TD}">${esc(p.advertiser)}</td><td style="${TD};white-space:nowrap"><code>${esc(p.placement)}</code></td><td style="${TDR}">${n(p.siteClicksWeek)}</td><td style="${TDR}">${n(p.week.orders)}</td><td style="${TDR}">${n(p.sinceLaunch.orders)}</td><td style="${TDR}">${n(p.sinceLaunch.paying)} / ${n(p.sinceLaunch.atZero)}</td><td style="${TDR}">${gbp(p.sinceLaunch.commission)}</td></tr>`,
           )
           .join("");
 
@@ -707,9 +864,10 @@ export function renderPartnerOrdersHtml(s: PartnerOrdersSummary): string {
     ${totalsRow("This week", s.week)}
     ${totalsRow(`Since launch${s.coverage ? ` <span style="color:#94a3b8">(from ${shortDay(s.coverage.from)})</span>` : ""}`, s.sinceLaunch)}
   </table>
-  <p style="margin:0 0 12px;font-size:13px;color:#64748b">Clicks are Rakuten's count. Provisional = commission on orders not locked yet, which can still change; locked is final. Orders are placed by transaction date.</p>
-  <table style="border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px">
-    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Placement (u1)</th><th style="${TDR}">Our clicks, week</th><th style="${TDR}">Orders, week</th><th style="${TDR}">Orders, all</th><th style="${TDR}">Paying / zero</th><th style="${TDR}">Commission, all</th></tr>
+  <p style="margin:0 0 12px;font-size:13px;color:#64748b">Clicks are Rakuten's count, every advertiser together. Provisional = commission on orders not locked yet, which can still change; locked is final. Orders are placed by transaction date.</p>
+  ${advertiserTable}
+  <table style="border-collapse:collapse;width:100%;font-size:13px;margin:0 0 8px">
+    <tr style="background:#f1f5f9"><th style="${TD};text-align:left">Advertiser</th><th style="${TD};text-align:left">Placement (u1)</th><th style="${TDR}">Our clicks, week</th><th style="${TDR}">Orders, week</th><th style="${TDR}">Orders, all</th><th style="${TDR}">Paying / zero</th><th style="${TDR}">Commission, all</th></tr>
     ${placementRows}
   </table>
   <p style="margin:0 0 18px;font-size:13px;${flagged ? "background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#0f172a" : "color:#64748b"}">
@@ -739,10 +897,12 @@ export function samplePartnerOrders(nowMs: number): PartnerOrdersSummary {
     total_commission: 0,
     updated_at: pulled,
   }));
+  const BUYER = "Sample car buyer";
+  const INSURER = "Sample insurer";
   const order = (id: number, ago: number, placement: string, commission: number, locked: boolean, previous: number | null = null): OrderRow => ({
     transaction_id: `SAMPLE-${id}`,
-    mid: "0",
-    advertiser: "Sample advertiser",
+    mid: placement.endsWith("-insurance") ? "1" : "0",
+    advertiser: placement.endsWith("-insurance") ? INSURER : BUYER,
     order_id: `S${id}`,
     transaction_date: day(ago),
     transaction_time: "12:00:00",
@@ -773,14 +933,23 @@ export function samplePartnerOrders(nowMs: number): PartnerOrdersSummary {
     order(5, 4, "valuation-result-wbac", 0, false, 10),
     order(6, 2, "money-wbac", 10, false),
     order(7, 1, "valuation-result-wbac", 10, false),
+    order(8, 3, "money-insurance", 10, false),
+    order(9, 1, "running-costs-insurance", 10, false),
   ];
   const siteClicks: SiteClick[] = [];
   clicks.forEach((c, i) => {
     // One day is made to disagree so the flag can be seen.
     const ours = i === 9 ? c + 7 : i === 4 ? c - 1 : c;
+    // The second advertiser's placements start five days back, as if it had
+    // just gone live: the network's total covers both from then on.
     for (let k = 0; k < ours; k++) {
-      siteClicks.push({ created_at: `${day(13 - i)}T12:00:00Z`, context: k % 4 === 0 ? "money-wbac" : "valuation-result-wbac" });
+      const insurer = i >= 9 && k % 3 === 2;
+      siteClicks.push({
+        created_at: `${day(13 - i)}T12:00:00Z`,
+        context: insurer ? (k % 2 === 0 ? "money-insurance" : "running-costs-insurance") : k % 4 === 0 ? "money-wbac" : "valuation-result-wbac",
+        advertiser: insurer ? INSURER : BUYER,
+      });
     }
   });
-  return { ...summarisePartnerOrders({ daily, orders, siteClicks, nowMs }), sample: true };
+  return { ...summarisePartnerOrders({ daily, orders, siteClicks, nowMs, offsite: {} }), sample: true };
 }

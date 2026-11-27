@@ -2,9 +2,10 @@ import { PARTNER_LINKS, isPartnerConfigured, type InsuranceGoPartner, type Partn
 
 // Which insurance partner a placement shows. Placements ask by vehicle type
 // and get the first partner in the list that's live, so they switch on — and
-// switch brand — with no change of their own: RVU (confused.com / Uswitch on
-// Rakuten) when its links arrive, GoCompare (Awin, pending since 2026) as the
-// car fallback; Tempcover first for temporary cover, then Cuvva.
+// switch brand — with no change of their own: Confused.com (RVU, on Rakuten)
+// for cars, vans and motorbikes, with no fallback: it is the site's insurance
+// provider, so where it is not live nothing shows. Tempcover first for
+// temporary cover, then Cuvva.
 
 export type InsuranceKind = "car" | "van" | "motorbike";
 
@@ -17,10 +18,7 @@ export interface InsuranceOffer {
 }
 
 const ANNUAL: Record<InsuranceKind, Array<{ partnerKey: string; go: InsuranceGoPartner }>> = {
-  car: [
-    { partnerKey: "rvuCarInsurance", go: "rvu-car" },
-    { partnerKey: "goCompare", go: "gocompare" },
-  ],
+  car: [{ partnerKey: "rvuCarInsurance", go: "rvu-car" }],
   van: [{ partnerKey: "rvuVanInsurance", go: "rvu-van" }],
   motorbike: [{ partnerKey: "rvuBikeInsurance", go: "rvu-bike" }],
 };

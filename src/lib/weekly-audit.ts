@@ -191,7 +191,7 @@ export interface WeeklyAuditData {
   /** /api/lookup's failures this week by stage, and the longest bad spell.
    *  Added after the 21.5-hour MOT outage of 8–9 Nov 2026 went unreported. */
   lookupHealth: LookupHealthSummary;
-  /** What the We Buy Any Car clicks became, from the Rakuten reports the
+  /** What the clicks sent through Rakuten became, from the reports the
    *  daily job stores (private tables); a "not connected" state until set up. */
   partnerOrders: PartnerOrdersSummary;
 }
